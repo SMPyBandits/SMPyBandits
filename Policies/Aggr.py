@@ -55,10 +55,10 @@ class Aggr:
             self.policies[i].getReward(arm, reward)
             if self.choices[i] == arm:  # this child's choice was chosen
                 # 3. increase self.trusts for the childs who were true
-                self.trust[i] *= np.exp(reward * self.learningRate)
+                self.trusts[i] *= np.exp(reward * self.learningRate)
         # 4. renormalize self.trusts to make it a proba dist
         self.trusts = self.trusts / np.sum(self.trusts)
-        print("self.trusts =", self.trusts)  # DEBUG
+        # print("self.trusts =", self.trusts)  # DEBUG
 
     def choice(self):
         # TODO :
@@ -66,10 +66,10 @@ class Aggr:
         self.choices = [-1] * self.nbPolicies
         for i in range(self.nbPolicies):
             self.choices[i] = self.policies[i].choice()
-        print("self.choices =", self.choices)  # DEBUG
+        # print("self.choices =", self.choices)  # DEBUG
         # 2. select the vote to trust
         # trustOnArms = [0] * self.nbArms
         # for i in range(self.nbPolicies):
-        #     trustOnArms[self.choices[i]] += self.trust[i]
+        #     trustOnArms[self.choices[i]] += self.trusts[i]
         # print("trustOnArms =", trustOnArms)  # DEBUG
-        return rn.choice(self.choices, self.trust)
+        return rn.choice(self.choices, p=self.trusts)

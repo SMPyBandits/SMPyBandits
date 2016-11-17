@@ -9,15 +9,18 @@ from Policies import AdBandit
 from Policies import Aggr
 
 
-HORIZON = 5000
-DO_PARALLEL  = False
+HORIZON = 10000
+REPETITIONS = 10
+
+# DO_PARALLEL = False
+DO_PARALLEL = True
 
 
 configuration = {
     "horizon": HORIZON,
-    "repetitions": 10,
+    "repetitions": REPETITIONS,
     "n_jobs": -1 if DO_PARALLEL else 1,    # = nb of CPU cores
-    "verbosity": 5,
+    "verbosity": 5,  # Max joblib verbosity
     "environment": [
         {
             "arm_type": Bernoulli,
@@ -45,12 +48,15 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        # FIXME finish to implement my "aggregated bandit" in Policies.Aggr
         {
             "archtype": Aggr,
             "params": {
-                "learningRate": 1,  # FIXME improve
+                "learningRate": 0.1,  # FIXME improve
                 "policies": [
+                    {
+                        "archtype": UCB,
+                        "params": {}
+                    },
                     {
                         "archtype": UCB,
                         "params": {}

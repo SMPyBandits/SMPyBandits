@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import numpy as np
-from joblib import *  # XXX
+import joblib
 import copy as cp
 import matplotlib.pyplot as plt
 
@@ -17,7 +17,7 @@ class Evaluator:
         self.envs = []
         self.policies = []
         self.__initEnvironments__()
-        print (len(self.cfg['policies']), len(self.envs), self.cfg['horizon'])
+        print((len(self.cfg['policies']), len(self.envs), self.cfg['horizon']))
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
         self.pulls = {}
@@ -36,14 +36,13 @@ class Evaluator:
 
     def start(self):
         for envId, env in enumerate(self.envs):
-            print "Evaluating environment: " + repr(env)
+            print("Evaluating environment: " + repr(env))
             self.policies = []
             self.__initPolicies__(env)
             for polId, policy in enumerate(self.policies):
-                print "+Evaluating: " + policy.__class__.__name__ + ' (' + \
-                      policy.params + ") ..."
-                results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    delayed(play)(env, policy, self.cfg['horizon'])
+                print("+Evaluating: " + policy.__class__.__name__ + ' (' + policy.params + ") ...")
+                results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                    joblib.delayed(play)(env, policy, self.cfg['horizon'])
                     for _ in xrange(self.cfg['repetitions']))
                 for result in results:
                     self.rewards[polId, envId, :] += np.cumsum(result.rewards)
