@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import numpy as np
 import joblib
-import copy as cp
+from copy import deepcopy
 import matplotlib.pyplot as plt
 
 from .Result import Result
@@ -64,20 +64,20 @@ class Evaluator:
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")
-        ymin, ymax = plt.ylim()
-        ymin = max(0, ymin)    # prevent a negative ymin
-        plt.ylim(ymin, ymax)
+        # ymin, ymax = plt.ylim()
+        # ymin = max(0, ymin)    # prevent a negative ymin
+        # plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative Regret")
-        plt.title("Regrets for different bandit algoritms, averaged {} times".format(self.cfg['repetitions']))
+        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.cfg['environment'])))
         plt.show()
         if savefig:
             plt.savefig(savefig)
 
 
 def play(env, policy, horizon):
-    env = cp.deepcopy(env)
-    policy = cp.deepcopy(policy)
-    horizon = cp.deepcopy(horizon)
+    env = deepcopy(env)
+    policy = deepcopy(policy)
+    horizon = deepcopy(horizon)
 
     policy.startGame()
     result = Result(env.nbArms, horizon)
