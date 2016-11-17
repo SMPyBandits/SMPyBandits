@@ -12,11 +12,11 @@ from Policies import Aggr
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 1000
+HORIZON = 100
 
 # REPETITIONS : number of repetitions of the experiments
-# XXX Should be >= 100 to be stastically trustworthy
-REPETITIONS = 10
+# XXX Should be >= 10 to be stastically trustworthy
+REPETITIONS = 1
 
 # DO_PARALLEL = False
 DO_PARALLEL = True
@@ -62,18 +62,26 @@ configuration = {
             "params": {
                 "learningRate": LEARNING_RATE,
                 "policies": [
+                    {
+                        "archtype": UCB,
+                        "params": {}
+                    },
+                    {
+                        "archtype": UCB,
+                        "params": {}
+                    },
+                    {
+                        "archtype": UCB,
+                        "params": {}
+                    },
                     # {
-                    #     "archtype": UCB,
+                    #     "archtype": Thompson,
                     #     "params": {}
                     # },
-                    {
-                        "archtype": Thompson,
-                        "params": {}
-                    },
-                    {
-                        "archtype": klUCB,
-                        "params": {}
-                    },
+                    # {
+                    #     "archtype": klUCB,
+                    #     "params": {}
+                    # },
                     # {
                     #     "archtype": AdBandit,
                     #     "params": {

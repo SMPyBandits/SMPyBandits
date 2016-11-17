@@ -1,6 +1,6 @@
 from Environment import Evaluator
+# XXX could this be read from a JSON file instead?
 from configuration import configuration
-# XXX this could be read from a JSON file instead?
 
 if __name__ == '__main__':
     evaluation = Evaluator(configuration)

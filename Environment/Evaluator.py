@@ -68,7 +68,7 @@ class Evaluator:
         # ymin = max(0, ymin)    # prevent a negative ymin
         # plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative Regret")
-        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.cfg['environment'])))
+        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.cfg['environment'][environment])))
         plt.show()
         if savefig:
             plt.savefig(savefig)

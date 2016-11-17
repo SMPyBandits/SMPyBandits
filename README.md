@@ -1,28 +1,14 @@
-# TODO
-- clean up code
-- pass to Python 3.5
-- improve it
-- add my aggregated bandit algorithms
-- document it a little bit
-- publish it on GitHub (and readthedocs ?)
-
-# AdBandits
-AdBandit: A New Algorithm For Multi-Armed Bandits
-
-This repository contains the code for the algorithm described in the article: [AdBandit:
-A New Algorithm For Multi-Armed Bandits] (http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf) published in ENIAC2013.
+# Aggregated bandits
 
 Most of the code comes from the [pymabandits](http://mloss.org/software/view/415/) project, but some of them were refactored.
 
-Unfortunately I didn't refactored everything, so you should encounter some javaish variable names all around.
+[joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores).
 
-I added the joblib in the Evaluator class, so the simulations can be parallelized.
+----
 
 ## Configuration:
-
-I use a simple python file: ```configuration.py```.
-
-Example:
+A simple python file [`configuration.py`](configuration.py) is used.
+For example:
 
 ```python
 configuration = {
@@ -69,12 +55,38 @@ configuration = {
 ```
 
 ## How to run
-
-It should be very straight forward. It will plot the results.
-
+First, install the requirements:
 ```bash
-pip install -r requirements.txt
-
-python main.py
+pip2 install -r requirements.txt
 ```
 
+It should be very straight forward. This will plot the results.
+```bash
+python2 main.py
+```
+
+----
+
+## :boom: TODO
+- clean up code
+- pass to Python 3.5
+- improve it : add all the bandits algorithms, more arms (Gaussian, Exponentials, ...)
+- add my aggregated bandit algorithms, explore it and understand it better
+- document it a little bit
+- publish it on GitHub
+
+----
+
+## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
+[MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
+
+© 2012 [Olivier Cappé](http://mloss.org/software/author/olivier-cappe) [Aurélien Garivier](http://mloss.org/software/author/aurelien-garivier) [Émilie Kaufmann](http://mloss.org/software/author/emilie-kaufmann) and for the initial [pymaBandits v1.0](http://mloss.org/software/view/415/) project, and © 2016 [Lilian Besson](https://GitHub.com/Naereen) for the rest.
+
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
+[![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/Naereen/AlgoBandits/README.md?pixel)](https://GitHub.com/Naereen/AlgoBandits/)
+
+[![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
+[![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
+
+[![ForTheBadge built-with-science](http://ForTheBadge.com/images/badges/built-with-science.svg)](https://GitHub.com/Naereen/)
