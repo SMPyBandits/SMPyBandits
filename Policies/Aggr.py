@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """ The Aggregated bandit algorithm
-Reference: FIXME
+
+- Reference: FIXME write it!
 """
 
+from __future__ import print_function
 import numpy as np
 import numpy.random as rn
 from .Beta import Beta
@@ -15,7 +17,8 @@ class Aggr:
     def __str__(self):
         return "Aggr"
 
-    def __init__(self, nbArms, learningRate, policies, prior=None, posterior=Beta):
+    def __init__(self, nbArms, learningRate, policies,
+                 prior=None, posterior=Beta):
         self.nbArms = nbArms
         self.learningRate = learningRate
         self.policies = []

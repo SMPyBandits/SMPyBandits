@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from __future__ import print_function
 
 import numpy as np
@@ -17,12 +16,15 @@ class Evaluator:
         self.envs = []
         self.policies = []
         self.__initEnvironments__()
-        print((len(self.cfg['policies']), len(self.envs), self.cfg['horizon']))
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
         self.pulls = {}
         for env in xrange(len(self.envs)):
             self.pulls[env] = np.zeros((len(self.cfg['policies']), self.envs[env].nbArms))
+        print("Number of algorithms to compare:", len(self.cfg['policies']))
+        print("Number of environments to try:", len(self.envs))
+        print("Time horizon:", self.cfg['horizon'])
+        print("Number of repetitions:", self.cfg['repetitions'])
 
     def __initEnvironments__(self):
         for armType in self.cfg['environment']:

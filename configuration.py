@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 # Import arms
 from Arms.Bernoulli import Bernoulli
 # Import algorithms
@@ -57,18 +59,25 @@ configuration = {
                         "archtype": UCB,
                         "params": {}
                     },
+                    # {
+                    #     "archtype": UCB,
+                    #     "params": {}
+                    # },
                     {
-                        "archtype": UCB,
+                        "archtype": Thompson,
                         "params": {}
                     },
-                    # {
-                    #     "archtype": Thompson,
-                    #     "params": {}
-                    # },
-                    # {
-                    #     "archtype": klUCB,
-                    #     "params": {}
-                    # },
+                    {
+                        "archtype": klUCB,
+                        "params": {}
+                    },
+                    {
+                        "archtype": AdBandit,
+                        "params": {
+                            "alpha": 0.5,
+                            "horizon": HORIZON
+                        }
+                    },
                 ]
             }
         }
