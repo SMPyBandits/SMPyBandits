@@ -1,9 +1,10 @@
 # TODO
-- fork it
 - clean up code
 - pass to Python 3.5
-- fully document it
-- publish it on GitHub and readthedocs
+- improve it
+- add my aggregated bandit algorithms
+- document it a little bit
+- publish it on GitHub (and readthedocs ?)
 
 # AdBandits
 AdBandit: A New Algorithm For Multi-Armed Bandits
