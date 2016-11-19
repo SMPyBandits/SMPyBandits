@@ -95,7 +95,7 @@ make pylint  # check the code with pylint
 - [X] pass it to Python 3.5 (while still being valid Python 2.7)
 - [ ] improve it : add all the bandits algorithms, more arms (Gaussian, Exponentials, ...)
 - [X] add my aggregated bandit algorithm
-- [ ] explore it and understand it better
+- [ ] explore the behavior of my algorithm, and understand it better (and improve it?)
 - [ ] document all that, at least a little bit
 - [ ] see if [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) could be easily used (but it won't be online!)
 - [ ] keep publishing it on GitHub, make the repository public

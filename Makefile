@@ -33,8 +33,8 @@ clean:
 # NPROC = 1
 NPROC = `getconf _NPROCESSORS_ONLN`
 
-pylint:
+lint:
 	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./pylint.log.txt
 
-pylint3:
+lint3:
 	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./pylint3.log.txt

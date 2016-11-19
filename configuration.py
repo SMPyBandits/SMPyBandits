@@ -37,6 +37,8 @@ LEARNING_RATE = 0.5
 LEARNING_RATE = 0.2
 LEARNING_RATE = 0.1
 
+TEST_AGGR = True
+
 
 configuration = {
     "horizon": HORIZON,
@@ -48,10 +50,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
         # },
-        {
+        # {
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        # },
+        {   # One optimal arm, much better than the others, but lots of bad arms
             "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
-        }
+            "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+        },
     ],
     "policies": [
         # {
@@ -116,13 +122,16 @@ configuration = {
 }
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
-current_policies = configuration["policies"]
-# print("configuration['policies'] =", current_policies)  # DEBUG
-configuration["policies"] = current_policies + [{  # Add one Aggr policy
-    "archtype": Aggr,
-    "params": {
-        "learningRate": LEARNING_RATE,
-        "children": current_policies
-    }
-}]
+if TEST_AGGR:
+    current_policies = configuration["policies"]
+    # print("configuration['policies'] =", current_policies)  # DEBUG
+    configuration["policies"] = current_policies + [{  # Add one Aggr policy
+        "archtype": Aggr,
+        "params": {
+            "learningRate": LEARNING_RATE,
+            "children": current_policies
+        }
+    }]
+
+# print("Loaded experiments configuration from 'configuration.py' :")
 # print("configuration['policies'] =", configuration["policies"])  # DEBUG
