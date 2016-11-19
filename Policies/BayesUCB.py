@@ -11,7 +11,7 @@ from .Beta import Beta
 
 
 class BayesUCB(IndexPolicy):
-    """The Bayes-UCB.
+    """ The Bayes-UCB.
       Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012].
     """
 

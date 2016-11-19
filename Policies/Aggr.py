@@ -30,7 +30,7 @@ class Aggr:
         if prior is not None and prior != 'uniform':
             self.trusts = prior  # Has to be an array of the good size
         else:   # Assume uniform prior if not given or if = 'uniform'
-            self.trusts = np.ones(self.nbChildren) / self.nbChildren
+            self.trusts = np.ones(self.nbChildren) / float(self.nbChildren)
         self.rewards = np.zeros(self.nbArms)
         self.pulls = np.zeros(self.nbArms)
         self.params = "children:" + repr(self.children)
@@ -64,7 +64,7 @@ class Aggr:
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
-        self.trusts = self.trusts / np.sum(self.trusts)
+        self.trusts = self.trusts / float(np.sum(self.trusts))
         # print("self.trusts =", self.trusts)  # DEBUG
 
     def choice(self):

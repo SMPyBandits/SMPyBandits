@@ -15,7 +15,7 @@ from .MAB import MAB
 
 
 class Evaluator:
-    """ Evaluator class to run the simulations. """
+    """ Evaluator class to run the simulations."""
 
     def __init__(self, configuration):
         self.cfg = configuration
@@ -24,8 +24,8 @@ class Evaluator:
         self.__initEnvironments__()
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
-        self.pulls = {}
-        for env in xrange(len(self.envs)):
+        self.pulls = dict()
+        for env in range(len(self.envs)):
             self.pulls[env] = np.zeros((len(self.cfg['policies']), self.envs[env].nbArms))
         print("Number of algorithms to compare:", len(self.cfg['policies']))
         print("Number of environments to try:", len(self.envs))
@@ -51,7 +51,7 @@ class Evaluator:
                 print("\n- Evaluating: {} ({}) ...".format(policy, policy.params))
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     joblib.delayed(play)(env, policy, self.cfg['horizon'])
-                    for _ in xrange(self.cfg['repetitions']))
+                    for _ in range(self.cfg['repetitions']))
                 for result in results:
                     self.rewards[polId, envId, :] += np.cumsum(result.rewards)
                     self.pulls[envId][polId, :] += result.pulls
@@ -92,7 +92,7 @@ def play(env, policy, horizon):
 
     policy.startGame()
     result = Result(env.nbArms, horizon)
-    for t in xrange(horizon):
+    for t in range(horizon):
         choice = policy.choice()
         reward = env.arms[choice].draw(t)
         policy.getReward(choice, reward)

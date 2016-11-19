@@ -22,7 +22,7 @@ class klUCB(IndexPolicy):
                  klucb=klucbBern):
         self.c = 1.
         self.nbArms = nbArms
-        self.amplitude = amplitude
+        self.amplitude = float(amplitude)
         self.lower = lower
         self.nbDraws = dict()
         self.cumReward = dict()
@@ -45,7 +45,7 @@ class klUCB(IndexPolicy):
             return float('+infinity')
         else:
             # Could adapt tolerance to the value of self.t
-            return self.klucb(self.cumReward[arm] / self.nbDraws[arm], self.c * log(self.t) / self.nbDraws[arm], self.tolerance)
+            return self.klucb(self.cumReward[arm] / float(self.nbDraws[arm]), self.c * log(self.t) / float(self.nbDraws[arm]), self.tolerance)
 
     def getReward(self, arm, reward):
         self.nbDraws[arm] += 1

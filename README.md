@@ -1,13 +1,15 @@
 # Aggregated bandits
-This repository contains the code for some numerical simulations on single-player [Multi-Armed Bandits](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
+This repository contains the code for some numerical simulations on single-player [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
 ## The policy aggregation algorithm
 Specifically, [I (Lilian Besson)](http://perso.crans.org/besson/) designed and added the [`Aggr`](Policies/Aggr.py) policy, in order to test it.
 
-It is a simple voting algorithm to combine multiple algorithms into one.
-Basically, it behaves like the simple [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), where arms are the child algorithms
+It is a simple **voting algorithm to combine multiple bandit algorithms into one**.
+Basically, it behaves like the simple [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), where arms are the child algorithms, each running in "parallel".
 
-FIXME explain better what it does
+It can be seen as the Multi-Armed Bandits (i.e., sequential reinforcement learning) counterpart of an ensemble voting technique, as used for classifiers or regression algorithm in usual supervised machine learning (see, e.g., [`sklearn.ensemble.VotingClassifier`](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html#sklearn.ensemble.VotingClassifier) in [scikit-learn](http://scikit-learn.org/)).
+
+Another approach could be to do some sort of [grid search](http://scikit-learn.org/stable/modules/grid_search.html).
 
 ## Remarks
 - [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores, as it is by default).
@@ -89,12 +91,16 @@ make pylint  # check the code with pylint
 ----
 
 ## :boom: TODO
-- clean up code
-- pass to Python 3.5
-- improve it : add all the bandits algorithms, more arms (Gaussian, Exponentials, ...)
-- add my aggregated bandit algorithms, explore it and understand it better
-- document it a little bit
-- publish it on GitHub
+- [x] clean up code
+- [X] pass it to Python 3.5 (while still being valid Python 2.7)
+- [ ] improve it : add all the bandits algorithms, more arms (Gaussian, Exponentials, ...)
+- [X] add my aggregated bandit algorithm
+- [ ] explore it and understand it better
+- [ ] document all that, at least a little bit
+- [ ] see if [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) could be easily used (but it won't be online!)
+- [ ] keep publishing it on GitHub, make the repository public
+- [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts) to store the data
+- [ ] implement some algorithms from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
 
 ----
 

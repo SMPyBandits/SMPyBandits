@@ -41,7 +41,7 @@ class UCB(IndexPolicy):
             self.nbpulls[arm] += 1
             return arm
         # print(self.rewards, self.nbpulls, self.t)
-        arm = np.argmax(self.rewards / self.nbpulls + np.sqrt((2 * np.log(self.t)) / self.nbpulls))
+        arm = np.argmax(self.rewards / float(self.nbpulls) + np.sqrt((2 * np.log(self.t)) / float(self.nbpulls)))
         self.nbpulls[arm] += 1
         return arm
 

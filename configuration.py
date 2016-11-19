@@ -34,8 +34,8 @@ DO_PARALLEL = True
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.05
 LEARNING_RATE = 0.5
-LEARNING_RATE = 0.1
 LEARNING_RATE = 0.2
+LEARNING_RATE = 0.1
 
 
 configuration = {
@@ -44,14 +44,14 @@ configuration = {
     "n_jobs": -1 if DO_PARALLEL else 1,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
     "environment": [
-        {
-            "arm_type": Bernoulli,
-            "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
-        },
         # {
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
-        # }
+        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
+        # },
+        {
+            "arm_type": Bernoulli,
+            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        }
     ],
     "policies": [
         # {
