@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-""" Kullback-Leibler utilities."""
+""" Kullback-Leibler utilities.
+Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+"""
 
 __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.26 $"
-
 
 from math import log, sqrt, exp
 import numpy as np
@@ -111,7 +112,7 @@ def maxEV(p, V, klMax):
         # If yes, this has to be on one which maximizes V.
         eta = max(V[K])
         J = K & (V == eta)
-        if (eta > max(V[Kb])):
+        if eta > max(V[Kb]):
             y = np.dot(p[Kb], np.log(eta - V[Kb])) + log(np.dot(p[Kb], (1. / (eta - V[Kb]))))
             # print("eta = ", eta, ", y = ", y)
             if y < klMax:

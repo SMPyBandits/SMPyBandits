@@ -7,8 +7,8 @@ from __future__ import print_function
 __author__ = "Flavio Truzzi et al."
 __version__ = "0.1"
 
-import numpy as np
 import random as rn
+import numpy as np
 from .Beta import Beta
 
 

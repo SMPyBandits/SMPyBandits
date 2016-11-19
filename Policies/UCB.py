@@ -32,11 +32,10 @@ class UCB(IndexPolicy):
         self.nbpulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
         self.t = -1
-        self.init = True
 
     def choice(self):
         self.t += 1
-        if (self.t < self.nbArms):
+        if self.t < self.nbArms:
             arm = self.t % self.nbArms
             self.nbpulls[arm] += 1
             return arm

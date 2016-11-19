@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
-""" Evaluator class to run the simulations. """
+""" Evaluator class to wrap and run the simulations."""
 from __future__ import print_function
 
 __author__ = "Lilian Besson, Emilie Kaufmann"
 __version__ = "0.1"
 
+from copy import deepcopy
 import numpy as np
 import matplotlib.pyplot as plt
-import joblib
-from copy import deepcopy
+try:
+    import joblib
+    USE_JOBLIB = True
+except ImportError:
+    print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
+    USE_JOBLIB = False
 
 from .Result import Result
 from .MAB import MAB
@@ -49,22 +54,28 @@ class Evaluator:
             self.__initPolicies__(env)
             for polId, policy in enumerate(self.policies):
                 print("\n- Evaluating: {} ({}) ...".format(policy, policy.params))
-                results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(play)(env, policy, self.cfg['horizon'])
-                    for _ in range(self.cfg['repetitions']))
+                if USE_JOBLIB:
+                    results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                        joblib.delayed(play)(env, policy, self.cfg['horizon'])
+                        for _ in range(self.cfg['repetitions'])
+                    )
+                else:
+                    results = []
+                    for _ in range(self.cfg['repetitions']):
+                        results.append(play(env, policy, self.cfg['horizon']))
                 for result in results:
                     self.rewards[polId, envId, :] += np.cumsum(result.rewards)
                     self.pulls[envId][polId, :] += result.pulls
 
     def getReward(self, policyId, environmentId):
-        return self.rewards[policyId, environmentId, :] / self.cfg['repetitions']
+        return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
 
     def getRegret(self, policyId, environmentId):
         horizon = np.arange(self.cfg['horizon'])
         return horizon * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
     def plotResults(self, environment, savefig=None):
-        figure = plt.figure()
+        plt.figure()
         ymin = 0
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environment)

@@ -12,9 +12,11 @@ import random
 class IndexPolicy:
     """ Class that implements a generic index policy."""
 
-    #  def __init__(self):
+    def __init__(self):
+        self.nbArms = 0
 
-    #  def computeIndex(self, arm):
+    def computeIndex(self, arm):
+        pass
 
     def choice(self):
         """ In an index policy, choose uniformly at random an arm with maximal index."""

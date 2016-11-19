@@ -19,7 +19,7 @@ class Aggr:
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 prior='uniform', posterior=Beta):
+                 prior='uniform'):
         self.nbArms = nbArms
         self.learningRate = learningRate
         self.children = []
@@ -35,6 +35,7 @@ class Aggr:
         self.pulls = np.zeros(self.nbArms)
         self.params = "children:" + repr(self.children)
         self.startGame()
+        self.choices = None
 
     def __str__(self):
         return "Aggr"

@@ -4,7 +4,7 @@
 # - install the requirements (make install)
 
 run:
-	make clean ; clear ; make main
+	make clean ; clear ; make main3
 
 # Runners
 main:

@@ -21,6 +21,7 @@ class BayesUCB(IndexPolicy):
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
         self.params = ''
+        self.t = -1
 
     def startGame(self):
         self.t = 1

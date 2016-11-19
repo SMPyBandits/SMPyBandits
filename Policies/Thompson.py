@@ -21,6 +21,7 @@ class Thompson(IndexPolicy):
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
         self.params = ''
+        self.t = -1
 
     def __str__(self):
         return "Thompson"
