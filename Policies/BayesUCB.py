@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-'''The Bayes-UCB policy.
- Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]'''
+""" The Bayes-UCB policy.
+Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
+"""
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
 __version__ = "$Revision: 1.7 $"
 
-
-from IndexPolicy import IndexPolicy
-from Beta import Beta
+from .IndexPolicy import IndexPolicy
+from .Beta import Beta
 
 
 class BayesUCB(IndexPolicy):
@@ -32,7 +32,7 @@ class BayesUCB(IndexPolicy):
         self.t += 1
 
     def computeIndex(self, arm):
-        return self.posterior[arm].quantile(1-1./self.t)
+        return self.posterior[arm].quantile(1 - 1. / self.t)
 
     def __str__(self):
         return "BayesUCB"
