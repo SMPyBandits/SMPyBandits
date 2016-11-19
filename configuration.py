@@ -16,9 +16,9 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
+HORIZON = 30000
 HORIZON = 100
 HORIZON = 3000
-HORIZON = 30000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -85,7 +85,7 @@ configuration = {
         #     "archtype": Aggr,
         #     "params": {
         #         "learningRate": LEARNING_RATE,
-        #         "childs": [
+        #         "children": [
         #             {
         #                 "archtype": UCB,
         #                 "params": {}
@@ -122,7 +122,7 @@ configuration["policies"] = current_policies + [{  # Add one Aggr policy
     "archtype": Aggr,
     "params": {
         "learningRate": LEARNING_RATE,
-        "childs": current_policies
+        "children": current_policies
     }
 }]
 # print("configuration['policies'] =", configuration["policies"])  # DEBUG

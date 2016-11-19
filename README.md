@@ -1,8 +1,17 @@
 # Aggregated bandits
+This repository contains the code for some numerical simulations on single-player [Multi-Armed Bandits](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
-Most of the code comes from the [pymabandits](http://mloss.org/software/view/415/) project, but some of them were refactored.
+## The policy aggregation algorithm
+Specifically, [I (Lilian Besson)](http://perso.crans.org/besson/) designed and added the [`Aggr`](Policies/Aggr.py) policy, in order to test it.
 
-[joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores).
+It is a simple voting algorithm to combine multiple algorithms into one.
+Basically, it behaves like the simple [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), where arms are the child algorithms
+
+FIXME explain better what it does
+
+## Remarks
+- [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores, as it is by default).
+- Most of the code comes from the [pymabandits](http://mloss.org/software/view/415/) project, but some of them were refactored. Thanks to the initial project!
 
 ----
 
@@ -63,6 +72,18 @@ pip2 install -r requirements.txt
 It should be very straight forward. This will plot the results.
 ```bash
 python2 main.py
+```
+
+### With a [`Makefile`](Makefile)
+You can also use the provided [`Makefile`](Makefile) file to do this simply:
+```bash
+make install  # install the requirements
+make main     # run and log the main.py script
+```
+
+It can be used to check [the quality of the code](pylint.log.txt) with [pylint](https://www.pylint.org/):
+```bash
+make pylint  # check the code with pylint
 ```
 
 ----
