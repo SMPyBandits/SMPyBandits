@@ -1,16 +1,22 @@
 # -*- coding: utf-8 -*-
+""" Evaluator class to run the simulations. """
 from __future__ import print_function
 
+__author__ = "Lilian Besson, Emilie Kaufmann"
+__version__ = "0.1"
+
 import numpy as np
+import matplotlib.pyplot as plt
 import joblib
 from copy import deepcopy
-import matplotlib.pyplot as plt
 
 from .Result import Result
 from .MAB import MAB
 
 
 class Evaluator:
+    """ Evaluator class to run the simulations. """
+
     def __init__(self, configuration):
         self.cfg = configuration
         self.envs = []
@@ -38,11 +44,11 @@ class Evaluator:
 
     def start(self):
         for envId, env in enumerate(self.envs):
-            print("Evaluating environment: " + repr(env))
+            print("\nEvaluating environment:", repr(env))
             self.policies = []
             self.__initPolicies__(env)
             for polId, policy in enumerate(self.policies):
-                print("+Evaluating: " + policy.__class__.__name__ + ' (' + policy.params + ") ...")
+                print("\n- Evaluating: {} ({}) ...".format(policy, policy.params))
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     joblib.delayed(play)(env, policy, self.cfg['horizon'])
                     for _ in xrange(self.cfg['repetitions']))
@@ -59,22 +65,27 @@ class Evaluator:
 
     def plotResults(self, environment, savefig=None):
         figure = plt.figure()
+        ymin = 0
         for i, policy in enumerate(self.policies):
-            plt.plot(self.getRegret(i, environment), label=str(policy))
+            Y = self.getRegret(i, environment)
+            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            plt.plot(Y, label=str(policy))
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")
-        # ymin, ymax = plt.ylim()
+        ymax = plt.ylim()[1]
         # ymin = max(0, ymin)    # prevent a negative ymin
-        # plt.ylim(ymin, ymax)
+        plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative Regret")
         plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.cfg['environment'][environment])))
-        plt.show()
-        if savefig:
+        if savefig is not None:
+            print("Saving to", savefig, "...")
             plt.savefig(savefig)
+        plt.show()
 
 
 def play(env, policy, horizon):
+    # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)
     horizon = deepcopy(horizon)
