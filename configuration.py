@@ -16,27 +16,29 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 30000
-HORIZON = 3000
+HORIZON = 500
 HORIZON = 1000
+HORIZON = 3000
+HORIZON = 30000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
 REPETITIONS = 200
 REPETITIONS = 5
-REPETITIONS = 100
 REPETITIONS = 20
+REPETITIONS = 100
 
 # DO_PARALLEL = False
 DO_PARALLEL = True
 
-EPSILON = 0.1
+EPSILON = 0.05
 
 # FIXME improve the learning rate for my aggregated bandit
-LEARNING_RATE = 0.05
 LEARNING_RATE = 0.5
 LEARNING_RATE = 0.1
+LEARNING_RATE = 0.05
 LEARNING_RATE = 0.2
 
 TEST_AGGR = True
@@ -64,16 +66,23 @@ configuration = {
         # },
     ],
     "policies": [
-        {
-            "archtype": Dummy,   # The stupidest policy
-            "params": {}
-        },
-        {
-            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-            "params": {
-                "epsilon": EPSILON
-            }
-        },
+        # {
+        #     "archtype": Dummy,   # The stupidest policy
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+        #     "params": {
+        #         "epsilon": EPSILON
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "decreasingRate": 0.005,
+        #     }
+        # },
         {
             "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
             "params": {
@@ -82,28 +91,21 @@ configuration = {
             }
         },
         {
-            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "decreasingRate": 0.01,
-            }
-        },
-        {
             "archtype": UCB,   # This basic UCB is very worse than the other
             "params": {}
         },
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
         # {
         #     "archtype": klUCB,
         #     "params": {}
         # },
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
-        # },
+        {
+            "archtype": BayesUCB,
+            "params": {}
+        },
         # {
         #     "archtype": AdBandit,
         #     "params": {
