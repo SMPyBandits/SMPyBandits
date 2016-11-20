@@ -1,0 +1,22 @@
+Number of algorithms to compare: 5
+Number of environments to try: 1
+Time horizon: 30000
+Number of repetitions: 20
+
+Evaluating environment: <MAB{'arms': [<Bernoulli: 0.01>, <Bernoulli: 0.02>, <Bernoulli: 0.3>, <Bernoulli: 0.4>, <Bernoulli: 0.5>, <Bernoulli: 0.6>, <Bernoulli: 0.79>, <Bernoulli: 0.8>, <Bernoulli: 0.81>], 'maxArm': 0.81000000000000005, 'nbArms': 9}>
+policy = {'archtype': <class Policies.Thompson.Thompson at 0x7f8c64b87600>, 'params': {}}
+policy = {'archtype': <class Policies.klUCB.klUCB at 0x7f8c62d60e88>, 'params': {}}
+policy = {'archtype': <class Policies.BayesUCB.BayesUCB at 0x7f8c64b87460>, 'params': {}}
+policy = {'archtype': <class Policies.AdBandits.AdBandit at 0x7f8c62d677a0>, 'params': {'alpha': 0.5, 'horizon': 30000}}
+policy = {'archtype': <class Policies.Aggr.Aggr at 0x7f8c62d676d0>, 'params': {'childs': [{'archtype': <class Policies.Thompson.Thompson at 0x7f8c64b87600>, 'params': {}}, {'archtype': <class Policies.klUCB.klUCB at 0x7f8c62d60e88>, 'params': {}}, {'archtype': <class Policies.BayesUCB.BayesUCB at 0x7f8c64b87460>, 'params': {}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f8c62d677a0>, 'params': {'alpha': 0.5, 'horizon': 30000}}], 'learningRate': 0.2}}
+
+- Evaluating: Thompson () ...
+
+- Evaluating: klUCB (amplitude:1.0, lower:0.0) ...
+
+- Evaluating: BayesUCB () ...
+
+- Evaluating: AdBandit (alpha:0.5) ...
+
+- Evaluating: Aggr (childs:[<Policies.Thompson.Thompson instance at 0x7f8c62d7a710>, <Policies.klUCB.klUCB instance at 0x7f8c62d7a9e0>, <Policies.BayesUCB.BayesUCB instance at 0x7f8c62d7aa28>, <Policies.AdBandits.AdBandit instance at 0x7f8c62d7acf8>]) ...
+Saving to main__1-1.png ...

@@ -1,6 +1,6 @@
 # Quick Makefile to:
-# - compile easily a LaTeX-powered research report (make pdf)
-# - run easily a Python script, while keeping a text log of its full output (make nicetest)
+# - run easily a Python script, while keeping a text log of its full output (make run)
+# - lint the Python code (make lint lint3)
 # - install the requirements (make install)
 
 run:

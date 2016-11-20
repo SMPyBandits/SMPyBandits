@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Policies : contains various bandits algorithms:
-Dummy, UCB, Thompson, BayesUCB, klUCB, Aggr, AdBandit.
+Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, UCB, Thompson, BayesUCB, klUCB, Aggr, AdBandit.
 """
 
 __author__ = "Lilian Besson"
