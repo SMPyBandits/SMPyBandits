@@ -80,7 +80,8 @@ class Evaluator:
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environment)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            plt.plot(Y, label=str(policy))
+            # plt.plot(Y, label=str(policy), marker='+')
+            plt.semilogx(Y, label=str(policy), marker='+')
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")

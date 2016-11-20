@@ -17,8 +17,8 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 30000
-HORIZON = 100
 HORIZON = 3000
+HORIZON = 100
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -38,6 +38,7 @@ LEARNING_RATE = 0.2
 LEARNING_RATE = 0.1
 
 TEST_AGGR = True
+updateAllChildren = False
 
 
 configuration = {
@@ -46,24 +47,37 @@ configuration = {
     "n_jobs": -1 if DO_PARALLEL else 1,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
     "environment": [
-        # {
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
-        # },
+        {
+            "arm_type": Bernoulli,
+            "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
+        },
         # {
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
         # },
-        {   # One optimal arm, much better than the others, but lots of bad arms
-            "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
-        },
+        # {   # One optimal arm, much better than the others, but lots of bad arms
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+        # },
     ],
     "policies": [
         # {
         #     "archtype": Dummy,   # The stupidest policy
         #     "params": {}
         # },
+        {
+            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+            "params": {
+                "epsilon": 0.1
+            }
+        },
+        {
+            "archtype": EpsilonFirst,   # This basic EpsilonGreedy is very bad
+            "params": {
+                "epsilon": 0.1,
+                "horizon": HORIZON
+            }
+        },
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
         #     "params": {}
@@ -117,7 +131,7 @@ configuration = {
         #             },
         #         ]
         #     }
-        # }
+        # },
     ]
 }
 
@@ -129,8 +143,10 @@ if TEST_AGGR:
         "archtype": Aggr,
         "params": {
             "learningRate": LEARNING_RATE,
-            "children": current_policies
-        }
+            # "updateAllChildren": updateAllChildren,
+            "updateAllChildren": updateAllChildren,
+            "children": current_policies,
+        },
     }]
 
 # print("Loaded experiments configuration from 'configuration.py' :")

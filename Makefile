@@ -38,3 +38,7 @@ lint:
 
 lint3:
 	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./pylint3.log.txt
+
+2to3:
+	-echo "FIXME this does not work from make (Makefile), but work from Bash"
+	echo 'for i in {,*/}*.py; do clear; echo $i; 2to3 -p $i 2>&1 | grep -v "root:" | colordiff ; read; done'
