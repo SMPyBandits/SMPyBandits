@@ -7,6 +7,8 @@ __author__ = "Lilian Besson, Emilie Kaufmann"
 __version__ = "0.1"
 
 from .Dummy import Dummy
+from .EpsilonGreedy import EpsilonGreedy
+from .EpsilonFirst import EpsilonFirst
 from .UCB import UCB
 from .Thompson import Thompson
 from .BayesUCB import BayesUCB

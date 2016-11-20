@@ -10,8 +10,6 @@ __version__ = "0.1"
 import numpy as np
 import numpy.random as rn
 
-from .Beta import Beta
-
 
 class Aggr:
     """ The Aggregated bandit algorithm
@@ -19,9 +17,10 @@ class Aggr:
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 prior='uniform'):
+                 updateAllChildren=False, prior='uniform'):
         self.nbArms = nbArms
         self.learningRate = learningRate
+        self.updateAllChildren = updateAllChildren
         self.children = []
         # Create all child children
         self.nbChildren = len(children)
@@ -58,10 +57,10 @@ class Aggr:
             if self.choices[i] == arm:  # this child's choice was chosen
                 # 3. increase self.trusts for the children who were true
                 self.trusts[i] *= np.exp(reward * self.learningRate)
-            else:
+            # FIXME test both, by changing the option self.updateAllChildren
+            elif self.updateAllChildren:
                 # 3. XXX decrease self.trusts for the children who were wrong
                 self.trusts[i] *= np.exp(- reward * self.learningRate)
-            # FIXME test both
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
