@@ -18,9 +18,9 @@ from Policies import *
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
 HORIZON = 1000
-HORIZON = 3000
-HORIZON = 30000
 HORIZON = 10000
+HORIZON = 30000
+HORIZON = 3000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -37,13 +37,13 @@ EPSILON = 0.05
 
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.5
-LEARNING_RATE = 0.1
 LEARNING_RATE = 0.05
+LEARNING_RATE = 0.1
 LEARNING_RATE = 0.2
 
 TEST_AGGR = True
-updateAllChildren = True
 updateAllChildren = False
+updateAllChildren = True
 
 
 configuration = {
@@ -83,25 +83,25 @@ configuration = {
         #         "decreasingRate": 0.005,
         #     }
         # },
-        {
-            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
+        # {
+        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
         {
             "archtype": Thompson,
             "params": {}
         },
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
         {
             "archtype": BayesUCB,
             "params": {}
