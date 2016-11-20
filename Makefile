@@ -31,6 +31,7 @@ clean:
 # Stats
 stats:
 	git-complete-stats.sh | tee complete-stats.txt
+	git-cal --ascii | tee -a complete-stats.txt
 	git wdiff complete-stats.txt
 
 # Linters
