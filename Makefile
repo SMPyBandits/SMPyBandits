@@ -28,6 +28,11 @@ clean:
 	-rm -vfr __pycache__/ */__pycache__/
 	-rm -vf *.pyc */*.pyc /tmp/
 
+# Stats
+stats:
+	git-complete-stats.sh | tee complete-stats.txt
+	git wdiff complete-stats.txt
+
 # Linters
 # NPROC = `nproc`
 # NPROC = 1
