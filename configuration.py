@@ -4,7 +4,7 @@ Configuration for the simulations.
 """
 from __future__ import print_function
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.2"
 
 
@@ -18,26 +18,29 @@ from Policies import *
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 30000
 HORIZON = 3000
-HORIZON = 100
+HORIZON = 1000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
 REPETITIONS = 200
-REPETITIONS = 100
 REPETITIONS = 5
+REPETITIONS = 100
 REPETITIONS = 20
 
 # DO_PARALLEL = False
 DO_PARALLEL = True
 
+EPSILON = 0.1
+
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.05
 LEARNING_RATE = 0.5
-LEARNING_RATE = 0.2
 LEARNING_RATE = 0.1
+LEARNING_RATE = 0.2
 
 TEST_AGGR = True
+updateAllChildren = True
 updateAllChildren = False
 
 
@@ -61,46 +64,53 @@ configuration = {
         # },
     ],
     "policies": [
-        # {
-        #     "archtype": Dummy,   # The stupidest policy
-        #     "params": {}
-        # },
+        {
+            "archtype": Dummy,   # The stupidest policy
+            "params": {}
+        },
         {
             "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
             "params": {
-                "epsilon": 0.1
+                "epsilon": EPSILON
             }
         },
         {
-            "archtype": EpsilonFirst,   # This basic EpsilonGreedy is very bad
+            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
             "params": {
-                "epsilon": 0.1,
+                "epsilon": EPSILON,
                 "horizon": HORIZON
             }
+        },
+        {
+            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "decreasingRate": 0.01,
+            }
+        },
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
         },
         # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "archtype": Thompson,
         #     "params": {}
         # },
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # {
         #     "archtype": Aggr,
         #     "params": {
@@ -143,7 +153,6 @@ if TEST_AGGR:
         "archtype": Aggr,
         "params": {
             "learningRate": LEARNING_RATE,
-            # "updateAllChildren": updateAllChildren,
             "updateAllChildren": updateAllChildren,
             "children": current_policies,
         },

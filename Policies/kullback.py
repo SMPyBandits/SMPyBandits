@@ -79,7 +79,7 @@ def klucbPoisson(x, d, precision=1e-6):
 def klucbBern(x, d, precision=1e-6):
     """ klUCB index computation for Bernoulli distributions."""
     upperbound = min(1., klucbGauss(x, d))
-    # upperbound = min(1.,klucbPoisson(x,d))  # also safe, and better ?
+    # upperbound = min(1., klucbPoisson(x,d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
 

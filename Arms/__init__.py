@@ -3,7 +3,7 @@
 Bernoulli, FIXME add more.
 """
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from .Bernoulli import Bernoulli

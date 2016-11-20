@@ -2,7 +2,7 @@
 """ The fully uniform policy : selects randomly (uniformly) an arm at each step (stupid).
 """
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from random import randint

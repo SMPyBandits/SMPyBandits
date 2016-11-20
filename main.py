@@ -4,7 +4,7 @@
 Script to load the config, run the simulations, and plot them.
 """
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from Environment import Evaluator

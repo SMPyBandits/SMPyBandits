@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The generic kl-UCB policy for one-parameter exponential distributions.
-Reference: [Garivier & cappé - COLT, 2011].
+Reference: [Garivier & Cappé - COLT, 2011].
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier"

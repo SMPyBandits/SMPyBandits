@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """ The epsilon-greedy random policy.
+Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
@@ -15,6 +16,7 @@ epsilon = 0.1
 
 class EpsilonGreedy(IndexPolicy):
     """ The epsilon-greedy random policy.
+    Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
     def __init__(self, nbArms, epsilon=epsilon):

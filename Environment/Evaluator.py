@@ -2,7 +2,7 @@
 """ Evaluator class to wrap and run the simulations."""
 from __future__ import print_function
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from copy import deepcopy
@@ -80,8 +80,8 @@ class Evaluator:
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environment)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            # plt.plot(Y, label=str(policy), marker='+')
-            plt.semilogx(Y, label=str(policy), marker='+')
+            # plt.plot(Y, label=str(policy))
+            plt.semilogx(Y, label=str(policy))
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")

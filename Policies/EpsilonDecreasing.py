@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The epsilon-first random policy.
+""" The epsilon-decreasing random policy.
 Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
 
@@ -12,35 +12,37 @@ from .IndexPolicy import IndexPolicy
 
 
 epsilon = 0.1
+decreasingRate = 1e-2
 
 
-class EpsilonFirst(IndexPolicy):
-    """ The epsilon-first random policy.
+class EpsilonDecreasing(IndexPolicy):
+    """ The epsilon-decreasing random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, horizon, epsilon=epsilon):
+    def __init__(self, nbArms, epsilon=epsilon, decreasingRate=decreasingRate):
         self.nbArms = nbArms
-        self.horizon = horizon
-        assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonFirst class has to be in [0, 1]."
+        assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonDecreasing class has to be in [0, 1]."
         self.epsilon = epsilon
+        assert decreasingRate > 0, "Error: the decreasingRate parameter for EpsilonDecreasing class has to be > 0."
+        self.decreasingRate = decreasingRate
         self.rewards = np.zeros(nbArms)
         self.params = ''
         self.t = -1
 
     def __str__(self):
-        return "EpsilonFirst"
+        return "EpsilonDecreasing"
 
     def startGame(self):
         self.rewards = np.zeros(self.nbArms)
         self.t = 0
 
     def choice(self):
-        if self.t <= self.epsilon * self.horizon:
-            # First phase: randomly explore!
+        if random.random() < self.epsilon * np.exp(- self.t * decreasingRate):
+            # Proba epsilon : explore
             arm = random.randint(0, self.nbArms - 1)
         else:
-            # Second phase: just exploit!
+            # Proba 1-epsilon : exploit
             arm = np.argmax(self.rewards)
         return arm
 

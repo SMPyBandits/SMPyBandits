@@ -4,7 +4,7 @@ Reference: FIXME write it!
 """
 from __future__ import print_function
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np

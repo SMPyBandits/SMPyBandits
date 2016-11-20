@@ -6,7 +6,7 @@
 - Result environment, used to wrap simulation results (list of decisions and rewards).
 """
 
-__author__ = "Lilian Besson, Emilie Kaufmann"
+__author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from .Evaluator import Evaluator
