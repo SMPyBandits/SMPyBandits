@@ -9,6 +9,7 @@ __version__ = "0.1"
 
 from Environment import Evaluator
 from configuration import configuration
+from os.path import join
 
 
 if __name__ == '__main__':
@@ -19,4 +20,4 @@ if __name__ == '__main__':
         # XXX be more explicit here
         hashvalue = hash((tuple(configuration.keys()), configuration.values()))  # almost unique hash from the configuration
         imagename = "main__{}_{}-{}.png".format(hashvalue, i + 1, N)
-        evaluation.plotResults(i, savefig=imagename)
+        evaluation.plotResults(i, savefig=join("plots", imagename))
