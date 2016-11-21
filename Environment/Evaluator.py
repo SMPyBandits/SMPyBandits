@@ -53,16 +53,16 @@ class Evaluator:
             self.policies = []
             self.__initPolicies__(env)
             for polId, policy in enumerate(self.policies):
-                print("\n- Evaluating: {} ({}) ...".format(policy, policy.params))
+                print("\n- Evaluating: {} ...".format(policy))
                 if USE_JOBLIB:
                     results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                        joblib.delayed(play)(env, policy, self.cfg['horizon'])
+                        joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
                         for _ in range(self.cfg['repetitions'])
                     )
                 else:
                     results = []
                     for _ in range(self.cfg['repetitions']):
-                        results.append(play(env, policy, self.cfg['horizon']))
+                        results.append(delayed_play(env, policy, self.cfg['horizon']))
                 for result in results:
                     self.rewards[polId, envId, :] += np.cumsum(result.rewards)
                     self.pulls[envId][polId, :] += result.pulls
@@ -89,14 +89,15 @@ class Evaluator:
         # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative Regret")
-        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.cfg['environment'][environment])))
+        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.envs[environment].arms)))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
         plt.show()
 
 
-def play(env, policy, horizon):
+# Helper function for the parallelization
+def delayed_play(env, policy, horizon):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)

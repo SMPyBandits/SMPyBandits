@@ -15,11 +15,11 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 1000
+HORIZON = 500
 HORIZON = 3000
 HORIZON = 30000
+HORIZON = 1000
 HORIZON = 10000
-HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -30,39 +30,39 @@ REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
 
+DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
-DO_PARALLEL = False
 N_JOBS = -1 if DO_PARALLEL else 1
 
-EPSILON = 0.05
+EPSILON = 0.1
 
 # FIXME improve the learning rate for my aggregated bandit
-LEARNING_RATE = 0.5
 LEARNING_RATE = 0.05
 LEARNING_RATE = 0.2
+LEARNING_RATE = 0.5
 LEARNING_RATE = 0.1
 
 TEST_AGGR = True
-UPDATE_ALL_CHILDREN = False
 UPDATE_ALL_CHILDREN = True
+UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 ONE_JOB_BY_CHILDREN = True
-ONE_JOB_BY_CHILDREN = False
+ONE_JOB_BY_CHILDREN = False  # XXX do not let this = False
 
 
 configuration = {
     "horizon": HORIZON,
     "repetitions": REPETITIONS,
     "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 5,  # Max joblib verbosity
+    "verbosity": 4,  # Max joblib verbosity
     "environment": [
         {
             "arm_type": Bernoulli,
             "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
         },
-        {
-            "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
-        },
+        # {
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        # },
         # {   # One optimal arm, much better than the others, but lots of bad arms
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
@@ -166,6 +166,9 @@ configuration = {
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
+    # N_JOBS = -1  # FIXME remove
+    N_JOBS = 1  # FIXME remove
+
     CURRENT_POLICIES = configuration["policies"]
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     configuration["policies"] = CURRENT_POLICIES + [{  # Add one Aggr policy
@@ -175,8 +178,8 @@ if TEST_AGGR:
             "update_all_children": UPDATE_ALL_CHILDREN,
             "children": CURRENT_POLICIES,
             "n_jobs": N_JOBS,
-            "verbosity": 5,
-            "one_job_by_children": ONE_JOB_BY_CHILDREN  # FIXME experimental!
+            "verbosity": 0 if N_JOBS == 1 else 1,
+            "one_job_by_children": ONE_JOB_BY_CHILDREN
         },
     }]
 

@@ -13,6 +13,7 @@ try:
 except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
+
 import numpy as np
 import numpy.random as rn
 
@@ -41,6 +42,9 @@ class Aggr:
             # XXX I am not sure if it speeds up to use joblib with more jobs than CPU cores... ?
             self.n_jobs = self.nbChildren
             print("Forcing parallelization for Aggr.Aggr: one job by child algorithm ({}).".format(self.n_jobs))
+        self.USE_JOBLIB = USE_JOBLIB
+        if self.n_jobs == 1:
+            self.USE_JOBLIB = False
         self.verbosity = verbosity
         self.children = []
         for i in range(self.nbChildren):
@@ -50,7 +54,7 @@ class Aggr:
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr.Aggr has to be an array of the good size ({}).".format(self.nbChildren)
             self.trusts = prior
         else:   # Assume uniform prior if not given or if = 'uniform'
-            self.trusts = np.ones(self.nbChildren) / float(self.nbChildren)
+            self.trusts = np.ones(self.nbChildren) / self.nbChildren
         self.rewards = np.zeros(self.nbArms)
         self.pulls = np.zeros(self.nbArms)
         self.params = "nbChildren:" + repr(self.nbChildren)
@@ -65,7 +69,7 @@ class Aggr:
         self.pulls[:] = 0
         self.t = 1
         # Start all child children
-        if USE_JOBLIB:
+        if self.USE_JOBLIB:
             # FIXME test and debug parallelization here!
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_startGame)(self, i)
@@ -79,7 +83,7 @@ class Aggr:
         self.rewards[arm] += reward
         self.pulls[arm] += 1
         self.t += 1
-        if USE_JOBLIB:
+        if self.USE_JOBLIB:
             # FIXME test and debug parallelization here!
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_getReward)(self, arm, reward, i)
@@ -93,20 +97,22 @@ class Aggr:
             if self.choices[i] == arm:  # this child's choice was chosen
                 # 3. increase self.trusts for the children who were true
                 self.trusts[i] *= np.exp(reward * self.learningRate)
-            # DONE test both, by changing the option self.update_all_children
-            elif self.update_all_children:
-                # 3. XXX decrease self.trusts for the children who were wrong
-                self.trusts[i] *= np.exp(- reward * self.learningRate)
+        # DONE test both, by changing the option self.update_all_children
+        if self.update_all_children:
+            for i in range(self.nbChildren):
+                if self.choices[i] != arm:  # this child's choice was not chosen
+                    # 3. XXX decrease self.trusts for the children who were wrong
+                    self.trusts[i] *= np.exp(- reward * self.learningRate)
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
-        self.trusts = self.trusts / float(np.sum(self.trusts))
+        self.trusts = self.trusts / np.sum(self.trusts)
         # print("self.trusts =", self.trusts)  # DEBUG
 
     def choice(self):
         # 1. make vote every child children
         self.choices = [-1] * self.nbChildren
-        if USE_JOBLIB:
+        if self.USE_JOBLIB:
             # FIXME test and debug parallelization here!
             self.choices = joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_choice)(self, i)
