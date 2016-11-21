@@ -6,6 +6,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.2"
 
 from copy import deepcopy
+from random import shuffle
 import numpy as np
 import matplotlib.pyplot as plt
 try:
@@ -79,11 +80,13 @@ class Evaluator:
         nbPolicies = len(self.policies)
         ymin = 0
         for i, policy in enumerate(self.policies):
-            # Get a random #RGB color from the hash of the policy
-            if nbPolicies < 8:
-                color = 'bgrcmyk'[i % nbPolicies]  # Default choice
+            if nbPolicies < 13:
+                color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'purple', 'darkgreen', 'darkblue', 'darkred', 'darkcyan'][i % nbPolicies]  # Default choice
             else:
-                color = '#' + str(hex(abs(hash(policy))))[2:][::-1][:6]
+                # XXX Experimental... Get a random #RGB color from the hash of the policy
+                s = list(str(hex(abs(hash(policy))))[2:][::-1])
+                shuffle(s)
+                color = '#' + str(''.join(s))[:6]
             Y = self.getRegret(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             print("Using color {} for policy number #{}/{} and called {}...".format(color, i + 1, nbPolicies, str(policy)))
@@ -111,12 +114,16 @@ class Evaluator:
             Y = self.getRegret(i, environmentId)
             lastY[i] = Y[-1]
         # Sort lastY and give ranking
-        # print("lastY =", lastY)  # DEBUG
+        print("lastY =", lastY)  # DEBUG
         index_of_sorting = np.argsort(lastY)
-        for k in range(nbPolicies):
-            i = index_of_sorting[k]
+        print("index_of_sorting =", index_of_sorting)  # DEBUG
+        # FIXME find a way to display these ranks nicely
+        # for k in index_of_sorting:
+        # for k in range(nbPolicies):
+        for i, k in enumerate(index_of_sorting):
+            # i = index_of_sorting[k]
             policy = self.policies[i]
-            print("The policy {} was ranked {}/{} for this simulation (last regret = {}).".format(str(policy), i + 1, nbPolicies, lastY[i]))
+            print("The policy {} was ranked {}/{} for this simulation (last regret = {}).".format(str(policy), k + 1, nbPolicies, lastY[i]))
         return lastY, index_of_sorting
 
 

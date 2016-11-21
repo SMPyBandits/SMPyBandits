@@ -124,6 +124,11 @@ make lint lint3  # check the code with pylint
 
 ----
 
+## Some illustrations
+- TODO add some examples of problems (ie. the distributions of the arms), algorithms and their performance
+
+----
+
 ## :boom: TODO
 - [x] clean up code, OK
 - [x] lint the code and make it "perfect", OK

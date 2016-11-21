@@ -22,18 +22,18 @@ from Policies import *
 HORIZON = 3000
 HORIZON = 30000
 HORIZON = 10000
-HORIZON = 500
 HORIZON = 2000
+HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
 REPETITIONS = 5
-REPETITIONS = 20
 REPETITIONS = 50
 REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
