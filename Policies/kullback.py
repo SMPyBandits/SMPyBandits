@@ -28,6 +28,13 @@ def klPoisson(x, y):
     return y - x + x * log(x / y)
 
 
+def klExp(x, y):
+    """ Kullback-Leibler divergence for exponential distributions."""
+    x = max(x, eps)
+    y = max(y, eps)
+    return x / y - 1 - log(x / y)
+
+
 def klGamma(x, y, a=1):
     """ Kullback-Leibler divergence for gamma distributions."""
     x = max(x, eps)

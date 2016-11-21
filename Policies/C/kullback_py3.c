@@ -276,16 +276,16 @@ static PyObject* maxEV(PyObject* self, PyObject* args)
 
 
 static PyMethodDef kullbackMethods[] = {
-    {"klBern", klBern, METH_VARARGS, "Calculate the binary Kullback-Leibler divergence."},
-    {"klPoisson", klPoisson, METH_VARARGS, "Calculate the Kullback-Leibler divergence for Poisson distributions."},
-    {"klExp", klExp, METH_VARARGS, "Calculate the Kullback-Leibler for Exponential distributions."},
-    {"klGamma", klGamma, METH_VARARGS, "Calculate the Kullback-Leibler for Gamma distributions."},
-    {"klGauss", klGauss, METH_VARARGS, "Calculate the Kullback-Leibler for Gaussian distributions."},
-    {"klucbGauss", klucbGauss, METH_VARARGS, "UCB for Gaussian observations."},
-    {"klucbPoisson", klucbPoisson, METH_VARARGS, "UCB for Poisson observations."},
-    {"klucbBern", klucbBern, METH_VARARGS, "UCB for Bernoulli observations."},
-    {"klucbExp", klucbExp, METH_VARARGS, "UCB for Exponential observations."},
-    {"maxEV", maxEV, METH_VARARGS, "maximize linear function under KL constraint."},
+    {"klBern", klBern, METH_VARARGS, "klBern(x, y): Calculate the binary Kullback-Leibler divergence."},
+    {"klPoisson", klPoisson, METH_VARARGS, "klPoisson(x, y): Calculate the Kullback-Leibler divergence for Poisson distributions."},
+    {"klExp", klExp, METH_VARARGS, "klExp(x, y): Calculate the Kullback-Leibler for Exponential distributions."},
+    {"klGamma", klGamma, METH_VARARGS, "klGamma(x, y, a=1): Calculate the Kullback-Leibler for Gamma distributions."},
+    {"klGauss", klGauss, METH_VARARGS, "klGauss(x, y, sig2=0.25): Calculate the Kullback-Leibler for Gaussian distributions."},
+    {"klucbGauss", klucbGauss, METH_VARARGS, "klucbGauss(x, d, sig2=1., precision=0.): UCB for Gaussian observations."},
+    {"klucbPoisson", klucbPoisson, METH_VARARGS, "klucbPoisson(x, d, precision=1e-6): UCB for Poisson observations."},
+    {"klucbBern", klucbBern, METH_VARARGS, "klucbBern(x, d, precision=1e-6): UCB for Bernoulli observations."},
+    {"klucbExp", klucbExp, METH_VARARGS, "klucbExp(x, d, precision=1e-6): UCB for Exponential observations."},
+    {"maxEV", maxEV, METH_VARARGS, "maxEV(p, V, klMax): maximize linear function under KL constraint."},
   //{"klucb", klucb, METH_VARARGS, "Compute the kl-ucb at x with distance d and precision prec."},
     {NULL, NULL, 0, NULL}
 };

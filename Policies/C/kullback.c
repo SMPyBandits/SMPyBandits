@@ -278,7 +278,7 @@ static PyObject* maxEV(PyObject* self, PyObject* args)
 static PyMethodDef kullbackMethods[] = {
     {"klBern", klBern, METH_VARARGS, "klBern(x, y): Calculate the binary Kullback-Leibler divergence."},
     {"klPoisson", klPoisson, METH_VARARGS, "klPoisson(x, y): Calculate the Kullback-Leibler divergence for Poisson distributions."},
-    {"klExp", klExp, METH_VARARGS, "XXX: Calculate the Kullback-Leibler for Exponential distributions."},
+    {"klExp", klExp, METH_VARARGS, "klExp(x, y): Calculate the Kullback-Leibler for Exponential distributions."},
     {"klGamma", klGamma, METH_VARARGS, "klGamma(x, y, a=1): Calculate the Kullback-Leibler for Gamma distributions."},
     {"klGauss", klGauss, METH_VARARGS, "klGauss(x, y, sig2=0.25): Calculate the Kullback-Leibler for Gaussian distributions."},
     {"klucbGauss", klucbGauss, METH_VARARGS, "klucbGauss(x, d, sig2=1., precision=0.): UCB for Gaussian observations."},
@@ -291,7 +291,7 @@ static PyMethodDef kullbackMethods[] = {
 };
 
 // This was for Python 2, as before.
-PyMODINIT_FUNC PyInit_kullback(void) {
+PyMODINIT_FUNC initkullback(void) {
         return Py_InitModule("kullback", kullbackMethods);
         import_array();
 };
