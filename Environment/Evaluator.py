@@ -74,17 +74,23 @@ class Evaluator:
         horizon = np.arange(self.cfg['horizon'])
         return horizon * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
-    def plotResults(self, environment, savefig=None, semilogx=False):
+    def plotResults(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
+        nbPolicies = len(self.policies)
         ymin = 0
         for i, policy in enumerate(self.policies):
-            Y = self.getRegret(i, environment)
-            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            # plt.plot(Y, label=str(policy))
-            if semilogx:
-                plt.semilogx(Y, label=str(policy))
+            # Get a random #RGB color from the hash of the policy
+            if nbPolicies < 8:
+                color = 'bgrcmyk'[i % nbPolicies]  # Default choice
             else:
-                plt.plot(Y, label=str(policy))
+                color = '#' + str(hex(abs(hash(policy))))[2:][::-1][:6]
+            Y = self.getRegret(i, environmentId)
+            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            print("Using color {} for policy number #{}/{} and called {}...".format(color, i + 1, nbPolicies, str(policy)))
+            if semilogx:
+                plt.semilogx(Y, label=str(policy), c=color)
+            else:
+                plt.plot(Y, label=str(policy), c=color)
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")
@@ -92,11 +98,26 @@ class Evaluator:
         # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative Regret")
-        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.envs[environment].arms)))
+        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms)))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
         plt.show()
+
+    def giveFinalRanking(self, environmentId):
+        nbPolicies = len(self.policies)
+        lastY = np.zeros(nbPolicies)
+        for i, policy in enumerate(self.policies):
+            Y = self.getRegret(i, environmentId)
+            lastY[i] = Y[-1]
+        # Sort lastY and give ranking
+        # print("lastY =", lastY)  # DEBUG
+        index_of_sorting = np.argsort(lastY)
+        for k in range(nbPolicies):
+            i = index_of_sorting[k]
+            policy = self.policies[i]
+            print("The policy {} was ranked {}/{} for this simulation (last regret = {}).".format(str(policy), i + 1, nbPolicies, lastY[i]))
+        return lastY, index_of_sorting
 
 
 # Helper function for the parallelization

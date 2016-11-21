@@ -57,7 +57,7 @@ class Aggr:
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         self.rewards = np.zeros(self.nbArms)
         self.pulls = np.zeros(self.nbArms)
-        self.params = "nbChildren:" + repr(self.nbChildren)
+        self.params = "nb:" + repr(self.nbChildren) + ", rate:" + repr(self.learningRate)
         self.startGame()
         self.choices = None
 

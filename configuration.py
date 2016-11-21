@@ -20,8 +20,8 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 3000
-HORIZON = 10000
 HORIZON = 30000
+HORIZON = 10000
 HORIZON = 500
 HORIZON = 2000
 
@@ -30,10 +30,10 @@ HORIZON = 2000
 REPETITIONS = 1
 REPETITIONS = 5
 REPETITIONS = 20
-REPETITIONS = 100
 REPETITIONS = 50
 REPETITIONS = 500
 REPETITIONS = 200
+REPETITIONS = 100
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
@@ -44,8 +44,13 @@ EPSILON = 0.1
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2
 LEARNING_RATE = 0.5
-LEARNING_RATE = 0.05
 LEARNING_RATE = 0.1
+LEARNING_RATE = 0.05
+
+# To try more learning rates in one run
+LEARNING_RATES = [2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
+LEARNING_RATES = [0.1, 0.01, 0.001]
+
 
 TEST_AGGR = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
@@ -66,8 +71,12 @@ configuration = {
         # },
         {
             "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+            "probabilities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         },
+        # {
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        # },
         # {   # One optimal arm, much better than the others, but lots of bad arms
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
@@ -159,13 +168,13 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.25,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.25,
+        #         "horizon": HORIZON
+        #     }
+        # },
         {
             "archtype": AdBandit,
             "params": {
@@ -173,13 +182,13 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.01,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
         {
             "archtype": AdBandit,
             "params": {
@@ -222,19 +231,22 @@ if TEST_AGGR:
     # N_JOBS = -1  # XXX for experiments
     N_JOBS = 1  # XXX for experiments
 
-    CURRENT_POLICIES = configuration["policies"]
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
-    configuration["policies"] = CURRENT_POLICIES + [{  # Add one Aggr policy
-        "archtype": Aggr,
-        "params": {
-            "learningRate": LEARNING_RATE,
-            "update_all_children": UPDATE_ALL_CHILDREN,
-            "children": CURRENT_POLICIES,
-            "n_jobs": N_JOBS,
-            "verbosity": 0 if N_JOBS == 1 else 1,
-            "one_job_by_children": ONE_JOB_BY_CHILDREN
-        },
-    }]
+    NON_AGGR_POLICIES = configuration["policies"]
+    for LEARNING_RATE in LEARNING_RATES:
+        CURRENT_POLICIES = configuration["policies"]
+        # Add one Aggr policy
+        configuration["policies"] = CURRENT_POLICIES + [{
+            "archtype": Aggr,
+            "params": {
+                "learningRate": LEARNING_RATE,
+                "update_all_children": UPDATE_ALL_CHILDREN,
+                "children": NON_AGGR_POLICIES,
+                "n_jobs": N_JOBS,
+                "verbosity": 0 if N_JOBS == 1 else 1,
+                "one_job_by_children": ONE_JOB_BY_CHILDREN
+            },
+        }]
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
