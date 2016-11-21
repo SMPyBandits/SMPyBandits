@@ -19,20 +19,21 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 500
 HORIZON = 3000
-HORIZON = 30000
 HORIZON = 10000
-HORIZON = 1000
+HORIZON = 30000
+HORIZON = 500
+HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
 REPETITIONS = 5
 REPETITIONS = 20
-REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
+REPETITIONS = 500
+REPETITIONS = 200
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
@@ -41,9 +42,9 @@ N_JOBS = -1 if DO_PARALLEL else 1
 EPSILON = 0.1
 
 # FIXME improve the learning rate for my aggregated bandit
-LEARNING_RATE = 0.05
 LEARNING_RATE = 0.2
 LEARNING_RATE = 0.5
+LEARNING_RATE = 0.05
 LEARNING_RATE = 0.1
 
 TEST_AGGR = True
@@ -63,14 +64,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
-        # },
-        {   # One optimal arm, much better than the others, but lots of bad arms
+        {
             "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
         },
+        # {   # One optimal arm, much better than the others, but lots of bad arms
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+        # },
     ],
     "policies": [
         # --- Stupid algorithms
@@ -108,19 +109,31 @@ configuration = {
         #     "archtype": UCBV,   # UCB with variance term
         #     "params": {}
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                # "alpha": 4          # Like usual UCB
-                "alpha": 1          # Limit case
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1          # Limit case
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         # "alpha": 4          # Like usual UCB
+        #         "alpha": 1          # Limit case
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1.25          # Above the alpha=4 like usual UCB
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -146,20 +159,34 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.25,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 1,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.25,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.125,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.01,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 1,
+                "horizon": HORIZON
+            }
+        },
         # {
         #     "archtype": Aggr,
         #     "params": {
