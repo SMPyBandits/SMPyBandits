@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
 from copy import deepcopy
 import numpy as np

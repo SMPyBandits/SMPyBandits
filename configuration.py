@@ -7,7 +7,6 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-
 # Import arms
 from Arms.Bernoulli import Bernoulli
 # Import algorithms
@@ -16,50 +15,54 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 500
 HORIZON = 1000
-HORIZON = 10000
-HORIZON = 30000
 HORIZON = 3000
+HORIZON = 30000
+HORIZON = 10000
+HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
-REPETITIONS = 200
 REPETITIONS = 5
 REPETITIONS = 20
+REPETITIONS = 200
 REPETITIONS = 100
+REPETITIONS = 50
 
-# DO_PARALLEL = False
 DO_PARALLEL = True
+DO_PARALLEL = False
+N_JOBS = -1 if DO_PARALLEL else 1
 
 EPSILON = 0.05
 
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.5
 LEARNING_RATE = 0.05
-LEARNING_RATE = 0.1
 LEARNING_RATE = 0.2
+LEARNING_RATE = 0.1
 
 TEST_AGGR = True
-updateAllChildren = False
-updateAllChildren = True
+UPDATE_ALL_CHILDREN = False
+UPDATE_ALL_CHILDREN = True
+ONE_JOB_BY_CHILDREN = True
+ONE_JOB_BY_CHILDREN = False
 
 
 configuration = {
     "horizon": HORIZON,
     "repetitions": REPETITIONS,
-    "n_jobs": -1 if DO_PARALLEL else 1,    # = nb of CPU cores
+    "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
     "environment": [
         {
             "arm_type": Bernoulli,
             "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
         },
-        # {
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
-        # },
+        {
+            "arm_type": Bernoulli,
+            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        },
         # {   # One optimal arm, much better than the others, but lots of bad arms
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
@@ -98,18 +101,32 @@ configuration = {
             "archtype": Thompson,
             "params": {}
         },
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {}
+        # },
         {
             "archtype": BayesUCB,
             "params": {}
         },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 1,
+                "horizon": HORIZON
+            }
+        },
         # {
         #     "archtype": AdBandit,
         #     "params": {
-        #         "alpha": 0.5,
+        #         "alpha": 0.25,
         #         "horizon": HORIZON
         #     }
         # },
@@ -149,14 +166,17 @@ configuration = {
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
-    current_policies = configuration["policies"]
-    # print("configuration['policies'] =", current_policies)  # DEBUG
-    configuration["policies"] = current_policies + [{  # Add one Aggr policy
+    CURRENT_POLICIES = configuration["policies"]
+    # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
+    configuration["policies"] = CURRENT_POLICIES + [{  # Add one Aggr policy
         "archtype": Aggr,
         "params": {
             "learningRate": LEARNING_RATE,
-            "updateAllChildren": updateAllChildren,
-            "children": current_policies,
+            "update_all_children": UPDATE_ALL_CHILDREN,
+            "children": CURRENT_POLICIES,
+            "n_jobs": N_JOBS,
+            "verbosity": 5,
+            "one_job_by_children": ONE_JOB_BY_CHILDREN  # FIXME experimental!
         },
     }]
 

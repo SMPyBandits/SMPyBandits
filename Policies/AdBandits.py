@@ -18,7 +18,7 @@ class AdBandit:
     """
 
     def __str__(self):
-        return "AdBandit"
+        return "AdBandit ({})".format(self.params)
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta):
         self.nbArms = nbArms
