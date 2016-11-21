@@ -19,7 +19,7 @@ class Beta:
         self.N = [a, b]
 
     def __repr__(self):
-        return '<' + repr(self.N) + '>'
+        return 'Beta(' + repr(self.a) + ', ' + repr(self.b) + ')'
 
     def reset(self, a=0, b=0):
         if a == 0:

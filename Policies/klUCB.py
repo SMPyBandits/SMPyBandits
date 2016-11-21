@@ -37,7 +37,7 @@ class klUCB(IndexPolicy):
         return "klUCB"
 
     def startGame(self):
-        self.t = 1
+        self.t = 0
         self.nbpulls = np.zeros(self.nbArms)
         self.cumReward = np.zeros(self.nbArms)
 

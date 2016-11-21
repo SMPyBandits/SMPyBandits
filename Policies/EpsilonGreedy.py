@@ -25,14 +25,12 @@ class EpsilonGreedy(IndexPolicy):
         self.epsilon = epsilon
         self.rewards = np.zeros(nbArms)
         self.params = ''
-        # self.t = -1
 
     def __str__(self):
         return "EpsilonGreedy"
 
     def startGame(self):
         self.rewards = np.zeros(self.nbArms)
-        # self.t = 0
 
     def choice(self):
         if random.random() < self.epsilon:  # Proba epsilon : explore
@@ -43,4 +41,3 @@ class EpsilonGreedy(IndexPolicy):
 
     def getReward(self, arm, reward):
         self.rewards[arm] += reward
-        # self.t += 1

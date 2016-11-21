@@ -9,6 +9,10 @@ __version__ = "0.2"
 
 # Import arms
 from Arms.Bernoulli import Bernoulli
+# from Arms.Exponential import Exponential
+# from Arms.Gaussian import Gaussian
+# from Arms.Poisson import Poisson
+
 # Import algorithms
 from Policies import *
 
@@ -18,8 +22,8 @@ from Policies import *
 HORIZON = 500
 HORIZON = 3000
 HORIZON = 30000
-HORIZON = 1000
 HORIZON = 10000
+HORIZON = 1000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -43,10 +47,10 @@ LEARNING_RATE = 0.5
 LEARNING_RATE = 0.1
 
 TEST_AGGR = True
-UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
-ONE_JOB_BY_CHILDREN = True
-ONE_JOB_BY_CHILDREN = False  # XXX do not let this = False
+UPDATE_ALL_CHILDREN = True
+ONE_JOB_BY_CHILDREN = True  # XXX do not let this = True
+ONE_JOB_BY_CHILDREN = False
 
 
 configuration = {
@@ -55,24 +59,26 @@ configuration = {
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 4,  # Max joblib verbosity
     "environment": [
-        {
-            "arm_type": Bernoulli,
-            "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.79, 0.8, 0.81]
-        },
+        # {
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
         # },
-        # {   # One optimal arm, much better than the others, but lots of bad arms
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
-        # },
+        {   # One optimal arm, much better than the others, but lots of bad arms
+            "arm_type": Bernoulli,
+            "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+        },
     ],
     "policies": [
+        # --- Stupid algorithms
         # {
         #     "archtype": Dummy,   # The stupidest policy
         #     "params": {}
         # },
+        # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
         #     "params": {
@@ -93,18 +99,42 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
+        # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
         #     "params": {}
         # },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                # "alpha": 4          # Like usual UCB
+                "alpha": 1          # Limit case
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1          # Limit case
+            }
+        },
+        # --- Thompson algorithms
         {
             "archtype": Thompson,
             "params": {}
         },
+        # --- KL algorithms
         {
             "archtype": klUCB,
             "params": {}
         },
+        # {
+        #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work well
+        #     "params": {}
+        # },
         {
             "archtype": BayesUCB,
             "params": {}
@@ -116,13 +146,6 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 1,
-                "horizon": HORIZON
-            }
-        },
         # {
         #     "archtype": AdBandit,
         #     "params": {
@@ -130,19 +153,18 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 1,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # {
         #     "archtype": Aggr,
         #     "params": {
         #         "learningRate": LEARNING_RATE,
         #         "children": [
-        #             {
-        #                 "archtype": UCB,
-        #                 "params": {}
-        #             },
         #             {
         #                 "archtype": Thompson,
         #                 "params": {}
@@ -170,8 +192,8 @@ configuration = {
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
-    # N_JOBS = -1  # FIXME remove
-    N_JOBS = 1  # FIXME remove
+    # N_JOBS = -1  # XXX for experiments
+    N_JOBS = 1  # XXX for experiments
 
     CURRENT_POLICIES = configuration["policies"]
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
@@ -187,5 +209,5 @@ if TEST_AGGR:
         },
     }]
 
-# print("Loaded experiments configuration from 'configuration.py' :")
-# print("configuration['policies'] =", configuration["policies"])  # DEBUG
+print("Loaded experiments configuration from 'configuration.py' :")
+print("configuration['policies'] =", configuration["policies"])  # DEBUG

@@ -65,9 +65,9 @@ class Aggr:
         return "Aggr ({})".format(self.params)
 
     def startGame(self):
-        self.rewards[:] = 0
-        self.pulls[:] = 0
-        self.t = 1
+        self.t = 0
+        self.rewards = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
         # Start all child children
         if self.USE_JOBLIB:
             # FIXME test and debug parallelization here!

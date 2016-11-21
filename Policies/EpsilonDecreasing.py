@@ -34,8 +34,8 @@ class EpsilonDecreasing(IndexPolicy):
         return "EpsilonDecreasing"
 
     def startGame(self):
-        self.rewards = np.zeros(self.nbArms)
         self.t = 0
+        self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
         if random.random() < self.epsilon * np.exp(- self.t * decreasingRate):

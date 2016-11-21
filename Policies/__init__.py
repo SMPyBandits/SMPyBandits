@@ -13,6 +13,7 @@ from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
 # From pymaBandits v1.0
 from .UCB import UCB
+from .UCBalpha import UCBalpha
 from .UCBV import UCBV
 from .Thompson import Thompson
 from .BayesUCB import BayesUCB

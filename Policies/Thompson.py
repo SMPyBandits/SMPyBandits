@@ -27,7 +27,7 @@ class Thompson(IndexPolicy):
         return "Thompson"
 
     def startGame(self):
-        self.t = 1
+        self.t = 0
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 

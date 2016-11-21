@@ -1,35 +1,34 @@
 # -*- coding: utf-8 -*-
-""" The UCB index policy.
-Reference: [Lai & Robbins, 1985].
+""" The UCB1 (UCB-alpha) index policy.
+Reference: [Auer et al. 02].
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
-__version__ = "$Revision: 1.9 $"
+__author__ = "Lilian Besson"
+__version__ = "0.2"
 
 import numpy as np
 from .IndexPolicy import IndexPolicy
 
 
-class UCB(IndexPolicy):
-    """ The UCB index policy.
-    Reference: [Lai & Robbins, 1985].
+class UCBalpha(IndexPolicy):
+    """ The UCB1 (UCB-alpha) index policy.
+    Reference: [Auer et al. 02].
     """
 
-    def __init__(self, nbArms):
-        # self.arms = arms
+    def __init__(self, nbArms, alpha=4):
         self.nbArms = nbArms
-        # self.budgets = np.asarray([arm.budget for arm in arms])
+        assert alpha > 0, "Error: the alpha parameter for UCBalpha class has to be > 0."
+        self.alpha = alpha
         self.nbpulls = np.zeros(nbArms)
         self.rewards = np.zeros(nbArms)
         self.t = -1
-        self.params = ''
+        self.params = 'alpha:' + repr(alpha)
 
     def __str__(self):
-        return "UCB"
+        return "UCBalpha (" + self.params + ")"
 
     def startGame(self):
         self.t = 0
-        # self.budgets = np.asarray([arm.budget for arm in self.arms])
         self.nbpulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
 
@@ -39,7 +38,7 @@ class UCB(IndexPolicy):
             self.nbpulls[arm] += 1
             return arm
         # print(self.rewards, self.nbpulls, self.t)
-        arm = np.argmax(self.rewards / self.nbpulls + np.sqrt((2 * np.log(self.t)) / self.nbpulls))
+        arm = np.argmax(self.rewards / self.nbpulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.nbpulls)))
         # XXX should be uniformly chosen if more than one arm has the highest index
         self.nbpulls[arm] += 1
         return arm

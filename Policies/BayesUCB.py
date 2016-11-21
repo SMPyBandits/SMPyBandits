@@ -21,11 +21,11 @@ class BayesUCB(IndexPolicy):
         self.posterior = dict()
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        self.params = ''
+        self.params = 'posterior: ' + repr(posterior)
         self.t = -1
 
     def startGame(self):
-        self.t = 1
+        self.t = 0
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
@@ -34,7 +34,7 @@ class BayesUCB(IndexPolicy):
         self.t += 1
 
     def computeIndex(self, arm):
-        return self.posterior[arm].quantile(1 - 1. / self.t)
+        return self.posterior[arm].quantile(1 - 1. / (1 + self.t))
 
     def __str__(self):
         return "BayesUCB"

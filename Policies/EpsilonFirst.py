@@ -32,8 +32,8 @@ class EpsilonFirst(IndexPolicy):
         return "EpsilonFirst"
 
     def startGame(self):
-        self.rewards = np.zeros(self.nbArms)
         self.t = 0
+        self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
         if self.t <= self.epsilon * self.horizon:

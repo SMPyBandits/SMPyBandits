@@ -22,20 +22,21 @@ class AdBandit:
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta):
         self.nbArms = nbArms
+        self.alpha = alpha
+        self.horizon = horizon
+        self.rewards = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms)
         self.posterior = dict()
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        self.alpha = alpha
-        self.horizon = horizon
-        self.rewards = np.zeros(self.nbArms)
-        self.pulls = np.zeros(self.nbArms)
+        # self.params = 'alpha:' + repr(self.alpha) + ', horizon:' + repr(self.horizon)
         self.params = 'alpha:' + repr(self.alpha)
         self.startGame()
 
     def startGame(self):
-        self.rewards[:] = 0
-        self.pulls[:] = 0
-        self.t = 1
+        self.t = 0
+        self.rewards = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
@@ -55,7 +56,7 @@ class AdBandit:
             maxIndex = max(upperbounds)
             bestArms = [arm for (arm, index) in enumerate(upperbounds) if index == maxIndex]
             return rn.choice(bestArms)
-        # UCBBayes
+        # UCB-Bayes
         else:
             expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
             upperbounds = [self.posterior[arm].quantile(1. - 1. / self.t) for arm in range(self.nbArms)]

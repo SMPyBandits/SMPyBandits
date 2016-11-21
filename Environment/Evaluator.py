@@ -74,14 +74,17 @@ class Evaluator:
         horizon = np.arange(self.cfg['horizon'])
         return horizon * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
-    def plotResults(self, environment, savefig=None):
+    def plotResults(self, environment, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environment)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             # plt.plot(Y, label=str(policy))
-            plt.semilogx(Y, label=str(policy))
+            if semilogx:
+                plt.semilogx(Y, label=str(policy))
+            else:
+                plt.plot(Y, label=str(policy))
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel("Time steps")

@@ -13,6 +13,7 @@ from Environment import Evaluator
 from configuration import configuration
 
 plot_dir = "plots"
+semilogx = False
 
 
 if __name__ == '__main__':
@@ -29,4 +30,5 @@ if __name__ == '__main__':
         # XXX be more explicit here
         hashvalue = hash((tuple(configuration.keys()), configuration.values()))  # almost unique hash from the configuration
         imagename = "main__{}_{}-{}.png".format(hashvalue, i + 1, N)
-        evaluation.plotResults(i, savefig=os.path.join(plot_dir, imagename))
+        evaluation.plotResults(i, savefig=os.path.join(plot_dir, imagename), semilogx=semilogx)
+        # evaluation.plotResults(i, semilogx=not semilogx)
