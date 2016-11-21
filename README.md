@@ -125,17 +125,19 @@ make lint lint3  # check the code with pylint
 ----
 
 ## :boom: TODO
-- [x] clean up code
-- [X] pass it to Python 3.5 (while still being valid Python 2.7)
-- [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf)
-- [ ] improve it : add more/all the bandits algorithms, more arms (Gaussian, Exponentials, ...)
-- [X] add my aggregated bandit algorithm
+- [x] clean up code, OK
+- [x] lint the code and make it "perfect", OK
+- [x] pass it to Python 3.5 (while still being valid Python 2.7), OK
+- [x] add more arms: Gaussian, Exponential, Poisson, OK
+- [x] add my aggregated bandit algorithm, OK
 - [ ] explore the behavior of my algorithm, and understand it better (and improve it?)
+- [x] In fact, [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) cannot be easily used as it cannot run *on-line*! Sadly OK
 - [ ] document all that, at least a little bit
-- [ ] see if [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) could be easily used (but it won't be online!)
+- [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf)
 - [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts) to store the data
 - [ ] implement some algorithms from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
 - [ ] keep it on GitHub, then make the repository public
+- [ ] implement a multi-player simulation environment as well!
 
 ----
 

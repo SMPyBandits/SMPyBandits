@@ -101,10 +101,10 @@ configuration = {
             "archtype": Thompson,
             "params": {}
         },
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
         {
             "archtype": BayesUCB,
             "params": {}
@@ -130,6 +130,10 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
+        {
+            "archtype": UCBV,   # UCB with variance term
+            "params": {}
+        },
         # {
         #     "archtype": Aggr,
         #     "params": {
