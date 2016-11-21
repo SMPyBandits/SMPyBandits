@@ -7,6 +7,7 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.15 $"
 
 from math import log
+import numpy as np
 
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
@@ -24,8 +25,8 @@ class klUCB(IndexPolicy):
         self.nbArms = nbArms
         self.amplitude = float(amplitude)
         self.lower = lower
-        self.nbDraws = dict()
-        self.cumReward = dict()
+        self.nbpulls = np.zeros(nbArms)
+        self.cumReward = np.zeros(nbArms)
         self.klucb = klucb
         self.tolerance = tolerance
         self.params = 'amplitude:' + repr(self.amplitude) + \
@@ -37,18 +38,17 @@ class klUCB(IndexPolicy):
 
     def startGame(self):
         self.t = 1
-        for arm in range(self.nbArms):
-            self.nbDraws[arm] = 0
-            self.cumReward[arm] = 0.0
+        self.nbpulls = np.zeros(self.nbArms)
+        self.cumReward = np.zeros(self.nbArms)
 
     def computeIndex(self, arm):
-        if self.nbDraws[arm] == 0:
+        if self.nbpulls[arm] == 0:
             return float('+infinity')
         else:
             # Could adapt tolerance to the value of self.t
-            return self.klucb(self.cumReward[arm] / float(self.nbDraws[arm]), self.c * log(self.t) / float(self.nbDraws[arm]), self.tolerance)
+            return self.klucb(self.cumReward[arm] / float(self.nbpulls[arm]), self.c * log(self.t) / float(self.nbpulls[arm]), self.tolerance)
 
     def getReward(self, arm, reward):
-        self.nbDraws[arm] += 1
-        self.cumReward[arm] += (reward - self.lower) / self.amplitude
         self.t += 1
+        self.nbpulls[arm] += 1
+        self.cumReward[arm] += (reward - self.lower) / self.amplitude

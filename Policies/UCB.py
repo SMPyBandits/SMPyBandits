@@ -28,13 +28,12 @@ class UCB(IndexPolicy):
         return "UCB"
 
     def startGame(self):
+        self.t = 1
         # self.budgets = np.asarray([arm.budget for arm in self.arms])
         self.nbpulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
-        self.t = -1
 
     def choice(self):
-        self.t += 1
         if self.t < self.nbArms:
             arm = self.t % self.nbArms
             self.nbpulls[arm] += 1
@@ -46,4 +45,5 @@ class UCB(IndexPolicy):
         return arm
 
     def getReward(self, arm, reward):
+        self.t += 1
         self.rewards[arm] += reward

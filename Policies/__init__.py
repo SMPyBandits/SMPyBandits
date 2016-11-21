@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 """ Policies : contains various bandits algorithms:
-Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, UCB, Thompson, BayesUCB, klUCB, Aggr, AdBandit.
+Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
 """
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
+# Mine, stupid ones
 from .Dummy import Dummy
 from .EpsilonGreedy import EpsilonGreedy
 from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
+# From pymaBandits v1.0
 from .UCB import UCB
+from .UCBV import UCBV
 from .Thompson import Thompson
 from .BayesUCB import BayesUCB
 from .klUCB import klUCB
-from .Aggr import Aggr
+from .KLempUCB import KLempUCB
+# From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandit
+# Mine, aggregated ones
+from .Aggr import Aggr
