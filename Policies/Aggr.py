@@ -5,7 +5,7 @@ Reference: FIXME write it!
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
 try:
     import joblib
@@ -59,7 +59,7 @@ class Aggr:
         self.pulls = np.zeros(self.nbArms)
         self.params = "nb:" + repr(self.nbChildren) + ", rate:" + repr(self.learningRate)
         self.startGame()
-        self.choices = None
+        self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
 
     def __str__(self):
         return "Aggr ({})".format(self.params)
@@ -70,7 +70,7 @@ class Aggr:
         self.pulls = np.zeros(self.nbArms)
         # Start all child children
         if self.USE_JOBLIB:
-            # FIXME test and debug parallelization here!
+            # FIXME the parallelization here was not improving anything
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_startGame)(self, i)
                 for i in range(self.nbChildren)
@@ -78,13 +78,16 @@ class Aggr:
         else:
             for i in range(self.nbChildren):
                 self.children[i].startGame()
+        self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
 
     def getReward(self, arm, reward):
         self.rewards[arm] += reward
         self.pulls[arm] += 1
         self.t += 1
+        # FIXME I am trying to reduce the learning rate (geometrically) when t increase...
+        # self.learningRate /= (self.t / 1000.)
         if self.USE_JOBLIB:
-            # FIXME test and debug parallelization here!
+            # FIXME the parallelization here was not improving anything
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_getReward)(self, arm, reward, i)
                 for i in range(self.nbChildren)
@@ -111,10 +114,9 @@ class Aggr:
 
     def choice(self):
         # 1. make vote every child children
-        self.choices = [-1] * self.nbChildren
         if self.USE_JOBLIB:
-            # FIXME test and debug parallelization here!
-            self.choices = joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
+            # FIXME the parallelization here was not improving anything
+            joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
                 joblib.delayed(delayed_choice)(self, i)
                 for i in range(self.nbChildren)
             )
@@ -128,12 +130,12 @@ class Aggr:
 
 # Helper functions for the parallelization
 def delayed_choice(self, j):
-    return self.children[j].choice()
+    self.choices[j] = self.children[j].choice()
 
 
 def delayed_getReward(self, arm, reward, j):
-    return self.children[j].getReward(arm, reward)
+    self.children[j].getReward(arm, reward)
 
 
 def delayed_startGame(self, j):
-    return self.children[j].startGame()
+    self.children[j].startGame()

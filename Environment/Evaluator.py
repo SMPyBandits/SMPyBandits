@@ -108,22 +108,20 @@ class Evaluator:
         plt.show()
 
     def giveFinalRanking(self, environmentId):
+        print("\nFinal ranking for this environment #{} :".format(environmentId))
         nbPolicies = len(self.policies)
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environmentId)
-            lastY[i] = Y[-1]
+            # lastY[i] = Y[-1]  # get the last value
+            lastY[i] = np.mean(Y[-int(0.01 * self.cfg['horizon'])])   # get average value during the last 1% of the iterations
+        # print("lastY =", lastY)  # DEBUG
         # Sort lastY and give ranking
-        print("lastY =", lastY)  # DEBUG
         index_of_sorting = np.argsort(lastY)
-        print("index_of_sorting =", index_of_sorting)  # DEBUG
-        # FIXME find a way to display these ranks nicely
-        # for k in index_of_sorting:
-        # for k in range(nbPolicies):
+        # print("index_of_sorting =", index_of_sorting)  # DEBUG
         for i, k in enumerate(index_of_sorting):
-            # i = index_of_sorting[k]
-            policy = self.policies[i]
-            print("The policy {} was ranked {}/{} for this simulation (last regret = {}).".format(str(policy), k + 1, nbPolicies, lastY[i]))
+            policy = self.policies[k]
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
 
 

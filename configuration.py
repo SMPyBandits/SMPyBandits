@@ -20,19 +20,19 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 3000
-HORIZON = 30000
 HORIZON = 10000
-HORIZON = 2000
+HORIZON = 30000
 HORIZON = 500
+HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
 REPETITIONS = 5
-REPETITIONS = 50
-REPETITIONS = 500
-REPETITIONS = 200
 REPETITIONS = 100
+REPETITIONS = 200
+REPETITIONS = 500
+REPETITIONS = 50
 REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False
@@ -46,9 +46,10 @@ LEARNING_RATE = 0.2
 LEARNING_RATE = 0.5
 LEARNING_RATE = 0.1
 LEARNING_RATE = 0.05
+# FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 
 # To try more learning rates in one run
-LEARNING_RATES = [2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
+LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
 LEARNING_RATES = [0.1, 0.01, 0.001]
 
 
@@ -65,21 +66,21 @@ configuration = {
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 4,  # Max joblib verbosity
     "environment": [
-        # {
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
-        {
+        {   # A very easy problem, but it is used in a lot of articles
             "arm_type": Bernoulli,
             "probabilities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         },
-        # {
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1]
+        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {   # One optimal arm, much better than the others, but lots of bad arms
+        # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.3]
+        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        # },
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
     ],
     "policies": [

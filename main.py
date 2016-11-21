@@ -27,9 +27,9 @@ if __name__ == '__main__':
     N = len(evaluation.envs)
     evaluation.start()
     for i in range(N):
+        evaluation.giveFinalRanking(i)
         # XXX be more explicit here
         hashvalue = abs(hash((tuple(configuration.keys()), configuration.values())))  # almost unique hash from the configuration
         imagename = "main__{}_{}-{}.png".format(hashvalue, i + 1, N)
         evaluation.plotResults(i, savefig=os.path.join(plot_dir, imagename), semilogx=semilogx)
         # evaluation.plotResults(i, semilogx=not semilogx)
-        evaluation.giveFinalRanking(i)
