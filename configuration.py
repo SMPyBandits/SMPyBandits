@@ -19,27 +19,37 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
+HORIZON = 500
 HORIZON = 3000
 HORIZON = 10000
+HORIZON = 20000
 HORIZON = 30000
-HORIZON = 500
 HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1
-REPETITIONS = 5
-REPETITIONS = 100
+REPETITIONS = 4  # Nb of cores
+REPETITIONS = 20
 REPETITIONS = 200
 REPETITIONS = 500
+REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
 N_JOBS = -1 if DO_PARALLEL else 1
 
+# Parameters for the policies
 EPSILON = 0.1
+
+TEMPERATURE = 0.01  # When -> 0, more greedy
+TEMPERATURE = 0.1
+TEMPERATURE = 0.5
+TEMPERATURE = 1
+TEMPERATURE = 10
+TEMPERATURE = 100   # When -> oo, more uniformly at random
+TEMPERATURE = 0.01
 
 # FIXME improve the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2
@@ -49,8 +59,9 @@ LEARNING_RATE = 0.05
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 
 # To try more learning rates in one run
-LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
-LEARNING_RATES = [0.1, 0.01, 0.001]
+# LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
+LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
+LEARNING_RATES = [LEARNING_RATE]
 
 
 TEST_AGGR = True
@@ -64,16 +75,17 @@ configuration = {
     "horizon": HORIZON,
     "repetitions": REPETITIONS,
     "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 4,  # Max joblib verbosity
+    "verbosity": 5,  # Max joblib verbosity
     "environment": [
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "probabilities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        # FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc!
+        # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        #     "probabilities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -84,12 +96,12 @@ configuration = {
         # },
     ],
     "policies": [
-        # --- Stupid algorithms
+        # # --- Stupid algorithms
         # {
         #     "archtype": Dummy,   # The stupidest policy
         #     "params": {}
         # },
-        # --- Epsilon-... algorithms
+        # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
         #     "params": {
@@ -144,6 +156,13 @@ configuration = {
         #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
         #     }
         # },
+        # --- Softmax algorithms
+        {
+            "archtype": Softmax,   # This basic Softmax is very bad
+            "params": {
+                "temperature": TEMPERATURE
+            }
+        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -154,10 +173,10 @@ configuration = {
             "archtype": klUCB,
             "params": {}
         },
-        # {
-        #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work well
-        #     "params": {}
-        # },
+        # # {
+        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # #     "params": {}
+        # # },
         {
             "archtype": BayesUCB,
             "params": {}
@@ -190,13 +209,14 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 1,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 1,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # # --- Manually, one Aggr policy
         # {
         #     "archtype": Aggr,
         #     "params": {

@@ -19,7 +19,7 @@ class UCBalpha(IndexPolicy):
         self.nbArms = nbArms
         assert alpha > 0, "Error: the alpha parameter for UCBalpha class has to be > 0."
         self.alpha = alpha
-        self.nbpulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms)
         self.rewards = np.zeros(nbArms)
         self.t = -1
         self.params = 'alpha:' + repr(alpha)
@@ -29,20 +29,20 @@ class UCBalpha(IndexPolicy):
 
     def startGame(self):
         self.t = 0
-        self.nbpulls = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
         if self.t < self.nbArms:
             arm = self.t % self.nbArms
-            self.nbpulls[arm] += 1
-            return arm
-        # print(self.rewards, self.nbpulls, self.t)
-        arm = np.argmax(self.rewards / self.nbpulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.nbpulls)))
-        # XXX should be uniformly chosen if more than one arm has the highest index
-        self.nbpulls[arm] += 1
+            self.pulls[arm] += 1
+        else:
+            # print(self.rewards, self.pulls, self.t)
+            arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))
+            # XXX should be uniformly chosen if more than one arm has the highest index
         return arm
 
     def getReward(self, arm, reward):
         self.t += 1
+        # self.pulls[arm] += 1  # XXX why is it not here?
         self.rewards[arm] += reward

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Policies : contains various bandits algorithms:
-Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
+Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, Softmax, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
 """
 
 __author__ = "Lilian Besson"
@@ -11,6 +11,7 @@ from .Dummy import Dummy
 from .EpsilonGreedy import EpsilonGreedy
 from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
+from .Softmax import Softmax
 # From pymaBandits v1.0
 from .UCB import UCB
 from .UCBalpha import UCBalpha

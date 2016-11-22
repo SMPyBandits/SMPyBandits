@@ -12,7 +12,7 @@ from .IndexPolicy import IndexPolicy
 
 
 epsilon = 0.1
-decreasingRate = 1e-2
+decreasingRate = 1e-6
 
 
 class EpsilonDecreasing(IndexPolicy):

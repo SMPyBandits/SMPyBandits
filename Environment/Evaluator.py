@@ -23,8 +23,13 @@ from .MAB import MAB
 class Evaluator:
     """ Evaluator class to run the simulations."""
 
-    def __init__(self, configuration):
+    def __init__(self, configuration,
+                 finalRanksOnAverage=True, averageOn=5e-3,
+                 useJoblibForPolicies=False):
         self.cfg = configuration
+        self.finalRanksOnAverage = finalRanksOnAverage
+        self.averageOn = averageOn
+        self.useJoblibForPolicies = useJoblibForPolicies
         self.envs = []
         self.policies = []
         self.__initEnvironments__()
@@ -53,8 +58,18 @@ class Evaluator:
             print("\nEvaluating environment:", repr(env))
             self.policies = []
             self.__initPolicies__(env)
+            # if self.useJoblibForPolicies:
+            #     n_jobs = len(self.policies)
+            #     joblib.Parallel(n_jobs=n_jobs, verbose=self.cfg['verbosity'])(
+            #         joblib.delayed(delayed_start)(self, env, policy, polId, envId)
+            #         for polId, policy in enumerate(self.policies)
+            #     )
+            # else:
+            #     for polId, policy in enumerate(self.policies):
+            #         delayed_start(self, env, policy, polId, envId)
+            # # FIXME try to also parallelize this loop on policies ?
             for polId, policy in enumerate(self.policies):
-                print("\n- Evaluating: {} ...".format(policy))
+                print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
                 if USE_JOBLIB:
                     results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                         joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
@@ -63,10 +78,11 @@ class Evaluator:
                 else:
                     results = []
                     for _ in range(self.cfg['repetitions']):
-                        results.append(delayed_play(env, policy, self.cfg['horizon']))
-                for result in results:
-                    self.rewards[polId, envId, :] += np.cumsum(result.rewards)
-                    self.pulls[envId][polId, :] += result.pulls
+                        r = delayed_play(env, policy, self.cfg['horizon'])
+                        results.append(r)
+                for r in results:
+                    self.rewards[polId, envId, :] += np.cumsum(r.rewards)
+                    self.pulls[envId][polId, :] += r.pulls
 
     def getReward(self, policyId, environmentId):
         return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
@@ -80,7 +96,7 @@ class Evaluator:
         nbPolicies = len(self.policies)
         ymin = 0
         for i, policy in enumerate(self.policies):
-            if nbPolicies < 13:
+            if i < 13:
                 color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'purple', 'darkgreen', 'darkblue', 'darkred', 'darkcyan'][i % nbPolicies]  # Default choice
             else:
                 # XXX Experimental... Get a random #RGB color from the hash of the policy
@@ -113,8 +129,10 @@ class Evaluator:
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environmentId)
-            # lastY[i] = Y[-1]  # get the last value
-            lastY[i] = np.mean(Y[-int(0.01 * self.cfg['horizon'])])   # get average value during the last 1% of the iterations
+            if self.finalRanksOnAverage:
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.cfg['horizon'])])   # get average value during the last 0.5% of the iterations
+            else:
+                lastY[i] = Y[-1]  # get the last value
         # print("lastY =", lastY)  # DEBUG
         # Sort lastY and give ranking
         index_of_sorting = np.argsort(lastY)
@@ -126,6 +144,23 @@ class Evaluator:
 
 
 # Helper function for the parallelization
+
+def delayed_start(self, env, policy, polId, envId):
+    print("\n- Evaluating: {} ...".format(policy))
+    if USE_JOBLIB:
+        results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+            joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
+            for _ in range(self.cfg['repetitions'])
+        )
+    else:
+        results = []
+        for _ in range(self.cfg['repetitions']):
+            results.append(delayed_play(env, policy, self.cfg['horizon']))
+    for result in results:
+        self.rewards[polId, envId, :] += np.cumsum(result.rewards)
+        self.pulls[envId][polId, :] += result.pulls
+
+
 def delayed_play(env, policy, horizon):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)

@@ -19,7 +19,7 @@ class UCB(IndexPolicy):
         # self.arms = arms
         self.nbArms = nbArms
         # self.budgets = np.asarray([arm.budget for arm in arms])
-        self.nbpulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms)
         self.rewards = np.zeros(nbArms)
         self.t = -1
         self.params = ''
@@ -30,20 +30,20 @@ class UCB(IndexPolicy):
     def startGame(self):
         self.t = 0
         # self.budgets = np.asarray([arm.budget for arm in self.arms])
-        self.nbpulls = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
-        if self.t < self.nbArms:
+        if self.t < self.nbArms:  # Force to first visit each arm
             arm = self.t % self.nbArms
-            self.nbpulls[arm] += 1
-            return arm
-        # print(self.rewards, self.nbpulls, self.t)
-        arm = np.argmax(self.rewards / self.nbpulls + np.sqrt((2 * np.log(self.t)) / self.nbpulls))
-        # XXX should be uniformly chosen if more than one arm has the highest index
-        self.nbpulls[arm] += 1
+            self.pulls[arm] += 1
+        else:
+            # print(self.rewards, self.pulls, self.t)
+            arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
+            # XXX should be uniformly chosen if more than one arm has the highest index
         return arm
 
     def getReward(self, arm, reward):
         self.t += 1
+        # self.pulls[arm] += 1  # XXX why is it not here?
         self.rewards[arm] += reward

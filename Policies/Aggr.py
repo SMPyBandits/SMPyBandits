@@ -85,7 +85,7 @@ class Aggr:
         self.pulls[arm] += 1
         self.t += 1
         # FIXME I am trying to reduce the learning rate (geometrically) when t increase...
-        # self.learningRate /= (self.t / 1000.)
+        learningRate = self.learningRate * np.exp(- self.t / 1000.)
         if self.USE_JOBLIB:
             # FIXME the parallelization here was not improving anything
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
@@ -99,13 +99,13 @@ class Aggr:
         for i in range(self.nbChildren):
             if self.choices[i] == arm:  # this child's choice was chosen
                 # 3. increase self.trusts for the children who were true
-                self.trusts[i] *= np.exp(reward * self.learningRate)
+                self.trusts[i] *= np.exp(reward * learningRate)
         # DONE test both, by changing the option self.update_all_children
         if self.update_all_children:
             for i in range(self.nbChildren):
                 if self.choices[i] != arm:  # this child's choice was not chosen
                     # 3. XXX decrease self.trusts for the children who were wrong
-                    self.trusts[i] *= np.exp(- reward * self.learningRate)
+                    self.trusts[i] *= np.exp(- reward * learningRate)
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG

@@ -20,9 +20,9 @@ class UCBV(IndexPolicy):
         self.nbArms = nbArms
         self.amplitude = amplitude
         self.lower = lower
-        self.nbpulls = np.zeros(nbArms)
-        self.cumReward = np.zeros(nbArms)
-        self.cumReward2 = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms)
+        self.rewards = np.zeros(nbArms)
+        self.rewardsCorrected = np.zeros(nbArms)
         self.t = -1
         self.params = 'amplitude: ' + repr(amplitude) + ', lower: ' + repr(lower)
 
@@ -31,20 +31,20 @@ class UCBV(IndexPolicy):
 
     def startGame(self):
         self.t = 0
-        self.nbpulls = np.zeros(self.nbArms)
-        self.cumReward = np.zeros(self.nbArms)
-        self.cumReward2 = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
+        self.rewards = np.zeros(self.nbArms)
+        self.rewardsCorrected = np.zeros(self.nbArms)
 
     def computeIndex(self, arm):
-        if self.nbpulls[arm] < 2:
+        if self.pulls[arm] < 2:
             return float('+infinity')
         else:
-            m = self.cumReward[arm] / self.nbpulls[arm]
-            v = self.cumReward2[arm] / self.nbpulls[arm] - m * m
-            return m + sqrt(2 * log(self.t) * v / self.nbpulls[arm]) + 3 * self.amplitude * log(self.t) / self.nbpulls[arm]
+            m = self.rewards[arm] / self.pulls[arm]
+            v = self.rewardsCorrected[arm] / self.pulls[arm] - m * m
+            return m + sqrt(2 * log(self.t) * v / self.pulls[arm]) + 3 * self.amplitude * log(self.t) / self.pulls[arm]
 
     def getReward(self, arm, reward):
         self.t += 1
-        self.nbpulls[arm] += 1
-        self.cumReward[arm] += reward
-        self.cumReward2[arm] += reward**2
+        self.pulls[arm] += 1
+        self.rewards[arm] += reward
+        self.rewardsCorrected[arm] += reward**2

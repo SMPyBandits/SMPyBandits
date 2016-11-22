@@ -24,7 +24,7 @@ class EpsilonGreedy(IndexPolicy):
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonGreedy class has to be in [0, 1]."
         self.epsilon = epsilon
         self.rewards = np.zeros(nbArms)
-        self.params = ''
+        self.params = "epsilon: " + repr(epsilon)
 
     def __str__(self):
         return "EpsilonGreedy"
