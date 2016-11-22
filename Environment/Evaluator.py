@@ -19,6 +19,9 @@ except ImportError:
 from .Result import Result
 from .MAB import MAB
 
+# Customize here if you want a signature on the titles of each plot
+signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
+
 
 class Evaluator:
     """ Evaluator class to run the simulations."""
@@ -112,12 +115,12 @@ class Evaluator:
                 plt.plot(Y, label=str(policy), c=color)
         plt.legend(loc='upper left')
         plt.grid()
-        plt.xlabel("Time steps")
+        plt.xlabel(r"Time steps $t = 1, \dots, T$, horizon $T = {}$".format(self.cfg['horizon']))
         ymax = plt.ylim()[1]
         # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
-        plt.ylabel("Cumulative Regret")
-        plt.title("Regrets for different bandit algoritms, averaged {} times\nArms: {}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms)))
+        plt.ylabel(r"Cumulative Regret $R_t$")
+        plt.title(r"Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
