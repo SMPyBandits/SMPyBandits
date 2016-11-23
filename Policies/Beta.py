@@ -5,8 +5,10 @@
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
 __version__ = "$Revision: 1.7 $"
 
-from random import betavariate
-# import scipy
+try:
+    from numpy.random import beta as betavariate  # Faster
+except ImportError:
+    from random import betavariate
 from scipy.special import btdtri
 
 

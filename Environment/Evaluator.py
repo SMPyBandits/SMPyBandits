@@ -63,6 +63,7 @@ class Evaluator:
         for envId, env in enumerate(self.envs):
             self.start_one_env(envId, env)
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
     def start_one_env(self, envId, env):
             print("\nEvaluating environment:", repr(env))
             self.policies = []
@@ -170,6 +171,7 @@ def delayed_start(self, env, policy, polId, envId):
         self.pulls[envId][polId, :] += result.pulls
 
 
+# @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)

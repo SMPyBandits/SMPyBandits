@@ -57,8 +57,8 @@ class Aggr:
             self.trusts = prior
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
-        self.rewards = np.zeros(self.nbArms)
-        self.pulls = np.zeros(self.nbArms)
+        # self.rewards = np.zeros(self.nbArms)
+        # self.pulls = np.zeros(self.nbArms)
         self.params = "nb:" + repr(self.nbChildren) + ", rate:" + repr(self.learningRate)
         self.startGame()
         self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
@@ -66,10 +66,11 @@ class Aggr:
     def __str__(self):
         return "Aggr ({})".format(self.params)
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def startGame(self):
         self.t = 0
-        self.rewards = np.zeros(self.nbArms)
-        self.pulls = np.zeros(self.nbArms)
+        # self.rewards = np.zeros(self.nbArms)
+        # self.pulls = np.zeros(self.nbArms)
         # Start all child children
         if self.USE_JOBLIB:
             # FIXME the parallelization here was not improving anything
@@ -82,10 +83,11 @@ class Aggr:
                 self.children[i].startGame()
         self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
-        self.rewards[arm] += reward
-        self.pulls[arm] += 1
         self.t += 1
+        # self.rewards[arm] += reward
+        # self.pulls[arm] += 1
         # FIXME I am trying to reduce the learning rate (geometrically) when t increase...
         if self.decreaseRate is not None:
             learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
@@ -101,22 +103,28 @@ class Aggr:
             # Give reward to all child children
             for i in range(self.nbChildren):
                 self.children[i].getReward(arm, reward)
-        for i in range(self.nbChildren):
-            if self.choices[i] == arm:  # this child's choice was chosen
-                # 3. increase self.trusts for the children who were true
-                self.trusts[i] *= np.exp(reward * learningRate)
+        # FIXED do this with numpy arrays instead ! FIXME try it !
+        scalingConstant = np.exp(reward * learningRate)
+        self.trusts[self.choices == arm] *= scalingConstant
+        # for i in range(self.nbChildren):
+        #     if self.choices[i] == arm:  # this child's choice was chosen
+        #         # 3. increase self.trusts for the children who were true
+        #         self.trusts[i] *= np.exp(reward * learningRate)
+        # FIXED do this with numpy arrays instead ! FIXME try it !
         # DONE test both, by changing the option self.update_all_children
         if self.update_all_children:
-            for i in range(self.nbChildren):
-                if self.choices[i] != arm:  # this child's choice was not chosen
-                    # 3. XXX decrease self.trusts for the children who were wrong
-                    self.trusts[i] *= np.exp(- reward * learningRate)
+            self.trusts[self.choices != arm] /= scalingConstant
+            # for i in range(self.nbChildren):
+            #     if self.choices[i] != arm:  # this child's choice was not chosen
+            #         # 3. XXX decrease self.trusts for the children who were wrong
+            #         self.trusts[i] *= np.exp(- reward * learningRate)
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         self.trusts = self.trusts / np.sum(self.trusts)
         # print("self.trusts =", self.trusts)  # DEBUG
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def choice(self):
         # 1. make vote every child children
         if self.USE_JOBLIB:
@@ -128,6 +136,8 @@ class Aggr:
         else:
             for i in range(self.nbChildren):
                 self.choices[i] = self.children[i].choice()
+            # ? we could be faster here, first sample according to self.trusts, then make it decide
+            # XXX in fact, no we need to vector self.choices to update the self.trusts probabilities!
         # print("self.choices =", self.choices)  # DEBUG
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)

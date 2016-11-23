@@ -36,8 +36,8 @@ REPETITIONS = 200
 REPETITIONS = 20
 REPETITIONS = 100
 
-DO_PARALLEL = True
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
+DO_PARALLEL = True
 N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the policies
@@ -50,8 +50,8 @@ TEMPERATURE = 0.5
 TEMPERATURE = 1
 TEMPERATURE = 10
 TEMPERATURE = 100   # When -> oo, more uniformly at random
-# TEMPERATURE = 10.0 / HORIZON
-TEMPERATURE = 0.01
+# TEMPERATURE = 10.0 / HORIZON  # Not sure ??!
+TEMPERATURE = 0.1
 
 # XXX try different values for the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2

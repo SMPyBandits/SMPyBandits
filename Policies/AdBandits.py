@@ -40,6 +40,7 @@ class AdBandit:
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
         self.posterior[arm].update(reward)
         self.rewards[arm] += reward
@@ -49,6 +50,7 @@ class AdBandit:
     def computeIndex(self, arm):
         return self.posterior[arm].sample()
 
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def choice(self):
         # Thompson Exploration
         if rn.random() > 1.0 * self.t / (self.horizon * self.alpha):
