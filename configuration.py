@@ -22,9 +22,9 @@ from Policies import *
 HORIZON = 500
 HORIZON = 3000
 HORIZON = 20000
-HORIZON = 30000
 HORIZON = 10000
 HORIZON = 2000
+HORIZON = 30000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -32,9 +32,9 @@ REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
 REPETITIONS = 20
 REPETITIONS = 50
-REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 100
+REPETITIONS = 200
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
