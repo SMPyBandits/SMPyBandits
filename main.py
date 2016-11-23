@@ -43,7 +43,7 @@ if __name__ == '__main__':
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
         # (almost) unique hash from the configuration
-        hashvalue = abs(hash((tuple(tuple(configuration.keys())), tuple(configuration.values()))))
+        hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
         # Evaluate just that env
         evaluation.start_one_env(envId, env)
         # Display the final rankings for that env

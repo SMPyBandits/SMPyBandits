@@ -30,11 +30,11 @@ HORIZON = 2000
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
+REPETITIONS = 20
+REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 100
-REPETITIONS = 20
-REPETITIONS = 50
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
@@ -43,6 +43,7 @@ N_JOBS = -1 if DO_PARALLEL else 1
 # Parameters for the policies
 EPSILON = 0.1
 
+# Temperature for the softmax
 TEMPERATURE = 0.01  # When -> 0, more greedy
 TEMPERATURE = 0.1
 TEMPERATURE = 0.5
@@ -50,6 +51,7 @@ TEMPERATURE = 1
 TEMPERATURE = 10
 TEMPERATURE = 100   # When -> oo, more uniformly at random
 TEMPERATURE = 0.01
+TEMPERATURE = 10.0 / HORIZON
 
 # XXX try different values for the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2
@@ -273,6 +275,9 @@ if TEST_AGGR:
                 "one_job_by_children": ONE_JOB_BY_CHILDREN
             },
         }]
+
+# # Make everything tuples - imutable, so they can be hashed
+# configuration["policies"] = tuple(configuration["policies"])
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

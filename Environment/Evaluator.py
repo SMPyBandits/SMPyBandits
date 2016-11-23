@@ -121,7 +121,7 @@ class Evaluator:
                 plt.plot(Y, label=str(policy), c=color)
         plt.legend(loc='upper left')
         plt.grid()
-        plt.xlabel(r"Time steps $t = 1, \dots, T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
         ymax = plt.ylim()[1]
         # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
