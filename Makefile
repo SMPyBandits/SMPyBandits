@@ -55,9 +55,9 @@ stats:
 NPROC = `getconf _NPROCESSORS_ONLN`
 
 lint:
-	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt.txt
+	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
 lint3:
-	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt.txt
+	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
 
 2to3:
 	-echo "FIXME this does not work from make (Makefile), but work from Bash"

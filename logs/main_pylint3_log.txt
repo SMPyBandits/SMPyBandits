@@ -1,0 +1,329 @@
+************* Module configuration
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module main
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 16, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+E: 30, 8: print statement used (print-statement)
+E: 48, 8: print statement used (print-statement)
+E: 59,12: print statement used (print-statement)
+E: 65, 8: print statement used (print-statement)
+************* Module Arms.Bernoulli
+W:  4, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Arms.Exponential
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 20,31: division w/o __future__ statement (old-division)
+************* Module Arms.Poisson
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 24,26: division w/o __future__ statement (old-division)
+************* Module Arms.Gaussian
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Arms
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment.MAB
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment.Result
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.AdBandits
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 54,38: division w/o __future__ statement (old-division)
+W: 61,27: division w/o __future__ statement (old-division)
+************* Module Policies.Aggr
+W: 11, 4: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 18, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 59,26: division w/o __future__ statement (old-division)
+W: 91,54: division w/o __future__ statement (old-division)
+W:117,22: division w/o __future__ statement (old-division)
+************* Module Policies.BayesUCB
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.Beta
+W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 39,15: division w/o __future__ statement (old-division)
+************* Module Policies.Dummy
+W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.EpsilonDecreasing
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.EpsilonFirst
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment.Evaluator
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 15, 4: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 21, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 22, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 97,15: division w/o __future__ statement (old-division)
+************* Module Policies.EpsilonGreedy
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.IndexPolicy
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.KLempUCB
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 36,67: division w/o __future__ statement (old-division)
+W: 48,12: division w/o __future__ statement (old-division)
+E: 51,12: print statement used (print-statement)
+************* Module Policies.Softmax
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 42,28: division w/o __future__ statement (old-division)
+************* Module Policies.Thompson
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.UCB
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 40,28: division w/o __future__ statement (old-division)
+W: 40,64: division w/o __future__ statement (old-division)
+************* Module Policies.UCBV
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 39,16: division w/o __future__ statement (old-division)
+W: 40,16: division w/o __future__ statement (old-division)
+W: 41,48: division w/o __future__ statement (old-division)
+W: 41,102: division w/o __future__ statement (old-division)
+************* Module Policies.UCBalpha
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 40,28: division w/o __future__ statement (old-division)
+W: 40,64: division w/o __future__ statement (old-division)
+************* Module Policies
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 16, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 18, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 19, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 20, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 21, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 22, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 24, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 26, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.klUCB
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 46,30: division w/o __future__ statement (old-division)
+W: 46,95: division w/o __future__ statement (old-division)
+W: 51,29: division w/o __future__ statement (old-division)
+************* Module Policies.kullback
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 21,19: division w/o __future__ statement (old-division)
+W: 21,42: division w/o __future__ statement (old-division)
+W: 28,27: division w/o __future__ statement (old-division)
+W: 35,11: division w/o __future__ statement (old-division)
+W: 35,27: division w/o __future__ statement (old-division)
+W: 42,16: division w/o __future__ statement (old-division)
+W: 42,32: division w/o __future__ statement (old-division)
+W: 47,19: division w/o __future__ statement (old-division)
+W: 47,60: division w/o __future__ statement (old-division)
+W: 52,29: division w/o __future__ statement (old-division)
+W: 64,12: division w/o __future__ statement (old-division)
+W: 69,11: division w/o __future__ statement (old-division)
+W: 96,21: division w/o __future__ statement (old-division)
+W:103,21: division w/o __future__ statement (old-division)
+W:127,25: division w/o __future__ statement (old-division)
+W:128,37: division w/o __future__ statement (old-division)
+W:129,24: division w/o __future__ statement (old-division)
+W:136,13: division w/o __future__ statement (old-division)
+W:137,13: division w/o __future__ statement (old-division)
+W:140,17: division w/o __future__ statement (old-division)
+W:156,19: division w/o __future__ statement (old-division)
+W:160,17: division w/o __future__ statement (old-division)
+W:160,28: division w/o __future__ statement (old-division)
+W:161,24: division w/o __future__ statement (old-division)
+W:164,20: division w/o __future__ statement (old-division)
+W:164,29: division w/o __future__ statement (old-division)
+W:165,23: division w/o __future__ statement (old-division)
+E:181, 4: print statement used (print-statement)
+E:182, 4: print statement used (print-statement)
+E:183, 4: print statement used (print-statement)
+E:193, 4: print statement used (print-statement)
+E:194, 4: print statement used (print-statement)
+E:198, 4: print statement used (print-statement)
+W:199, 9: division w/o __future__ statement (old-division)
+E:200, 4: print statement used (print-statement)
+E:201, 4: print statement used (print-statement)
+
+
+Report
+======
+944 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |29     |19         |+10.00     |NC          |NC       |
++---------+-------+-----------+-----------+------------+---------+
+|class    |23     |13         |+10.00     |NC          |NC       |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |63         |-63.00     |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |0      |13         |-13.00     |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |1048   |56.77 |576      |+472.00    |
++----------+-------+------+---------+-----------+
+|docstring |191    |10.35 |130      |+61.00     |
++----------+-------+------+---------+-----------+
+|comment   |303    |16.41 |128      |+175.00    |
++----------+-------+------+---------+-----------+
+|empty     |304    |16.47 |182      |+122.00    |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |0      |93       |-93.00     |
++-----------+-------+---------+-----------+
+|refactor   |0      |5        |-5.00      |
++-----------+-------+---------+-----------+
+|warning    |131    |39       |+92.00     |
++-----------+-------+---------+-----------+
+|error      |13     |2        |+11.00     |
++-----------+-------+---------+-----------+
+
+
+
+% errors / warnings by module
+-----------------------------
+
++---------------------------+------+--------+---------+-----------+
+|module                     |error |warning |refactor |convention |
++===========================+======+========+=========+===========+
+|Policies.kullback          |61.54 |22.90   |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|main                       |30.77 |3.05    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.KLempUCB          |7.69  |4.58    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.__init__          |0.00  |10.69   |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Environment.Evaluator      |0.00  |6.11    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.klUCB             |0.00  |5.34    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.UCBV              |0.00  |5.34    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.Aggr              |0.00  |4.58    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.AdBandits         |0.00  |3.82    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Arms.__init__              |0.00  |3.05    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.UCBalpha          |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.UCB               |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.Beta              |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.BayesUCB          |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Environment.__init__       |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Arms.Poisson               |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Arms.Exponential           |0.00  |2.29    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|configuration              |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.Thompson          |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.Softmax           |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.IndexPolicy       |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.EpsilonGreedy     |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.EpsilonFirst      |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.EpsilonDecreasing |0.00  |1.53    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Policies.Dummy             |0.00  |0.76    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Environment.Result         |0.00  |0.76    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Environment.MAB            |0.00  |0.76    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Arms.Gaussian              |0.00  |0.76    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+|Arms.Bernoulli             |0.00  |0.76    |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++-------------------+------------+
+|message id         |occurrences |
++===================+============+
+|no-absolute-import |80          |
++-------------------+------------+
+|old-division       |51          |
++-------------------+------------+
+|print-statement    |13          |
++-------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.92/10 (previous run: 7.22/10, +0.71)
+

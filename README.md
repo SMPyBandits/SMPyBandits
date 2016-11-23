@@ -99,7 +99,7 @@ make install  # install the requirements
 make run      # run and log the main.py script
 ```
 
-It can be used to check [the quality of the code](pylint.log.txt) with [pylint](https://www.pylint.org/):
+It can be used to check [the quality of the code](logs/main_pylint_log.txt) with [pylint](https://www.pylint.org/):
 ```bash
 make lint lint3  # check the code with pylint
 ```
@@ -139,7 +139,7 @@ The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a
 ## Code organization
 ### Remarks (bragging):
 - Everything here is done in an imperative, object oriented style.
-- The code is [clean](pylint.log.txt), valid for both [Python 2](pylint.log.txt) and [Python 3](pylint3.log.txt).
+- The code is [clean](logs/main_pylint_log.txt), valid for both [Python 2](logs/main_pylint_log.txt) and [Python 3](logs/main_pylint3_log.txt).
 
 ### Layout of the code:
 - Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](Arms/Bernoulli.py)

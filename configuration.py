@@ -36,8 +36,8 @@ REPETITIONS = 100
 REPETITIONS = 50
 REPETITIONS = 20
 
-DO_PARALLEL = True
 DO_PARALLEL = False  # XXX do not let this = False
+DO_PARALLEL = True
 N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the policies
@@ -96,33 +96,33 @@ configuration = {
         # },
     ],
     "policies": [
-        # --- Stupid algorithms
-        {
-            "archtype": Dummy,   # The stupidest policy
-            "params": {}
-        },
-        # --- Epsilon-... algorithms
-        {
-            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-            "params": {
-                "epsilon": EPSILON
-            }
-        },
-        {
-            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "decreasingRate": 0.005,
-            }
-        },
-        {
-            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "horizon": HORIZON
-            }
-        },
-        # --- UCB algorithms
+        # # --- Stupid algorithms
+        # {
+        #     "archtype": Dummy,   # The stupidest policy
+        #     "params": {}
+        # },
+        # # --- Epsilon-... algorithms
+        # {
+        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+        #     "params": {
+        #         "epsilon": EPSILON
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "decreasingRate": 0.005,
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
         #     "params": {}
