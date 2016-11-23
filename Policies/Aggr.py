@@ -29,13 +29,14 @@ class Aggr:
     """
 
     def __init__(self, nbArms, learningRate, children,
+                 decreaseRate=None,
                  update_all_children=update_all_children, prior='uniform',
                  one_job_by_children=one_job_by_children, n_jobs=1, verbosity=5):
         self.nbArms = nbArms
         self.learningRate = learningRate
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
-        # Parameters for joblib
+        # Parameters for internal use of joblib.Parallel ?
         self.n_jobs = n_jobs
         # Create all child children
         if one_job_by_children:
@@ -85,7 +86,10 @@ class Aggr:
         self.pulls[arm] += 1
         self.t += 1
         # FIXME I am trying to reduce the learning rate (geometrically) when t increase...
-        learningRate = self.learningRate * np.exp(- self.t / 1000.)
+        if self.decreaseRate is not None:
+            learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
+        else:
+            learningRate = self.learningRate
         if self.USE_JOBLIB:
             # FIXME the parallelization here was not improving anything
             joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(

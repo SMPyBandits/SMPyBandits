@@ -7,8 +7,12 @@ Script to load the config, run the simulations, and plot them.
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+# Generic imports
 from os import mkdir
 import os.path
+# Adding a time profiler!
+# import cProfile
+# Local imports
 from Environment import Evaluator
 from configuration import configuration
 
@@ -34,15 +38,23 @@ if __name__ == '__main__':
                            averageOn=averageOn,
                            useJoblibForPolicies=useJoblibForPolicies
                            )
-    # Start the evaluation
-    evaluation.start()
-
-    # Print final ranking and plot, for each environment
+    # evaluation.start_all_env()
+    # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
-    for i in range(N):
-        evaluation.giveFinalRanking(i)
-        # XXX be more explicit here
-        hashvalue = abs(hash((tuple(configuration.keys()), configuration.values())))  # (almost) unique hash from the configuration
-        imagename = "main__{}_{}-{}.png".format(hashvalue, i + 1, N)
-        evaluation.plotResults(i, savefig=os.path.join(plot_dir, imagename), semilogx=semilogx)
-        # evaluation.plotResults(i, semilogx=not semilogx)
+    for envId, env in enumerate(evaluation.envs):
+        # Evaluate just that env
+        evaluation.start_one_env(envId, env)
+        # Display the final rankings for that env
+        print("Giving the final ranks ...")
+        evaluation.giveFinalRanking(envId)
+        # Sub folder with a useful name
+        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        # (almost) unique hash from the configuration
+        hashvalue = abs(hash((tuple(configuration.keys()), configuration.values())))
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        savefig = os.path.join(plot_dir, subfolder, imagename)
+        print("Plotting the results, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotResults(envId, semilogx=not semilogx)
+        evaluation.plotResults(envId, savefig=savefig, semilogx=semilogx)
+    # Done

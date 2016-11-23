@@ -8,12 +8,30 @@ run:
 
 # Runners
 main:
-	time nice -n 20 ipython2 ./main.py
-	# time nice -n 20 python2 ./main.py | tee ./main.py.log
+	time nice -n 20 ipython2 ./main.py | tee ./main_py2_log.txt
+	# time nice -n 20 python2 ./main.py | tee ./main_py2_log.txt
 
 main3:
-	time nice -n 20 ipython3 ./main.py
-	# time nice -n 20 python3 ./main.py | tee ./main.py.log
+	time nice -n 20 ipython3 ./main.py | tee ./main_py3_log.txt
+	# time nice -n 20 python3 ./main.py | tee ./main_py3_log.txt
+
+# Time profilers
+profile:
+	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
+	# time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
+
+profile3:
+	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
+	# time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
+
+# Line time profilers
+line_profile:
+	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
+	# time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
+
+profile3:
+	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
+	# time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
 
 # Installers
 install:
@@ -40,11 +58,23 @@ stats:
 NPROC = `getconf _NPROCESSORS_ONLN`
 
 lint:
-	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./pylint.log.txt
+	pylint -j $(NPROC) ./*.py ./*/*.py | tee ._pylint_log.txt.txt
 
 lint3:
-	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./pylint3.log.txt
+	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ._pylint3_log.txt.txt
 
 2to3:
 	-echo "FIXME this does not work from make (Makefile), but work from Bash"
 	echo 'for i in {,*/}*.py; do clear; echo $i; 2to3 -p $i 2>&1 | grep -v "root:" | colordiff ; read; done'
+
+pyreverse:
+	pyreverse -o dot -my -f ALL -p AlgoBandits ./*.py ./*/*.py
+	# Output packages and classes graphs to SVG...
+	dot -Tsvg packages_AlgoBandits.dot > packages_AlgoBandits.svg
+	dot -Tsvg classes_AlgoBandits.dot > classes_AlgoBandits.svg
+	# Output packages and classes graphs to PNG...
+	dot -Tpng packages_AlgoBandits.dot > packages_AlgoBandits.png
+	dot -Tpng classes_AlgoBandits.dot > classes_AlgoBandits.png
+	# Output packages and classes graphs to PDF...
+	# dot -Tpdf packages_AlgoBandits.dot > packages_AlgoBandits.pdf
+	# dot -Tpdf classes_AlgoBandits.dot > classes_AlgoBandits.pdf

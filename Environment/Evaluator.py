@@ -56,8 +56,11 @@ class Evaluator:
             self.policies.append(policy['archtype'](env.nbArms,
                                                     **policy['params']))
 
-    def start(self):
+    def start_all_env(self):
         for envId, env in enumerate(self.envs):
+            self.start_one_env(envId, env)
+
+    def start_one_env(self, envId, env):
             print("\nEvaluating environment:", repr(env))
             self.policies = []
             self.__initPolicies__(env)

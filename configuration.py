@@ -19,25 +19,25 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
+HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 10000
-HORIZON = 500
+HORIZON = 3000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
-REPETITIONS = 1
+REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
-REPETITIONS = 20
+REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 100
-REPETITIONS = 50
+REPETITIONS = 20
 
-DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
+DO_PARALLEL = False  # XXX do not let this = False
 N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the policies
@@ -261,6 +261,8 @@ if TEST_AGGR:
             "archtype": Aggr,
             "params": {
                 "learningRate": LEARNING_RATE,
+                # "decreaseRate": None,
+                "decreaseRate": 1000.,
                 "update_all_children": UPDATE_ALL_CHILDREN,
                 "children": NON_AGGR_POLICIES,
                 "n_jobs": N_JOBS,
