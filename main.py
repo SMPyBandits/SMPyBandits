@@ -53,7 +53,15 @@ if __name__ == '__main__':
         hashvalue = abs(hash((tuple(configuration.keys()), configuration.values())))
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
-        savefig = os.path.join(plot_dir, subfolder, imagename)
+        # Create the sub folder
+        plot_dir = os.path.join(plot_dir, subfolder)
+        if os.path.isdir(plot_dir):
+            print("{} is already a directory here...".format(plot_dir))
+        elif os.path.isfile(plot_dir):
+            raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+        else:
+            mkdir(plot_dir)
+        savefig = os.path.join(plot_dir, imagename)
         print("Plotting the results, and saving the plot to {} ...".format(savefig))
         # evaluation.plotResults(envId, semilogx=not semilogx)
         evaluation.plotResults(envId, savefig=savefig, semilogx=semilogx)

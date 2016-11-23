@@ -8,28 +8,28 @@ run:
 
 # Runners
 main:
-	time nice -n 20 ipython2 ./main.py | tee ./main_py2_log.txt
-	# time nice -n 20 python2 ./main.py | tee ./main_py2_log.txt
+	time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt
+	# time nice -n 20 python2 ./main.py | tee ./logs/main_py2_log.txt
 main3:
-	time nice -n 20 ipython3 ./main.py | tee ./main_py3_log.txt
-	# time nice -n 20 python3 ./main.py | tee ./main_py3_log.txt
+	time nice -n 20 ipython3 ./main.py | tee ./logs/main_py3_log.txt
+	# time nice -n 20 python3 ./main.py | tee ./logs/main_py3_log.txt
 
 # Time profilers
 profile:
-	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
+	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
 profile3:
-	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
+	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
 
 # Line time profilers
 line_profile:
-	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
+	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./logs/main_py2_line_profile_log.txt
 line_profile3:
-	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
+	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./logs/main_py3_line_profile_log.txt
 
 # Time profilers
 pycallgraph:
-	time nice -n 20 pycallgraph -f svg -o pycallgraph.svg --verbose -- ./main.py | tee ./main_pycallgraph_log.txt
-	# time nice -n 20 pycallgraph --verbose --threaded --memory -- ./main.py | tee ./main_pycallgraph_log.txt  # XXX experimental
+	time nice -n 20 pycallgraph -f svg -o pycallgraph.svg --verbose -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 20 pycallgraph --verbose --threaded --memory -- ./main.py | tee ./logs/main_pycallgraph_log.txt  # XXX experimental
 
 # Installers
 install:
@@ -55,9 +55,9 @@ stats:
 NPROC = `getconf _NPROCESSORS_ONLN`
 
 lint:
-	pylint -j $(NPROC) ./*.py ./*/*.py | tee ._pylint_log.txt.txt
+	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt.txt
 lint3:
-	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ._pylint3_log.txt.txt
+	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt.txt
 
 2to3:
 	-echo "FIXME this does not work from make (Makefile), but work from Bash"

@@ -5,8 +5,10 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+# Generic imports
 from copy import deepcopy
 from random import shuffle
+# Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
 try:
@@ -15,7 +17,7 @@ try:
 except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
-
+# Local imports
 from .Result import Result
 from .MAB import MAB
 
@@ -33,6 +35,7 @@ class Evaluator:
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
         self.useJoblibForPolicies = useJoblibForPolicies
+        self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
         self.envs = []
         self.policies = []
         self.__initEnvironments__()
@@ -76,7 +79,7 @@ class Evaluator:
             # # FIXME try to also parallelize this loop on policies ?
             for polId, policy in enumerate(self.policies):
                 print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
-                if USE_JOBLIB:
+                if self.useJoblib:
                     results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                         joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
                         for _ in range(self.cfg['repetitions'])
@@ -123,7 +126,7 @@ class Evaluator:
         # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
-        plt.title(r"Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
@@ -153,7 +156,7 @@ class Evaluator:
 
 def delayed_start(self, env, policy, polId, envId):
     print("\n- Evaluating: {} ...".format(policy))
-    if USE_JOBLIB:
+    if self.useJoblib:
         results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
             joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
             for _ in range(self.cfg['repetitions'])

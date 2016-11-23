@@ -20,20 +20,20 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 2000
+HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 10000
-HORIZON = 3000
+HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
-REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 100
+REPETITIONS = 50
 REPETITIONS = 20
 
 DO_PARALLEL = True
@@ -96,32 +96,32 @@ configuration = {
         # },
     ],
     "policies": [
-        # # --- Stupid algorithms
-        # {
-        #     "archtype": Dummy,   # The stupidest policy
-        #     "params": {}
-        # },
-        # # --- Epsilon-... algorithms
-        # {
-        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-        #     "params": {
-        #         "epsilon": EPSILON
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "decreasingRate": 0.005,
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # --- Stupid algorithms
+        {
+            "archtype": Dummy,   # The stupidest policy
+            "params": {}
+        },
+        # --- Epsilon-... algorithms
+        {
+            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+            "params": {
+                "epsilon": EPSILON
+            }
+        },
+        {
+            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "decreasingRate": 0.005,
+            }
+        },
+        {
+            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "horizon": HORIZON
+            }
+        },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
