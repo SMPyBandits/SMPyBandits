@@ -17,21 +17,26 @@ main3:
 
 # Time profilers
 profile:
-	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
+	time nice -n 20 ipython2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
 	# time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
 
 profile3:
-	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
+	time nice -n 20 ipython3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
 	# time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
 
 # Line time profilers
 line_profile:
-	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
+	time nice -n 20 ipython2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
 	# time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
 
-profile3:
-	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
+line_profile3:
+	time nice -n 20 ipython3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
 	# time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
+
+# Time profilers
+pycallgraph:
+	time nice -n 20 pycallgraph -f svg -o pycallgraph.svg --verbose -- ./main.py | tee ./main_pycallgraph_log.txt
+	# time nice -n 20 pycallgraph --verbose --threaded --memory -- ./main.py | tee ./main_pycallgraph_log.txt  # XXX experimental
 
 # Installers
 install:
@@ -68,13 +73,15 @@ lint3:
 	echo 'for i in {,*/}*.py; do clear; echo $i; 2to3 -p $i 2>&1 | grep -v "root:" | colordiff ; read; done'
 
 pyreverse:
+	-mkdir uml_diagrams/
 	pyreverse -o dot -my -f ALL -p AlgoBandits ./*.py ./*/*.py
-	# Output packages and classes graphs to SVG...
-	dot -Tsvg packages_AlgoBandits.dot > packages_AlgoBandits.svg
-	dot -Tsvg classes_AlgoBandits.dot > classes_AlgoBandits.svg
+	-mv -vf packages_AlgoBandits.dot classes_AlgoBandits.dot uml_diagrams/
 	# Output packages and classes graphs to PNG...
-	dot -Tpng packages_AlgoBandits.dot > packages_AlgoBandits.png
-	dot -Tpng classes_AlgoBandits.dot > classes_AlgoBandits.png
+	dot -Tpng uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.png
+	dot -Tpng uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.png
+	# Output packages and classes graphs to SVG...
+	dot -Tsvg uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.svg
+	dot -Tsvg uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.svg
 	# Output packages and classes graphs to PDF...
-	# dot -Tpdf packages_AlgoBandits.dot > packages_AlgoBandits.pdf
-	# dot -Tpdf classes_AlgoBandits.dot > classes_AlgoBandits.pdf
+	# dot -Tpdf uml_diagrams/packages_AlgoBandits.dot > uml_diagrams/packages_AlgoBandits.pdf
+	# dot -Tpdf uml_diagrams/classes_AlgoBandits.dot  > uml_diagrams/classes_AlgoBandits.pdf

@@ -24,28 +24,26 @@ Another approach could be to do some sort of [grid search](http://scikit-learn.o
 ----
 
 ## Remarks
-- [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores, as it is by default).
-- Most of the code comes from the [pymabandits](http://mloss.org/software/view/415/) project, but some of them were refactored. Thanks to the initial project!
-- This work is still in its early stage of development!
-- This aggregated bandit algorithm has NO THEORETICAL warranties what so ever - yet.
+- [G.Varoquaux](http://gael-varoquaux.info/)'s [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) class, so the simulations can easily be parallelized. (Put `n_jobs = -1` or `PARALLEL = True` to use all your CPU cores, as it is by default).
+- Most of the code comes from the [pymaBandits](http://mloss.org/software/view/415/) project, but some of them were refactored. Thanks to the initial project!
+
+### Warning
+- This work is still in **its early stage of development**!
+- This aggregated bandit algorithm has NO THEORETICAL warranties what so ever - *yet*.
 
 ----
 
 ## Configuration:
-A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the experiments.
+A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-For example, this will compare the [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py), and the less classical [`AdBandit`](Policies/AdBandit.py) algorithms.
+For example, this will compare the classical MAB algorithms [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py), and the less classical [`AdBandit`](Policies/AdBandit.py) algorithms.
 
 ```python
 configuration = {
-    # Finite horizon of the simulation
-    "horizon": 10000,
-    # number of repetitions
-    "repetitions": 100,
-    # Maximum number of cores for parallelization
-    "n_jobs": -1,
-    # Verbosity for the joblib calls
-    "verbosity": 5,
+    "horizon": 10000,    # Finite horizon of the simulation
+    "repetitions": 100,  # number of repetitions
+    "n_jobs": -1,        # Maximum number of cores for parallelization: use ALL your CPU
+    "verbosity": 5,      # Verbosity for the joblib calls
     # Environment configuration, you can set up more than one.
     "environment": [
         {
@@ -55,34 +53,18 @@ configuration = {
     ],
     # Policies that should be simulated, and their parameters.
     "policies": [
-        {
-            "archtype": UCB,
-            "params": {}
-        },
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.5,
-                "horizon": 10000  # AdBandit require to know the horizon
-            }
-        }
+        {"archtype": UCB, "params": {} },
+        {"archtype": Thompson, "params": {} },
+        {"archtype": klUCB, "params": {} },
+        {"archtype": BayesUCB, "params": {} },
+        {"archtype": AdBandit, "params": {
+                "alpha": 0.5, "horizon": 10000  # AdBandit require to know the horizon
+        } }
     ]
 }
 ```
 
-To add an aggregated bandit algorithm ([`Aggr` class](Policies/Aggr.py)), you can use this piece of code, to aggregate all the algorithms defined before:
+To add an aggregated bandit algorithm ([`Aggr` class](Policies/Aggr.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
 ```python
 current_policies = configuration["policies"]
 configuration["policies"] = current_policies +
@@ -99,13 +81,13 @@ configuration["policies"] = current_policies +
 ----
 
 ## How to run the experiments ?
-First, install the requirements:
+*First*, install the requirements:
 ```bash
 pip install -r requirements.txt
 ```
 
-Then it should be very straight forward to run some experiment.
-This will plot run the simulation, average them (by `repetitions`) and plot the results:
+*Then*, it should be very straight forward to run some experiment.
+This will run the simulation, average them (by `repetitions`) and plot the results:
 ```bash
 python main.py
 ```
@@ -150,24 +132,55 @@ The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a
 
 ## A note on execution times, speed and profiling.
 - About (time) profiling with Python (2 or 3): `cProfile` or `profile` [in Python 2 documentation](https://docs.python.org/2/library/profile.html) ([in Python 3 documentation](https://docs.python.org/2/library/profile.html)), [this StackOverflow thread](https://stackoverflow.com/a/7693928/5889533), [this blog post](https://www.huyng.com/posts/python-performance-analysis), and the documentation of [`line_profiler`](https://github.com/rkern/line_profiler) (to profile lines instead of functions) and [`pycallgraph`](http://pycallgraph.slowchop.com/en/master/) (to illustrate function calls) and [`yappi`](https://pypi.python.org/pypi/yappi/) (which seems to be thread aware).
-- See also [`pyreverse`]() to get nice UML-like diagrams illustrating the relationships of packages and classes between each-other.
+- See also [`pyreverse`](https://www.logilab.org/blogentry/6883) to get nice UML-like diagrams illustrating the relationships of packages and classes between each-other.
+
+----
+
+## Code organization
+### Remarks (bragging):
+- Everything here is done in an imperative, object oriented style.
+- The code is [clean](pylint.log.txt), valid for both [Python 2](pylint.log.txt) and [Python 3](pylint3.log.txt).
+
+### Layout of the code:
+- Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](Arms/Bernoulli.py)
+- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](Policies/BayesUCB.py), [`Policies.klUCB`](Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggr`](Policies/Aggr.py) for my *aggregated bandits* algorithms.
+- Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](Environment/MAB.py), simulation results are stored in a [`Environment.Result`](Environment/Result.py), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluate`](Environment/Evaluate.py).
+- [`configuration.py`](configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
+- [`main.py`](main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
+
+For more details, see these UML diagrams:
+[![UML Diagram - Packages of AlgoBandits.git](uml_diagrams/packages_AlgoBandits.png)](uml_diagrams/packages_AlgoBandits.png)
+[![UML Diagram - Classes of AlgoBandits.git](uml_diagrams/classes_AlgoBandits.png)](uml_diagrams/classes_AlgoBandits.png)
 
 ----
 
 ## :boom: TODO
+### Initial things to do - OK
 - [x] clean up code, OK
 - [x] lint the code and make it "perfect", OK
 - [x] pass it to Python 3.5 (while still being valid Python 2.7), OK
 - [x] add more arms: Gaussian, Exponential, Poisson, OK
 - [x] add my aggregated bandit algorithm, OK
-- [ ] explore the behavior of my algorithm, and understand it better (and improve it?)
+
+### Improve the code
 - [x] In fact, [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) cannot be easily used as it cannot run *on-line*! Sadly OK
-- [ ] document all that, at least a little bit
-- [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf) or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf)
+- [ ] explore the behavior of my algorithm, and understand it better (and improve it?)
+- [ ] TODO fully profile my code, with `cProfile` for functions and `line_profiler` for line-by-line. Improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](), or [`cython`]() code ?
+
+### Better storing of the simulation results
 - [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts) to store the data, on the run (to never lose data even if the simulation gets killed)
-- [ ] implement some algorithms from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
+
+### Publicly release it ?
+- [ ] document all that, at least a little bit
 - [ ] keep it on GitHub, then make the repository public
+
+### More MAB algorithms
+- [ ] implement some algorithms from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
+- [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf) or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf)
+
+### Multi-players simulations ?
 - [ ] implement a multi-player simulation environment as well!
+- [ ] implement the [`rho_rand`](http://ieeexplore.ieee.org/document/5462144/), [`TDFS`](https://arxiv.org/abs/0910.2065v3), [`MEGA`](https://arxiv.org/abs/1404.5421), [`Musical Chair` and `Dynamic Musical Chair`](https://arxiv.org/abs/1512.02866) multi-player algorithms
 
 ----
 
