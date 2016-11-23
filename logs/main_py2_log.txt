@@ -1,0 +1,40 @@
+Loaded experiments configuration from 'configuration.py' :
+configuration['policies'] = [{'archtype': <class Policies.Softmax.Softmax at 0x7f0e6f8082c0>, 'params': {'temperature': 0.01}}, {'archtype': <class 'Policies.Thompson.Thompson'>, 'params': {}}, {'archtype': <class 'Policies.klUCB.klUCB'>, 'params': {}}, {'archtype': <class 'Policies.BayesUCB.BayesUCB'>, 'params': {}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.5, 'horizon': 2000}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.125, 'horizon': 2000}}, {'archtype': <class Policies.Aggr.Aggr at 0x7f0e6f808940>, 'params': {'n_jobs': 1, 'verbosity': 0, 'decreaseRate': None, 'update_all_children': True, 'one_job_by_children': False, 'learningRate': 0.05, 'children': [{'archtype': <class Policies.Softmax.Softmax at 0x7f0e6f8082c0>, 'params': {'temperature': 0.01}}, {'archtype': <class 'Policies.Thompson.Thompson'>, 'params': {}}, {'archtype': <class 'Policies.klUCB.klUCB'>, 'params': {}}, {'archtype': <class 'Policies.BayesUCB.BayesUCB'>, 'params': {}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.5, 'horizon': 2000}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.125, 'horizon': 2000}}]}}]
+plots is already a directory here...
+Number of algorithms to compare: 7
+Number of environments to try: 1
+Time horizon: 2000
+Number of repetitions: 50
+
+Evaluating environment: <MAB{'arms': [B(0.01), B(0.02), B(0.3), B(0.4), B(0.5), B(0.6), B(0.78), B(0.8), B(0.82)], 'maxArm': 0.81999999999999995, 'nbArms': 9}>
+policy = {'archtype': <class Policies.Softmax.Softmax at 0x7f0e6f8082c0>, 'params': {'temperature': 0.01}}
+policy = {'archtype': <class 'Policies.Thompson.Thompson'>, 'params': {}}
+policy = {'archtype': <class 'Policies.klUCB.klUCB'>, 'params': {}}
+policy = {'archtype': <class 'Policies.BayesUCB.BayesUCB'>, 'params': {}}
+policy = {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.5, 'horizon': 2000}}
+policy = {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.125, 'horizon': 2000}}
+policy = {'archtype': <class Policies.Aggr.Aggr at 0x7f0e6f808940>, 'params': {'n_jobs': 1, 'verbosity': 0, 'decreaseRate': None, 'update_all_children': True, 'one_job_by_children': False, 'learningRate': 0.05, 'children': [{'archtype': <class Policies.Softmax.Softmax at 0x7f0e6f8082c0>, 'params': {'temperature': 0.01}}, {'archtype': <class 'Policies.Thompson.Thompson'>, 'params': {}}, {'archtype': <class 'Policies.klUCB.klUCB'>, 'params': {}}, {'archtype': <class 'Policies.BayesUCB.BayesUCB'>, 'params': {}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.5, 'horizon': 2000}}, {'archtype': <class Policies.AdBandits.AdBandit at 0x7f0e6f808808>, 'params': {'alpha': 0.125, 'horizon': 2000}}]}}
+
+- Evaluating policy #1/7: Softmax (temperature:0.01) ...
+
+- Evaluating policy #2/7: Thompson ...
+
+- Evaluating policy #3/7: klUCB ...
+
+- Evaluating policy #4/7: BayesUCB ...
+
+- Evaluating policy #5/7: AdBandit (alpha:0.5) ...
+
+- Evaluating policy #6/7: AdBandit (alpha:0.125) ...
+
+- Evaluating policy #7/7: Aggr (nb:6, rate:0.05) ...
+Giving the final ranks ...
+
+Final ranking for this environment #0 :
+- Policy 'Aggr (nb:6, rate:0.05)'	was ranked	1 / 7 for this simulation (last regret = 33.940).
+- Policy 'AdBandit (alpha:0.5)'	was ranked	2 / 7 for this simulation (last regret = 36.660).
+- Policy 'AdBandit (alpha:0.125)'	was ranked	3 / 7 for this simulation (last regret = 39.120).
+- Policy 'Softmax (temperature:0.01)'	was ranked	4 / 7 for this simulation (last regret = 41.640).
+- Policy 'BayesUCB'	was ranked	5 / 7 for this simulation (last regret = 43.140).
+- Policy 'Thompson'	was ranked	6 / 7 for this simulation (last regret = 50.620).
+- Policy 'klUCB'	was ranked	7 / 7 for this simulation (last regret = 53.100).

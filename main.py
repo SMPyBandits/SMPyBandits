@@ -42,6 +42,8 @@ if __name__ == '__main__':
     # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
+        # (almost) unique hash from the configuration
+        hashvalue = abs(hash((tuple(tuple(configuration.keys())), tuple(configuration.values()))))
         # Evaluate just that env
         evaluation.start_one_env(envId, env)
         # Display the final rankings for that env
@@ -49,8 +51,6 @@ if __name__ == '__main__':
         evaluation.giveFinalRanking(envId)
         # Sub folder with a useful name
         subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        # (almost) unique hash from the configuration
-        hashvalue = abs(hash((tuple(configuration.keys()), configuration.values())))
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
         # Create the sub folder

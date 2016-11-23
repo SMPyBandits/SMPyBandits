@@ -8,6 +8,7 @@ __version__ = "$Revision: 1.7 $"
 
 from math import sqrt, log
 import numpy as np
+
 from .IndexPolicy import IndexPolicy
 
 

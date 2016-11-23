@@ -8,8 +8,8 @@ run:
 
 # Runners
 main:
-	time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt
-	# time nice -n 20 python2 ./main.py | tee ./logs/main_py2_log.txt
+	# time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt
+	time nice -n 20 python2 ./main.py | tee ./logs/main_py2_log.txt
 main3:
 	time nice -n 20 ipython3 ./main.py | tee ./logs/main_py3_log.txt
 	# time nice -n 20 python3 ./main.py | tee ./logs/main_py3_log.txt

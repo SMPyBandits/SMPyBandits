@@ -33,8 +33,8 @@ REPETITIONS = 4  # Nb of cores
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 100
-REPETITIONS = 50
 REPETITIONS = 20
+REPETITIONS = 50
 
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
@@ -51,17 +51,21 @@ TEMPERATURE = 10
 TEMPERATURE = 100   # When -> oo, more uniformly at random
 TEMPERATURE = 0.01
 
-# FIXME improve the learning rate for my aggregated bandit
+# XXX try different values for the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2
 LEARNING_RATE = 0.5
 LEARNING_RATE = 0.1
 LEARNING_RATE = 0.05
-# FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 
 # To try more learning rates in one run
 # LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
-LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
+# LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
 LEARNING_RATES = [LEARNING_RATE]
+
+# XXX try different values for time tau for the decreasing rate for my aggregated bandit
+# FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
+DECREASE_RATE = HORIZON / 2.0
+DECREASE_RATE = None
 
 
 TEST_AGGR = True
@@ -261,8 +265,7 @@ if TEST_AGGR:
             "archtype": Aggr,
             "params": {
                 "learningRate": LEARNING_RATE,
-                # "decreaseRate": None,
-                "decreaseRate": 1000.,
+                "decreaseRate": DECREASE_RATE,
                 "update_all_children": UPDATE_ALL_CHILDREN,
                 "children": NON_AGGR_POLICIES,
                 "n_jobs": N_JOBS,

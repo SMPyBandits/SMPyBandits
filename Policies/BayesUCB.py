@@ -6,7 +6,6 @@ Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
 __version__ = "$Revision: 1.7 $"
 
-import numpy as np
 from .IndexPolicy import IndexPolicy
 from .Beta import Beta
 

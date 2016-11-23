@@ -10,7 +10,7 @@ import numpy as np
 import numpy.random as rn
 
 
-class IndexPolicy:
+class IndexPolicy(object):
     """ Class that implements a generic index policy."""
 
     def __init__(self, nbArms):
