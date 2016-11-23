@@ -23,8 +23,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 20000
 HORIZON = 30000
-HORIZON = 10000
 HORIZON = 3000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy

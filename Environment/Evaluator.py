@@ -180,16 +180,16 @@ def delayed_play(env, policy, horizon):
 
     policy.startGame()
     result = Result(env.nbArms, horizon)
-    t_half = int(horizon / 2.0)  # XXX Experimental
+    t_events = [int(horizon / 5.0), 2 * int(horizon / 5.0), 3 * int(horizon / 5.0), 4 * int(horizon / 5.0), ]  # XXX Experimental
     for t in range(horizon):
         choice = policy.choice()
         reward = env.arms[choice].draw(t)
         policy.getReward(choice, reward)
         result.store(t, choice, reward)
         # XXX Experimental : shuffle the arms at the middle of the simulation
-        if t == t_half:  # XXX Experimental
-            # shuffle(env.arms)
+        if t in t_events:  # XXX Experimental
+            shuffle(env.arms)
             # print("Shuffling the arms ...")  # DEBUG
-            env.arms = env.arms[::-1]
+            # env.arms = env.arms[::-1]
             # print("Inverting the order of the arms ...")  # DEBUG
     return result
