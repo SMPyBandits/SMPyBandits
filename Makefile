@@ -10,28 +10,21 @@ run:
 main:
 	time nice -n 20 ipython2 ./main.py | tee ./main_py2_log.txt
 	# time nice -n 20 python2 ./main.py | tee ./main_py2_log.txt
-
 main3:
 	time nice -n 20 ipython3 ./main.py | tee ./main_py3_log.txt
 	# time nice -n 20 python3 ./main.py | tee ./main_py3_log.txt
 
 # Time profilers
 profile:
-	time nice -n 20 ipython2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
-	# time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
-
+	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./main_py2_profile_log.txt
 profile3:
-	time nice -n 20 ipython3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
-	# time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
+	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./main_py3_profile_log.txt
 
 # Line time profilers
 line_profile:
-	time nice -n 20 ipython2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
-	# time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
-
+	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./main_py2_line_profile_log.txt
 line_profile3:
-	time nice -n 20 ipython3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
-	# time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
+	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./main_py3_line_profile_log.txt
 
 # Time profilers
 pycallgraph:
@@ -41,7 +34,6 @@ pycallgraph:
 # Installers
 install:
 	sudo pip  install -r requirements.txt
-
 install3:
 	sudo pip3 install -r requirements.txt
 
@@ -64,7 +56,6 @@ NPROC = `getconf _NPROCESSORS_ONLN`
 
 lint:
 	pylint -j $(NPROC) ./*.py ./*/*.py | tee ._pylint_log.txt.txt
-
 lint3:
 	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ._pylint3_log.txt.txt
 

@@ -34,6 +34,7 @@ class Aggr:
                  one_job_by_children=one_job_by_children, n_jobs=1, verbosity=5):
         self.nbArms = nbArms
         self.learningRate = learningRate
+        self.decreaseRate = decreaseRate
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
         # Parameters for internal use of joblib.Parallel ?
