@@ -1,0 +1,147 @@
+Timer unit: 1e-06 s
+
+Total time: 1656.88 s
+File: ./Environment/Evaluator.py
+Function: start_one_env at line 66
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    66                                               @profile
+    67                                               def start_one_env(self, envId, env):
+    68         1           83     83.0      0.0              print("\nEvaluating environment:", repr(env))
+    69         1            4      4.0      0.0              self.policies = []
+    70         1         1555   1555.0      0.0              self.__initPolicies__(env)
+    71                                                       # if self.useJoblibForPolicies:
+    72                                                       #     n_jobs = len(self.policies)
+    73                                                       #     joblib.Parallel(n_jobs=n_jobs, verbose=self.cfg['verbosity'])(
+    74                                                       #         joblib.delayed(delayed_start)(self, env, policy, polId, envId)
+    75                                                       #         for polId, policy in enumerate(self.policies)
+    76                                                       #     )
+    77                                                       # else:
+    78                                                       #     for polId, policy in enumerate(self.policies):
+    79                                                       #         delayed_start(self, env, policy, polId, envId)
+    80                                                       # # FIXME try to also parallelize this loop on policies ?
+    81         8           16      2.0      0.0              for polId, policy in enumerate(self.policies):
+    82         7          340     48.6      0.0                  print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
+    83         7           12      1.7      0.0                  if self.useJoblib:
+    84                                                               results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+    85                                                                   joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
+    86                                                                   for _ in range(self.cfg['repetitions'])
+    87                                                               )
+    88                                                           else:
+    89         7         1087    155.3      0.0                      results = []
+    90       707          859      1.2      0.0                      for _ in range(self.cfg['repetitions']):
+    91       700   1656834940 2366907.1    100.0                          r = delayed_play(env, policy, self.cfg['horizon'])
+    92       700         1508      2.2      0.0                          results.append(r)
+    93       707          552      0.8      0.0                  for r in results:
+    94       700        34464     49.2      0.0                      self.rewards[polId, envId, :] += np.cumsum(r.rewards)
+    95       700         1837      2.6      0.0                      self.pulls[envId][polId, :] += r.pulls
+
+Total time: 1641.51 s
+File: ./Environment/Evaluator.py
+Function: delayed_play at line 174
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   174                                           @profile
+   175                                           def delayed_play(env, policy, horizon):
+   176                                               # We have to deepcopy because this function is Parallel-ized
+   177       700       223856    319.8      0.0      env = deepcopy(env)
+   178       700       417490    596.4      0.0      policy = deepcopy(policy)
+   179       700         6685      9.6      0.0      horizon = deepcopy(horizon)
+   180                                           
+   181       700        24535     35.0      0.0      policy.startGame()
+   182       700        34651     49.5      0.0      result = Result(env.nbArms, horizon)
+   183   7000700      3866063      0.6      0.2      for t in range(horizon):
+   184   7000000   1445126060    206.4     88.0          choice = policy.choice()
+   185   7000000     17715425      2.5      1.1          reward = env.arms[choice].draw(t)
+   186   7000000    151410147     21.6      9.2          policy.getReward(choice, reward)
+   187   7000000     22683925      3.2      1.4          result.store(t, choice, reward)
+   188       700          365      0.5      0.0      return result
+
+Total time: 0.011257 s
+File: ./Policies/Aggr.py
+Function: startGame at line 69
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    69                                               @profile
+    70                                               def startGame(self):
+    71       101           92      0.9      0.8          self.t = 0
+    72       101          581      5.8      5.2          self.rewards = np.zeros(self.nbArms)
+    73       101          200      2.0      1.8          self.pulls = np.zeros(self.nbArms)
+    74                                                   # Start all child children
+    75       101           73      0.7      0.6          if self.USE_JOBLIB:
+    76                                                       # FIXME the parallelization here was not improving anything
+    77                                                       joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
+    78                                                           joblib.delayed(delayed_startGame)(self, i)
+    79                                                           for i in range(self.nbChildren)
+    80                                                       )
+    81                                                   else:
+    82       707          511      0.7      4.5              for i in range(self.nbChildren):
+    83       606         8251     13.6     73.3                  self.children[i].startGame()
+    84       101         1549     15.3     13.8          self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
+
+Total time: 86.9587 s
+File: ./Policies/Aggr.py
+Function: getReward at line 86
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    86                                               @profile
+    87                                               def getReward(self, arm, reward):
+    88   1000000      2620553      2.6      3.0          self.rewards[arm] += reward
+    89   1000000      2015283      2.0      2.3          self.pulls[arm] += 1
+    90   1000000      1130590      1.1      1.3          self.t += 1
+    91                                                   # FIXME I am trying to reduce the learning rate (geometrically) when t increase...
+    92   1000000       708076      0.7      0.8          if self.decreaseRate is not None:
+    93   1000000      4278824      4.3      4.9              learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
+    94                                                   else:
+    95                                                       learningRate = self.learningRate
+    96   1000000       742288      0.7      0.9          if self.USE_JOBLIB:
+    97                                                       # FIXME the parallelization here was not improving anything
+    98                                                       joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
+    99                                                           joblib.delayed(delayed_getReward)(self, arm, reward, i)
+   100                                                           for i in range(self.nbChildren)
+   101                                                       )
+   102                                                   else:
+   103                                                       # Give reward to all child children
+   104   7000000      5536238      0.8      6.4              for i in range(self.nbChildren):
+   105   6000000     21971660      3.7     25.3                  self.children[i].getReward(arm, reward)
+   106   7000000      4726833      0.7      5.4          for i in range(self.nbChildren):
+   107   6000000      5091786      0.8      5.9              if self.choices[i] == arm:  # this child's choice was chosen
+   108                                                           # 3. increase self.trusts for the children who were true
+   109   3919841      9007720      2.3     10.4                  self.trusts[i] *= np.exp(reward * learningRate)
+   110                                                   # DONE test both, by changing the option self.update_all_children
+   111   1000000       657475      0.7      0.8          if self.update_all_children:
+   112   7000000      4582006      0.7      5.3              for i in range(self.nbChildren):
+   113   6000000      4626663      0.8      5.3                  if self.choices[i] != arm:  # this child's choice was not chosen
+   114                                                               # 3. XXX decrease self.trusts for the children who were wrong
+   115   2080159      4494132      2.2      5.2                      self.trusts[i] *= np.exp(- reward * learningRate)
+   116                                                   # 4. renormalize self.trusts to make it a proba dist
+   117                                                   # In practice, it also decreases the self.trusts for the children who were wrong
+   118                                                   # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
+   119   1000000     14768621     14.8     17.0          self.trusts = self.trusts / np.sum(self.trusts)
+
+Total time: 732.266 s
+File: ./Policies/Aggr.py
+Function: choice at line 122
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   122                                               @profile
+   123                                               def choice(self):
+   124                                                   # 1. make vote every child children
+   125   1000000       740356      0.7      0.1          if self.USE_JOBLIB:
+   126                                                       # FIXME the parallelization here was not improving anything
+   127                                                       joblib.Parallel(n_jobs=self.n_jobs, verbose=self.verbosity)(
+   128                                                           joblib.delayed(delayed_choice)(self, i)
+   129                                                           for i in range(self.nbChildren)
+   130                                                       )
+   131                                                   else:
+   132   7000000      6719560      1.0      0.9              for i in range(self.nbChildren):
+   133   6000000    685746972    114.3     93.6                  self.choices[i] = self.children[i].choice()
+   134                                                   # print("self.choices =", self.choices)  # DEBUG
+   135                                                   # 2. select the vote to trust, randomly
+   136   1000000     39059595     39.1      5.3          return rn.choice(self.choices, p=self.trusts)
+

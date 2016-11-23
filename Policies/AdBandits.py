@@ -52,10 +52,11 @@ class AdBandit:
     def choice(self):
         # Thompson Exploration
         if rn.random() > 1.0 * self.t / (self.horizon * self.alpha):
+            # XXX if possible, this part should also use numpy arrays to be faster?
             upperbounds = [self.computeIndex(i) for i in range(self.nbArms)]
             maxIndex = max(upperbounds)
             bestArms = [arm for (arm, index) in enumerate(upperbounds) if index == maxIndex]
-            return rn.choice(bestArms)
+            arm = rn.choice(bestArms)
         # UCB-Bayes
         else:
             expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
@@ -64,4 +65,4 @@ class AdBandit:
             remin = np.min(regret)
             admissible = np.where(regret == remin)[0]
             arm = rn.choice(admissible)
-            return arm
+        return arm

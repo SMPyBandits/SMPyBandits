@@ -39,7 +39,7 @@ class klUCB(IndexPolicy):
         self.rewards = np.zeros(self.nbArms)
 
     def computeIndex(self, arm):
-        if self.pulls[arm] == 0:
+        if self.pulls[arm] < 1:
             return float('+infinity')
         else:
             # Could adapt tolerance to the value of self.t

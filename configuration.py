@@ -19,25 +19,25 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 500
 HORIZON = 3000
 HORIZON = 20000
-HORIZON = 10000
-HORIZON = 2000
 HORIZON = 30000
+HORIZON = 2000
+HORIZON = 500
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
-REPETITIONS = 20
 REPETITIONS = 50
 REPETITIONS = 500
-REPETITIONS = 100
 REPETITIONS = 200
+REPETITIONS = 20
+REPETITIONS = 100
 
-DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
+DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the policies
@@ -50,8 +50,8 @@ TEMPERATURE = 0.5
 TEMPERATURE = 1
 TEMPERATURE = 10
 TEMPERATURE = 100   # When -> oo, more uniformly at random
+# TEMPERATURE = 10.0 / HORIZON
 TEMPERATURE = 0.01
-TEMPERATURE = 10.0 / HORIZON
 
 # XXX try different values for the learning rate for my aggregated bandit
 LEARNING_RATE = 0.2
@@ -66,8 +66,8 @@ LEARNING_RATES = [LEARNING_RATE]
 
 # XXX try different values for time tau for the decreasing rate for my aggregated bandit
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
-DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
+DECREASE_RATE = HORIZON / 2.0
 
 
 TEST_AGGR = True

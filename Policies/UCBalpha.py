@@ -24,7 +24,7 @@ class UCBalpha():
         self.params = 'alpha:' + repr(alpha)
 
     def __str__(self):
-        return "UCBalpha (" + self.params + ")"
+        return "UCB1 (" + self.params + ")"
 
     def startGame(self):
         self.t = 0
@@ -34,11 +34,11 @@ class UCBalpha():
     def choice(self):
         if self.t < self.nbArms:
             arm = self.t % self.nbArms
-            self.pulls[arm] += 1
         else:
             # print(self.rewards, self.pulls, self.t)
             arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))
             # XXX should be uniformly chosen if more than one arm has the highest index
+        self.pulls[arm] += 1
         return arm
 
     def getReward(self, arm, reward):

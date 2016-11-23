@@ -21,10 +21,13 @@ profile3:
 	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
 
 # Line time profilers
-line_profile:
-	time nice -n 20 python2 -m line_profile -s cumtime ./main.py | tee ./logs/main_py2_line_profile_log.txt
-line_profile3:
-	time nice -n 20 python3 -m line_profile -s cumtime ./main.py | tee ./logs/main_py3_line_profile_log.txt
+line_profiler: kernprof lprof
+kernprof:
+	@echo "Running the script 'main.py' ..."
+	time nice -n 20 kernprof -l ./main.py | tee ./logs/main_py3_log.txt
+lprof:
+	@echo "Time profile, line by line, for the script 'main.py' ..."
+	time nice -n 20 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
 
 # Time profilers
 pycallgraph:
