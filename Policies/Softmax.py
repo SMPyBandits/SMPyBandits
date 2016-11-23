@@ -6,13 +6,12 @@ Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-from .IndexPolicy import IndexPolicy
 import numpy as np
 
 temperature = 1
 
 
-class Softmax(IndexPolicy):
+class Softmax():
     """The Boltzmann Exploration (Softmax) index policy.
     Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
     """

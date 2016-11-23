@@ -7,10 +7,9 @@ __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
 __version__ = "$Revision: 1.9 $"
 
 import numpy as np
-from .IndexPolicy import IndexPolicy
 
 
-class UCB(IndexPolicy):
+class UCB():
     """ The UCB index policy.
     Reference: [Lai & Robbins, 1985].
     """
@@ -36,11 +35,11 @@ class UCB(IndexPolicy):
     def choice(self):
         if self.t < self.nbArms:  # Force to first visit each arm
             arm = self.t % self.nbArms
-            self.pulls[arm] += 1
         else:
             # print(self.rewards, self.pulls, self.t)
             arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
             # XXX should be uniformly chosen if more than one arm has the highest index
+        self.pulls[arm] += 1
         return arm
 
     def getReward(self, arm, reward):

@@ -25,8 +25,5 @@ class Dummy():
     def getReward(self, arm, reward):
         pass
 
-    def computeIndex(self, arm):
-        pass
-
     def choice(self):
         return randint(0, self.nbArms - 1)

@@ -8,14 +8,13 @@ __version__ = "0.1"
 
 import numpy as np
 import random
-from .IndexPolicy import IndexPolicy
 
 
 epsilon = 0.1
 decreasingRate = 1e-6
 
 
-class EpsilonDecreasing(IndexPolicy):
+class EpsilonDecreasing():
     """ The epsilon-decreasing random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """

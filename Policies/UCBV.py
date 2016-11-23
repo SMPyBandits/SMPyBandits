@@ -17,13 +17,10 @@ class UCBV(IndexPolicy):
     """
 
     def __init__(self, nbArms, amplitude=1., lower=0.):
-        self.nbArms = nbArms
+        super(UCBV, self).__init__(nbArms)
         self.amplitude = amplitude
         self.lower = lower
-        self.pulls = np.zeros(nbArms)
-        self.rewards = np.zeros(nbArms)
         self.rewardsCorrected = np.zeros(nbArms)
-        self.t = -1
         self.params = 'amplitude: ' + repr(amplitude) + ', lower: ' + repr(lower)
 
     def __str__(self):

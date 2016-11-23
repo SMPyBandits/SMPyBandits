@@ -19,31 +19,30 @@ class KLempUCB(IndexPolicy):
     """
 
     def __init__(self, nbArms, maxReward=1.):
+        super(KLempUCB, self).__init__(nbArms)
         self.c = 1
-        self.nbArms = nbArms
         self.maxReward = maxReward
-        self.nbpulls = np.zeros(nbArms)
-        self.obs = dict()
-        self.t = -1
+        self.obs = [None] * nbArms  # List instead of dict, quicker access
         self.params = 'maxReward: ' + repr(maxReward)
 
     def startGame(self):
         self.t = 0
-        self.nbpulls = np.zeros(self.nbArms)
+        self.pulls = np.zeros(self.nbArms)
         for arm in range(self.nbArms):
             self.obs[arm] = {self.maxReward: 0}
 
     def computeIndex(self, arm):
-        if self.nbpulls[arm] > 0:
-            return self._KLucb(self.obs[arm], self.c * log(self.t) / self.nbpulls[arm])
+        if self.pulls[arm] > 0:
+            return self._KLucb(self.obs[arm], self.c * log(self.t) / self.pulls[arm])
         else:
             return float('+infinity')
 
     def getReward(self, arm, reward):
         self.t += 1
-        self.nbpulls[arm] += 1
+        self.pulls[arm] += 1
         self.obs[arm][reward] = 1 + self.obs[arm].get(reward, 0)
 
+    # FIXME this does not work apparently...
     def _KLucb(self, obs, klMax, debug=False):
         p = np.array(list(obs.values()))
         p = p / np.sum(p)

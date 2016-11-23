@@ -21,17 +21,14 @@ class klUCB(IndexPolicy):
     def __init__(self, nbArms,
                  amplitude=1., lower=0., tolerance=1e-4,
                  klucb=klucbBern):
+        super(klUCB, self).__init__(nbArms)
         self.c = 1.
-        self.nbArms = nbArms
         self.amplitude = float(amplitude)
         self.lower = lower
-        self.pulls = np.zeros(nbArms)
-        self.rewards = np.zeros(nbArms)
         self.klucb = klucb
         self.tolerance = tolerance
         self.params = 'amplitude:' + repr(self.amplitude) + \
                       ', lower:' + repr(self.lower)
-        self.t = -1
 
     def __str__(self):
         return "klUCB"

@@ -17,12 +17,11 @@ class BayesUCB(IndexPolicy):
     """
 
     def __init__(self, nbArms, posterior=Beta):
-        self.nbArms = nbArms
-        self.posterior = dict()
+        super(BayesUCB, self).__init__(nbArms)
+        self.posterior = [None] * nbArms  # List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
         self.params = 'posterior: ' + repr(posterior)
-        self.t = -1
 
     def startGame(self):
         self.t = 0

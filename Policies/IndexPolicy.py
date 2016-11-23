@@ -6,26 +6,43 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.5 $"
 
 
-import random
+import numpy as np
+import numpy.random as rn
 
 
 class IndexPolicy:
     """ Class that implements a generic index policy."""
 
-    def __init__(self):
-        self.nbArms = 0
+    def __init__(self, nbArms):
+        self.nbArms = nbArms
+        self._index = np.zeros(self.nbArms)
+        self.pulls = np.zeros(nbArms)
+        self.rewards = np.zeros(nbArms)
+        self.t = -1
+        self.params = ''
 
-    def computeIndex(self, arm):
-        pass
+    # def computeIndex(self, arm):
+    #     pass
+
+    def startGame(self):
+        self.t = 0
+        self.pulls = np.zeros(self.nbArms)
+        self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
         """ In an index policy, choose uniformly at random an arm with maximal index."""
-        index = dict()
         for arm in range(self.nbArms):
-            index[arm] = self.computeIndex(arm)
-        maxIndex = max(index.values())
-        bestArms = [arm for arm in index.keys() if index[arm] == maxIndex]
-        return random.choice(bestArms)  # Uniform choice among the best arms
+            self._index[arm] = self.computeIndex(arm)
+        maxIndex = np.max(self._index)
+        # bestArms = self._index[self._index == maxIndex]
+        # return rn.choice(bestArms)  # FIXED choice as to be an integer
+        # Uniform choice among the best arms
+        return np.random.choice(np.where(self._index == maxIndex)[0])
+
+    def getReward(self, arm, reward):
+        self.t += 1
+        self.pulls[arm] += 1
+        self.rewards[arm] += reward
 
     def __str__(self):
         return self.__class__.__name__

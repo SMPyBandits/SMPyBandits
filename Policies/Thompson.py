@@ -16,12 +16,10 @@ class Thompson(IndexPolicy):
     """
 
     def __init__(self, nbArms, posterior=Beta):
-        self.nbArms = nbArms
-        self.posterior = dict()
+        super(Thompson, self).__init__(nbArms)
+        self.posterior = [None] * nbArms  # List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        self.params = ''
-        self.t = -1
 
     def __str__(self):
         return "Thompson"
