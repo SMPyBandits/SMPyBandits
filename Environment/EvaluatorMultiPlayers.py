@@ -22,7 +22,7 @@ except ImportError:
 # Local imports
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
-from .CollisionModel import *
+from .CollisionModels import *
 
 # Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
 # cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
@@ -75,7 +75,7 @@ class EvaluatorMultiPlayers:
         self.pulls = dict()
         print("Number of environments to try:", len(self.envs))
         for env in range(len(self.envs)):
-            self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.cfg['horizon']))
+            self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
 
     def __initEnvironments__(self):
@@ -94,43 +94,46 @@ class EvaluatorMultiPlayers:
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
     def start_one_env(self, envId, env):
-            print("\nEvaluating environment:", repr(env))
-            self.players = []
-            self.__initPlayers__(env)
-            if self.useJoblib:
-                results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, self.players, self.horizon)
-                    for _ in range(self.repetitions)
-                )
-            else:
-                results = []
-                for _ in range(self.repetitions):
-                    r = delayed_play(env, self.players, self.horizon)
-                    results.append(r)
-            for playerId in range(self.nbPlayers):
-                # Get the position of the best arms
-                env = self.envs[envId]
-                means = np.array([arm.mean() for arm in env.arms])
-                bestarm = np.max(means)
-                index_bestarm = np.argwhere(np.isclose(means, bestarm))
-                for r in results:
-                    self.rewards[playerId, envId, :] += np.cumsum(r.rewards)
-                    self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
-                    self.pulls[envId][playerId, :] += r.pulls
+        print("\nEvaluating environment:", repr(env))
+        self.players = []
+        self.__initPlayers__(env)
+        if self.useJoblib:
+            results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                joblib.delayed(delayed_play)(env, self.players, self.horizon)
+                for _ in range(self.repetitions)
+            )
+        else:
+            results = []
+            for _ in range(self.repetitions):
+                r = delayed_play(env, self.players, self.horizon)
+                results.append(r)
+        # Get the position of the best arms
+        env = self.envs[envId]
+        means = np.array([arm.mean() for arm in env.arms])
+        bestarm = np.max(means)
+        index_bestarm = np.argwhere(np.isclose(means, bestarm))
+        for r in results:
+            self.rewards[:, envId, :] += np.cumsum(r.rewards)
+            self.bestArmPulls[envId] += np.cumsum(np.in1d(r.choices, index_bestarm))
+            self.pulls[envId] += r.pulls
+            # for playerId in range(self.nbPlayers):
+            #     self.rewards[playerId, envId, :] += np.cumsum(r.rewards[playerId])
+            #     self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId], index_bestarm))
+            #     self.pulls[envId][playerId, :] += r.pulls[playerId]
 
     def getPulls(self, playerId, environmentId):
-        return self.pulls[environmentId][playerId, :] / float(self.cfg['repetitions'])
+        return self.pulls[environmentId][playerId, :] / float(self.self.repetitions)
 
     def getbestArmPulls(self, playerId, environmentId):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.bestArmPulls[environmentId][playerId, :] / float(self.cfg['repetitions']) / np.arange(start=1, stop=1 + self.cfg['horizon'])
+        return self.bestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
     def getReward(self, playerId, environmentId):
         return self.rewards[playerId, environmentId, :] / float(self.repetitions)
 
     def getRegret(self, playerId, environmentId):
-        horizon = np.arange(self.horizon)
-        return horizon * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
+        times = np.arange(self.horizon)
+        return times * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
     # Plotting
     def plotResults(self, environmentId, savefig=None, semilogx=False):
@@ -163,7 +166,7 @@ class EvaluatorMultiPlayers:
             plt.plot(Y, label=str(player))
         plt.legend(loc='lower right')
         plt.grid()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(0, 1)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
@@ -207,7 +210,7 @@ def delayed_play(env, players, horizon,
         player.startGame()
     result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
 
-    choices = np.zeros(nbPlayers)
+    choices = np.zeros(nbPlayers, dtype=int)
     rewards = np.zeros(nbPlayers)
     for t in range(horizon):
         # Every player decides which arm to pull

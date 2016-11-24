@@ -20,7 +20,7 @@ plot_dir = "plots"
 semilogx = False
 
 # Parameters for the Evaluator object
-finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
+finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested players
 averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
 
 # Whether to do the plots or not
@@ -40,7 +40,7 @@ if __name__ == '__main__':
                                        averageOn=averageOn
                                        )
     # Start the evaluation and then print final ranking and plot, for each environment
-    M = len(evaluation.nbPlayers)
+    M = evaluation.nbPlayers
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
         # (almost) unique hash from the configuration
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         evaluation.giveFinalRanking(envId)
         if do_plot:
             # Sub folder with a useful name
-            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
             # Get the name of the output file
             imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
             # Create the sub folder

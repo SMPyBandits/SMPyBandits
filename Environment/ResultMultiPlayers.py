@@ -12,9 +12,9 @@ class ResultMultiPlayers:
     """
 
     def __init__(self, nbArms, horizon, nbPlayers):
-        self.choices = np.zeros(nbPlayers, horizon)
-        self.rewards = np.zeros(nbPlayers, horizon)
-        self.pulls = np.zeros(nbPlayers, nbArms)
+        self.choices = np.zeros((nbPlayers, horizon))
+        self.rewards = np.zeros((nbPlayers, horizon))
+        self.pulls = np.zeros((nbPlayers, nbArms))
 
     def store(self, time, choices, rewards):
         self.choices[:, time] = choices

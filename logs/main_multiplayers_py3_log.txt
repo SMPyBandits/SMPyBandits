@@ -1,0 +1,16 @@
+Loaded experiments configuration from 'configuration.py' :
+configuration['players'] = [{'archtype': <class 'PoliciesMultiPlayers.Dummy.Dummy'>, 'params': {'nbUsers': 1}}]
+plots is already a directory here...
+Number of players in the multi-players game: 1
+Time horizon: 500
+Number of repetitions: 1
+Number of environments to try: 1
+
+Evaluating environment: <MAB{'arms': [B(0.1), B(0.5), B(0.9)], 'maxArm': 0.9, 'nbArms': 3}>
+- Adding player #1 = {'archtype': <class 'PoliciesMultiPlayers.Dummy.Dummy'>, 'params': {'nbUsers': 1}} ...
+Giving the final ranks ...
+
+Final ranking for this environment #0 :
+- Player 'Dummy'	was ranked	1 / 1 for this simulation (last regret = 448.200).
+Plotting the results, and saving the plot to plots/MP__M1_T500_N1__1_algos/main____env1-1_7681648478510869507.png ...
+Saving to plots/MP__M1_T500_N1__1_algos/main____env1-1_7681648478510869507.png ...
