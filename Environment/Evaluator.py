@@ -55,14 +55,18 @@ class Evaluator:
     def __init__(self, configuration,
                  finalRanksOnAverage=True, averageOn=5e-3,
                  useJoblibForPolicies=False):
+        # Configuration
         self.cfg = configuration
+        # Flags
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
         self.useJoblibForPolicies = useJoblibForPolicies
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
+        # Internal object memory
         self.envs = []
         self.policies = []
         self.__initEnvironments__()
+        # Internal vectorial memory
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
         self.bestArmPulls = dict()
@@ -123,6 +127,7 @@ class Evaluator:
             means = np.array([arm.mean() for arm in env.arms])
             bestarm = np.max(means)
             index_bestarm = np.argwhere(np.isclose(means, bestarm))
+            # Store the results
             for r in results:
                 self.rewards[polId, envId, :] += np.cumsum(r.rewards)
                 self.bestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))

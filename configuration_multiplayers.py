@@ -20,31 +20,30 @@ from PoliciesMultiPlayers import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
+HORIZON = 2000
 HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 10000
-HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 500
-REPETITIONS = 200
 REPETITIONS = 100
+REPETITIONS = 200
+REPETITIONS = 500
 REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
-DO_PARALLEL = True
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
+DO_PARALLEL = True
 N_JOBS = -1 if DO_PARALLEL else 1
 
 
-# NB_PLAYERS : number of player.
-NB_PLAYERS = 1   # FIXME I should first check that the framework works well for 1 player
-NB_PLAYERS = 2
+# NB_PLAYERS : number of player, for policies who need it ?
+# NB_PLAYERS = 4
 
 
 configuration = {
@@ -58,35 +57,69 @@ configuration = {
     # Arms
     "environment": [
         # FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc!
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        },
-        # {   # A very easy problem, but it is used in a lot of articles
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        #     "params": [0.1, 0.5, 0.9]
         # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        },
     ],
     # XXX Parameters for the multi-players setting
-    # TODO first try with 1, then M stupid players, to check
     "players": [
-        # --- Stupid algorithm
+        # # --- Stupid algorithm
+        # {
+        #     "archtype": Dummy,   # The stupidest policy
+        #     "params": {
+        #     }
+        # },
+        # # --- Static or perfect (toy) algorithm
+        # {
+        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
+        #     "params": {
+        #         "armIndex": 8
+        #     }
+        # },
+        # {
+        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
+        #     "params": {
+        #         "armIndex": 7
+        #     }
+        # },
+        # {
+        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
+        #     "params": {
+        #         "armIndex": 6
+        #     }
+        # },
+        # --- Take randomly one of the best arm
         {
-            "archtype": Dummy,   # The stupidest policy
-            "params": {
-                "nbUsers": NB_PLAYERS
+            "archtype": UniformOnSome,
+            "params": {  # armIndexes = None : like the Dummy
+                "armIndexes": None
             }
         },
-        # --- Perfect (toy) algorithm
         {
-            "archtype": TakeBestArm,   # The stupidest policy
+            "archtype": UniformOnSome,
             "params": {
-                "nbUsers": NB_PLAYERS,
-                "bestArmIndex": -1     # For all our example, the best arm is the last one
+                "armIndexes": [6, 7, 8]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {
+                "armIndexes": [2, 3, 4, 5]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {
+                "armIndexes": [0, 1]
             }
         },
     ]
 }
 
 print("Loaded experiments configuration from 'configuration.py' :")
-print("configuration['players'] =", configuration["players"])  # DEBUG
+print("configuration =", configuration)  # DEBUG

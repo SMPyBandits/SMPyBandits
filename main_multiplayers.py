@@ -65,6 +65,10 @@ if __name__ == '__main__':
                 mkdir(plot_dir)
             savefig = os.path.join(plot_dir, imagename)
             print("Plotting the results, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotResults(envId, semilogx=not semilogx)
-            evaluation.plotResults(envId, savefig=savefig, semilogx=semilogx)
+            # evaluation.plotRewards(envId, semilogx=not semilogx)
+            evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
+            # Also plotting the probability of picking the best arm
+            savefig = savefig.replace('main', 'main_BestArmPulls')
+            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+            evaluation.plotBestArmPulls(envId, savefig=savefig)
     # Done

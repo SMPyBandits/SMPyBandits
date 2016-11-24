@@ -52,7 +52,7 @@ class EvaluatorMultiPlayers:
 
     def __init__(self, configuration,
                  finalRanksOnAverage=True, averageOn=5e-3):
-        # configuration
+        # Configuration
         self.cfg = configuration
         # Attributes
         self.nbPlayers = len(self.cfg['players'])
@@ -65,16 +65,17 @@ class EvaluatorMultiPlayers:
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
-        # Internal memory
+        # Internal object memory
         self.envs = []
         self.players = []
         self.__initEnvironments__()
-        self.rewards = np.zeros((self.nbPlayers,
-                                 len(self.envs), self.horizon))
+        # Internal vectorial memory
+        self.rewards = dict()
         self.bestArmPulls = dict()
         self.pulls = dict()
         print("Number of environments to try:", len(self.envs))
         for env in range(len(self.envs)):
+            self.rewards[env] = np.zeros((self.nbPlayers, self.horizon))
             self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
 
@@ -112,14 +113,12 @@ class EvaluatorMultiPlayers:
         means = np.array([arm.mean() for arm in env.arms])
         bestarm = np.max(means)
         index_bestarm = np.argwhere(np.isclose(means, bestarm))
+        # Store the results
         for r in results:
-            self.rewards[:, envId, :] += np.cumsum(r.rewards)
-            self.bestArmPulls[envId] += np.cumsum(np.in1d(r.choices, index_bestarm))
+            self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             self.pulls[envId] += r.pulls
-            # for playerId in range(self.nbPlayers):
-            #     self.rewards[playerId, envId, :] += np.cumsum(r.rewards[playerId])
-            #     self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId], index_bestarm))
-            #     self.pulls[envId][playerId, :] += r.pulls[playerId]
+            for playerId in range(self.nbPlayers):
+                self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId], index_bestarm))
 
     def getPulls(self, playerId, environmentId):
         return self.pulls[environmentId][playerId, :] / float(self.self.repetitions)
@@ -129,14 +128,14 @@ class EvaluatorMultiPlayers:
         return self.bestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
     def getReward(self, playerId, environmentId):
-        return self.rewards[playerId, environmentId, :] / float(self.repetitions)
+        return self.rewards[environmentId][playerId, :] / float(self.repetitions)
 
     def getRegret(self, playerId, environmentId):
         times = np.arange(self.horizon)
         return times * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
     # Plotting
-    def plotResults(self, environmentId, savefig=None, semilogx=False):
+    def plotRewards(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, player in enumerate(self.players):
@@ -153,7 +152,7 @@ class EvaluatorMultiPlayers:
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
-        plt.title("Regrets for each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players: personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
@@ -199,12 +198,19 @@ class EvaluatorMultiPlayers:
 def delayed_play(env, players, horizon,
                  collisionModel=defaultCollisionModel
                  ):
+    # print("Starting a call to 'delayed_play' with:")  # DEBUG
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     nbArms = env.nbArms
     players = deepcopy(players)
     horizon = deepcopy(horizon)
     nbPlayers = len(players)
+    # print("env =", env)  # DEBUG
+    # print("nbArms =", nbArms)  # DEBUG
+    # print("players =", players)  # DEBUG
+    # print("horizon =", horizon)  # DEBUG
+    # print("collisionModel =", collisionModel.__name__)  # DEBUG
+    # print(collisionModel.__doc__)  # DEBUG
 
     for player in players:
         player.startGame()
@@ -216,6 +222,7 @@ def delayed_play(env, players, horizon,
         # Every player decides which arm to pull
         for i, player in enumerate(players):
             choice = player.choice()
+            # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choice))  # DEBUG
             # rewards[i] = env.arms[choice].draw(t)
             choices[i] = choice
         # Then we decide if there is collisions and what to do why them

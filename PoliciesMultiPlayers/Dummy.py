@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The fully uniform multi-players policy: selects randomly (uniformly) an arm at each step (stupid).
+""" Dummy: the fully uniform policy: selects randomly (uniformly) an arm at each step (stupid).
 """
 
 __author__ = "Lilian Besson"
@@ -9,12 +9,11 @@ from random import randint
 
 
 class Dummy():
-    """ The fully uniform policy : selects randomly (uniformly) an arm at each step (stupid).
+    """ Dummy: the fully uniform policy : selects randomly (uniformly) an arm at each step (stupid).
     """
 
-    def __init__(self, nbArms, nbUsers=None):
+    def __init__(self, nbArms):
         self.nbArms = nbArms
-        self.nbUsers = nbUsers
         self.params = ''
 
     def __str__(self):

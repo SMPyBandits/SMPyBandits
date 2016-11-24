@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ PoliciesMultiPlayers : contains various bandits algorithms:
-Dummy, TakeBestArm.
+Dummy, TakeFixedArm, UniformOnSome.
 """
 # Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, Softmax, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
 
@@ -9,7 +9,8 @@ __version__ = "0.1"
 
 # Mine, stupid ones
 from .Dummy import Dummy
-from .TakeBestArm import TakeBestArm
+from .TakeFixedArm import TakeFixedArm
+from .UniformOnSome import UniformOnSome
 
 # from .EpsilonGreedy import EpsilonGreedy
 # from .EpsilonFirst import EpsilonFirst
