@@ -178,6 +178,8 @@ class EvaluatorMultiPlayers:
             plt.savefig(savefig)
         plt.show()
 
+    # TODO plot of number of collisions
+
     def giveFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         lastY = np.zeros(self.nbPlayers)

@@ -23,11 +23,11 @@ from Environment.CollisionModels import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
+HORIZON = 1000
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
 HORIZON = 20000
-HORIZON = 1000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -40,11 +40,16 @@ REPETITIONS = 500
 REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
-# DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
+DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
 
+
+# Collision model
+collisionModel = noCollision
+collisionModel = rewardIsSharedUniformly
+collisionModel = onlyUniqUserGetsReward
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -70,11 +75,9 @@ configuration = {
     "repetitions": REPETITIONS,
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 5,  # Max joblib verbosity
+    "verbosity": 8,  # Max joblib verbosity
     # --- Collision model
-    # "collisionModel": onlyUniqUserGetsReward,
-    "collisionModel": noCollision,
-    # "collisionModel": rewardIsSharedUniformly,
+    "collisionModel": collisionModel,
     # --- Other parameters for the Evaluator
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
@@ -89,23 +92,27 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
         # },
-        {   # An easy problem
-            "arm_type": Bernoulli,
-            "params": [round(t / 15.0, 2) for t in range(1, 15)]
-        },
+        # {   # An easy problem
+        #     "arm_type": Bernoulli,
+        #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
+        # },
         # {   # An easy problem
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        },
     ],
     # --- Parameters for the multi-players setting
     "players": [
-        # # --- Stupid algorithm
-        # {
-        #     "archtype": Dummy,   # The stupidest policy
-        #     "params": {
-        #     }
-        # },
+        # --- Stupid algorithm
+        {
+            "archtype": Dummy,   # The stupidest policy
+            "params": {
+            }
+        },
         # # --- Static or perfect (toy) algorithm
         # {
         #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
@@ -113,37 +120,37 @@ configuration = {
         #         "armIndex": 13
         #     }
         # },
-        # --- Take randomly one arm from a fixed set
+        # # --- Take randomly one arm from a fixed set
+        # # {
+        # #     "archtype": UniformOnSome,
+        # #     "params": {
+        # #         "armIndexes": [0, 13]
+        # #     }
+        # # },
         # {
         #     "archtype": UniformOnSome,
-        #     "params": {
-        #         "armIndexes": [0, 13]
+        #     "params": {  # Example: one of the best arms
+        #         "armIndexes": [10, 11, 12, 13]
         #     }
         # },
-        {
-            "archtype": UniformOnSome,
-            "params": {  # Example: one of the best arms
-                "armIndexes": [10, 11, 12, 13]
-            }
-        },
         {
             "archtype": UniformOnSome,
             "params": {
                 "armIndexes": [6, 7, 8, 9]
             }
         },
-        {
-            "archtype": UniformOnSome,
-            "params": {
-                "armIndexes": [0, 1, 12, 13]
-            }
-        },
-        {
-            "archtype": UniformOnSome,
-            "params": {  # Example: one of the worse arms
-                "armIndexes": [0, 1, 2, 3]
-            }
-        },
+        # {
+        #     "archtype": UniformOnSome,
+        #     "params": {
+        #         "armIndexes": [0, 1, 12, 13]
+        #     }
+        # },
+        # {
+        #     "archtype": UniformOnSome,
+        #     "params": {  # Example: one of the worse arms
+        #         "armIndexes": [0, 1, 2, 3]
+        #     }
+        # },
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -170,17 +177,17 @@ configuration = {
             "archtype": UCB,   # This basic UCB is very worse than the other
             "params": {}
         },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
-        # --- Softmax algorithms
-        {
-            "archtype": Softmax,   # This basic Softmax is very bad
-            "params": {
-                "temperature": TEMPERATURE
-            }
-        },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
+        # # --- Softmax algorithms
+        # {
+        #     "archtype": Softmax,   # This basic Softmax is very bad
+        #     "params": {
+        #         "temperature": TEMPERATURE
+        #     }
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,

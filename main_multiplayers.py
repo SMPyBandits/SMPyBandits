@@ -29,13 +29,13 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
     else:
         mkdir(plot_dir)
+    # (almost) unique hash from the configuration
+    hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
     evaluation = EvaluatorMultiPlayers(configuration)
     # Start the evaluation and then print final ranking and plot, for each environment
     M = evaluation.nbPlayers
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
-        # (almost) unique hash from the configuration
-        hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
         # Evaluate just that env
         evaluation.start_one_env(envId, env)
         # Display the final rankings for that env

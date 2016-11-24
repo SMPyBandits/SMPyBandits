@@ -18,7 +18,7 @@ import numpy as np
 
 
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls):
-    """ Simple collision model where only the players alone on one an arm sample it and receive the reward.
+    """ Simple collision model where only the players alone on one arm sample it and receive the reward.
 
     - This is the default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
     """
@@ -55,7 +55,7 @@ def noCollision(t, arms, players, choices, rewards, pulls):
 
 def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls):
     """ Simple collision model where:
-    - The players alone on one an arm sample it and receive the reward.
+    - The players alone on one arm sample it and receive the reward.
     - In case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward.
     """
     for arm in range(len(arms)):
