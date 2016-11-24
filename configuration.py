@@ -20,15 +20,14 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 2000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 3000
 HORIZON = 10000
+HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
-REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores
 REPETITIONS = 50
 REPETITIONS = 500
@@ -36,6 +35,7 @@ REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 1  # To profile the code, turn down parallel computing
 REPETITIONS = 20
+REPETITIONS = 1  # To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -84,6 +84,11 @@ configuration = {
     "repetitions": REPETITIONS,
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
+    # # Random events - TODO finish the improvement on Evaluator.py to support these parameters
+    # "random_shuffle": True,
+    # "random_invert": False,
+    # "nb_random_events": 5,
+    # Arms
     "environment": [
         # FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc!
         # {   # A very easy problem, but it is used in a lot of articles
@@ -189,14 +194,14 @@ configuration = {
             "archtype": BayesUCB,
             "params": {}
         },
-        # # --- AdBandit with different alpha paramters
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # --- AdBandit with different alpha paramters
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON
+            }
+        },
         # # {
         # #     "archtype": AdBandit,
         # #     "params": {
@@ -204,13 +209,13 @@ configuration = {
         # #         "horizon": HORIZON
         # #     }
         # # },
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.125,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.125,
+                "horizon": HORIZON
+            }
+        },
         # # {
         # #     "archtype": AdBandit,
         # #     "params": {

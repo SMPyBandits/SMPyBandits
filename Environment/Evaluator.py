@@ -11,6 +11,7 @@ from random import shuffle
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+from cycler import cycler
 try:
     import joblib
     USE_JOBLIB = True
@@ -20,6 +21,20 @@ except ImportError:
 # Local imports
 from .Result import Result
 from .MAB import MAB
+
+# Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
+# cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
+USE_4_COLORS = True
+USE_4_COLORS = False
+colors = ['r', 'g', 'b', 'k']
+linestyles = ['-', '--', ':', '-.']
+# linewidths =   # TODO
+if not USE_4_COLORS:
+    colors = ['blue', 'green', 'red', 'magenta', 'lime', 'black', 'purple', 'pink', 'brown', 'orange', 'teal', 'coral', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
+    # linestyles = ['-', '--', '-.', ':', 'd', ',', 'o', 'v', '^', '<', '>', '1', '2', '3', '4', 's', 'p', '*', 'h', 'H', '+', 'x']
+    linestyles = ['-', '--', ':', '-.'] * (1 + int(len(colors) / float(len(linestyles))))
+    linestyles = linestyles[:len(colors)]
+plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles)))
 
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
@@ -77,18 +92,20 @@ class Evaluator:
             # else:
             #     for polId, policy in enumerate(self.policies):
             #         delayed_start(self, env, policy, polId, envId)
-            # # FIXME try to also parallelize this loop on policies ?
+            # # FIXED I tried to also parallelize this loop on policies, of course it does give any speedup
             for polId, policy in enumerate(self.policies):
                 print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
                 if self.useJoblib:
                     results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                         joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
                         for _ in range(self.cfg['repetitions'])
+                        # , random_shuffle=self.get(['random_shuffle'], None), random_invert=self.get(['random_invert'], None), nb_random_events=self.get(['nb_random_events'], 0)
                     )
                 else:
                     results = []
                     for _ in range(self.cfg['repetitions']):
                         r = delayed_play(env, policy, self.cfg['horizon'])
+                        # , random_shuffle=self.get(['random_shuffle'], None), random_invert=self.get(['random_invert'], None), nb_random_events=self.get(['nb_random_events'], 0)
                         results.append(r)
                 for r in results:
                     self.rewards[polId, envId, :] += np.cumsum(r.rewards)
@@ -103,28 +120,18 @@ class Evaluator:
 
     def plotResults(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
-        nbPolicies = len(self.policies)
         ymin = 0
         for i, policy in enumerate(self.policies):
-            if i < 13:
-                color = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange', 'purple', 'darkgreen', 'darkblue', 'darkred', 'darkcyan'][i % nbPolicies]  # Default choice
-            else:
-                # XXX Experimental... Get a random #RGB color from the hash of the policy
-                s = list(str(hex(abs(hash(policy))))[2:][::-1])
-                shuffle(s)
-                color = '#' + str(''.join(s))[:6]
             Y = self.getRegret(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            print("Using color {} for policy number #{}/{} and called {}...".format(color, i + 1, nbPolicies, str(policy)))
             if semilogx:
-                plt.semilogx(Y, label=str(policy), c=color)
+                plt.semilogx(Y, label=str(policy))
             else:
-                plt.plot(Y, label=str(policy), c=color)
+                plt.plot(Y, label=str(policy))
         plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
         ymax = plt.ylim()[1]
-        # ymin = max(0, ymin)    # prevent a negative ymin
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
         plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
@@ -172,7 +179,8 @@ def delayed_start(self, env, policy, polId, envId):
 
 
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-def delayed_play(env, policy, horizon):
+def delayed_play(env, policy, horizon,
+                 random_shuffle=True, random_invert=False, nb_random_events=5):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)
@@ -180,16 +188,25 @@ def delayed_play(env, policy, horizon):
 
     policy.startGame()
     result = Result(env.nbArms, horizon)
-    t_events = [int(horizon / 5.0), 2 * int(horizon / 5.0), 3 * int(horizon / 5.0), 4 * int(horizon / 5.0), ]  # XXX Experimental
+    # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
+    t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
+    if nb_random_events is None or nb_random_events <= 0:
+        random_shuffle = False
+        random_invert = False
+
     for t in range(horizon):
         choice = policy.choice()
         reward = env.arms[choice].draw(t)
         policy.getReward(choice, reward)
         result.store(t, choice, reward)
         # XXX Experimental : shuffle the arms at the middle of the simulation
-        if t in t_events:  # XXX Experimental
-            shuffle(env.arms)
-            # print("Shuffling the arms ...")  # DEBUG
-            # env.arms = env.arms[::-1]
-            # print("Inverting the order of the arms ...")  # DEBUG
+        if random_shuffle:
+            if t in t_events:  # XXX Experimental
+                shuffle(env.arms)
+                # print("Shuffling the arms ...")  # DEBUG
+        # XXX Experimental : invert the order of the arms at the middle of the simulation
+        if random_invert:
+            if t in t_events:  # XXX Experimental
+                env.arms = env.arms[::-1]
+                # print("Inverting the order of the arms ...")  # DEBUG
     return result
