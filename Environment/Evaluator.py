@@ -98,29 +98,17 @@ class Evaluator:
         print("\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
-        # if self.useJoblibForPolicies:
-        #     n_jobs = len(self.policies)
-        #     joblib.Parallel(n_jobs=n_jobs, verbose=self.cfg['verbosity'])(
-        #         joblib.delayed(delayed_start)(self, env, policy, polId, envId)
-        #         for polId, policy in enumerate(self.policies)
-        #     )
-        # else:
-        #     for polId, policy in enumerate(self.policies):
-        #         delayed_start(self, env, policy, polId, envId)
-        # # FIXED I tried to also parallelize this loop on policies, of course it does give any speedup
         for polId, policy in enumerate(self.policies):
             print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
             if self.useJoblib:
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
                     for _ in range(self.cfg['repetitions'])
-                    # , random_shuffle=self.get(['random_shuffle'], None), random_invert=self.get(['random_invert'], None), nb_random_events=self.get(['nb_random_events'], 0)
                 )
             else:
                 results = []
                 for _ in range(self.cfg['repetitions']):
                     r = delayed_play(env, policy, self.cfg['horizon'])
-                    # , random_shuffle=self.get(['random_shuffle'], None), random_invert=self.get(['random_invert'], None), nb_random_events=self.get(['nb_random_events'], 0)
                     results.append(r)
             # Get the position of the best arms
             env = self.envs[envId]

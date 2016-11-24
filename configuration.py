@@ -19,26 +19,27 @@ from Policies import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 500
 HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 2000
 HORIZON = 10000
+HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 20
 REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
+DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the epsilon-greedy and epsilon-... policies
@@ -75,10 +76,9 @@ DECREASE_RATE = HORIZON / 2.0
 TEST_AGGR = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
-ONE_JOB_BY_CHILDREN = True  # XXX do not let this = True
-ONE_JOB_BY_CHILDREN = False
 
 
+# XXX This dictionary configures the experiments
 configuration = {
     # Duration of the experiment
     "horizon": HORIZON,
@@ -270,9 +270,6 @@ configuration = {
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
-    # N_JOBS = -1  # XXX for experiments
-    N_JOBS = 1  # XXX for experiments
-
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     NON_AGGR_POLICIES = configuration["policies"]
     for LEARNING_RATE in LEARNING_RATES:
@@ -284,15 +281,9 @@ if TEST_AGGR:
                 "learningRate": LEARNING_RATE,
                 "decreaseRate": DECREASE_RATE,
                 "update_all_children": UPDATE_ALL_CHILDREN,
-                "children": NON_AGGR_POLICIES,
-                "n_jobs": N_JOBS,
-                "verbosity": 0 if N_JOBS == 1 else 1,
-                "one_job_by_children": ONE_JOB_BY_CHILDREN
+                "children": NON_AGGR_POLICIES
             },
         }]
-
-# # Make everything tuples - imutable, so they can be hashed
-# configuration["policies"] = tuple(configuration["policies"])
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
