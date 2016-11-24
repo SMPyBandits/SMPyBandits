@@ -20,10 +20,10 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 2000
 HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
+HORIZON = 2000
 HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -33,8 +33,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 500
 REPETITIONS = 200
-REPETITIONS = 20
 REPETITIONS = 100
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -64,7 +64,7 @@ LEARNING_RATE = 0.01
 # To try more learning rates in one run
 LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
 LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
-# LEARNING_RATES = [LEARNING_RATE]
+LEARNING_RATES = [LEARNING_RATE]
 
 # XXX try different values for time tau for the decreasing rate for my aggregated bandit
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
@@ -94,22 +94,26 @@ configuration = {
     # Arms
     "environment": [
         # FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc!
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
         # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        {   # Lots of bad arms, significative difference between the best and the others
-            "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        },
-        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
+        {   # One optimal arm, much better than the others, but *lots* of bad arms
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        },
     ],
     "policies": [
         # # --- Stupid algorithms

@@ -42,7 +42,8 @@ if not USE_4_COLORS:
     linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
     linewidths = linewidths[:len(colors)]
 # Default configuration for the plots: cycle through these colors, linestyles and linewidths
-plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
+# plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
+plt.rc('axes', prop_cycle=(cycler('color', colors)))
 
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
@@ -64,8 +65,10 @@ class Evaluator:
         self.__initEnvironments__()
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
+        self.bestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
+            self.bestArmPulls[env] = np.zeros((len(self.cfg['policies']), self.cfg['horizon']))
             self.pulls[env] = np.zeros((len(self.cfg['policies']), self.envs[env].nbArms))
         print("Number of algorithms to compare:", len(self.cfg['policies']))
         print("Number of environments to try:", len(self.envs))
@@ -77,8 +80,8 @@ class Evaluator:
             self.envs.append(MAB(armType))
 
     def __initPolicies__(self, env):
-        for policy in self.cfg['policies']:
-            print("policy =", policy)  # DEBUG
+        for polId, policy in enumerate(self.cfg['policies']):
+            print("- policy #{} = {} ...".format(polId + 1, policy))  # DEBUG
             self.policies.append(policy['archtype'](env.nbArms,
                                                     **policy['params']))
 
@@ -115,9 +118,23 @@ class Evaluator:
                         r = delayed_play(env, policy, self.cfg['horizon'])
                         # , random_shuffle=self.get(['random_shuffle'], None), random_invert=self.get(['random_invert'], None), nb_random_events=self.get(['nb_random_events'], 0)
                         results.append(r)
+                # Get the position of the best arms
+                env = self.envs[envId]
+                means = np.array([arm.mean() for arm in env.arms])
+                bestarm = np.max(means)
+                index_bestarm = np.argwhere(np.isclose(means, bestarm))
                 for r in results:
                     self.rewards[polId, envId, :] += np.cumsum(r.rewards)
+                    self.bestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                     self.pulls[envId][polId, :] += r.pulls
+
+    def getPulls(self, policyId, environmentId):
+        return self.pulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
+
+    def getbestArmPulls(self, policyId, environmentId):
+        Y = self.bestArmPulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
+        Y /= np.arange(start=1, stop=1 + self.cfg['horizon'])  # Get a frequency
+        return Y
 
     def getReward(self, policyId, environmentId):
         return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
@@ -126,7 +143,7 @@ class Evaluator:
         horizon = np.arange(self.cfg['horizon'])
         return horizon * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
-    def plotResults(self, environmentId, savefig=None, semilogx=False):
+    def plotRewards(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, policy in enumerate(self.policies):
@@ -143,6 +160,22 @@ class Evaluator:
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
         plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig)
+        plt.show()
+
+    def plotBestArmPulls(self, environmentId, savefig=None):
+        plt.figure()
+        for i, policy in enumerate(self.policies):
+            Y = self.getbestArmPulls(i, environmentId)
+            plt.plot(Y, label=str(policy))
+        plt.legend(loc='lower right')
+        plt.grid()
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.ylim(0, 1)
+        plt.ylabel(r"Frequency of pulls of the optimal arm")
+        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
