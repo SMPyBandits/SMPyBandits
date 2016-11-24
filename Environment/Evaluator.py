@@ -180,7 +180,7 @@ def delayed_start(self, env, policy, polId, envId):
 
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon,
-                 random_shuffle=True, random_invert=False, nb_random_events=5):
+                 random_shuffle=True, random_invert=False, nb_random_events=4):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)
@@ -201,12 +201,12 @@ def delayed_play(env, policy, horizon,
         result.store(t, choice, reward)
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle:
-            if t in t_events:  # XXX Experimental
+            if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
                 shuffle(env.arms)
                 # print("Shuffling the arms ...")  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert:
-            if t in t_events:  # XXX Experimental
+            if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
                 env.arms = env.arms[::-1]
                 # print("Inverting the order of the arms ...")  # DEBUG
     return result

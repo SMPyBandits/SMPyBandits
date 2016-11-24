@@ -148,8 +148,12 @@ The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a
 - [`configuration.py`](configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
 - [`main.py`](main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
 
+### UML diagrams
 For more details, see [these UML diagrams](uml_diagrams/):
+
+- Packages: organization of the different files:
 [![UML Diagram - Packages of AlgoBandits.git](uml_diagrams/packages_AlgoBandits.png)](uml_diagrams/packages_AlgoBandits.svg)
+- Classes: inheritance diagrams of the different classes:
 [![UML Diagram - Classes of AlgoBandits.git](uml_diagrams/classes_AlgoBandits.png)](uml_diagrams/classes_AlgoBandits.svg)
 
 ----
@@ -164,15 +168,17 @@ For more details, see [these UML diagrams](uml_diagrams/):
 
 ### Improve the code
 - [x] In fact, [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) cannot be easily used as it cannot run *on-line*! Sadly OK
-- [ ] explore the behavior of my algorithm, and understand it better (and improve it?)
-- [ ] TODO fully profile my code, with `cProfile` for functions and `line_profiler` for line-by-line. Then, improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](http://numba.pydata.org/), or [`cython`](http://cython.org/) code ?
+- [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions).
+- [ ] I could have tried to improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](http://numba.pydata.org/), or [`cython`](http://cython.org/) code ? Not so easy, not so interesting...
+- [ ] explore the behavior of my Aggr algorithm, and understand it better (and improve it?)
+- [ ] add plots that show the percentage of optimal arms play ([e.g., as done in this paper](http://www.cs.mcgill.ca/~vkules/bandits.pdf#page=11)). This requires all Policies to keep a `self.pulls` numpy array that contains the number of pulls of each arms.
 
 ### Better storing of the simulation results
-- [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts) to store the data, on the run (to never lose data, even if the simulation gets killed)
+- [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, on the run (to never lose data, even if the simulation gets killed)
 
 ### Publicly release it ?
-- [x] keep it on GitHub, then make the repository public
-- [ ] document all that, at least a little bit
+- [x] keep it up-to-date [on GitHub](https://github.com/Naereen/AlgoBandits)
+- [x] I could document this project better. But, well, there is no [Sphinx](http://sphinx-doc.org/) documentation yet, but each file has a docstring, some useful comments for the interesting part, and this very page you are reading contains [insights on how to use the framework](#configuration) as well as [the organization of the code](#code-organization).
 
 ### More MAB algorithms
 - [ ] implement some more algorithms, e.g., from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
