@@ -94,16 +94,16 @@ configuration = {
         #     }
         # },
         # --- Take randomly one of the best arm
-        {
-            "archtype": UniformOnSome,
-            "params": {  # armIndexes = None : like the Dummy
-                "armIndexes": None
-            }
-        },
+        # {
+        #     "archtype": UniformOnSome,
+        #     "params": {  # armIndexes = None : like the Dummy
+        #         "armIndexes": None
+        #     }
+        # },
         {
             "archtype": UniformOnSome,
             "params": {
-                "armIndexes": [6, 7, 8]
+                "armIndexes": [5, 6, 7, 8]
             }
         },
         {
@@ -115,7 +115,7 @@ configuration = {
         {
             "archtype": UniformOnSome,
             "params": {
-                "armIndexes": [0, 1]
+                "armIndexes": [0, 1, 2]
             }
         },
     ]
