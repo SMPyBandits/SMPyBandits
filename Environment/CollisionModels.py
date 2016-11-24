@@ -4,11 +4,11 @@
 Collision model are generic functions, taking:
 
  - the time t
- - the environment
+ - the environment arms
  - the list of players
  - the numpy array of their choices
  - the numpy array to store their rewards
- - the number of arms, nbArms
+ - the numpy array to store their pulls
 """
 
 __author__ = "Lilian Besson"
@@ -17,17 +17,20 @@ __version__ = "0.1"
 import numpy as np
 
 
-def onlyUniqUserGetsReward(t, arms, players, choices, rewards, nbArms):
+def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls):
     """ Simple collision model where only the players alone on one an arm sample it and receive the reward.
+
+    - This is the default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
     """
-    nbCollisions = [np.sum(choices == arm) - 1 for arm in range(nbArms)]
+    nbCollisions = [np.sum(choices == arm) - 1 for arm in range(len(arms))]
     # print("nbCollisions =", nbCollisions)  # DEBUG
-    if np.max(nbCollisions) > 1:  # DEBUG
-        print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(nbCollisions >= 1, t))  # DEBUG
+    # if np.max(nbCollisions) >= 1:  # DEBUG
+    #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):
         if nbCollisions[choices[i]] < 1:
             rewards[i] = arms[choices[i]].draw(t)
             player.getReward(choices[i], rewards[i])
+            pulls[i, choices[i]] += 1
         # else:
         #     print("  - 1 collision on channel {} : {} other users choosed it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
 
@@ -36,32 +39,37 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, nbArms):
 defaultCollisionModel = onlyUniqUserGetsReward
 
 
-def noCollision(t, arms, players, choices, rewards, nbArms):
+def noCollision(t, arms, players, choices, rewards, pulls):
     """ Simple collision model where all players sample it and receive the reward.
     It corresponds to the single-player simulation: each player is a policy, compared without collision.
     """
     for i, player in enumerate(players):
         rewards[i] = arms[choices[i]].draw(t)
         player.getReward(choices[i], rewards[i])
+        pulls[i, choices[i]] += 1
 
 
 # Default collision model to use
 # defaultCollisionModel = noCollision
 
 
-def rewardIsSharedUniformly(t, arms, players, choices, rewards, nbArms):
+def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls):
     """ Simple collision model where:
     - The players alone on one an arm sample it and receive the reward.
     - In case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward.
     """
-    for arm in range(nbArms):
-        players_who_chosed_it = np.argwhere(choices == arm)
+    for arm in range(len(arms)):
         # If he is alone, sure to be chosen, otherwise only one get randomly chosen
-        if len(players_who_chosed_it) > 1:  # DEBUG
-            print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, len(players_who_chosed_it) - 1, t))  # DEBUG
-        i = np.random.choice(players_who_chosed_it)
-        rewards[i] = arms[choices[i]].draw(t)
-        players[i].getReward(choices[i], rewards[i])
+        players_who_chosed_it = np.nonzero(choices == arm)[0]
+        # print("players_who_chosed_it =", players_who_chosed_it)  # DEBUG
+        # print("np.shape(players_who_chosed_it) =", np.shape(players_who_chosed_it))  # DEBUG
+        # if len(players_who_chosed_it) > 1:  # DEBUG
+        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, len(players_who_chosed_it) - 1, t))  # DEBUG
+        if len(players_who_chosed_it) > 0:
+            i = np.random.choice(players_who_chosed_it)
+            rewards[i] = arms[choices[i]].draw(t)
+            players[i].getReward(choices[i], rewards[i])
+            pulls[i, choices[i]] += 1
 
 
 # Default collision model to use

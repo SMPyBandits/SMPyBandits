@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-""" UniformOnSome: a fully uniform policy: selects randomly (uniformly) an arm among a fix set, at each step (stupid).
+""" UniformOnSome: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
 """
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from numpy.random import choice
+# from numpy.random import choice
+from random import choice
 
 
 class UniformOnSome():
-    """ UniformOnSome: a fully uniform policy: selects randomly (uniformly) an arm among a fix set, at each step (stupid).
+    """ UniformOnSome: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
     """
 
     def __init__(self, nbArms, armIndexes=None):

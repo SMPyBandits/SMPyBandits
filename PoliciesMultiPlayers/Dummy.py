@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Dummy: the fully uniform policy: selects randomly (uniformly) an arm at each step (stupid).
+""" Dummy: the fully uniform policy who selects randomly (uniformly) an arm at each step (stupid).
 """
 
 __author__ = "Lilian Besson"
@@ -9,7 +9,7 @@ from random import randint
 
 
 class Dummy():
-    """ Dummy: the fully uniform policy : selects randomly (uniformly) an arm at each step (stupid).
+    """ Dummy: the fully uniform policy who selects randomly (uniformly) an arm at each step (stupid).
     """
 
     def __init__(self, nbArms):

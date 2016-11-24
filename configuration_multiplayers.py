@@ -16,15 +16,18 @@ from Arms.Bernoulli import Bernoulli
 # Import algorithms
 from PoliciesMultiPlayers import *
 
+from Environment.CollisionModels import *
+
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 2000
 HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
 HORIZON = 10000
+HORIZON = 2000
+HORIZON = 100
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -54,6 +57,13 @@ configuration = {
     # Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
+    # Collision model
+    "collisionModel": onlyUniqUserGetsReward,
+    # "collisionModel": noCollision,
+    # "collisionModel": rewardIsSharedUniformly,
+    # Other parameters for the Evaluator
+    "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
+    "averageOn": 5e-3,  # Average the final rank on the 0.5% last time steps
     # Arms
     "environment": [
         # FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc!
@@ -75,12 +85,12 @@ configuration = {
         #     }
         # },
         # # --- Static or perfect (toy) algorithm
-        # {
-        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
-        #     "params": {
-        #         "armIndex": 8
-        #     }
-        # },
+        {
+            "archtype": TakeFixedArm,   # The static policy: always selects one arm
+            "params": {
+                "armIndex": 8
+            }
+        },
         # {
         #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
         #     "params": {
@@ -103,6 +113,12 @@ configuration = {
         {
             "archtype": UniformOnSome,
             "params": {
+                "armIndexes": [0, 8]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {
                 "armIndexes": [5, 6, 7, 8]
             }
         },
@@ -110,6 +126,12 @@ configuration = {
             "archtype": UniformOnSome,
             "params": {
                 "armIndexes": [2, 3, 4, 5]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {
+                "armIndexes": [0, 1, 6, 8]
             }
         },
         {

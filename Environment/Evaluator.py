@@ -177,7 +177,7 @@ class Evaluator:
         plt.legend(loc='lower right')
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
-        plt.ylim(0, 1)
+        plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         if savefig is not None:

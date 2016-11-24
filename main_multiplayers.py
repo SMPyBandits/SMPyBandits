@@ -10,18 +10,12 @@ __version__ = "0.1"
 # Generic imports
 from os import mkdir
 import os.path
-# Adding a time profiler!
-# import cProfile
 # Local imports
 from Environment import EvaluatorMultiPlayers
 from configuration_multiplayers import configuration
 
 plot_dir = "plots"
 semilogx = False
-
-# Parameters for the Evaluator object
-finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested players
-averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
 
 # Whether to do the plots or not
 do_plot = False
@@ -35,10 +29,7 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
     else:
         mkdir(plot_dir)
-    evaluation = EvaluatorMultiPlayers(configuration,
-                                       finalRanksOnAverage=finalRanksOnAverage,
-                                       averageOn=averageOn
-                                       )
+    evaluation = EvaluatorMultiPlayers(configuration)
     # Start the evaluation and then print final ranking and plot, for each environment
     M = evaluation.nbPlayers
     N = len(evaluation.envs)

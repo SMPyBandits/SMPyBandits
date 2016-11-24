@@ -16,9 +16,7 @@ class ResultMultiPlayers:
         self.rewards = np.zeros((nbPlayers, horizon))
         self.pulls = np.zeros((nbPlayers, nbArms))
 
-    def store(self, time, choices, rewards):
+    def store(self, time, choices, rewards, pulls):
         self.choices[:, time] = choices
         self.rewards[:, time] = rewards
-        # for choice in choices:
-        #     self.pulls[:, choice] += 1
-        self.pulls[:, choices] += 1  # XXX it works directly?
+        self.pulls += pulls
