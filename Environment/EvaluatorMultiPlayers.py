@@ -223,9 +223,8 @@ def delayed_play(env, players, horizon, collisionModel):
         pulls *= 0
         # Every player decides which arm to pull
         for i, player in enumerate(players):
-            choice = player.choice()
-            choices[i] = choice
-            # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choice))  # DEBUG
+            choices[i] = player.choice()
+            # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
         collisionModel(t, env.arms, players, choices, rewards, pulls)
         # Finally we store the results
