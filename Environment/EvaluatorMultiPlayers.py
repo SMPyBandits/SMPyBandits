@@ -120,6 +120,7 @@ class EvaluatorMultiPlayers:
         for r in results:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             self.pulls[envId] += r.pulls
+            # FIXME use r.pulls instead of r.choices to count the bestArmPulls
             for playerId in range(self.nbPlayers):
                 self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId], index_bestarm))
 

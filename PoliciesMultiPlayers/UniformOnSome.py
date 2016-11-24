@@ -29,8 +29,5 @@ class UniformOnSome():
     def getReward(self, arm, reward):
         pass
 
-    def handleCollision(self, arm):
-        pass
-
     def choice(self):
         return choice(self.armIndexes)
