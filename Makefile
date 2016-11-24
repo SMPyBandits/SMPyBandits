@@ -23,16 +23,22 @@ profile3:
 # Line time profilers
 line_profiler: kernprof lprof
 kernprof:
-	@echo "Running the script 'main.py' ..."
+	@echo "Running the script 'main.py' with the 'kernprof' command line profiler ..."
+	@echo "See 'https://github.com/rkern/line_profiler#kernprof' if needed"
 	time nice -n 20 kernprof -l ./main.py | tee ./logs/main_py3_log.txt
 lprof:
 	@echo "Time profile, line by line, for the script 'main.py' ..."
+	@echo "See 'https://github.com/rkern/line_profiler#line-profiler' if needed"
 	time nice -n 20 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
 
-# Time profilers
-pycallgraph:
-	time nice -n 20 pycallgraph -f svg -o pycallgraph.svg --verbose -- ./main.py | tee ./logs/main_pycallgraph_log.txt
-	# time nice -n 20 pycallgraph --verbose --threaded --memory -- ./main.py | tee ./logs/main_pycallgraph_log.txt  # XXX experimental
+# Python Call Graph, XXX does not work well as far as now
+callgraph:
+	@echo "Running the script 'main.py' with the pycallgraph command line profiler ..."
+	@echo "See 'http://pycallgraph.slowchop.com/en/master/guide/command_line_usage.html#examples' if needed"
+	# time nice -n 20 pycallgraph --verbose --max-depth 10 graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 20 /usr/local/bin/pycallgraph --verbose --threaded --memory graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	time nice -n 20 pycallgraph --verbose --max-depth 10 gephi --output-file=logs/pycallgraph.gdf -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# -convert logs/pycallgraph.svg logs/pycallgraph.png
 
 # Installers
 install:

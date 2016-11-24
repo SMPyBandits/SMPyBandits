@@ -24,6 +24,10 @@ finalRanksOnAverage = True     # Use an average instead of the last value for th
 averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
 useJoblibForPolicies = False
 
+# Whether to do the plots or not
+do_plot = False
+do_plot = True
+
 
 if __name__ == '__main__':
     if os.path.isdir(plot_dir):
@@ -49,20 +53,21 @@ if __name__ == '__main__':
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.giveFinalRanking(envId)
-        # Sub folder with a useful name
-        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        # Get the name of the output file
-        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
-        # Create the sub folder
-        plot_dir = os.path.join(plot_dir, subfolder)
-        if os.path.isdir(plot_dir):
-            print("{} is already a directory here...".format(plot_dir))
-        elif os.path.isfile(plot_dir):
-            raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-        else:
-            mkdir(plot_dir)
-        savefig = os.path.join(plot_dir, imagename)
-        print("Plotting the results, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotResults(envId, semilogx=not semilogx)
-        evaluation.plotResults(envId, savefig=savefig, semilogx=semilogx)
+        if do_plot:
+            # Sub folder with a useful name
+            subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+            # Get the name of the output file
+            imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+            # Create the sub folder
+            plot_dir = os.path.join(plot_dir, subfolder)
+            if os.path.isdir(plot_dir):
+                print("{} is already a directory here...".format(plot_dir))
+            elif os.path.isfile(plot_dir):
+                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+            else:
+                mkdir(plot_dir)
+            savefig = os.path.join(plot_dir, imagename)
+            print("Plotting the results, and saving the plot to {} ...".format(savefig))
+            # evaluation.plotResults(envId, semilogx=not semilogx)
+            evaluation.plotResults(envId, savefig=savefig, semilogx=semilogx)
     # Done

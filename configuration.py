@@ -20,22 +20,22 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 30000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 2000
 HORIZON = 20000
+HORIZON = 30000
+HORIZON = 2000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
-REPETITIONS = 1  # To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 500
 REPETITIONS = 200
-REPETITIONS = 100
 REPETITIONS = 20
-# REPETITIONS = 1  # To profile the code, turn down parallel computing
+REPETITIONS = 100
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -99,14 +99,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "probabilities": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
-        {   # One optimal arm, much better than the others, but *lots* of bad arms
+        {   # Lots of bad arms, significative difference between the best and the others
             "arm_type": Bernoulli,
-            "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+            "probabilities": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         },
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        #     "arm_type": Bernoulli,
+        #     "probabilities": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        # },
     ],
     "policies": [
         # # --- Stupid algorithms

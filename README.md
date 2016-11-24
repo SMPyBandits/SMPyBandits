@@ -168,7 +168,7 @@ For more details, see [these UML diagrams](uml_diagrams/):
 
 ### Improve the code
 - [x] In fact, [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) cannot be easily used as it cannot run *on-line*! Sadly OK
-- [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions).
+- [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions). See for instance [this log file (with `cProfile`)](logs/main_py3_profile_log.txt) or [this one (with `line_profiler`)](logs/main_py3_line_profiler_log.txt).
 - [ ] I could have tried to improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](http://numba.pydata.org/), or [`cython`](http://cython.org/) code ? Not so easy, not so interesting...
 - [ ] explore the behavior of my Aggr algorithm, and understand it better (and improve it?)
 - [ ] add plots that show the percentage of optimal arms play ([e.g., as done in this paper](http://www.cs.mcgill.ca/~vkules/bandits.pdf#page=11)). This requires all Policies to keep a `self.pulls` numpy array that contains the number of pulls of each arms.
