@@ -20,9 +20,9 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .Result import Result
+from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
-
+from .CollisionModel import *
 
 # Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
 # cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
@@ -44,6 +44,7 @@ plt.rc('axes', prop_cycle=(cycler('color', colors)))
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
 
+# --- Class EvaluatorMultiPlayers
 
 class EvaluatorMultiPlayers:
     """ Evaluator class to run the simulations, for the multi-players case.
@@ -70,9 +71,11 @@ class EvaluatorMultiPlayers:
         self.__initEnvironments__()
         self.rewards = np.zeros((self.nbPlayers,
                                  len(self.envs), self.horizon))
+        self.bestArmPulls = dict()
         self.pulls = dict()
         print("Number of environments to try:", len(self.envs))
         for env in range(len(self.envs)):
+            self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.cfg['horizon']))
             self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
 
     def __initEnvironments__(self):
@@ -81,7 +84,7 @@ class EvaluatorMultiPlayers:
 
     def __initPlayers__(self, env):
         for playerId, player in enumerate(self.cfg['players']):
-            print("- player #{} = {} ...".format(playerId + 1, player))  # DEBUG
+            print("- Adding player #{} = {} ...".format(playerId + 1, player))  # DEBUG
             self.players.append(player['archtype'](env.nbArms,
                                                    **player['params']))
 
@@ -94,28 +97,40 @@ class EvaluatorMultiPlayers:
             print("\nEvaluating environment:", repr(env))
             self.players = []
             self.__initPlayers__(env)
-            for playerId, player in enumerate(self.players):
-                print("\n- Evaluating player #{}/{}: {} ...".format(playerId + 1, self.nbPlayers, player))
-                if self.useJoblib:
-                    results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                        joblib.delayed(delayed_play)(env, player, self.horizon)
-                        for _ in range(self.repetitions)
-                    )
-                else:
-                    results = []
-                    for _ in range(self.repetitions):
-                        r = delayed_play(env, player, self.horizon)
-                        results.append(r)
+            if self.useJoblib:
+                results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                    joblib.delayed(delayed_play)(env, self.players, self.horizon)
+                    for _ in range(self.repetitions)
+                )
+            else:
+                results = []
+                for _ in range(self.repetitions):
+                    r = delayed_play(env, self.players, self.horizon)
+                    results.append(r)
+            for playerId in range(self.nbPlayers):
+                # Get the position of the best arms
+                env = self.envs[envId]
+                means = np.array([arm.mean() for arm in env.arms])
+                bestarm = np.max(means)
+                index_bestarm = np.argwhere(np.isclose(means, bestarm))
                 for r in results:
                     self.rewards[playerId, envId, :] += np.cumsum(r.rewards)
+                    self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                     self.pulls[envId][playerId, :] += r.pulls
 
-    def getReward(self, policyId, environmentId):
-        return self.rewards[policyId, environmentId, :] / float(self.repetitions)
+    def getPulls(self, playerId, environmentId):
+        return self.pulls[environmentId][playerId, :] / float(self.cfg['repetitions'])
 
-    def getRegret(self, policyId, environmentId):
+    def getbestArmPulls(self, playerId, environmentId):
+        # We have to divide by a arange() = cumsum(ones) to get a frequency
+        return self.bestArmPulls[environmentId][playerId, :] / float(self.cfg['repetitions']) / np.arange(start=1, stop=1 + self.cfg['horizon'])
+
+    def getReward(self, playerId, environmentId):
+        return self.rewards[playerId, environmentId, :] / float(self.repetitions)
+
+    def getRegret(self, playerId, environmentId):
         horizon = np.arange(self.horizon)
-        return horizon * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
+        return horizon * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
     # Plotting
     def plotResults(self, environmentId, savefig=None, semilogx=False):
@@ -141,6 +156,22 @@ class EvaluatorMultiPlayers:
             plt.savefig(savefig)
         plt.show()
 
+    def plotBestArmPulls(self, environmentId, savefig=None):
+        plt.figure()
+        for i, player in enumerate(self.players):
+            Y = self.getbestArmPulls(i, environmentId)
+            plt.plot(Y, label=str(player))
+        plt.legend(loc='lower right')
+        plt.grid()
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.ylim(0, 1)
+        plt.ylabel(r"Frequency of pulls of the optimal arm")
+        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig)
+        plt.show()
+
     def giveFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         lastY = np.zeros(self.nbPlayers)
@@ -161,20 +192,30 @@ class EvaluatorMultiPlayers:
 
 
 # Helper function for the parallelization
-
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-def delayed_play(env, player, horizon):
+def delayed_play(env, players, horizon,
+                 collisionModel=defaultCollisionModel
+                 ):
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
-    player = deepcopy(player)
+    nbArms = env.nbArms
+    players = deepcopy(players)
     horizon = deepcopy(horizon)
+    nbPlayers = len(players)
 
-    player.startGame()
-    result = Result(env.nbArms, horizon)
+    for player in players:
+        player.startGame()
+    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
 
+    choices = np.zeros(nbPlayers)
+    rewards = np.zeros(nbPlayers)
     for t in range(horizon):
-        choice = player.choice()
-        reward = env.arms[choice].draw(t)
-        player.getReward(choice, reward)
-        result.store(t, choice, reward)
+        # Every player decides which arm to pull
+        for i, player in enumerate(players):
+            choice = player.choice()
+            # rewards[i] = env.arms[choice].draw(t)
+            choices[i] = choice
+        # Then we decide if there is collisions and what to do why them
+        collisionModel(t, env.arms, players, choices, rewards, nbArms)
+        result.store(t, choices, rewards)
     return result
