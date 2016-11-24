@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Bernoulli distributed arm."""
+""" Bernoulli distributed arm."""
+
+__author__ = "Lilian Besson"
+__version__ = "0.1"
 
 from random import random
+from .Arm import Arm
 
 
-class Bernoulli():
+class Bernoulli(Arm):
     """ Bernoulli distributed arm."""
 
     def __init__(self, probability):

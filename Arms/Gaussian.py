@@ -5,9 +5,10 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.4 $"
 
 from random import gauss
+from .Arm import Arm
 
 
-class Gaussian():
+class Gaussian(Arm):
     """ Gaussian distributed arm."""
 
     def __init__(self, mu, sigma):
@@ -21,7 +22,8 @@ class Gaussian():
     def mean(self):
         return self.expectation
 
-    def draw(self):
+    def draw(self, t=None):
+        """ The parameter t is ignored in this Arm."""
         return self.mu + self.sigma * gauss(0, 1)
 
     def __repr__(self):

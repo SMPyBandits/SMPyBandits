@@ -6,9 +6,10 @@ __version__ = "$Revision: 1.5 $"
 
 from math import isinf, exp, log
 from random import random
+from .Arm import Arm
 
 
-class Exponential():
+class Exponential(Arm):
     """Exponentially distributed arm, possibly truncated."""
 
     def __init__(self, p, trunc=float('inf')):
@@ -25,7 +26,8 @@ class Exponential():
     def mean(self):
         return self.expectation
 
-    def draw(self):
+    def draw(self, t=None):
+        """ The parameter t is ignored in this Arm."""
         return min(-1. / self.p * log(random()), self.trunc)
 
     def __repr__(self):

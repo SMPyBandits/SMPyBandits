@@ -6,9 +6,10 @@ __version__ = "$Revision: 1.6 $"
 
 from math import isinf, exp
 from scipy.stats import poisson
+from .Arm import Arm
 
 
-class Poisson():
+class Poisson(Arm):
     """ Poisson distributed arm, possibly truncated."""
 
     def __init__(self, p, trunc=float('inf')):
@@ -32,7 +33,8 @@ class Poisson():
     def mean(self):
         return self.expectation
 
-    def draw(self):
+    def draw(self, t=None):
+        """ The parameter t is ignored in this Arm."""
         return min(poisson.rvs(self.p), self.trunc)
 
     def __repr__(self):

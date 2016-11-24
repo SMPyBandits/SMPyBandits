@@ -1,142 +1,164 @@
+************* Module configuration_multiplayers
+W: 21, 0: XXX Should be >= 10000 to be interesting "asymptotically" (fixme)
+W: 30, 0: XXX Should be >= 10 to be stastically trustworthy (fixme)
+W: 31, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 38, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 41, 0: XXX do not let this = False  # To profile the code, turn down parallel computing (fixme)
+W: 47, 0: FIXME I should first check that the framework works well for 1 player (fixme)
+W: 60, 0: FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc! (fixme)
+W: 70, 0: XXX Parameters for the multi-players setting (fixme)
+W: 71, 0: TODO first try with 1, then M stupid players, to check (fixme)
+C: 11, 0: Import "from Arms.Bernoulli import Bernoulli" should be placed at the top of the module (wrong-import-position)
+W: 17, 0: Wildcard import PoliciesMultiPlayers (wildcard-import)
+C: 17, 0: Import "from PoliciesMultiPlayers import *" should be placed at the top of the module (wrong-import-position)
 ************* Module configuration
 W: 21, 0: XXX Should be >= 10000 to be interesting "asymptotically" (fixme)
 W: 30, 0: XXX Should be >= 10 to be stastically trustworthy (fixme)
-W: 39, 0: XXX do not let this = False (fixme)
-W: 54, 0: FIXME improve the learning rate for my aggregated bandit (fixme)
-W: 68, 0: XXX do not let this = False (fixme)
-W: 70, 0: XXX do not let this = True (fixme)
-W: 80, 0: FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc! (fixme)
-W:150, 0: XXX Below the theoretically acceptable value! (fixme)
-W:156, 0: XXX Below the theoretically acceptable value! (fixme)
-W:252, 0: XXX for experiments (fixme)
-W:253, 0: XXX for experiments (fixme)
+W: 31, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 38, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 40, 0: XXX do not let this = False  # To profile the code, turn down parallel computing (fixme)
+W: 57, 0: XXX try different values for the learning rate for my aggregated bandit (fixme)
+W: 69, 0: XXX try different values for time tau for the decreasing rate for my aggregated bandit (fixme)
+W: 76, 0: XXX do not let this = False (fixme)
+W: 78, 0: XXX do not let this = True (fixme)
+W: 96, 0: FIXME try with other arms distribution: Exponential, Gaussian, Poisson, etc! (fixme)
+W:170, 0: XXX Below the theoretically acceptable value! (fixme)
+W:176, 0: XXX Below the theoretically acceptable value! (fixme)
+W:273, 0: XXX for experiments (fixme)
+W:274, 0: XXX for experiments (fixme)
 C: 11, 0: Import "from Arms.Bernoulli import Bernoulli" should be placed at the top of the module (wrong-import-position)
 W: 17, 0: Wildcard import Policies (wildcard-import)
 C: 17, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
-R: 49, 0: Redefinition of TEMPERATURE type from float to int (redefined-variable-type)
-W: 17, 0: Unused import Dummy from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 17, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+R: 51, 0: Redefinition of TEMPERATURE type from float to int (redefined-variable-type)
+************* Module Arms.Arm
+C:  5, 0: Old-style class defined. (old-style-class)
+C: 18, 4: Missing method docstring (missing-docstring)
+E: 22,52: Instance of 'Arm' has no '__dir__' member (no-member)
 ************* Module Arms.Bernoulli
-C:  7, 0: Old-style class defined. (old-style-class)
-W: 16,19: Unused argument 't' (unused-argument)
-C: 20, 4: Missing method docstring (missing-docstring)
+W: 10, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+************* Module Arms.Gaussian
+C:  7, 0: Import "from random import gauss" should be placed at the top of the module (wrong-import-position)
+C:  8, 0: Import "from .Arm import Arm" should be placed at the top of the module (wrong-import-position)
+W: 13, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+W: 24, 4: Arguments number differs from overridden 'draw' method (arguments-differ)
 ************* Module Arms.Exponential
 C:  7, 0: Import "from math import isinf, exp, log" should be placed at the top of the module (wrong-import-position)
 C:  8, 0: Import "from random import random" should be placed at the top of the module (wrong-import-position)
-C: 11, 0: Old-style class defined. (old-style-class)
-C: 25, 4: Missing method docstring (missing-docstring)
-C: 28, 4: Missing method docstring (missing-docstring)
-************* Module Arms.Gaussian
-C:  7, 0: Import "from random import gauss" should be placed at the top of the module (wrong-import-position)
-C: 10, 0: Old-style class defined. (old-style-class)
-C: 21, 4: Missing method docstring (missing-docstring)
-C: 24, 4: Missing method docstring (missing-docstring)
-************* Module main
-W: 35, 0: FIXME it does not work - yet (fixme)
-C: 30, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
-C: 40, 0: Wrong continued indentation (remove 1 space).
-                           )
-                          |^ (bad-continuation)
-C: 48, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
-C: 59, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
-C: 65, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
-C: 11, 0: Import "from os import mkdir" should be placed at the top of the module (wrong-import-position)
-C: 12, 0: Import "import os.path" should be placed at the top of the module (wrong-import-position)
-C: 16, 0: Import "from Environment import Evaluator" should be placed at the top of the module (wrong-import-position)
-C: 17, 0: Import "from configuration import configuration" should be placed at the top of the module (wrong-import-position)
+C:  9, 0: Import "from .Arm import Arm" should be placed at the top of the module (wrong-import-position)
+W: 14, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+W: 28, 4: Arguments number differs from overridden 'draw' method (arguments-differ)
 ************* Module Arms
 C:  9, 0: Import "from .Poisson import Poisson" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Import "from .Gaussian import Gaussian" should be placed at the top of the module (wrong-import-position)
 C: 11, 0: Import "from .Exponential import Exponential" should be placed at the top of the module (wrong-import-position)
 C: 12, 0: Import "from .Bernoulli import Bernoulli" should be placed at the top of the module (wrong-import-position)
-************* Module Arms.Poisson
-C:  7, 0: Import "from math import isinf, exp" should be placed at the top of the module (wrong-import-position)
-C:  8, 0: Import "from scipy.stats import poisson" should be placed at the top of the module (wrong-import-position)
-C: 11, 0: Old-style class defined. (old-style-class)
-C: 32, 4: Missing method docstring (missing-docstring)
-C: 35, 4: Missing method docstring (missing-docstring)
+************* Module main_multiplayers
+C: 33, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 41, 0: Wrong continued indentation (remove 1 space).
+                                       )
+                                      |^ (bad-continuation)
+C: 51, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 61, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 67, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 11, 0: Import "from os import mkdir" should be placed at the top of the module (wrong-import-position)
+C: 12, 0: Import "import os.path" should be placed at the top of the module (wrong-import-position)
+C: 16, 0: Import "from Environment import EvaluatorMultiPlayers" should be placed at the top of the module (wrong-import-position)
+C: 17, 0: Import "from configuration_multiplayers import configuration" should be placed at the top of the module (wrong-import-position)
+************* Module main
+W: 37, 0: FIXME it does not work - yet (fixme)
+C: 32, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 42, 0: Wrong continued indentation (remove 1 space).
+                           )
+                          |^ (bad-continuation)
+C: 52, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 62, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 68, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 73, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
+C: 11, 0: Import "from os import mkdir" should be placed at the top of the module (wrong-import-position)
+C: 12, 0: Import "import os.path" should be placed at the top of the module (wrong-import-position)
+C: 14, 0: Import "from Environment import Evaluator" should be placed at the top of the module (wrong-import-position)
+C: 15, 0: Import "from configuration import configuration" should be placed at the top of the module (wrong-import-position)
+************* Module Environment.CollisionModels
+C: 17, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+W: 34,52: Unused argument 'nbArms' (unused-argument)
+W: 57, 8: Using possibly undefined loop variable 'player' (undefined-loop-variable)
 ************* Module Environment.MAB
-C:  7, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
-C: 10, 0: Old-style class defined. (old-style-class)
-R: 10, 0: Too few public methods (0/2) (too-few-public-methods)
+C:  8, 0: Old-style class defined. (old-style-class)
+R:  8, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module Environment.Result
 C:  7, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Old-style class defined. (old-style-class)
 C: 18, 4: Missing method docstring (missing-docstring)
-C: 23, 4: Missing method docstring (missing-docstring)
+R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
+************* Module Environment.ResultMultiPlayers
+W: 24, 0: XXX it works directly? (fixme)
+C:  7, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+C: 10, 0: Old-style class defined. (old-style-class)
+C: 19, 4: Missing method docstring (missing-docstring)
+R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
 ************* Module Environment
-C: 12, 0: Import "from .Evaluator import Evaluator" should be placed at the top of the module (wrong-import-position)
 C: 13, 0: Import "from .MAB import MAB" should be placed at the top of the module (wrong-import-position)
 C: 14, 0: Import "from .Result import Result" should be placed at the top of the module (wrong-import-position)
+C: 15, 0: Import "from .Evaluator import Evaluator" should be placed at the top of the module (wrong-import-position)
+C: 16, 0: Import "from .EvaluatorMultiPlayers import EvaluatorMultiPlayers" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.AdBandits
+W: 57, 0: XXX if possible, this part should also use numpy arrays to be faster? (fixme)
 C: 10, 0: Import "import random as rn" should be placed at the top of the module (wrong-import-position)
 C: 11, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 12, 0: Import "from .Beta import Beta" should be placed at the top of the module (wrong-import-position)
 R: 15, 0: Too many instance attributes (8/7) (too-many-instance-attributes)
 C: 15, 0: Old-style class defined. (old-style-class)
 C: 36, 4: Missing method docstring (missing-docstring)
-C: 43, 4: Missing method docstring (missing-docstring)
-C: 49, 4: Missing method docstring (missing-docstring)
-C: 52, 4: Missing method docstring (missing-docstring)
+C: 44, 4: Missing method docstring (missing-docstring)
+C: 50, 4: Missing method docstring (missing-docstring)
+C: 54, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.Aggr
 W: 44, 0: XXX I am not sure if it speeds up to use joblib with more jobs than CPU cores... ? (fixme)
-W: 75, 0: FIXME the parallelization here was not improving anything (fixme)
-W: 89, 0: FIXME I am trying to reduce the learning rate (geometrically) when t increase... (fixme)
-W: 95, 0: FIXME the parallelization here was not improving anything (fixme)
-W:123, 0: FIXME the parallelization here was not improving anything (fixme)
+W: 76, 0: FIXME the parallelization here was not improving anything (fixme)
+W: 91, 0: FIXME I am trying to reduce the learning rate (geometrically) when t increase... (fixme)
+W: 97, 0: FIXME the parallelization here was not improving anything (fixme)
+W:131, 0: FIXME the parallelization here was not improving anything (fixme)
+W:140, 0: XXX in fact, no we need to vector self.choices to update the self.trusts probabilities! (fixme)
 C: 11, 4: Import "import joblib" should be placed at the top of the module (wrong-import-position)
 C: 17, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 18, 0: Import "import numpy.random as rn" should be placed at the top of the module (wrong-import-position)
-R: 26, 0: Too many instance attributes (15/7) (too-many-instance-attributes)
+R: 26, 0: Too many instance attributes (13/7) (too-many-instance-attributes)
 C: 26, 0: Old-style class defined. (old-style-class)
 W: 33,17: Redefining name 'update_all_children' from outer scope (line 22) (redefined-outer-name)
 W: 34,17: Redefining name 'one_job_by_children' from outer scope (line 23) (redefined-outer-name)
-C: 69, 4: Missing method docstring (missing-docstring)
-C: 85, 4: Missing method docstring (missing-docstring)
-C:120, 4: Missing method docstring (missing-docstring)
-C:137, 0: Missing function docstring (missing-docstring)
-C:141, 0: Missing function docstring (missing-docstring)
-C:145, 0: Missing function docstring (missing-docstring)
-************* Module Environment.Evaluator
-W: 79, 0: FIXME try to also parallelize this loop on policies ? (fixme)
-W:111, 0: XXX Experimental... Get a random #RGB color from the hash of the policy (fixme)
-W:116, 0: XXX Should be smarter (fixme)
-C:  9, 0: Import "from copy import deepcopy" should be placed at the top of the module (wrong-import-position)
-C: 10, 0: Import "from random import shuffle" should be placed at the top of the module (wrong-import-position)
-C: 12, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
-C: 13, 0: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
-C: 15, 4: Import "import joblib" should be placed at the top of the module (wrong-import-position)
-C: 21, 0: Import "from .Result import Result" should be placed at the top of the module (wrong-import-position)
-C: 22, 0: Import "from .MAB import MAB" should be placed at the top of the module (wrong-import-position)
-R: 28, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
-C: 28, 0: Old-style class defined. (old-style-class)
-C: 62, 4: Missing method docstring (missing-docstring)
-C: 66, 4: Missing method docstring (missing-docstring)
-C: 96, 4: Missing method docstring (missing-docstring)
-C: 99, 4: Missing method docstring (missing-docstring)
-C:103, 4: Missing method docstring (missing-docstring)
-C:135, 4: Missing method docstring (missing-docstring)
-C:157, 0: Missing function docstring (missing-docstring)
-C:173, 0: Missing function docstring (missing-docstring)
+C: 70, 4: Missing method docstring (missing-docstring)
+C: 87, 4: Missing method docstring (missing-docstring)
+C:128, 4: Missing method docstring (missing-docstring)
+C:147, 0: Missing function docstring (missing-docstring)
+C:151, 0: Missing function docstring (missing-docstring)
+C:155, 0: Missing function docstring (missing-docstring)
 ************* Module Policies.BayesUCB
-C:  9, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
-C: 10, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-C: 11, 0: Import "from .Beta import Beta" should be placed at the top of the module (wrong-import-position)
-E: 19, 4: Use of super on an old style class (super-on-old-class)
-C: 35, 4: Missing method docstring (missing-docstring)
-W:  9, 0: Unused numpy imported as np (unused-import)
+C:  9, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
+C: 10, 0: Import "from .Beta import Beta" should be placed at the top of the module (wrong-import-position)
+C: 34, 4: Missing method docstring (missing-docstring)
+************* Module Arms.Poisson
+C:  7, 0: Import "from math import isinf, exp" should be placed at the top of the module (wrong-import-position)
+C:  8, 0: Import "from scipy.stats import poisson" should be placed at the top of the module (wrong-import-position)
+C:  9, 0: Import "from .Arm import Arm" should be placed at the top of the module (wrong-import-position)
+W: 14, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+W: 35, 4: Arguments number differs from overridden 'draw' method (arguments-differ)
 ************* Module Policies.Dummy
 C:  8, 0: Import "from random import randint" should be placed at the top of the module (wrong-import-position)
 C: 11, 0: Old-style class defined. (old-style-class)
 C: 22, 4: Missing method docstring (missing-docstring)
 C: 25, 4: Missing method docstring (missing-docstring)
 C: 28, 4: Missing method docstring (missing-docstring)
+************* Module Policies.Beta
+C:  9, 4: Import "from numpy.random import beta as betavariate" should be placed at the top of the module (wrong-import-position)
+C: 11, 4: Import "from random import betavariate" should be placed at the top of the module (wrong-import-position)
+C: 12, 0: Import "from scipy.special import btdtri" should be placed at the top of the module (wrong-import-position)
+C: 15, 0: Old-style class defined. (old-style-class)
+C: 26, 4: Missing method docstring (missing-docstring)
+C: 33, 4: Missing method docstring (missing-docstring)
+C: 36, 4: Missing method docstring (missing-docstring)
+C: 40, 4: Missing method docstring (missing-docstring)
+C: 43, 4: Missing method docstring (missing-docstring)
+C: 46, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.EpsilonDecreasing
 C:  9, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Import "import random" should be placed at the top of the module (wrong-import-position)
@@ -168,7 +190,6 @@ C: 10, 0: standard import "import random" comes before "import numpy as np" (wro
 ************* Module Policies.IndexPolicy
 C:  9, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Import "import numpy.random as rn" should be placed at the top of the module (wrong-import-position)
-C: 13, 0: Old-style class defined. (old-style-class)
 C: 27, 4: Missing method docstring (missing-docstring)
 E: 35,31: Instance of 'IndexPolicy' has no 'computeIndex' member (no-member)
 C: 42, 4: Missing method docstring (missing-docstring)
@@ -180,7 +201,6 @@ C: 10, 0: Import "import numpy as np" should be placed at the top of the module 
 E: 12, 0: No name 'maxEV' in module 'Policies.kullback' (no-name-in-module)
 C: 12, 0: Import "from .kullback import maxEV" should be placed at the top of the module (wrong-import-position)
 C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-E: 21, 4: Use of super on an old style class (super-on-old-class)
 C: 34, 4: Missing method docstring (missing-docstring)
 C: 46, 4: Missing method docstring (missing-docstring)
 R: 46, 4: Method could be a function (no-self-use)
@@ -196,7 +216,6 @@ C: 48, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.Thompson
 C:  9, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Import "from .Beta import Beta" should be placed at the top of the module (wrong-import-position)
-E: 18, 4: Use of super on an old style class (super-on-old-class)
 C: 36, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.UCB
 W: 41, 0: XXX should be uniformly chosen if more than one arm has the highest index (fixme)
@@ -209,11 +228,10 @@ C: 45, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.UCBV
 C:  9, 0: Import "from math import sqrt, log" should be placed at the top of the module (wrong-import-position)
 C: 10, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
-C: 11, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-E: 19, 4: Use of super on an old style class (super-on-old-class)
-C: 35, 4: Missing method docstring (missing-docstring)
+C: 12, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
+C: 36, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.UCBalpha
-W: 41, 0: XXX should be uniformly chosen if more than one arm has the highest index (fixme)
+W: 40, 0: XXX should be uniformly chosen if more than one arm has the highest index (fixme)
 W: 46, 0: XXX why is it not here? (fixme)
 C:  9, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
 C: 12, 0: Old-style class defined. (old-style-class)
@@ -242,8 +260,46 @@ E: 12, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 C: 12, 0: Import "from .kullback import klucbBern" should be placed at the top of the module (wrong-import-position)
 C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 R: 16, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
-E: 21, 4: Use of super on an old style class (super-on-old-class)
 C: 41, 4: Missing method docstring (missing-docstring)
+************* Module Environment.EvaluatorMultiPlayers
+W:142, 0: XXX Should be smarter (fixme)
+C:198, 0: Wrong continued indentation (remove 1 space).
+                 ):
+                |^ (bad-continuation)
+C: 10, 0: Import "from copy import deepcopy" should be placed at the top of the module (wrong-import-position)
+C: 11, 0: Import "from random import shuffle" should be placed at the top of the module (wrong-import-position)
+C: 13, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+C: 14, 0: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
+C: 15, 0: Import "from cycler import cycler" should be placed at the top of the module (wrong-import-position)
+C: 17, 4: Import "import joblib" should be placed at the top of the module (wrong-import-position)
+C: 23, 0: Import "from .ResultMultiPlayers import ResultMultiPlayers" should be placed at the top of the module (wrong-import-position)
+C: 24, 0: Import "from .MAB import MAB" should be placed at the top of the module (wrong-import-position)
+W: 25, 0: Wildcard import CollisionModel (wildcard-import)
+E: 25, 0: Unable to import 'Environment.CollisionModel' (import-error)
+C: 25, 0: Import "from .CollisionModel import *" should be placed at the top of the module (wrong-import-position)
+R: 49, 0: Too many instance attributes (12/7) (too-many-instance-attributes)
+C: 49, 0: Old-style class defined. (old-style-class)
+C: 91, 4: Missing method docstring (missing-docstring)
+C: 96, 4: Missing method docstring (missing-docstring)
+C:121, 4: Missing method docstring (missing-docstring)
+C:124, 4: Missing method docstring (missing-docstring)
+C:128, 4: Missing method docstring (missing-docstring)
+C:131, 4: Missing method docstring (missing-docstring)
+C:136, 4: Missing method docstring (missing-docstring)
+C:159, 4: Missing method docstring (missing-docstring)
+C:175, 4: Missing method docstring (missing-docstring)
+C:196, 0: Missing function docstring (missing-docstring)
+E:197,32: Undefined variable 'defaultCollisionModel' (undefined-variable)
+W: 11, 0: Unused shuffle imported from random (unused-import)
+************* Module PoliciesMultiPlayers.Dummy
+C:  8, 0: Import "from random import randint" should be placed at the top of the module (wrong-import-position)
+C: 11, 0: Old-style class defined. (old-style-class)
+C: 23, 4: Missing method docstring (missing-docstring)
+C: 26, 4: Missing method docstring (missing-docstring)
+C: 29, 4: Missing method docstring (missing-docstring)
+C: 32, 4: Missing method docstring (missing-docstring)
+************* Module PoliciesMultiPlayers
+C: 11, 0: Import "from .Dummy import Dummy" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.kullback
 C:181, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
 C:182, 0: Unnecessary parens after u'print' keyword (superfluous-parens)
@@ -274,21 +330,42 @@ W:144,17: Redefining name 'klMax' from outer scope (line 187) (redefined-outer-n
 W:144,11: Redefining name 'p' from outer scope (line 184) (redefined-outer-name)
 W:144,14: Redefining name 'V' from outer scope (line 186) (redefined-outer-name)
 W:172, 4: String statement has no effect (pointless-string-statement)
-************* Module Policies.Beta
-C:  8, 0: Import "from random import betavariate" should be placed at the top of the module (wrong-import-position)
-C: 10, 0: Import "from scipy.special import btdtri" should be placed at the top of the module (wrong-import-position)
-C: 13, 0: Old-style class defined. (old-style-class)
-C: 24, 4: Missing method docstring (missing-docstring)
-C: 31, 4: Missing method docstring (missing-docstring)
-C: 34, 4: Missing method docstring (missing-docstring)
-C: 38, 4: Missing method docstring (missing-docstring)
-C: 41, 4: Missing method docstring (missing-docstring)
-C: 44, 4: Missing method docstring (missing-docstring)
+************* Module Environment.Evaluator
+W:150, 0: XXX Should be smarter (fixme)
+W:231, 0: XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps (fixme)
+W:242, 0: XXX Experimental : shuffle the arms at the middle of the simulation (fixme)
+W:244, 0: XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...' (fixme)
+W:247, 0: XXX Experimental : invert the order of the arms at the middle of the simulation (fixme)
+W:249, 0: XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...' (fixme)
+C:  9, 0: Import "from copy import deepcopy" should be placed at the top of the module (wrong-import-position)
+C: 10, 0: Import "from random import shuffle" should be placed at the top of the module (wrong-import-position)
+C: 12, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+C: 13, 0: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
+C: 14, 0: Import "from cycler import cycler" should be placed at the top of the module (wrong-import-position)
+C: 16, 4: Import "import joblib" should be placed at the top of the module (wrong-import-position)
+C: 22, 0: Import "from .Result import Result" should be placed at the top of the module (wrong-import-position)
+C: 23, 0: Import "from .MAB import MAB" should be placed at the top of the module (wrong-import-position)
+R: 52, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
+C: 52, 0: Old-style class defined. (old-style-class)
+C: 88, 4: Missing method docstring (missing-docstring)
+C: 93, 4: Missing method docstring (missing-docstring)
+C:131, 4: Missing method docstring (missing-docstring)
+C:134, 4: Missing method docstring (missing-docstring)
+C:138, 4: Missing method docstring (missing-docstring)
+C:141, 4: Missing method docstring (missing-docstring)
+C:145, 4: Missing method docstring (missing-docstring)
+C:167, 4: Missing method docstring (missing-docstring)
+C:183, 4: Missing method docstring (missing-docstring)
+C:205, 0: Missing function docstring (missing-docstring)
+W:223,48: Redefining name 'random_invert' from outer scope (line 28) (redefined-outer-name)
+W:223,77: Redefining name 'nb_random_events' from outer scope (line 29) (redefined-outer-name)
+W:223,17: Redefining name 'random_shuffle' from outer scope (line 27) (redefined-outer-name)
+C:222, 0: Missing function docstring (missing-docstring)
 
 
 Report
 ======
-944 statements analysed.
+1286 statements analysed.
 
 Statistics by type
 ------------------
@@ -296,13 +373,13 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |29     |19         |+10.00     |100.00      |3.45     |
+|module   |43     |NC         |NC         |100.00      |2.33     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |23     |13         |+10.00     |100.00      |4.35     |
+|class    |27     |NC         |NC         |100.00      |3.70     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |118    |65         |+53.00     |51.69       |28.81    |
+|method   |145    |NC         |NC         |53.79       |33.10    |
 +---------+-------+-----------+-----------+------------+---------+
-|function |18     |13         |+5.00      |72.22       |72.22    |
+|function |22     |NC         |NC         |72.73       |72.73    |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -312,20 +389,25 @@ External dependencies
 ::
 
     Arms 
+      \-Arm (Arms.Poisson)
       \-Bernoulli (configuration)
     Environment 
-      \-Evaluator (main)
       \-MAB (Environment.Evaluator)
       \-Result (Environment.Evaluator)
+      \-ResultMultiPlayers (Environment.EvaluatorMultiPlayers)
     Policies 
+      \-Beta (Policies.Thompson)
       \-IndexPolicy (Policies.klUCB)
       \-kullback (Policies.klUCB)
     configuration 
       \-configuration (main)
+    configuration_multiplayers 
+      \-configuration (main_multiplayers)
+    cycler (Environment.Evaluator)
     joblib (Environment.Evaluator)
     matplotlib 
       \-pyplot (Environment.Evaluator)
-    numpy (Policies.kullback)
+    numpy (Environment.Evaluator)
       \-random (Policies.IndexPolicy)
     scipy 
       \-special (Policies.Beta)
@@ -339,13 +421,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |1048   |56.77 |581      |+467.00    |
+|code      |1422   |56.59 |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|docstring |191    |10.35 |130      |+61.00     |
+|docstring |249    |9.91  |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|comment   |303    |16.41 |126      |+177.00    |
+|comment   |442    |17.59 |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|empty     |304    |16.47 |182      |+122.00    |
+|empty     |400    |15.92 |NC       |NC         |
 +----------+-------+------+---------+-----------+
 
 
@@ -356,9 +438,9 @@ Duplication
 +-------------------------+------+---------+-----------+
 |                         |now   |previous |difference |
 +=========================+======+=========+===========+
-|nb duplicated lines      |0     |0        |=          |
+|nb duplicated lines      |0     |NC       |NC         |
 +-------------------------+------+---------+-----------+
-|percent duplicated lines |0.000 |0.000    |=          |
+|percent duplicated lines |0.000 |NC       |NC         |
 +-------------------------+------+---------+-----------+
 
 
@@ -369,13 +451,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |170    |89       |+81.00     |
+|convention |210    |NC       |NC         |
 +-----------+-------+---------+-----------+
-|refactor   |7      |4        |+3.00      |
+|refactor   |10     |NC       |NC         |
 +-----------+-------+---------+-----------+
-|warning    |70     |39       |+31.00     |
+|warning    |94     |NC       |NC         |
 +-----------+-------+---------+-----------+
-|error      |8      |0        |+8.00      |
+|error      |6      |NC       |NC         |
 +-----------+-------+---------+-----------+
 
 
@@ -383,67 +465,83 @@ Messages by category
 % errors / warnings by module
 -----------------------------
 
-+---------------------------+------+--------+---------+-----------+
-|module                     |error |warning |refactor |convention |
-+===========================+======+========+=========+===========+
-|Policies.KLempUCB          |25.00 |1.43    |14.29    |3.53       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.klUCB             |25.00 |0.00    |14.29    |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.IndexPolicy       |12.50 |1.43    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.BayesUCB          |12.50 |1.43    |0.00     |2.35       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.UCBV              |12.50 |0.00    |0.00     |2.35       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.Thompson          |12.50 |0.00    |0.00     |1.76       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.kullback          |0.00  |34.29   |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|configuration              |0.00  |28.57   |14.29    |1.18       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.Aggr              |0.00  |10.00   |14.29    |5.88       |
-+---------------------------+------+--------+---------+-----------+
-|Environment.Evaluator      |0.00  |4.29    |14.29    |9.41       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.Softmax           |0.00  |4.29    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.EpsilonDecreasing |0.00  |2.86    |0.00     |4.12       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.UCBalpha          |0.00  |2.86    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.UCB               |0.00  |2.86    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|main                       |0.00  |1.43    |0.00     |5.29       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.EpsilonGreedy     |0.00  |1.43    |0.00     |4.12       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.EpsilonFirst      |0.00  |1.43    |0.00     |4.12       |
-+---------------------------+------+--------+---------+-----------+
-|Arms.Bernoulli             |0.00  |1.43    |0.00     |1.18       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.AdBandits         |0.00  |0.00    |14.29    |4.71       |
-+---------------------------+------+--------+---------+-----------+
-|Environment.MAB            |0.00  |0.00    |14.29    |1.18       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.__init__          |0.00  |0.00    |0.00     |8.24       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.Beta              |0.00  |0.00    |0.00     |5.29       |
-+---------------------------+------+--------+---------+-----------+
-|Policies.Dummy             |0.00  |0.00    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Arms.Poisson               |0.00  |0.00    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Arms.Exponential           |0.00  |0.00    |0.00     |2.94       |
-+---------------------------+------+--------+---------+-----------+
-|Environment.Result         |0.00  |0.00    |0.00     |2.35       |
-+---------------------------+------+--------+---------+-----------+
-|Arms.__init__              |0.00  |0.00    |0.00     |2.35       |
-+---------------------------+------+--------+---------+-----------+
-|Arms.Gaussian              |0.00  |0.00    |0.00     |2.35       |
-+---------------------------+------+--------+---------+-----------+
-|Environment.__init__       |0.00  |0.00    |0.00     |1.76       |
-+---------------------------+------+--------+---------+-----------+
++----------------------------------+------+--------+---------+-----------+
+|module                            |error |warning |refactor |convention |
++==================================+======+========+=========+===========+
+|Environment.EvaluatorMultiPlayers |33.33 |3.19    |10.00    |10.00      |
++----------------------------------+------+--------+---------+-----------+
+|Policies.KLempUCB                 |16.67 |1.06    |10.00    |2.86       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.IndexPolicy              |16.67 |1.06    |0.00     |1.90       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.klUCB                    |16.67 |0.00    |10.00    |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.Arm                          |16.67 |0.00    |0.00     |0.95       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.kullback                 |0.00  |25.53   |0.00     |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|configuration                     |0.00  |15.96   |10.00    |0.95       |
++----------------------------------+------+--------+---------+-----------+
+|configuration_multiplayers        |0.00  |10.64   |0.00     |0.95       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.Evaluator             |0.00  |9.57    |10.00    |9.52       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.Aggr                     |0.00  |8.51    |10.00    |4.76       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.Softmax                  |0.00  |3.19    |0.00     |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.EpsilonDecreasing        |0.00  |2.13    |0.00     |3.33       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.UCBalpha                 |0.00  |2.13    |0.00     |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.UCB                      |0.00  |2.13    |0.00     |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.Poisson                      |0.00  |2.13    |0.00     |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.Exponential                  |0.00  |2.13    |0.00     |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.Gaussian                     |0.00  |2.13    |0.00     |0.95       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.CollisionModels       |0.00  |2.13    |0.00     |0.48       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.AdBandits                |0.00  |1.06    |10.00    |3.81       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.ResultMultiPlayers    |0.00  |1.06    |10.00    |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|main                              |0.00  |1.06    |0.00     |4.76       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.EpsilonGreedy            |0.00  |1.06    |0.00     |3.33       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.EpsilonFirst             |0.00  |1.06    |0.00     |3.33       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.Bernoulli                    |0.00  |1.06    |0.00     |0.00       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.Result                |0.00  |0.00    |10.00    |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.MAB                   |0.00  |0.00    |10.00    |0.48       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.__init__                 |0.00  |0.00    |0.00     |6.67       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.Beta                     |0.00  |0.00    |0.00     |4.76       |
++----------------------------------+------+--------+---------+-----------+
+|main_multiplayers                 |0.00  |0.00    |0.00     |4.29       |
++----------------------------------+------+--------+---------+-----------+
+|PoliciesMultiPlayers.Dummy        |0.00  |0.00    |0.00     |2.86       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.Dummy                    |0.00  |0.00    |0.00     |2.38       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.UCBV                     |0.00  |0.00    |0.00     |1.90       |
++----------------------------------+------+--------+---------+-----------+
+|Environment.__init__              |0.00  |0.00    |0.00     |1.90       |
++----------------------------------+------+--------+---------+-----------+
+|Arms.__init__                     |0.00  |0.00    |0.00     |1.90       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.Thompson                 |0.00  |0.00    |0.00     |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|Policies.BayesUCB                 |0.00  |0.00    |0.00     |1.43       |
++----------------------------------+------+--------+---------+-----------+
+|PoliciesMultiPlayers.__init__     |0.00  |0.00    |0.00     |0.48       |
++----------------------------------+------+--------+---------+-----------+
 
 
 
@@ -453,25 +551,31 @@ Messages
 +-----------------------------+------------+
 |message id                   |occurrences |
 +=============================+============+
-|wrong-import-position        |79          |
+|wrong-import-position        |102         |
 +-----------------------------+------------+
-|missing-docstring            |62          |
+|missing-docstring            |73          |
 +-----------------------------+------------+
-|redefined-outer-name         |29          |
+|fixme                        |46          |
 +-----------------------------+------------+
-|fixme                        |27          |
+|redefined-outer-name         |32          |
 +-----------------------------+------------+
-|old-style-class              |18          |
+|old-style-class              |17          |
 +-----------------------------+------------+
-|unused-wildcard-import       |8           |
+|superfluous-parens           |12          |
 +-----------------------------+------------+
-|superfluous-parens           |7           |
+|too-many-instance-attributes |5           |
 +-----------------------------+------------+
-|super-on-old-class           |5           |
-+-----------------------------+------------+
-|too-many-instance-attributes |4           |
+|super-init-not-called        |4           |
 +-----------------------------+------------+
 |wrong-import-order           |3           |
++-----------------------------+------------+
+|wildcard-import              |3           |
++-----------------------------+------------+
+|too-few-public-methods       |3           |
++-----------------------------+------------+
+|bad-continuation             |3           |
++-----------------------------+------------+
+|arguments-differ             |3           |
 +-----------------------------+------------+
 |unused-import                |2           |
 +-----------------------------+------------+
@@ -479,9 +583,11 @@ Messages
 +-----------------------------+------------+
 |no-name-in-module            |2           |
 +-----------------------------+------------+
-|wildcard-import              |1           |
+|no-member                    |2           |
 +-----------------------------+------------+
-|too-few-public-methods       |1           |
+|undefined-variable           |1           |
++-----------------------------+------------+
+|undefined-loop-variable      |1           |
 +-----------------------------+------------+
 |redefined-variable-type      |1           |
 +-----------------------------+------------+
@@ -489,14 +595,12 @@ Messages
 +-----------------------------+------------+
 |no-self-use                  |1           |
 +-----------------------------+------------+
-|no-member                    |1           |
-+-----------------------------+------------+
-|bad-continuation             |1           |
+|import-error                 |1           |
 +-----------------------------+------------+
 
 
 
 Global evaluation
 -----------------
-Your code has been rated at 6.96/10 (previous run: 7.52/10, -0.56)
+Your code has been rated at 7.33/10
 
