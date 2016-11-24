@@ -20,11 +20,11 @@ from Policies import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
+HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
-HORIZON = 2000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -35,7 +35,7 @@ REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 20
 REPETITIONS = 100
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -63,8 +63,8 @@ LEARNING_RATE = 0.01
 
 # To try more learning rates in one run
 LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
-# LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
-LEARNING_RATES = [LEARNING_RATE]
+LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
+# LEARNING_RATES = [LEARNING_RATE]
 
 # XXX try different values for time tau for the decreasing rate for my aggregated bandit
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
@@ -80,8 +80,11 @@ ONE_JOB_BY_CHILDREN = False
 
 
 configuration = {
+    # Duration of the experiment
     "horizon": HORIZON,
+    # Number of repetition of the experiment (to have an average)
     "repetitions": REPETITIONS,
+    # Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 5,  # Max joblib verbosity
     # # Random events - TODO finish the improvement on Evaluator.py to support these parameters
@@ -135,15 +138,15 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
+        # # --- UCB algorithms
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {

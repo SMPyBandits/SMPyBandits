@@ -14,6 +14,10 @@ main3:
 	time nice -n 20 ipython3 ./main.py | tee ./logs/main_py3_log.txt
 	# time nice -n 20 python3 ./main.py | tee ./logs/main_py3_log.txt
 
+multiplayers:
+	time nice -n 20 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	# time nice -n 20 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+
 # Time profilers
 profile:
 	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt

@@ -10,8 +10,6 @@ __version__ = "0.2"
 # Generic imports
 from os import mkdir
 import os.path
-# Adding a time profiler!
-# import cProfile
 # Local imports
 from Environment import Evaluator
 from configuration import configuration
