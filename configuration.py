@@ -30,11 +30,11 @@ HORIZON = 10000
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 50
+REPETITIONS = 20
 REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
-REPETITIONS = 20
+REPETITIONS = 50
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -98,10 +98,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -110,10 +110,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
-        {   # One optimal arm, much better than the others, but *lots* of bad arms
-            "arm_type": Bernoulli,
-            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        },
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        # },
     ],
     "policies": [
         # # --- Stupid algorithms
@@ -142,15 +142,15 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBV,   # UCB with variance term
-        #     "params": {}
-        # },
+        # --- UCB algorithms
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
+        {
+            "archtype": UCBV,   # UCB with variance term
+            "params": {}
+        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {

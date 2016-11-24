@@ -19,6 +19,3 @@ class Result:
         self.choices[time] = choice
         self.rewards[time] = reward
         self.pulls[choice] += 1
-
-    def getNbPulls(self):
-        return self.pulls

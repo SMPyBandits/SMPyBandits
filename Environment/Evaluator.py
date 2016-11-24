@@ -81,7 +81,7 @@ class Evaluator:
 
     def __initPolicies__(self, env):
         for polId, policy in enumerate(self.cfg['policies']):
-            print("- policy #{} = {} ...".format(polId + 1, policy))  # DEBUG
+            print("- Adding policy #{} = {} ...".format(polId + 1, policy))  # DEBUG
             self.policies.append(policy['archtype'](env.nbArms,
                                                     **policy['params']))
 
@@ -132,9 +132,8 @@ class Evaluator:
         return self.pulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
 
     def getbestArmPulls(self, policyId, environmentId):
-        Y = self.bestArmPulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
-        Y /= np.arange(start=1, stop=1 + self.cfg['horizon'])  # Get a frequency
-        return Y
+        # We have to divide by a arange() = cumsum(ones) to get a frequency
+        return self.bestArmPulls[environmentId][policyId, :] / float(self.cfg['repetitions']) / np.arange(start=1, stop=1 + self.cfg['horizon'])
 
     def getReward(self, policyId, environmentId):
         return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
