@@ -111,7 +111,7 @@ configuration = {
     "players": [
         # --- Stupid algorithm
         {
-            "archtype": Dummy,   # The stupidest policy
+            "archtype": Uniform,   # The stupidest policy
             "params": {
             }
         },

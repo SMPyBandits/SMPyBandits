@@ -20,6 +20,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
+from ._maximizeWindow import maximizeWindow
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -163,10 +164,11 @@ class EvaluatorMultiPlayers:
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
         plt.title("Multi-players: personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        show()
+        plt.show()
 
     # Plotting centralized rewards (sum)
     def plotRewardsCentralized(self, environmentId, savefig=None, semilogx=False, weights='uniform'):
@@ -186,10 +188,11 @@ class EvaluatorMultiPlayers:
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players: cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        show()
+        plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
@@ -202,10 +205,11 @@ class EvaluatorMultiPlayers:
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Multi-players: best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        show()
+        plt.show()
 
     def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
@@ -232,10 +236,11 @@ class EvaluatorMultiPlayers:
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"frequency of collision in each arm $a = 1 .. {}$".format(nbArms))
         plt.title("Frequency of collision for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        show()
+        plt.show()
 
     def giveFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
@@ -294,16 +299,3 @@ def delayed_play(env, players, horizon, collisionModel):
     return result
 
 
-def show():
-    # plt.show()
-    # XXX Experimental https://stackoverflow.com/q/12439588/
-    plt.show()
-    try:
-        figManager = plt.get_current_fig_manager()
-        figManager.frame.Maximize(True)
-    except:
-        try:
-            figManager = plt.get_current_fig_manager()
-            figManager.window.showMaximized()
-        except:
-            print("Unable to maximize window...")

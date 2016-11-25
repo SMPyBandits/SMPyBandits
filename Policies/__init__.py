@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 """ Policies : contains various bandits algorithms:
-Dummy, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, Softmax, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
+Uniform, EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, Softmax, UCB, UCBV, Thompson, BayesUCB, klUCB, KLempUCB, Aggr, AdBandit.
 """
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 # Mine, stupid ones
-from .Dummy import Dummy
+from .Uniform import Uniform
+from .Uniform import Uniform
+from .TakeFixedArm import TakeFixedArm
+from .UniformOnSome import UniformOnSome
+# Simple exploratory policies
 from .EpsilonGreedy import EpsilonGreedy
 from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing

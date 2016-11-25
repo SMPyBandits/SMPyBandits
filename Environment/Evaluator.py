@@ -21,6 +21,7 @@ except ImportError:
 # Local imports
 from .Result import Result
 from .MAB import MAB
+from ._maximizeWindow import maximizeWindow
 
 
 # Parameters for the random events
@@ -152,6 +153,7 @@ class Evaluator:
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
         plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
@@ -168,6 +170,7 @@ class Evaluator:
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
