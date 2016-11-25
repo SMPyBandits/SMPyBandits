@@ -44,42 +44,48 @@ if __name__ == '__main__':
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.giveFinalRanking(envId)
-        if do_plot:
-            # Sub folder with a useful name
-            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
-            # Get the name of the output file
-            imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
-            # Create the sub folder
-            plot_dir = os.path.join(plot_dir, subfolder)
-            if os.path.isdir(plot_dir):
-                print("{} is already a directory here...".format(plot_dir))
-            elif os.path.isfile(plot_dir):
-                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-            else:
-                mkdir(plot_dir)
+        if not do_plot:
+            break
+        # Sub folder with a useful name
+        subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        # Create the sub folder
+        plot_dir = os.path.join(plot_dir, subfolder)
+        if os.path.isdir(plot_dir):
+            print("{} is already a directory here...".format(plot_dir))
+        elif os.path.isfile(plot_dir):
+            raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+        else:
+            mkdir(plot_dir)
 
-            # Set plotting mode to interactive
-            # plt.interactive(True)
+        # Set plotting mode to interactive
+        # plt.interactive(True)
 
-            savefig = os.path.join(plot_dir, imagename)
-            # Plotting the decentralized rewards
-            print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
-            evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
+        savefig = os.path.join(plot_dir, imagename)
+        # Plotting the decentralized rewards
+        print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
+        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
 
-            # Plotting the centralized rewards
-            savefig = savefig.replace('main', 'main_RewardsCentralized')
-            print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
-            evaluation.plotRewardsCentralized(envId, savefig=savefig, semilogx=semilogx)
+        # # Plotting the centralized rewards
+        # savefig = savefig.replace('main', 'main_RewardsCentralized')
+        # print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx)
 
-            # Also plotting the probability of picking the best arm
-            savefig = savefig.replace('main', 'main_BestArmPulls')
-            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
-            evaluation.plotBestArmPulls(envId, savefig=savefig)
+        # Also plotting the probability of picking the best arm
+        savefig = savefig.replace('main', 'main_BestArmPulls')
+        print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+        evaluation.plotBestArmPulls(envId, savefig=savefig)
 
-            # Also plotting the frequency of collision in each arm
-            savefig = savefig.replace('main', 'main_FrequencyCollisions')
-            print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
-            evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+        # Also plotting the probability of transmission on a free channel
+        savefig = savefig.replace('main', 'main_FreeTransmissions')
+        print(" - Plotting the probability of transmission on a free channel, and saving the plot to {} ...".format(savefig))
+        evaluation.plotFreeTransmissions(envId, savefig=savefig)
 
-            # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        # Also plotting the frequency of collision in each arm
+        savefig = savefig.replace('main', 'main_FrequencyCollisions')
+        print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
+        evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+
+        # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done

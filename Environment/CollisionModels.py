@@ -79,6 +79,10 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
             rewards[i] = arms[choices[i]].draw(t)
             players[i].getReward(choices[i], rewards[i])
             pulls[i, choices[i]] += 1
+            for j in players_who_chosed_it:
+                if i != j:
+                    # FIXME player[j].getReward() should be called with a reward = 0 when there is collisions (to change the internals memory of the player)
+                    players[j].getReward(choices[j], 0)
 
 
 # Default collision model to use

@@ -23,22 +23,19 @@ from Environment.CollisionModels import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 1000
+HORIZON = 20000
+HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 100
-REPETITIONS = 200
-REPETITIONS = 500
-REPETITIONS = 20
 REPETITIONS = 8
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -66,7 +63,7 @@ TEST_AGGR = False
 
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 4
+NB_PLAYERS = 3
 
 
 # XXX This dictionary configures the experiments
@@ -90,45 +87,45 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        # {   # A very easy problem, but it is used in a lot of articles
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
         # },
-        # {   # An easy problem
+        # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
         # },
-        # {   # An easy problem
+        # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
             "arm_type": Bernoulli,
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
     # --- Defining each player manually
     "players": [
-        # --- Stupid algorithm
-        {
-            "archtype": Uniform,   # The stupidest policy
-            "params": {
-            }
-        },
-        # --- Static or perfect (toy) algorithm
-        {
-            "archtype": TakeFixedArm,   # The static policy: always selects one arm
-            "params": {
-                "armIndex": 16
-            }
-        },
-        # # --- Take randomly one arm from a fixed set
-        {
-            "archtype": UniformOnSome,
-            "params": {
-                "armIndexes": [0, 16]
-            }
-        },
+        # # --- Stupid algorithm
+        # {
+        #     "archtype": Uniform,   # The stupidest policy
+        #     "params": {
+        #     }
+        # },
+        # # --- Static or perfect (toy) algorithm
+        # {
+        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
+        #     "params": {
+        #         "armIndex": 16
+        #     }
+        # },
+        # --- Take randomly one arm from a fixed set
+        # {
+        #     "archtype": UniformOnSome,
+        #     "params": {
+        #         "armIndexes": [0, 16]
+        #     }
+        # },
         {
             "archtype": UniformOnSome,
             "params": {  # Example: one of the best arms
@@ -174,27 +171,27 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
-        # # --- Softmax algorithms
+        # # --- UCB algorithms
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
+        # # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
         #     "params": {
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
         # # --- KL algorithms
         # {
         #     "archtype": klUCB,
@@ -223,6 +220,13 @@ configuration = {
     # # --- Defining each player as one child of a multi-player policy
     # # FIXME finish this !
     # "players": Selfish(NB_PLAYERS, Uniform).players
+    # "players": [
+    #     {
+    #         "archtype": Thompson,
+    #         "params": {}
+    #     }
+    #     for _ in range(NB_PLAYERS)
+    # ]
 }
 
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined

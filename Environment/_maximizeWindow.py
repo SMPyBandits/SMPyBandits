@@ -13,7 +13,7 @@ def maximizeWindow():
     """ Tries as well as possible to maximize the figure."""
     # print("Calling 'plt.tight_layout()' ...")  # DEBUG
     # plt.show()
-    plt.tight_layout()
+    # plt.tight_layout()
     try:
         # print("Calling 'figManager = plt.get_current_fig_manager()' ...")  # DEBUG
         figManager = plt.get_current_fig_manager()

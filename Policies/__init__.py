@@ -23,7 +23,7 @@ from .UCBV import UCBV
 from .Thompson import Thompson
 from .BayesUCB import BayesUCB
 from .klUCB import klUCB
-from .KLempUCB import KLempUCB
+# from .KLempUCB import KLempUCB  # XXX fix it before importing it
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandit
 # Mine, aggregated ones

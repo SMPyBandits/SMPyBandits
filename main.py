@@ -51,27 +51,28 @@ if __name__ == '__main__':
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.giveFinalRanking(envId)
-        if do_plot:
-            # Sub folder with a useful name
-            subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-            # Get the name of the output file
-            imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
-            # Create the sub folder
-            plot_dir = os.path.join(plot_dir, subfolder)
-            if os.path.isdir(plot_dir):
-                print("{} is already a directory here...".format(plot_dir))
-            elif os.path.isfile(plot_dir):
-                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-            else:
-                mkdir(plot_dir)
-            savefig = os.path.join(plot_dir, imagename)
-            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotRewards(envId, semilogx=not semilogx)
-            evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
-            # Also plotting the probability of picking the best arm
-            savefig = savefig.replace('main', 'main_BestArmPulls')
-            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-            evaluation.plotBestArmPulls(envId, savefig=savefig)
+        if not do_plot:
+            break
+        # Sub folder with a useful name
+        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        # Create the sub folder
+        plot_dir = os.path.join(plot_dir, subfolder)
+        if os.path.isdir(plot_dir):
+            print("{} is already a directory here...".format(plot_dir))
+        elif os.path.isfile(plot_dir):
+            raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+        else:
+            mkdir(plot_dir)
+        savefig = os.path.join(plot_dir, imagename)
+        print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
 
-            # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        # Also plotting the probability of picking the best arm
+        savefig = savefig.replace('main', 'main_BestArmPulls')
+        print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+        evaluation.plotBestArmPulls(envId, savefig=savefig)
+
+        # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done

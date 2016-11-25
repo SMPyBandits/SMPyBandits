@@ -7,6 +7,8 @@ __version__ = "0.1"
 
 import numpy as np
 
+# FIXME finish this
+
 
 class Selfish():
     """ Selfish: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
@@ -23,14 +25,17 @@ class Selfish():
         return "Selfish({})".format(self.params)
 
     def startGame(self):
-        for player in self.players:
-            player.startGame()
+        raise NotImplementedError("Method startGame() in Selfish class is not implemented yet.")
+        # for player in self.players:
+        #     player.startGame()
 
     def getReward(self, arm, reward):
-        for player in self.players:
-            player.getReward(arm, reward)()
+        raise NotImplementedError("Method getReward() in Selfish class is not implemented yet.")
+        # for player in self.players:
+        #     player.getReward(arm, reward)()
 
     def choice(self):
-        choices = np.zeros(self.nbPlayers)
-        for i, player in enumerate(self.players):
-            choices[i] = player.choice()
+        raise NotImplementedError("Method choice() in Selfish class is not implemented yet.")
+        # choices = np.zeros(self.nbPlayers)
+        # for i, player in enumerate(self.players):
+        #     choices[i] = player.choice()

@@ -35,7 +35,7 @@ colors = ['r', 'g', 'b', 'k']
 linestyles = ['-', '--', ':', '-.']
 linewidths = [2, 3, 3, 3]
 if not USE_4_COLORS:
-    colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'pink', 'brown', 'magenta', 'lime', 'coral', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
+    colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'brown', 'magenta', 'lime', 'coral', 'pink', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
     linestyles = linestyles * (1 + int(len(colors) / float(len(linestyles))))
     linestyles = linestyles[:len(colors)]
     linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
@@ -77,16 +77,17 @@ class EvaluatorMultiPlayers:
         self.__initEnvironments__()
         # Internal vectorial memory
         self.rewards = dict()
-        self.bestArmPulls = dict()
         self.pulls = dict()
         self.collisions = dict()
+        self.BestArmPulls = dict()
+        self.FreeTransmissions = dict()
         print("Number of environments to try:", len(self.envs))
         for env in range(len(self.envs)):
             self.rewards[env] = np.zeros((self.nbPlayers, self.horizon))
-            self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
-            # FIXME it chould simply be computed as a difference between choices and pulls at the end right ?
             self.collisions[env] = np.zeros((self.envs[env].nbArms, self.horizon))
+            self.BestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
+            self.FreeTransmissions[env] = np.zeros((self.nbPlayers, self.horizon))
 
     def __initEnvironments__(self):
         for armType in self.cfg['environment']:
@@ -127,16 +128,19 @@ class EvaluatorMultiPlayers:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             self.pulls[envId] += r.pulls
             self.collisions[envId] += r.collisions
-            # XXX? also use binary knowledge from r.collisions to count the bestArmPulls
             for playerId in range(self.nbPlayers):
-                self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
+                self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
+                self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.horizon)])
 
     def getPulls(self, playerId, environmentId):
         return self.pulls[environmentId][playerId, :] / float(self.repetitions)
 
-    def getbestArmPulls(self, playerId, environmentId):
+    def getBestArmPulls(self, playerId, environmentId):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.bestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
+        return self.BestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(1, 1 + self.horizon))
+
+    def getFreeTransmissions(self, playerId, environmentId):
+        return self.FreeTransmissions[environmentId][playerId, :] / float(self.repetitions)
 
     def getFrequencyCollisions(self, armId, environmentId):
         return self.collisions[environmentId][armId, :] / float(self.repetitions)
@@ -145,10 +149,16 @@ class EvaluatorMultiPlayers:
         return self.rewards[environmentId][playerId, :] / float(self.repetitions)
 
     def getRegret(self, playerId, environmentId):
-        return np.arange(self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
+        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
+
+    def getCentralizedRegret(self, environmentId):
+        meansBestArms = np.sort(np.array([arm.mean() for arm in self.envs[environmentId].arms]))[-self.nbPlayers:]
+        averageBestRewards = np.arange(1, 1 + self.horizon) * np.sum(meansBestArms)
+        actualRewards = sum([self.getReward(playerId, environmentId) for playerId in range(self.nbPlayers)])
+        return averageBestRewards - actualRewards
 
     # Plotting decentralized (vectorial) rewards
-    def plotRewards(self, environmentId, savefig=None, semilogx=False):
+    def plotRegrets(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, player in enumerate(self.players):
@@ -165,7 +175,7 @@ class EvaluatorMultiPlayers:
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
-        plt.title("Multi-players: personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players ({}): personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -173,13 +183,9 @@ class EvaluatorMultiPlayers:
         plt.show()
 
     # Plotting centralized rewards (sum)
-    def plotRewardsCentralized(self, environmentId, savefig=None, semilogx=False, weights='uniform'):
+    def plotRegretsCentralized(self, environmentId, savefig=None, semilogx=False):
         Y = np.zeros(self.horizon)
-        if weights == 'uniform':
-            weights = np.ones(self.nbPlayers)
-        weights /= np.sum(weights)
-        for i in range(self.nbPlayers):
-            Y += self.getRegret(i, environmentId) * weights[i]
+        Y = self.getCentralizedRegret(environmentId)
         # Start the figure
         plt.figure()
         if semilogx:
@@ -189,7 +195,7 @@ class EvaluatorMultiPlayers:
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
-        plt.title("Multi-players: cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players ({}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -199,14 +205,32 @@ class EvaluatorMultiPlayers:
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
         for i, player in enumerate(self.players):
-            Y = self.getbestArmPulls(i, environmentId)
+            Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(player))
         plt.legend(loc='lower right')
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Multi-players: best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players ({}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig, dpi=DPI)
+        plt.show()
+
+    def plotFreeTransmissions(self, environmentId, savefig=None):
+        plt.figure()
+        for i, player in enumerate(self.players):
+            Y = self.getFreeTransmissions(i, environmentId)
+            plt.plot(Y, label=str(player))
+            # TODO should only plot with markers
+        plt.legend(loc='lower right')
+        plt.grid()
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.ylim(-0.03, 1.03)
+        plt.ylabel(r"Frequency of transmission on a free channel")
+        plt.title("Multi-players ({}): free transmission frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -215,29 +239,33 @@ class EvaluatorMultiPlayers:
 
     def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
-        Y = np.zeros(nbArms)
-        labels = [''] * nbArms
+        Y = np.zeros(1 + nbArms)
+        labels = [''] * (1 + nbArms)
+        # All the other arms
         for armId, arm in enumerate(self.envs[environmentId].arms):
-            Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
-            labels[armId] = 'Arm #{}: {}'.format(armId + 1, str(arm))
-            print("  - For {}, frequency of collisions is {}  ...".format(labels[armId], Y[armId]))
+            Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
+            # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
+            labels[armId] = '#${}$: {}'.format(armId + 1, repr(arm))
+        for armId, arm in enumerate(self.envs[environmentId].arms):
+            print("  - For {}, frequency of collisions is {}  ...".format(labels[armId], Y[armId] / self.horizon))
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
+        Y /= self.horizon
+        Y[-1] = 1 - np.sum(Y)
+        # Special arm: no collision
+        labels[-1] = 'No collision'
         # Start the figure
         plt.figure()
         if piechart:
-            # Y /= np.sum(Y)  # XXX Should we feed a normalized vector to plt.pie or plt.hist ?
-            plt.pie(Y, labels=labels, colors=colors[:len(labels)])
-            plt.axes('equal')
+            plt.axis('equal')
+            plt.pie(Y, labels=labels, colors=colors[:len(labels)], explode=[0.05] * len(Y))
         else:
-            plt.hist(Y, bins=nbArms)
+            # Y /= np.sum(Y)  # XXX Should we feed a normalized vector to plt.pie or plt.hist ?
+            plt.hist(Y, bins=len(Y))
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='lower right')
-        plt.grid()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        plt.ylabel(r"frequency of collision in each arm $a = 1 .. {}$".format(nbArms))
-        plt.title("Frequency of collision for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players ({}): Frequency of collision for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")

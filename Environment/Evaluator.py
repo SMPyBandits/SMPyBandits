@@ -72,10 +72,10 @@ class Evaluator:
         # Internal vectorial memory
         self.rewards = np.zeros((len(self.cfg['policies']),
                                  len(self.envs), self.cfg['horizon']))
-        self.bestArmPulls = dict()
+        self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
-            self.bestArmPulls[env] = np.zeros((len(self.cfg['policies']), self.cfg['horizon']))
+            self.BestArmPulls[env] = np.zeros((len(self.cfg['policies']), self.cfg['horizon']))
             self.pulls[env] = np.zeros((len(self.cfg['policies']), self.envs[env].nbArms))
         print("Number of algorithms to compare:", len(self.cfg['policies']))
         print("Number of environments to try:", len(self.envs))
@@ -121,24 +121,23 @@ class Evaluator:
             # Store the results
             for r in results:
                 self.rewards[polId, envId, :] += np.cumsum(r.rewards)
-                self.bestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
+                self.BestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                 self.pulls[envId][polId, :] += r.pulls
 
     def getPulls(self, policyId, environmentId):
         return self.pulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
 
-    def getbestArmPulls(self, policyId, environmentId):
+    def getBestArmPulls(self, policyId, environmentId):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.bestArmPulls[environmentId][policyId, :] / float(self.cfg['repetitions']) / np.arange(start=1, stop=1 + self.cfg['horizon'])
+        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
     def getReward(self, policyId, environmentId):
         return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
 
     def getRegret(self, policyId, environmentId):
-        times = np.arange(self.cfg['horizon'])
-        return times * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
+        return np.arange(1, 1 + self.cfg['horizon']) * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
-    def plotRewards(self, environmentId, savefig=None, semilogx=False):
+    def plotRegrets(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, policy in enumerate(self.policies):
@@ -164,7 +163,7 @@ class Evaluator:
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
         for i, policy in enumerate(self.policies):
-            Y = self.getbestArmPulls(i, environmentId)
+            Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy))
         plt.legend(loc='lower right')
         plt.grid()
