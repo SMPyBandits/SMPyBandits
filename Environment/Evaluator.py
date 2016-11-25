@@ -23,6 +23,8 @@ from .Result import Result
 from .MAB import MAB
 from ._maximizeWindow import maximizeWindow
 
+DPI = 140
+
 
 # Parameters for the random events
 random_shuffle = False
@@ -156,7 +158,7 @@ class Evaluator:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
@@ -173,7 +175,7 @@ class Evaluator:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     def giveFinalRanking(self, environmentId):

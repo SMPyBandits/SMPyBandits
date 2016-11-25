@@ -61,12 +61,12 @@ LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
-TEST_AGGR = False
 TEST_AGGR = True
+TEST_AGGR = False
 
 
 # NB_PLAYERS : number of player, for policies who need it ?
-# NB_PLAYERS = 4
+NB_PLAYERS = 4
 
 
 # XXX This dictionary configures the experiments
@@ -107,7 +107,7 @@ configuration = {
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
-    # --- Parameters for the multi-players setting
+    # --- Defining each player manually
     "players": [
         # --- Stupid algorithm
         {
@@ -220,6 +220,9 @@ configuration = {
         # #     }
         # # },
     ]
+    # # --- Defining each player as one child of a multi-player policy
+    # # FIXME finish this !
+    # "players": Selfish(NB_PLAYERS, Uniform).players
 }
 
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined

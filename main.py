@@ -72,4 +72,6 @@ if __name__ == '__main__':
             savefig = savefig.replace('main', 'main_BestArmPulls')
             print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
             evaluation.plotBestArmPulls(envId, savefig=savefig)
+
+            # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done

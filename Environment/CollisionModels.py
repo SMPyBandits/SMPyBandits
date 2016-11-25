@@ -36,6 +36,8 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users choosed it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1
+            # FIXME player[i].getReward() should be called with a reward = 0 when there is collisions (to change the internals memory of the player)
+            player.getReward(choices[i], 0)
 
 
 # Default collision model to use

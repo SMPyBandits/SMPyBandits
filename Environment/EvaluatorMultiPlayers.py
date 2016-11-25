@@ -25,6 +25,8 @@ from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
 
+DPI = 140
+
 # Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
 # cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
 USE_4_COLORS = True
@@ -167,7 +169,7 @@ class EvaluatorMultiPlayers:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     # Plotting centralized rewards (sum)
@@ -191,7 +193,7 @@ class EvaluatorMultiPlayers:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
@@ -208,7 +210,7 @@ class EvaluatorMultiPlayers:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
@@ -239,7 +241,7 @@ class EvaluatorMultiPlayers:
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig)
+            plt.savefig(savefig, dpi=DPI)
         plt.show()
 
     def giveFinalRanking(self, environmentId):

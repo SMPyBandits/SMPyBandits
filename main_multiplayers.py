@@ -81,5 +81,5 @@ if __name__ == '__main__':
             print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
             evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
 
-            input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+            # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done

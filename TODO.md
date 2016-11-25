@@ -12,8 +12,6 @@
 - [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions). See for instance [this log file (with `cProfile`)](logs/main_py3_profile_log.txt) or [this one (with `line_profiler`)](logs/main_py3_line_profiler_log.txt).
 - [ ] I could have tried to improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](http://numba.pydata.org/), or [`cython`](http://cython.org/) code ? Not so easy, not so interesting...
 - [ ] explore the behavior of my Aggr algorithm, and understand it better (and improve it?)
-- [ ] rename Dummy -> Uniform
-- [ ] move the "simple" Policies from [`PoliciesMultiPlayers`](PoliciesMultiPlayers/) to [`Policies`](Policies/)
 
 ## Better storing of the simulation results
 - [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, on the run (to never lose data, even if the simulation gets killed)
