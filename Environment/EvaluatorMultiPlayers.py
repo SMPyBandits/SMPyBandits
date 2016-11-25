@@ -76,11 +76,14 @@ class EvaluatorMultiPlayers:
         self.rewards = dict()
         self.bestArmPulls = dict()
         self.pulls = dict()
+        self.collisions = dict()
         print("Number of environments to try:", len(self.envs))
         for env in range(len(self.envs)):
             self.rewards[env] = np.zeros((self.nbPlayers, self.horizon))
             self.bestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
+            # FIXME it chould simply be computed as a difference between choices and pulls at the end right ?
+            self.collisions[env] = np.zeros((self.envs[env].nbArms, self.horizon))
 
     def __initEnvironments__(self):
         for armType in self.cfg['environment']:
@@ -116,13 +119,14 @@ class EvaluatorMultiPlayers:
         means = np.array([arm.mean() for arm in env.arms])
         bestarm = np.max(means)
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
-        # Store the results
+        # Get and merge the results from all the 'repetitions'
         for r in results:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             self.pulls[envId] += r.pulls
-            # FIXME use r.pulls instead of r.choices to count the bestArmPulls
+            self.collisions[envId] += r.collisions
+            # XXX? also use binary knowledge from r.collisions to count the bestArmPulls
             for playerId in range(self.nbPlayers):
-                self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId], index_bestarm))
+                self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
 
     def getPulls(self, playerId, environmentId):
         return self.pulls[environmentId][playerId, :] / float(self.repetitions)
@@ -131,14 +135,16 @@ class EvaluatorMultiPlayers:
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.bestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
+    def getFrequencyCollisions(self, armId, environmentId):
+        return self.collisions[environmentId][armId, :] / float(self.repetitions)
+
     def getReward(self, playerId, environmentId):
         return self.rewards[environmentId][playerId, :] / float(self.repetitions)
 
     def getRegret(self, playerId, environmentId):
-        times = np.arange(self.horizon)
-        return times * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
+        return np.arange(self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
-    # Plotting
+    # Plotting decentralized (vectorial) rewards
     def plotRewards(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
@@ -155,12 +161,35 @@ class EvaluatorMultiPlayers:
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
-        plt.ylabel(r"Cumulative Regret $R_t$")
+        plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
         plt.title("Multi-players: personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        plt.show()
+        show()
+
+    # Plotting centralized rewards (sum)
+    def plotRewardsCentralized(self, environmentId, savefig=None, semilogx=False, weights='uniform'):
+        plt.figure()
+        Y = np.zeros(self.horizon)
+        if weights == 'uniform':
+            weights = np.ones(self.nbPlayers)
+        weights /= np.sum(weights)
+        for i in range(self.nbPlayers):
+            Y += self.getRegret(i, environmentId) * weights[i]
+        if semilogx:
+            plt.semilogx(Y)
+        else:
+            plt.plot(Y)
+        plt.legend(loc='upper left')
+        plt.grid()
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.ylabel(r"Cumulative Centralized Regret $R_t$")
+        plt.title("Multi-players: cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig)
+        show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
@@ -172,13 +201,41 @@ class EvaluatorMultiPlayers:
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players: best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig)
-        plt.show()
+        show()
 
-    # TODO plot of number of collisions
+    # TODO plot of frequency of collision in each arm
+    def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
+        plt.figure()
+        nbArms = self.envs[environmentId].nbArms
+        Y = np.zeros(nbArms)
+        labels = [''] * nbArms
+        for armId, arm in enumerate(self.envs[environmentId].arms):
+            Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
+            labels[armId] = 'Arm #{}: {}'.format(armId + 1, str(arm))
+            print("  - For {}, frequency of collisions is {}  ...".format(labels[armId], Y[armId]))
+        if np.isclose(np.sum(Y), 0):
+            print("==> No collisions to plot ... Stopping now  ...")
+            return
+        if piechart:
+            # Y /= np.sum(Y)  # XXX Should we feed a normalized vector to plt.pie or plt.hist ?
+            plt.pie(Y, labels=labels, colors=colors[:len(labels)], shadow=True)
+            plt.axes('equal')
+        else:
+            plt.hist(Y, bins=nbArms)
+            # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
+        plt.legend(loc='lower right')
+        plt.grid()
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.ylabel(r"frequency of collision in each arm $a = 1 .. {}$".format(nbArms))
+        plt.title("Frequency of collision for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig)
+        show()
 
     def giveFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
@@ -213,20 +270,36 @@ def delayed_play(env, players, horizon, collisionModel):
         player.startGame()
     result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
 
-    choices = np.zeros(nbPlayers, dtype=int)
     rewards = np.zeros(nbPlayers)
+    choices = np.zeros(nbPlayers, dtype=int)
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
+    collisions = np.zeros(nbArms, dtype=int)
     for t in range(horizon):
-        # choices *= 0
-        # XXX Is this step needed?
-        rewards *= 0
-        pulls *= 0
+        # Reset the array, faster than reallocating them!
+        rewards.fill(0)
+        pulls.fill(0)
+        collisions.fill(0)
         # Every player decides which arm to pull
         for i, player in enumerate(players):
             choices[i] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
-        collisionModel(t, env.arms, players, choices, rewards, pulls)
+        collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
+        # FIXME? Do not store the choices as good choices if they gave a collision
+        for i, player in enumerate(players):
+            if collisions[choices[i]] > 1:
+                choices[i] = -1
         # Finally we store the results
-        result.store(t, choices, rewards, pulls)
+        result.store(t, choices, rewards, pulls, collisions)
     return result
+
+
+def show():
+    # plt.show()
+    # XXX Experimental https://stackoverflow.com/q/12439588/
+    figManager = plt.get_current_fig_manager()
+    try:
+        figManager.frame.Maximize(True)
+    except:
+        figManager.window.showMaximized()
+    plt.show()

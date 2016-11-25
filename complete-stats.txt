@@ -2,25 +2,25 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-    71	Lilian Besson
+    73	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
   - Number of files changed: 104
-  - Number of lines added: 242134
-  - Number of lines deleted: 227464
+  - Number of lines added: 242849
+  - Number of lines deleted: 228157
   - Number of merges: 0
     Nov   Dec     Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov 
                                                                                                               o 
     M                                                                                                         o 
                                                                                                               . 
-    W                                                                                                         0 
-                                                                                                            . O 
+    W                                                                                                         O 
+                                                                                                            . 0 
     F                                                                                                           
                                                                                                             .   
 
                                                                                           Less   . o O 0  More
-  71: Total commits
+  73: Total commits
    6: Days ( Nov 19 2016 - Nov 24 2016 ) - Longest streak excluding weekends       
    6: Days ( Nov 19 2016 - Nov 24 2016 ) - Longest streak including weekends       
-   6: Days ( Nov 19 2016 - Nov 24 2016 ) - Current streak                          
+   0: Days - Current streak                          

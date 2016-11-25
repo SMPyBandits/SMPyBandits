@@ -14,8 +14,10 @@ import os.path
 from Environment import EvaluatorMultiPlayers
 from configuration_multiplayers import configuration
 
+# Parameters for the plots (where to save them) and what to draw
 plot_dir = "plots"
 semilogx = False
+piechart = True
 
 # Whether to do the plots or not
 do_plot = False
@@ -54,12 +56,24 @@ if __name__ == '__main__':
                 raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
             else:
                 mkdir(plot_dir)
+
             savefig = os.path.join(plot_dir, imagename)
-            print("Plotting the results, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotRewards(envId, semilogx=not semilogx)
+            # Plotting the decentralized rewards
+            print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
             evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
-            # # Also plotting the probability of picking the best arm
-            # savefig = savefig.replace('main', 'main_BestArmPulls')
-            # print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotBestArmPulls(envId, savefig=savefig)
+
+            # # Plotting the centralized rewards
+            # savefig = savefig.replace('main', 'main_RewardsCentralized')
+            # print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
+            # evaluation.plotRewardsCentralized(envId, savefig=savefig, semilogx=semilogx)
+
+            # Also plotting the probability of picking the best arm
+            savefig = savefig.replace('main', 'main_BestArmPulls')
+            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+            evaluation.plotBestArmPulls(envId, savefig=savefig)
+
+            # Also plotting the frequency of collision in each arm
+            savefig = savefig.replace('main', 'main_FrequencyCollisions')
+            print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
+            evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
     # Done

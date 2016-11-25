@@ -26,8 +26,8 @@ HORIZON = 500
 HORIZON = 1000
 HORIZON = 2000
 HORIZON = 20000
-HORIZON = 10000
 HORIZON = 3000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -38,7 +38,7 @@ REPETITIONS = 100
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 20
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -59,6 +59,7 @@ TEMPERATURE = 0.05
 LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
+DECREASE_RATE = None
 TEST_AGGR = False
 TEST_AGGR = True
 
@@ -113,44 +114,44 @@ configuration = {
             "params": {
             }
         },
-        # # --- Static or perfect (toy) algorithm
-        # {
-        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
-        #     "params": {
-        #         "armIndex": 13
-        #     }
-        # },
+        # --- Static or perfect (toy) algorithm
+        {
+            "archtype": TakeFixedArm,   # The static policy: always selects one arm
+            "params": {
+                "armIndex": 16
+            }
+        },
         # # --- Take randomly one arm from a fixed set
-        # # {
-        # #     "archtype": UniformOnSome,
-        # #     "params": {
-        # #         "armIndexes": [0, 13]
-        # #     }
-        # # },
-        # {
-        #     "archtype": UniformOnSome,
-        #     "params": {  # Example: one of the best arms
-        #         "armIndexes": [10, 11, 12, 13]
-        #     }
-        # },
+        {
+            "archtype": UniformOnSome,
+            "params": {
+                "armIndexes": [0, 16]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {  # Example: one of the best arms
+                "armIndexes": [13, 14, 15, 16]
+            }
+        },
         {
             "archtype": UniformOnSome,
             "params": {
                 "armIndexes": [6, 7, 8, 9]
             }
         },
-        # {
-        #     "archtype": UniformOnSome,
-        #     "params": {
-        #         "armIndexes": [0, 1, 12, 13]
-        #     }
-        # },
-        # {
-        #     "archtype": UniformOnSome,
-        #     "params": {  # Example: one of the worse arms
-        #         "armIndexes": [0, 1, 2, 3]
-        #     }
-        # },
+        {
+            "archtype": UniformOnSome,
+            "params": {
+                "armIndexes": [0, 1, 15, 16]
+            }
+        },
+        {
+            "archtype": UniformOnSome,
+            "params": {  # Example: one of the worse arms
+                "armIndexes": [0, 1, 2, 3]
+            }
+        },
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -172,11 +173,11 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
+        # # --- UCB algorithms
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
         # {
         #     "archtype": UCBV,   # UCB with variance term
         #     "params": {}
@@ -188,20 +189,20 @@ configuration = {
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {}
+        # },
         # # --- AdBandit with different alpha paramters
         # {
         #     "archtype": AdBandit,

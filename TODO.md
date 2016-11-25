@@ -25,5 +25,6 @@
 - [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf) or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf)
 
 ## Multi-players simulations
-- [ ] implement a multi-player simulation environment as well!
+- [x] implement a multi-player simulation environment as well!
+- [ ] try it on [different collision models](Environment/CollisionModels.py), with different setting (K < M, M <= K, etc).
 - [ ] implement the [`rho_rand`](http://ieeexplore.ieee.org/document/5462144/), [`TDFS`](https://arxiv.org/abs/0910.2065v3), [`MEGA`](https://arxiv.org/abs/1404.5421), [`Musical Chair` and `Dynamic Musical Chair`](https://arxiv.org/abs/1512.02866) multi-player algorithms

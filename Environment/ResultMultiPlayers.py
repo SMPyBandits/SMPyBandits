@@ -15,8 +15,11 @@ class ResultMultiPlayers:
         self.choices = np.zeros((nbPlayers, horizon))
         self.rewards = np.zeros((nbPlayers, horizon))
         self.pulls = np.zeros((nbPlayers, nbArms))
+        self.collisions = np.zeros((nbArms, horizon))
 
-    def store(self, time, choices, rewards, pulls):
+    def store(self, time, choices, rewards, pulls, collisions):
         self.choices[:, time] = choices
         self.rewards[:, time] = rewards
         self.pulls += pulls
+        # FIXME it chould simply be computed as a difference between choices and pulls at the end right ?
+        self.collisions[:, time] += collisions
