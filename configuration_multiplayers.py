@@ -105,128 +105,128 @@ configuration = {
         },
     ],
     # --- Defining each player manually
-    "players": [
-        # # --- Stupid algorithm
-        # {
-        #     "archtype": Uniform,   # The stupidest policy
-        #     "params": {
-        #     }
-        # },
-        # # --- Static or perfect (toy) algorithm
-        # {
-        #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
-        #     "params": {
-        #         "armIndex": 16
-        #     }
-        # },
-        # --- Take randomly one arm from a fixed set
-        # {
-        #     "archtype": UniformOnSome,
-        #     "params": {
-        #         "armIndexes": [0, 16]
-        #     }
-        # },
-        {
-            "archtype": UniformOnSome,
-            "params": {  # Example: one of the best arms
-                "armIndexes": [13, 14, 15, 16]
-            }
-        },
-        {
-            "archtype": UniformOnSome,
-            "params": {
-                "armIndexes": [6, 7, 8, 9]
-            }
-        },
-        {
-            "archtype": UniformOnSome,
-            "params": {
-                "armIndexes": [0, 1, 15, 16]
-            }
-        },
-        {
-            "archtype": UniformOnSome,
-            "params": {  # Example: one of the worse arms
-                "armIndexes": [0, 1, 2, 3]
-            }
-        },
-        # # --- Epsilon-... algorithms
-        # {
-        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-        #     "params": {
-        #         "epsilon": EPSILON
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "decreasingRate": 0.005,
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBV,   # UCB with variance term
-        #     "params": {}
-        # },
-        # # # --- Softmax algorithms
-        # {
-        #     "archtype": Softmax,   # This basic Softmax is very bad
-        #     "params": {
-        #         "temperature": TEMPERATURE
-        #     }
-        # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
-        # },
-        # # --- AdBandit with different alpha paramters
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # # {
-        # #     "archtype": AdBandit,
-        # #     "params": {
-        # #         "alpha": 0.125,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
-    ]
+    # "players": [
+    #     # --- Stupid algorithm
+    #     {
+    #         "archtype": Uniform,   # The stupidest policy
+    #         "params": {
+    #         }
+    #     },
+    #     # # --- Static or perfect (toy) algorithm
+    #     # {
+    #     #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
+    #     #     "params": {
+    #     #         "armIndex": 16
+    #     #     }
+    #     # },
+    #     # --- Take randomly one arm from a fixed set
+    #     # {
+    #     #     "archtype": UniformOnSome,
+    #     #     "params": {
+    #     #         "armIndexes": [0, 16]
+    #     #     }
+    #     # },
+    #     {
+    #         "archtype": UniformOnSome,
+    #         "params": {  # Example: one of the best arms
+    #             "armIndexes": [13, 14, 15, 16]
+    #         }
+    #     },
+    #     {
+    #         "archtype": UniformOnSome,
+    #         "params": {
+    #             "armIndexes": [6, 7, 8, 9]
+    #         }
+    #     },
+    #     {
+    #         "archtype": UniformOnSome,
+    #         "params": {
+    #             "armIndexes": [0, 1, 15, 16]
+    #         }
+    #     },
+    #     {
+    #         "archtype": UniformOnSome,
+    #         "params": {  # Example: one of the worse arms
+    #             "armIndexes": [0, 1, 2, 3]
+    #         }
+    #     },
+    #     # # --- Epsilon-... algorithms
+    #     # {
+    #     #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+    #     #     "params": {
+    #     #         "epsilon": EPSILON
+    #     #     }
+    #     # },
+    #     # {
+    #     #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+    #     #     "params": {
+    #     #         "epsilon": EPSILON,
+    #     #         "decreasingRate": 0.005,
+    #     #     }
+    #     # },
+    #     # {
+    #     #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+    #     #     "params": {
+    #     #         "epsilon": EPSILON,
+    #     #         "horizon": HORIZON
+    #     #     }
+    #     # },
+    #     # # --- UCB algorithms
+    #     # {
+    #     #     "archtype": UCB,   # This basic UCB is very worse than the other
+    #     #     "params": {}
+    #     # },
+    #     # {
+    #     #     "archtype": UCBV,   # UCB with variance term
+    #     #     "params": {}
+    #     # },
+    #     # # # --- Softmax algorithms
+    #     # {
+    #     #     "archtype": Softmax,   # This basic Softmax is very bad
+    #     #     "params": {
+    #     #         "temperature": TEMPERATURE
+    #     #     }
+    #     # },
+    #     # # --- Thompson algorithms
+    #     # {
+    #     #     "archtype": Thompson,
+    #     #     "params": {}
+    #     # },
+    #     # # --- KL algorithms
+    #     # {
+    #     #     "archtype": klUCB,
+    #     #     "params": {}
+    #     # },
+    #     # {
+    #     #     "archtype": BayesUCB,
+    #     #     "params": {}
+    #     # },
+    #     # # --- AdBandit with different alpha paramters
+    #     # {
+    #     #     "archtype": AdBandit,
+    #     #     "params": {
+    #     #         "alpha": 0.5,
+    #     #         "horizon": HORIZON
+    #     #     }
+    #     # },
+    #     # # {
+    #     # #     "archtype": AdBandit,
+    #     # #     "params": {
+    #     # #         "alpha": 0.125,
+    #     # #         "horizon": HORIZON
+    #     # #     }
+    #     # # },
+    # ],
     # # --- Defining each player as one child of a multi-player policy
     # # FIXME finish this !
     # "players": Selfish(NB_PLAYERS, Uniform).players
-    # "players": [
-    #     {
-    #         "archtype": Thompson,
-    #         "params": {}
-    #     }
-    #     for _ in range(NB_PLAYERS)
-    # ]
+    "players": [
+        {
+            "archtype": TakeRandomFixedArm,
+            "params": {}
+        }
+        for _ in range(NB_PLAYERS)
+    ]
 }
 
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined

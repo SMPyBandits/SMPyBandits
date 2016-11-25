@@ -21,5 +21,4 @@ class ResultMultiPlayers:
         self.choices[:, time] = choices
         self.rewards[:, time] = rewards
         self.pulls += pulls
-        # TODO it chould simply be computed as a difference between choices and pulls at the end right ?
         self.collisions[:, time] = collisions

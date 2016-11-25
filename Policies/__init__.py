@@ -10,6 +10,7 @@ __version__ = "0.1"
 from .Uniform import Uniform
 from .Uniform import Uniform
 from .TakeFixedArm import TakeFixedArm
+from .TakeRandomFixedArm import TakeRandomFixedArm
 from .UniformOnSome import UniformOnSome
 # Simple exploratory policies
 from .EpsilonGreedy import EpsilonGreedy

@@ -223,14 +223,14 @@ class EvaluatorMultiPlayers:
         plt.figure()
         for i, player in enumerate(self.players):
             Y = self.getFreeTransmissions(i, environmentId)
-            plt.plot(Y, label=str(player))
+            plt.plot(Y, '.', label=str(player))
             # TODO should only plot with markers
         plt.legend(loc='lower right')
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
-        plt.ylabel(r"Frequency of transmission on a free channel")
-        plt.title("Multi-players ({}): free transmission frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.ylabel(r"Transmission on a free channel")
+        plt.title("Multi-players ({}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -243,16 +243,17 @@ class EvaluatorMultiPlayers:
         labels = [''] * (1 + nbArms)
         # All the other arms
         for armId, arm in enumerate(self.envs[environmentId].arms):
-            Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
-            # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
+            # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
+            Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
             labels[armId] = '#${}$: {}'.format(armId + 1, repr(arm))
         for armId, arm in enumerate(self.envs[environmentId].arms):
-            print("  - For {}, frequency of collisions is {}  ...".format(labels[armId], Y[armId] / self.horizon))
+            print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId] / self.horizon))
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
         Y /= self.horizon
-        Y[-1] = 1 - np.sum(Y)
+        # FIXME
+        Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision
         labels[-1] = 'No collision'
         # Start the figure
@@ -265,7 +266,7 @@ class EvaluatorMultiPlayers:
             plt.hist(Y, bins=len(Y))
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='lower right')
-        plt.title("Multi-players ({}): Frequency of collision for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players ({}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
