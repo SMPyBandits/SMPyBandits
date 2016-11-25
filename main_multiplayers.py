@@ -10,6 +10,7 @@ __version__ = "0.1"
 # Generic imports
 from os import mkdir
 import os.path
+import matplotlib.pyplot as plt
 # Local imports
 from Environment import EvaluatorMultiPlayers
 from configuration_multiplayers import configuration
@@ -57,15 +58,18 @@ if __name__ == '__main__':
             else:
                 mkdir(plot_dir)
 
+            # Set plotting mode to interactive
+            # plt.interactive(True)
+
             savefig = os.path.join(plot_dir, imagename)
             # Plotting the decentralized rewards
             print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
             evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
 
-            # # Plotting the centralized rewards
-            # savefig = savefig.replace('main', 'main_RewardsCentralized')
-            # print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotRewardsCentralized(envId, savefig=savefig, semilogx=semilogx)
+            # Plotting the centralized rewards
+            savefig = savefig.replace('main', 'main_RewardsCentralized')
+            print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
+            evaluation.plotRewardsCentralized(envId, savefig=savefig, semilogx=semilogx)
 
             # Also plotting the probability of picking the best arm
             savefig = savefig.replace('main', 'main_BestArmPulls')
@@ -76,4 +80,6 @@ if __name__ == '__main__':
             savefig = savefig.replace('main', 'main_FrequencyCollisions')
             print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
             evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+
+            input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done

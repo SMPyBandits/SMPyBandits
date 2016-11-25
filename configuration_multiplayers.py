@@ -22,12 +22,12 @@ from Environment.CollisionModels import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 500
 HORIZON = 1000
 HORIZON = 2000
-HORIZON = 20000
 HORIZON = 3000
 HORIZON = 10000
+HORIZON = 20000
+HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -38,7 +38,8 @@ REPETITIONS = 100
 REPETITIONS = 200
 REPETITIONS = 500
 REPETITIONS = 20
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 8
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -47,8 +48,8 @@ N_JOBS = -1 if DO_PARALLEL else 1
 
 
 # Collision model
-collisionModel = noCollision
 collisionModel = rewardIsSharedUniformly
+collisionModel = noCollision
 collisionModel = onlyUniqUserGetsReward
 
 # Parameters for the epsilon-greedy and epsilon-... policies
@@ -173,15 +174,15 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBV,   # UCB with variance term
-        #     "params": {}
-        # },
+        # --- UCB algorithms
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
+        {
+            "archtype": UCBV,   # UCB with variance term
+            "params": {}
+        },
         # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -189,11 +190,11 @@ configuration = {
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
         # # --- KL algorithms
         # {
         #     "archtype": klUCB,

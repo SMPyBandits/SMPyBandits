@@ -170,18 +170,18 @@ class EvaluatorMultiPlayers:
 
     # Plotting centralized rewards (sum)
     def plotRewardsCentralized(self, environmentId, savefig=None, semilogx=False, weights='uniform'):
-        plt.figure()
         Y = np.zeros(self.horizon)
         if weights == 'uniform':
             weights = np.ones(self.nbPlayers)
         weights /= np.sum(weights)
         for i in range(self.nbPlayers):
             Y += self.getRegret(i, environmentId) * weights[i]
+        # Start the figure
+        plt.figure()
         if semilogx:
             plt.semilogx(Y)
         else:
             plt.plot(Y)
-        plt.legend(loc='upper left')
         plt.grid()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
@@ -207,9 +207,7 @@ class EvaluatorMultiPlayers:
             plt.savefig(savefig)
         show()
 
-    # TODO plot of frequency of collision in each arm
     def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
-        plt.figure()
         nbArms = self.envs[environmentId].nbArms
         Y = np.zeros(nbArms)
         labels = [''] * nbArms
@@ -220,9 +218,11 @@ class EvaluatorMultiPlayers:
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
+        # Start the figure
+        plt.figure()
         if piechart:
             # Y /= np.sum(Y)  # XXX Should we feed a normalized vector to plt.pie or plt.hist ?
-            plt.pie(Y, labels=labels, colors=colors[:len(labels)], shadow=True)
+            plt.pie(Y, labels=labels, colors=colors[:len(labels)])
             plt.axes('equal')
         else:
             plt.hist(Y, bins=nbArms)
@@ -297,9 +297,13 @@ def delayed_play(env, players, horizon, collisionModel):
 def show():
     # plt.show()
     # XXX Experimental https://stackoverflow.com/q/12439588/
-    figManager = plt.get_current_fig_manager()
+    plt.show()
     try:
+        figManager = plt.get_current_fig_manager()
         figManager.frame.Maximize(True)
     except:
-        figManager.window.showMaximized()
-    plt.show()
+        try:
+            figManager = plt.get_current_fig_manager()
+            figManager.window.showMaximized()
+        except:
+            print("Unable to maximize window...")
