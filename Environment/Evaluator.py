@@ -11,7 +11,6 @@ from random import shuffle
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-from cycler import cycler
 try:
     import joblib
     USE_JOBLIB = True
@@ -33,20 +32,24 @@ nb_random_events = 4
 
 # Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
 # cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
-USE_4_COLORS = True
-USE_4_COLORS = False
-colors = ['r', 'g', 'b', 'k']
-linestyles = ['-', '--', ':', '-.']
-linewidths = [2, 3, 3, 3]
-if not USE_4_COLORS:
-    colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'pink', 'brown', 'magenta', 'lime', 'coral', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
-    linestyles = linestyles * (1 + int(len(colors) / float(len(linestyles))))
-    linestyles = linestyles[:len(colors)]
-    linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
-    linewidths = linewidths[:len(colors)]
-# Default configuration for the plots: cycle through these colors, linestyles and linewidths
-# plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
-plt.rc('axes', prop_cycle=(cycler('color', colors)))
+try:
+    from cycler import cycler
+    USE_4_COLORS = True
+    USE_4_COLORS = False
+    colors = ['r', 'g', 'b', 'k']
+    linestyles = ['-', '--', ':', '-.']
+    linewidths = [2, 3, 3, 3]
+    if not USE_4_COLORS:
+        colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'pink', 'brown', 'magenta', 'lime', 'coral', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
+        linestyles = linestyles * (1 + int(len(colors) / float(len(linestyles))))
+        linestyles = linestyles[:len(colors)]
+        linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
+        linewidths = linewidths[:len(colors)]
+    # Default configuration for the plots: cycle through these colors, linestyles and linewidths
+    # plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
+    plt.rc('axes', prop_cycle=(cycler('color', colors)))
+except:
+    print("Using default colors and plot styles (cycler was not available or something went wrong with 'plt.rc' calls?)")
 
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"

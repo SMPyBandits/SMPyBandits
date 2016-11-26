@@ -22,20 +22,20 @@ from Environment.CollisionModels import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 1000
 HORIZON = 20000
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
+HORIZON = 1000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 8
 REPETITIONS = 20
+REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
