@@ -89,13 +89,13 @@ class CentralizedNotFair(object):
 
     def _printNbCollisions(self):
         """ Print number of collisions. """
-        nbPlayersAlone = len(set(self._affectations))
-        if nbPlayersAlone != self.nbPlayers:
-            print("\n==> This affectation will bring collisions! Exactly {} at each step...".format(self.nbPlayers - nbPlayersAlone))
+        nbDifferentAffectation = len(set(self._affectations))
+        if nbDifferentAffectation != self.nbPlayers:
+            print("\n==> This affectation will bring collisions! Exactly {} at each step...".format(self.nbPlayers - nbDifferentAffectation + 1))
             for armId in range(self.nbArms):
                 nbAffected = np.count_nonzero(self._affectations == armId)
                 if nbAffected > 1:
-                    print(" - For arm number {}, there is {} different child player affected on this arm ...".format(armId + 1, nbAffected))
+                    print(" - For arm number {}, there is {} different child players affected on this arm ...".format(armId, nbAffected))
 
     def startGame(self):
         for player in self._players:

@@ -159,8 +159,15 @@ class EvaluatorMultiPlayers(object):
         return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
     def getCentralizedRegret(self, environmentId):
-        meansBestArms = np.sort(np.array([arm.mean() for arm in self.envs[environmentId].arms]))[-self.nbPlayers:]
+        meansArms = np.sort(np.array([arm.mean() for arm in self.envs[environmentId].arms]))
+        meansBestArms = meansArms[-self.nbPlayers:]
+        # FIXED how to count it when their is more players than arms ?
+        if self.envs[environmentId].nbArms < self.nbPlayers:
+            # sure to have collisions, then the best strategy is to put the collisions in the worse arm
+            worseArm = np.min(meansArms)
+            meansBestArms -= worseArm  # This count the collisions
         averageBestRewards = np.arange(1, 1 + self.horizon) * np.sum(meansBestArms)
+        # And for the actual rewards, the collisions are counted in the rewards logged in self.getReward
         actualRewards = sum([self.getReward(playerId, environmentId) for playerId in range(self.nbPlayers)])
         return averageBestRewards - actualRewards
 

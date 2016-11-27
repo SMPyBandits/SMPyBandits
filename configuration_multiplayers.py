@@ -25,20 +25,21 @@ from Environment.CollisionModels import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 20000
-HORIZON = 500
 HORIZON = 2000
 HORIZON = 10000
 HORIZON = 3000
 HORIZON = 1000
+HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 20
-REPETITIONS = 8
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 200
+# REPETITIONS = 20
+# REPETITIONS = 8
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -65,8 +66,8 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 17   # Just the number of arms
-NB_PLAYERS = 25   # More than the number of arms !!
+# NB_PLAYERS = 17   # Just the number of arms
+# NB_PLAYERS = 25   # More than the number of arms !!
 
 # Test one the multi-players policy
 TEST_MULTIPLAYER_POLICY = False
@@ -267,8 +268,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
         # --- Using multi-player Orcale policy
         # XXX they need a perfect knowledge on the arms, even this is not physically plausible
-        "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        # "players": OracleFair(NB_PLAYERS, configuration['environment'][0]).childs
+        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })
 
 

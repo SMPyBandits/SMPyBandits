@@ -68,20 +68,20 @@ if __name__ == '__main__':
         print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
         evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
 
-        # # Plotting the centralized rewards
-        # savefig = savefig.replace('main', 'main_RewardsCentralized')
-        # print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx)
+        # Plotting the centralized rewards
+        savefig = savefig.replace('main', 'main_RewardsCentralized')
+        print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
+        evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx)
 
-        # Also plotting the probability of picking the best arm
-        savefig = savefig.replace('main', 'main_BestArmPulls')
-        print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
-        evaluation.plotBestArmPulls(envId, savefig=savefig)
+        # # Also plotting the probability of picking the best arm
+        # savefig = savefig.replace('main', 'main_BestArmPulls')
+        # print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotBestArmPulls(envId, savefig=savefig)
 
-        # Also plotting the probability of transmission on a free channel
-        savefig = savefig.replace('main', 'main_FreeTransmissions')
-        print(" - Plotting the probability of transmission on a free channel, and saving the plot to {} ...".format(savefig))
-        evaluation.plotFreeTransmissions(envId, savefig=savefig)
+        # # Also plotting the probability of transmission on a free channel
+        # savefig = savefig.replace('main', 'main_FreeTransmissions')
+        # print(" - Plotting the probability of transmission on a free channel, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotFreeTransmissions(envId, savefig=savefig)
 
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
