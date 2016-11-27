@@ -7,7 +7,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 
-class TakeFixedArm():
+class TakeFixedArm(object):
     """ TakeFixedArm: always select a fixed arm.
     This is the perfect static policy if armIndex = bestArmIndex (not realistic, for test only).
     """

@@ -14,7 +14,7 @@ import numpy as np
 from .ChildPointer import ChildPointer
 
 
-class Fixed():
+class Fixed(object):
     """ Fixed: always select a fixed arm, as decided by the CentralizedNotFair multi-player policy.
     """
 
@@ -36,7 +36,7 @@ class Fixed():
         return self.armIndex
 
 
-class CentralizedNotFair():
+class CentralizedNotFair(object):
     """ CentralizedNotFair: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
     """
 

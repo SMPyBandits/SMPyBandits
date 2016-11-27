@@ -12,7 +12,7 @@ import random
 epsilon = 0.1
 
 
-class EpsilonGreedy():
+class EpsilonGreedy(object):
     """ The epsilon-greedy random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """

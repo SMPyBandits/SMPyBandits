@@ -8,7 +8,7 @@ __version__ = "0.1"
 from random import randint
 
 
-class Uniform():
+class Uniform(object):
     """ Uniform: the fully uniform policy who selects randomly (uniformly) an arm at each step (stupid).
     """
 

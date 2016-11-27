@@ -5,7 +5,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 
-class Arm():
+class Arm(object):
     """ Basis class for an arm."""
 
     def __init__(self):

@@ -10,7 +10,7 @@ import numpy as np
 from .ChildPointer import ChildPointer
 
 
-class Selfish():
+class Selfish(object):
     """ Selfish: a multi-player policy where every player is selfish, they do not try to handle the collisions.
     """
 

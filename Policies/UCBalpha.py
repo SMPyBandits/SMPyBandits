@@ -9,7 +9,7 @@ __version__ = "0.2"
 import numpy as np
 
 
-class UCBalpha():
+class UCBalpha(object):
     """ The UCB1 (UCB-alpha) index policy.
     Reference: [Auer et al. 02].
     """

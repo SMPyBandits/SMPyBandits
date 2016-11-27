@@ -52,7 +52,7 @@ signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/
 
 # --- Class EvaluatorMultiPlayers
 
-class EvaluatorMultiPlayers:
+class EvaluatorMultiPlayers(object):
     """ Evaluator class to run the simulations, for the multi-players case.
     """
 

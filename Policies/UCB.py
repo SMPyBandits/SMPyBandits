@@ -9,7 +9,7 @@ __version__ = "$Revision: 1.9 $"
 import numpy as np
 
 
-class UCB():
+class UCB(object):
     """ The UCB index policy.
     Reference: [Lai & Robbins, 1985].
     """

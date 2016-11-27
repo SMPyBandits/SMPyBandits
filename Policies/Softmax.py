@@ -11,7 +11,7 @@ import numpy as np
 temperature = 1
 
 
-class Softmax():
+class Softmax(object):
     """The Boltzmann Exploration (Softmax) index policy.
     Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
     """

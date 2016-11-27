@@ -12,7 +12,7 @@ import numpy as np
 from .Beta import Beta
 
 
-class AdBandit:
+class AdBandit(object):
     """ The AdBandit bandit algorithm
     Reference: https://github.com/flaviotruzzi/AdBandits/
     """

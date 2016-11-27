@@ -13,7 +13,7 @@ import numpy as np
 from .ChildPointer import ChildPointer
 
 
-class Cycling():
+class Cycling(object):
     """ Cycling: select an arm as (offset + t) % nbArms, with offset being decided by the CentralizedFair multi-player policy.
     """
 
@@ -38,7 +38,7 @@ class Cycling():
         return c
 
 
-class CentralizedFair():
+class CentralizedFair(object):
     """ CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 

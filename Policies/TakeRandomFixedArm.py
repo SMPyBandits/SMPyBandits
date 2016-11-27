@@ -10,7 +10,7 @@ import numpy as np
 import numpy.random as rd
 
 
-class TakeRandomFixedArm():
+class TakeRandomFixedArm(object):
     """ TakeRandomFixedArm: first selects a random sub-set of arms, then always select from it
     """
 

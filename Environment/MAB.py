@@ -5,7 +5,7 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.26 $"
 
 
-class MAB:
+class MAB(object):
     """ Multi-armed Bandit environment.
 
     - configuration has to be a dict with 'arm_type' and 'params' keys.

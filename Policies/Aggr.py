@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The Aggregated bandit algorithm
-Reference: FIXME write it!
+Reference: https://github.com/Naereen/AlgoBandits
 """
 from __future__ import print_function
 
@@ -15,9 +15,9 @@ import numpy.random as rn
 update_all_children = False
 
 
-class Aggr:
+class Aggr(object):
     """ The Aggregated bandit algorithm
-    Reference: FIXME write it!
+    Reference: https://github.com/Naereen/AlgoBandits
     """
 
     def __init__(self, nbArms, learningRate, children,

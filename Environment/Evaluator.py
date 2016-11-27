@@ -55,7 +55,7 @@ except:
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
 
 
-class Evaluator:
+class Evaluator(object):
     """ Evaluator class to run the simulations."""
 
     def __init__(self, configuration,

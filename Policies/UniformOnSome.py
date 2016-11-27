@@ -9,7 +9,7 @@ __version__ = "0.1"
 from random import choice
 
 
-class UniformOnSome():
+class UniformOnSome(object):
     """ UniformOnSome: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
     """
 

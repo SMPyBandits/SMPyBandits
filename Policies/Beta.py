@@ -12,7 +12,7 @@ except ImportError:
 from scipy.special import btdtri
 
 
-class Beta:
+class Beta(object):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
     def __init__(self, a=1, b=1):

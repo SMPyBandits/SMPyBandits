@@ -7,9 +7,8 @@ __version__ = "0.1"
 import numpy as np
 
 
-class ResultMultiPlayers:
-    """ ResultMultiPlayers accumulators, for the multi-players case.
-    """
+class ResultMultiPlayers(object):
+    """ ResultMultiPlayers accumulators, for the multi-players case. """
 
     def __init__(self, nbArms, horizon, nbPlayers):
         self.choices = np.zeros((nbPlayers, horizon))

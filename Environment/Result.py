@@ -7,7 +7,7 @@ __version__ = "$Revision: 1.26 $"
 import numpy as np
 
 
-class Result:
+class Result(object):
     """ Result accumulators"""
 
     def __init__(self, nbArms, horizon):
