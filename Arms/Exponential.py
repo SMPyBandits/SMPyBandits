@@ -18,7 +18,7 @@ class Exponential(Arm):
     # def __init__(self, p, trunc=float('inf')):
     def __init__(self, p, trunc=1):
         self.p = p
-        assert 0 < p <= 1, "Error, the parameter 'p' for Exponential class has to be in (0, 1]."
+        assert 0 < p, "Error, the parameter 'p' for Exponential class has to be > 0."
         self.trunc = trunc
         assert 0 < trunc, "Error, the parameter 'trunc' for Exponential class has to be > 0."
         if isinf(trunc):

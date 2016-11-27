@@ -23,12 +23,25 @@ class MAB:
     """
 
     def __init__(self, configuration):
+        print("New MAB instance!")  # DEBUG
         arm_type = configuration["arm_type"]
+        print(" - with 'arm_type' =", arm_type)  # DEBUG
         params = configuration["params"]
+        print(" - with 'params' =", params)  # DEBUG
         # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian)
-        self.arms = [arm_type(param) for param in params]
+        # XXX manually detect if the parameters are iterable or not
+        self.arms = []
+        for param in params:
+            try:
+                self.arms.append(arm_type(*param))
+            except TypeError:
+                self.arms.append(arm_type(param))
+        # self.arms = [arm_type(*param) for param in params]
+        print(" - with 'arms' =", self.arms)  # DEBUG
         self.nbArms = len(self.arms)
+        print(" - with 'nbArms' =", self.nbArms)  # DEBUG
         self.maxArm = max([arm.mean() for arm in self.arms])
+        print(" - with 'maxArm' =", self.maxArm)  # DEBUG
 
     def __repr__(self):
         return '<' + self.__class__.__name__ + repr(self.__dict__) + '>'

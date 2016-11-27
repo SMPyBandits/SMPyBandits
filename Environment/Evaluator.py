@@ -63,6 +63,13 @@ class Evaluator:
                  useJoblibForPolicies=False):
         # Configuration
         self.cfg = configuration
+        # Attributes
+        self.nbPolicies = len(self.cfg['policies'])
+        print("Number of policies in this comparaison:", self.nbPolicies)
+        self.horizon = self.cfg['horizon']
+        print("Time horizon:", self.horizon)
+        self.repetitions = self.cfg['repetitions']
+        print("Number of repetitions:", self.repetitions)
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
@@ -73,17 +80,14 @@ class Evaluator:
         self.policies = []
         self.__initEnvironments__()
         # Internal vectorial memory
-        self.rewards = np.zeros((len(self.cfg['policies']),
-                                 len(self.envs), self.cfg['horizon']))
+        self.rewards = np.zeros((self.nbPolicies,
+                                 len(self.envs), self.horizon))
         self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
-            self.BestArmPulls[env] = np.zeros((len(self.cfg['policies']), self.cfg['horizon']))
-            self.pulls[env] = np.zeros((len(self.cfg['policies']), self.envs[env].nbArms))
-        print("Number of algorithms to compare:", len(self.cfg['policies']))
+            self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
+            self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
         print("Number of environments to try:", len(self.envs))
-        print("Time horizon:", self.cfg['horizon'])
-        print("Number of repetitions:", self.cfg['repetitions'])
 
     def __initEnvironments__(self):
         for armType in self.cfg['environment']:
@@ -105,16 +109,16 @@ class Evaluator:
         self.policies = []
         self.__initPolicies__(env)
         for polId, policy in enumerate(self.policies):
-            print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, len(self.policies), policy))
+            print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
-                    for _ in range(self.cfg['repetitions'])
+                    joblib.delayed(delayed_play)(env, policy, self.horizon)
+                    for _ in range(self.repetitions)
                 )
             else:
                 results = []
-                for _ in range(self.cfg['repetitions']):
-                    r = delayed_play(env, policy, self.cfg['horizon'])
+                for _ in range(self.repetitions):
+                    r = delayed_play(env, policy, self.horizon)
                     results.append(r)
             # Get the position of the best arms
             env = self.envs[envId]
@@ -128,17 +132,17 @@ class Evaluator:
                 self.pulls[envId][polId, :] += r.pulls
 
     def getPulls(self, policyId, environmentId):
-        return self.pulls[environmentId][policyId, :] / float(self.cfg['repetitions'])
+        return self.pulls[environmentId][policyId, :] / float(self.repetitions)
 
     def getBestArmPulls(self, policyId, environmentId):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][policyId, :] / (float(self.cfg['repetitions']) * np.arange(start=1, stop=1 + self.horizon))
+        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
     def getReward(self, policyId, environmentId):
-        return self.rewards[policyId, environmentId, :] / float(self.cfg['repetitions'])
+        return self.rewards[policyId, environmentId, :] / float(self.repetitions)
 
     def getRegret(self, policyId, environmentId):
-        return np.arange(1, 1 + self.cfg['horizon']) * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
+        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
     def plotRegrets(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
@@ -152,11 +156,11 @@ class Evaluator:
                 plt.plot(Y, label=str(policy))
         plt.legend(loc='upper left')
         plt.grid()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
-        plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -170,10 +174,10 @@ class Evaluator:
             plt.plot(Y, label=str(policy))
         plt.legend(loc='lower right')
         plt.grid()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.cfg['horizon']))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -182,12 +186,12 @@ class Evaluator:
 
     def giveFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
-        nbPolicies = len(self.policies)
+        nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environmentId)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.cfg['horizon'])])   # get average value during the last 0.5% of the iterations
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
         # print("lastY =", lastY)  # DEBUG
@@ -206,13 +210,13 @@ def delayed_start(self, env, policy, polId, envId):
     print("\n- Evaluating: {} ...".format(policy))
     if self.useJoblib:
         results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-            joblib.delayed(delayed_play)(env, policy, self.cfg['horizon'])
-            for _ in range(self.cfg['repetitions'])
+            joblib.delayed(delayed_play)(env, policy, self.horizon)
+            for _ in range(self.repetitions)
         )
     else:
         results = []
-        for _ in range(self.cfg['repetitions']):
-            results.append(delayed_play(env, policy, self.cfg['horizon']))
+        for _ in range(self.repetitions):
+            results.append(delayed_play(env, policy, self.horizon))
     for result in results:
         self.rewards[polId, envId, :] += np.cumsum(result.rewards)
         self.pulls[envId][polId, :] += result.pulls

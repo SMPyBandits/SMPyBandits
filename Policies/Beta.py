@@ -35,15 +35,17 @@ class Beta:
 
     def quantile(self, p):
         return btdtri(self.N[1], self.N[0], p)
-        # Bug: do not call btdtri with (0.5,0.5,0.5) in scipy < 0.9
+        # Bug: do not call btdtri with (0.5,0.5,0.5) in scipy version < 0.9 (old)
 
     def mean(self):
         return self.N[1] / float(sum(self.N))
 
     def forget(self, obs):
         # print("Info: calling Beta.forget() with obs = {} ...".format(obs))  # DEBUG
+        # FIXME update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
         self.N[int(obs)] -= 1
 
     def update(self, obs):
         # print("Info: calling Beta.update() with obs = {} ...".format(obs))  # DEBUG
+        # FIXME update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
         self.N[int(obs)] += 1

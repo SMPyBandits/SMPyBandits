@@ -74,7 +74,7 @@ configuration = {
     "repetitions": REPETITIONS,
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 8,  # Max joblib verbosity
+    "verbosity": 6,  # Max joblib verbosity
     # --- Collision model
     "collisionModel": collisionModel,
     # --- Other parameters for the Evaluator
