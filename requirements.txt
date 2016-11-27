@@ -1,6 +1,6 @@
 # requirements.txt file for https://github.com/Naereen/AlgoBandits
 numpy       # Required for numpy arrays and functions
-scipy       # Required for scipy.stats functions (Beta, Poisson, Exponentiels)
+scipy>0.9   # Required for scipy.stats functions (Beta, Poisson, Exponentiels)
 matplotlib  # Required for the plots in Environment/Evaluator*.py
 cycler      # Required for better colors for the plots. Note: it should come along matplotlib
 joblib      # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).

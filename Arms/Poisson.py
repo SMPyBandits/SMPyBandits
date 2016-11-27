@@ -10,14 +10,20 @@ from .Arm import Arm
 
 
 class Poisson(Arm):
-    """ Poisson distributed arm, possibly truncated."""
+    """ Poisson distributed arm, possibly truncated.
 
+    - Default is to not truncate.
+    - Warning: the draw() method is QUITE inefficient! (15 seconds for 200000 draws, 62 µs for 1).
+    """
+
+    # def __init__(self, p, trunc=1):
     def __init__(self, p, trunc=float('inf')):
+        assert 0 <= p, "Error, the parameter 'p' for Poisson class has to be > 0."
         self.p = p
         self.trunc = trunc
         if isinf(trunc):
             self.expectation = p
-        else:
+        else:  # Warning: this is very slow if self.trunc is large!
             q = exp(-p)
             sq = q
             self.expectation = 0

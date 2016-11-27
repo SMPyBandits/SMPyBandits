@@ -12,6 +12,7 @@ class Bernoulli(Arm):
     """ Bernoulli distributed arm."""
 
     def __init__(self, probability):
+        assert 0 <= probability <= 1, "Error, the parameter probability for Bernoulli class has to be in [0, 1]."
         self.probability = probability
 
     def __str__(self):

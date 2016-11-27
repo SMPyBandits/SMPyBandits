@@ -41,7 +41,9 @@ class Beta:
         return self.N[1] / float(sum(self.N))
 
     def forget(self, obs):
+        # print("Info: calling Beta.forget() with obs = {} ...".format(obs))  # DEBUG
         self.N[int(obs)] -= 1
 
     def update(self, obs):
+        # print("Info: calling Beta.update() with obs = {} ...".format(obs))  # DEBUG
         self.N[int(obs)] += 1
