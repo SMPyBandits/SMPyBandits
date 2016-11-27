@@ -9,9 +9,9 @@ __version__ = "0.2"
 
 # Import arms
 from Arms.Bernoulli import Bernoulli
-from Arms.Exponential import Exponential
-from Arms.Gaussian import Gaussian
-from Arms.Poisson import Poisson
+# from Arms.Exponential import Exponential
+# from Arms.Gaussian import Gaussian
+# from Arms.Poisson import Poisson
 
 # Import algorithms, both single-player and multi-player
 from Policies import *
@@ -26,16 +26,16 @@ HORIZON = 20000
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 1000
 HORIZON = 10000
+HORIZON = 1000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 8
 REPETITIONS = 20
+REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -58,12 +58,15 @@ LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
-TEST_AGGR = False
 TEST_AGGR = True
-
+TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 5
+NB_PLAYERS = 6
+
+# Test the Selfish multi-players policy (and the others)
+TEST_SELFISH = False
+TEST_SELFISH = True
 
 
 # XXX This dictionary configures the experiments
@@ -103,7 +106,7 @@ configuration = {
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
-    # FIXED try with other arms distribution: Exponential
+    # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
@@ -111,7 +114,8 @@ configuration = {
     #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
     #     },
     # ],
-    # FIXED try with other arms distribution: Gaussian
+    # DONE I tried with other arms distribution: Gaussian, it works similarly
+    # FIXME Bayesian policies based on a Beta posterior (Thompson, BayesUCB) do not work - yet - for continuous reward in [0, 1] but only for Boolean reward in {0, 1} (ie Bernoulli).
     # "environment": [  # Gaussian arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
@@ -239,11 +243,26 @@ configuration = {
     #     }
     #     for _ in range(NB_PLAYERS)
     # ],
-    "players": [TakeRandomFixedArm(17) for _ in range(NB_PLAYERS)]
-    # # --- Defining each player as one child of a multi-player policy
-    # # FIXME finish implementing this !
-    # "players": Selfish(NB_PLAYERS, Uniform).players
 }
+
+
+if TEST_SELFISH:
+    nbArms = len(configuration['environment'][0]['params'])
+    if len(configuration['environment']) > 1:
+        print("WARNING do not use this hack if you try to use more than one environment.")
+    configuration.update({
+        # # --- Defining manually each child
+        # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
+        # --- Defining each player as one child of a multi-player policy
+        # # --- Using multi-player 'Selfish' policy
+        # # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+        # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+        # --- Using multi-player 'Selfish' policy
+        "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs  # FIXME try it!
+        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs  # FIXME try it!
+    })
+
 
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined
 if TEST_AGGR:

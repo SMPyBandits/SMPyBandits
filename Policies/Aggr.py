@@ -23,11 +23,14 @@ class Aggr:
     def __init__(self, nbArms, learningRate, children,
                  decreaseRate=None,
                  update_all_children=update_all_children, prior='uniform'):
+        # Attributes
         self.nbArms = nbArms
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
+        self.t = -1
+        # Internal object memory
         self.children = []
         for i in range(self.nbChildren):
             if isinstance(children[i], dict):
@@ -43,8 +46,8 @@ class Aggr:
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         self.params = "nb:" + repr(self.nbChildren) + ", rate:" + repr(self.learningRate)
+        # Internal vectorial memory
         self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
-        # self.startGame()
 
     def __str__(self):
         return "Aggr ({})".format(self.params)

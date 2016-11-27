@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
 """ PoliciesMultiPlayers : contains various collision-avoidance protocol for the multi-players setting.
 
-- Selfish:
+- Selfish: a multi-player policy where every player is selfish, they do not try to handle the collisions.
+- CentralizedNotFair: a multi-player policy which uses a centralize intelligence to affect users to a FIXED arm.
+- CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
 """
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-# Mine, stupid ones
+# Mine, stupid and decentralized ones
 from .Selfish import Selfish
+
+# Mine, centralized ones
+from .CentralizedNotFair import CentralizedNotFair
+from .CentralizedFair import CentralizedFair
+
+# FIXME implement it
+# from .MEGA import MEGA
+# FIXME implement it
+# from .RhoRand import RhoRand
+# FIXME implement it
+# from .TDFS import TDFS

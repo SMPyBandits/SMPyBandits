@@ -8,7 +8,6 @@ __version__ = "0.1"
 
 # Generic imports
 from copy import deepcopy
-from random import shuffle
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt

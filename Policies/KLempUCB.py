@@ -9,7 +9,7 @@ __version__ = "$Revision: 1.8 $"
 from math import log
 import numpy as np
 
-from .kullback import maxEV
+from .kullback import maxEV   # XXX Not detected as in the kullback.py file ?
 from .IndexPolicy import IndexPolicy
 
 

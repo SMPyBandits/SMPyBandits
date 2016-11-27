@@ -15,7 +15,7 @@ class Gaussian(Arm):
     """
 
     def __init__(self, mu, sigma, trunc=[0, 1]):
-        assert 0 < sigma, "Error, the parameter 'sigma' for Gaussian class has to be > 0."
+        assert sigma > 0, "Error, the parameter 'sigma' for Gaussian class has to be > 0."
         self.sigma = sigma
         self.mu = mu
         self.expectation = mu

@@ -137,7 +137,7 @@ def maxEV(p, V, klMax):
         Uq = Uq / sum(Uq)
     else:
         # Case where all values in V(Kb) are almost identical.
-        Uq[Kb] = 1 / len(Kb)
+        Uq[Kb] = 1.0 / len(Kb)
     return Uq
 
 

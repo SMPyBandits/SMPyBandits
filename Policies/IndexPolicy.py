@@ -7,7 +7,6 @@ __version__ = "$Revision: 1.5 $"
 
 
 import numpy as np
-import numpy.random as rn
 
 
 class IndexPolicy(object):
@@ -21,8 +20,8 @@ class IndexPolicy(object):
         self.t = -1
         self.params = ''
 
-    # def computeIndex(self, arm):
-    #     pass
+    def computeIndex(self, arm):
+        raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")
 
     def startGame(self):
         self.t = 0

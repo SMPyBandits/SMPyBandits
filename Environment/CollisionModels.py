@@ -54,6 +54,7 @@ def noCollision(t, arms, players, choices, rewards, pulls, collisions):
         rewards[i] = arms[choices[i]].draw(t)
         player.getReward(choices[i], rewards[i])
         pulls[i, choices[i]] += 1
+        # collisions[choices[i]] += 0  # that's the idea, but useless to do it
 
 
 # Default collision model to use
