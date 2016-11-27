@@ -11,7 +11,8 @@
 - [x] add plots that show the percentage of optimal arms play ([e.g., as done in this paper](http://www.cs.mcgill.ca/~vkules/bandits.pdf#page=11))
 - [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions). See for instance [this log file (with `cProfile`)](logs/main_py3_profile_log.txt) or [this one (with `line_profiler`)](logs/main_py3_line_profiler_log.txt).
 - [ ] I could have tried to improve the bottlenecks, with smart `numpy`/`scipy` code, or [`numba` ?](http://numba.pydata.org/), or [`cython`](http://cython.org/) code ? Not so easy, not so interesting...
-- [ ] explore the behavior of my Aggr algorithm, and understand it better (and improve it?)
+- [x] explore the behavior of my Aggr algorithm, and understand it better (and improve it? it would only be by parameter tweaking, not interesting).
+- [ ] test again (and adapt, if needed) each single-player policy against non-Bernoulli arms (Gaussian, Exponential, Poisson). FIXME how to handle rewards which are NOT in `[0, 1]` ?
 
 ## Better storing of the simulation results
 - [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, on the run (to never lose data, even if the simulation gets killed)
@@ -20,11 +21,12 @@
 - [x] keep it up-to-date [on GitHub](https://github.com/Naereen/AlgoBandits)
 - [x] I could document this project better. But, well, there is no [Sphinx](http://sphinx-doc.org/) documentation yet, but each file has a docstring, some useful comments for the interesting part, and this very page you are reading contains [insights on how to use the framework](#configuration) as well as [the organization of the code](#code-organization).
 
-## More MAB algorithms
+## More MAB algorithms (EXP-3 etc)
 - [ ] implement some more algorithms, e.g., from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py)
 - [ ] add more basic algorithms, e.g., from [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf) or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf)
 
 ## Multi-players simulations
 - [x] implement a multi-player simulation environment as well!
-- [ ] try it on [different collision models](Environment/CollisionModels.py), with different setting (K < M, M <= K, etc).
-- [ ] implement the [`rho_rand`](http://ieeexplore.ieee.org/document/5462144/), [`TDFS`](https://arxiv.org/abs/0910.2065v3), [`MEGA`](https://arxiv.org/abs/1404.5421), [`Musical Chair` and `Dynamic Musical Chair`](https://arxiv.org/abs/1512.02866) multi-player algorithms
+- [x] try it on [different collision models](Environment/CollisionModels.py), with different setting (K < M, M <= K, etc).
+- [x] implement more basic policies, as [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
+- [ ] implement the state-of-the-art algorithms: [`rho_rand`](http://ieeexplore.ieee.org/document/5462144/), [`TDFS`](https://arxiv.org/abs/0910.2065v3), [`MEGA`](https://arxiv.org/abs/1404.5421), [`Musical Chair` and `Dynamic Musical Chair`](https://arxiv.org/abs/1512.02866) multi-player algorithms
