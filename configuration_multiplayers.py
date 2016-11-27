@@ -9,9 +9,9 @@ __version__ = "0.2"
 
 # Import arms
 from Arms.Bernoulli import Bernoulli
-# from Arms.Exponential import Exponential
-# from Arms.Gaussian import Gaussian
-# from Arms.Poisson import Poisson
+from Arms.Exponential import Exponential
+from Arms.Gaussian import Gaussian
+from Arms.Poisson import Poisson
 
 # Import algorithms, both single-player and multi-player
 from Policies import *
@@ -26,16 +26,16 @@ HORIZON = 20000
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
 HORIZON = 1000
+HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 20
 REPETITIONS = 8
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -58,12 +58,12 @@ LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
-TEST_AGGR = True
 TEST_AGGR = False
+TEST_AGGR = True
 
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 3
+NB_PLAYERS = 5
 
 
 # XXX This dictionary configures the experiments
@@ -82,7 +82,6 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        # TODO try with other arms distribution: Exponential, Gaussian, Poisson, etc!
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
@@ -104,6 +103,21 @@ configuration = {
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
+    # FIXED try with other arms distribution: Exponential
+    # "environment": [  # Exponential arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Exponential,
+    #         # "params": [(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1)]
+    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    #     },
+    # ],
+    # FIXED try with other arms distribution: Gaussian
+    # "environment": [  # Gaussian arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Gaussian,
+    #         "params": [(0.1, 0.5), (0.2, 0.5), (0.3, 0.5), (0.4, 0.5), (0.5, 0.5), (0.6, 0.5), (0.7, 0.5), (0.8, 0.5), (0.9, 0.5)]
+    #     },
+    # ],
     # --- Defining each player manually
     # "players": [
     #     # --- Stupid algorithm
@@ -217,16 +231,18 @@ configuration = {
     #     # #     }
     #     # # },
     # ],
+    # --- Using the same type of player for all players:
+    # "players": [
+    #     {
+    #         "archtype": TakeRandomFixedArm,
+    #         "params": {}
+    #     }
+    #     for _ in range(NB_PLAYERS)
+    # ],
+    "players": [TakeRandomFixedArm(17) for _ in range(NB_PLAYERS)]
     # # --- Defining each player as one child of a multi-player policy
-    # # FIXME finish this !
+    # # FIXME finish implementing this !
     # "players": Selfish(NB_PLAYERS, Uniform).players
-    "players": [
-        {
-            "archtype": TakeRandomFixedArm,
-            "params": {}
-        }
-        for _ in range(NB_PLAYERS)
-    ]
 }
 
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined

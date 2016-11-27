@@ -99,8 +99,12 @@ class EvaluatorMultiPlayers:
     def __initPlayers__(self, env):
         for playerId, player in enumerate(self.cfg['players']):
             print("- Adding player #{} = {} ...".format(playerId + 1, player))  # DEBUG
-            self.players.append(player['archtype'](env.nbArms,
-                                                   **player['params']))
+            if isinstance(player, dict):
+                print("  Creating this player from a dictionnary 'player' = {} ...".format(player))  # DEBUG
+                self.players.append(player['archtype'](env.nbArms, **player['params']))
+            else:
+                print("  Using this already created player 'player' = {} ...".format(player))  # DEBUG
+                self.players.append(player)
 
     def start_all_env(self):
         for envId, env in enumerate(self.envs):

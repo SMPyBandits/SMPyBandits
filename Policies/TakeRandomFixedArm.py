@@ -19,8 +19,8 @@ class TakeRandomFixedArm():
         # Get the number of arms
         nbArmIndexes = rd.randint(low=1, high=1 + int(nbArms / 2.))
         # Fix the set of arms
-        self.armIndexes = rd.choice(np.arange(nbArms), size=nbArmIndexes, replace=False)
-        print("New player following TakeRandomFixedArm with arms", self.armIndexes)
+        self.armIndexes = list(rd.choice(np.arange(nbArms), size=nbArmIndexes, replace=False))
+        # print("New player following TakeRandomFixedArm with arms", self.armIndexes)  # DEBUG
         self.params = repr(self.armIndexes)
 
     def __str__(self):

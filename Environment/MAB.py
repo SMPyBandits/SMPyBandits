@@ -23,20 +23,27 @@ class MAB:
     """
 
     def __init__(self, configuration):
-        print("New MAB instance!")  # DEBUG
-        arm_type = configuration["arm_type"]
-        print(" - with 'arm_type' =", arm_type)  # DEBUG
-        params = configuration["params"]
-        print(" - with 'params' =", params)  # DEBUG
-        # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian)
-        # XXX manually detect if the parameters are iterable or not
-        self.arms = []
-        for param in params:
-            try:
-                self.arms.append(arm_type(*param))
-            except TypeError:
-                self.arms.append(arm_type(param))
-        # self.arms = [arm_type(*param) for param in params]
+        print("Creating a new MAB problem ...")  # DEBUG
+        if isinstance(configuration, dict):
+            print("  Reading arms of this MAB problem from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
+            arm_type = configuration["arm_type"]
+            print(" - with 'arm_type' =", arm_type)  # DEBUG
+            params = configuration["params"]
+            print(" - with 'params' =", params)  # DEBUG
+            # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian)
+            # XXX manually detect if the parameters are iterable or not
+            self.arms = []
+            for param in params:
+                try:
+                    self.arms.append(arm_type(*param))
+                except TypeError:
+                    self.arms.append(arm_type(param))
+            # self.arms = [arm_type(*param) for param in params]
+        else:
+            print("  Taking arms of this MAB problem from a list of arms 'configuration' = {} ...".format(configuration))  # DEBUG
+            self.arms = []
+            for arm in configuration:
+                self.arms.append(arm)
         print(" - with 'arms' =", self.arms)  # DEBUG
         self.nbArms = len(self.arms)
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG

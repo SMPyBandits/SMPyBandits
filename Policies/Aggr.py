@@ -30,7 +30,12 @@ class Aggr:
         self.nbChildren = len(children)
         self.children = []
         for i in range(self.nbChildren):
-            self.children.append(children[i]['archtype'](nbArms, **children[i]['params']))
+            if isinstance(children[i], dict):
+                print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, children[i]))  # DEBUG
+                self.children.append(children[i]['archtype'](nbArms, **children[i]['params']))
+            else:
+                print("  Using this already created player 'children[{}]' = {} ...".format(i, children[i]))  # DEBUG
+                self.children.append(children[i])
         # Initialize the arrays
         if prior is not None and prior != 'uniform':
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr.Aggr has to be an array of the good size ({}).".format(self.nbChildren)
