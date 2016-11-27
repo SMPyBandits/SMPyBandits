@@ -13,6 +13,8 @@ from Arms.Bernoulli import Bernoulli
 # from Arms.Gaussian import Gaussian
 # from Arms.Poisson import Poisson
 
+# Import contained classes
+from Environment.MAB import MAB
 # Import algorithms, both single-player and multi-player
 from Policies import *
 from PoliciesMultiPlayers import *
@@ -25,8 +27,8 @@ from Environment.CollisionModels import *
 HORIZON = 20000
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
 HORIZON = 10000
+HORIZON = 3000
 HORIZON = 1000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -36,7 +38,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 20
 REPETITIONS = 8
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -62,11 +64,13 @@ TEST_AGGR = True
 TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 6
+NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 17   # Just the number of arms
+NB_PLAYERS = 25   # More than the number of arms !!
 
-# Test the Selfish multi-players policy (and the others)
-TEST_SELFISH = False
-TEST_SELFISH = True
+# Test one the multi-players policy
+TEST_MULTIPLAYER_POLICY = False
+TEST_MULTIPLAYER_POLICY = True
 
 
 # XXX This dictionary configures the experiments
@@ -246,21 +250,25 @@ configuration = {
 }
 
 
-if TEST_SELFISH:
+if TEST_MULTIPLAYER_POLICY:
     nbArms = len(configuration['environment'][0]['params'])
     if len(configuration['environment']) > 1:
-        print("WARNING do not use this hack if you try to use more than one environment.")
+        raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     configuration.update({
         # # --- Defining manually each child
         # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
         # --- Defining each player as one child of a multi-player policy
-        # # --- Using multi-player 'Selfish' policy
+        # # --- Using multi-player Selfish policy
         # # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
-        # --- Using multi-player 'Selfish' policy
-        "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs  # FIXME try it!
-        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs  # FIXME try it!
+        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+        # --- Using multi-player Centralized policy
+        # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
+        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+        # --- Using multi-player Orcale policy
+        # XXX they need a perfect knowledge on the arms, even this is not physically plausible
+        "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        # "players": OracleFair(NB_PLAYERS, configuration['environment'][0]).childs
     })
 
 

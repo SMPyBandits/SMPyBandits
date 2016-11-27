@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-""" CentralizedFair: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
+""" OracleFair: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
 
 - It allows to have absolutely *no* collision, if there is more channels than users (always assumed).
 - And it is perfectly fair on every run: each chosen arm is played successively by each player.
-- Note that it is NOT affecting players on the best arms: it has no knowledge of the means of the arms, only of the number of arms nbArms.
+- Note that it IS affecting players on the best arms: it requires full knowledge of the means of the arms, not simply the number of arms.
+
+- Note that they need a perfect knowledge on the arms, even this is not physically plausible.
 """
 from __future__ import print_function
 
@@ -15,18 +17,23 @@ import numpy as np
 from .ChildPointer import ChildPointer
 
 
-class Cycling(object):
-    """ Cycling: select an arm as (offset + t) % nbArms, with offset being decided by the CentralizedFair multi-player policy.
+class CyclingBest(object):
+    """ CyclingBest: select an arm in the best ones (bestArms) as (offset + t) % (len(bestArms)), with offset being decided by the OracleFair multi-player policy.
     """
 
-    def __init__(self, nbArms, offset):
+    def __init__(self, nbArms, offset, bestArms=None):
         self.nbArms = nbArms
         self.offset = offset
+        if bestArms is None:
+            bestArms = list(range(nbArms))
+        self.bestArms = bestArms
+        self.nb_bestArms = len(bestArms)
+        # self.params = '{}, {}'.format(str(offset), str(bestArms))
         self.params = str(offset)
         self._t = -1
 
     def __str__(self):
-        return "Cycling({})".format(self.params)
+        return "CyclingBest({})".format(self.params)
 
     def startGame(self):
         self._t = 0
@@ -35,59 +42,63 @@ class Cycling(object):
         pass
 
     def choice(self):
-        c = (self.offset + self._t) % self.nbArms
+        c = self.bestArms[(self.offset + self._t) % self.nb_bestArms]
         self._t += 1
         return c
 
 
-class CentralizedFair(object):
-    """ CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
+class OracleFair(object):
+    """ OracleFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 
-    def __init__(self, nbPlayers, nbArms):
+    def __init__(self, nbPlayers, armsMAB):
         """
         - nbPlayers: number of players to create (in self._players).
-        - nbArms: number of arms, given as first argument to playerAlgo.
+        - armsMAB: MAB object that represents the arms.
 
         Examples:
-        >>> s = CentralizedFair(10, 14)
+        >>> s = OracleFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use
         """
-        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedFair class has to be > 0."
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for OracleFair class has to be > 0."
+        nbArms = armsMAB.nbArms
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
         self.nbPlayers = nbPlayers
         self.nbArms = nbArms
         # Internal vectorial memory
+        means = np.array([arm.mean() for arm in armsMAB.arms])
+        bestArms = np.argsort(means)[-min(nbPlayers, nbArms):]
+        print("bestArms =", bestArms)  # DEBUG
         if nbPlayers <= nbArms:
-            self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)
+            self._offsets = np.argsort(means)[-nbPlayers:]
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
-            self._offsets[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
+            self._offsets[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX a permutation
             # Try to minimize the number of doubled offsets, so all the other players are affected to the *same* arm
-            trashArm = np.random.choice(nbArms)
-            self._offsets[nbArms:] = trashArm
+            worseArm = np.argmin(means)
+            self._offsets[nbArms:] = worseArm
             # XXX this "trash" arm with max number of collision will cycle: that's the best we can do!
             # self._offsets[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
         # Shuffle it once, just to be fair in average
         np.random.shuffle(self._offsets)
-        print("CentralizedFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        print("OracleFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
         self.childs = [None] * nbPlayers
         for playerId in range(nbPlayers):
             print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
-            self._players[playerId] = Cycling(nbArms, self._offsets[playerId])
+            self._players[playerId] = CyclingBest(nbArms, self._offsets[playerId], bestArms)
             self.childs[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "CentralizedFair({})".format(self.params)
+        return "OracleFair({})".format(self.params)
 
     def _printNbCollisions(self):
         """ Print number of collisions. """

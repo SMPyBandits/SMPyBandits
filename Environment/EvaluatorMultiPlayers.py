@@ -136,6 +136,7 @@ class EvaluatorMultiPlayers(object):
             self.collisions[envId] += r.collisions
             for playerId in range(self.nbPlayers):
                 self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
+                # FIXME there is probably a bug in this computation
                 self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.horizon)])
 
     def getPulls(self, playerId, environmentId):
@@ -258,13 +259,16 @@ class EvaluatorMultiPlayers(object):
             print("==> No collisions to plot ... Stopping now  ...")
             return
         Y /= self.horizon
-        # FIXME
+        # FIXME how could the np.sum(Y) not be < 1 ???
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision
         labels[-1] = 'No collision'
         # Start the figure
         plt.figure()
         if piechart:
+            xlabel = ', '.join(str(player) for player in self.players)
+            print("Using xlabel =", xlabel)  # DEBUG
+            plt.xlabel(xlabel)
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors[:len(labels)], explode=[0.05] * len(Y))
         else:

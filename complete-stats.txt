@@ -2,25 +2,25 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-    85	Lilian Besson
+    86	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
   - Number of files changed: 112
-  - Number of lines added: 247575
-  - Number of lines deleted: 231792
+  - Number of lines added: 247826
+  - Number of lines deleted: 232060
   - Number of merges: 0
     Nov Dec           Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov 
-                                                                                                            O . 
+                                                                                                            o . 
     M                                                                                                       O   
                                                                                                             .   
-    W                                                                                                       0   
+    W                                                                                                       O   
                                                                                                           o 0   
-    F                                                                                                       o   
+    F                                                                                                       .   
                                                                                                           o .   
 
                                                                                           Less   . o O 0  More
-  85: Total commits
+  86: Total commits
    9: Days ( Nov 19 2016 - Nov 27 2016 ) - Longest streak excluding weekends       
    9: Days ( Nov 19 2016 - Nov 27 2016 ) - Longest streak including weekends       
    9: Days ( Nov 19 2016 - Nov 27 2016 ) - Current streak                          

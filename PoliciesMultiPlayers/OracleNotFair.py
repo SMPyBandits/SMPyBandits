@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-""" CentralizedNotFair: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
+""" OracleNotFair: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
 
 - It allows to have absolutely *no* collision, if there is more channels than users (always assumed).
 - But it is NOT fair on ONE run: the best arm is played only by one player.
 - Note that in average, it is fair (who plays the best arm is randomly decided).
-- Note that it is NOT affecting players on the best arms: it has no knowledge of the means of the arms, only of the number of arms nbArms.
+- Note that it IS affecting players on the best arms: it requires full knowledge of the means of the arms, not simply the number of arms.
+
+- Note that they need a perfect knowledge on the arms, even this is not physically plausible.
 """
 from __future__ import print_function
 
@@ -17,7 +19,7 @@ from .ChildPointer import ChildPointer
 
 
 class Fixed(object):
-    """ Fixed: always select a fixed arm, as decided by the CentralizedNotFair multi-player policy.
+    """ Fixed: always select a fixed arm, as decided by the OracleNotFair multi-player policy.
     """
 
     def __init__(self, nbArms, armIndex):
@@ -38,41 +40,42 @@ class Fixed(object):
         return self.armIndex
 
 
-class CentralizedNotFair(object):
-    """ CentralizedNotFair: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
+class OracleNotFair(object):
+    """ OracleNotFair: a multi-player policy which uses a centralized intelligence to affect users to affect users to a FIXED arm, among the best arms.
     """
 
-    def __init__(self, nbPlayers, nbArms):
+    def __init__(self, nbPlayers, armsMAB):
         """
         - nbPlayers: number of players to create (in self._players).
-        - nbArms: number of arms, given as first argument to playerAlgo.
+        - armsMAB: MAB object that represents the arms.
 
         Examples:
-        >>> s = CentralizedNotFair(10, 14)
+        >>> s = OracleNotFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use
         """
-        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedNotFair class has to be > 0."
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for OracleNotFair class has to be > 0."
+        nbArms = armsMAB.nbArms
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
         self.nbPlayers = nbPlayers
         self.nbArms = nbArms
         # Internal vectorial memory
+        means = np.array([arm.mean() for arm in armsMAB.arms])
         if nbPlayers <= nbArms:
-            self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)
+            self._affectations = np.argsort(means)[-nbPlayers:]
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
-            self._affectations[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
+            self._affectations[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX a permutation
             # Try to minimize the number of doubled affectations, so all the other players are affected to the *same* arm
-            trashArm = np.random.choice(nbArms)
-            self._affectations[nbArms:] = trashArm
-            # XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!)
-            # self._affectations[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
+            worseArm = np.argmin(means)
+            self._affectations[nbArms:] = worseArm
+            # XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal!
         # Shuffle it once, just to be fair in average
         np.random.shuffle(self._affectations)
-        print("CentralizedNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        print("OracleNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
@@ -85,7 +88,7 @@ class CentralizedNotFair(object):
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "CentralizedNotFair({})".format(self.params)
+        return "OracleNotFair({})".format(self.params)
 
     def _printNbCollisions(self):
         """ Print number of collisions. """
