@@ -3,6 +3,7 @@
 """
 Script to load the config, run the simulations, and plot them, for the multi-players case.
 """
+from __future__ import print_function
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

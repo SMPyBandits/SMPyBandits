@@ -5,6 +5,7 @@
 - But it is NOT fair on ONE run: the best arm is played only by one player.
 - Note that in average, it is fair (who plays the best arm is randomly decided).
 """
+from __future__ import print_function
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

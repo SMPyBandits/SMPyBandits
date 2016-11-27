@@ -1,14 +1,24 @@
-************* Module configuration_multiplayers
-W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 18, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 20, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module configuration
 W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module configuration_multiplayers
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 17, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 18, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 20, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module main
+W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 15, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+E: 32, 8: print statement used (print-statement)
+E: 52, 8: print statement used (print-statement)
+E: 63,12: print statement used (print-statement)
+E: 69, 8: print statement used (print-statement)
+E: 74, 8: print statement used (print-statement)
 ************* Module main_multiplayers
 W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -22,16 +32,6 @@ E: 67, 8: print statement used (print-statement)
 E: 77, 8: print statement used (print-statement)
 E: 82, 8: print statement used (print-statement)
 E: 87, 8: print statement used (print-statement)
-************* Module main
-W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 15, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-E: 32, 8: print statement used (print-statement)
-E: 52, 8: print statement used (print-statement)
-E: 63,12: print statement used (print-statement)
-E: 69, 8: print statement used (print-statement)
-E: 74, 8: print statement used (print-statement)
 ************* Module Arms.Bernoulli
 W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -71,6 +71,24 @@ W:135,15: division w/o __future__ statement (old-division)
 W:139,15: division w/o __future__ statement (old-division)
 W:142,15: division w/o __future__ statement (old-division)
 W:236,24: division w/o __future__ statement (old-division)
+************* Module Environment.MAB
+E: 26, 8: print statement used (print-statement)
+E: 28,12: print statement used (print-statement)
+E: 30,12: print statement used (print-statement)
+E: 32,12: print statement used (print-statement)
+E: 43,12: print statement used (print-statement)
+E: 47, 8: print statement used (print-statement)
+E: 49, 8: print statement used (print-statement)
+E: 51, 8: print statement used (print-statement)
+************* Module Environment.Result
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment.ResultMultiPlayers
+W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Environment
+W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 15, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 16, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Environment.EvaluatorMultiPlayers
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -89,24 +107,6 @@ W:149,15: division w/o __future__ statement (old-division)
 W:152,15: division w/o __future__ statement (old-division)
 W:155,15: division w/o __future__ statement (old-division)
 W:256,94: division w/o __future__ statement (old-division)
-************* Module Environment.Result
-W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-************* Module Environment.ResultMultiPlayers
-W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-************* Module Environment.MAB
-E: 26, 8: print statement used (print-statement)
-E: 28,12: print statement used (print-statement)
-E: 30,12: print statement used (print-statement)
-E: 32,12: print statement used (print-statement)
-E: 43,12: print statement used (print-statement)
-E: 47, 8: print statement used (print-statement)
-E: 49, 8: print statement used (print-statement)
-E: 51, 8: print statement used (print-statement)
-************* Module Environment
-W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 15, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 16, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Environment._maximizeWindow
 W:  7, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Policies.AdBandits
@@ -129,20 +129,17 @@ W:  9, 4: import missing `from __future__ import absolute_import` (no-absolute-i
 W: 11, 4: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 41,15: division w/o __future__ statement (old-division)
-************* Module Policies.EpsilonFirst
-W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Policies.EpsilonDecreasing
 W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Policies.EpsilonGreedy
 W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+************* Module Policies.EpsilonFirst
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 ************* Module Policies.IndexPolicy
 W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-************* Module Policies.Softmax
-W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 42,28: division w/o __future__ statement (old-division)
 ************* Module Policies.KLempUCB
 W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -151,6 +148,9 @@ W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-i
 W: 36,67: division w/o __future__ statement (old-division)
 W: 48,12: division w/o __future__ statement (old-division)
 E: 51,12: print statement used (print-statement)
+************* Module Policies.Softmax
+W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 42,28: division w/o __future__ statement (old-division)
 ************* Module Policies.TakeRandomFixedArm
 W:  9, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -240,14 +240,6 @@ E:198, 4: print statement used (print-statement)
 W:199, 9: division w/o __future__ statement (old-division)
 E:200, 4: print statement used (print-statement)
 E:201, 4: print statement used (print-statement)
-************* Module PoliciesMultiPlayers.CentralizedNotFair
-W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
-E: 70, 8: print statement used (print-statement)
-E: 71, 8: print statement used (print-statement)
-E: 76,12: print statement used (print-statement)
-E: 89,12: print statement used (print-statement)
-E: 93,20: print statement used (print-statement)
 ************* Module PoliciesMultiPlayers.CentralizedFair
 W: 11, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 13, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -256,6 +248,14 @@ E: 73, 8: print statement used (print-statement)
 E: 78,12: print statement used (print-statement)
 E: 91,12: print statement used (print-statement)
 E: 95,20: print statement used (print-statement)
+************* Module PoliciesMultiPlayers.CentralizedNotFair
+W: 12, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+W: 14, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
+E: 70, 8: print statement used (print-statement)
+E: 71, 8: print statement used (print-statement)
+E: 76,12: print statement used (print-statement)
+E: 89,12: print statement used (print-statement)
+E: 93,20: print statement used (print-statement)
 ************* Module PoliciesMultiPlayers.Selfish
 W:  8, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
 W: 10, 0: import missing `from __future__ import absolute_import` (no-absolute-import)
@@ -275,13 +275,13 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |47     |NC         |NC         |NC          |NC       |
+|module   |47     |47         |=          |NC          |NC       |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |35     |NC         |NC         |NC          |NC       |
+|class    |35     |35         |=          |NC          |NC       |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |0      |NC         |NC         |0           |0        |
+|method   |0      |203        |-203.00    |0           |0        |
 +---------+-------+-----------+-----------+------------+---------+
-|function |0      |NC         |NC         |0           |0        |
+|function |0      |20         |-20.00     |0           |0        |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -292,13 +292,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |1808   |54.02 |NC       |NC         |
+|code      |1808   |54.07 |1808     |=          |
 +----------+-------+------+---------+-----------+
-|docstring |371    |11.08 |NC       |NC         |
+|docstring |370    |11.06 |370      |=          |
 +----------+-------+------+---------+-----------+
-|comment   |660    |19.72 |NC       |NC         |
+|comment   |660    |19.74 |660      |=          |
 +----------+-------+------+---------+-----------+
-|empty     |508    |15.18 |NC       |NC         |
+|empty     |506    |15.13 |506      |=          |
 +----------+-------+------+---------+-----------+
 
 
@@ -309,9 +309,9 @@ Duplication
 +-------------------------+------+---------+-----------+
 |                         |now   |previous |difference |
 +=========================+======+=========+===========+
-|nb duplicated lines      |0     |NC       |NC         |
+|nb duplicated lines      |0     |0        |=          |
 +-------------------------+------+---------+-----------+
-|percent duplicated lines |0.000 |NC       |NC         |
+|percent duplicated lines |0.000 |0.000    |=          |
 +-------------------------+------+---------+-----------+
 
 
@@ -322,13 +322,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |0      |NC       |NC         |
+|convention |0      |257      |-257.00    |
 +-----------+-------+---------+-----------+
-|refactor   |0      |NC       |NC         |
+|refactor   |0      |10       |-10.00     |
 +-----------+-------+---------+-----------+
-|warning    |185    |NC       |NC         |
+|warning    |185    |142      |+43.00     |
 +-----------+-------+---------+-----------+
-|error      |39     |NC       |NC         |
+|error      |39     |3        |+36.00     |
 +-----------+-------+---------+-----------+
 
 
@@ -441,5 +441,5 @@ Messages
 
 Global evaluation
 -----------------
-Your code has been rated at 7.74/10
+Your code has been rated at 7.74/10 (previous run: 7.47/10, +0.26)
 

@@ -4,6 +4,7 @@
 - It allows to have absolutely *no* collision, if there is more channels than users (always assumed).
 - And it is perfectly fair on every run: the best arm is played successively by each player.
 """
+from __future__ import print_function
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

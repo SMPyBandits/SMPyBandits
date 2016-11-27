@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """ MAB.MAB class to wrap the arms."""
+from __future__ import print_function
 
 __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.26 $"

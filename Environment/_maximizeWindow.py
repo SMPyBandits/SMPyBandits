@@ -4,9 +4,11 @@
 Cf. https://stackoverflow.com/q/12439588/
 """
 from __future__ import print_function
-import matplotlib.pyplot as plt
+
 __author__ = "Lilian Besson"
 __version__ = "0.1"
+
+import matplotlib.pyplot as plt
 
 
 def maximizeWindow():

@@ -11,6 +11,7 @@ Collision model are generic functions, taking:
  - the numpy array to store their pulls: 'pulls'
  - the numpy array to store their collisions: 'collisions'
 """
+from __future__ import print_function
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
