@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Define some basic collision models.
 
-Collision model are generic functions, taking:
+Collision models are generic functions, taking:
 
  - the time: 't'
  - the arms of the current environment: 'arms'
@@ -10,6 +10,12 @@ Collision model are generic functions, taking:
  - the numpy array to store their rewards: 'rewards'
  - the numpy array to store their pulls: 'pulls'
  - the numpy array to store their collisions: 'collisions'
+
+As far as now, there is 3 different collision models implemented:
+
+ - noCollision: simple collision model where all players sample it and receive the reward.
+ - onlyUniqUserGetsReward: simple collision model, where only the players alone on one arm sample it and receive the reward (default).
+ - rewardIsSharedUniformly: simple collision model, where in case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward..
 """
 from __future__ import print_function
 
