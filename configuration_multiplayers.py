@@ -28,7 +28,7 @@ HORIZON = 20000
 HORIZON = 2000
 HORIZON = 500
 HORIZON = 1000
-# HORIZON = 3000
+HORIZON = 3000
 # HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -36,10 +36,10 @@ HORIZON = 1000
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-# REPETITIONS = 200
-# REPETITIONS = 20
+REPETITIONS = 200
+REPETITIONS = 20
 # REPETITIONS = 8
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -68,12 +68,12 @@ collisionModel = rewardIsSharedUniformly
 collisionModel = noCollision
 collisionModel = onlyUniqUserGetsReward
 
-distances = np.random.random_sample(NB_PLAYERS)
-print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")
-for i in range(NB_PLAYERS):
-    print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
-def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
-collisionModel = closerOneGetsReward
+# distances = np.random.random_sample(NB_PLAYERS)
+# print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")
+# for i in range(NB_PLAYERS):
+#     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
+# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
+# collisionModel = closerOneGetsReward
 
 
 # Test one the multi-players policy
@@ -285,9 +285,13 @@ if TEST_MULTIPLAYER_POLICY:
         # --- Defining each player as one child of a multi-player policy
         # # --- Using multi-player Selfish policy
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
-        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
-        # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
+        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # --- Using multi-player Centralized policy
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs

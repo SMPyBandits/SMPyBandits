@@ -265,14 +265,14 @@ class EvaluatorMultiPlayers(object):
             # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
             Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
             labels[armId] = '#${}$: {}'.format(armId, repr(arm))
-        for armId, arm in enumerate(self.envs[environmentId].arms):
-            print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId] / self.horizon))
-        if np.isclose(np.sum(Y), 0):
-            print("==> No collisions to plot ... Stopping now  ...")
-            return
         Y /= (self.horizon * self.nbPlayers)
         # print("  sum(Y) =", np.sum(Y))  # DEBUG
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
+        for armId, arm in enumerate(self.envs[environmentId].arms):
+            print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId]))
+        if np.isclose(np.sum(Y), 0):
+            print("==> No collisions to plot ... Stopping now  ...")
+            return
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision
         labels[-1] = 'No collision'
