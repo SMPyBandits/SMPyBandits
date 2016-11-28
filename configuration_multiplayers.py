@@ -29,7 +29,8 @@ HORIZON = 2000
 HORIZON = 500
 HORIZON = 1000
 HORIZON = 3000
-# HORIZON = 10000
+HORIZON = 10000
+# HORIZON = 40000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -38,7 +39,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
-# REPETITIONS = 8
+REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -49,7 +50,7 @@ N_JOBS = -1 if DO_PARALLEL else 1
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
 # Temperature for the softmax
-TEMPERATURE = 0.05
+TEMPERATURE = 0.005
 # Parameters for the Aggr policy
 LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
@@ -59,9 +60,10 @@ TEST_AGGR = True
 TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 17   # Just the number of arms
-NB_PLAYERS = 25   # More than the number of arms !!
 NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 13    # Less that the number of arms
+# NB_PLAYERS = 17   # Just the number of arms
+# NB_PLAYERS = 25   # More than the number of arms !!
 
 # Collision model
 collisionModel = rewardIsSharedUniformly
@@ -287,9 +289,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # --- Using multi-player Centralized policy
@@ -297,9 +298,10 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
         # --- Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, even this is not physically plausible
-        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
         # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })
+# FIXME the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration =", configuration)  # DEBUG

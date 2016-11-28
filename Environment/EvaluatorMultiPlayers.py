@@ -11,6 +11,7 @@ from copy import deepcopy
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 try:
     import joblib
     USE_JOBLIB = True
@@ -23,32 +24,23 @@ from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
 
-DPI = 140
-
-# Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
-# cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
-# FIXME use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-try:
-    from cycler import cycler
-    USE_4_COLORS = True
-    USE_4_COLORS = False
-    colors = ['r', 'g', 'b', 'k']
-    linestyles = ['-', '--', ':', '-.']
-    linewidths = [2, 3, 3, 3]
-    if not USE_4_COLORS:
-        colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'brown', 'magenta', 'lime', 'coral', 'pink', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
-        linestyles = linestyles * (1 + int(len(colors) / float(len(linestyles))))
-        linestyles = linestyles[:len(colors)]
-        linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
-        linewidths = linewidths[:len(colors)]
-    # Default configuration for the plots: cycle through these colors, linestyles and linewidths
-    # plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
-    plt.rc('axes', prop_cycle=(cycler('color', colors)))
-except:
-    print("Using default colors and plot styles (cycler was not available or something went wrong with 'plt.rc' calls?)")
 
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
+
+DPI = 140
+
+# FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
+sns.set(context="talk", style="darkgrid", palette="husl", font="sans-serif", font_scale=1.4)
+
+
+def palette(nb):
+    """ Use a smart palette from seaborn, for nb different things to plot.
+
+    - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
+    """
+    return sns.husl_palette(nb + 1)[:nb]
+    # return sns.hls_palette(nb + 1)[:nb]
 
 
 # --- Class EvaluatorMultiPlayers
@@ -178,21 +170,20 @@ class EvaluatorMultiPlayers(object):
     def plotRewards(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
+        colors = palette(self.nbPlayers)
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
-            # Y = self.getRegret(i, environmentId)
             Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=label)
+                plt.semilogx(Y, label=label, color=colors[i])
             else:
-                plt.plot(Y, label=label)
+                plt.plot(Y, label=label, color=colors[i])
         plt.legend(loc='upper left')
-        plt.grid()
+        plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
-        # plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
         plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players ({}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
@@ -211,7 +202,7 @@ class EvaluatorMultiPlayers(object):
             plt.semilogx(Y)
         else:
             plt.plot(Y)
-        plt.grid()
+        plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players ({}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
@@ -223,11 +214,12 @@ class EvaluatorMultiPlayers(object):
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
+        colors = palette(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(Y, label=str(player))
+            plt.plot(Y, label=str(player), color=colors[i])
         plt.legend(loc='lower right')
-        plt.grid()
+        plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -240,12 +232,13 @@ class EvaluatorMultiPlayers(object):
 
     def plotFreeTransmissions(self, environmentId, savefig=None):
         plt.figure()
+        colors = palette(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getFreeTransmissions(i, environmentId)
-            plt.plot(Y, '.', label=str(player))
+            plt.plot(Y, '.', label=str(player), color=colors[i])
             # TODO should only plot with markers
         plt.legend(loc='lower right')
-        plt.grid()
+        plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
@@ -270,23 +263,24 @@ class EvaluatorMultiPlayers(object):
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId]))
+            if Y[armId] < 1e-3:
+                labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
-        Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision
+        Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         labels[-1] = 'No collision'
         # Start the figure
         plt.figure()
         if piechart:
             xlabel = ', '.join(str(player) for player in self.players)
-            # print("Using xlabel =", xlabel)  # DEBUG
+            # TODO split this in new lines if it is too long!
             plt.xlabel(xlabel)
             plt.axis('equal')
-            plt.pie(Y, labels=labels, colors=colors[:len(labels)], explode=[0.05] * len(Y))
+            plt.pie(Y, labels=labels, colors=palette(1 + nbArms), explode=[0.05] * len(Y))
         else:
-            # Y /= np.sum(Y)  # XXX Should we feed a normalized vector to plt.pie or plt.hist ?
-            plt.hist(Y, bins=len(Y))
+            plt.hist(Y, bins=len(Y), colors=palette(1 + nbArms))
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='lower right')
         plt.title("Multi-players ({}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))

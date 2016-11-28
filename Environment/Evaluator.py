@@ -11,6 +11,7 @@ from random import shuffle
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 try:
     import joblib
     USE_JOBLIB = True
@@ -22,37 +23,28 @@ from .Result import Result
 from .MAB import MAB
 from ._maximizeWindow import maximizeWindow
 
-DPI = 140
-
 
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
 nb_random_events = 4
 
-# Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
-# cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
-try:
-    from cycler import cycler
-    USE_4_COLORS = True
-    USE_4_COLORS = False
-    colors = ['r', 'g', 'b', 'k']
-    linestyles = ['-', '--', ':', '-.']
-    linewidths = [2, 3, 3, 3]
-    if not USE_4_COLORS:
-        colors = ['blue', 'green', 'red', 'black', 'purple', 'orange', 'teal', 'pink', 'brown', 'magenta', 'lime', 'coral', 'lightblue', 'plum', 'lavender', 'turquoise', 'darkgreen', 'tan', 'salmon', 'gold', 'darkred', 'darkblue']
-        linestyles = linestyles * (1 + int(len(colors) / float(len(linestyles))))
-        linestyles = linestyles[:len(colors)]
-        linewidths = linewidths * (1 + int(len(colors) / float(len(linewidths))))
-        linewidths = linewidths[:len(colors)]
-    # Default configuration for the plots: cycle through these colors, linestyles and linewidths
-    # plt.rc('axes', prop_cycle=(cycler('color', colors) + cycler('linestyle', linestyles) + cycler('linewidth', linewidths)))
-    plt.rc('axes', prop_cycle=(cycler('color', colors)))
-except:
-    print("Using default colors and plot styles (cycler was not available or something went wrong with 'plt.rc' calls?)")
-
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
+
+DPI = 140
+
+# FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
+sns.set(context="talk", style="darkgrid", palette="husl", font="sans-serif", font_scale=1.4)
+
+
+def palette(nb):
+    """ Use a smart palette from seaborn, for nb different things to plot.
+
+    - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
+    """
+    return sns.husl_palette(nb + 1)[:nb]
+    # return sns.hls_palette(nb + 1)[:nb]
 
 
 class Evaluator(object):
@@ -147,15 +139,16 @@ class Evaluator(object):
     def plotRegrets(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
+        colors = palette(self.nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=str(policy))
+                plt.semilogx(Y, label=str(policy), color=colors[i])
             else:
-                plt.plot(Y, label=str(policy))
+                plt.plot(Y, label=str(policy), color=colors[i])
         plt.legend(loc='upper left')
-        plt.grid()
+        # plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
@@ -169,11 +162,12 @@ class Evaluator(object):
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
+        colors = palette(self.nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(Y, label=str(policy))
+            plt.plot(Y, label=str(policy), color=colors[i])
         plt.legend(loc='lower right')
-        plt.grid()
+        # plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")

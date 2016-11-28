@@ -36,6 +36,9 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     # print("nbCollisions =", nbCollisions)  # DEBUG
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
+    # for armId, nb in enumerate(nbCollisions):  # Count collisions?
+    #     if nb > 0:
+    #         collisions[armId] += nb - 1  # -1 if one guy can communicate when there is a collision, 0 otherwise (0 here)
     for i, player in enumerate(players):
         if nbCollisions[choices[i]] < 1:
             rewards[i] = arms[choices[i]].draw(t)
@@ -43,7 +46,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
             pulls[i, choices[i]] += 1
         else:
             # print("  - 1 collision on channel {} : {} other users chosed it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
-            collisions[choices[i]] += 1
+            collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
             # FIXME should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
             player.getReward(choices[i], 0)
             # FIXME player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
@@ -113,11 +116,13 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     """ Simple collision model where:
 
     - The players alone on one arm sample it and receive the reward.
-    - In case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a random distance of each player to the base station (random number in [0, 1]).
+    - In case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a distance of each player to the base station (numbers in [0, 1]).
+    - If distances is not given, it is either generated randomly (random numbers in [0, 1]) or is a linspace of nbPlayers values in (0, 1), equally spacen (default).
     """
     if distances is None:
-        # TODO test this creation of the 'distances' array
         # FIXME find a way to generate the distances only once, from the function side, and then use it
+        distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]
+    if distances == 'random':
         distances = np.random.random_sample(len(players))
     # For each arm, explore who chosed it
     for arm in range(len(arms)):

@@ -2,6 +2,6 @@
 numpy       # Required for numpy arrays and functions
 scipy>0.9   # Required for scipy.stats functions (Beta, Poisson, Exponentiels)
 matplotlib  # Required for the plots in Environment/Evaluator*.py
-cycler      # Required for better colors for the plots. Note: it should come along matplotlib
+seaborn     # Required for bar plots, andbetter colors
 joblib      # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).
 # h5py      # TODO: add support to h5py in order to constantly save the numerical values computed in the simulations?
