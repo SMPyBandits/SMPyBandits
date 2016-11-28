@@ -125,6 +125,7 @@ class OracleFair(object):
         return choices  # XXX What to do with this ?
 
     def _startGame_one(self, playerId):
+        # FIXME It should re-generate the affectations every time a game is started!
         return self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
