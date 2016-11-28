@@ -11,7 +11,6 @@ from copy import deepcopy
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 try:
     import joblib
     USE_JOBLIB = True
@@ -19,28 +18,10 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from ._maximizeWindow import maximizeWindow
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
-
-
-# Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
-
-DPI = 140
-
-# FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-sns.set(context="talk", style="darkgrid", palette="husl", font="sans-serif", font_scale=1.4)
-
-
-def palette(nb):
-    """ Use a smart palette from seaborn, for nb different things to plot.
-
-    - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
-    """
-    return sns.husl_palette(nb + 1)[:nb]
-    # return sns.hls_palette(nb + 1)[:nb]
 
 
 # --- Class EvaluatorMultiPlayers
@@ -171,16 +152,17 @@ class EvaluatorMultiPlayers(object):
         plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
+        markers = makemarkers(self.nbPlayers)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10))
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
             Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=label, color=colors[i])
+                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(100 * i + markers_on))
             else:
-                plt.plot(Y, label=label, color=colors[i])
-        plt.legend(loc='upper left')
-        plt.grid(True)
+                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(100 * i + markers_on))
+        plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
@@ -196,14 +178,12 @@ class EvaluatorMultiPlayers(object):
     def plotRegretsCentralized(self, environmentId, savefig=None, semilogx=False):
         Y = np.zeros(self.horizon)
         Y = self.getCentralizedRegret(environmentId)
-        markers_on = np.arange(0, self.horizon, int(self.horizon / 10))
         # Start the figure
         plt.figure()
         if semilogx:
-            plt.semilogx(Y, '-D', markevery=markers_on)
+            plt.semilogx(Y)
         else:
-            plt.plot(Y, '-D', markevery=markers_on)
-        plt.grid(True)
+            plt.plot(Y)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players ({}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
@@ -219,8 +199,7 @@ class EvaluatorMultiPlayers(object):
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(player), color=colors[i])
-        plt.legend(loc='lower right')
-        plt.grid(True)
+        plt.legend(loc='lower right', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -238,8 +217,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getFreeTransmissions(i, environmentId)
             plt.plot(Y, '.', label=str(player), color=colors[i])
             # TODO should only plot with markers
-        plt.legend(loc='lower right')
-        plt.grid(True)
+        plt.legend(loc='lower right', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
@@ -283,7 +261,7 @@ class EvaluatorMultiPlayers(object):
         else:
             plt.hist(Y, bins=len(Y), colors=palette(1 + nbArms))
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='lower right')
+        plt.legend(loc='lower right', numpoints=1)
         plt.title("Multi-players ({}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:

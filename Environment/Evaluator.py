@@ -11,7 +11,6 @@ from random import shuffle
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 try:
     import joblib
     USE_JOBLIB = True
@@ -19,32 +18,15 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
 from .Result import Result
 from .MAB import MAB
-from ._maximizeWindow import maximizeWindow
 
 
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
 nb_random_events = 4
-
-# Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
-
-DPI = 140
-
-# FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-sns.set(context="talk", style="darkgrid", palette="husl", font="sans-serif", font_scale=1.4)
-
-
-def palette(nb):
-    """ Use a smart palette from seaborn, for nb different things to plot.
-
-    - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
-    """
-    return sns.husl_palette(nb + 1)[:nb]
-    # return sns.hls_palette(nb + 1)[:nb]
 
 
 class Evaluator(object):
@@ -147,8 +129,7 @@ class Evaluator(object):
                 plt.semilogx(Y, label=str(policy), color=colors[i])
             else:
                 plt.plot(Y, label=str(policy), color=colors[i])
-        plt.legend(loc='upper left')
-        # plt.grid(True)
+        plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
@@ -166,8 +147,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy), color=colors[i])
-        plt.legend(loc='lower right')
-        # plt.grid(True)
+        plt.legend(loc='lower right', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
