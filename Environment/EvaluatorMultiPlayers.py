@@ -27,6 +27,7 @@ DPI = 140
 
 # Fix the issue with colors, cf. my question here https://github.com/matplotlib/matplotlib/issues/7505
 # cf. http://matplotlib.org/cycler/ and http://matplotlib.org/api/pyplot_api.html#matplotlib.pyplot.plot
+# FIXME use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
 try:
     from cycler import cycler
     USE_4_COLORS = True
@@ -156,6 +157,8 @@ class EvaluatorMultiPlayers(object):
         return self.rewards[environmentId][playerId, :] / float(self.repetitions)
 
     def getRegret(self, playerId, environmentId):
+        """ Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
+        """
         return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
 
     def getCentralizedRegret(self, environmentId):
@@ -172,12 +175,13 @@ class EvaluatorMultiPlayers(object):
         return averageBestRewards - actualRewards
 
     # Plotting decentralized (vectorial) rewards
-    def plotRegrets(self, environmentId, savefig=None, semilogx=False):
+    def plotRewards(self, environmentId, savefig=None, semilogx=False):
         plt.figure()
         ymin = 0
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
-            Y = self.getRegret(i, environmentId)
+            # Y = self.getRegret(i, environmentId)
+            Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
                 plt.semilogx(Y, label=label)
@@ -188,8 +192,9 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
-        plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
-        plt.title("Multi-players ({}): personal regret for each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
+        # plt.ylabel(r"Cumulative Regret $R_t$ (personal, not centralized)")
+        plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
+        plt.title("Multi-players ({}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -265,7 +270,11 @@ class EvaluatorMultiPlayers(object):
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
+        print("  1. sum(Y) =", np.sum(Y))
         Y /= self.horizon
+        print("  2. sum(Y) =", np.sum(Y))
+        Y /= self.nbPlayers
+        print("  3. sum(Y) =", np.sum(Y))
         # FIXME how could the np.sum(Y) not be < 1 ???
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision

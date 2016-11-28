@@ -66,7 +66,7 @@ if __name__ == '__main__':
         savefig = os.path.join(plot_dir, imagename)
         # Plotting the decentralized rewards
         print("- Plotting the decentralized rewards, and saving the plot to {} ...".format(savefig))
-        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
+        evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
 
         # Plotting the centralized rewards
         savefig = savefig.replace('main', 'main_RewardsCentralized')

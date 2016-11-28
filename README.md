@@ -159,7 +159,31 @@ Have a look to:
 - [`main_multiplayers.py`](./main_multiplayers.py) and [`configuration_multiplayers.py`](./configuration_multiplayers.py) to run and configure the simulation,
 - the [`EvaluatorMultiPlayers`](./Environment/EvaluatorMultiPlayers.py) class to perform the simulation,
 - the [`ResultMultiPlayers`](./Environment/ResultMultiPlayers.py) class to store the results,
-- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is a [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
+- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) multi-players policy.
+- Use them like this:
+
+```python
+nbArms = len(configuration['environment'][0]['params'])
+if len(configuration['environment']) > 1:
+    raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+configuration.update({
+    # Uncomment the lines you don't want, keep ONLY one line
+    # --- Using multi-player Selfish policy
+    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+    "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+    # --- Using multi-player Centralized policy
+    "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
+    "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    # --- Using multi-player Oracle policy
+    # XXX they need a perfect knowledge on the arms, even this is not physically plausible
+    "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+})
+```
+
+- The multi-players policies are added by giving a list of their children (`CentralizedFair(*args).childs`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedFair`), who can then handle the calls as it wants (can be centralized or not).
+- *I know*, it's not clear and not simple to use. Just read the code.
 
 ----
 
