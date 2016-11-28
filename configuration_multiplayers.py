@@ -26,17 +26,17 @@ from Environment.CollisionModels import *
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 20000
 HORIZON = 2000
-HORIZON = 10000
-HORIZON = 3000
-HORIZON = 1000
 HORIZON = 500
+HORIZON = 1000
+# HORIZON = 3000
+# HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
-REPETITIONS = 200
+# REPETITIONS = 200
 # REPETITIONS = 20
 # REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
@@ -45,12 +45,6 @@ DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn 
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
-
-
-# Collision model
-collisionModel = rewardIsSharedUniformly
-collisionModel = noCollision
-collisionModel = onlyUniqUserGetsReward
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -65,9 +59,21 @@ TEST_AGGR = True
 TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
+NB_PLAYERS = 17   # Just the number of arms
+NB_PLAYERS = 25   # More than the number of arms !!
 NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 17   # Just the number of arms
-# NB_PLAYERS = 25   # More than the number of arms !!
+
+# Collision model
+collisionModel = rewardIsSharedUniformly
+collisionModel = noCollision
+collisionModel = onlyUniqUserGetsReward
+
+distances = np.random.random_sample(NB_PLAYERS)
+print("Each player is at the base station with a certain distance:")
+for i in range(NB_PLAYERS):
+    print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
+def collisionModel(*args): return closerUserGetsReward(*args, distances=distances)
+
 
 # Test one the multi-players policy
 TEST_MULTIPLAYER_POLICY = False
@@ -224,7 +230,7 @@ configuration = {
     #     #     "archtype": BayesUCB,
     #     #     "params": {}
     #     # },
-    #     # # --- AdBandit with different alpha paramters
+    #     # # --- AdBandit with different alpha parameters
     #     # {
     #     #     "archtype": AdBandit,
     #     #     "params": {
@@ -251,28 +257,6 @@ configuration = {
 }
 
 
-if TEST_MULTIPLAYER_POLICY:
-    nbArms = len(configuration['environment'][0]['params'])
-    if len(configuration['environment']) > 1:
-        raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
-    configuration.update({
-        # # --- Defining manually each child
-        # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
-        # --- Defining each player as one child of a multi-player policy
-        # # --- Using multi-player Selfish policy
-        # # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
-        # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
-        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
-        # --- Using multi-player Centralized policy
-        # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
-        # --- Using multi-player Orcale policy
-        # XXX they need a perfect knowledge on the arms, even this is not physically plausible
-        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-    })
-
-
 # Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined
 if TEST_AGGR:
     non_aggr_players = configuration["players"]
@@ -287,6 +271,28 @@ if TEST_AGGR:
                 "children": non_aggr_players
             },
         }]
+
+
+if TEST_MULTIPLAYER_POLICY:
+    nbArms = len(configuration['environment'][0]['params'])
+    if len(configuration['environment']) > 1:
+        raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+    configuration.update({
+        # # --- Defining manually each child
+        # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
+        # --- Defining each player as one child of a multi-player policy
+        # # --- Using multi-player Selfish policy
+        "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+        # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+        # --- Using multi-player Centralized policy
+        # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
+        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+        # --- Using multi-player Oracle policy
+        # XXX they need a perfect knowledge on the arms, even this is not physically plausible
+        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    })
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration =", configuration)  # DEBUG
