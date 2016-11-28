@@ -39,7 +39,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
-REPETITIONS = 8
+# REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -289,7 +289,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
@@ -298,7 +298,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
         # --- Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, even this is not physically plausible
-        "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
         # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })
 # FIXME the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies

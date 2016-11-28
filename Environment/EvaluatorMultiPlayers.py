@@ -196,12 +196,13 @@ class EvaluatorMultiPlayers(object):
     def plotRegretsCentralized(self, environmentId, savefig=None, semilogx=False):
         Y = np.zeros(self.horizon)
         Y = self.getCentralizedRegret(environmentId)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10))
         # Start the figure
         plt.figure()
         if semilogx:
-            plt.semilogx(Y)
+            plt.semilogx(Y, '-D', markevery=markers_on)
         else:
-            plt.plot(Y)
+            plt.plot(Y, '-D', markevery=markers_on)
         plt.grid(True)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
