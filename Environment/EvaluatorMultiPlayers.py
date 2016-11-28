@@ -159,9 +159,9 @@ class EvaluatorMultiPlayers(object):
             Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(100 * i + markers_on))
+                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
             else:
-                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(100 * i + markers_on))
+                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
         plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
@@ -232,6 +232,7 @@ class EvaluatorMultiPlayers(object):
         nbArms = self.envs[environmentId].nbArms
         Y = np.zeros(1 + nbArms)
         labels = [''] * (1 + nbArms)
+        colors = palette(1 + nbArms)
         # All the other arms
         for armId, arm in enumerate(self.envs[environmentId].arms):
             # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
@@ -248,19 +249,20 @@ class EvaluatorMultiPlayers(object):
             return
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = 'No collision ({:.2%}%)'.format(Y[-1]) if Y[-1] > 1e-3 else ''
+        labels[-1] = 'No collision ({:.2%})'.format(Y[-1]) if Y[-1] > 1e-3 else ''
+        colors[-1] = 'lightgrey'
         # Start the figure
         plt.figure()
         if piechart:
-            xlabel = ', '.join(str(player) for player in self.players)
+            xlabel = ', '.join(str(player) for player in self.players).replace('Child(', '').replace('), ', ', ')
             # TODO split this in new lines if it is too long!
             plt.xlabel(xlabel)
             plt.axis('equal')
-            plt.pie(Y, labels=labels, colors=palette(1 + nbArms), explode=[0.05] * len(Y))
+            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
         else:
-            plt.hist(Y, bins=len(Y), colors=palette(1 + nbArms))
+            plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='lower right', numpoints=1)
+        plt.legend(loc='lower right')
         plt.title("Multi-players ({}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:

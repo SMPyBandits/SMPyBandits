@@ -16,23 +16,23 @@ import seaborn as sns
 signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
 
 DPI = 140
+HLS = True
 
 # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
 sns.set(context="talk",
         style="darkgrid",
-        palette="husl",
+        palette="hls" if HLS else "husl",
         font="sans-serif",
         font_scale=1.1
         )
 
 
-def palette(nb):
+def palette(nb, hls=HLS):
     """ Use a smart palette from seaborn, for nb different things to plot.
 
     - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
     """
-    return sns.husl_palette(nb + 1)[:nb]
-    # return sns.hls_palette(nb + 1)[:nb]
+    return sns.hls_palette(nb + 1)[:nb] if hls else sns.husl_palette(nb + 1)[:nb]
 
 
 def makemarkers(nb):

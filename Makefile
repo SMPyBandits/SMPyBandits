@@ -91,3 +91,6 @@ pyreverse:
 	# dot -Tpdf uml_diagrams/packages_AlgoBandits.dot > uml_diagrams/packages_AlgoBandits.pdf
 	# dot -Tpdf uml_diagrams/classes_AlgoBandits.dot  > uml_diagrams/classes_AlgoBandits.pdf
 	-advpng -z -2 ./uml_diagrams/*.png
+
+ignorelogs:
+	git checkout -- logs/
