@@ -185,6 +185,15 @@ configuration.update({
 - The multi-players policies are added by giving a list of their children (`CentralizedFair(*args).childs`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedFair`), who can then handle the calls as it wants (can be centralized or not).
 - *I know*, it's not clear and not simple to use. Just read the code.
 
+### Some illustrations of multi-players simulations
+Here are one example of simulation: 6 players independently and selfishly play according to the [`Thompson`](Policies/Thompson.py) policy, against 17 unknown Bernoulli arms, in a [collision model where only the player alone on an arm can sample it and gets some reward](Environment/CollisionModels.py).
+
+- First, their own personal rewards along the time:
+[![5 tests - AdBandit and Aggr](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)
+
+- Then, the centralized regret, which in this case seems to be converging to a constant. That is a very good performance: the regret even stops growing after some 700 steps or so:
+[![2000 steps - 100 repetition](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)
+
 ----
 
 ## :boom: [TODO](TODO.md)
