@@ -264,18 +264,15 @@ class EvaluatorMultiPlayers(object):
         for armId, arm in enumerate(self.envs[environmentId].arms):
             # Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId) >= 1)
             Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
-            labels[armId] = '#${}$: {}'.format(armId + 1, repr(arm))
+            labels[armId] = '#${}$: {}'.format(armId, repr(arm))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId] / self.horizon))
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             return
-        print("  1. sum(Y) =", np.sum(Y))
-        Y /= self.horizon
-        print("  2. sum(Y) =", np.sum(Y))
-        Y /= self.nbPlayers
-        print("  3. sum(Y) =", np.sum(Y))
-        # FIXME how could the np.sum(Y) not be < 1 ???
+        Y /= (self.horizon * self.nbPlayers)
+        # print("  sum(Y) =", np.sum(Y))  # DEBUG
+        assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         # Special arm: no collision
         labels[-1] = 'No collision'
@@ -283,7 +280,7 @@ class EvaluatorMultiPlayers(object):
         plt.figure()
         if piechart:
             xlabel = ', '.join(str(player) for player in self.players)
-            print("Using xlabel =", xlabel)  # DEBUG
+            # print("Using xlabel =", xlabel)  # DEBUG
             plt.xlabel(xlabel)
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors[:len(labels)], explode=[0.05] * len(Y))
@@ -314,7 +311,7 @@ class EvaluatorMultiPlayers(object):
         # print("index_of_sorting =", index_of_sorting)  # DEBUG
         for i, k in enumerate(index_of_sorting):
             player = self.players[k]
-            print("- Player '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(str(player), i + 1, self.nbPlayers, lastY[k]))
+            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))
         return lastY, index_of_sorting
 
 

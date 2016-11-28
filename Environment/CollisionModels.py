@@ -124,17 +124,19 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
         # If he is alone, sure to be chosen, otherwise only the closest one can sample
         players_who_chosed_it = np.nonzero(choices == arm)[0]
         # print("players_who_chosed_it =", players_who_chosed_it)  # DEBUG
-        # print("np.shape(players_who_chosed_it) =", np.shape(players_who_chosed_it))  # DEBUG
-        # if len(players_who_chosed_it) > 1:  # DEBUG
-        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, len(players_who_chosed_it) - 1, t))  # DEBUG
+        # if np.size(players_who_chosed_it) > 1:  # DEBUG
+        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, np.size(players_who_chosed_it) - 1, t))  # DEBUG
         if np.size(players_who_chosed_it) > 0:
             collisions[arm] += np.size(players_who_chosed_it) - 1   # Increase nb of collisions for nb of player who chosed it, minus 1 (eg, if 1 then no collision, if 2 then one collision)
             distancesChosen = distances[players_who_chosed_it]
             smaller_distance = np.min(distancesChosen)
+            # print("Using distances to chose the user who can pull arm {} : only users at the minimal distance = {} can transmit ...".format(arm, smaller_distance))  # DEBUG
             if np.count_nonzero(distancesChosen == smaller_distance) == 1:
                 i = players_who_chosed_it[np.argmin(distancesChosen)]
+                # print("Only one user is at minimal distance, of index i =", i)  # DEBUG
             else:   # XXX very low probability, if the distances are randomly chosen
                 i = players_who_chosed_it[np.random.choice(np.argwhere(distancesChosen == smaller_distance))]
+                print("  Randomly choosing one user at minimal distance = {:.4f}, among {}... Index i = {} was chosed !".format(smaller_distance, np.count_nonzero(distancesChosen == smaller_distance), i + 1))  # DEBUG
             rewards[i] = arms[choices[i]].draw(t)
             players[i].getReward(choices[i], rewards[i])
             pulls[i, choices[i]] += 1
@@ -150,7 +152,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
 
 
 # Default collision model to use
-# defaultCollisionModel = rewardIsSharedUniformly
+# defaultCollisionModel = closerUserGetsReward
 
 
 # List of possible collision models

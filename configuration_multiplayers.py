@@ -39,7 +39,7 @@ REPETITIONS = 50
 # REPETITIONS = 200
 # REPETITIONS = 20
 # REPETITIONS = 8
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -69,10 +69,11 @@ collisionModel = noCollision
 collisionModel = onlyUniqUserGetsReward
 
 distances = np.random.random_sample(NB_PLAYERS)
-print("Each player is at the base station with a certain distance:")
+print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")
 for i in range(NB_PLAYERS):
     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
-def collisionModel(*args): return closerUserGetsReward(*args, distances=distances)
+def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
+collisionModel = closerOneGetsReward
 
 
 # Test one the multi-players policy
@@ -279,10 +280,12 @@ if TEST_MULTIPLAYER_POLICY:
         raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     configuration.update({
         # # --- Defining manually each child
+        # "players": [TakeFixedArm(nbArms, 16) for _ in range(NB_PLAYERS)]
         # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
         # --- Defining each player as one child of a multi-player policy
         # # --- Using multi-player Selfish policy
-        "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # --- Using multi-player Centralized policy
