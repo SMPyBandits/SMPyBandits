@@ -44,7 +44,7 @@ if __name__ == '__main__':
         evaluation.start_one_env(envId, env)
         # Display the final rankings for that env
         print("Giving the final ranks ...")
-        evaluation.giveFinalRanking(envId)
+        evaluation.printFinalRanking(envId)
         if not do_plot:
             break
         # Sub folder with a useful name

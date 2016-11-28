@@ -158,7 +158,7 @@ class Evaluator(object):
             plt.savefig(savefig, dpi=DPI)
         plt.show()
 
-    def giveFinalRanking(self, environmentId):
+    def printFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
@@ -168,10 +168,8 @@ class Evaluator(object):
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
-        # print("lastY =", lastY)  # DEBUG
         # Sort lastY and give ranking
         index_of_sorting = np.argsort(lastY)
-        # print("index_of_sorting =", index_of_sorting)  # DEBUG
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
             print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(str(policy), i + 1, nbPolicies, lastY[k]))

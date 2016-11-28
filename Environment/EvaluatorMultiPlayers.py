@@ -238,7 +238,6 @@ class EvaluatorMultiPlayers(object):
             Y[armId] = np.sum(self.getFrequencyCollisions(armId, environmentId))
             labels[armId] = '#${}$: {}'.format(armId, repr(arm))
         Y /= (self.horizon * self.nbPlayers)
-        # print("  sum(Y) =", np.sum(Y))  # DEBUG
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId]))
@@ -249,7 +248,7 @@ class EvaluatorMultiPlayers(object):
             return
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = 'No collision'
+        labels[-1] = 'No collision ({:.2%}%)'.format(Y[-1]) if Y[-1] > 1e-3 else ''
         # Start the figure
         plt.figure()
         if piechart:
@@ -269,7 +268,7 @@ class EvaluatorMultiPlayers(object):
             plt.savefig(savefig, dpi=DPI)
         plt.show()
 
-    def giveFinalRanking(self, environmentId):
+    def printFinalRanking(self, environmentId):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         lastY = np.zeros(self.nbPlayers)
         for i, player in enumerate(self.players):
@@ -278,10 +277,8 @@ class EvaluatorMultiPlayers(object):
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
-        # print("lastY =", lastY)  # DEBUG
         # Sort lastY and give ranking
         index_of_sorting = np.argsort(lastY)
-        # print("index_of_sorting =", index_of_sorting)  # DEBUG
         for i, k in enumerate(index_of_sorting):
             player = self.players[k]
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))

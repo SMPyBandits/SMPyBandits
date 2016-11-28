@@ -126,9 +126,9 @@
 <text text-anchor="start" x="716.5" y="-173.3" font-family="Times,serif" font-size="14.00">getPulls()</text>
 <text text-anchor="start" x="716.5" y="-158.3" font-family="Times,serif" font-size="14.00">getRegret()</text>
 <text text-anchor="start" x="716.5" y="-143.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="716.5" y="-128.3" font-family="Times,serif" font-size="14.00">giveFinalRanking()</text>
-<text text-anchor="start" x="716.5" y="-113.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
-<text text-anchor="start" x="716.5" y="-98.3" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
+<text text-anchor="start" x="716.5" y="-128.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
+<text text-anchor="start" x="716.5" y="-113.3" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
+<text text-anchor="start" x="716.5" y="-98.3" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
 <text text-anchor="start" x="716.5" y="-83.3" font-family="Times,serif" font-size="14.00">start_all_env()</text>
 <text text-anchor="start" x="716.5" y="-68.3" font-family="Times,serif" font-size="14.00">start_one_env()</text>
 </g>
@@ -163,12 +163,12 @@
 <text text-anchor="start" x="935" y="-158.3" font-family="Times,serif" font-size="14.00">getPulls()</text>
 <text text-anchor="start" x="935" y="-143.3" font-family="Times,serif" font-size="14.00">getRegret()</text>
 <text text-anchor="start" x="935" y="-128.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="935" y="-113.3" font-family="Times,serif" font-size="14.00">giveFinalRanking()</text>
-<text text-anchor="start" x="935" y="-98.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
-<text text-anchor="start" x="935" y="-83.3" font-family="Times,serif" font-size="14.00">plotFreeTransmissions()</text>
-<text text-anchor="start" x="935" y="-68.3" font-family="Times,serif" font-size="14.00">plotFrequencyCollisions()</text>
-<text text-anchor="start" x="935" y="-53.3" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
-<text text-anchor="start" x="935" y="-38.3" font-family="Times,serif" font-size="14.00">plotRegretsCentralized()</text>
+<text text-anchor="start" x="935" y="-113.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
+<text text-anchor="start" x="935" y="-98.3" font-family="Times,serif" font-size="14.00">plotFreeTransmissions()</text>
+<text text-anchor="start" x="935" y="-83.3" font-family="Times,serif" font-size="14.00">plotFrequencyCollisions()</text>
+<text text-anchor="start" x="935" y="-68.3" font-family="Times,serif" font-size="14.00">plotRegretsCentralized()</text>
+<text text-anchor="start" x="935" y="-53.3" font-family="Times,serif" font-size="14.00">plotRewards()</text>
+<text text-anchor="start" x="935" y="-38.3" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
 <text text-anchor="start" x="935" y="-23.3" font-family="Times,serif" font-size="14.00">start_all_env()</text>
 <text text-anchor="start" x="935" y="-8.3" font-family="Times,serif" font-size="14.00">start_one_env()</text>
 </g>
@@ -530,7 +530,7 @@
 <polygon fill="none" stroke="black" points="5475,-188 5475,-347 5732,-347 5732,-188 5475,-188"/>
 <text text-anchor="middle" x="5603.5" y="-331.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="5475,-324 5732,-324 "/>
-<text text-anchor="start" x="5483" y="-308.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="5483" y="-308.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="5483" y="-293.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="5483" y="-278.8" font-family="Times,serif" font-size="14.00">params</text>
 <polyline fill="none" stroke="black" points="5475,-271 5732,-271 "/>
