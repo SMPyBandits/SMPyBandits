@@ -9,6 +9,7 @@ __version__ = "0.1"
 # Generic imports
 from copy import deepcopy
 from textwrap import wrap
+from re import search
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -287,14 +288,9 @@ class EvaluatorMultiPlayers(object):
         return lastY, index_of_sorting
 
     def strPlayers(self, width=130):
-        from re import search
-        listStrPlayers = [str(player) for player in self.players]
+        listStrPlayers = [extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
-            text = listStrPlayers[0]
-            # TODO do this for all str(player) before the set()
-            m = search('<[^>]+>', text).group(0)
-            if m[0] == '<' and m[-1] == '>':
-                text = m[1:-1]
+            text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
             text = ', '.join(listStrPlayers)
         text = '\n'.join(wrap(text, width=width))
@@ -311,11 +307,11 @@ def delayed_play(env, players, horizon, collisionModel):
     players = deepcopy(players)
     horizon = deepcopy(horizon)
     nbPlayers = len(players)
-
+    # Start game
     for player in players:
         player.startGame()
+    # Store results
     result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
-
     rewards = np.zeros(nbPlayers)
     choices = np.zeros(nbPlayers, dtype=int)
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
@@ -338,3 +334,12 @@ def delayed_play(env, players, horizon, collisionModel):
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
     return result
+
+
+def extract(text):
+    """ Extract the str of a player, if it is a child, printed as '#[0-9]+<...>' --> ... """
+    m = search('<[^>]+>', text).group(0)
+    if m[0] == '<' and m[-1] == '>':
+        return m[1:-1]
+    else:
+        return text
