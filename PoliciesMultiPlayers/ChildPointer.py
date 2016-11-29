@@ -11,12 +11,13 @@ class ChildPointer(object):
     """
 
     def __init__(self, mother, playerId):
-        self.mother = mother  # XXX Pointer to the mother class.
+        self.mother = mother  # Pointer to the mother class.
         self.playerId = playerId
-        self.params = '#{}, {}'.format(playerId + 1, self.mother._players[self.playerId])
+        self.params = '#{}<{}>'.format(playerId + 1, self.mother._players[self.playerId])
 
     def __str__(self):
-        return "Child({})".format(self.params)
+        # return "Child({})".format(self.params)
+        return self.params
 
     def startGame(self):
         """ Pass the call to self.mother._startGame_one() with the player'ID number. """

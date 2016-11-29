@@ -8,6 +8,7 @@ __version__ = "0.1"
 
 # Generic imports
 from copy import deepcopy
+from textwrap import wrap
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -159,38 +160,40 @@ class EvaluatorMultiPlayers(object):
             Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
+                # plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
+                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=markers_on)
             else:
-                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
+                # plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=((1 + int(self.horizon / 100)) * i + markers_on))
+                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=markers_on)
         plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
-        plt.title("Multi-players ({}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players M = {} (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     # Plotting centralized rewards (sum)
     def plotRegretsCentralized(self, environmentId, savefig=None, semilogx=False):
         Y = np.zeros(self.horizon)
         Y = self.getCentralizedRegret(environmentId)
-        # Start the figure
         plt.figure()
         if semilogx:
             plt.semilogx(Y)
         else:
             plt.plot(Y)
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        strPlayers = '{} players: {}'.format(self.nbPlayers, '\n'.join(wrap(', '.join(str(player) for player in self.players), width=130)))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + strPlayers)
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
-        plt.title("Multi-players ({}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players M = {} (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
@@ -203,11 +206,11 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Multi-players ({}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players M = {} (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def plotFreeTransmissions(self, environmentId, savefig=None):
@@ -221,11 +224,11 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
-        plt.title("Multi-players ({}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.title("Multi-players M = {} (collision model: {}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def plotFrequencyCollisions(self, environmentId, savefig=None, piechart=True):
@@ -249,25 +252,24 @@ class EvaluatorMultiPlayers(object):
             return
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = 'No collision ({:.2%})'.format(Y[-1]) if Y[-1] > 1e-3 else ''
+        labels[-1] = 'No collision ({:.1%})'.format(Y[-1]) if Y[-1] > 1e-3 else ''
         colors[-1] = 'lightgrey'
         # Start the figure
         plt.figure()
         if piechart:
-            xlabel = ', '.join(str(player) for player in self.players).replace('Child(', '').replace('), ', ', ')
-            # TODO split this in new lines if it is too long!
-            plt.xlabel(xlabel)
+            strPlayers = '{} players: {}'.format(self.nbPlayers, '\n'.join(wrap(', '.join(str(player) for player in self.players), width=130)))
+            plt.xlabel(strPlayers)  # DONE split this in new lines if it is too long!
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
         else:
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='lower right')
-        plt.title("Multi-players ({}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.collisionModel.__name__, self.cfg['repetitions'], repr(self.envs[environmentId].arms), signature))
+        plt.legend(loc='center right')
+        plt.title("Multi-players M = {} (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def printFinalRanking(self, environmentId):
@@ -317,11 +319,9 @@ def delayed_play(env, players, horizon, collisionModel):
         # Then we decide if there is collisions and what to do why them
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
         # FIXME? Do not store the choices as good choices if they gave a collision
-        for i, player in enumerate(players):
-            if collisions[choices[i]] > 1:
-                choices[i] = -1
+        # for i, player in enumerate(players):
+        #     if collisions[choices[i]] > 1:
+        #         choices[i] = -1
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
     return result
-
-

@@ -5,6 +5,8 @@ from __future__ import print_function
 __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.26 $"
 
+import numpy as np
+
 
 class MAB(object):
     """ Multi-armed Bandit environment.
@@ -53,6 +55,27 @@ class MAB(object):
 
     def __repr__(self):
         return '<' + self.__class__.__name__ + repr(self.__dict__) + '>'
+
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*'):
+        """ Return a str representation of the list of the arms (repr(self.arms))
+
+        - If nbPlayers > 0, it surrounds the representation of the best arms by openTag, endTag (for plot titles, in a multi-player setting).
+
+        - Example: openTag = '<red>', endTag = '</red>' for HTML-like tags.
+        - Example: openTag = r'\textcolor{red}{', endTag = '}' for LaTeX tags.
+        """
+        if nbPlayers is None:
+            return repr(self.arms)
+        else:
+            assert 0 < nbPlayers, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
+            means = np.array([arm.mean() for arm in self.arms])
+            bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
+            # TODO how to color in red the best M arms ?
+            return '[{}]'.format(', '.join(
+                # r'\textcolor{red}{' + repr(arm) + '}' if armId in bestArms else repr(arm)
+                openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
+                for armId, arm in enumerate(self.arms))
+            )
 
     def complexity(self):
         """ Compute the [Lai & Robbins] lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """

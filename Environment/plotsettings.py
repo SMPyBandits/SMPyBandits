@@ -37,7 +37,7 @@ def palette(nb, hls=HLS):
 
 def makemarkers(nb):
     """ Give a list of cycling markers. See http://matplotlib.org/api/markers_api.html """
-    allmarkers = ['o', 'v', '^', '<', '>', 'D', '*', '+', 'x']
+    allmarkers = ['o', 'v', '^', '<', '>', 'D', '*']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     return longlist[:nb]  # Truncate
 

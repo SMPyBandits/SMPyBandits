@@ -30,7 +30,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 # HORIZON = 40000
-HORIZON = 3000
+# HORIZON = 3000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -39,7 +39,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
-# REPETITIONS = 8
+REPETITIONS = 8
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -61,7 +61,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 13    # Less that the number of arms
+NB_PLAYERS = 13    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
 
@@ -289,10 +289,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+        "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using multi-player Centralized policy
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs

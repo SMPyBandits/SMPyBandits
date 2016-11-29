@@ -138,7 +138,7 @@ class Evaluator(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
@@ -155,7 +155,7 @@ class Evaluator(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI)
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def printFinalRanking(self, environmentId):
