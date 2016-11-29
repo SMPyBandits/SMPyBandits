@@ -21,8 +21,12 @@ class UCB(object):
         self.t = -1
         self.params = ''
         # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
-        self._random_offset = np.random.randint(nbArms)  # Exploration starts with this arm
+        # self._random_offset = np.random.randint(nbArms)  # Exploration starts with this arm
         # self.params = 'offset: {}'.format(self._random_offset)
+        # XXX do even more randomized, take a random permutation of the arm
+        self._initial_exploration = np.random.choice(nbArms, size=nbArms, replace=False)
+        # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
+        # print("One UCB player with _initial_exploration =", self._initial_exploration)  # DEBUG
 
     def __str__(self):
         return "UCB"
@@ -33,8 +37,9 @@ class UCB(object):
         self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
-        if self.t < self.nbArms:  # Force to first visit each arm
-            arm = (self.t + self._random_offset) % self.nbArms
+        if self.t < self.nbArms:  # Force to first visit each arm in a certain random order
+            # arm = (self.t + self._random_offset) % self.nbArms
+            arm = self._initial_exploration[self.t]
         else:
             # print(self.rewards, self.pulls, self.t)  # DEBUG
             arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
