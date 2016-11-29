@@ -25,10 +25,10 @@ class UCBalpha(object):
         # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # self._random_offset = np.random.randint(nbArms)  # Exploration starts with this arm
         # self.params = 'alpha: {}, offset: {}'.format(self.alpha, self._random_offset)
-        # TODO do even more randomized, take a random permutation of the arm
+        # XXX do even more randomized, take a random permutation of the arm
         self._initial_exploration = np.random.choice(nbArms, size=nbArms, replace=False)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
-        print("One UCBalpha player with _initial_exploration =", self._initial_exploration)  # DEBUG
+        # print("One UCBalpha player with _initial_exploration =", self._initial_exploration)  # DEBUG
 
     def __str__(self):
         return "UCB1 (" + self.params + ")"

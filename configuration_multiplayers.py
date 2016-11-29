@@ -30,7 +30,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 # HORIZON = 40000
-HORIZON = 5000
+# HORIZON = 5000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -40,7 +40,7 @@ REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
 # REPETITIONS = 8
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -292,7 +292,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=4).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
-        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
+        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.01).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs

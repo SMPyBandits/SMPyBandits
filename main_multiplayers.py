@@ -63,7 +63,8 @@ if __name__ == '__main__':
             mkdir(plot_dir)
 
         # Set plotting mode to interactive
-        if interactive: plt.interactive(True)
+        if interactive:
+            plt.interactive(True)
 
         savefig = os.path.join(plot_dir, imagename)
         # Plotting the decentralized rewards
@@ -79,18 +80,19 @@ if __name__ == '__main__':
         # savefig = savefig.replace('main', 'main_BestArmPulls')
         # print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
         # evaluation.plotBestArmPulls(envId, savefig=savefig)
-        evaluation.plotBestArmPulls(envId)
+        evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
 
         # # Also plotting the probability of transmission on a free channel
         # savefig = savefig.replace('main', 'main_FreeTransmissions')
         # print(" - Plotting the probability of transmission on a free channel, and saving the plot to {} ...".format(savefig))
         # evaluation.plotFreeTransmissions(envId, savefig=savefig)
-        evaluation.plotFreeTransmissions(envId)
+        # evaluation.plotFreeTransmissions(envId)  # XXX To plot without saving
 
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
         evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
 
-        if interactive: input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        if interactive:
+            input("\n\nCan we continue to the next environment? [Enter]")
     # Done
