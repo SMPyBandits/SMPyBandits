@@ -186,8 +186,7 @@ class EvaluatorMultiPlayers(object):
             plt.semilogx(Y)
         else:
             plt.plot(Y)
-        strPlayers = '{} players: {}'.format(self.nbPlayers, '\n'.join(wrap(', '.join(str(player) for player in self.players), width=130)))
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + strPlayers)
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + self.strPlayers())
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players M = {} (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
@@ -257,8 +256,7 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.figure()
         if piechart:
-            strPlayers = '{} players: {}'.format(self.nbPlayers, '\n'.join(wrap(', '.join(str(player) for player in self.players), width=130)))
-            plt.xlabel(strPlayers)  # DONE split this in new lines if it is too long!
+            plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
         else:
@@ -287,6 +285,21 @@ class EvaluatorMultiPlayers(object):
             player = self.players[k]
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))
         return lastY, index_of_sorting
+
+    def strPlayers(self, width=130):
+        from re import search
+        listStrPlayers = [str(player) for player in self.players]
+        if len(set(listStrPlayers)) == 1:  # Unique user
+            text = listStrPlayers[0]
+            # TODO do this for all str(player) before the set()
+            m = search('<[^>]+>', text).group(0)
+            if m[0] == '<' and m[-1] == '>':
+                text = m[1:-1]
+        else:
+            text = ', '.join(listStrPlayers)
+        text = '\n'.join(wrap(text, width=width))
+        text = '{} players: {}'.format(self.nbPlayers, text)
+        return text
 
 
 # Helper function for the parallelization

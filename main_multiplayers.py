@@ -61,7 +61,7 @@ if __name__ == '__main__':
             mkdir(plot_dir)
 
         # Set plotting mode to interactive
-        # plt.interactive(True)
+        plt.interactive(True)
 
         savefig = os.path.join(plot_dir, imagename)
         # Plotting the decentralized rewards
@@ -88,5 +88,5 @@ if __name__ == '__main__':
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
         evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
 
-        # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done
