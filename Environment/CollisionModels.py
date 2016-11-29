@@ -47,9 +47,9 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chosed it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            # FIXME should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-            player.getReward(choices[i], 0)
-            # FIXME player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
+            # XXX should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
+            player.getReward(choices[i], 0)  # FIXME Strong assumption on the model
+            # XXX player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
             if hasattr(player, 'handleCollision'):
                 player.handleCollision(t, choices[i], rewards[i])
                 # TODO had this to some multi-players policies
@@ -99,9 +99,9 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
             pulls[i, choices[i]] += 1
             for j in players_who_chosed_it:
                 if i != j:
-                    # FIXME should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-                    players[j].getReward(choices[j], 0)
-                    # FIXME player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
+                    # XXX should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
+                    players[j].getReward(choices[j], 0)  # FIXME Strong assumption on the model
+                    # XXX player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
                     if hasattr(players[j], 'handleCollision'):
                         players[j].handleCollision(t, choices[j], rewards[j])
                         # TODO had this to some multi-players policies
@@ -147,9 +147,9 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
             pulls[i, choices[i]] += 1
             for j in players_who_chosed_it:
                 if i != j:
-                    # FIXME should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-                    players[j].getReward(choices[j], 0)
-                    # FIXME player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
+                    # XXX should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
+                    players[j].getReward(choices[j], 0)  # FIXME Strong assumption on the model
+                    # XXX player.handleCollision(t, choices[i], rewards[i]) should be called to inform the user that there were a collision
                     if hasattr(players[j], 'handleCollision'):
                         players[j].handleCollision(t, choices[j], rewards[j])
                         # TODO had this to some multi-players policies

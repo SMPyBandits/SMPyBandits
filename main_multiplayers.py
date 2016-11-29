@@ -20,10 +20,12 @@ from configuration_multiplayers import configuration
 plot_dir = "plots"
 semilogx = False
 piechart = True
-
 # Whether to do the plots or not
 do_plot = False
 do_plot = True
+# Whether to show all plots, or one by one
+interactive = True
+interactive = False  # Seems to be the only mode which is working well
 
 
 if __name__ == '__main__':
@@ -61,7 +63,7 @@ if __name__ == '__main__':
             mkdir(plot_dir)
 
         # Set plotting mode to interactive
-        plt.interactive(True)
+        if interactive: plt.interactive(True)
 
         savefig = os.path.join(plot_dir, imagename)
         # Plotting the decentralized rewards
@@ -77,16 +79,18 @@ if __name__ == '__main__':
         # savefig = savefig.replace('main', 'main_BestArmPulls')
         # print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
         # evaluation.plotBestArmPulls(envId, savefig=savefig)
+        evaluation.plotBestArmPulls(envId)
 
         # # Also plotting the probability of transmission on a free channel
         # savefig = savefig.replace('main', 'main_FreeTransmissions')
         # print(" - Plotting the probability of transmission on a free channel, and saving the plot to {} ...".format(savefig))
         # evaluation.plotFreeTransmissions(envId, savefig=savefig)
+        evaluation.plotFreeTransmissions(envId)
 
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
         evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
 
-        input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        if interactive: input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
     # Done
