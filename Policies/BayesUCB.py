@@ -20,7 +20,7 @@ class BayesUCB(IndexPolicy):
         self.posterior = [None] * nbArms  # List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        self.params = 'posterior: ' + repr(posterior)
+        self.params = 'posterior: {}'.format(posterior)
 
     def startGame(self):
         self.t = 0

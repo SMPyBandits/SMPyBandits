@@ -21,7 +21,9 @@ class UCBalpha(object):
         self.pulls = np.zeros(nbArms)
         self.rewards = np.zeros(nbArms)
         self.t = -1
-        self.params = 'alpha:' + repr(alpha)
+        # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
+        self._random_offset = np.random.randint(nbArms)  # Exploration starts with this arm
+        self.params = 'alpha: {}, offset: {}'.format(self.alpha, self._random_offset)
 
     def __str__(self):
         return "UCB1 (" + self.params + ")"
@@ -32,12 +34,12 @@ class UCBalpha(object):
         self.rewards = np.zeros(self.nbArms)
 
     def choice(self):
-        if self.t < self.nbArms:
-            arm = self.t % self.nbArms
+        if self.t < self.nbArms:  # Force to first visit each arm
+            arm = (self.t + self._random_offset) % self.nbArms
         else:
-            # print(self.rewards, self.pulls, self.t)
+            # print(self.rewards, self.pulls, self.t)  # DEBUG
             arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))
-            # XXX should be uniformly chosen if more than one arm has the highest index
+            # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
         self.pulls[arm] += 1
         return arm
 

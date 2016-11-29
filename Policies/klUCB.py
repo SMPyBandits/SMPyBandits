@@ -27,8 +27,7 @@ class klUCB(IndexPolicy):
         self.lower = lower
         self.klucb = klucb
         self.tolerance = tolerance
-        self.params = 'amplitude:' + repr(self.amplitude) + \
-                      ', lower:' + repr(self.lower)
+        self.params = 'amplitude: {}, lower: {}'.format(self.amplitude, self.lower)
 
     def __str__(self):
         return "klUCB"

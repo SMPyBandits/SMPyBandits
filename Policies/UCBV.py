@@ -21,7 +21,7 @@ class UCBV(IndexPolicy):
         super(UCBV, self).__init__(nbArms)
         self.amplitude = amplitude
         self.lower = lower
-        self.rewardsCorrected = np.zeros(nbArms)
+        self.rewardsSquared = np.zeros(nbArms)
         self.params = 'amplitude: ' + repr(amplitude) + ', lower: ' + repr(lower)
 
     def __str__(self):
@@ -31,18 +31,18 @@ class UCBV(IndexPolicy):
         self.t = 0
         self.pulls = np.zeros(self.nbArms)
         self.rewards = np.zeros(self.nbArms)
-        self.rewardsCorrected = np.zeros(self.nbArms)
+        self.rewardsSquared = np.zeros(self.nbArms)
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
             return float('+infinity')
         else:
-            m = self.rewards[arm] / self.pulls[arm]
-            v = self.rewardsCorrected[arm] / self.pulls[arm] - m * m
-            return m + sqrt(2 * log(self.t) * v / self.pulls[arm]) + 3 * self.amplitude * log(self.t) / self.pulls[arm]
+            mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
+            variance = (self.rewardsSquared[arm] / self.pulls[arm]) - mean ** 2  # Variance estimate
+            return mean + sqrt(2.0 * log(self.t) * variance / self.pulls[arm]) + 3.0 * self.amplitude * log(self.t) / self.pulls[arm]
 
     def getReward(self, arm, reward):
         self.t += 1
         self.pulls[arm] += 1
         self.rewards[arm] += reward
-        self.rewardsCorrected[arm] += reward**2
+        self.rewardsSquared[arm] += reward ** 2

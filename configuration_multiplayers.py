@@ -40,7 +40,7 @@ REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
 # REPETITIONS = 8
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -61,7 +61,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 13    # Less that the number of arms
+# NB_PLAYERS = 13    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
 
@@ -289,7 +289,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=4).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
+        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
+        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
