@@ -30,21 +30,20 @@ class CyclingBest(object):
         self.nb_bestArms = len(bestArms)
         # self.params = '{}, {}'.format(str(offset), str(bestArms))
         self.params = str(offset)
-        self._t = -1
+        self.t = -1
 
     def __str__(self):
         return "CyclingBest({})".format(self.params)
 
     def startGame(self):
-        self._t = 0
+        pass
 
     def getReward(self, arm, reward):
         pass
 
     def choice(self):
-        c = self.bestArms[(self.offset + self._t) % self.nb_bestArms]
-        self._t += 1
-        return c
+        self.t += 1
+        return self.bestArms[(self.offset + self.t) % self.nb_bestArms]
 
 
 class OracleFair(object):

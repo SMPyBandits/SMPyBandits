@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-""" Selfish: a multi-player policy where every player is selfish, they do not try to handle the collisions.
+""" Selfish: a multi-player policy where every player is selfish, playing on their side.
+
+- without knowing how many players there is,
+- and not even knowing that they should try to avoid collisions.
 """
 
 __author__ = "Lilian Besson"
@@ -11,7 +14,10 @@ from .ChildPointer import ChildPointer
 
 
 class Selfish(object):
-    """ Selfish: a multi-player policy where every player is selfish, they do not try to handle the collisions.
+    """ Selfish: a multi-player policy where every player is selfish, playing on their side (without.
+
+    - nowing how many players there is, and
+    - not even knowing that they should try to avoid collisions.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, *args, **kwargs):
@@ -42,14 +48,17 @@ class Selfish(object):
         return "Selfish({})".format(self.params)
 
     def startGame(self):
+        # XXX Not used right now!
         for player in self._players:
             player.startGame()
 
     def getReward(self, arm, reward):
+        # XXX Not used right now!
         for player in self._players:
             player.getReward(arm, reward)()
 
     def choice(self):
+        # XXX Not used right now!
         choices = np.zeros(self.nbPlayers)
         for i, player in enumerate(self._players):
             choices[i] = player.choice()

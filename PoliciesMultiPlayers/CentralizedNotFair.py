@@ -66,11 +66,13 @@ class CentralizedNotFair(object):
             self._affectations = np.zeros(nbPlayers, dtype=int)
             self._affectations[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
             # Try to minimize the number of doubled affectations, so all the other players are affected to the *same* arm
+            # 1. first option : chose a random arm, put everyone else in it. Plus: minimize collisions, Minus: maybe it's a bad arm
             trashArm = np.random.choice(nbArms)
-            self._affectations[nbArms:] = trashArm
             # XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!)
+            self._affectations[nbArms:] = trashArm
+            # 2. second option : chose a random affectation. Plus: minimize risk, Minus: increase collisions
             # self._affectations[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
-        # Shuffle it once, just to be fair in average
+        # Shuffle it once, just to be fair, IN AVERAGE (by repetitions)
         np.random.shuffle(self._affectations)
         print("CentralizedNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
@@ -98,14 +100,17 @@ class CentralizedNotFair(object):
                     print(" - For arm number {}, there is {} different child players affected on this arm ...".format(armId, nbAffected))
 
     def startGame(self):
+        # XXX Not used right now!
         for player in self._players:
             player.startGame()
 
     def getReward(self, arm, reward):
+        # XXX Not used right now!
         for player in self._players:
             player.getReward(arm, reward)()
 
     def choice(self):
+        # XXX Not used right now!
         choices = np.zeros(self.nbPlayers)
         for i, player in enumerate(self._players):
             choices[i] = player.choice()

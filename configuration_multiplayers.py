@@ -136,127 +136,6 @@ configuration = {
     #         "params": [(0.1, 0.5), (0.2, 0.5), (0.3, 0.5), (0.4, 0.5), (0.5, 0.5), (0.6, 0.5), (0.7, 0.5), (0.8, 0.5), (0.9, 0.5)]
     #     },
     # ],
-    # --- Defining each player manually
-    # "players": [
-    #     # --- Stupid algorithm
-    #     {
-    #         "archtype": Uniform,   # The stupidest policy
-    #         "params": {
-    #         }
-    #     },
-    #     # # --- Static or perfect (toy) algorithm
-    #     # {
-    #     #     "archtype": TakeFixedArm,   # The static policy: always selects one arm
-    #     #     "params": {
-    #     #         "armIndex": 16
-    #     #     }
-    #     # },
-    #     # --- Take randomly one arm from a fixed set
-    #     # {
-    #     #     "archtype": UniformOnSome,
-    #     #     "params": {
-    #     #         "armIndexes": [0, 16]
-    #     #     }
-    #     # },
-    #     {
-    #         "archtype": UniformOnSome,
-    #         "params": {  # Example: one of the best arms
-    #             "armIndexes": [13, 14, 15, 16]
-    #         }
-    #     },
-    #     {
-    #         "archtype": UniformOnSome,
-    #         "params": {
-    #             "armIndexes": [6, 7, 8, 9]
-    #         }
-    #     },
-    #     {
-    #         "archtype": UniformOnSome,
-    #         "params": {
-    #             "armIndexes": [0, 1, 15, 16]
-    #         }
-    #     },
-    #     {
-    #         "archtype": UniformOnSome,
-    #         "params": {  # Example: one of the worse arms
-    #             "armIndexes": [0, 1, 2, 3]
-    #         }
-    #     },
-    #     # # --- Epsilon-... algorithms
-    #     # {
-    #     #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-    #     #     "params": {
-    #     #         "epsilon": EPSILON
-    #     #     }
-    #     # },
-    #     # {
-    #     #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-    #     #     "params": {
-    #     #         "epsilon": EPSILON,
-    #     #         "decreasingRate": 0.005,
-    #     #     }
-    #     # },
-    #     # {
-    #     #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-    #     #     "params": {
-    #     #         "epsilon": EPSILON,
-    #     #         "horizon": HORIZON
-    #     #     }
-    #     # },
-    #     # # --- UCB algorithms
-    #     # {
-    #     #     "archtype": UCB,   # This basic UCB is very worse than the other
-    #     #     "params": {}
-    #     # },
-    #     # {
-    #     #     "archtype": UCBV,   # UCB with variance term
-    #     #     "params": {}
-    #     # },
-    #     # # # --- Softmax algorithms
-    #     # {
-    #     #     "archtype": Softmax,   # This basic Softmax is very bad
-    #     #     "params": {
-    #     #         "temperature": TEMPERATURE
-    #     #     }
-    #     # },
-    #     # # --- Thompson algorithms
-    #     # {
-    #     #     "archtype": Thompson,
-    #     #     "params": {}
-    #     # },
-    #     # # --- KL algorithms
-    #     # {
-    #     #     "archtype": klUCB,
-    #     #     "params": {}
-    #     # },
-    #     # {
-    #     #     "archtype": BayesUCB,
-    #     #     "params": {}
-    #     # },
-    #     # # --- AdBandit with different alpha parameters
-    #     # {
-    #     #     "archtype": AdBandit,
-    #     #     "params": {
-    #     #         "alpha": 0.5,
-    #     #         "horizon": HORIZON
-    #     #     }
-    #     # },
-    #     # # {
-    #     # #     "archtype": AdBandit,
-    #     # #     "params": {
-    #     # #         "alpha": 0.125,
-    #     # #         "horizon": HORIZON
-    #     # #     }
-    #     # # },
-    # ],
-    # --- Using the same type of player for all players:
-    # "players": [
-    #     {
-    #         "archtype": TakeRandomFixedArm,
-    #         "params": {}
-    #     }
-    #     for _ in range(NB_PLAYERS)
-    # ],
 }
 
 
@@ -282,7 +161,7 @@ if TEST_MULTIPLAYER_POLICY:
         raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     configuration.update({
         # # --- Defining manually each child
-        # "players": [TakeFixedArm(nbArms, 16) for _ in range(NB_PLAYERS)]
+        # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
         # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
         # --- Defining each player as one child of a multi-player policy
         # # --- Using multi-player Selfish policy
@@ -299,10 +178,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using multi-player Centralized policy
+        # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
         # --- Using multi-player Oracle policy
-        # XXX they need a perfect knowledge on the arms, even this is not physically plausible
+        # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
         # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
         # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })

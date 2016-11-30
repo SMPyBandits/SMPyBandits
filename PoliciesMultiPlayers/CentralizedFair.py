@@ -22,22 +22,22 @@ class Cycling(object):
     def __init__(self, nbArms, offset):
         self.nbArms = nbArms
         self.offset = offset
+        # XXX It could be a random permutation, instead of a cycling
         self.params = str(offset)
-        self._t = -1
+        self.t = -1
 
     def __str__(self):
         return "Cycling({})".format(self.params)
 
     def startGame(self):
-        self._t = 0
+        pass
 
     def getReward(self, arm, reward):
         pass
 
     def choice(self):
-        c = (self.offset + self._t) % self.nbArms
-        self._t += 1
-        return c
+        self.t += 1
+        return (self.offset + self.t) % self.nbArms
 
 
 class CentralizedFair(object):
@@ -68,11 +68,11 @@ class CentralizedFair(object):
             self._offsets = np.zeros(nbPlayers, dtype=int)
             self._offsets[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
             # Try to minimize the number of doubled offsets, so all the other players are affected to the *same* arm
+            # 1. first option : chose a random offset, everyone else uses it. Plus: minimize collisions
             trashArm = np.random.choice(nbArms)
             self._offsets[nbArms:] = trashArm
             # XXX this "trash" arm with max number of collision will cycle: that's the best we can do!
-            # self._offsets[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
-        # Shuffle it once, just to be fair in average
+        # Shuffle it once, just to be even more fair in average (by repetitions)
         np.random.shuffle(self._offsets)
         print("CentralizedFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
@@ -100,14 +100,17 @@ class CentralizedFair(object):
                     print(" - For arm number {}, there is {} different child player affected on this arm ...".format(armId + 1, nbAffected))
 
     def startGame(self):
+        # XXX Not used right now!
         for player in self._players:
             player.startGame()
 
     def getReward(self, arm, reward):
+        # XXX Not used right now!
         for player in self._players:
             player.getReward(arm, reward)()
 
     def choice(self):
+        # XXX Not used right now!
         choices = np.zeros(self.nbPlayers)
         for i, player in enumerate(self._players):
             choices[i] = player.choice()
