@@ -168,14 +168,13 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.1).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.01).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-        "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using multi-player Centralized policy
@@ -185,7 +184,7 @@ if TEST_MULTIPLAYER_POLICY:
         # --- Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
         # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })
 # FIXME the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

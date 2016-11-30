@@ -80,6 +80,8 @@ class OracleFair(object):
             # Try to minimize the number of doubled offsets, so all the other players are affected to the *same* arm
             worseArm = np.argmin(means)
             self._offsets[nbArms:] = worseArm
+            # FIXME improve this, when there is more player than arms, this is not optimal
+            # FIXME indeed, all the collisions will first be in worseArm, but they all cycle! That's bad
             # XXX this "trash" arm with max number of collision will cycle: that's the best we can do!
             # self._offsets[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
         # Shuffle it once, just to be fair in average

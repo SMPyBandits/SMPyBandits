@@ -163,9 +163,9 @@ class EvaluatorMultiPlayers(object):
             Y = self.getReward(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * i + markers_on))
+                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
-                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * i + markers_on))
+                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
         plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
@@ -202,7 +202,7 @@ class EvaluatorMultiPlayers(object):
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(player), color=colors[i])
-        plt.legend(loc='lower right', numpoints=1)
+        plt.legend(loc='upper right', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
