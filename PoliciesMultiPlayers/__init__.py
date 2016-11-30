@@ -26,6 +26,10 @@ from .OracleFair import OracleFair
 
 
 # FIXME implement it
+# from .MC import MC
+# from .DMC import DMC  # XXX Dynamic setting!
+
+# FIXME implement it
 # from .MEGA import MEGA
 
 # FIXME implement it
