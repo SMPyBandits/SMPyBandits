@@ -289,11 +289,10 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=4).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
-        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.01).childs
+        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.1).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
