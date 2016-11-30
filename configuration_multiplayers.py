@@ -171,10 +171,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs
-        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.1).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.1).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.01).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+        "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using multi-player Centralized policy

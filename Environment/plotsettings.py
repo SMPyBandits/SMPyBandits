@@ -23,7 +23,7 @@ sns.set(context="talk",
         style="darkgrid",
         palette="hls" if HLS else "husl",
         font="sans-serif",
-        font_scale=1.1
+        font_scale=1.0
         )
 
 

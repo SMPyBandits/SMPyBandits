@@ -231,6 +231,10 @@ class EvaluatorMultiPlayers(object):
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
+    # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
+    # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
+    # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
+
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
         Y = np.zeros(1 + nbArms)
@@ -245,7 +249,7 @@ class EvaluatorMultiPlayers(object):
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:.3f}  ...".format(labels[armId], Y[armId]))
-            if Y[armId] < 1e-3:
+            if Y[armId] < 1e-3:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
@@ -259,7 +263,8 @@ class EvaluatorMultiPlayers(object):
         if piechart:
             plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
-            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
+            # FIXME this pie chart display labels too close for small slices
+            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45, autopct='%.4g%%')
         else:  # TODO do an histogram instead of this piechart
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
