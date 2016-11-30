@@ -110,7 +110,7 @@ class MusicalChair(object):
             if self._nbCollision == self.T0:  # 1st case, we only saw collisions!
                 self.nbPlayers = self.nbArms  # Worst case, pessimist estimate of the nb of players
             else:  # 2nd case, we didn't see only collisions
-                self.nbPlayers = round(1 + np.log((self.TO - self._nbCollision) / self.TO) / np.log(1. - 1. / self.nbArms))
+                self.nbPlayers = int(round(1 + np.log((self.T0 - self._nbCollision) / self.T0) / np.log(1. - 1. / self.nbArms)))
         # Finish, next step
         self.t += 1
 
@@ -121,3 +121,4 @@ class MusicalChair(object):
         elif self.state == STATE_2__MusicalChair:
             self._chair = None  # Cannot stay sitted here
             # FIXME should be different!
+            # XXX Idea : either use a 3rd state, or tweaks with t and self._time_sitted or something
