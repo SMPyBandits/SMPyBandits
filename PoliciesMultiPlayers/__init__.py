@@ -26,7 +26,7 @@ from .OracleFair import OracleFair
 
 
 # FIXME implement it
-# from .MC import MC
+# from .MusicalChair import MusicalChair    # FIXME no it is a single-player policy!
 # from .DMC import DMC  # XXX Dynamic setting!
 
 # FIXME implement it

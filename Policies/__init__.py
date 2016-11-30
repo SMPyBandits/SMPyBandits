@@ -32,3 +32,6 @@ from .AdBandits import AdBandit
 
 # Mine, aggregated ones
 from .Aggr import Aggr
+
+# Mine, implemented from state-of-the-art papers
+from .MusicalChair import MusicalChair  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)

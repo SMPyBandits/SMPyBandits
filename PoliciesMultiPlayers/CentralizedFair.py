@@ -47,7 +47,7 @@ class CentralizedFair(object):
     def __init__(self, nbPlayers, nbArms):
         """
         - nbPlayers: number of players to create (in self._players).
-        - nbArms: number of arms, given as first argument to playerAlgo.
+        - nbArms: number of arms.
 
         Examples:
         >>> s = CentralizedFair(10, 14)

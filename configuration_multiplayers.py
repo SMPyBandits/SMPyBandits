@@ -177,6 +177,9 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
+        # --- Using single-player Musical Chair policy
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, T0=0, T1=HORIZON, nbPlayers=NB_PLAYERS).childs
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, T0=0.25, T1=HORIZON).childs  # Estimate nbPlayers in T0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
@@ -184,7 +187,7 @@ if TEST_MULTIPLAYER_POLICY:
         # --- Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
         # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
     })
 # FIXME the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
