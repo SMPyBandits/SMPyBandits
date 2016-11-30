@@ -264,7 +264,8 @@ class EvaluatorMultiPlayers(object):
             plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
             # FIXME this pie chart display labels too close for small slices
-            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45, autopct='%.4g%%')
+            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
+            # , autopct='%.4g%%'
         else:  # TODO do an histogram instead of this piechart
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts

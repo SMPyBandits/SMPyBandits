@@ -186,13 +186,18 @@ configuration.update({
 - *I know*, it's not clear and not simple to use. Just read the code.
 
 ### Some illustrations of multi-players simulations
-Here are one example of simulation: 6 players independently and selfishly play according to the [`Thompson`](Policies/Thompson.py) policy, against 17 unknown Bernoulli arms, in a [collision model where only the player alone on an arm can sample it and gets some reward](Environment/CollisionModels.py).
+Here are one example of simulation: `M = 6` players independently and selfishly play according to the [`Thompson`](Policies/Thompson.py) policy, against `K = 17` unknown Bernoulli arms, in a [collision model where only the player alone on an arm can sample it and gets some reward](Environment/CollisionModels.py).
 
-- First, their own personal rewards along the time:
-[![5 tests - AdBandit and Aggr](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)
+- First, their own personal *rewards* along the time, showing that all the `M = 6` players achieve similar average reward, about `0.82 × Horizon`. This is a satisfactory result, as the average availability of the best `M` channels is exactly `0.82`: it means that, in average in these 20 simulations, every player achieves a linear reward with the good slope, indicating that they all select their arms among the best `M` channels.
+[![10000 steps - 20 repetition - Thompson personnal rewards](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)](plots/10000_steps__6_Thompson_on_Selfish_multi-players.png)
 
-- Then, the centralized regret, which in this case seems to be converging to a constant. That is a very good performance: the regret even stops growing after some 700 steps or so:
-[![2000 steps - 100 repetition](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)
+- Then, the centralized regret, which in this case seems to be converging to a constant (or growing very slowly). That is a very good performance: the regret almost stops growing after some 700 steps or so:
+[![10000 steps - 20 repetition - Thompson selfish](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)](plots/10000_steps__20_repetitions_6_Thompson_on_Selfish_multi-players__centralized_regret.png)
+- The same is obtained for other order-optimal single-player policies (eg. KL-UCB, BayesUCB, UCB1 with good choice of alpha etc), in a purely selfish setting where every `M` player runs locally, without knowing the number of players and the collision model, they are able to learn and find an orthogonal affectation amongst the best `M` channels:
+[![10000 steps - 20 repetition - BayesUCB selfish](plots/10000_steps__20_repetitions_6_BayesUCB_on_Selfish_multi-players__centralized_regret.png)](plots/10000_steps__20_repetitions_6_BayesUCB_on_Selfish_multi-players__centralized_regret.png)
+
+- Of course, this is not perfect, as the limit value of the regret is quite high, when compared to an ideal setting with communication and full knowledge of the arm ([`OracleFair`](PoliciesMultiPlayers/OracleFair.py), the best possible policy):
+[![10000 steps - 20 repetition - OracleFair](plots/10000_steps__20_repetitions_6_OracleFair_on_Oracle_multi-players__centralized_regret.png)](plots/10000_steps__20_repetitions_6_OracleFair_on_Oracle_multi-players__centralized_regret.png)
 
 ----
 
