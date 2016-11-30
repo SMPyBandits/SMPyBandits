@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB-V policy for bounded bandits.
+""" The UCB-V policy for bounded bandits, with a variance correction term.
 Reference: [Audibert, Munos, & Szepesvári - Theoret. Comput. Sci., 2009].
 """
 
@@ -13,7 +13,7 @@ from .IndexPolicy import IndexPolicy
 
 
 class UCBV(IndexPolicy):
-    """ The UCB-V policy for bounded bandits.
+    """ The UCB-V policy for bounded bandits, with a variance correction term.
     Reference: [Audibert, Munos, & Szepesvári - Theoret. Comput. Sci., 2009].
     """
 
@@ -22,7 +22,7 @@ class UCBV(IndexPolicy):
         self.amplitude = amplitude
         self.lower = lower
         self.rewardsSquared = np.zeros(nbArms)
-        self.params = 'amplitude: ' + repr(amplitude) + ', lower: ' + repr(lower)
+        self.params = 'amplitude: {}, lower: {}'.format(amplitude, lower)
 
     def __str__(self):
         return "UCBV"

@@ -12,10 +12,8 @@ from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
 from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
-
 # Import algorithms
 from Policies import *
-
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
@@ -92,36 +90,40 @@ configuration = {
     # "random_invert": False,
     # "nb_random_events": 5,
     # Arms
-    # "environment": [  # Bernoulli arms
-    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.5, 0.9]
-    #     # },
-    #     {   # A very easy problem, but it is used in a lot of articles
-    #         "arm_type": Bernoulli,
-    #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    #     },
-    #     # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-    #     # },
-    #     # {   # Lots of bad arms, significative difference between the best and the others
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-    #     # },
-    #     # {   # One optimal arm, much better than the others, but *lots* of bad arms
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-    #     # },
-    # ],
-    # FIXED try with other arms distribution: Exponential
-    "environment": [  # Exponential arms
-        {   # An example problem with  arms
-            "arm_type": Exponential,
-            # "params": [(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1)]
-            "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    "environment": [  # Bernoulli arms
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
+        # {   # Lots of bad arms, significative difference between the best and the others
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        # },
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        # },
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
+    # # FIXED try with other arms distribution: Exponential
+    # "environment": [  # Exponential arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Exponential,
+    #         # "params": [(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1)]
+    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #     },
+    # ],
     # FIXED try with other arms distribution: Gaussian
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
@@ -157,25 +159,18 @@ configuration = {
         #     }
         # },
         # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
+        # # {
+        # #     "archtype": UCB,   # This basic UCB is very worse than the other
+        # #     "params": {}
+        # # },
+        # # {
+        # #     "archtype": UCBV,   # UCB with variance term
+        # #     "params": {}
+        # # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         # "alpha": 4          # Like usual UCB
-        #         "alpha": 1          # Limit case
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1.25          # Above the alpha=4 like usual UCB
+        #         "alpha": 1          # Below the alpha=4 like old classic UCB
         #     }
         # },
         # {
@@ -184,12 +179,12 @@ configuration = {
         #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
         # --- Softmax algorithms
         {
             "archtype": Softmax,   # This basic Softmax is very bad
@@ -223,13 +218,6 @@ configuration = {
                 "horizon": HORIZON
             }
         },
-        # # {
-        # #     "archtype": AdBandit,
-        # #     "params": {
-        # #         "alpha": 0.25,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
         {
             "archtype": AdBandit,
             "params": {
@@ -244,41 +232,6 @@ configuration = {
         # #         "horizon": HORIZON
         # #     }
         # # },
-        # # {
-        # #     "archtype": AdBandit,
-        # #     "params": {
-        # #         "alpha": 1,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
-        # # --- Manually, one Aggr policy
-        # {
-        #     "archtype": Aggr,
-        #     "params": {
-        #         "learningRate": LEARNING_RATE,
-        #         "children": [
-        #             {
-        #                 "archtype": Thompson,
-        #                 "params": {}
-        #             },
-        #             {
-        #                 "archtype": klUCB,
-        #                 "params": {}
-        #             },
-        #             {
-        #                 "archtype": BayesUCB,
-        #                 "params": {}
-        #             },
-        #             {
-        #                 "archtype": AdBandit,
-        #                 "params": {
-        #                     "alpha": 0.5,
-        #                     "horizon": HORIZON
-        #                 }
-        #             },
-        #         ]
-        #     }
-        # },
     ]
 }
 

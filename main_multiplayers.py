@@ -94,5 +94,5 @@ if __name__ == '__main__':
         evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
 
         if interactive:
-            input("\n\nCan we continue to the next environment? [Enter]")
+            print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done

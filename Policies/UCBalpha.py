@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB1 (UCB-alpha) index policy.
+""" The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
 Reference: [Auer et al. 02].
 """
 
@@ -10,7 +10,7 @@ import numpy as np
 
 
 class UCBalpha(object):
-    """ The UCB1 (UCB-alpha) index policy.
+    """ The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
     Reference: [Auer et al. 02].
     """
 
@@ -40,8 +40,8 @@ class UCBalpha(object):
 
     def choice(self):
         if self.t < self.nbArms:  # Force to first visit each arm in a certain random order
-            # arm = (self.t + self._random_offset) % self.nbArms
-            arm = self._initial_exploration[self.t]
+            # arm = (self.t + self._random_offset) % self.nbArms  # XXX cycling with an offset
+            arm = self._initial_exploration[self.t]  # Better: random permutation!
         else:
             # print(self.rewards, self.pulls, self.t)  # DEBUG
             arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))

@@ -18,7 +18,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
+from .plotsettings import DPI, signature, maximizeWindow, palette
 from .Result import Result
 from .MAB import MAB
 
@@ -105,17 +105,17 @@ class Evaluator(object):
                 self.BestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                 self.pulls[envId][polId, :] += r.pulls
 
-    def getPulls(self, policyId, environmentId):
+    def getPulls(self, policyId, environmentId=0):
         return self.pulls[environmentId][policyId, :] / float(self.repetitions)
 
-    def getBestArmPulls(self, policyId, environmentId):
+    def getBestArmPulls(self, policyId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
-    def getReward(self, policyId, environmentId):
+    def getReward(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
 
-    def getRegret(self, policyId, environmentId):
+    def getRegret(self, policyId, environmentId=0):
         return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
 
     def plotRegrets(self, environmentId, savefig=None, semilogx=False):
@@ -158,7 +158,8 @@ class Evaluator(object):
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
-    def printFinalRanking(self, environmentId):
+    def printFinalRanking(self, environmentId=0):
+        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
@@ -178,22 +179,6 @@ class Evaluator(object):
 
 # Helper function for the parallelization
 
-def delayed_start(self, env, policy, polId, envId):
-    print("\n- Evaluating: {} ...".format(policy))
-    if self.useJoblib:
-        results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-            joblib.delayed(delayed_play)(env, policy, self.horizon)
-            for _ in range(self.repetitions)
-        )
-    else:
-        results = []
-        for _ in range(self.repetitions):
-            results.append(delayed_play(env, policy, self.horizon))
-    for result in results:
-        self.rewards[polId, envId, :] += np.cumsum(result.rewards)
-        self.pulls[envId][polId, :] += result.pulls
-
-
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events):
@@ -201,9 +186,9 @@ def delayed_play(env, policy, horizon,
     env = deepcopy(env)
     policy = deepcopy(policy)
     horizon = deepcopy(horizon)
-
+    # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon)
+    result = Result(env.nbArms, horizon)  # One Result object, for every policy
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
     if nb_random_events is None or nb_random_events <= 0:
