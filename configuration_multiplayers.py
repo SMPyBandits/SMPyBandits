@@ -25,12 +25,12 @@ from Environment.CollisionModels import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 20000
+HORIZON = 40000
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 40000
+# HORIZON = 20000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -61,8 +61,8 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 # NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 13    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 13    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
 
@@ -170,9 +170,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.5).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).childs  # This one is efficient!
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.1).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
@@ -180,10 +179,10 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using single-player Musical Chair policy
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # Tweaked MusicalChair, with knowledge of nbPlayers
-        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.5, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # XXX Tweaked MusicalChair, with knowledge of nbPlayers
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.5, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs

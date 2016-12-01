@@ -69,9 +69,6 @@ class MusicalChair(object):
         else:  # No need for an initial phase if nbPlayers is known (given)
             self.Time0 = 0
             self.state = State.MusicalChair
-        # print("\nA MusicalChair player, after call to startGame() ...")  # DEBUG
-        # for k in [k for k in dir(self) if k[:2] + k[-2:] != '____']:  # DEBUG
-        #     print(" - self.{} = {}".format(k, getattr(self, k)))  # DEBUG
 
     def choice(self):
         self.t += 1
@@ -79,25 +76,25 @@ class MusicalChair(object):
             # If the player is already sit, nothing to do
             self.state = State.Sitted  # We can stay sitted: no collision right after we sit
             # If we can chose this chair like this, it's because we were already sitted, without seeing a collision
-            print("\n- A MusicalChair player chose arm {} because it's his chair, and time t = {} ...".format(self._chair, self.t))  # DEBUG
+            # print("\n- A MusicalChair player chose arm {} because it's his chair, and time t = {} ...".format(self._chair, self.t))  # DEBUG
             return self._chair
         elif self.state == State.InitialPhase:
             # Play as initial phase: chose a random arm, uniformly among all the K arms
             i = np.random.randint(self.nbArms)
-            print("\n- A MusicalChair player chose a random arm {} among [1,...,{}] as it is in state InitialPhase, and time t = {} ...".format(i, self.nbArms, self.t))  # DEBUG
+            # print("\n- A MusicalChair player chose a random arm {} among [1,...,{}] as it is in state InitialPhase, and time t = {} ...".format(i, self.nbArms, self.t))  # DEBUG
             return i
         elif self.state == State.MusicalChair:
             # Play as musical chair: chose a random arm, among the M bests
             k = np.random.randint(self.nbPlayers)
             i = self._A[k]  # Random arm among the M bests
             self._chair = i  # Assume that it would be a good chair
-            print("\n- A MusicalChair player chose a random arm i={} of index={} among the {}-best arms in [1,...,{}] as it is in state MusicalChair, and time t = {} ...".format(i, k, self.nbPlayers, self.nbArms, self.t))  # DEBUG
+            # print("\n- A MusicalChair player chose a random arm i={} of index={} among the {}-best arms in [1,...,{}] as it is in state MusicalChair, and time t = {} ...".format(i, k, self.nbPlayers, self.nbArms, self.t))  # DEBUG
             return i
         else:  # TODO remove this
             raise ValueError("MusicalChair.choice() should never be in this case. Fix this code, quickly!")
 
     def getReward(self, arm, reward):
-        print("- A MusicalChair player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
+        # print("- A MusicalChair player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
         # If not collision, receive a reward after pulling the arm
         if self.state == State.InitialPhase:
             # Count the observation, update arm cumulated reward
@@ -132,7 +129,7 @@ class MusicalChair(object):
 
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         """
-        print("- A MusicalChair player saw a collision on arm {}, in state {}, and time t = {} ...".format(arm, self.state, self.t))  # DEBUG
+        # print("- A MusicalChair player saw a collision on arm {}, in state {}, and time t = {} ...".format(arm, self.state, self.t))  # DEBUG
         if self.state == State.InitialPhase:
             # count one more collision in this initial phase (no matter the arm)
             self._nbCollision += 1
