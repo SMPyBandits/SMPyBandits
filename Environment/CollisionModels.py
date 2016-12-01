@@ -23,6 +23,7 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+from functools import lru_cache
 import numpy as np
 
 
@@ -44,9 +45,9 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            # XXX player.handleCollision(t, choices[i]) should be called to inform the user that there were a collision
+            # player.handleCollision(choices[i]) is called to inform the user that there were a collision
             if hasattr(player, 'handleCollision'):
-                player.handleCollision(t, choices[i])
+                player.handleCollision(choices[i])
                 # TODO had this to some multi-players policies
                 # Example: ALOHA will not visit an arm for some time after seeing a collision!
             else:
@@ -95,14 +96,21 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
             pulls[i, arm] += 1
             for j in players_who_chose_it:
                 if i != j:
-                    # XXX player.handleCollision(t, arm) should be called to inform the user that there were a collision
+                    # player.handleCollision(arm) is called to inform the user that there were a collision
                     if hasattr(players[j], 'handleCollision'):
-                        players[j].handleCollision(t, arm)
+                        players[j].handleCollision(arm)
                         # TODO had this to some multi-players policies
                         # Example: ALOHA will not visit an arm for some time after seeing a collision!
                     else:
                         # XXX should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
                         players[j].getReward(arm, 0)  # FIXME Strong assumption on the model
+
+
+# FIXME check that this is fine
+@lru_cache(maxsize=None, typed=False)  # XXX size is NOT bounded... bad!
+def random_distances(players):
+    # Maybe use a cache mecanism ? with a functools.lru_cache wrapping this function distances ?
+    return np.random.random_sample(len(players))
 
 
 def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=None):
@@ -113,10 +121,10 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     - If distances is not given, it is either generated randomly (random numbers in [0, 1]) or is a linspace of nbPlayers values in (0, 1), equally spacen (default).
     """
     if distances is None:  # Uniformly spacen distances, in (0, 1)
-        # FIXME find a way to generate the distances only once, from the function side, and then use it
         distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]
     if distances == 'random':  # Or fully uniform
-        distances = np.random.random_sample(len(players))
+        # FIXME find a way to generate the distances only once, from the function side, and then use it
+        random_distances(players)
     # For each arm, explore who chose it
     for arm in range(len(arms)):
         # If he is alone, sure to be chosen, otherwise only the closest one can sample
@@ -142,9 +150,9 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
             for j in players_who_chose_it:
                 # The other players cannot
                 if i != j:
-                    # XXX player.handleCollision(t, arm) should be called to inform the user that there were a collision
+                    # player.handleCollision(arm) is called to inform the user that there were a collision
                     if hasattr(players[j], 'handleCollision'):
-                        players[j].handleCollision(t, arm)
+                        players[j].handleCollision(arm)
                         # TODO had this to some multi-players policies
                         # Example: ALOHA will not visit an arm for some time after seeing a collision!
                     else:
