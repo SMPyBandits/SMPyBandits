@@ -43,9 +43,9 @@ class UCB(object):
         else:
             # print(self.rewards, self.pulls, self.t)  # DEBUG
             # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
-            arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
-            # TODO try the g_opt policy (as decribed in rho_rand [Anandkumar et al., 2010])
-            # arm = np.argmax(self.rewards / self.pulls + min(1, np.sqrt((2 * np.log(self.t)) / self.pulls)))
+            # arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
+            # DONE try the g_opt policy (as decribed in rho_rand [Anandkumar et al., 2010]), it seems better
+            arm = np.argmax(self.rewards / self.pulls + np.minimum(1, np.sqrt((2 * np.log(self.t)) / self.pulls)))
         self.pulls[arm] += 1  # XXX why is it here?
         return arm
 

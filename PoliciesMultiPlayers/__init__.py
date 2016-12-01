@@ -24,11 +24,6 @@ from .CentralizedFair import CentralizedFair
 from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
-
-# FIXME implement it
-# from .MusicalChair import MusicalChair    # FIXME no it is a single-player policy!
-# from .DMC import DMC  # XXX Dynamic setting!
-
 # FIXME implement it
 # from .MEGA import MEGA
 

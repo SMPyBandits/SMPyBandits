@@ -32,7 +32,7 @@ REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -71,6 +71,7 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
+TEST_AGGR = False
 TEST_AGGR = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
@@ -159,72 +160,72 @@ configuration = {
         #     }
         # },
         # --- UCB algorithms
-        # # {
-        # #     "archtype": UCB,   # This basic UCB is very worse than the other
-        # #     "params": {}
-        # # },
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
         # # {
         # #     "archtype": UCBV,   # UCB with variance term
         # #     "params": {}
         # # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1          # Below the alpha=4 like old classic UCB
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 4          # Below the alpha=4 like old classic UCB
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
                 "alpha": 0.1          # XXX Below the theoretically acceptable value!
             }
         },
-        # --- Softmax algorithms
-        {
-            "archtype": Softmax,   # This basic Softmax is very bad
-            "params": {
-                "temperature": TEMPERATURE
-            }
-        },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        # # {
-        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # #     "params": {}
-        # # },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
-        # --- AdBandit with different alpha paramters
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.125,
-                "horizon": HORIZON
-            }
-        },
+        # # --- Softmax algorithms
+        # {
+        #     "archtype": Softmax,   # This basic Softmax is very bad
+        #     "params": {
+        #         "temperature": TEMPERATURE
+        #     }
+        # },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
+        #     "params": {}
+        # },
+        # # # {
+        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # # #     "params": {}
+        # # # },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {}
+        # },
+        # # --- AdBandit with different alpha paramters
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # # {
         # #     "archtype": AdBandit,
         # #     "params": {

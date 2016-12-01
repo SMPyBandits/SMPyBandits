@@ -5,19 +5,25 @@
 
 run:
 	make clean ; clear ; make multiplayers
-	# make clean ; clear ; make main3
+single:
+	make clean ; clear ; make main
+multiplayers:
+	make clean ; clear ; make multiplayers
 
 # Runners
-main:
+main2:
 	time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt
-	# time nice -n 20 python2 ./main.py | tee ./logs/main_py2_log.txt
+
+main: main3
 main3:
 	time nice -n 20 ipython3 ./main.py | tee ./logs/main_py3_log.txt
-	# time nice -n 20 python3 ./main.py | tee ./logs/main_py3_log.txt
 
-multiplayers:
+multiplayers2:
+	time nice -n 20 ipython2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+
+multiplayers: multiplayers3
+multiplayers3:
 	time nice -n 20 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
-	# time nice -n 20 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
 # Time profilers
 profile:

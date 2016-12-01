@@ -32,9 +32,10 @@ HORIZON = 10000
 # HORIZON = 20000
 
 # REPETITIONS : number of repetitions of the experiments
-# XXX Should be >= 10 to be stastically trustworthy
+# XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
+REPETITIONS = 100
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -72,8 +73,8 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 # for i in range(NB_PLAYERS):
 #     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
 # def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
-def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  # FIXME try it! Let it compute the random distances, ONCE
-collisionModel = closerOneGetsReward
+# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  #Let it compute the random distances, ONCE by thread, and then cache it
+# collisionModel = closerOneGetsReward
 
 
 # Test one of the multi-players policy
@@ -167,9 +168,9 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
+        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
-        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs

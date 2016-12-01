@@ -45,9 +45,9 @@ class UCBalpha(object):
         else:
             # print(self.rewards, self.pulls, self.t)  # DEBUG
             # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
-            arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))
-            # TODO try the g_opt policy (as decribed in rho_rand [Anandkumar et al., 2010])
-            # arm = np.argmax(self.rewards / self.pulls + min(1, np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls))))
+            # arm = np.argmax(self.rewards / self.pulls + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls)))
+            # DONE try the g_opt policy (as decribed in rho_rand [Anandkumar et al., 2010]), it seems better
+            arm = np.argmax(self.rewards / self.pulls + np.minimum(1, np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls))))
         self.pulls[arm] += 1  # XXX why is it here?
         return arm
 
