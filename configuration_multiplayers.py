@@ -28,10 +28,9 @@ HORIZON = 500
 HORIZON = 20000
 HORIZON = 2000
 HORIZON = 3000
+HORIZON = 5000
 HORIZON = 10000
 # HORIZON = 40000
-# HORIZON = 5000
-HORIZON = 500
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -41,7 +40,7 @@ REPETITIONS = 50
 REPETITIONS = 200
 REPETITIONS = 20
 # REPETITIONS = 8
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -61,16 +60,16 @@ TEST_AGGR = True
 TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
-NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 2    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
 
 # Collision model
 collisionModel = rewardIsSharedUniformly
-collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 collisionModel = noCollision
+collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 # distances = np.random.random_sample(NB_PLAYERS)
 # print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")
@@ -102,10 +101,10 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        },
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
@@ -118,10 +117,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # },
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -180,9 +179,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
-        # --- FIXME try it! Using single-player Musical Chair policy
-        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, T0=0, T1=HORIZON, nbPlayers=NB_PLAYERS).childs
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, T0=0.25, T1=HORIZON).childs  # FIXME Estimate nbPlayers in T0 initial rounds
+        # --- Using single-player Musical Chair policy
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # Tweaked MusicalChair, with knowledge of nbPlayers
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.5, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs

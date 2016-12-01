@@ -72,3 +72,6 @@ class Selfish(object):
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()
+
+    def _handleCollision_one(self, playerId, arm):
+        return self._players[playerId].handleCollision(arm)

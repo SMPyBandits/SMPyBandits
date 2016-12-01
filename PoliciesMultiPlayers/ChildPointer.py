@@ -20,13 +20,17 @@ class ChildPointer(object):
         return self.params
 
     def startGame(self):
-        """ Pass the call to self.mother._startGame_one() with the player'ID number. """
+        """ Pass the call to self.mother._startGame_one(playerId) with the player's ID number. """
         return self.mother._startGame_one(self.playerId)
 
     def getReward(self, arm, reward):
-        """ Pass the call to self.mother._getReward_one() with the player'ID number. """
+        """ Pass the call to self.mother._getReward_one(playerId, arm, reward) with the player's ID number. """
         return self.mother._getReward_one(self.playerId, arm, reward)
 
     def choice(self):
-        """ Pass the call to self.mother._choice_one() with the player'ID number. """
+        """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
         return self.mother._choice_one(self.playerId)
+
+    def handleCollision(self, arm):
+        """ Pass the call to self.mother._handleCollision_one(playerId, arm) with the player's ID number. """
+        return self.mother._handleCollision_one(self.playerId, arm)
