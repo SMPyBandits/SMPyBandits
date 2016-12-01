@@ -282,16 +282,16 @@ class EvaluatorMultiPlayers(object):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         lastY = np.zeros(self.nbPlayers)
         for i, player in enumerate(self.players):
-            Y = self.getRegret(i, environmentId)
+            Y = self.getReward(i, environmentId)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last averageOn% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
         # Sort lastY and give ranking
-        index_of_sorting = np.argsort(lastY)
+        index_of_sorting = np.argsort(-lastY)  # Get them by INCREASING rewards, not decreasing regrets
         for i, k in enumerate(index_of_sorting):
             player = self.players[k]
-            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))
+            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.3f}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))
         return lastY, index_of_sorting
 
     def strPlayers(self, width=130):

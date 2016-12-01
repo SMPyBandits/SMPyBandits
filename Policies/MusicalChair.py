@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
-""" MusicalChair: implementation of the single-player policy from https://arxiv.org/abs/1512.02866.
+""" MusicalChair: implementation of the single-player policy from [a Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
 
-- FIXME write documentation
+- Each player has 3 states, 1st is random exploration, 2nd is musical chair, 3rd is staying sit
+- 1st step
+  - Every player tries uniformly an arm for T0 steps, counting the empirical means of each arm, and the number of observed collisions C_T0
+  - Finally, N* = nbPlayers is estimated based on nb of collisions C_T0, and the N* best arms are computed from their empirical means
+- 2nd step:
+  - Every player chose an arm uniformly, among the N* best arms, until she does not encounter collision right after choosing it
+  - When an arm was chosen by only one player, she decides to sit on this chair (= arm)
+- 3rd step:
+  - Every player stays sitted on her chair for the rest of the game
+  - ==> constant regret if N* is well estimated and if the estimated N* best arms were correct
+  - ==> linear regret otherwise
 """
 from __future__ import print_function
 
@@ -9,13 +19,49 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
-from enum import Enum
+from enum import Enum  # For the different states
+
+
+# --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]
+
+def optimalT0(nbArms, epsilon, delta=0.05):
+    """ Ch. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+
+    >>> optimalT0(2, 0.1, 0.05)     # Just 2 arms !
+    18459                           # ==> That's a LOT of steps for just 2 arms!
+    >>> optimalT0(17, 0.01, 0.05)   # Constant regret with >95% proba
+    27331794                        # ==> That's a LOT of steps!!!
+    >>> optimalT0(17, 0.001, 0.05)  # Reasonable value of epsilon
+    2733179304                      # ==> That's a LOT of steps!!!
+    """
+    K = nbArms
+    T0_1 = (K / 2.) * np.log(2 * K**2 / delta)
+    T0_2 = ((16 * K) / (epsilon**2)) * np.log(4 * K**2 / delta)
+    T0_3 = (K**2 * np.log10(2 / delta**2)) / 0.02   # delta**2 or delta_2 ? Typing mistake in their paper
+    T0 = max(T0_1, T0_2, T0_3)
+    return int(np.ceil(T0))
+
+
+def boundOnFinalRegret(T0, nbPlayers):
+    """ Ch. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+
+    >>> boundOnFinalRegret(18459, 2)       # Crazy constant regret!
+    36948
+    >>> boundOnFinalRegret(27331794, 6)    # Crazy constant regret!!
+    163990852
+    >>> boundOnFinalRegret(2733179304, 6)  # Crazy constant regret!!
+    16399075913
+    """
+    return T0 * nbPlayers + 2 * np.exp(2) * nbPlayers
+
+
+# --- Class MusicalChair
 
 State = Enum('State', ['NotStarted', 'InitialPhase', 'MusicalChair', 'Sitted'])
 
 
 class MusicalChair(object):
-    """ MusicalChair: implementation of the single-player policy from https://arxiv.org/abs/1512.02866.
+    """ MusicalChair: implementation of the single-player policy from [a Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
     """
 
     def __init__(self, nbArms, Time0=0.25, Time1=None, N=None):  # Named argument to give them in any order
@@ -48,20 +94,19 @@ class MusicalChair(object):
         self._A = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX it will then be of size nbPlayers!
         self._nbCollision = 0  # That's the C_Time0 of the paper
         # Implementation details for the common API
-        self.params = ''
         self.t = -1
 
     def __str__(self):
-        self.params = 'N*: {}'.format(self.nbPlayers)  # Update current estimate
-        return "MusicalChair({})".format(self.params)
+        # return "MusicalChair(N*: {}, T0: {})".format(self.nbPlayers, self.Time0)  # Use current estimate
+        return "MusicalChair(T0: {})".format(self.Time0)  # Use current estimate
 
     def startGame(self):
         """ Just reinitialize all the internal memory, and decide how to start (state 1 or 2)."""
-        self.t = -1
+        self.t = -1  # -1 because t += 1 is done in self.choice()
         self._chair = None  # Not sited yet
         self._cumulatedRewards.fill(0)
         self._nbObservations.fill(0)
-        self._A = np.random.choice(self.nbArms, size=self.nbArms, replace=False)
+        self._A = np.random.choice(self.nbArms, size=self.nbArms, replace=False)  # We have to select a random permutation, instead of fill(0), in case the initial phase was too short, the player is not too stupid
         self._nbCollision = 0
         # if nbPlayers is None, start by estimating it to N*, with the initial phase procedure
         if self.nbPlayers is None:
@@ -100,29 +145,31 @@ class MusicalChair(object):
             # Count the observation, update arm cumulated reward
             self._nbObservations[arm] += 1      # One observation of this arm
             self._cumulatedRewards[arm] += reward  # More reward
-        elif self.state in [State.MusicalChair, State.Sitted]:  # TODO comment this part
-            pass  # Nothing to do in this second phase
-            # We don't care anymore about rewards in this step
-        # Maybe we are done with the initial phase?
+        # elif self.state in [State.MusicalChair, State.Sitted]:
+        #     pass  # Nothing to do in this second phase
+        #     # We don't care anymore about rewards in this step
+
+        # And if t = Time0, we are do with the initial phase
         if self.t >= self.Time0 and self.state == State.InitialPhase:
-            print("- A MusicalChair player has to switch from InitialPhase to MusicalChair ...")  # DEBUG
-            self.state = State.MusicalChair  # Switch ONCE to state 2
-            # First, we compute the empirical means mu_i
-            print("  - self._cumulatedRewards =", self._cumulatedRewards)  # DEBUG
-            print("  - self._nbObservations =", self._nbObservations)  # DEBUG
-            empiricalMeans = self._cumulatedRewards / self._nbObservations
-            print("  - empiricalMeans =", empiricalMeans)  # DEBUG
-            # Then, sort their index by empirical means, decreasing order
-            self._A = np.argsort(-empiricalMeans)  # DEBUG not yet among the best M arms?!
-            print("  - self._A =", self._A)  # DEBUG
-            # Finally, we compute the final estimate of N* = nbPlayers
-            if self._nbCollision == self.Time0:  # 1st case, we only saw collisions!
-                self.nbPlayers = self.nbArms  # Worst case, pessimist estimate of the nb of players
-            else:  # 2nd case, we didn't see only collisions
-                self.nbPlayers = int(round(1 + np.log((self.Time0 - self._nbCollision) / self.Time0) / np.log(1. - 1. / self.nbArms)))
-            print("  - self.nbPlayers =", self.nbPlayers)  # DEBUG
-            self._A = np.argsort(-empiricalMeans)[:self.nbPlayers]  # FIXED among the best M arms!
-            print("  - self._A =", self._A)  # DEBUG
+            self.endInitialPhase()
+
+    def endInitialPhase(self):
+        # print("\n- A MusicalChair player has to switch from InitialPhase to MusicalChair ...")  # DEBUG
+        self.state = State.MusicalChair  # Switch ONCE to state 2
+        # First, we compute the empirical means mu_i
+        # print("   - self._cumulatedRewards =", self._cumulatedRewards)  # DEBUG
+        # print("   - self._nbObservations =", self._nbObservations)  # DEBUG
+        empiricalMeans = self._cumulatedRewards / self._nbObservations
+        # print("   - empiricalMeans =", empiricalMeans)  # DEBUG
+        # Then, we compute the final estimate of N* = nbPlayers
+        if self._nbCollision == self.Time0:  # 1st case, we only saw collisions!
+            self.nbPlayers = self.nbArms  # Worst case, pessimist estimate of the nb of players
+        else:  # 2nd case, we didn't see only collisions
+            self.nbPlayers = int(round(1 + np.log((self.Time0 - self._nbCollision) / self.Time0) / np.log(1. - 1. / self.nbArms)))
+        # print("   - self.nbPlayers =", self.nbPlayers)  # DEBUG
+        # Finally, sort their index by empirical means, decreasing order
+        self._A = np.argsort(-empiricalMeans)[:self.nbPlayers]  # FIXED among the best M arms!
+        # print("   - self._A =", self._A)  # DEBUG
 
     def handleCollision(self, arm):
         """ Handle a collision, on arm of index 'arm'.

@@ -25,7 +25,6 @@ from Environment.CollisionModels import *
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 40000
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
@@ -35,11 +34,8 @@ HORIZON = 10000
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 50
-REPETITIONS = 200
 REPETITIONS = 20
-# REPETITIONS = 8
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -49,7 +45,7 @@ N_JOBS = -1 if DO_PARALLEL else 1
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
-# Temperature for the softmax
+# Temperature for the Softmax
 TEMPERATURE = 0.005
 # Parameters for the Aggr policy
 LEARNING_RATE = 0.01
@@ -60,9 +56,9 @@ TEST_AGGR = True
 TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
-# NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 13    # Less that the number of arms
+NB_PLAYERS = 2    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 13    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
 
@@ -157,6 +153,8 @@ if TEST_AGGR:
         }]
 
 
+# FIXME the child policies should not have a handleCollision method if the initial algorithm does not have one
+
 if TEST_MULTIPLAYER_POLICY:
     nbArms = len(configuration['environment'][0]['params'])
     if len(configuration['environment']) > 1:
@@ -179,10 +177,11 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using single-player Musical Chair policy
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # XXX Tweaked MusicalChair, with knowledge of nbPlayers
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.5, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # XXX Tweaked MusicalChair, with knowledge of nbPlayers -- In fact it works worse than the non-tweaked version
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs

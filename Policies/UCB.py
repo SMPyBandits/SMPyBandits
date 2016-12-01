@@ -42,9 +42,11 @@ class UCB(object):
             arm = self._initial_exploration[self.t]  # Better: random permutation!
         else:
             # print(self.rewards, self.pulls, self.t)  # DEBUG
-            arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
             # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
-        self.pulls[arm] += 1
+            arm = np.argmax(self.rewards / self.pulls + np.sqrt((2 * np.log(self.t)) / self.pulls))
+            # TODO try the g_opt policy (as decribed in rho_rand [Anandkumar et al., 2010])
+            # arm = np.argmax(self.rewards / self.pulls + min(1, np.sqrt((2 * np.log(self.t)) / self.pulls)))
+        self.pulls[arm] += 1  # XXX why is it here?
         return arm
 
     def getReward(self, arm, reward):

@@ -47,22 +47,24 @@ class Selfish(object):
     def __str__(self):
         return "Selfish({})".format(self.params)
 
-    def startGame(self):
-        # XXX Not used right now!
-        for player in self._players:
-            player.startGame()
+    # def startGame(self):
+    #     # XXX Not used right now!
+    #     for player in self._players:
+    #         # player.startGame()
 
-    def getReward(self, arm, reward):
-        # XXX Not used right now!
-        for player in self._players:
-            player.getReward(arm, reward)()
+    # def getReward(self, arm, reward):
+    #     # XXX Not used right now!
+    #     for player in self._players:
+    #         player.getReward(arm, reward)()
 
-    def choice(self):
-        # XXX Not used right now!
-        choices = np.zeros(self.nbPlayers)
-        for i, player in enumerate(self._players):
-            choices[i] = player.choice()
-        return choices  # XXX What to do with this ?
+    # def choice(self):
+    #     # XXX Not used right now!
+    #     choices = np.zeros(self.nbPlayers)
+    #     for i, player in enumerate(self._players):
+    #         choices[i] = player.choice()
+    #     return choices  # XXX What to do with this ?
+
+    # --- Proxy methods
 
     def _startGame_one(self, playerId):
         return self._players[playerId].startGame()
@@ -74,4 +76,11 @@ class Selfish(object):
         return self._players[playerId].choice()
 
     def _handleCollision_one(self, playerId, arm):
-        return self._players[playerId].handleCollision(arm)
+        player = self._players[playerId]
+        if hasattr(player, 'handleCollision'):
+            # player.handleCollision(arm) is called to inform the user that there were a collision
+            player.handleCollision(arm)
+        else:
+            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
+            player.getReward(arm, 0)
+            # FIXME Strong assumption on the model
