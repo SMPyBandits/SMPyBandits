@@ -101,7 +101,7 @@ Here are some plots illustrating the performances of the different [policies](Po
 [![10000 steps - 50 repetition - 6 policies - With 4 Aggr](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)
 - 1 [`Aggr`](Policies/Aggr.py) performing very well:
 [![10000 steps - 50 repetition - 6 policies - With Softmax and 1 Aggr](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)
-- 3 different UCB, with alpha values lower than 0.5 (nothing is none theoretically for alpha < 1/2).
+- 3 different UCB, with alpha values lower than 0.5 (nothing is known theoretically for alpha < 1/2).
 [![10000 steps - 50 repetition - 3 UCB and Aggr](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)
 
 ### Some examples where [`Aggr`](Policies/Aggr.py) performs well
