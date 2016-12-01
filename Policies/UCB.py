@@ -24,7 +24,7 @@ class UCB(object):
         # self._random_offset = np.random.randint(nbArms)  # Exploration starts with this arm
         # self.params = 'offset: {}'.format(self._random_offset)
         # XXX do even more randomized, take a random permutation of the arm
-        self._initial_exploration = np.random.choice(nbArms, size=nbArms, replace=False)
+        self._initial_exploration = np.random.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
         # print("One UCB player with _initial_exploration =", self._initial_exploration)  # DEBUG
 

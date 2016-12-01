@@ -64,7 +64,7 @@ class CentralizedNotFair(object):
             self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
-            self._affectations[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
+            self._affectations[:nbArms] = np.random.permutation(nbArms)
             # Try to minimize the number of doubled affectations, so all the other players are affected to the *same* arm
             # 1. first option : chose a random arm, put everyone else in it. Plus: minimize collisions, Minus: maybe it's a bad arm
             trashArm = np.random.choice(nbArms)

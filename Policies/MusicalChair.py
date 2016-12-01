@@ -91,7 +91,7 @@ class MusicalChair(object):
         self._chair = None  # Not sited yet
         self._cumulatedRewards = np.zeros(nbArms)  # That's the s_i(t) of the paper
         self._nbObservations = np.zeros(nbArms, dtype=int)  # That's the o_i of the paper
-        self._A = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX it will then be of size nbPlayers!
+        self._A = np.random.permutation(nbArms)  # XXX it will then be of size nbPlayers!
         self._nbCollision = 0  # That's the C_Time0 of the paper
         # Implementation details for the common API
         self.t = -1
@@ -106,7 +106,7 @@ class MusicalChair(object):
         self._chair = None  # Not sited yet
         self._cumulatedRewards.fill(0)
         self._nbObservations.fill(0)
-        self._A = np.random.choice(self.nbArms, size=self.nbArms, replace=False)  # We have to select a random permutation, instead of fill(0), in case the initial phase was too short, the player is not too stupid
+        self._A = np.random.permutation(self.nbArms)  # We have to select a random permutation, instead of fill(0), in case the initial phase was too short, the player is not too stupid
         self._nbCollision = 0
         # if nbPlayers is None, start by estimating it to N*, with the initial phase procedure
         if self.nbPlayers is None:

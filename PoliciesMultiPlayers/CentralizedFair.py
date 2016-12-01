@@ -66,7 +66,7 @@ class CentralizedFair(object):
             self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
-            self._offsets[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)
+            self._offsets[:nbArms] = np.random.permutation(nbArms)
             # Try to minimize the number of doubled offsets, so all the other players are affected to the *same* arm
             # 1. first option : chose a random offset, everyone else uses it. Plus: minimize collisions
             trashArm = np.random.choice(nbArms)

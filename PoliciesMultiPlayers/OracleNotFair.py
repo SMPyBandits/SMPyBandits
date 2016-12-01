@@ -68,7 +68,7 @@ class OracleNotFair(object):
             self._affectations = np.argsort(means)[-nbPlayers:]
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
-            self._affectations[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX a permutation
+            self._affectations[:nbArms] = np.random.permutation(nbArms)
             # Try to minimize the number of doubled affectations, so all the other players are affected to the *same* arm
             worseArm = np.argmin(means)
             self._affectations[nbArms:] = worseArm

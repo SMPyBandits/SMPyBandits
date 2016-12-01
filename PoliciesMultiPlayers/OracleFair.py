@@ -76,7 +76,7 @@ class OracleFair(object):
             self._offsets = np.argsort(means)[-nbPlayers:]
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
-            self._offsets[:nbArms] = np.random.choice(nbArms, size=nbArms, replace=False)  # XXX a permutation
+            self._offsets[:nbArms] = np.random.permutation(nbArms)
             # Try to minimize the number of doubled offsets, so all the other players are affected to the *same* arm
             worseArm = np.argmin(means)
             self._offsets[nbArms:] = worseArm
