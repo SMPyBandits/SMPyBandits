@@ -28,14 +28,17 @@ class klUCB(IndexPolicy):
         self.klucb = klucb
         self.tolerance = tolerance
         self.params = 'amplitude: {}, lower: {}'.format(self.amplitude, self.lower)
+        self.t = -1
+        self.pulls = np.zeros(self.nbArms, dtype=int)
+        self.rewards = np.zeros(self.nbArms)
 
     def __str__(self):
         return "klUCB"
 
     def startGame(self):
         self.t = 0
-        self.pulls = np.zeros(self.nbArms)
-        self.rewards = np.zeros(self.nbArms)
+        self.pulls.fill(0)
+        self.rewards.fill(0)
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:

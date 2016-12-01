@@ -25,22 +25,22 @@ class AdBandit(object):
         self.alpha = alpha
         self.horizon = horizon
         self.rewards = np.zeros(nbArms)
-        self.pulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms, dtype=int)
         self.posterior = dict()
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
         # self.params = 'alpha:' + repr(self.alpha) + ', horizon:' + repr(self.horizon)
         self.params = 'alpha:' + repr(self.alpha)
-        self.startGame()
+        # self.startGame()  # XXX do not call it here!
+        self.t = -1
 
     def startGame(self):
         self.t = 0
-        self.rewards = np.zeros(self.nbArms)
-        self.pulls = np.zeros(self.nbArms)
+        self.rewards.fill(0)
+        self.pulls.fill(0)
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
         self.posterior[arm].update(reward)
         self.rewards[arm] += reward
@@ -50,7 +50,6 @@ class AdBandit(object):
     def computeIndex(self, arm):
         return self.posterior[arm].sample()
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def choice(self):
         # Thompson Exploration
         if rn.random() > 1.0 * self.t / (self.horizon * self.alpha):

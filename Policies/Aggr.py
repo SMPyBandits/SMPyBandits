@@ -58,7 +58,7 @@ class Aggr(object):
         # Start all child children
         for i in range(self.nbChildren):
             self.children[i].startGame()
-        self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
+        self.choices.fill(-1)
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):

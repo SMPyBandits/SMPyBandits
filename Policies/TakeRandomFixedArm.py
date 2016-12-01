@@ -11,12 +11,11 @@ import numpy.random as rd
 
 
 class TakeRandomFixedArm(object):
-    """ TakeRandomFixedArm: first selects a random sub-set of arms, then always select from it
-    """
+    """ TakeRandomFixedArm: first selects a random sub-set of arms, then always select from it. """
 
     def __init__(self, nbArms):
         self.nbArms = nbArms
-        # Get the number of arms
+        # Get the number of arms, randomly!
         nbArmIndexes = rd.randint(low=1, high=1 + int(nbArms / 2.))
         # Fix the set of arms
         self.armIndexes = list(rd.choice(np.arange(nbArms), size=nbArmIndexes, replace=False))

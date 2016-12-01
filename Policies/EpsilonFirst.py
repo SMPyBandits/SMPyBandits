@@ -31,7 +31,7 @@ class EpsilonFirst(object):
 
     def startGame(self):
         self.t = 0
-        self.rewards = np.zeros(self.nbArms)
+        self.rewards.fill(0)
 
     def choice(self):
         if self.t <= self.epsilon * self.horizon:

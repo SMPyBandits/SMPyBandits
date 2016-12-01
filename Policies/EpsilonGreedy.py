@@ -28,7 +28,7 @@ class EpsilonGreedy(object):
         return "EpsilonGreedy"
 
     def startGame(self):
-        self.rewards = np.zeros(self.nbArms)
+        self.rewards.fill(0)
 
     def choice(self):
         if random.random() < self.epsilon:  # Proba epsilon : explore

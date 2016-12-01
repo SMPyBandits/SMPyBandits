@@ -33,7 +33,7 @@ class EpsilonDecreasing(object):
 
     def startGame(self):
         self.t = 0
-        self.rewards = np.zeros(self.nbArms)
+        self.rewards.fill(0)
 
     def choice(self):
         if random.random() < self.epsilon * np.exp(- self.t * decreasingRate):

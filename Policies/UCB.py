@@ -16,7 +16,7 @@ class UCB(object):
 
     def __init__(self, nbArms):
         self.nbArms = nbArms
-        self.pulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms, dtype=int)
         self.rewards = np.zeros(nbArms)
         self.t = -1
         self.params = ''
@@ -33,8 +33,8 @@ class UCB(object):
 
     def startGame(self):
         self.t = 0
-        self.pulls = np.zeros(self.nbArms)
-        self.rewards = np.zeros(self.nbArms)
+        self.pulls.fill(0)
+        self.rewards.fill(0)
 
     def choice(self):
         if self.t < self.nbArms:  # Force to first visit each arm in a certain random order

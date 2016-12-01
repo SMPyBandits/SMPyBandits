@@ -15,7 +15,7 @@ class IndexPolicy(object):
     def __init__(self, nbArms):
         self.nbArms = nbArms
         self._index = np.zeros(self.nbArms)
-        self.pulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms, dtype=int)
         self.rewards = np.zeros(nbArms)
         self.t = -1
         self.params = ''
@@ -25,17 +25,16 @@ class IndexPolicy(object):
 
     def startGame(self):
         self.t = 0
-        self.pulls = np.zeros(self.nbArms)
-        self.rewards = np.zeros(self.nbArms)
+        self._index.fill(0)
+        self.pulls.fill(0)
+        self.rewards.fill(0)
 
     def choice(self):
         """ In an index policy, choose uniformly at random an arm with maximal index."""
         for arm in range(self.nbArms):
             self._index[arm] = self.computeIndex(arm)
         maxIndex = np.max(self._index)
-        # bestArms = self._index[self._index == maxIndex]
-        # return rn.choice(bestArms)  # FIXED choice as to be an integer
-        # Uniform choice among the best arms
+        # FIXED Uniform choice among the best arms
         return np.random.choice(np.where(self._index == maxIndex)[0])
 
     def getReward(self, arm, reward):

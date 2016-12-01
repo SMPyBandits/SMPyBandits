@@ -5,7 +5,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-# from numpy.random import choice
 from random import choice
 
 

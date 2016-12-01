@@ -14,7 +14,6 @@ class Uniform(object):
 
     def __init__(self, nbArms):
         self.nbArms = nbArms
-        self.params = ''
 
     def __str__(self):
         return "Uniform"

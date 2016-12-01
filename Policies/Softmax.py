@@ -22,16 +22,16 @@ class Softmax(object):
         self.temperature = temperature
         self.params = "temperature:" + repr(temperature)
         self.rewards = np.zeros(nbArms)
-        self.pulls = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms, dtype=int)
         self.t = -1
 
     def __str__(self):
         return "Softmax ({})".format(self.params)
 
     def startGame(self):
-        self.rewards = np.zeros(self.nbArms)
-        self.pulls = np.zeros(self.nbArms)
         self.t = 0
+        self.rewards.fill(0)
+        self.pulls.fill(0)
 
     def choice(self):
         # Force to first visit each arm once in the first steps
