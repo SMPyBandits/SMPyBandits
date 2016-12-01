@@ -1,8 +1,8 @@
 # Bandit algorithms and the aggregated bandit
 This repository contains the code of [my](http://perso.crans.org/besson/) numerical environment, written in [Python](https://www.python.org/), in order to perform numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
-[![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 
