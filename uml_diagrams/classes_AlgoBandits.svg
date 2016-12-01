@@ -392,7 +392,7 @@
 <polygon fill="none" stroke="black" points="4182,-128 4182,-422 4397,-422 4397,-128 4182,-128"/>
 <text text-anchor="middle" x="4289.5" y="-406.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="4182,-399 4397,-399 "/>
-<text text-anchor="start" x="4190" y="-383.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="4190" y="-383.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="4190" y="-368.8" font-family="Times,serif" font-size="14.00">_A</text>
 <text text-anchor="start" x="4190" y="-353.8" font-family="Times,serif" font-size="14.00">_chair : NoneType</text>
 <text text-anchor="start" x="4190" y="-338.8" font-family="Times,serif" font-size="14.00">_cumulatedRewards</text>
@@ -400,13 +400,13 @@
 <text text-anchor="start" x="4190" y="-308.8" font-family="Times,serif" font-size="14.00">_nbObservations</text>
 <text text-anchor="start" x="4190" y="-293.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="4190" y="-278.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
-<text text-anchor="start" x="4190" y="-263.8" font-family="Times,serif" font-size="14.00">params : str</text>
-<text text-anchor="start" x="4190" y="-248.8" font-family="Times,serif" font-size="14.00">state</text>
-<text text-anchor="start" x="4190" y="-233.8" font-family="Times,serif" font-size="14.00">t : int</text>
-<polyline fill="none" stroke="black" points="4182,-226 4397,-226 "/>
-<text text-anchor="start" x="4190" y="-210.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="4190" y="-195.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="4190" y="-180.8" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="4190" y="-263.8" font-family="Times,serif" font-size="14.00">state</text>
+<text text-anchor="start" x="4190" y="-248.8" font-family="Times,serif" font-size="14.00">t : int</text>
+<polyline fill="none" stroke="black" points="4182,-241 4397,-241 "/>
+<text text-anchor="start" x="4190" y="-225.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="4190" y="-210.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="4190" y="-195.8" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="4190" y="-180.8" font-family="Times,serif" font-size="14.00">endInitialPhase()</text>
 <text text-anchor="start" x="4190" y="-165.8" font-family="Times,serif" font-size="14.00">getReward()</text>
 <text text-anchor="start" x="4190" y="-150.8" font-family="Times,serif" font-size="14.00">handleCollision()</text>
 <text text-anchor="start" x="4190" y="-135.8" font-family="Times,serif" font-size="14.00">startGame()</text>
@@ -670,19 +670,18 @@
 </g>
 <!-- 34 -->
 <g id="node35" class="node"><title>34</title>
-<polygon fill="none" stroke="black" points="7244,-188 7244,-362 7519,-362 7519,-188 7244,-188"/>
-<text text-anchor="middle" x="7381.5" y="-346.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ChildPointer.ChildPointer</text>
-<polyline fill="none" stroke="black" points="7244,-339 7519,-339 "/>
-<text text-anchor="start" x="7252" y="-323.8" font-family="Times,serif" font-size="14.00">mother</text>
-<text text-anchor="start" x="7252" y="-308.8" font-family="Times,serif" font-size="14.00">params : str</text>
-<text text-anchor="start" x="7252" y="-293.8" font-family="Times,serif" font-size="14.00">playerId</text>
-<polyline fill="none" stroke="black" points="7244,-286 7519,-286 "/>
-<text text-anchor="start" x="7252" y="-270.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="7252" y="-255.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="7252" y="-240.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="7252" y="-225.8" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="7252" y="-210.8" font-family="Times,serif" font-size="14.00">handleCollision()</text>
-<text text-anchor="start" x="7252" y="-195.8" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="7244,-195.5 7244,-354.5 7519,-354.5 7519,-195.5 7244,-195.5"/>
+<text text-anchor="middle" x="7381.5" y="-339.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ChildPointer.ChildPointer</text>
+<polyline fill="none" stroke="black" points="7244,-331.5 7519,-331.5 "/>
+<text text-anchor="start" x="7252" y="-316.3" font-family="Times,serif" font-size="14.00">mother</text>
+<text text-anchor="start" x="7252" y="-301.3" font-family="Times,serif" font-size="14.00">playerId</text>
+<polyline fill="none" stroke="black" points="7244,-293.5 7519,-293.5 "/>
+<text text-anchor="start" x="7252" y="-278.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="7252" y="-263.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="7252" y="-248.3" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="7252" y="-233.3" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="7252" y="-218.3" font-family="Times,serif" font-size="14.00">handleCollision()</text>
+<text text-anchor="start" x="7252" y="-203.3" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 35 -->
 <g id="node36" class="node"><title>35</title>
@@ -763,24 +762,21 @@
 </g>
 <!-- 39 -->
 <g id="node40" class="node"><title>39</title>
-<polygon fill="none" stroke="black" points="8665.5,-150.5 8665.5,-399.5 8877.5,-399.5 8877.5,-150.5 8665.5,-150.5"/>
-<text text-anchor="middle" x="8771.5" y="-384.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Selfish.Selfish</text>
-<polyline fill="none" stroke="black" points="8665.5,-376.5 8877.5,-376.5 "/>
-<text text-anchor="start" x="8673.5" y="-361.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="8673.5" y="-346.3" font-family="Times,serif" font-size="14.00">childs</text>
-<text text-anchor="start" x="8673.5" y="-331.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="8673.5" y="-316.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="8673.5" y="-301.3" font-family="Times,serif" font-size="14.00">params : str</text>
-<polyline fill="none" stroke="black" points="8665.5,-293.5 8877.5,-293.5 "/>
-<text text-anchor="start" x="8673.5" y="-278.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="8673.5" y="-263.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="8673.5" y="-248.3" font-family="Times,serif" font-size="14.00">_choice_one()</text>
-<text text-anchor="start" x="8673.5" y="-233.3" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
-<text text-anchor="start" x="8673.5" y="-218.3" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
-<text text-anchor="start" x="8673.5" y="-203.3" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
-<text text-anchor="start" x="8673.5" y="-188.3" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="8673.5" y="-173.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="8673.5" y="-158.3" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="8665.5,-173 8665.5,-377 8877.5,-377 8877.5,-173 8665.5,-173"/>
+<text text-anchor="middle" x="8771.5" y="-361.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Selfish.Selfish</text>
+<polyline fill="none" stroke="black" points="8665.5,-354 8877.5,-354 "/>
+<text text-anchor="start" x="8673.5" y="-338.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="8673.5" y="-323.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="8673.5" y="-308.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="8673.5" y="-293.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="8673.5" y="-278.8" font-family="Times,serif" font-size="14.00">params : str</text>
+<polyline fill="none" stroke="black" points="8665.5,-271 8877.5,-271 "/>
+<text text-anchor="start" x="8673.5" y="-255.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="8673.5" y="-240.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="8673.5" y="-225.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<text text-anchor="start" x="8673.5" y="-210.8" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
+<text text-anchor="start" x="8673.5" y="-195.8" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
+<text text-anchor="start" x="8673.5" y="-180.8" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
 </g>
 </g>
 </svg>
