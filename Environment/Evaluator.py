@@ -18,7 +18,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
 from .Result import Result
 from .MAB import MAB
 
@@ -122,13 +122,16 @@ class Evaluator(object):
         plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
+        markers = makemarkers(self.nbPolicies)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
+        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         for i, policy in enumerate(self.policies):
             Y = self.getRegret(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(Y, label=str(policy), color=colors[i])
+                plt.semilogx(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
-                plt.plot(Y, label=str(policy), color=colors[i])
+                plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
         plt.legend(loc='upper left', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
@@ -144,9 +147,12 @@ class Evaluator(object):
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
         colors = palette(self.nbPolicies)
+        markers = makemarkers(self.nbPolicies)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
+        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(Y, label=str(policy), color=colors[i])
+            plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
         plt.legend(loc='lower right', numpoints=1)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)

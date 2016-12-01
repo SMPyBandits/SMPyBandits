@@ -79,7 +79,7 @@ python main.py
 You can also use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
 make install  # install the requirements
-make main3    # run and log the main.py script
+make single   # run and log the main.py script
 ```
 
 It can be used to check [the quality of the code](logs/main_pylint_log.txt) with [pylint](https://www.pylint.org/):
@@ -97,14 +97,20 @@ Here are some plots illustrating the performances of the different [policies](Po
 [![2000 steps - 100 repetition](plots/2000_steps__100_average.png)](plots/2000_steps__100_average.png)
 
 ### Larger tests
+- 4 different [`Aggr`](Policies/Aggr.py) on 6 policies:
 [![10000 steps - 50 repetition - 6 policies - With 4 Aggr](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)
+- 1 [`Aggr`](Policies/Aggr.py) performing very well:
 [![10000 steps - 50 repetition - 6 policies - With Softmax and 1 Aggr](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)
+- 3 different UCB, with alpha values lower than 0.5 (nothing is none theoretically for alpha < 1/2).
+[![10000 steps - 50 repetition - 3 UCB and Aggr](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)
 
 ### Some examples where [`Aggr`](Policies/Aggr.py) performs well
+- [`Aggr`](Policies/Aggr.py) is the best on this example:
 [![Aggr is the best here](plots/Aggr_is_the_best_here.png)](plots/Aggr_is_the_best_here.png)
+- And it performed well here also:
 [![one Aggr does very well](plots/one_Aggr_does_very_well.png)](plots/one_Aggr_does_very_well.png)
 
-### One last example
+### Another example
 The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a great effect on its performance, as illustrated here:
 [![20000 steps - 100 repetition - 6 policies - With 5 Aggr](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)
 
@@ -139,7 +145,6 @@ For more details, see [these UML diagrams](uml_diagrams/):
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/Naereen/AlgoBandits/README.md?pixel)](https://GitHub.com/Naereen/AlgoBandits/)
-
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
