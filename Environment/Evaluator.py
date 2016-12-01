@@ -173,7 +173,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(lastY)
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3f}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
 
 

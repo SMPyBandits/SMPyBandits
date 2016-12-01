@@ -91,7 +91,8 @@ if __name__ == '__main__':
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
-        evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+        # evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+        evaluation.plotFrequencyCollisions(envId, piechart=piechart)
 
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))

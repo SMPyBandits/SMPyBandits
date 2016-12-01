@@ -35,7 +35,7 @@ HORIZON = 10000
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -72,8 +72,8 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 # for i in range(NB_PLAYERS):
 #     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
 # def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
-# collisionModel = closerOneGetsReward
-# collisionModel = closerUserGetsReward  # FIXME try it! Let it compute the random distances, ONCE
+def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  # FIXME try it! Let it compute the random distances, ONCE
+collisionModel = closerOneGetsReward
 
 
 # Test one of the multi-players policy
@@ -153,8 +153,6 @@ if TEST_AGGR:
         }]
 
 
-# FIXME the child policies should not have a handleCollision method if the initial algorithm does not have one
-
 if TEST_MULTIPLAYER_POLICY:
     nbArms = len(configuration['environment'][0]['params'])
     if len(configuration['environment']) > 1:
@@ -171,7 +169,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
-        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+        "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
@@ -181,7 +179,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.04, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs

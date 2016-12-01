@@ -106,11 +106,12 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
                         players[j].getReward(arm, 0)  # FIXME Strong assumption on the model
 
 
-# FIXME check that this is fine
+# XXX Using a cache to not regenerate a random vector of distances. Siooooux!
 @lru_cache(maxsize=None, typed=False)  # XXX size is NOT bounded... bad!
-def random_distances(players):
-    # Maybe use a cache mecanism ? with a functools.lru_cache wrapping this function distances ?
-    return np.random.random_sample(len(players))
+def random_distances(nbPlayers):
+    distances = np.random.random_sample(nbPlayers)
+    print("I just generated a new distances vector, for {} players : distances = {} ...".format(nbPlayers, distances))  # DEBUG
+    return distances
 
 
 def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=None):
@@ -120,11 +121,10 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     - In case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a distance of each player to the base station (numbers in [0, 1]).
     - If distances is not given, it is either generated randomly (random numbers in [0, 1]) or is a linspace of nbPlayers values in (0, 1), equally spacen (default).
     """
-    if distances is None:  # Uniformly spacen distances, in (0, 1)
+    if distances is None or distances == 'uniform':  # Uniformly spacen distances, in (0, 1)
         distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]
-    if distances == 'random':  # Or fully uniform
-        # FIXME find a way to generate the distances only once, from the function side, and then use it
-        random_distances(players)
+    elif distances == 'random':  # Or fully uniform
+        distances = random_distances(len(players))
     # For each arm, explore who chose it
     for arm in range(len(arms)):
         # If he is alone, sure to be chosen, otherwise only the closest one can sample
@@ -142,7 +142,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
                 # print("Only one user is at minimal distance, of index i =", i)  # DEBUG
             else:   # XXX very low probability, if the distances are randomly chosen
                 i = players_who_chose_it[np.random.choice(np.argwhere(distancesChosen == smaller_distance))]
-                print("  Randomly choosing one user at minimal distance = {:.4f}, among {}... Index i = {} was chose !".format(smaller_distance, np.count_nonzero(distancesChosen == smaller_distance), i + 1))  # DEBUG
+                print("  Randomly choosing one user at minimal distance = {:.4g}, among {}... Index i = {} was chose !".format(smaller_distance, np.count_nonzero(distancesChosen == smaller_distance), i + 1))  # DEBUG
             # Player i can pull the arm
             rewards[i] = arms[arm].draw(t)
             players[i].getReward(arm, rewards[i])
