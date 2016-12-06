@@ -20,8 +20,8 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -71,8 +71,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
-TEST_AGGR = False
 TEST_AGGR = True
+TEST_AGGR = False
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
 
@@ -133,32 +133,32 @@ configuration = {
     #     },
     # ],
     "policies": [
-        # # --- Stupid algorithms
-        # {
-        #     "archtype": Uniform,   # The stupidest policy
-        #     "params": {}
-        # },
-        # # --- Epsilon-... algorithms
-        # {
-        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-        #     "params": {
-        #         "epsilon": EPSILON
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "decreasingRate": 0.005,
-        #     }
-        # },
-        # {
-        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # --- Stupid algorithms
+        {
+            "archtype": Uniform,   # The stupidest policy
+            "params": {}
+        },
+        # --- Epsilon-... algorithms
+        {
+            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+            "params": {
+                "epsilon": EPSILON
+            }
+        },
+        {
+            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "decreasingRate": 0.005,
+            }
+        },
+        {
+            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "horizon": HORIZON
+            }
+        },
         # # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -193,39 +193,39 @@ configuration = {
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        # # {
-        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # #     "params": {}
-        # # },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
-        # --- AdBandit with different alpha paramters
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandit,
-            "params": {
-                "alpha": 0.125,
-                "horizon": HORIZON
-            }
-        },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
+        #     "params": {}
+        # },
+        # # # {
+        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # # #     "params": {}
+        # # # },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {}
+        # },
+        # # --- AdBandit with different alpha paramters
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # {
         #     "archtype": AdBandit,
         #     "params": {

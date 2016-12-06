@@ -3,17 +3,20 @@
 
 ----
 
-## About the simulations
+## Question: *How to change the simulations*?
 ### To customize the plots
 1. Change the default settings defined in [`Environment/plotsettings.py`](Environment/plotsettings.py).
 
 ### To change the configuration of the simulations
+1. Change the config file, i.e., [`configuration.py`](configuration.py) for single-player simulations, or [`configuration_multiplayers.py`](configuration_multiplayers.py) for multi-players simulations.
 
 ### To change how to results are exploited
+1. Change the main script, i.e., [`main.py`](main.py) for single-player simulations, [`main_multiplayers.py`](main_multiplayers.py) for multi-players simulations. Some plots can be disabled or enabled by commenting a few lines, and some options are given as flags (constants in the beginning of the file).
+2. If needed, change, improve or add some methods to the simulation environment class, i.e., [`Environment.Evaluator`](Environment/Evaluator.py) for single-player simulations, and [`Environment.EvaluatorMultiPlayers`](Environment/EvaluatorMultiPlayers.py) for multi-players simulations. They use a class to store their simulation result, [`Environment.Result`](Environment/Result.py) and [`Environment.ResultMultiPlayers`](Environment/ResultMultiPlayers.py).
 
 ----
 
-## How do I add *something* to this project?
+## Question: *How to add something to this project?*
 > In other words, *what's the API of this project*?
 
 ### For a **new arm**

@@ -54,8 +54,8 @@ class Evaluator(object):
         self.policies = []
         self.__initEnvironments__()
         # Internal vectorial memory
-        self.rewards = np.zeros((self.nbPolicies,
-                                 len(self.envs), self.horizon))
+        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))
+        self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.horizon))
         self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
@@ -68,8 +68,8 @@ class Evaluator(object):
             self.envs.append(MAB(armType))
 
     def __initPolicies__(self, env):
-        for polId, policy in enumerate(self.cfg['policies']):
-            print("- Adding policy #{} = {} ...".format(polId + 1, policy))  # DEBUG
+        for policyId, policy in enumerate(self.cfg['policies']):
+            print("- Adding policy #{} = {} ...".format(policyId + 1, policy))  # DEBUG
             self.policies.append(policy['archtype'](env.nbArms,
                                                     **policy['params']))
 
@@ -82,8 +82,8 @@ class Evaluator(object):
         print("\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
-        for polId, policy in enumerate(self.policies):
-            print("\n- Evaluating policy #{}/{}: {} ...".format(polId + 1, self.nbPolicies, policy))
+        for policyId, policy in enumerate(self.policies):
+            print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     joblib.delayed(delayed_play)(env, policy, self.horizon)
@@ -101,9 +101,12 @@ class Evaluator(object):
             index_bestarm = np.argwhere(np.isclose(means, bestarm))
             # Store the results
             for r in results:
-                self.rewards[polId, envId, :] += np.cumsum(r.rewards)
-                self.BestArmPulls[envId][polId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
-                self.pulls[envId][polId, :] += r.pulls
+                # self.rewards[policyId, envId, :] += np.cumsum(r.rewards)
+                self.rewards[policyId, envId, :] += r.rewards  # FIXME not sure if we can remove np.cumsum here???
+                # self.rewardsSquared[policyId, envId, :] += np.cumsum(r.rewardsSquared)
+                self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # FIXME not sure if we can remove np.cumsum here???
+                self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
+                self.pulls[envId][policyId, :] += r.pulls
 
     def getPulls(self, policyId, environmentId=0):
         return self.pulls[environmentId][policyId, :] / float(self.repetitions)
@@ -112,13 +115,16 @@ class Evaluator(object):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
 
-    def getReward(self, policyId, environmentId=0):
+    def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
 
-    def getRegret(self, policyId, environmentId=0):
-        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(policyId, environmentId)
+    def getRegretMean(self, policyId, environmentId=0):
+        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))  # FIXME not sure if we can remove np.cumsum here???
 
-    def plotRegrets(self, environmentId, savefig=None, semilogx=False):
+    def getRewardsSquared(self, policyId, environmentId=0):
+        return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
+
+    def plotRegrets(self, environmentId, savefig=None, errorplot=True, semilogx=False):
         plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
@@ -126,13 +132,26 @@ class Evaluator(object):
         markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
         delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         for i, policy in enumerate(self.policies):
-            Y = self.getRegret(i, environmentId)
+            Y = self.getRegretMean(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
                 plt.semilogx(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
                 plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-        plt.legend(loc='upper left', numpoints=1)
+            # FIXME use http://matplotlib.org/users/recipes.html#fill-between-and-alpha if errorplot is not enough?
+            # std(X) = sqrt( E[X**2] - E[X]**2 )
+            if errorplot:
+                stdY = np.sqrt(np.abs(self.getRewardsSquared(i, environmentId) - self.getRewards(i, environmentId)**2))
+                # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
+                # stdY = np.cumsum(stdY)  # FIXME is it correct?
+                print("  - stdY =", stdY)  # DEBUG
+                print("  - np.shape(stdY) =", np.shape(stdY))  # DEBUG
+                print("  - np.min(stdY) =", np.min(stdY))  # DEBUG
+                print("  - np.max(stdY) =", np.max(stdY))  # DEBUG
+                X = np.arange(0, self.horizon)
+                # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
+                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
+        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
@@ -153,7 +172,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-        plt.legend(loc='lower right', numpoints=1)
+        plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -170,7 +189,7 @@ class Evaluator(object):
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
-            Y = self.getRegret(i, environmentId)
+            Y = self.getRegretMean(i, environmentId)
             if self.finalRanksOnAverage:
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:

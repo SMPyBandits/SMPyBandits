@@ -54,17 +54,19 @@ class EvaluatorMultiPlayers(object):
         self.__initEnvironments__()
         # Internal vectorial memory
         self.rewards = dict()
+        self.rewardsSquared = dict()
         self.pulls = dict()
         self.collisions = dict()
         self.BestArmPulls = dict()
         self.FreeTransmissions = dict()
         print("Number of environments to try:", len(self.envs))
-        for env in range(len(self.envs)):  # Zeros everywhere
-            self.rewards[env] = np.zeros((self.nbPlayers, self.horizon))
-            self.pulls[env] = np.zeros((self.nbPlayers, self.envs[env].nbArms))
-            self.collisions[env] = np.zeros((self.envs[env].nbArms, self.horizon))
-            self.BestArmPulls[env] = np.zeros((self.nbPlayers, self.horizon))
-            self.FreeTransmissions[env] = np.zeros((self.nbPlayers, self.horizon))
+        for envId in range(len(self.envs)):  # Zeros everywhere
+            self.rewards[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
+            self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
+            self.BestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
 
     def __initEnvironments__(self):
         for armType in self.cfg['environment']:
@@ -107,6 +109,7 @@ class EvaluatorMultiPlayers(object):
         # Get and merge the results from all the 'repetitions'
         for r in results:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
+            self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
             self.pulls[envId] += r.pulls
             self.collisions[envId] += r.collisions
             for playerId in range(self.nbPlayers):
@@ -127,27 +130,27 @@ class EvaluatorMultiPlayers(object):
     def getCollisions(self, armId, environmentId=0):
         return self.collisions[environmentId][armId, :] / float(self.repetitions)
 
-    def getReward(self, playerId, environmentId=0):
+    def getRewards(self, playerId, environmentId=0):
         return self.rewards[environmentId][playerId, :] / float(self.repetitions)
 
-    def getRegret(self, playerId, environmentId=0):
+    def getRegretMean(self, playerId, environmentId=0):
         """ Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
         """
-        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getReward(playerId, environmentId)
+        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - self.getRewards(playerId, environmentId)
 
     def getCentralizedRegret(self, environmentId=0):
         meansArms = np.sort(np.array([arm.mean() for arm in self.envs[environmentId].arms]))
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
-        # FIXED how to count it when their is more players than arms ?
+        # FIXED how to count it when there is more players than arms ?
         # FIXME it depend on the collision model !
         if self.envs[environmentId].nbArms < self.nbPlayers:
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
         averageBestRewards = np.arange(1, 1 + self.horizon) * sumBestMeans
-        # And for the actual rewards, the collisions are counted in the rewards logged in self.getReward
-        actualRewards = sum(self.getReward(playerId, environmentId) for playerId in range(self.nbPlayers))
+        # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
+        actualRewards = sum(self.getRewards(playerId, environmentId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
 
     # Plotting decentralized (vectorial) rewards
@@ -160,13 +163,14 @@ class EvaluatorMultiPlayers(object):
         delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
-            Y = self.getReward(i, environmentId)
+            Y = self.getRewards(i, environmentId)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
                 plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
                 plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-        plt.legend(loc='upper left', numpoints=1)
+        # TODO add std
+        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
@@ -187,6 +191,7 @@ class EvaluatorMultiPlayers(object):
             plt.semilogx(Y)
         else:
             plt.plot(Y)
+        # TODO add std
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + self.strPlayers())
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players M = {} (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
@@ -202,7 +207,7 @@ class EvaluatorMultiPlayers(object):
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(player), color=colors[i])
-        plt.legend(loc='upper right', numpoints=1)
+        plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -220,7 +225,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getFreeTransmissions(i, environmentId)
             plt.plot(Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
             # TODO should only plot with markers
-        plt.legend(loc='lower right', numpoints=1)
+        plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
@@ -269,7 +274,7 @@ class EvaluatorMultiPlayers(object):
         else:  # TODO do an histogram instead of this piechart
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='center right')
+        plt.legend(loc='center right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players M = {} (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -282,7 +287,7 @@ class EvaluatorMultiPlayers(object):
         print("\nFinal ranking for this environment #{} :".format(environmentId))
         lastY = np.zeros(self.nbPlayers)
         for i, player in enumerate(self.players):
-            Y = self.getReward(i, environmentId)
+            Y = self.getRewards(i, environmentId)
             if self.finalRanksOnAverage:
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last averageOn% of the iterations
             else:
@@ -333,6 +338,7 @@ def delayed_play(env, players, horizon, collisionModel):
             choices[i] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
+        # XXX It is here that the player may receive a reward, if there is no collisions
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)

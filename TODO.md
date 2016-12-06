@@ -17,18 +17,22 @@
 - [ ] test again (and adapt, if needed) each single-player policy against non-Bernoulli arms (Gaussian, Exponential, Poisson). FIXME how to handle rewards which are NOT in `[0, 1]` ?
 
 ## Better storing of the simulation results
-- [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, on the run (to never lose data, even if the simulation gets killed)
+- [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, on the run (to never lose data, even if the simulation gets killed).
 
 ## Publicly release it ?
 - [x] keep it up-to-date [on GitHub](https://github.com/Naereen/AlgoBandits)
-- [x] I could document this project better. Well, there is no [Sphinx](http://sphinx-doc.org/) documentation yet, but each file has a docstring, some useful comments for the interesting part, and this very page you are reading contains [insights on how to use the framework](#configuration) as well as [the organization of the code](#code-organization).
+- [x] I could document this project better. Well, there is no [Sphinx](http://sphinx-doc.org/) documentation yet, but each file has a docstring, some useful comments for the interesting part, and this very page you are reading contains [insights on how to use the framework](#configuration) as well as [the organization of the code](#code-organization). I added the [`API.md`](API.md) file to document the arms and policies API.
 
 ## More MAB algorithms (EXP-3 etc)
-- [ ] implement some more algorithms, e.g., from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py) (EXP3), or [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf), or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf)
+- [ ] implement some more algorithms, e.g., from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py) (EXP3), or [this survey](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf), or [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf).
 
 ## Multi-players simulations
 - [x] implement a multi-player simulation environment as well! Done, in [EvaluatorMultiPlayers](Environment/EvaluatorMultiPlayers.py).
 - [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms).
 - [x] implement the basic multi-player policies, as [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
 - [x] I implemented the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](Policies/MusicalChair.py). TODO ["Dynamic Musical Chair"](https://arxiv.org/abs/1512.02866).
-- [ ] implement the state-of-the-art algorithms: ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/), ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3), ["MEGA"](https://arxiv.org/abs/1404.5421) from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421).
+
+### Implement the state-of-the-art algorithms:
+- [ ] first ["MEGA"](https://arxiv.org/abs/1404.5421) from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421).
+- [ ] then ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/).
+- [ ] finally ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
