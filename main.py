@@ -15,17 +15,19 @@ import os.path
 from Environment import Evaluator
 from configuration import configuration
 
+# Parameters for the plots (where to save them) and what to draw
 plot_dir = "plots"
 semilogx = False
-
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
 averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
 useJoblibForPolicies = False
-
 # Whether to do the plots or not
 do_plot = False
 do_plot = True
+# Whether to show all plots, or one by one
+interactive = True
+interactive = False  # Seems to be the only mode which is working well
 
 
 if __name__ == '__main__':
@@ -54,6 +56,7 @@ if __name__ == '__main__':
         evaluation.printFinalRanking(envId)
         if not do_plot:
             break
+
         # Sub folder with a useful name
         subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         # Get the name of the output file
@@ -66,6 +69,11 @@ if __name__ == '__main__':
             raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
         else:
             mkdir(plot_dir)
+
+        # Set plotting mode to interactive
+        if interactive:
+            plt.interactive(True)
+
         savefig = os.path.join(plot_dir, imagename)
         print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
         evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
@@ -75,5 +83,6 @@ if __name__ == '__main__':
         print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
         evaluation.plotBestArmPulls(envId, savefig=savefig)
 
-        # input("\n\nCan we continue to the next environment? [Enter]")  # DEBUG
+        if interactive:
+            print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done

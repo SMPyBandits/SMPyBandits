@@ -137,7 +137,7 @@ class Evaluator(object):
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative Regret $R_t$")
-        plt.title("Regrets for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -157,7 +157,7 @@ class Evaluator(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algoritms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -179,7 +179,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(lastY)
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.3g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
 
 

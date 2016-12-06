@@ -4,11 +4,11 @@
 # - install the requirements (make install)
 
 run:
-	make clean ; clear ; make multiplayers
+	make clean ; clear ; make multi
 single:
 	make clean ; clear ; make main
-multiplayers:
-	make clean ; clear ; make multiplayers
+multi:
+	make clean ; clear ; make multiplayers3
 
 # Runners
 main2:

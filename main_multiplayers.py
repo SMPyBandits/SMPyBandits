@@ -49,6 +49,7 @@ if __name__ == '__main__':
         evaluation.printFinalRanking(envId)
         if not do_plot:
             break
+
         # Sub folder with a useful name
         subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
         # Get the name of the output file

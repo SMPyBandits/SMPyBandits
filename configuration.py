@@ -22,7 +22,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 20000
 HORIZON = 30000
-HORIZON = 10000
+# HORIZON = 10000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -32,7 +32,7 @@ REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -159,21 +159,21 @@ configuration = {
         #         "horizon": HORIZON
         #     }
         # },
-        # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
+        # # --- UCB algorithms
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
         # # {
         # #     "archtype": UCBV,   # UCB with variance term
         # #     "params": {}
         # # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 4          # Below the alpha=4 like old classic UCB
+        #     }
+        # },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
@@ -193,46 +193,46 @@ configuration = {
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
-        # # # {
-        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # # #     "params": {}
-        # # # },
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
-        # },
-        # # --- AdBandit with different alpha paramters
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandit,
-        #     "params": {
-        #         "alpha": 0.125,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
+        # --- KL algorithms
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
         # # {
-        # #     "archtype": AdBandit,
-        # #     "params": {
-        # #         "alpha": 0.01,
-        # #         "horizon": HORIZON
-        # #     }
+        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # #     "params": {}
         # # },
+        {
+            "archtype": BayesUCB,
+            "params": {}
+        },
+        # --- AdBandit with different alpha paramters
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandit,
+            "params": {
+                "alpha": 0.125,
+                "horizon": HORIZON
+            }
+        },
+        # {
+        #     "archtype": AdBandit,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
     ]
 }
 

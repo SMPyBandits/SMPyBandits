@@ -29,13 +29,13 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -168,7 +168,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
-        "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
+        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
@@ -179,7 +179,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # XXX Tweaked MusicalChair, with knowledge of nbPlayers -- In fact it works worse than the non-tweaked version
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.04, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible
