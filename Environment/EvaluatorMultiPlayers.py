@@ -172,7 +172,7 @@ class EvaluatorMultiPlayers(object):
         # TODO add std
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        ymax = plt.ylim()[1]
+        ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players M = {} (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
@@ -225,7 +225,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getFreeTransmissions(i, environmentId)
             plt.plot(Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
             # TODO should only plot with markers
-        plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
@@ -268,7 +268,6 @@ class EvaluatorMultiPlayers(object):
         if piechart:
             plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
-            # FIXME this pie chart display labels too close for small slices
             plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
             # , autopct='%.4g%%'
         else:  # TODO do an histogram instead of this piechart

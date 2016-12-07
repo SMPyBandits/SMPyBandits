@@ -32,13 +32,13 @@ class Aggr(object):
         self.t = -1
         # Internal object memory
         self.children = []
-        for i in range(self.nbChildren):
-            if isinstance(children[i], dict):
-                print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, children[i]))  # DEBUG
-                self.children.append(children[i]['archtype'](nbArms, **children[i]['params']))
+        for childId, child in enumerate(children):
+            if isinstance(child, dict):
+                print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(childId, child))  # DEBUG
+                self.children.append(child['archtype'](nbArms, **child['params']))
             else:
-                print("  Using this already created player 'children[{}]' = {} ...".format(i, children[i]))  # DEBUG
-                self.children.append(children[i])
+                print("  Using this already created player 'children[{}]' = {} ...".format(childId, child))  # DEBUG
+                self.children.append(child)
         # Initialize the arrays
         if prior is not None and prior != 'uniform':
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr.Aggr has to be an array of the good size ({}).".format(self.nbChildren)

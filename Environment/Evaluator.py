@@ -70,8 +70,12 @@ class Evaluator(object):
     def __initPolicies__(self, env):
         for policyId, policy in enumerate(self.cfg['policies']):
             print("- Adding policy #{} = {} ...".format(policyId + 1, policy))  # DEBUG
-            self.policies.append(policy['archtype'](env.nbArms,
-                                                    **policy['params']))
+            if isinstance(policy, dict):
+                print("  Creating this policy from a dictionnary 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
+                self.policies.append(policy['archtype'](env.nbArms, **policy['params']))
+            else:
+                print("  Using this already created policy 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
+                self.policies.append(policy)
 
     def start_all_env(self):
         for envId, env in enumerate(self.envs):
@@ -95,16 +99,13 @@ class Evaluator(object):
                     r = delayed_play(env, policy, self.horizon)
                     results.append(r)
             # Get the position of the best arms
-            env = self.envs[envId]
             means = np.array([arm.mean() for arm in env.arms])
             bestarm = np.max(means)
             index_bestarm = np.argwhere(np.isclose(means, bestarm))
             # Store the results
             for r in results:
-                # self.rewards[policyId, envId, :] += np.cumsum(r.rewards)
-                self.rewards[policyId, envId, :] += r.rewards  # FIXME not sure if we can remove np.cumsum here???
-                # self.rewardsSquared[policyId, envId, :] += np.cumsum(r.rewardsSquared)
-                self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # FIXME not sure if we can remove np.cumsum here???
+                self.rewards[policyId, envId, :] += r.rewards
+                self.rewardsSquared[policyId, envId, :] += r.rewardsSquared
                 self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                 self.pulls[envId][policyId, :] += r.pulls
 
@@ -118,45 +119,83 @@ class Evaluator(object):
     def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
 
-    def getRegretMean(self, policyId, environmentId=0):
-        return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))  # FIXME not sure if we can remove np.cumsum here???
+    def getCumulatedRegret(self, policyId, environmentId=0):
+        # return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))
+        return np.cumsum(self.envs[environmentId].maxArm - self.getRewards(policyId, environmentId))
+
+    def getAverageRewards(self, policyId, environmentId=0):
+        return np.cumsum(self.getRewards(policyId, environmentId)) / np.arange(1, 1 + self.horizon)
 
     def getRewardsSquared(self, policyId, environmentId=0):
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
 
-    def plotRegrets(self, environmentId, savefig=None, errorplot=True, semilogx=False):
+    def getSTDRegret(self, policyId, environmentId=0, averageRegret=False):
+        X = np.arange(1, 1 + self.horizon)
+        Y = self.getRewards(policyId, environmentId)
+        Y2 = self.getRewardsSquared(policyId, environmentId)
+        if averageRegret:  # FIXME The expectation is also done on time ??
+            Ycum2 = (np.cumsum(Y) / X)**2
+            Y2cum = np.cumsum(Y2) / X
+            assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
+            stdY = np.sqrt(Y2cum - Ycum2)
+            # stdY /= 10  # XXX make it look smaller????
+            stdY /= 10 * np.max(Y)
+        else:  # FIXED The expectation was done on nb of repetitions
+            # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
+            # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
+            stdY = np.sqrt(Y2 - Y**2)
+            # stdY /= 10  # XXX make it look smaller????
+            stdY = np.cumsum(stdY)  # cumsum is needed here??
+            stdY /= 0.1 * np.max(Y)
+        print("  - stdY =", stdY)  # DEBUG
+        print("  - np.shape(stdY) =", np.shape(stdY))  # DEBUG
+        print("  - np.min(stdY) =", np.min(stdY))  # DEBUG
+        print("  - np.max(stdY) =", np.max(stdY))  # DEBUG
+        return stdY
+
+    def plotRegrets(self, environmentId,
+                    savefig=None, averageRegret=False, errorplot=True, semilogx=False, normalizedRegret=False
+                    ):
         plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
         delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        X = np.arange(self.horizon)
         for i, policy in enumerate(self.policies):
-            Y = self.getRegretMean(i, environmentId)
-            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            if averageRegret:
+                Y = self.getAverageRewards(i, environmentId)
+            else:
+                Y = self.getCumulatedRegret(i, environmentId)
+                if normalizedRegret:
+                    Y /= np.log(2 + X)   # FIXME better way to prevent /0 ??
+            ymin = min(ymin, np.min(Y))
             if semilogx:
                 plt.semilogx(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
                 plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-            # FIXME use http://matplotlib.org/users/recipes.html#fill-between-and-alpha if errorplot is not enough?
-            # std(X) = sqrt( E[X**2] - E[X]**2 )
-            if errorplot:
-                stdY = np.sqrt(np.abs(self.getRewardsSquared(i, environmentId) - self.getRewards(i, environmentId)**2))
+            # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
+            if errorplot and self.repetitions > 1:
+                stdY = self.getSTDRegret(i, environmentId, averageRegret=averageRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
-                # stdY = np.cumsum(stdY)  # FIXME is it correct?
-                print("  - stdY =", stdY)  # DEBUG
-                print("  - np.shape(stdY) =", np.shape(stdY))  # DEBUG
-                print("  - np.min(stdY) =", np.min(stdY))  # DEBUG
-                print("  - np.max(stdY) =", np.max(stdY))  # DEBUG
-                X = np.arange(0, self.horizon)
+                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.3)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
-                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
-        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        ymax = plt.ylim()[1]
+        ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
-        plt.ylabel(r"Cumulative Regret $R_t$")
-        plt.title("Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        if averageRegret:
+            plt.legend(loc='center right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.ylabel(r"Mean Reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Mean Reward for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        elif normalizedRegret:
+            plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.ylabel(r"Normalized Cumulated Regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Normalized Cumulated Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        else:
+            plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.ylabel(r"Cumulated Regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Cumulated Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -172,7 +211,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-        plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -189,7 +228,7 @@ class Evaluator(object):
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
-            Y = self.getRegretMean(i, environmentId)
+            Y = self.getCumulatedRegret(i, environmentId)
             if self.finalRanksOnAverage:
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:

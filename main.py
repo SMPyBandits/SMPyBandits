@@ -11,20 +11,26 @@ __version__ = "0.2"
 # Generic imports
 from os import mkdir
 import os.path
+import matplotlib.pyplot as plt
 # Local imports
 from Environment import Evaluator
 from configuration import configuration
 
+
 # Parameters for the plots (where to save them) and what to draw
 plot_dir = "plots"
 semilogx = False
+averageRegret = True
+normalizedRegret = True
+
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
 averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
-useJoblibForPolicies = False
+
 # Whether to do the plots or not
 do_plot = False
 do_plot = True
+
 # Whether to show all plots, or one by one
 interactive = True
 interactive = False  # Seems to be the only mode which is working well
@@ -37,13 +43,10 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
     else:
         mkdir(plot_dir)
-    # useJoblibForPolicies = True  # FIXME it does not work - yet
     evaluation = Evaluator(configuration,
                            finalRanksOnAverage=finalRanksOnAverage,
-                           averageOn=averageOn,
-                           useJoblibForPolicies=useJoblibForPolicies
+                           averageOn=averageOn
                            )
-    # evaluation.start_all_env()
     # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
@@ -74,14 +77,28 @@ if __name__ == '__main__':
         if interactive:
             plt.interactive(True)
 
-        savefig = os.path.join(plot_dir, imagename)
-        print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)
+        # savefig = os.path.join(plot_dir, imagename)
+        # print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
+        evaluation.plotRegrets(envId, semilogx=semilogx)
 
-        # Also plotting the probability of picking the best arm
-        savefig = savefig.replace('main', 'main_BestArmPulls')
-        print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-        evaluation.plotBestArmPulls(envId, savefig=savefig)
+        if averageRegret:
+            # savefig = savefig.replace('main', 'main_MeanRewards')
+            # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
+            # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, averageRegret=True)  # XXX To save the figure
+            evaluation.plotRegrets(envId, semilogx=semilogx, averageRegret=True)
+
+        if normalizedRegret:
+            # savefig = savefig.replace('main', 'main_Normalized')
+            # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
+            # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
+            evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True)
+
+        # --- Also plotting the probability of picking the best arm
+        # savefig = savefig.replace('main', 'main_BestArmPulls')
+        # print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
+        evaluation.plotBestArmPulls(envId)
 
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))

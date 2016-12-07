@@ -16,13 +16,18 @@ import matplotlib.pyplot as plt
 from Environment import EvaluatorMultiPlayers
 from configuration_multiplayers import configuration
 
+
 # Parameters for the plots (where to save them) and what to draw
 plot_dir = "plots"
 semilogx = False
 piechart = True
+averageRegret = True
+normalizedRegret = True
+
 # Whether to do the plots or not
 do_plot = False
 do_plot = True
+
 # Whether to show all plots, or one by one
 interactive = True
 interactive = False  # Seems to be the only mode which is working well

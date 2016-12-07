@@ -20,19 +20,20 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-# HORIZON = 20000
-# HORIZON = 30000
-# HORIZON = 10000
+HORIZON = 20000
+HORIZON = 30000
+HORIZON = 10000
+# HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 500
-REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 500
+# REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -71,8 +72,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
+TEST_AGGR = False  # XXX do not let this = False
 TEST_AGGR = True
-TEST_AGGR = False
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
 
@@ -132,33 +133,48 @@ configuration = {
     #         "params": [(0.1, 0.5), (0.2, 0.5), (0.3, 0.5), (0.4, 0.5), (0.5, 0.5), (0.6, 0.5), (0.7, 0.5), (0.8, 0.5), (0.9, 0.5)]
     #     },
     # ],
+}
+
+nbArms = len(configuration['environment'][0]['params'])
+if len(configuration['environment']) > 1:
+    raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+
+configuration.update({
     "policies": [
-        # --- Stupid algorithms
-        {
-            "archtype": Uniform,   # The stupidest policy
-            "params": {}
-        },
-        # --- Epsilon-... algorithms
-        {
-            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-            "params": {
-                "epsilon": EPSILON
-            }
-        },
-        {
-            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "decreasingRate": 0.005,
-            }
-        },
-        {
-            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "horizon": HORIZON
-            }
-        },
+        # # --- Stupid algorithms
+        # {
+        #     "archtype": Uniform,   # The stupidest policy
+        #     "params": {}
+        # },
+        # Uniform(nbArms),
+        TakeRandomFixedArm(nbArms),
+        TakeRandomFixedArm(nbArms),
+        TakeRandomFixedArm(nbArms),
+        TakeRandomFixedArm(nbArms),
+        # # --- Full or partial knowledge algorithms
+        # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
+        # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
+        # # --- Epsilon-... algorithms
+        # {
+        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+        #     "params": {
+        #         "epsilon": EPSILON
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "decreasingRate": 0.005,
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -174,18 +190,18 @@ configuration = {
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -203,10 +219,10 @@ configuration = {
         #     "archtype": klUCB,
         #     "params": {}
         # },
-        # # # {
-        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # # #     "params": {}
-        # # # },
+        # # {
+        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # #     "params": {}
+        # # },
         # {
         #     "archtype": BayesUCB,
         #     "params": {}
@@ -234,7 +250,7 @@ configuration = {
         #     }
         # },
     ]
-}
+})
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
