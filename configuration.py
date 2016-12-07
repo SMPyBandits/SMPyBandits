@@ -28,12 +28,12 @@ HORIZON = 30000
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 500
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -155,7 +155,7 @@ configuration.update({
         #     "params": {}
         # },
         # # --- Full or partial knowledge algorithms
-        # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
+        TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
         # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
         # TakeFixedArm(nbArms, 0),  # Take worse arm!
         # # --- Epsilon-... algorithms

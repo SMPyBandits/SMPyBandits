@@ -147,13 +147,14 @@ class Evaluator(object):
             # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
             # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
             stdY = np.cumsum(np.sqrt(Y2 - Y**2))
-            YMAX *= np.log(2 + self.horizon)  # XXX make it look larger, for the plots
+            YMAX *= np.log(2 + self.horizon)  # Normalize the std variation
+            YMAX *= 50  # XXX make it look larger, for the plots
         # Renormalize this standard deviation
         stdY /= YMAX
         return stdY
 
     def plotRegrets(self, environmentId,
-                    savefig=None, averageRegret=False, errorplot=True, semilogx=False, normalizedRegret=False
+                    savefig=None, averageRegret=False, plotSTD=True, semilogx=False, normalizedRegret=False
                     ):
         plt.figure()
         ymin = 0
@@ -168,19 +169,19 @@ class Evaluator(object):
             else:
                 Y = self.getCumulatedRegret(i, environmentId)
                 if normalizedRegret:
-                    Y /= np.log(2 + X)   # FIXME better way to prevent /0 ??
+                    Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
             if semilogx:
                 plt.semilogx(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
                 plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
-            if errorplot and self.repetitions > 1:
+            if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, environmentId, averageRegret=averageRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
-                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.3)
+                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)

@@ -102,38 +102,40 @@
 </g>
 <!-- 5 -->
 <g id="node6" class="node"><title>5</title>
-<polygon fill="none" stroke="black" points="708.5,-53 708.5,-512 908.5,-512 908.5,-53 708.5,-53"/>
-<text text-anchor="middle" x="808.5" y="-496.8" font-family="Times,serif" font-size="14.00">Environment.Evaluator.Evaluator</text>
-<polyline fill="none" stroke="black" points="708.5,-489 908.5,-489 "/>
-<text text-anchor="start" x="716.5" y="-473.8" font-family="Times,serif" font-size="14.00">BestArmPulls : dict</text>
-<text text-anchor="start" x="716.5" y="-458.8" font-family="Times,serif" font-size="14.00">averageOn : float</text>
-<text text-anchor="start" x="716.5" y="-443.8" font-family="Times,serif" font-size="14.00">cfg</text>
-<text text-anchor="start" x="716.5" y="-428.8" font-family="Times,serif" font-size="14.00">envs : list</text>
-<text text-anchor="start" x="716.5" y="-413.8" font-family="Times,serif" font-size="14.00">finalRanksOnAverage : bool</text>
-<text text-anchor="start" x="716.5" y="-398.8" font-family="Times,serif" font-size="14.00">horizon</text>
-<text text-anchor="start" x="716.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPolicies</text>
-<text text-anchor="start" x="716.5" y="-368.8" font-family="Times,serif" font-size="14.00">policies : list</text>
-<text text-anchor="start" x="716.5" y="-353.8" font-family="Times,serif" font-size="14.00">pulls : dict</text>
-<text text-anchor="start" x="716.5" y="-338.8" font-family="Times,serif" font-size="14.00">repetitions</text>
-<text text-anchor="start" x="716.5" y="-323.8" font-family="Times,serif" font-size="14.00">rewards</text>
-<text text-anchor="start" x="716.5" y="-308.8" font-family="Times,serif" font-size="14.00">rewardsSquared</text>
-<text text-anchor="start" x="716.5" y="-293.8" font-family="Times,serif" font-size="14.00">useJoblib</text>
-<text text-anchor="start" x="716.5" y="-278.8" font-family="Times,serif" font-size="14.00">useJoblibForPolicies : bool</text>
-<polyline fill="none" stroke="black" points="708.5,-271 908.5,-271 "/>
-<text text-anchor="start" x="716.5" y="-255.8" font-family="Times,serif" font-size="14.00">__initEnvironments__()</text>
-<text text-anchor="start" x="716.5" y="-240.8" font-family="Times,serif" font-size="14.00">__initPolicies__()</text>
-<text text-anchor="start" x="716.5" y="-225.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<polygon fill="none" stroke="black" points="708.5,-38 708.5,-527 908.5,-527 908.5,-38 708.5,-38"/>
+<text text-anchor="middle" x="808.5" y="-511.8" font-family="Times,serif" font-size="14.00">Environment.Evaluator.Evaluator</text>
+<polyline fill="none" stroke="black" points="708.5,-504 908.5,-504 "/>
+<text text-anchor="start" x="716.5" y="-488.8" font-family="Times,serif" font-size="14.00">BestArmPulls : dict</text>
+<text text-anchor="start" x="716.5" y="-473.8" font-family="Times,serif" font-size="14.00">averageOn : float</text>
+<text text-anchor="start" x="716.5" y="-458.8" font-family="Times,serif" font-size="14.00">cfg</text>
+<text text-anchor="start" x="716.5" y="-443.8" font-family="Times,serif" font-size="14.00">envs : list</text>
+<text text-anchor="start" x="716.5" y="-428.8" font-family="Times,serif" font-size="14.00">finalRanksOnAverage : bool</text>
+<text text-anchor="start" x="716.5" y="-413.8" font-family="Times,serif" font-size="14.00">horizon</text>
+<text text-anchor="start" x="716.5" y="-398.8" font-family="Times,serif" font-size="14.00">nbPolicies</text>
+<text text-anchor="start" x="716.5" y="-383.8" font-family="Times,serif" font-size="14.00">policies : list</text>
+<text text-anchor="start" x="716.5" y="-368.8" font-family="Times,serif" font-size="14.00">pulls : dict</text>
+<text text-anchor="start" x="716.5" y="-353.8" font-family="Times,serif" font-size="14.00">repetitions</text>
+<text text-anchor="start" x="716.5" y="-338.8" font-family="Times,serif" font-size="14.00">rewards</text>
+<text text-anchor="start" x="716.5" y="-323.8" font-family="Times,serif" font-size="14.00">rewardsSquared</text>
+<text text-anchor="start" x="716.5" y="-308.8" font-family="Times,serif" font-size="14.00">useJoblib</text>
+<text text-anchor="start" x="716.5" y="-293.8" font-family="Times,serif" font-size="14.00">useJoblibForPolicies : bool</text>
+<polyline fill="none" stroke="black" points="708.5,-286 908.5,-286 "/>
+<text text-anchor="start" x="716.5" y="-270.8" font-family="Times,serif" font-size="14.00">__initEnvironments__()</text>
+<text text-anchor="start" x="716.5" y="-255.8" font-family="Times,serif" font-size="14.00">__initPolicies__()</text>
+<text text-anchor="start" x="716.5" y="-240.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="716.5" y="-225.8" font-family="Times,serif" font-size="14.00">getAverageRewards()</text>
 <text text-anchor="start" x="716.5" y="-210.8" font-family="Times,serif" font-size="14.00">getBestArmPulls()</text>
-<text text-anchor="start" x="716.5" y="-195.8" font-family="Times,serif" font-size="14.00">getPulls()</text>
-<text text-anchor="start" x="716.5" y="-180.8" font-family="Times,serif" font-size="14.00">getRegretMean()</text>
-<text text-anchor="start" x="716.5" y="-165.8" font-family="Times,serif" font-size="14.00">getRegretVariance()</text>
-<text text-anchor="start" x="716.5" y="-150.8" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="716.5" y="-135.8" font-family="Times,serif" font-size="14.00">getRewardSquared()</text>
-<text text-anchor="start" x="716.5" y="-120.8" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
-<text text-anchor="start" x="716.5" y="-105.8" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
-<text text-anchor="start" x="716.5" y="-90.8" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
-<text text-anchor="start" x="716.5" y="-75.8" font-family="Times,serif" font-size="14.00">start_all_env()</text>
-<text text-anchor="start" x="716.5" y="-60.8" font-family="Times,serif" font-size="14.00">start_one_env()</text>
+<text text-anchor="start" x="716.5" y="-195.8" font-family="Times,serif" font-size="14.00">getCumulatedRegret()</text>
+<text text-anchor="start" x="716.5" y="-180.8" font-family="Times,serif" font-size="14.00">getMaxRewards()</text>
+<text text-anchor="start" x="716.5" y="-165.8" font-family="Times,serif" font-size="14.00">getPulls()</text>
+<text text-anchor="start" x="716.5" y="-150.8" font-family="Times,serif" font-size="14.00">getRewards()</text>
+<text text-anchor="start" x="716.5" y="-135.8" font-family="Times,serif" font-size="14.00">getRewardsSquared()</text>
+<text text-anchor="start" x="716.5" y="-120.8" font-family="Times,serif" font-size="14.00">getSTDRegret()</text>
+<text text-anchor="start" x="716.5" y="-105.8" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
+<text text-anchor="start" x="716.5" y="-90.8" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
+<text text-anchor="start" x="716.5" y="-75.8" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
+<text text-anchor="start" x="716.5" y="-60.8" font-family="Times,serif" font-size="14.00">start_all_env()</text>
+<text text-anchor="start" x="716.5" y="-45.8" font-family="Times,serif" font-size="14.00">start_one_env()</text>
 </g>
 <!-- 6 -->
 <g id="node7" class="node"><title>6</title>
@@ -166,7 +168,7 @@
 <text text-anchor="start" x="935" y="-188.3" font-family="Times,serif" font-size="14.00">getFreeTransmissions()</text>
 <text text-anchor="start" x="935" y="-173.3" font-family="Times,serif" font-size="14.00">getPulls()</text>
 <text text-anchor="start" x="935" y="-158.3" font-family="Times,serif" font-size="14.00">getRegretMean()</text>
-<text text-anchor="start" x="935" y="-143.3" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="935" y="-143.3" font-family="Times,serif" font-size="14.00">getRewards()</text>
 <text text-anchor="start" x="935" y="-128.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
 <text text-anchor="start" x="935" y="-113.3" font-family="Times,serif" font-size="14.00">plotFreeTransmissions()</text>
 <text text-anchor="start" x="935" y="-98.3" font-family="Times,serif" font-size="14.00">plotFrequencyCollisions()</text>

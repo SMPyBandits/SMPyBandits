@@ -22,6 +22,7 @@ plot_dir = "plots"
 semilogx = False
 averageRegret = True
 normalizedRegret = True
+plotSTD = True
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
@@ -80,19 +81,22 @@ if __name__ == '__main__':
         # savefig = os.path.join(plot_dir, imagename)
         # print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
         # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
-        evaluation.plotRegrets(envId, semilogx=semilogx)
+        evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
+        evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 
         if averageRegret:
             # savefig = savefig.replace('main', 'main_MeanRewards')
             # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
             # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, averageRegret=True)  # XXX To save the figure
-            evaluation.plotRegrets(envId, semilogx=semilogx, averageRegret=True)
+            evaluation.plotRegrets(envId, semilogx=semilogx, averageRegret=True, plotSTD=False)
+            # evaluation.plotRegrets(envId, semilogx=semilogx, averageRegret=True, plotSTD=True)
 
         if normalizedRegret:
             # savefig = savefig.replace('main', 'main_Normalized')
             # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
             # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
-            evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True)
+            # evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=False)
+            evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
 
         # --- Also plotting the probability of picking the best arm
         # savefig = savefig.replace('main', 'main_BestArmPulls')
