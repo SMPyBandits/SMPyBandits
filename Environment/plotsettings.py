@@ -6,14 +6,14 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 
 # Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Nov.2016 - Code on https://github.com/Naereen/AlgoBandits)"
+signature = "\n(By Lilian Besson, Dec.2016 - Code on https://github.com/Naereen/AlgoBandits)"
 
 DPI = 140
 HLS = True

@@ -119,6 +119,9 @@ class Evaluator(object):
     def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
 
+    def getMaxRewards(self, environmentId=0):
+        return np.max(self.rewards[:, environmentId, :] / float(self.repetitions))
+
     def getCumulatedRegret(self, policyId, environmentId=0):
         # return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))
         return np.cumsum(self.envs[environmentId].maxArm - self.getRewards(policyId, environmentId))
@@ -130,27 +133,23 @@ class Evaluator(object):
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, environmentId=0, averageRegret=False):
+        YMAX = self.getMaxRewards(environmentId=environmentId)
         X = np.arange(1, 1 + self.horizon)
         Y = self.getRewards(policyId, environmentId)
         Y2 = self.getRewardsSquared(policyId, environmentId)
-        if averageRegret:  # FIXME The expectation is also done on time ??
+        if averageRegret:  # Cumulated expectation on time
             Ycum2 = (np.cumsum(Y) / X)**2
             Y2cum = np.cumsum(Y2) / X
             assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
             stdY = np.sqrt(Y2cum - Ycum2)
-            # stdY /= 10  # XXX make it look smaller????
-            stdY /= 10 * np.max(Y)
-        else:  # FIXED The expectation was done on nb of repetitions
+            YMAX *= 20  # XXX make it look smaller, for the plots
+        else:  # Expectation on nb of repetitions
             # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
             # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
-            stdY = np.sqrt(Y2 - Y**2)
-            # stdY /= 10  # XXX make it look smaller????
-            stdY = np.cumsum(stdY)  # cumsum is needed here??
-            stdY /= 0.1 * np.max(Y)
-        print("  - stdY =", stdY)  # DEBUG
-        print("  - np.shape(stdY) =", np.shape(stdY))  # DEBUG
-        print("  - np.min(stdY) =", np.min(stdY))  # DEBUG
-        print("  - np.max(stdY) =", np.max(stdY))  # DEBUG
+            stdY = np.cumsum(np.sqrt(Y2 - Y**2))
+            YMAX *= np.log(2 + self.horizon)  # XXX make it look larger, for the plots
+        # Renormalize this standard deviation
+        stdY /= YMAX
         return stdY
 
     def plotRegrets(self, environmentId,
@@ -179,13 +178,15 @@ class Evaluator(object):
             if errorplot and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, environmentId, averageRegret=averageRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
+                if normalizedRegret:
+                    stdY /= np.log(2 + X)
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.3)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         if averageRegret:
-            plt.legend(loc='center right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean Reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Mean Reward for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:

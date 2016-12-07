@@ -20,9 +20,9 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
+HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
-HORIZON = 10000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -143,17 +143,21 @@ configuration.update({
     "policies": [
         # # --- Stupid algorithms
         # {
-        #     "archtype": Uniform,   # The stupidest policy
+        #     "archtype": Uniform,   # The stupidest policy, fully uniform
         #     "params": {}
         # },
-        # Uniform(nbArms),
-        TakeRandomFixedArm(nbArms),
-        TakeRandomFixedArm(nbArms),
-        TakeRandomFixedArm(nbArms),
-        TakeRandomFixedArm(nbArms),
+        # {
+        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        #     "params": {}
+        # },
         # # --- Full or partial knowledge algorithms
         # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
         # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
+        # TakeFixedArm(nbArms, 0),  # Take worse arm!
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -190,18 +194,18 @@ configuration.update({
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
         # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -209,24 +213,24 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
+        # --- KL algorithms
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}
         # # },
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
-        # },
+        {
+            "archtype": BayesUCB,
+            "params": {}
+        },
         # # --- AdBandit with different alpha paramters
         # {
         #     "archtype": AdBandit,
