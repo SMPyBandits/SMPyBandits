@@ -9,6 +9,7 @@ __version__ = "0.1"
 from copy import deepcopy
 from textwrap import wrap
 from re import search
+import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -92,9 +93,10 @@ class EvaluatorMultiPlayers(object):
         self.players = []
         self.__initPlayers__(env)
         if self.useJoblib:
+            seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                joblib.delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel)
-                for _ in range(self.repetitions)
+                joblib.delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[i])
+                for i in range(self.repetitions)
             )
         else:
             results = []
@@ -311,7 +313,10 @@ class EvaluatorMultiPlayers(object):
 
 # Helper function for the parallelization
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-def delayed_play(env, players, horizon, collisionModel):
+def delayed_play(env, players, horizon, collisionModel, seed=None):
+    # XXX Try to give a unique seed to random & numpy.random for each call of this function
+    random.seed(seed)
+    np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     nbArms = env.nbArms

@@ -7,7 +7,7 @@ __version__ = "0.2"
 
 # Generic imports
 from copy import deepcopy
-from random import shuffle
+import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -89,9 +89,10 @@ class Evaluator(object):
         for policyId, policy in enumerate(self.policies):
             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
+                seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon)
-                    for _ in range(self.repetitions)
+                    joblib.delayed(delayed_play)(env, policy, self.horizon, seed=seeds[i])
+                    for i in range(self.repetitions)
                 )
             else:
                 results = []
@@ -132,12 +133,12 @@ class Evaluator(object):
     def getRewardsSquared(self, policyId, environmentId=0):
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
 
-    def getSTDRegret(self, policyId, environmentId=0, averageRegret=False):
+    def getSTDRegret(self, policyId, environmentId=0, meanRegret=False):
         YMAX = self.getMaxRewards(environmentId=environmentId)
         X = np.arange(1, 1 + self.horizon)
         Y = self.getRewards(policyId, environmentId)
         Y2 = self.getRewardsSquared(policyId, environmentId)
-        if averageRegret:  # Cumulated expectation on time
+        if meanRegret:  # Cumulated expectation on time
             Ycum2 = (np.cumsum(Y) / X)**2
             Y2cum = np.cumsum(Y2) / X
             assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
@@ -154,7 +155,7 @@ class Evaluator(object):
         return stdY
 
     def plotRegrets(self, environmentId,
-                    savefig=None, averageRegret=False, plotSTD=True, semilogx=False, normalizedRegret=False
+                    savefig=None, meanRegret=False, plotSTD=True, semilogx=False, normalizedRegret=False
                     ):
         plt.figure()
         ymin = 0
@@ -164,7 +165,7 @@ class Evaluator(object):
         delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         X = np.arange(self.horizon)
         for i, policy in enumerate(self.policies):
-            if averageRegret:
+            if meanRegret:
                 Y = self.getAverageRewards(i, environmentId)
             else:
                 Y = self.getCumulatedRegret(i, environmentId)
@@ -177,7 +178,7 @@ class Evaluator(object):
                 plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
-                stdY = self.getSTDRegret(i, environmentId, averageRegret=averageRegret)
+                stdY = self.getSTDRegret(i, environmentId, meanRegret=meanRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
@@ -186,18 +187,20 @@ class Evaluator(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
-        if averageRegret:
+        if meanRegret:
+            # We plot a horizontal line ----- at the best arm mean
+            plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
             plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-            plt.ylabel(r"Mean Reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Mean Reward for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-            plt.ylabel(r"Normalized Cumulated Regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Normalized Cumulated Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         else:
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-            plt.ylabel(r"Cumulated Regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Cumulated Regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -213,7 +216,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
-        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
@@ -247,7 +250,11 @@ class Evaluator(object):
 
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon,
-                 random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events):
+                 random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
+                 seed=None):
+    # XXX Try to give a unique seed to random & numpy.random for each call of this function
+    random.seed(seed)
+    np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)
@@ -269,7 +276,7 @@ def delayed_play(env, policy, horizon,
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle:
             if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
-                shuffle(env.arms)
+                random.shuffle(env.arms)
                 # print("Shuffling the arms ...")  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert:
