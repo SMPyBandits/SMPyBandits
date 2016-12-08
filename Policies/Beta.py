@@ -1,15 +1,25 @@
 # -*- coding: utf-8 -*-
 """ Manipulate posteriors of Bernoulli/Beta experiments.
+
+Rewards not in `{0, 1}` are handled with a trick, with a "random binarization", cf., [[Agrawal & Goyal, 2012]](http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf) (algorithm 2).
+When reward `r_t \in [0, 1]` is observed, the player receives the result of a Bernoulli sample of average `r_t`: `r_t <- sample from Bernoulli(r_t)` so it is well in `{0, 1}`.
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
 __version__ = "$Revision: 1.7 $"
 
+from random import random
 try:
     from numpy.random import beta as betavariate  # Faster
 except ImportError:
     from random import betavariate
 from scipy.special import btdtri
+
+
+def bernoulliBinarization(r_t):
+    """ Return a (random) binarization of a reward r_t in the continuous interval [0, 1] as an observation in discrete {0, 1}."""
+    assert 0 <= r_t <= 1, "Error: only bounded rewards in [0, 1] are supported by this Beta posterior right now."
+    return int(random() < r_t)
 
 
 class Beta(object):
@@ -42,10 +52,10 @@ class Beta(object):
 
     def forget(self, obs):
         # print("Info: calling Beta.forget() with obs = {} ...".format(obs))  # DEBUG
-        # FIXME update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
-        self.N[int(obs)] -= 1
+        # FIXED update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
+        self.N[bernoulliBinarization(obs)] -= 1
 
     def update(self, obs):
         # print("Info: calling Beta.update() with obs = {} ...".format(obs))  # DEBUG
-        # FIXME update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
-        self.N[int(obs)] += 1
+        # FIXED update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
+        self.N[bernoulliBinarization(obs)] += 1

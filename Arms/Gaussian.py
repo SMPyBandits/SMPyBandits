@@ -33,5 +33,4 @@ class Gaussian(Arm):
         return min(max(self.mu + self.sigma * gauss(0, 1), self.trunc[0]), self.trunc[1])
 
     def __repr__(self):
-        # return "<" + self.__class__.__name__ + ": " + repr(self.mu) + ", " + repr(self.sigma) + ">"
         return "G({}, {})".format(self.mu, self.sigma)

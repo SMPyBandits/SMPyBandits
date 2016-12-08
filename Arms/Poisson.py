@@ -18,7 +18,7 @@ class Poisson(Arm):
 
     # def __init__(self, p, trunc=1):
     def __init__(self, p, trunc=float('inf')):
-        assert p >= 0, "Error, the parameter 'p' for Poisson class has to be > 0."
+        assert p >= 0, "Error, the parameter 'p' for Poisson class has to be >= 0."
         self.p = p
         self.trunc = trunc
         if isinf(trunc):
@@ -28,7 +28,7 @@ class Poisson(Arm):
             sq = q
             self.expectation = 0
             for k in range(1, self.trunc):
-                q = q * p / k
+                q *= p / k
                 self.expectation += k * q
                 sq += q
             self.expectation += self.trunc * (1 - sq)
@@ -45,8 +45,6 @@ class Poisson(Arm):
 
     def __repr__(self):
         if isinf(self.trunc):
-            # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ">"
             return "P({})".format(self.p)
         else:
-            # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ", " + repr(self.trunc) + ">"
             return "P({}, {})".format(self.p, self.trunc)
