@@ -25,9 +25,6 @@ from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
 # FIXME implement it
-# from .MEGA import MEGA
-
-# FIXME implement it
 # from .RhoRand import RhoRand
 
 # FIXME implement it

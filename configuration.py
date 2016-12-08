@@ -20,19 +20,19 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 500
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 500
+REPETITIONS = 200
+REPETITIONS = 100
+REPETITIONS = 50
 REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -78,20 +78,24 @@ UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
 
 
+# Parameters for the arms
+VARIANCE = 0.05   # Variance of Gaussian arms
+
+
 # XXX This dictionary configures the experiments
 configuration = {
-    # Duration of the experiment
+    # --- Duration of the experiment
     "horizon": HORIZON,
-    # Number of repetition of the experiment (to have an average)
+    # --- Number of repetition of the experiment (to have an average)
     "repetitions": REPETITIONS,
-    # Parameters for the use of joblib.Parallel
+    # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 6,  # Max joblib verbosity
-    # # Random events - TODO finish the improvement on Evaluator.py to support these parameters
+    # # --- Random events - TODO finish the improvement on Evaluator.py to support these parameters
     # "random_shuffle": True,
-    # "random_invert": False,
+    # # "random_invert": False,
     # "nb_random_events": 5,
-    # Arms
+    # --- Arms
     "environment": [  # Bernoulli arms
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
@@ -118,19 +122,18 @@ configuration = {
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         },
     ],
-    # # FIXED try with other arms distribution: Exponential
+    # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
-    #         # "params": [(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1)]
     #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
     #     },
     # ],
-    # FIXED try with other arms distribution: Gaussian
+    # DONE I tried with other arms distribution: Gaussian, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
-    #         "params": [(0.1, 0.5), (0.2, 0.5), (0.3, 0.5), (0.4, 0.5), (0.5, 0.5), (0.6, 0.5), (0.7, 0.5), (0.8, 0.5), (0.9, 0.5)]
+    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
     #     },
     # ],
 }
@@ -155,7 +158,7 @@ configuration.update({
         #     "params": {}
         # },
         # # --- Full or partial knowledge algorithms
-        TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
+        # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
         # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
         # TakeFixedArm(nbArms, 0),  # Take worse arm!
         # # --- Epsilon-... algorithms
@@ -194,6 +197,12 @@ configuration.update({
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {

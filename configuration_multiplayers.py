@@ -82,6 +82,10 @@ TEST_MULTIPLAYER_POLICY = False
 TEST_MULTIPLAYER_POLICY = True
 
 
+# Parameters for the arms
+VARIANCE = 0.05   # Variance of Gaussian arms
+
+
 # XXX This dictionary configures the experiments
 configuration = {
     # --- Duration of the experiment
@@ -123,16 +127,14 @@ configuration = {
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
-    #         # "params": [(2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1), (8, 1), (9, 1), (10, 1), (11, 1), (12, 1), (13, 1), (14, 1)]
-    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
     #     },
     # ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # FIXME Bayesian policies based on a Beta posterior (Thompson, BayesUCB) do not work - yet - for continuous reward in [0, 1] but only for Boolean reward in {0, 1} (ie Bernoulli).
-    # "environment": [  # Gaussian arms
+    # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
-    #         "params": [(0.1, 0.5), (0.2, 0.5), (0.3, 0.5), (0.4, 0.5), (0.5, 0.5), (0.6, 0.5), (0.7, 0.5), (0.8, 0.5), (0.9, 0.5)]
+    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
     #     },
     # ],
 }
@@ -177,9 +179,9 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
         # --- Using single-player Musical Chair policy
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0, Time1=HORIZON, N=NB_PLAYERS).childs  # XXX Tweaked MusicalChair, with knowledge of nbPlayers -- In fact it works worse than the non-tweaked version
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.04, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using multi-player Centralized policy
         # XXX each player need to now the number of players, OF COURSE this is not very physically plausible

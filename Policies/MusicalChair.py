@@ -93,7 +93,7 @@ class MusicalChair(object):
         self._nbObservations = np.zeros(nbArms, dtype=int)  # That's the o_i of the paper
         self._A = np.random.permutation(nbArms)  # XXX it will then be of size nbPlayers!
         self._nbCollision = 0  # That's the C_Time0 of the paper
-        # Implementation details for the common API
+        # Implementation details
         self.t = -1
 
     def __str__(self):
