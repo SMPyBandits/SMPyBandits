@@ -55,6 +55,7 @@ class MEGA(object):
         self.chosenArm = None
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
         self.rewards = np.zeros(nbArms)
+        self.pulls = np.zeros(nbArms, dtype=int)
         # Implementation details
         self.t = -1
 
@@ -67,6 +68,7 @@ class MEGA(object):
         self.chosenArm = rn.randint(self.nbArms)  # Start on a random arm
         self.tnext.fill(1)
         self.rewards.fill(0)
+        self.pulls.fill(0)
         self.t = 0
 
     def choice(self):
@@ -87,9 +89,12 @@ class MEGA(object):
                     newArm = rn.choice(availableArms)  # Explore valid arms
                     if self.chosenArm != newArm:
                         self.p = self.p0  # Reinitialize proba p
-                    self.chosenArm = newArm
-                else:  # Exploit
-                    self.chosenArm = self.chosenArm  # XXX remove after
+                else:  # Exploit: select the arm with highest meanRewards
+                    meanRewards = self.rewards / self.pulls
+                    meanRewards[self.pulls == 0] = float('-inf')  # Null reward if not pulled
+                    # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
+                    newArm = np.argmax(meanRewards)
+                self.chosenArm = newArm
                 return self.chosenArm
 
     def getReward(self, arm, reward):
@@ -118,7 +123,6 @@ class MEGA(object):
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
             # Reinitialize the proba p
             self.p = self.p0
-        raise ValueError("FIXME MEGA.handleCollision()")
 
     # --- Internal methods
 
