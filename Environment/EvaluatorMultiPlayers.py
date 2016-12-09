@@ -173,10 +173,10 @@ class EvaluatorMultiPlayers(object):
                 plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
         # TODO add std
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
-        plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
+        plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -194,8 +194,8 @@ class EvaluatorMultiPlayers(object):
         else:
             plt.plot(Y)
         # TODO add std
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + self.strPlayers())
-        plt.ylabel(r"Cumulative Centralized Regret $R_t$")
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
+        plt.ylabel("Cumulative Centralized Regret $R_t$")
         plt.title("Multi-players $M = {}$ (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -210,9 +210,9 @@ class EvaluatorMultiPlayers(object):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(player), color=colors[i])
         plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
-        plt.ylabel(r"Frequency of pulls of the optimal arm")
+        plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -228,9 +228,9 @@ class EvaluatorMultiPlayers(object):
             plt.plot(Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
             # TODO should only plot with markers
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
-        plt.ylabel(r"Transmission on a free channel")
+        plt.ylabel("Transmission on a free channel")
         plt.title("Multi-players $M = {}$ (collision model: {}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -252,10 +252,10 @@ class EvaluatorMultiPlayers(object):
             Y = np.cumsum(Y)
         else:
             plt.ylim([-0.03, 1.03])
-        # Y /= (self.nbPlayers)  # XXX To normalized the count?
+        Y /= (self.nbPlayers)  # XXX To normalized the count?
         # Start the figure
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        plt.ylabel(r"{} of collisions".format("Cumulated number" if cumsum else "Number"))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
+        plt.ylabel("{} of collisions".format("Cumulated number" if cumsum else "Number"))
         plt.plot(Y, '-' if cumsum else '.')
         plt.legend(loc='lower right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):{} number of collisions, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, " cumulated" if cumsum else ' ', self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))

@@ -89,6 +89,8 @@ It is important to highlight that it has to be verified on each run of the MP po
 - Usually, the [`Selfish`](PoliciesMultiPlayers/Selfish.py) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `M` best arms.
 - Conversely, the [`MusicalChair`](Policies/MusicalChair.py) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `M` best arms.
 
+- The [`MEGA`](Policies/MEGA.py) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `M` best arms equally.
+
 ----
 
 ## How to run the experiments ?

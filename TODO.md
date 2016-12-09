@@ -33,9 +33,9 @@
 - [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms).
 - [x] implement the basic multi-player policies, as [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
 - [x] I implemented the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](Policies/MusicalChair.py). TODO ["Dynamic Musical Chair"](https://arxiv.org/abs/1512.02866).
+- [x] I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421).
 - [ ] plot several "multi-players" policy on the same graphs (e.g., the cumulative centralized regret of `M` players following `Selfish[UCB]` against the regret of `M` players following `Selfish[klCUB]`).
 
 ### Implement the state-of-the-art algorithms:
-- [ ] first ["MEGA"](https://arxiv.org/abs/1404.5421) from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421).
 - [ ] then ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/).
 - [ ] finally ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
