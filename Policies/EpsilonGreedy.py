@@ -9,7 +9,7 @@ __version__ = "0.1"
 import numpy as np
 import random
 
-epsilon = 0.1
+EPSILON = 0.1
 
 
 class EpsilonGreedy(object):
@@ -17,7 +17,7 @@ class EpsilonGreedy(object):
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, epsilon=epsilon):
+    def __init__(self, nbArms, epsilon=EPSILON):
         self.nbArms = nbArms
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonGreedy class has to be in [0, 1]."
         self.epsilon = epsilon

@@ -9,8 +9,8 @@ __version__ = "0.1"
 import numpy as np
 import random
 
-epsilon = 0.1
-decreasingRate = 1e-6
+EPSILON = 0.1
+DECREASINGRATE = 1e-6
 
 
 class EpsilonDecreasing(object):
@@ -18,7 +18,7 @@ class EpsilonDecreasing(object):
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, epsilon=epsilon, decreasingRate=decreasingRate):
+    def __init__(self, nbArms, epsilon=EPSILON, decreasingRate=DECREASINGRATE):
         self.nbArms = nbArms
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonDecreasing class has to be in [0, 1]."
         self.epsilon = epsilon
@@ -36,7 +36,7 @@ class EpsilonDecreasing(object):
         self.rewards.fill(0)
 
     def choice(self):
-        if random.random() < self.epsilon * np.exp(- self.t * decreasingRate):
+        if random.random() < self.epsilon * np.exp(- self.t * self.decreasingRate):
             # Proba epsilon : explore
             arm = random.randint(0, self.nbArms - 1)
         else:
