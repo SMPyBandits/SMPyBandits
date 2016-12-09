@@ -20,8 +20,8 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-# HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 10000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 
@@ -197,24 +197,24 @@ configuration.update({
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -231,6 +231,16 @@ configuration.update({
         {
             "archtype": klUCB,
             "params": {}
+        },
+        {
+            "archtype": klUCBPlus,
+            "params": {}
+        },
+        {
+            "archtype": klUCBHPlus,
+            "params": {
+                "horizon": HORIZON
+            }
         },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now

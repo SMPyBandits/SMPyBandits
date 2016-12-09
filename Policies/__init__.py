@@ -21,11 +21,18 @@ from .Softmax import Softmax
 # From pymaBandits v1.0
 from .UCB import UCB
 from .UCBalpha import UCBalpha
+from .UCBTuned import UCBTuned
 from .UCBV import UCBV
+from .MOSS import MOSS
+
 from .Thompson import Thompson
+
 from .BayesUCB import BayesUCB
+
 from .klUCB import klUCB
 # from .KLempUCB import KLempUCB  # XXX fix it before importing it
+from .klUCBPlus import klUCBPlus
+from .klUCBHPlus import klUCBHPlus
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandit

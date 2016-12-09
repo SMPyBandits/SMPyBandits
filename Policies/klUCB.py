@@ -27,7 +27,7 @@ class klUCB(IndexPolicy):
         self.lower = lower
         self.klucb = klucb
         self.tolerance = tolerance
-        self.params = 'amplitude: {}, lower: {}'.format(self.amplitude, self.lower)
+        self.params = "amplitude: {}, lower: {}".format(self.amplitude, self.lower)
         self.t = -1
         self.pulls = np.zeros(self.nbArms, dtype=int)
         self.rewards = np.zeros(self.nbArms)
@@ -42,10 +42,10 @@ class klUCB(IndexPolicy):
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:
-            return float('+infinity')
+            return float('+inf')
         else:
             # Could adapt tolerance to the value of self.t
-            return self.klucb(self.rewards[arm] / float(self.pulls[arm]), self.c * log(self.t) / float(self.pulls[arm]), self.tolerance)
+            return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)
 
     def getReward(self, arm, reward):
         self.t += 1
