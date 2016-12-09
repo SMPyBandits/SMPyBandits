@@ -94,6 +94,18 @@ if __name__ == '__main__':
         # evaluation.plotFreeTransmissions(envId, savefig=savefig)
         # evaluation.plotFreeTransmissions(envId)  # XXX To plot without saving
 
+        # Also plotting the total nb of collision as a function of time
+        savefig = savefig.replace('main', 'main_NbCollisions')
+        print(" - Plotting the total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=False)
+        evaluation.plotNbCollisions(envId, cumsum=False)
+
+        # Also plotting the total nb of collision as a function of time
+        savefig = savefig.replace('main', 'main_NbCollisionsCum')
+        print(" - Plotting the cumulated total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=True)
+        evaluation.plotNbCollisions(envId, cumsum=True)
+
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))

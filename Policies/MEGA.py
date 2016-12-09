@@ -15,10 +15,10 @@ import numpy.random as rn
 
 # --- Help functions
 
-def epsilon_t(c, d, K, t):
+def epsilon_t(c, d, nbArms, t):
     """ Cf. Algorithm 1 in [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)."""
-    epsilon = min(1, (c * K**2) / (d**2 * (K - 1) * t))
-    assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, K, t, epsilon)  # DEBUG
+    epsilon = min(1, (c * nbArms**2) / (d**2 * (nbArms - 1) * t))
+    assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, nbArms, t, epsilon)  # DEBUG
     return epsilon
 
 
@@ -80,11 +80,12 @@ class MEGA(object):
             # Identify available arms
             availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]
             if len(availableArms) == 0:
-                # self.chosenArm = rn.randint(self.nbArms)  # XXX Chose a random arm
-                raise ValueError("FIXME MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET")
+                print("Error: MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET ... Choosing a random arm.")  # DEBUG
+                self.chosenArm = rn.randint(self.nbArms)  # XXX Chose a random arm
+                # raise ValueError("FIXME MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET")
             else:  # There is some available arms
                 epsilon = self._epsilon_t()
-                if np.random() < epsilon:  # With proba epsilon_t
+                if rn.random() < epsilon:  # With proba epsilon_t
                     self.chosenArm
                     newArm = rn.choice(availableArms)  # Explore valid arms
                     if self.chosenArm != newArm:
@@ -102,8 +103,9 @@ class MEGA(object):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        print("- A MEGA player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
+        # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
         self.rewards[arm] += reward
+        self.pulls[arm] += 1
         self.p = self.p * self.alpha + (1 - self.alpha)  # Update proba p
 
     def handleCollision(self, arm):
@@ -111,7 +113,7 @@ class MEGA(object):
 
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         """
-        print("- A MEGA player saw a collision on arm {}, in state {}, and time t = {} ...".format(arm, self.state, self.t))  # DEBUG
+        # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
         if rn.random() < self.p:
             self.chosenArm = self.chosenArm  # XXX remove after
@@ -127,4 +129,4 @@ class MEGA(object):
     # --- Internal methods
 
     def _epsilon_t(self):
-        return epsilon_t(self.c, self.d, self.K, self.t)
+        return epsilon_t(self.c, self.d, self.nbArms, self.t)

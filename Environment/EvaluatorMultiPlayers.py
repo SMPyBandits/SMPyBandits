@@ -177,7 +177,7 @@ class EvaluatorMultiPlayers(object):
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative personal reward $r_t$ (not centralized)")
-        plt.title("Multi-players M = {} (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -196,7 +196,7 @@ class EvaluatorMultiPlayers(object):
         # TODO add std
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon) + '\n' + self.strPlayers())
         plt.ylabel(r"Cumulative Centralized Regret $R_t$")
-        plt.title("Multi-players M = {} (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -213,7 +213,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Multi-players M = {} (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -231,7 +231,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Transmission on a free channel")
-        plt.title("Multi-players M = {} (collision model: {}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -242,6 +242,29 @@ class EvaluatorMultiPlayers(object):
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
+    def plotNbCollisions(self, environmentId=0, savefig=None, cumsum=False):
+        Y = np.zeros(self.horizon)
+        for armId in range(self.envs[environmentId].nbArms):
+            # Y += (self.getCollisions(armId, environmentId) >= 1)
+            Y += self.getCollisions(armId, environmentId)
+        plt.figure()
+        if cumsum:
+            Y = np.cumsum(Y)
+        else:
+            plt.ylim([-0.03, 1.03])
+        # Y /= (self.nbPlayers)  # XXX To normalized the count?
+        # Start the figure
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.ylabel(r"{} of collisions".format("Cumulated number" if cumsum else "Number"))
+        plt.plot(Y, '-' if cumsum else '.')
+        plt.legend(loc='lower right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.title("Multi-players $M = {}$ (collision model: {}):{} number of collisions, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, " cumulated" if cumsum else ' ', self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+        plt.show()
+
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
         Y = np.zeros(1 + nbArms)
@@ -251,7 +274,7 @@ class EvaluatorMultiPlayers(object):
         for armId, arm in enumerate(self.envs[environmentId].arms):
             # Y[armId] = np.sum(self.getCollisions(armId, environmentId) >= 1)  # XXX no, we should not count just the fact that there were collisions, but instead count all collisions
             Y[armId] = np.sum(self.getCollisions(armId, environmentId))
-            labels[armId] = "#${}$: {}".format(armId, repr(arm))
+            labels[armId] = "#${}$: ${}$".format(armId, repr(arm))
         Y /= (self.horizon * self.nbPlayers)
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
@@ -260,23 +283,23 @@ class EvaluatorMultiPlayers(object):
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
-            return
+            # return  # XXX
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = "No collision ({:.1%})".format(Y[-1]) if Y[-1] > 1e-3 else ''
+        labels[-1] = "No collision (${:.1%}$)".format(Y[-1]) if Y[-1] > 1e-3 else ''
         colors[-1] = 'lightgrey'
         # Start the figure
         plt.figure()
         if piechart:
             plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
-            plt.pie(Y, labels=labels, colors=colors, explode=[0.06] * len(Y), startangle=45)
+            plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
             # , autopct='%.4g%%'
         else:  # TODO do an histogram instead of this piechart
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='center right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.title("Multi-players M = {} (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
