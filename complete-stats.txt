@@ -2,25 +2,25 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   148	Lilian Besson
+   156	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 147
-  - Number of lines added: 258666
-  - Number of lines deleted: 240531
+  - Number of files changed: 154
+  - Number of lines added: 259066
+  - Number of lines deleted: 240749
   - Number of merges: 0
       Dec     Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec 
-                                                                                                          O o   
+                                                                                                          o o   
     M                                                                                                     O O   
                                                                                                           . o . 
-    W                                                                                                     0 O . 
+    W                                                                                                     0 o . 
                                                                                                         o 0 0 . 
-    F                                                                                                     o   . 
+    F                                                                                                     .   O 
                                                                                                         o .     
 
                                                                                           Less   . o O 0  More
- 147: Total commits
+ 155: Total commits
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
    4: Days ( Dec  6 2016 - Dec  9 2016 ) - Current streak                          
