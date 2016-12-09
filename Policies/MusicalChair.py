@@ -131,8 +131,7 @@ class MusicalChair(object):
             return i
         elif self.state == State.MusicalChair:
             # Play as musical chair: chose a random arm, among the M bests
-            k = np.random.randint(self.nbPlayers)
-            i = self._A[k]  # Random arm among the M bests
+            i = np.random.choice(self._A)  # Random arm among the M bests
             self._chair = i  # Assume that it would be a good chair
             # print("\n- A MusicalChair player chose a random arm i={} of index={} among the {}-best arms in [1,...,{}] as it is in state MusicalChair, and time t = {} ...".format(i, k, self.nbPlayers, self.nbArms, self.t))  # DEBUG
             return i

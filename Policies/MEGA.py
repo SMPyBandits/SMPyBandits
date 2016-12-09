@@ -86,7 +86,6 @@ class MEGA(object):
             else:  # There is some available arms
                 epsilon = self._epsilon_t()
                 if rn.random() < epsilon:  # With proba epsilon_t
-                    self.chosenArm
                     newArm = rn.choice(availableArms)  # Explore valid arms
                     if self.chosenArm != newArm:
                         self.p = self.p0  # Reinitialize proba p
@@ -96,7 +95,7 @@ class MEGA(object):
                     # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
                     newArm = np.argmax(meanRewards)
                 self.chosenArm = newArm
-                return self.chosenArm
+            return self.chosenArm
 
     def getReward(self, arm, reward):
         """ Receive a reward on arm of index 'arm', as described by the MEGA algorithm.
