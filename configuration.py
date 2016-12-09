@@ -187,6 +187,10 @@ configuration.update({
         #     "archtype": UCB,   # This basic UCB is very worse than the other
         #     "params": {}
         # },
+        # {
+        #     "archtype": UCBTuned,   # This other basic UCB is very worse than the other
+        #     "params": {}
+        # },
         # # {
         # #     "archtype": UCBV,   # UCB with variance term
         # #     "params": {}
@@ -222,6 +226,11 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
+        # --- MOSS algorithm, quite efficient
+        {
+            "archtype": MOSS,
+            "params": {}
+        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -236,12 +245,12 @@ configuration.update({
             "archtype": klUCBPlus,
             "params": {}
         },
-        {
-            "archtype": klUCBHPlus,
-            "params": {
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": klUCBHPlus,
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}

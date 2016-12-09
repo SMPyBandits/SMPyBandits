@@ -7,7 +7,7 @@ It could also be done the other way: the aggregated bandit could first decide wh
 But we want to update the trust probability of all the children algorithms, not only one, when it was wised to trust them.
 Mathematically, when the aggregated arm choose to pull the arm `k` at step `t`, if it yielded a positive reward `r_{k,t}`, then the probability of all children algorithms `A_i` who decided (independently) to chose `k` (i.e., `a_{i,t} = k`) are increased multiplicatively: `p_i <- p_i * exp(+ beta * r_{k,t})` where `beta` is a positive *learning rate*, e.g., `beta = 0.1`.
 
-It is also possible to decrease multiplicatively the trust of all the children algorithms who did not decided to chose the arm `k` at every step `t`: if  `a_{i,t} != k` then `p_i <- p_i * exp(- beta * r_{k,t})`. I did not observe any difference of behavior between these two options (implemented with the Boolean parameter `updateAllChildren`).
+It is also possible to decrease multiplicatively the trust of all the children algorithms who did not decided to chose the arm `k` at every step `t`: if `a_{i,t} != k` then `p_i <- p_i * exp(- beta * r_{k,t})`. I did not observe any difference of behavior between these two options (implemented with the Boolean parameter `updateAllChildren`).
 
 ### Ensemble voting for MAB algorithms
 This algorithm can be seen as the Multi-Armed Bandits (i.e., sequential reinforcement learning) counterpart of an *ensemble voting* technique, as used for classifiers or regression algorithm in usual supervised machine learning (see, e.g., [`sklearn.ensemble.VotingClassifier`](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html#sklearn.ensemble.VotingClassifier) in [scikit-learn](http://scikit-learn.org/)).
@@ -31,14 +31,19 @@ configuration = {
     "environment": [
         {
             "arm_type": Bernoulli,  # Only Bernoulli is available as far as now
-            "probabilities": [0.02, 0.02, 0.02, 0.10, 0.05, 0.05, 0.05, 0.01, 0.01, 0.01]
+            "probabilities": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.1]
         }
     ],
     # Policies that should be simulated, and their parameters.
     "policies": [
         {"archtype": UCB, "params": {} },
+        {"archtype": UCBV, "params": {} },
+        {"archtype": UCBTuned, "params": {} },
+        {"archtype": MOSS, "params": {} },
         {"archtype": Thompson, "params": {} },
         {"archtype": klUCB, "params": {} },
+        {"archtype": klUCBPlus, "params": {} },
+        {"archtype": klUCBHPlus, "params": {} },
         {"archtype": BayesUCB, "params": {} },
         {"archtype": AdBandit, "params": {
                 "alpha": 0.5, "horizon": 10000  # AdBandit require to know the horizon
@@ -116,6 +121,12 @@ The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a
 
 ### One a harder problem
 [![example harder problem](plots/example_harder_problem.png)](plots/example_harder_problem.png)
+
+### Aggregation of order-optimal policies
+This last example shows the aggregation of various policies, all being order-optimal and performing similarly
+[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - cumulative regret](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned.png)
+[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - frequency of best arm pull](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__freqBestArm.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__freqBestArm.png)
+[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - normalized cumulative regret](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__normalized.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__normalized.png)
 
 ----
 
