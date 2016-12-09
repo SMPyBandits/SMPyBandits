@@ -15,7 +15,7 @@ class Exponential(Arm):
     - Default is to truncate to 1 (so Exponential.draw() is in [0, 1]).
     """
 
-    # def __init__(self, p, trunc=float('inf')):
+    # def __init__(self, p, trunc=float('+inf')):
     def __init__(self, p, trunc=1):
         self.p = p
         assert p > 0, "Error, the parameter 'p' for Exponential class has to be > 0."

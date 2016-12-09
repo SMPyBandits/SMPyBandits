@@ -7,7 +7,7 @@ __version__ = "$Revision: 1.4 $"
 from random import gauss
 from .Arm import Arm
 
-# oo = float("+inf")  # Nice way to write +infinity
+# oo = float('+inf')  # Nice way to write +infinity
 
 
 class Gaussian(Arm):

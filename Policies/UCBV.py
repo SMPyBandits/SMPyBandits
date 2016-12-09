@@ -39,7 +39,7 @@ class UCBV(IndexPolicy):
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
-            return float('+infinity')
+            return float('+inf')
         else:
             mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
             variance = (self.rewardsSquared[arm] / self.pulls[arm]) - mean ** 2  # Variance estimate

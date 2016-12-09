@@ -17,7 +17,7 @@ class Poisson(Arm):
     """
 
     # def __init__(self, p, trunc=1):
-    def __init__(self, p, trunc=float('inf')):
+    def __init__(self, p, trunc=float('+inf')):
         assert p >= 0, "Error, the parameter 'p' for Poisson class has to be >= 0."
         self.p = p
         self.trunc = trunc

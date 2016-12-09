@@ -24,12 +24,14 @@ class EpsilonFirst(object):
         self.epsilon = epsilon
         self.rewards = np.zeros(nbArms)
         self.params = ''
+        self.t = -1
 
     def __str__(self):
         return "EpsilonFirst"
 
     def startGame(self):
         self.rewards.fill(0)
+        self.t = 0
 
     def choice(self):
         if self.t <= self.epsilon * self.horizon:
@@ -42,3 +44,4 @@ class EpsilonFirst(object):
 
     def getReward(self, arm, reward):
         self.rewards[arm] += reward
+        self.t += 1
