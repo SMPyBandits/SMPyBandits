@@ -116,6 +116,7 @@ class MusicalChair(object):
             self.state = State.MusicalChair
 
     def choice(self):
+        """ Chose an arm, as described by the Musical Chair algorithm."""
         self.t += 1
         if self._chair is not None:  # and self.state == State.Sitted:
             # If the player is already sit, nothing to do
@@ -139,6 +140,10 @@ class MusicalChair(object):
             raise ValueError("MusicalChair.choice() should never be in this case. Fix this code, quickly!")
 
     def getReward(self, arm, reward):
+        """ Receive a reward on arm of index 'arm', as described by the Musical Chair algorithm.
+
+        - If not collision, receive a reward after pulling the arm.
+        """
         # print("- A MusicalChair player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
         # If not collision, receive a reward after pulling the arm
         if self.state == State.InitialPhase:

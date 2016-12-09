@@ -34,8 +34,8 @@ from .AdBandits import AdBandit
 from .Aggr import Aggr
 
 # Mine, implemented from state-of-the-art papers
+
 from .MusicalChair import MusicalChair  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
 # from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
 
-# FIXME implement it
-# from .MEGA import MEGA
+from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)
