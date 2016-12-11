@@ -53,9 +53,11 @@ callgraph:
 
 # Installers
 install:
-	sudo pip  install -r requirements.txt
+	sudo -H pip  install -U -r requirements.txt
+install2:
+	sudo -H pip2 install -U -r requirements.txt
 install3:
-	sudo pip3 install -r requirements.txt
+	sudo -H pip3 install -U -r requirements.txt
 
 # Cleaner
 clean:
