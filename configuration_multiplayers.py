@@ -207,7 +207,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
         # --- DONE Using single-player rhoRand policy
-        "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+        "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

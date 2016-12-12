@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 """ rhoRand: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
 
-FIXME explain
+- Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
+- But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
+- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
+
+- Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
 """
 from __future__ import print_function
 
@@ -93,4 +97,5 @@ class rhoRand(object):
         else:
             # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
             player.getReward(arm, 0)
+            # print("   - rhoRand _handleCollision_one({}, {}) called getReward({}, 0) for player = {} ...".format(playerId, arm, arm, player))  # DEBUG
             # FIXME Strong assumption on the model

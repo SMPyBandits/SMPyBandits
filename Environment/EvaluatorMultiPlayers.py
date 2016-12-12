@@ -379,12 +379,14 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
         result.store(t, choices, rewards, pulls, collisions)
 
     # Prints the ranks
-    ranks = [player.rank if hasattr(player, 'rank') else 1 for player in players]
+    ranks = [player.rank if hasattr(player, 'rank') else None for player in players]
     if len(set(ranks)) != nbPlayers:
         for (player, rank) in zip(players, ranks):
-            print(" - End of one game, rhoRand player {} had rank {} ...".format(player, rank))
+            if rank:
+                print(" - End of one game, rhoRand player {} had rank {} ...".format(player, rank))
     else:
-        print(" - End of one game, rhoRand found orthogonal ranks: ranks = {} ...".format(ranks))
+        if set(ranks) != {None}:
+            print(" - End of one game, rhoRand found orthogonal ranks: ranks = {} ...".format(ranks))
     return result
 
 
