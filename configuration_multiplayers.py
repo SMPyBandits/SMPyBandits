@@ -58,7 +58,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
@@ -102,10 +102,10 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        {   # A damn simple problem: 2 arms, one bad, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.9]
-        },
+        # {   # A damn simple problem: 2 arms, one bad, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.9]
+        # },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
@@ -122,10 +122,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # },
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -176,7 +176,10 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
+        # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
+        "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
+        # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
@@ -194,7 +197,7 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using single-player MEGA policy
-        "players": Selfish(NB_PLAYERS, MEGA, nbArms, c=0.1, d=0.5, p0=0.6, alpha=0.5, beta=0.8).childs  # FIXME how to chose the 5 parameters ??
+        # "players": Selfish(NB_PLAYERS, MEGA, nbArms, c=0.1, d=0.5, p0=0.6, alpha=0.5, beta=0.8).childs  # FIXME how to chose the 5 parameters ??
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

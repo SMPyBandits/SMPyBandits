@@ -346,6 +346,7 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
     players = deepcopy(players)
     horizon = deepcopy(horizon)
     nbPlayers = len(players)
+    random_arm_orders = [np.random.permutation(nbArms) for i in range(nbPlayers)]
     # Start game
     for player in players:
         player.startGame()
@@ -362,7 +363,10 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
         collisions.fill(0)
         # Every player decides which arm to pull
         for i, player in enumerate(players):
-            choices[i] = player.choice()
+            # FIXME here, the environment should apply a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
+            choice = player.choice()
+            # choices[i] = random_arm_orders[i][choice]  # FIXME try it!
+            choices[i] = choice
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
