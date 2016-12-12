@@ -29,6 +29,10 @@ class ChildPointer(object):
         """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
         return self.mother._choice_one(self.playerId)
 
+    def choiceWithRank(self, rank):
+        """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
+        return self.mother._choiceWithRank_one(self.playerId, rank)
+
     def handleCollision(self, arm):
         """ Pass the call to self.mother._handleCollision_one(playerId, arm) with the player's ID number. """
         return self.mother._handleCollision_one(self.playerId, arm)
