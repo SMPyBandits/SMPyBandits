@@ -48,8 +48,13 @@ class IndexPolicy(object):
         assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
         for arm in range(self.nbArms):
             self._index[arm] = self.computeIndex(arm)
-        values = np.sort(np.unique(self._index))
-        chosenIndex = values[-rank]
+        # FIXME be more efficient
+        try:
+            values = np.sort(np.unique(self._index))  # XXX Should we do a np.unique here ??
+            chosenIndex = values[-rank]
+        except IndexError:
+            values = np.sort(self._index)
+            chosenIndex = values[-rank]
         # FIXED Uniform choice among the arms of same index
         return np.random.choice(np.where(self._index == chosenIndex)[0])
 

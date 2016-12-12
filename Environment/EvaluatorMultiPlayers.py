@@ -291,7 +291,7 @@ class EvaluatorMultiPlayers(object):
             # return  # XXX
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = "No collision (${:.1%}\\%$)".format(Y[-1]) if Y[-1] > 1e-4 else ''
+        labels[-1] = "No collision (${:.1%}$$\%$)".format(Y[-1]) if Y[-1] > 1e-4 else ''
         colors[-1] = 'lightgrey'
         # Start the figure
         plt.figure()

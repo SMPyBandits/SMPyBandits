@@ -58,7 +58,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
@@ -209,6 +209,7 @@ if TEST_MULTIPLAYER_POLICY:
         # --- DONE Using single-player rhoRand policy
         # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
         "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+        # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

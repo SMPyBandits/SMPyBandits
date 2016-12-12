@@ -36,9 +36,9 @@ class oneRhoRand(ChildPointer):
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def handleCollision(self, arm):
+        # super(oneRhoRand, self).handleCollision(arm)  # No need for that, there is a collision avoidance RIGHT HERE
         self.rank = 1 + rn.randint(self.nbPlayers)  # New random rank
         # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
-        super(oneRhoRand, self).handleCollision(arm)
 
     def choice(self):
         result = super(oneRhoRand, self).choiceWithRank(self.rank)

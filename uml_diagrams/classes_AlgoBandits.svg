@@ -469,7 +469,7 @@
 <text text-anchor="start" x="4395" y="-338.8" font-family="Times,serif" font-size="14.00">_nbCollision : int</text>
 <text text-anchor="start" x="4395" y="-323.8" font-family="Times,serif" font-size="14.00">_nbObservations</text>
 <text text-anchor="start" x="4395" y="-308.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="4395" y="-293.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="4395" y="-293.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="4395" y="-278.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="4395" y="-263.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="4387,-256 4602,-256 "/>
@@ -638,7 +638,7 @@
 <polygon fill="none" stroke="black" points="5914,-210.5 5914,-369.5 6171,-369.5 6171,-210.5 5914,-210.5"/>
 <text text-anchor="middle" x="6042.5" y="-354.3" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="5914,-346.5 6171,-346.5 "/>
-<text text-anchor="start" x="5922" y="-331.3" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="5922" y="-331.3" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="5922" y="-316.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="5922" y="-301.3" font-family="Times,serif" font-size="14.00">params</text>
 <polyline fill="none" stroke="black" points="5914,-293.5 6171,-293.5 "/>
@@ -795,7 +795,7 @@
 <polygon fill="none" stroke="black" points="7720.5,-188 7720.5,-392 7982.5,-392 7982.5,-188 7720.5,-188"/>
 <text text-anchor="middle" x="7851.5" y="-376.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="7720.5,-369 7982.5,-369 "/>
-<text text-anchor="start" x="7728.5" y="-353.8" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
+<text text-anchor="start" x="7728.5" y="-353.8" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
 <text text-anchor="start" x="7728.5" y="-338.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7728.5" y="-323.8" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="7728.5" y="-308.8" font-family="Times,serif" font-size="14.00">offset</text>
