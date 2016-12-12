@@ -17,8 +17,8 @@ class UCBTuned(UCBV):
     Reference: [Auer et al. 02].
     """
 
-    def __init__(self, nbArms, amplitude=1., lower=0.):
-        super(UCBTuned, self).__init__(nbArms, amplitude, lower)
+    def __init__(self, nbArms):
+        super(UCBTuned, self).__init__(nbArms)
 
     def __str__(self):
         return "UCBTuned"

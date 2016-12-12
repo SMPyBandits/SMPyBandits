@@ -17,8 +17,8 @@ class MOSS(UCBV):
     Reference: [Audibert & Bubeck, 10].
     """
 
-    def __init__(self, nbArms, amplitude=1., lower=0.):
-        super(MOSS, self).__init__(nbArms, amplitude, lower)
+    def __init__(self, nbArms):
+        super(MOSS, self).__init__(nbArms)
 
     def __str__(self):
         return "MOSS"
