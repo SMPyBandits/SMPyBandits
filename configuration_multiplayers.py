@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
@@ -58,7 +58,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
@@ -105,41 +105,41 @@ configuration = {
         # {   # A damn simple problem: 2 arms, one bad, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.9]
-        # },
+        # }
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
-        # },
+        # }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
-        # },
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
-        # },
+        # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
-        # },
+        # }
         {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
             "arm_type": Bernoulli,
             "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        },
+        }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
     #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
-    #     },
+    #     }
     # ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
     #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-    #     },
+    #     }
     # ],
 }
 
@@ -156,7 +156,7 @@ if TEST_AGGR:
                 "learningRate": learning_rate,
                 "decreaseRate": DECREASE_RATE,
                 "children": non_aggr_players
-            },
+            }
         }]
 
 
@@ -195,9 +195,10 @@ if TEST_MULTIPLAYER_POLICY:
         # --- DONE Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
         # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
 
         # --- DONE Using single-player Musical Chair policy
+        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
@@ -205,8 +206,8 @@ if TEST_MULTIPLAYER_POLICY:
         # --- DONE Using single-player MEGA policy
         # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
-        # --- FIXME Using single-player rhoRand policy
-        # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+        # --- DONE Using single-player rhoRand policy
+        "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

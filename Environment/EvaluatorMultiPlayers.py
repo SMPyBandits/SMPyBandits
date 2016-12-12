@@ -279,14 +279,14 @@ class EvaluatorMultiPlayers(object):
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))
-            if Y[armId] < 1e-3:  # Do not display small slices
+            if Y[armId] < 1e-4:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")
             # return  # XXX
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
-        labels[-1] = "No collision (${:.1%}$)".format(Y[-1]) if Y[-1] > 1e-3 else ''
+        labels[-1] = "No collision (${:.1%}\\%$)".format(Y[-1]) if Y[-1] > 1e-4 else ''
         colors[-1] = 'lightgrey'
         # Start the figure
         plt.figure()

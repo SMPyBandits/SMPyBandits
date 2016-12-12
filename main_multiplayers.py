@@ -35,7 +35,7 @@ interactive = False  # Seems to be the only mode which is working well
 
 if __name__ == '__main__':
     if os.path.isdir(plot_dir):
-        print("{} is already a directory here...".format(plot_dir))
+        print("{}/ is already a directory here...".format(plot_dir))
     elif os.path.isfile(plot_dir):
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
     else:
