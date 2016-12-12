@@ -165,10 +165,12 @@ if TEST_MULTIPLAYER_POLICY:
     if len(configuration['environment']) > 1:
         raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     configuration.update({
-        # # --- Defining manually each child
+        # --- DONE Defining manually each child
         # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
         # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
+
         # --- Defining each player as one child of a multi-player policy
+
         # --- DONE Using multi-player Selfish policy
         # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
         # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
@@ -178,27 +180,33 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
         # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
         # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
-        "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
+        # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
         # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
         # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
         # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
         # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
         # "players": Selfish(NB_PLAYERS, AdBandit, nbArms, alpha=0.5, horizon=HORIZON).childs
+
         # --- DONE Using multi-player Centralized policy
         # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
         # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
         # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+
         # --- DONE Using multi-player Oracle policy
         # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
         # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+        "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+
         # --- DONE Using single-player Musical Chair policy
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # --- Using single-player MEGA policy
+
+        # --- DONE Using single-player MEGA policy
         # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
-        # --- Using single-player rhoRand policy
+
+        # --- FIXME Using single-player rhoRand policy
+        # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

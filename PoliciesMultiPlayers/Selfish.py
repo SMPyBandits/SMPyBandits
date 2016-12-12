@@ -14,9 +14,9 @@ from .ChildPointer import ChildPointer
 
 
 class Selfish(object):
-    """ Selfish: a multi-player policy where every player is selfish, playing on their side (without.
+    """ Selfish: a multi-player policy where every player is selfish, playing on their side.
 
-    - nowing how many players there is, and
+    - without nowing how many players there is, and
     - not even knowing that they should try to avoid collisions.
     """
 
