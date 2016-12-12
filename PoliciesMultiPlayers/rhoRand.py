@@ -19,8 +19,8 @@ class oneRhoRand(ChildPointer):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
     """
 
-    def __init__(self, nbArms, nbPlayers, *args, **kwargs):
-        super(oneRhoRand, self).__init__(nbArms, *args, **kwargs)
+    def __init__(self, nbPlayers, *args, **kwargs):
+        super(oneRhoRand, self).__init__(*args, **kwargs)
         self.nbPlayers = nbPlayers
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
@@ -31,12 +31,15 @@ class oneRhoRand(ChildPointer):
         super(oneRhoRand, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
-    def handleCollision(self):
-        super(oneRhoRand, self).handleCollision()
+    def handleCollision(self, arm):
         self.rank = 1 + rn.randint(self.nbPlayers)  # New random rank
+        # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
+        super(oneRhoRand, self).handleCollision(arm)
 
     def choice(self):
-        return super(oneRhoRand, self).choiceWithRank(self.rank)
+        result = super(oneRhoRand, self).choiceWithRank(self.rank)
+        # print(" - A oneRhoRand player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
+        return result
 
 
 # --- Class rhoRand
@@ -78,9 +81,6 @@ class rhoRand(object):
 
     def _getReward_one(self, playerId, arm, reward):
         return self._players[playerId].getReward(arm, reward)
-
-    def _choice_one(self, playerId):
-        return self._players[playerId].choice()
 
     def _choiceWithRank_one(self, playerId, rank):
         return self._players[playerId].choiceWithRank(rank)
