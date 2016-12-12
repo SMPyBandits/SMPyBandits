@@ -25,7 +25,7 @@ class oneRhoRand(ChildPointer):
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def __str__(self):   # Better to recompute it automatically
-        return '#{}<{}, rank:{}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.rank)
+        return '#{}<rhoRand, {}, rank:{}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.rank)
 
     def startGame(self):
         super(oneRhoRand, self).startGame()

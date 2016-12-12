@@ -85,8 +85,8 @@ if __name__ == '__main__':
         # # Also plotting the probability of picking the best arm
         # savefig = savefig.replace('main', 'main_BestArmPulls')
         # print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotBestArmPulls(envId, savefig=savefig)
-        evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
+        evaluation.plotBestArmPulls(envId, savefig=savefig)
+        # evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
 
         # # Also plotting the probability of transmission on a free channel
         # savefig = savefig.replace('main', 'main_FreeTransmissions')
@@ -97,20 +97,20 @@ if __name__ == '__main__':
         # Also plotting the total nb of collision as a function of time
         savefig = savefig.replace('main', 'main_NbCollisions')
         print(" - Plotting the total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=False)
-        evaluation.plotNbCollisions(envId, cumsum=False)
+        evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=False)
+        # evaluation.plotNbCollisions(envId, cumsum=False)
 
         # Also plotting the total nb of collision as a function of time
         savefig = savefig.replace('main', 'main_NbCollisionsCum')
         print(" - Plotting the cumulated total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=True)
-        evaluation.plotNbCollisions(envId, cumsum=True)
+        evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=True)
+        # evaluation.plotNbCollisions(envId, cumsum=True)
 
         # Also plotting the frequency of collision in each arm
         savefig = savefig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
-        evaluation.plotFrequencyCollisions(envId, piechart=piechart)
+        evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+        # evaluation.plotFrequencyCollisions(envId, piechart=piechart)
 
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))

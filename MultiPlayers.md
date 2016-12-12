@@ -88,9 +88,12 @@ It is important to highlight that it has to be verified on each run of the MP po
 - And the other oracle policy [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) affects an offset to each of the `M` players corresponding to one of the `M` best arms, orthogonally, and once they are affected they will cycle among the best `M` arms. It's fair because every player will pull the `M` best arms an equal number of time. And the centralized regret is also optimal (null, in average).
 
 - Usually, the [`Selfish`](PoliciesMultiPlayers/Selfish.py) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `M` best arms.
+
 - Conversely, the [`MusicalChair`](Policies/MusicalChair.py) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `M` best arms.
 
 - The [`MEGA`](Policies/MEGA.py) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `M` best arms equally.
+
+- The [`rhoRand`](PoliciesMultiPlayers/rhoRand.py) policy is not designed to be fair: when players collide, they all take a random rank from the same distribution `rank_k ~ Uniform(U)`. Note that it can be fair, but not with high probability.
 
 ----
 

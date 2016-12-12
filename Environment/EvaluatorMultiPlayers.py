@@ -186,17 +186,22 @@ class EvaluatorMultiPlayers(object):
 
     # Plotting centralized rewards (sum)
     def plotRegretsCentralized(self, environmentId=0, savefig=None, semilogx=False):
-        Y = np.zeros(self.horizon)
+        X = np.arange(self.horizon)
         Y = self.getCentralizedRegret(environmentId)
+        meanY = np.mean(Y)
         plt.figure()
         if semilogx:
             plt.semilogx(Y)
+            # We plot a horizontal line ----- at the best arm mean
+            plt.semilogx(X, meanY * np.ones_like(X), 'k--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
             plt.plot(Y)
+            # We plot a horizontal line ----- at the best arm mean
+            plt.plot(X, meanY * np.ones_like(X), 'k--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("Cumulative Centralized Regret $R_t$")
-        plt.title("Multi-players $M = {}$ (collision model: {}): cumulated regret from each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): cumulated centralized regret, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -346,7 +351,7 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
     players = deepcopy(players)
     horizon = deepcopy(horizon)
     nbPlayers = len(players)
-    random_arm_orders = [np.random.permutation(nbArms) for i in range(nbPlayers)]
+    # random_arm_orders = [np.random.permutation(nbArms) for i in range(nbPlayers)]
     # Start game
     for player in players:
         player.startGame()
@@ -364,15 +369,22 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
         # Every player decides which arm to pull
         for i, player in enumerate(players):
             # FIXME here, the environment should apply a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
-            choice = player.choice()
-            # choices[i] = random_arm_orders[i][choice]  # FIXME try it!
-            choices[i] = choice
+            # choices[i] = random_arm_orders[i][player.choice()]  # FIXME try it!
+            choices[i] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
+
+    # Prints the ranks
+    ranks = [player.rank if hasattr(player, 'rank') else 1 for player in players]
+    if len(set(ranks)) != nbPlayers:
+        for (player, rank) in zip(players, ranks):
+            print(" - End of one game, rhoRand player {} had rank {} ...".format(player, rank))
+    else:
+        print(" - End of one game, rhoRand found orthogonal ranks: ranks = {} ...".format(ranks))
     return result
 
 
