@@ -37,6 +37,21 @@ class IndexPolicy(object):
         # FIXED Uniform choice among the best arms
         return np.random.choice(np.where(self._index == maxIndex)[0])
 
+    def choiceWithRank(self, rank=0):
+        """ In an index policy, choose uniformly at random an arm with index is the (1+rank)-th best.
+
+        - For instance, if rank is 0, the best arm is chosen (the 1-st best).
+        - If rank is 3, the 4-th best arm is chosen.
+
+        - Note: this method is *required* for the rhoRand policy.
+        """
+        for arm in range(self.nbArms):
+            self._index[arm] = self.computeIndex(arm)
+        values = np.sort(np.unique(self._index))
+        chosenIndex = values[-(1 + rank)]
+        # FIXED Uniform choice among the arms of same index
+        return np.random.choice(np.where(self._index == chosenIndex)[0])
+
     def getReward(self, arm, reward):
         self.t += 1
         self.pulls[arm] += 1

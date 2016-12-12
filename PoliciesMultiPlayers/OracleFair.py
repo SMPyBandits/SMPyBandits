@@ -111,20 +111,6 @@ class OracleFair(object):
                 if nbAffected > 1:
                     print(" - For arm number {}, there is {} different child player affected on this arm ...".format(armId + 1, nbAffected))
 
-    def startGame(self):
-        for player in self._players:
-            player.startGame()
-
-    def getReward(self, arm, reward):
-        for player in self._players:
-            player.getReward(arm, reward)()
-
-    def choice(self):
-        choices = np.zeros(self.nbPlayers)
-        for i, player in enumerate(self._players):
-            choices[i] = player.choice()
-        return choices  # XXX What to do with this ?
-
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
         return self._players[playerId].startGame()

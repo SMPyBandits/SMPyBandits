@@ -25,7 +25,7 @@ from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
 # FIXME implement it
-# from .RhoRand import RhoRand
+# from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 
 # FIXME implement it
 # from .TDFS import TDFS

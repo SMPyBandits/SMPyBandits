@@ -28,17 +28,20 @@ class MEGA(object):
     """ MEGA: implementation of the single-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
     """
 
-    def __init__(self, nbArms, c=None, d=0.01, p0=0.5, alpha=0.1, beta=0.5):  # Named argument to give them in any order
+    def __init__(self, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=0.01):  # Named argument to give them in any order
         """
         - nbArms: number of arms.
-        - FIXME describe other parameters
+        - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
+        - alpha: scaling in the update for p(t+1) <- alpha p(t) + (1 - alpha(t))
+        - beta: exponent used in the interval [t, t + t^beta], from where to sample a random time t_next(k), until when the chosenArm is unavailable
+        - c, d: used to compute the exploration probability epsilon_t, cf the function epsilon_t.
 
         Example:
-        >>> nbArms, XXX = 17, XXX
-        >>> player1 = MEGA(nbArms, XXX)
+        >>> nbArms, p0, alpha, beta, c, d = 17, 0.5, 0.5, 0.5, 0.1, 0.01
+        >>> player1 = MEGA(nbArms, nbArms, p0, alpha, beta, c, d)
 
         For multi-players use:
-        >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, XXX).childs
+        >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).childs
         """
         # Store parameters
         self.nbArms = nbArms

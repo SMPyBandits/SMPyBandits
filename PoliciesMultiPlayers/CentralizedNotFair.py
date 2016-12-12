@@ -99,23 +99,6 @@ class CentralizedNotFair(object):
                 if nbAffected > 1:
                     print(" - For arm number {}, there is {} different child players affected on this arm ...".format(armId, nbAffected))
 
-    def startGame(self):
-        # XXX Not used right now!
-        for player in self._players:
-            player.startGame()
-
-    def getReward(self, arm, reward):
-        # XXX Not used right now!
-        for player in self._players:
-            player.getReward(arm, reward)()
-
-    def choice(self):
-        # XXX Not used right now!
-        choices = np.zeros(self.nbPlayers)
-        for i, player in enumerate(self._players):
-            choices[i] = player.choice()
-        return choices  # XXX What to do with this ?
-
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
         return self._players[playerId].startGame()

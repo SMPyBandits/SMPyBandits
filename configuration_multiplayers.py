@@ -197,7 +197,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
         # --- Using single-player MEGA policy
-        # "players": Selfish(NB_PLAYERS, MEGA, nbArms, c=0.1, d=0.5, p0=0.6, alpha=0.5, beta=0.8).childs  # FIXME how to chose the 5 parameters ??
+        # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
+        # --- Using single-player rhoRand policy
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
