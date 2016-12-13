@@ -35,7 +35,7 @@ from .klUCBPlus import klUCBPlus
 from .klUCBHPlus import klUCBHPlus
 
 # From https://github.com/flaviotruzzi/AdBandits/
-from .AdBandits import AdBandit
+from .AdBandits import AdBandits
 
 # Mine, aggregated ones
 from .Aggr import Aggr

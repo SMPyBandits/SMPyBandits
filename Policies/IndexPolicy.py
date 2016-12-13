@@ -56,10 +56,10 @@ class IndexPolicy(object):
             self.index[arm] = self.computeIndex(arm)
         # FIXME be more efficient
         try:
-            values = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
-            chosenIndex = values[-rank]
+            uniqueValues = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
+            chosenIndex = uniqueValues[-rank]
         except IndexError:
-            values = np.sort(self.index)
+            values = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = values[-rank]
-        # FIXED Uniform choice among the arms of same index
+        # FIXED Uniform choice among the rank-th best arms
         return np.random.choice(np.where(self.index == chosenIndex)[0])

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The AdBandit bandit algorithm
+""" The AdBandits bandit algorithm
 Reference: https://github.com/flaviotruzzi/AdBandits/
 """
 from __future__ import print_function
@@ -12,13 +12,13 @@ import numpy as np
 from .Beta import Beta
 
 
-class AdBandit(object):
-    """ The AdBandit bandit algorithm
+class AdBandits(object):
+    """ The AdBandits bandit algorithm
     Reference: https://github.com/flaviotruzzi/AdBandits/
     """
 
     def __str__(self):
-        return "AdBandit ({})".format(self.params)
+        return "AdBandits ({})".format(self.params)
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta):
         self.nbArms = nbArms

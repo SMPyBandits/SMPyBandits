@@ -21,6 +21,9 @@ from .ChildPointer import ChildPointer
 
 class oneRhoRand(ChildPointer):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
+
+    - Except for the handleCollision method: a new random rank is sampled after observing a collision,
+    - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
     def __init__(self, nbPlayers, *args, **kwargs):

@@ -259,23 +259,23 @@ configuration.update({
             "archtype": BayesUCB,
             "params": {}
         },
-        # # --- AdBandit with different alpha paramters
+        # # --- AdBandits with different alpha paramters
         # {
-        #     "archtype": AdBandit,
+        #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.5,
         #         "horizon": HORIZON
         #     }
         # },
         # {
-        #     "archtype": AdBandit,
+        #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.125,
         #         "horizon": HORIZON
         #     }
         # },
         # {
-        #     "archtype": AdBandit,
+        #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.01,
         #         "horizon": HORIZON
