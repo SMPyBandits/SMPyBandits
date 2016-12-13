@@ -15,9 +15,6 @@ class klUCBPlus(klUCB):
     Reference: [Cappé et al. 13](https://arxiv.org/pdf/1210.1136.pdf)
     """
 
-    def __str__(self):
-        return "klUCBPlus"
-
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:
             return float('+inf')

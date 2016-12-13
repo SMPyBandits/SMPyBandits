@@ -16,14 +16,9 @@ class klUCBHPlus(klUCB):
     Reference: [Lai 87](https://projecteuclid.org/download/pdf_1/euclid.aos/1176350495)
     """
 
-    def __init__(self, nbArms, horizon=None,
-                 amplitude=1., lower=0., tolerance=1e-4,
-                 klucb=klucbBern):
-        super(klUCBHPlus, self).__init__(nbArms, amplitude, lower, tolerance, klucb)
+    def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, lower=0., amplitude=1.):
+        super(klUCBHPlus, self).__init__(nbArms, tolerance, klucb, amplitude, lower)
         self.horizon = horizon
-
-    def __str__(self):
-        return "klUCBHPlus"
 
     def getHorizon(self):
         """ If the 'horizon' parameter was not provided, act like the klUCBPlus policy. """

@@ -11,41 +11,36 @@ __version__ = "0.1"
 import random as rn
 import numpy as np
 from .Beta import Beta
+from .BasePolicy import BasePolicy
 
 
-class AdBandits(object):
+class AdBandits(BasePolicy):
     """ The AdBandits bandit algorithm
     Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
     Code from: https://github.com/flaviotruzzi/AdBandits/
     """
 
-    def __str__(self):
-        # return "AdBandits (alpha: {}, horizon: {})".format(self.alpha, self.horizon)
-        return "AdBandits (alpha: {})".format(self.alpha)
-
-    def __init__(self, nbArms, horizon, alpha, posterior=Beta):
-        self.nbArms = nbArms
+    def __init__(self, nbArms, horizon, alpha, posterior=Beta, lower=0., amplitude=1.):
+        super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha
         self.horizon = horizon
-        self.rewards = np.zeros(nbArms)
-        self.pulls = np.zeros(nbArms, dtype=int)
-        self.posterior = [None] * self.nbArms  # Faster with a list
+        self.posterior = [None] * self.nbArms  # List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        self.t = -1
+
+    def __str__(self):
+        # return "AdBandits(alpha: {}, horizon: {})".format(self.alpha, self.horizon)
+        return "AdBandits(alpha: {})".format(self.alpha)
 
     def startGame(self):
-        self.t = 0
-        self.rewards.fill(0)
-        self.pulls.fill(0)
+        super(AdBandits, self).startGame()
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
     def getReward(self, arm, reward):
+        super(AdBandits, self).getReward(arm, reward)
+        reward = (reward - self.lower) / self.amplitude
         self.posterior[arm].update(reward)
-        self.rewards[arm] += reward
-        self.pulls[arm] += 1
-        self.t += 1
 
     def computeIndex(self, arm):
         return self.posterior[arm].sample()

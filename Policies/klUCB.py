@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The generic kl-UCB policy for one-parameter exponential distributions.
+By default, it uses a Beta posterior.
 Reference: [Garivier & Cappé - COLT, 2011].
 """
 
@@ -7,7 +8,6 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.15 $"
 
 from math import log
-import numpy as np
 
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
@@ -15,30 +15,16 @@ from .IndexPolicy import IndexPolicy
 
 class klUCB(IndexPolicy):
     """ The generic kl-UCB policy for one-parameter exponential distributions.
-    Reference: [Garivier & cappé - COLT, 2011].
+    By default, it uses a Beta posterior.
+    Reference: [Garivier & Cappé - COLT, 2011].
     """
 
-    def __init__(self, nbArms,
-                 amplitude=1., lower=0., tolerance=1e-4,
-                 klucb=klucbBern):
-        super(klUCB, self).__init__(nbArms)
+    def __init__(self, nbArms, tolerance=1e-4, klucb=klucbBern, lower=0., amplitude=1.):
+        super(klUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = 1.
-        self.amplitude = float(amplitude)
-        self.lower = lower
         self.klucb = klucb
         self.tolerance = tolerance
         self.params = "amplitude: {}, lower: {}".format(self.amplitude, self.lower)
-        self.t = -1
-        self.pulls = np.zeros(self.nbArms, dtype=int)
-        self.rewards = np.zeros(self.nbArms)
-
-    def __str__(self):
-        return "klUCB"
-
-    def startGame(self):
-        self.t = 0
-        self.pulls.fill(0)
-        self.rewards.fill(0)
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:
@@ -46,8 +32,3 @@ class klUCB(IndexPolicy):
         else:
             # Could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)
-
-    def getReward(self, arm, reward):
-        self.t += 1
-        self.pulls[arm] += 1
-        self.rewards[arm] += (reward - self.lower) / self.amplitude
