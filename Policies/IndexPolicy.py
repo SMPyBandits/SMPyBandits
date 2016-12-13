@@ -1,36 +1,27 @@
 # -*- coding: utf-8 -*-
-""" Generic index policy. """
+""" Generic index policy.
+
+- If rewards are not in [0, 1], be sure to give the lower value and the amplitude. Eg, if rewards are in [-3, 3], lower = -3, amplitude = 6.
+"""
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-
 import numpy as np
 
+from .BasePolicy import BasePolicy
 
-class IndexPolicy(object):
+
+class IndexPolicy(BasePolicy):
     """ Class that implements a generic index policy."""
 
-    def __init__(self, nbArms):
-        self.nbArms = nbArms
-        self.index = np.zeros(self.nbArms)
-        self.pulls = np.zeros(nbArms, dtype=int)
-        self.rewards = np.zeros(nbArms)
-        self.t = -1
-
-    def __str__(self):
-        return self.__class__.__name__
+    def __init__(self, nbArms, lower=0., amplitude=1.):
+        super(IndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        self.index = np.zeros(nbArms)
 
     def startGame(self):
-        self.t = 0
-        self.index.fill(0)
-        self.pulls.fill(0)
+        super(IndexPolicy, self).startGame()
         self.rewards.fill(0)
-
-    def getReward(self, arm, reward):
-        self.t += 1
-        self.pulls[arm] += 1
-        self.rewards[arm] += reward
 
     def computeIndex(self, arm):
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")

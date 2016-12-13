@@ -15,6 +15,8 @@ except ImportError:
     from random import betavariate
 from scipy.special import btdtri
 
+from .Posterior import Posterior
+
 
 def bernoulliBinarization(r_t):
     """ Return a (random) binarization of a reward r_t in the continuous interval [0, 1] as an observation in discrete {0, 1}."""
@@ -22,7 +24,7 @@ def bernoulliBinarization(r_t):
     return int(random() < r_t)
 
 
-class Beta(object):
+class Beta(Posterior):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
     def __init__(self, a=1, b=1):
@@ -30,8 +32,8 @@ class Beta(object):
         self.b = b
         self.N = [a, b]
 
-    def __repr__(self):
-        return 'Beta(' + repr(self.a) + ', ' + repr(self.b) + ')'
+    def __str__(self):
+        return "Beta({}, {})".format(self.a, self.b)
 
     def reset(self, a=0, b=0):
         if a == 0:
