@@ -106,6 +106,7 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
 # XXX Using a cache to not regenerate a random vector of distances. Siooooux!
 @lru_cache(maxsize=None, typed=False)  # XXX size is NOT bounded... bad!
 def random_distances(nbPlayers):
+    """ Get a random vector of distances."""
     distances = np.random.random_sample(nbPlayers)
     print("I just generated a new distances vector, for {} players : distances = {} ...".format(nbPlayers, distances))  # DEBUG
     return distances

@@ -109,6 +109,7 @@ class MEGA(BasePolicy):
         """ Handle a collision, on arm of index 'arm'.
 
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
+        - Note: we do not care on which arm the collision occured.
         """
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist

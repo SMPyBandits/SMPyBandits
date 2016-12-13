@@ -12,14 +12,13 @@ class Arm(object):
         pass
 
     def __str__(self):
-        return "Arm"
+        return self.__class__.__name__
+
+    def __repr__(self):
+        return self.__class__.__name__ + "(" + repr(self.__dir__) + ")"
 
     def draw(self, t=None):
-        """ The parameter t is ignored in this Arm."""
         raise NotImplementedError("This method draw() has to be implemented in the child class.")
 
     def mean(self):
         raise NotImplementedError("This method mean() has to be implemented in the child class.")
-
-    def __repr__(self):
-        return self.__class__.__name__ + "(" + repr(self.__dir__) + ")"

@@ -33,7 +33,6 @@ class Softmax(BasePolicy):
             trusts = np.exp(self.rewards / (self.temperature * self.pulls))
             trusts /= np.sum(trusts)
             arm = np.random.choice(self.nbArms, p=trusts)
-        # self.pulls[arm] += 1  # XXX why is it here?
         return arm
 
     def choiceWithRank(self, rank=1):

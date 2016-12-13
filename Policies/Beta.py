@@ -2,7 +2,7 @@
 """ Manipulate posteriors of Bernoulli/Beta experiments.
 
 Rewards not in `{0, 1}` are handled with a trick, with a "random binarization", cf., [[Agrawal & Goyal, 2012]](http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf) (algorithm 2).
-When reward `r_t \in [0, 1]` is observed, the player receives the result of a Bernoulli sample of average `r_t`: `r_t <- sample from Bernoulli(r_t)` so it is well in `{0, 1}`.
+When reward `r_t in [0, 1]` is observed, the player receives the result of a Bernoulli sample of average `r_t`: `r_t <- sample from Bernoulli(r_t)` so it is well in `{0, 1}`.
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"

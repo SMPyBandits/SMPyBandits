@@ -18,8 +18,8 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-import numpy as np
 from enum import Enum  # For the different states
+import numpy as np
 from .BasePolicy import BasePolicy
 
 
@@ -85,7 +85,7 @@ class MusicalChair(BasePolicy):
         self.state = State.NotStarted
         if 0 < Time0 < 1:  # Time0 is a fraction of the horizon Time1
             Time0 = int(Time0 * Time1)  # Lower bound
-        elif 1 <= Time0:
+        elif Time0 >= 1:
             Time0 = int(Time0)
         # Store parameters
         self.Time0 = Time0

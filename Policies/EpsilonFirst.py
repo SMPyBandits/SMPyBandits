@@ -6,8 +6,8 @@ Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-import numpy as np
 import random
+import numpy as np
 from .BasePolicy import BasePolicy
 
 EPSILON = 0.1

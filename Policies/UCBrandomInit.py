@@ -6,8 +6,8 @@ Reference: [Lai & Robbins, 1985].
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-from .UCB import UCB
 import numpy as np
+from .UCB import UCB
 
 
 class UCBrandomInit(UCB):

@@ -8,8 +8,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-import numpy as np
-
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 

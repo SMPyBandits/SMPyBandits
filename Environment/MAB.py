@@ -67,7 +67,7 @@ class MAB(object):
         if nbPlayers is None:
             return repr(self.arms)
         else:
-            assert 0 < nbPlayers, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
+            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
             means = np.array([arm.mean() for arm in self.arms])
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             # TODO how to color in red the best M arms ?

@@ -8,10 +8,10 @@ __version__ = "$Revision: 1.7 $"
 
 from math import sqrt, log
 
-from .UCB import UCB
+from .UCBV import UCBV
 
 
-class UCBtuned(UCB):
+class UCBtuned(UCBV):
     """ The UCB-Tuned policy for bounded bandits, with a tuned variance correction term.
     Reference: [Auer et al. 02].
     """
