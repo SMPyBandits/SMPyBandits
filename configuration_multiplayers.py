@@ -30,6 +30,7 @@ HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
+# HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
@@ -58,7 +59,7 @@ TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
@@ -73,7 +74,7 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 # for i in range(NB_PLAYERS):
 #     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
 # def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
-# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  #Let it compute the random distances, ONCE by thread, and then cache it
+# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  # Let it compute the random distances, ONCE by thread, and then cache it
 # collisionModel = closerOneGetsReward
 
 
@@ -106,10 +107,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
@@ -122,10 +123,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -207,8 +208,8 @@ if TEST_MULTIPLAYER_POLICY:
         # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
         # --- DONE Using single-player rhoRand policy
-        # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-        "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+        "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+        # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
         # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
     })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies

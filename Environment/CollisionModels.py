@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Define some basic collision models.
+""" Define the different collision models.
 
 Collision models are generic functions, taking:
 
@@ -27,6 +27,17 @@ from functools import lru_cache
 import numpy as np
 
 
+def handleCollision_or_getZeroReward(player, arm, lower=0):
+    """ If the player has a method handleCollision, it is called, otherwise a reward of lower is given to the player for that arm.
+    """
+    # player.handleCollision(arm) is called to inform the user that there were a collision
+    if hasattr(player, 'handleCollision'):
+        player.handleCollision(arm)
+    else:
+        # XXX Should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
+        player.getReward(arm, lower)  # XXX Strong assumption on the model
+
+
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions):
     """ Simple collision model where only the players alone on one arm sample it and receive the reward.
 
@@ -45,14 +56,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            # player.handleCollision(choices[i]) is called to inform the user that there were a collision
-            if hasattr(player, 'handleCollision'):
-                player.handleCollision(choices[i])
-                # TODO had this to some multi-players policies
-                # Example: ALOHA will not visit an arm for some time after seeing a collision!
-            else:
-                # XXX should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-                player.getReward(choices[i], 0)  # FIXME Strong assumption on the model
+            handleCollision_or_getZeroReward(player, choices[i])
 
 
 # Default collision model to use
@@ -96,14 +100,7 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
             pulls[i, arm] += 1
             for j in players_who_chose_it:
                 if i != j:
-                    # player.handleCollision(arm) is called to inform the user that there were a collision
-                    if hasattr(players[j], 'handleCollision'):
-                        players[j].handleCollision(arm)
-                        # TODO had this to some multi-players policies
-                        # Example: ALOHA will not visit an arm for some time after seeing a collision!
-                    else:
-                        # XXX should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-                        players[j].getReward(arm, 0)  # FIXME Strong assumption on the model
+                    handleCollision_or_getZeroReward(players[j], arm)
 
 
 # XXX Using a cache to not regenerate a random vector of distances. Siooooux!
@@ -150,14 +147,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
             for j in players_who_chose_it:
                 # The other players cannot
                 if i != j:
-                    # player.handleCollision(arm) is called to inform the user that there were a collision
-                    if hasattr(players[j], 'handleCollision'):
-                        players[j].handleCollision(arm)
-                        # TODO had this to some multi-players policies
-                        # Example: ALOHA will not visit an arm for some time after seeing a collision!
-                    else:
-                        # XXX should players[j].getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
-                        players[j].getReward(arm, 0)  # FIXME Strong assumption on the model
+                    handleCollision_or_getZeroReward(players[j], arm)
 
 
 # List of possible collision models

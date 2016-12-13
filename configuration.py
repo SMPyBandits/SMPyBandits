@@ -201,24 +201,24 @@ configuration.update({
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
         # # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -245,12 +245,12 @@ configuration.update({
             "archtype": klUCBPlus,
             "params": {}
         },
-        # {
-        #     "archtype": klUCBHPlus,
-        #     "params": {
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": klUCBHPlus,
+            "params": {
+                "horizon": HORIZON
+            }
+        },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}

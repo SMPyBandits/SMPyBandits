@@ -260,10 +260,10 @@ class EvaluatorMultiPlayers(object):
         Y /= (self.nbPlayers)  # XXX To normalized the count?
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
-        plt.ylabel("{} of collisions".format("Cumulated number" if cumsum else "Number"))
+        plt.ylabel("{} of collisions".format("Cumulated number" if cumsum else "Frequency"))
         plt.plot(Y, '-' if cumsum else '.')
         plt.legend(loc='lower right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.title("Multi-players $M = {}$ (collision model: {}):{} number of collisions, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, " cumulated" if cumsum else ' ', self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}):{} of collisions, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, " cumulated number" if cumsum else " frequency", self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
