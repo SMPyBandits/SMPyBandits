@@ -2,25 +2,25 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   166	Lilian Besson
+   181	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 164
-  - Number of lines added: 257716
-  - Number of lines deleted: 237791
+  - Number of files changed: 174
+  - Number of lines added: 262529
+  - Number of lines deleted: 243948
   - Number of merges: 0
       Dec   Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec 
                                                                                                         o o   . 
-    M                                                                                                   O O   o 
-                                                                                                        . o .   
+    M                                                                                                   O O   O 
+                                                                                                        . o . O 
     W                                                                                                   0 o .   
-                                                                                                      o 0 O .   
+                                                                                                      o 0 0 .   
     F                                                                                                   .   O   
                                                                                                       o .       
 
                                                                                           Less   . o O 0  More
- 165: Total commits
+ 180: Total commits
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
-   6: Days ( Dec  6 2016 - Dec 12 2016 ) - Current streak                          
+   7: Days ( Dec  6 2016 - Dec 13 2016 ) - Current streak                          
