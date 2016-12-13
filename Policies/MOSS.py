@@ -7,21 +7,14 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from math import sqrt, log
-import numpy as np
 
-from .UCBV import UCBV
+from .IndexPolicy import IndexPolicy
 
 
-class MOSS(UCBV):
+class MOSS(IndexPolicy):
     """ The MOSS policy for bounded bandits.
     Reference: [Audibert & Bubeck, 10].
     """
-
-    def __init__(self, nbArms):
-        super(MOSS, self).__init__(nbArms)
-
-    def __str__(self):
-        return "MOSS"
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:

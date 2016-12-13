@@ -7,21 +7,14 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.7 $"
 
 from math import sqrt, log
-import numpy as np
 
-from .UCBV import UCBV
+from .UCB import UCB
 
 
-class UCBTuned(UCBV):
+class UCBtuned(UCB):
     """ The UCB-Tuned policy for bounded bandits, with a tuned variance correction term.
     Reference: [Auer et al. 02].
     """
-
-    def __init__(self, nbArms):
-        super(UCBTuned, self).__init__(nbArms)
-
-    def __str__(self):
-        return "UCBTuned"
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
