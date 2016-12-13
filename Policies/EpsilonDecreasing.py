@@ -8,31 +8,26 @@ __version__ = "0.1"
 
 import numpy as np
 import random
+from .BasePolicy import BasePolicy
 
 EPSILON = 0.1
 DECREASINGRATE = 1e-6
 
 
-class EpsilonDecreasing(object):
+class EpsilonDecreasing(BasePolicy):
     """ The epsilon-decreasing random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, epsilon=EPSILON, decreasingRate=DECREASINGRATE):
-        self.nbArms = nbArms
+    def __init__(self, nbArms, epsilon=EPSILON, decreasingRate=DECREASINGRATE, lower=0., amplitude=1.):
+        super(EpsilonDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonDecreasing class has to be in [0, 1]."
         self.epsilon = epsilon
         assert decreasingRate > 0, "Error: the decreasingRate parameter for EpsilonDecreasing class has to be > 0."
         self.decreasingRate = decreasingRate
-        self.rewards = np.zeros(nbArms)
-        self.t = -1
 
     def __str__(self):
         return "EpsilonDecreasing({})".format(self.decreaseRate)
-
-    def startGame(self):
-        self.t = 0
-        self.rewards.fill(0)
 
     def choice(self):
         if random.random() < self.epsilon * np.exp(- self.t * self.decreasingRate):
@@ -42,7 +37,3 @@ class EpsilonDecreasing(object):
             # Proba 1-epsilon : exploit
             arm = np.argmax(self.rewards)
         return arm
-
-    def getReward(self, arm, reward):
-        self.rewards[arm] += reward
-        self.t += 1

@@ -8,29 +8,24 @@ __version__ = "0.1"
 
 import numpy as np
 import random
+from .BasePolicy import BasePolicy
 
 EPSILON = 0.1
 
 
-class EpsilonFirst(object):
+class EpsilonFirst(BasePolicy):
     """ The epsilon-first random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, horizon, epsilon=EPSILON):
-        self.nbArms = nbArms
+    def __init__(self, nbArms, horizon, epsilon=EPSILON, lower=0., amplitude=1.):
+        super(EpsilonFirst, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.horizon = horizon
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonFirst class has to be in [0, 1]."
         self.epsilon = epsilon
-        self.rewards = np.zeros(nbArms)
-        self.t = -1
 
     def __str__(self):
         return "EpsilonFirst({})".format(self.epsilon)
-
-    def startGame(self):
-        self.rewards.fill(0)
-        self.t = 0
 
     def choice(self):
         if self.t <= self.epsilon * self.horizon:
@@ -40,7 +35,3 @@ class EpsilonFirst(object):
             # Second phase: just exploit!
             arm = np.argmax(self.rewards)
         return arm
-
-    def getReward(self, arm, reward):
-        self.rewards[arm] += reward
-        self.t += 1

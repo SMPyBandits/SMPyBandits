@@ -8,26 +8,23 @@ __version__ = "0.1"
 
 import numpy as np
 import random
+from .BasePolicy import BasePolicy
 
 EPSILON = 0.1
 
 
-class EpsilonGreedy(object):
+class EpsilonGreedy(BasePolicy):
     """ The epsilon-greedy random policy.
     Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
-    def __init__(self, nbArms, epsilon=EPSILON):
-        self.nbArms = nbArms
+    def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
+        super(EpsilonGreedy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonGreedy class has to be in [0, 1]."
         self.epsilon = epsilon
-        self.rewards = np.zeros(nbArms)
 
     def __str__(self):
         return "EpsilonGreedy({})".format(self.epsilon)
-
-    def startGame(self):
-        self.rewards.fill(0)
 
     def choice(self):
         if random.random() < self.epsilon:  # Proba epsilon : explore
@@ -36,9 +33,6 @@ class EpsilonGreedy(object):
             # FIXED Uniform choice among the best arms
             arm = np.random.choice(np.where(self.rewards == np.max(self.rewards))[0])
         return arm
-
-    def getReward(self, arm, reward):
-        self.rewards[arm] += reward
 
     def choiceWithRank(self, rank=1):
         if random.random() < self.epsilon:  # Proba epsilon : explore

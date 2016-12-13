@@ -7,8 +7,10 @@ __version__ = "0.1"
 
 from random import choice
 
+from .Uniform import Uniform
 
-class UniformOnSome(object):
+
+class UniformOnSome(Uniform):
     """ UniformOnSome: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
     """
 
@@ -17,20 +19,9 @@ class UniformOnSome(object):
         if armIndexes is None:
             armIndexes = list(range(nbArms))
         self.armIndexes = armIndexes
-        self.params = repr(armIndexes)
 
     def __str__(self):
-        return "UniformOnSome({})".format(self.params)
-
-    def startGame(self):
-        pass
-
-    def getReward(self, arm, reward):
-        pass
+        return "UniformOnSome({})".format(self.armIndexes)
 
     def choice(self):
         return choice(self.armIndexes)
-
-    # def choiceWithRank(self, rank=1):
-    #     """ Ignore the rank."""
-    #     return self.choice()
