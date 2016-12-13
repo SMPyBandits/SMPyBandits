@@ -35,7 +35,7 @@ class Softmax(object):
     def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            arm = self.t % self.nbArms
+            arm = self.t % self.nbArms  # TODO random permutation instead of deterministic order!
         else:
             trusts = np.exp(self.rewards / (self.temperature * self.pulls))
             trusts /= np.sum(trusts)
@@ -43,9 +43,17 @@ class Softmax(object):
         # self.pulls[arm] += 1  # XXX why is it here?
         return arm
 
-    # def choiceWithRank(self, rank=1):
-    #     """ FIXME can be done better."""
-    #     return self.choice()
+    def choiceWithRank(self, rank=1):
+        # Force to first visit each arm once in the first steps
+        if self.t < self.nbArms:
+            arm = self.t % self.nbArms  # TODO random permutation instead of deterministic order!
+        else:
+            trusts = np.exp(self.rewards / (self.temperature * self.pulls))
+            trusts /= np.sum(trusts)
+            arms = np.random.choice(self.nbArms, size=rank, replace=False, p=trusts)
+            arm = arms[rank - 1]
+        # self.pulls[arm] += 1  # XXX why is it here?
+        return arm
 
     def getReward(self, arm, reward):
         self.rewards[arm] += reward
