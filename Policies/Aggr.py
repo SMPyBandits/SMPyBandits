@@ -45,12 +45,11 @@ class Aggr(object):
             self.trusts = prior
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
-        self.params = "nb:" + repr(self.nbChildren) + ", rate:" + repr(self.learningRate)
         # Internal vectorial memory
         self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
 
     def __str__(self):
-        return "Aggr ({})".format(self.params)
+        return "Aggr (nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def startGame(self):
@@ -63,11 +62,11 @@ class Aggr(object):
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
         self.t += 1
-        # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
-        if self.decreaseRate is not None:
-            learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
-        else:
+        if self.decreaseRate is None:
             learningRate = self.learningRate
+        else:
+            # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
+            learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
         # Give reward to all child children
         for i in range(self.nbChildren):
             self.children[i].getReward(arm, reward)
@@ -88,6 +87,17 @@ class Aggr(object):
         # 1. make vote every child children
         for i in range(self.nbChildren):
             self.choices[i] = self.children[i].choice()
+            # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
+            # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
+        # print("self.choices =", self.choices)  # DEBUG
+        # 2. select the vote to trust, randomly
+        return rn.choice(self.choices, p=self.trusts)
+
+    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
+    def choiceWithRank(self, rank=1):
+        # 1. make vote every child children
+        for i in range(self.nbChildren):
+            self.choices[i] = self.children[i].choiceWithRank(rank)
             # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
             # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
         # print("self.choices =", self.choices)  # DEBUG

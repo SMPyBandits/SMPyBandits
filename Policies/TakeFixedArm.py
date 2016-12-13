@@ -28,3 +28,7 @@ class TakeFixedArm(object):
 
     def choice(self):
         return self.armIndex
+
+    # def choiceWithRank(self, rank=1):
+    #     """ Ignore the rank."""
+    #     return self.choice()

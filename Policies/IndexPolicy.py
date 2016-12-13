@@ -39,9 +39,8 @@ class IndexPolicy(object):
         """ In an index policy, choose uniformly at random an arm with maximal index."""
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
-        maxIndex = np.max(self.index)
         # FIXED Uniform choice among the best arms
-        return np.random.choice(np.where(self.index == maxIndex)[0])
+        return np.random.choice(np.where(self.index == np.max(self.index))[0])
 
     def choiceWithRank(self, rank=1):
         """ In an index policy, choose uniformly at random an arm with index is the (1+rank)-th best.

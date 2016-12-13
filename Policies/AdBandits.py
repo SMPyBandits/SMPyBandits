@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ The AdBandits bandit algorithm
-Reference: https://github.com/flaviotruzzi/AdBandits/
+Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
+Code from: https://github.com/flaviotruzzi/AdBandits/
 """
 from __future__ import print_function
 
@@ -14,11 +15,13 @@ from .Beta import Beta
 
 class AdBandits(object):
     """ The AdBandits bandit algorithm
-    Reference: https://github.com/flaviotruzzi/AdBandits/
+    Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
+    Code from: https://github.com/flaviotruzzi/AdBandits/
     """
 
     def __str__(self):
-        return "AdBandits ({})".format(self.params)
+        # return "AdBandits (alpha: {}, horizon: {})".format(self.alpha, self.horizon)
+        return "AdBandits (alpha: {})".format(self.alpha)
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta):
         self.nbArms = nbArms
@@ -26,12 +29,9 @@ class AdBandits(object):
         self.horizon = horizon
         self.rewards = np.zeros(nbArms)
         self.pulls = np.zeros(nbArms, dtype=int)
-        self.posterior = dict()
+        self.posterior = [None] * self.nbArms  # Faster with a list
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
-        # self.params = 'alpha:' + repr(self.alpha) + ', horizon:' + repr(self.horizon)
-        self.params = 'alpha:' + repr(self.alpha)
-        # self.startGame()  # XXX do not call it here!
         self.t = -1
 
     def startGame(self):
@@ -63,7 +63,10 @@ class AdBandits(object):
             expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
             upperbounds = [self.posterior[arm].quantile(1. - 1. / self.t) for arm in range(self.nbArms)]
             regret = np.max(upperbounds) - expectations
-            remin = np.min(regret)
-            admissible = np.where(regret == remin)[0]
+            admissible = np.where(regret == np.min(regret))[0]
             arm = rn.choice(admissible)
         return arm
+
+    # def choiceWithRank(self, rank=1):
+    #     """ FIXME I should do it directly, here."""
+    #     return self.choice()

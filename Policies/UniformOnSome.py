@@ -30,3 +30,7 @@ class UniformOnSome(object):
 
     def choice(self):
         return choice(self.armIndexes)
+
+    # def choiceWithRank(self, rank=1):
+    #     """ Ignore the rank."""
+    #     return self.choice()

@@ -25,11 +25,10 @@ class EpsilonDecreasing(object):
         assert decreasingRate > 0, "Error: the decreasingRate parameter for EpsilonDecreasing class has to be > 0."
         self.decreasingRate = decreasingRate
         self.rewards = np.zeros(nbArms)
-        self.params = ''
         self.t = -1
 
     def __str__(self):
-        return "EpsilonDecreasing"
+        return "EpsilonDecreasing({})".format(self.decreaseRate)
 
     def startGame(self):
         self.t = 0

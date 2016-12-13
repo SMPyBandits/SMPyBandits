@@ -128,6 +128,10 @@ class MEGA(object):
             # Reinitialize the proba p
             self.p = self.p0
 
+    # def choiceWithRank(self, rank=1):
+    #     """ Ignore the rank."""
+    #     return self.choice()
+
     # --- Internal methods
 
     def _epsilon_t(self):

@@ -26,3 +26,7 @@ class Uniform(object):
 
     def choice(self):
         return randint(0, self.nbArms - 1)
+
+    # def choiceWithRank(self, rank=1):
+    #     """ Ignore the rank."""
+    #     return self.choice()

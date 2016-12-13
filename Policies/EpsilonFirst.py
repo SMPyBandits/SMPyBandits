@@ -23,11 +23,10 @@ class EpsilonFirst(object):
         assert 0 <= epsilon <= 1, "Error: the epsilon parameter for EpsilonFirst class has to be in [0, 1]."
         self.epsilon = epsilon
         self.rewards = np.zeros(nbArms)
-        self.params = ''
         self.t = -1
 
     def __str__(self):
-        return "EpsilonFirst"
+        return "EpsilonFirst({})".format(self.epsilon)
 
     def startGame(self):
         self.rewards.fill(0)

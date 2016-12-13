@@ -20,13 +20,12 @@ class Softmax(object):
         self.nbArms = nbArms
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
         self.temperature = temperature
-        self.params = "temperature:" + repr(temperature)
         self.rewards = np.zeros(nbArms)
         self.pulls = np.zeros(nbArms, dtype=int)
         self.t = -1
 
     def __str__(self):
-        return "Softmax ({})".format(self.params)
+        return "Softmax (temperature: {})".format(self.temperature)
 
     def startGame(self):
         self.t = 0
@@ -37,15 +36,18 @@ class Softmax(object):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
             arm = self.t % self.nbArms
-            self.pulls[arm] += 1
         else:
             trusts = np.exp(self.rewards / (self.temperature * self.pulls))
             trusts /= np.sum(trusts)
             arm = np.random.choice(self.nbArms, p=trusts)
-            self.pulls[arm] += 1  # XXX why is it not here?
+        # self.pulls[arm] += 1  # XXX why is it here?
         return arm
+
+    # def choiceWithRank(self, rank=1):
+    #     """ FIXME can be done better."""
+    #     return self.choice()
 
     def getReward(self, arm, reward):
         self.rewards[arm] += reward
-        # self.pulls[arm] += 1  # XXX why is it not here?
+        self.pulls[arm] += 1  # XXX why is it not here?
         self.t += 1

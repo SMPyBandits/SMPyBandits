@@ -74,8 +74,8 @@ DECREASE_RATE = HORIZON / 2.0
 
 TEST_AGGR = False  # XXX do not let this = False
 TEST_AGGR = True
-UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
+UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
 
 # Parameters for the arms
@@ -220,12 +220,12 @@ configuration.update({
             }
         },
         # # --- Softmax algorithms
-        # {
-        #     "archtype": Softmax,   # This basic Softmax is very bad
-        #     "params": {
-        #         "temperature": TEMPERATURE
-        #     }
-        # },
+        {
+            "archtype": Softmax,   # This basic Softmax is very bad
+            "params": {
+                "temperature": TEMPERATURE
+            }
+        },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,
