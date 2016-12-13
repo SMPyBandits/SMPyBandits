@@ -14,10 +14,12 @@ __version__ = "0.1"
 
 import numpy as np
 
+from .BaseMPPolicy import BaseMPPolicy
+from .BaseCentralizedPolicy import BaseCentralizedPolicy
 from .ChildPointer import ChildPointer
 
 
-class CyclingBest(object):
+class CyclingBest(BaseCentralizedPolicy):
     """ CyclingBest: select an arm in the best ones (bestArms) as (offset + t) % (len(bestArms)), with offset being decided by the OracleFair multi-player policy.
     """
 
@@ -46,7 +48,7 @@ class CyclingBest(object):
         return self.bestArms[(self.offset + self.t) % self.nb_bestArms]
 
 
-class OracleFair(object):
+class OracleFair(BaseMPPolicy):
     """ OracleFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 

@@ -15,10 +15,12 @@ __version__ = "0.1"
 
 import numpy as np
 
+from .BaseMPPolicy import BaseMPPolicy
+from .BaseCentralizedPolicy import BaseCentralizedPolicy
 from .ChildPointer import ChildPointer
 
 
-class Fixed(object):
+class Fixed(BaseCentralizedPolicy):
     """ Fixed: always select a fixed arm, as decided by the OracleNotFair multi-player policy.
     """
 
@@ -40,7 +42,7 @@ class Fixed(object):
         return self.armIndex
 
 
-class OracleNotFair(object):
+class OracleNotFair(BaseMPPolicy):
     """ OracleNotFair: a multi-player policy which uses a centralized intelligence to affect users to affect users to a FIXED arm, among the best arms.
     """
 

@@ -10,10 +10,11 @@ __version__ = "0.1"
 
 import numpy as np
 
+from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
-class Selfish(object):
+class Selfish(BaseMPPolicy):
     """ Selfish: a multi-player policy where every player is selfish, playing on their side.
 
     - without nowing how many players there is, and

@@ -14,6 +14,7 @@ __version__ = "0.1"
 
 import numpy.random as rn
 
+from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
@@ -51,7 +52,7 @@ class oneRhoRand(ChildPointer):
 
 # --- Class rhoRand
 
-class rhoRand(object):
+class rhoRand(BaseMPPolicy):
     """ rhoRand: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 

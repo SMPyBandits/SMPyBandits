@@ -12,10 +12,12 @@ __version__ = "0.1"
 
 import numpy as np
 
+from .BaseMPPolicy import BaseMPPolicy
+from .BaseCentralizedPolicy import BaseCentralizedPolicy
 from .ChildPointer import ChildPointer
 
 
-class Cycling(object):
+class Cycling(BaseCentralizedPolicy):
     """ Cycling: select an arm as (offset + t) % nbArms, with offset being decided by the CentralizedFair multi-player policy.
     """
 
@@ -40,7 +42,7 @@ class Cycling(object):
         return (self.offset + self.t) % self.nbArms
 
 
-class CentralizedFair(object):
+class CentralizedFair(BaseMPPolicy):
     """ CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 
