@@ -17,7 +17,7 @@ class klUCBHPlus(klUCB):
     """
 
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, lower=0., amplitude=1.):
-        super(klUCBHPlus, self).__init__(nbArms, tolerance, klucb, amplitude, lower)
+        super(klUCBHPlus, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, lower=lower, amplitude=amplitude)
         self.horizon = horizon
 
     def getHorizon(self):

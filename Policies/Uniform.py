@@ -13,7 +13,7 @@ class Uniform(BasePolicy):
     """ Uniform: the fully uniform policy who selects randomly (uniformly) an arm at each step (stupid).
     """
 
-    def __init__(self, nbArms):
+    def __init__(self, nbArms, lower=0., amplitude=1.):
         self.nbArms = nbArms
 
     def startGame(self):

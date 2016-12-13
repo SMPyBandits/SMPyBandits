@@ -14,7 +14,7 @@ class TakeFixedArm(BasePolicy):
     This is the perfect static policy if armIndex = bestArmIndex (not realistic, for test only).
     """
 
-    def __init__(self, nbArms, armIndex):
+    def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
         self.nbArms = nbArms
         self.armIndex = armIndex
 

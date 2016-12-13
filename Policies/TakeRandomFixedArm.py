@@ -14,7 +14,7 @@ from .TakeFixedArm import TakeFixedArm
 class TakeRandomFixedArm(TakeFixedArm):
     """ TakeRandomFixedArm: first selects a random sub-set of arms, then always select from it. """
 
-    def __init__(self, nbArms):
+    def __init__(self, nbArms, lower=0., amplitude=1.):
         self.nbArms = nbArms
         # Get the number of arms, randomly!
         nbArmIndexes = rd.randint(low=1, high=1 + int(nbArms / 2.))

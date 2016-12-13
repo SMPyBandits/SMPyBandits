@@ -27,7 +27,7 @@ class EpsilonDecreasing(BasePolicy):
         self.decreasingRate = decreasingRate
 
     def __str__(self):
-        return "EpsilonDecreasing({})".format(self.decreaseRate)
+        return "EpsilonDecreasing({})".format(self.decreasingRate)
 
     def choice(self):
         if random.random() < self.epsilon * np.exp(- self.t * self.decreasingRate):

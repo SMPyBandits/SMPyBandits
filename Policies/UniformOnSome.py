@@ -14,7 +14,7 @@ class UniformOnSome(Uniform):
     """ UniformOnSome: a fully uniform policy who selects randomly (uniformly) an arm among a fix set, at each step (stupid).
     """
 
-    def __init__(self, nbArms, armIndexes=None):
+    def __init__(self, nbArms, armIndexes=None, lower=0., amplitude=1.):
         self.nbArms = nbArms
         if armIndexes is None:
             armIndexes = list(range(nbArms))
