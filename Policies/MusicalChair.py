@@ -20,6 +20,7 @@ __version__ = "0.1"
 
 import numpy as np
 from enum import Enum  # For the different states
+from .BasePolicy import BasePolicy
 
 
 # --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]
@@ -60,11 +61,11 @@ def boundOnFinalRegret(T0, nbPlayers):
 State = Enum('State', ['NotStarted', 'InitialPhase', 'MusicalChair', 'Sitted'])
 
 
-class MusicalChair(object):
+class MusicalChair(BasePolicy):
     """ MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
     """
 
-    def __init__(self, nbArms, Time0=0.25, Time1=None, N=None):  # Named argument to give them in any order
+    def __init__(self, nbArms, Time0=0.25, Time1=None, N=None, lower=0., amplitude=1.):  # Named argument to give them in any order
         """
         - nbArms: number of arms,
         - Time0: required, number of step, or portion of the horizon Time1 (optional), for the first step (pure random exploration by each players),
@@ -78,6 +79,7 @@ class MusicalChair(object):
         For multi-players use:
         >>> configuration["players"] = Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.25, Time1=HORIZON, N=NB_PLAYERS).childs
         """
+        super(MusicalChair, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         nbPlayers = N
         assert nbPlayers is None or nbPlayers > 0, "Error, the parameter 'nbPlayers' for MusicalChair class has to be None or > 0."
         self.state = State.NotStarted
@@ -86,7 +88,6 @@ class MusicalChair(object):
         elif 1 <= Time0:
             Time0 = int(Time0)
         # Store parameters
-        self.nbArms = nbArms
         self.Time0 = Time0
         self.nbPlayers = nbPlayers
         # Internal memory
@@ -150,7 +151,7 @@ class MusicalChair(object):
         if self.state == State.InitialPhase:
             # Count the observation, update arm cumulated reward
             self.nbObservations[arm] += 1      # One observation of this arm
-            self.cumulatedRewards[arm] += reward  # More reward
+            self.cumulatedRewards[arm] += (reward - self.lower) / self.amplitude  # More reward
         # elif self.state in [State.MusicalChair, State.Sitted]:
         #     pass  # Nothing to do in this second phase
         #     # We don't care anymore about rewards in this step

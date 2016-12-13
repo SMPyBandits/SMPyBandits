@@ -11,6 +11,7 @@ __version__ = "0.1"
 
 import numpy as np
 import numpy.random as rn
+from .BasePolicy import BasePolicy
 
 
 # --- Help functions
@@ -24,11 +25,11 @@ def epsilon_t(c, d, nbArms, t):
 
 # --- Class MEGA
 
-class MEGA(object):
+class MEGA(BasePolicy):
     """ MEGA: implementation of the single-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
     """
 
-    def __init__(self, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=0.01):  # Named argument to give them in any order
+    def __init__(self, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=0.01, lower=0., amplitude=1.):  # Named argument to give them in any order
         """
         - nbArms: number of arms.
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
@@ -44,7 +45,7 @@ class MEGA(object):
         >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).childs
         """
         # Store parameters
-        self.nbArms = nbArms
+        super(MEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = c
         self.d = d
         assert 0 <= p0 <= 1, "Error: parameter 'p0' for a MEGA player should be in [0, 1]."
@@ -57,22 +58,16 @@ class MEGA(object):
         # Internal memory
         self.chosenArm = None
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
-        self.rewards = np.zeros(nbArms)
-        self.pulls = np.zeros(nbArms, dtype=int)
-        # Implementation details
-        self.t = -1
 
     def __str__(self):
         return "MEGA(c: {}, d: {}, p0: {}, alpha: {}, beta: {})".format(self.c, self.d, self.p0, self.alpha, self.beta)
 
     def startGame(self):
         """ Just reinitialize all the internal memory."""
+        super(MEGA, self).startGame()
         self.p = self.p0
         self.chosenArm = rn.randint(self.nbArms)  # Start on a random arm
         self.tnext.fill(1)
-        self.rewards.fill(0)
-        self.pulls.fill(0)
-        self.t = 0
 
     def choice(self):
         """ Chose an arm, as described by the MEGA algorithm."""
@@ -106,7 +101,7 @@ class MEGA(object):
         - If not collision, receive a reward after pulling the arm.
         """
         # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
-        self.rewards[arm] += reward
+        self.rewards[arm] += (reward - self.lower) / self.amplitude
         self.pulls[arm] += 1
         self.p = self.p * self.alpha + (1 - self.alpha)  # Update proba p
 

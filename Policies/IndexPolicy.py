@@ -21,7 +21,7 @@ class IndexPolicy(BasePolicy):
 
     def startGame(self):
         super(IndexPolicy, self).startGame()
-        self.rewards.fill(0)
+        self.index.fill(0)
 
     def computeIndex(self, arm):
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")

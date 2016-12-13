@@ -23,7 +23,6 @@ class KLempUCB(IndexPolicy):
         self.c = 1
         self.maxReward = maxReward
         self.obs = [None] * nbArms  # List instead of dict, quicker access
-        self.params = 'maxReward: ' + repr(maxReward)
         self.t = -1
         self.pulls = np.zeros(self.nbArms, dtype=int)
         self.obs = [dict()] * self.nbArms

@@ -9,22 +9,25 @@ __version__ = "0.2"
 
 import numpy as np
 import numpy.random as rn
+from .BasePolicy import BasePolicy
 
 
 # Default values for the parameters
 update_all_children = False
 
 
-class Aggr(object):
+class Aggr(BasePolicy):
     """ The Aggregated bandit algorithm
     Reference: https://github.com/Naereen/AlgoBandits
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 decreaseRate=None,
+                 decreaseRate=None, lower=0., amplitude=1.,
                  update_all_children=update_all_children, prior='uniform'):
         # Attributes
         self.nbArms = nbArms
+        self.lower = lower
+        self.amplitude = amplitude
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
         self.update_all_children = update_all_children
@@ -35,7 +38,7 @@ class Aggr(object):
         for childId, child in enumerate(children):
             if isinstance(child, dict):
                 print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(childId, child))  # DEBUG
-                self.children.append(child['archtype'](nbArms, **child['params']))
+                self.children.append(child['archtype'](nbArms, lower=lower, amplitude=amplitude, **child['params']))
             else:
                 print("  Using this already created player 'children[{}]' = {} ...".format(childId, child))  # DEBUG
                 self.children.append(child)
@@ -49,7 +52,7 @@ class Aggr(object):
         self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
 
     def __str__(self):
-        return "Aggr (nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
+        return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def startGame(self):
@@ -61,6 +64,7 @@ class Aggr(object):
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
+        reward = (reward - self.lower) / self.amplitude
         self.t += 1
         if self.decreaseRate is None:
             learningRate = self.learningRate

@@ -25,6 +25,10 @@ class UCBV(UCB):
         super(UCBV, self).startGame()
         self.rewardsSquared.fill(0)
 
+    def getReward(self, arm, reward):
+        super(UCBV, self).getReward(arm, reward)
+        self.rewardsSquared[arm] += ((reward - self.lower) / self.amplitude) ** 2
+
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
             return float('+inf')
@@ -32,7 +36,3 @@ class UCBV(UCB):
             mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
             variance = (self.rewardsSquared[arm] / self.pulls[arm]) - mean ** 2  # Variance estimate
             return mean + sqrt(2.0 * log(self.t) * variance / self.pulls[arm]) + 3.0 * self.amplitude * log(self.t) / self.pulls[arm]
-
-    def getReward(self, arm, reward):
-        super(UCBV, self).getReward(arm, reward)
-        self.rewardsSquared[arm] += ((reward - self.lower) / self.amplitude) ** 2
