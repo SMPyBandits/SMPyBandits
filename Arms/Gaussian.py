@@ -47,8 +47,11 @@ class Gaussian(Arm):
 
     # --- Lower bound
 
-    kl = klGauss
+    @staticmethod
+    def kl(x, y):
+        return klGauss(x, y)
 
-    def oneLR(self, mumax, mu):
+    @staticmethod
+    def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klGauss(mu, mumax)

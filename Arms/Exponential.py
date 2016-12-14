@@ -52,8 +52,11 @@ class Exponential(Arm):
 
     # --- Lower bound
 
-    kl = klExp
+    @staticmethod
+    def kl(x, y):
+        return klExp(x, y)
 
-    def oneLR(self, mumax, mu):
+    @staticmethod
+    def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Exponential arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klExp(mu, mumax)

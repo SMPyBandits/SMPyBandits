@@ -37,8 +37,11 @@ class Bernoulli(Arm):
 
     # --- Lower bound
 
-    kl = klBern
+    @staticmethod
+    def kl(x, y):
+        return klBern(x, y)
 
-    def oneLR(self, mumax, mu):
+    @staticmethod
+    def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klBern(mu, mumax)
