@@ -20,7 +20,7 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-# HORIZON = 10000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
@@ -29,11 +29,11 @@ HORIZON = 3000
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 500
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 500
+REPETITIONS = 200
+REPETITIONS = 100
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -144,44 +144,44 @@ if len(configuration['environment']) > 1:
 
 configuration.update({
     "policies": [
-        # --- Stupid algorithms
-        {
-            "archtype": Uniform,   # The stupidest policy, fully uniform
-            "params": {}
-        },
-        {
-            "archtype": TakeRandomFixedArm,   # The stupidest policy
-            "params": {}
-        },
-        {
-            "archtype": TakeRandomFixedArm,   # The stupidest policy
-            "params": {}
-        },
-        # --- Full or partial knowledge algorithms
-        TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
-        TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
-        TakeFixedArm(nbArms, 0),  # Take worse arm!
-        # --- Epsilon-... algorithms
-        {
-            "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
-            "params": {
-                "epsilon": EPSILON
-            }
-        },
-        {
-            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "decreasingRate": 0.005,
-            }
-        },
-        {
-            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "horizon": HORIZON
-            }
-        },
+        # # --- Stupid algorithms
+        # {
+        #     "archtype": Uniform,   # The stupidest policy, fully uniform
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        #     "params": {}
+        # },
+        # # --- Full or partial knowledge algorithms
+        # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
+        # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
+        # TakeFixedArm(nbArms, 0),  # Take worse arm!
+        # # --- Epsilon-... algorithms
+        # {
+        #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
+        #     "params": {
+        #         "epsilon": EPSILON
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "decreasingRate": 0.005,
+        #     }
+        # },
+        # {
+        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # # --- UCB algorithms
         {
             "archtype": UCB,   # This basic UCB is very worse than the other
