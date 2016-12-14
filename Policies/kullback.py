@@ -32,7 +32,10 @@ def klExp(x, y):
     """ Kullback-Leibler divergence for exponential distributions."""
     x = max(x, eps)
     y = max(y, eps)
-    return x / y - 1 - log(x / y)
+    if x <= 0 or y <= 0:
+        return float('+inf')
+    else:
+        return x / y - 1 - log(x / y)
 
 
 def klGamma(x, y, a=1):
