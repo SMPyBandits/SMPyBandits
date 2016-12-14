@@ -185,9 +185,11 @@ class EvaluatorMultiPlayers(object):
         plt.show()
 
     # Plotting centralized rewards (sum)
-    def plotRegretsCentralized(self, environmentId=0, savefig=None, semilogx=False):
+    def plotRegretsCentralized(self, environmentId=0, savefig=None, semilogx=False, normalizedRegret=False):
         X = np.arange(self.horizon)
         Y = self.getCentralizedRegret(environmentId)
+        if normalizedRegret:
+            Y /= np.log(2 + X)   # XXX prevent /0
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
@@ -199,9 +201,16 @@ class EvaluatorMultiPlayers(object):
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, meanY * np.ones_like(X), 'k--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
+        lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
+        # We also plot our lower bound
+        if normalizedRegret:
+            plt.plot(lowerbound * np.ones_like(X), 'k-', label="Kaufmann & Besson lower bound", lw=3)
+        else:
+            plt.plot(lowerbound * np.log(1 + X), 'k-', label="Kaufmann & Besson lower bound", lw=3)
+        # Labels and legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
-        plt.ylabel("Cumulative Centralized Regret $R_t$")
-        plt.title("Multi-players $M = {}$ (collision model: {}): cumulated centralized regret, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalizedRegret else " "))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalizedRegret else " ", self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")

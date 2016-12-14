@@ -185,6 +185,7 @@ class Evaluator(object):
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        lowerbound = self.envs[environmentId].lowerbound()
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         if meanRegret:
@@ -195,15 +196,13 @@ class Evaluator(object):
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
-            complexity = self.envs[environmentId].complexity()
-            plt.plot(complexity * np.ones_like(X), 'k-', label="Lai & Robbins lower bound")
+            plt.plot(lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound", lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         else:
             # We also plot the Lai & Robbins lower bound
-            complexity = self.envs[environmentId].complexity()
-            plt.plot(complexity * np.log(1 + X), 'k-', label="Lai & Robbins lower bound")
+            plt.plot(lowerbound * np.log(1 + X), 'k-', label="Lai & Robbins lower bound", lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))

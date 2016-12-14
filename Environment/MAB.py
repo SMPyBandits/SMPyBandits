@@ -77,6 +77,25 @@ class MAB(object):
                 for armId, arm in enumerate(self.arms))
             )
 
-    def complexity(self):
+    def lowerbound(self):
         """ Compute the [Lai & Robbins] lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
-        return self.arms[0].lowerbound(self.means())
+        means = self.means()
+        bestMean = max(means)
+        oneLR = self.arms[0].oneLR
+        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+
+    def lowerbound_multiplayers(self, nbPlayers):
+        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        sortedMeans = sorted(self.means())
+        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
+        bestMeans = sortedMeans[-nbPlayers:]
+        worstMeans = sortedMeans[:-nbPlayers]
+        worstOfBestMean = bestMeans[0]
+        oneLR = self.arms[0].oneLR
+        # Our lower bound is this:
+        our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, mean) for mean in worstMeans)
+        # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
+        kl = self.arms[0].kl
+        anandkumar_lowerbound = sum(sum((worstOfBestMean - mean) / kl(mean, oneOfBestMean) for mean in worstMeans) for oneOfBestMean in bestMeans)
+        assert our_lowerbound <= anandkumar_lowerbound, "Error, our lower bound is not smaller than the one in Theorem 6 from [Anandkumar et al., 2010]..."  # FIXME?
+        return our_lowerbound
