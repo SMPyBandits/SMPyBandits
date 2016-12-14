@@ -94,8 +94,10 @@ class MAB(object):
         oneLR = self.arms[0].oneLR
         # Our lower bound is this:
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, mean) for mean in worstMeans)
+        print("- Our lower bound gave = {} ...".format(our_lowerbound))  # DEBUG
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
         anandkumar_lowerbound = sum(sum((worstOfBestMean - mean) / kl(mean, oneOfBestMean) for mean in worstMeans) for oneOfBestMean in bestMeans)
-        assert our_lowerbound <= anandkumar_lowerbound, "Error, our lower bound is not smaller than the one in Theorem 6 from [Anandkumar et al., 2010]..."  # FIXME?
-        return our_lowerbound
+        print("- The initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(anandkumar_lowerbound))  # DEBUG
+        # assert our_lowerbound <= anandkumar_lowerbound, "Error, our lower bound is not smaller than the one in Theorem 6 from [Anandkumar et al., 2010]..."  # FIXME?
+        return our_lowerbound, anandkumar_lowerbound

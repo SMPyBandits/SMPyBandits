@@ -21,7 +21,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 
@@ -72,8 +72,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
-TEST_AGGR = False  # XXX do not let this = False
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
@@ -97,14 +97,14 @@ configuration = {
     # "nb_random_events": 5,
     # --- Arms
     "environment": [  # Bernoulli arms
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        },
-        # {   # A very easy problem, but it is used in a lot of articles
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        #     "params": [0.1, 0.5, 0.9]
         # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -203,10 +203,10 @@ configuration.update({
         #     "archtype": UCBV,   # UCB with variance term
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCBtuned,   # UCB with variance term and one trick
-        #     "params": {}
-        # },
+        {
+            "archtype": UCBtuned,   # UCB with variance term and one trick
+            "params": {}
+        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -263,16 +263,16 @@ configuration.update({
             "archtype": klUCB,
             "params": {}
         },
-        {
-            "archtype": klUCBPlus,
-            "params": {}
-        },
-        {
-            "archtype": klUCBHPlus,
-            "params": {
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": klUCBHPlus,
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}

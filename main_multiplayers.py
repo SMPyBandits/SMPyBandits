@@ -81,8 +81,14 @@ if __name__ == '__main__':
         # Plotting the centralized rewards
         savefig = savefig.replace('main', 'main_RewardsCentralized')
         print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
-        evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx)
-        # evaluation.plotRegretsCentralized(envId, semilogx=semilogx)  # XXX To plot without saving
+        evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=False)
+        # evaluation.plotRegretsCentralized(envId, semilogx=semilogx, normalizedRegret=False)  # XXX To plot without saving
+
+        # Plotting the centralized rewards
+        savefig = savefig.replace('main', 'main_RewardsCentralized')
+        print("- Plotting the centralized  rewards, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)
+        evaluation.plotRegretsCentralized(envId, semilogx=semilogx, normalizedRegret=True)  # XXX To plot without saving
 
         # # Also plotting the probability of picking the best arm
         # savefig = savefig.replace('main', 'main_BestArmPulls')

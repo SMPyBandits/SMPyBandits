@@ -54,12 +54,10 @@ LEARNING_RATE = 0.01
 LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
-TEST_AGGR = True
-TEST_AGGR = False
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 13   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # More than the number of arms !!
@@ -76,11 +74,6 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 # def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
 # def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  # Let it compute the random distances, ONCE by thread, and then cache it
 # collisionModel = closerOneGetsReward
-
-
-# Test one of the multi-players policy
-TEST_MULTIPLAYER_POLICY = False
-TEST_MULTIPLAYER_POLICY = True
 
 
 # Parameters for the arms
@@ -107,10 +100,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
@@ -123,10 +116,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -145,75 +138,58 @@ configuration = {
 }
 
 
-# Dynamic hack to force the Aggr (player aggregator) to use all the player previously/already defined
-if TEST_AGGR:
-    non_aggr_players = configuration["players"]
-    for learning_rate in LEARNING_RATES:
-        current_players = configuration["players"]
-        # Add one Aggr policy
-        configuration["players"] = current_players + [{
-            "archtype": Aggr,
-            "params": {
-                "learningRate": learning_rate,
-                "decreaseRate": DECREASE_RATE,
-                "children": non_aggr_players
-            }
-        }]
+nbArms = len(configuration['environment'][0]['params'])
+if len(configuration['environment']) > 1:
+    raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+configuration.update({
+    # --- DONE Defining manually each child
+    # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
+    # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
 
+    # --- Defining each player as one child of a multi-player policy
 
-if TEST_MULTIPLAYER_POLICY:
-    nbArms = len(configuration['environment'][0]['params'])
-    if len(configuration['environment']) > 1:
-        raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
-    configuration.update({
-        # --- DONE Defining manually each child
-        # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
-        # "players": [TakeRandomFixedArm(nbArms) for _ in range(NB_PLAYERS)]
+    # --- DONE Using multi-player Selfish policy
+    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
+    # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
+    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
+    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
+    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
+    # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+    # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
-        # --- Defining each player as one child of a multi-player policy
+    # --- DONE Using multi-player Centralized policy
+    # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
+    # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
+    # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
 
-        # --- DONE Using multi-player Selfish policy
-        # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
-        # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
-        # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
-        # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
-        # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
-        # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
-        # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
-        # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
-        # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
-        # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
+    # --- DONE Using multi-player Oracle policy
+    # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
+    # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
 
-        # --- DONE Using multi-player Centralized policy
-        # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
-        # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-        # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    # --- DONE Using single-player Musical Chair policy
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
 
-        # --- DONE Using multi-player Oracle policy
-        # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
-        # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-        # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    # --- DONE Using single-player MEGA policy
+    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
-        # --- DONE Using single-player Musical Chair policy
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-        # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-
-        # --- DONE Using single-player MEGA policy
-        # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
-
-        # --- DONE Using single-player rhoRand policy
-        # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
-        # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-        "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
-        # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-        # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
-    })
+    # --- DONE Using single-player rhoRand policy
+    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
+})
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 print("Loaded experiments configuration from 'configuration.py' :")

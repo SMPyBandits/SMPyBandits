@@ -201,12 +201,14 @@ class EvaluatorMultiPlayers(object):
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, meanY * np.ones_like(X), 'k--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
-        lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
+        lowerbound, anandkumar_lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
         # We also plot our lower bound
         if normalizedRegret:
             plt.plot(lowerbound * np.ones_like(X), 'k-', label="Kaufmann & Besson lower bound", lw=3)
+            plt.plot(anandkumar_lowerbound * np.ones_like(X), 'k:', label="Anandkumar lower bound", lw=3)
         else:
-            plt.plot(lowerbound * np.log(1 + X), 'k-', label="Kaufmann & Besson lower bound", lw=3)
+            plt.plot(lowerbound * np.log(2 + X), 'k-', label="Kaufmann & Besson lower bound", lw=3)
+            plt.plot(anandkumar_lowerbound * np.log(2 + X), 'k:', label="Anandkumar lower bound", lw=3)
         # Labels and legends
         plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
