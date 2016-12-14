@@ -25,7 +25,9 @@ from .TakeRandomFixedArm import TakeRandomFixedArm
 from .EpsilonGreedy import EpsilonGreedy
 from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
-from .Softmax import Softmax
+
+# --- Mine, Exp3-like policies
+from .Softmax import Softmax, SoftmaxDecreasing, SoftmaxWithHorizon
 
 # --- From pymaBandits v1.0
 from .UCB import UCB

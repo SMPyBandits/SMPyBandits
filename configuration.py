@@ -21,7 +21,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 
@@ -33,7 +33,7 @@ REPETITIONS = 500
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -183,59 +183,69 @@ configuration.update({
         #     }
         # },
         # # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBplus,   # This other basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBopt,
-            "params": {}
-        },
-        {
-            "archtype": UCBrandomInit,
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
-        {
-            "archtype": UCBtuned,   # UCB with variance term and one trick
-            "params": {}
-        },
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBplus,   # This other basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBopt,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBrandomInit,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBtuned,   # UCB with variance term and one trick
+        #     "params": {}
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
         #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # # --- Softmax algorithms
         {
             "archtype": Softmax,   # This basic Softmax is very bad
             "params": {
                 "temperature": TEMPERATURE
+            }
+        },
+        {
+            "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
+            "params": {}
+        },
+        {
+            "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
+            "params": {
+                "horizon": HORIZON
             }
         },
         # --- MOSS algorithm, quite efficient
@@ -272,27 +282,27 @@ configuration.update({
             "params": {}
         },
         # # --- AdBandits with different alpha paramters
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.125,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.01,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
     ]
 })
 

@@ -64,8 +64,8 @@ class Evaluator(object):
         print("Number of environments to try:", len(self.envs))
 
     def __initEnvironments__(self):
-        for armType in self.cfg['environment']:
-            self.envs.append(MAB(armType))
+        for configuration_arms in self.cfg['environment']:
+            self.envs.append(MAB(configuration_arms))
 
     def __initPolicies__(self, env):
         for policyId, policy in enumerate(self.cfg['policies']):
@@ -189,15 +189,21 @@ class Evaluator(object):
         plt.ylim(ymin, ymax)
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
+            plt.plot(self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
             plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
+            # We also plot the Lai & Robbins lower bound
+            complexity = self.envs[environmentId].complexity()
+            plt.plot(complexity * np.ones_like(X), 'k-', label="Lai & Robbins lower bound")
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         else:
+            # We also plot the Lai & Robbins lower bound
+            complexity = self.envs[environmentId].complexity()
+            plt.plot(complexity * np.log(1 + X), 'k-', label="Lai & Robbins lower bound")
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
