@@ -28,8 +28,7 @@ class Exponential(Arm):
         else:
             self.expectation = (1. - exp(-p * trunc)) / p
 
-    def __str__(self):
-        return "Exponential"
+    # --- Random samples
 
     def mean(self):
         return self.expectation
@@ -37,6 +36,11 @@ class Exponential(Arm):
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""
         return min(-1. / self.p * log(random()), self.trunc)
+
+    # --- Printing
+
+    def __str__(self):
+        return "Exponential"
 
     def __repr__(self):
         if isinf(self.trunc):
@@ -46,12 +50,8 @@ class Exponential(Arm):
             # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ", " + repr(self.trunc) + ">"
             return "Exp({}, {})".format(self.p, self.trunc)
 
-    def lowerbound(self, means):
-        """ Compute the Lai & Robbins lower bounds for a list of Exponential arms. """
-        bestMean = max(means)
-        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+    # --- Lower bound
 
-
-def oneLR(mumax, mu):
-    """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
-    return (mumax - mu) / klExp(mu, mumax)
+    def oneLR(mumax, mu):
+        """ One term of the Lai & Robbins lower bound for Exponential arms: (mumax - mu) / KL(mu, mumax). """
+        return (mumax - mu) / klExp(mu, mumax)

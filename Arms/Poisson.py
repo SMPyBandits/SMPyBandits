@@ -35,8 +35,7 @@ class Poisson(Arm):
                 sq += q
             self.expectation += self.trunc * (1 - sq)
 
-    def __str__(self):
-        return "Poisson"
+    # --- Random samples
 
     def mean(self):
         return self.expectation
@@ -45,18 +44,19 @@ class Poisson(Arm):
         """ The parameter t is ignored in this Arm."""
         return min(poisson.rvs(self.p), self.trunc)
 
+    # --- Printing
+
+    def __str__(self):
+        return "Poisson"
+
     def __repr__(self):
         if isinf(self.trunc):
             return "P({})".format(self.p)
         else:
             return "P({}, {})".format(self.p, self.trunc)
 
-    def lowerbound(self, means):
-        """ Compute the Lai & Robbins lower bounds for a list of Poisson arms. """
-        bestMean = max(means)
-        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+    # --- Lower bound
 
-
-def oneLR(mumax, mu):
-    """ One term of the Lai & Robbins lower bound for Poisson arms: (mumax - mu) / KL(mu, mumax). """
-    return (mumax - mu) / klPoisson(mu, mumax)
+    def oneLR(mumax, mu):
+        """ One term of the Lai & Robbins lower bound for Poisson arms: (mumax - mu) / KL(mu, mumax). """
+        return (mumax - mu) / klPoisson(mu, mumax)
