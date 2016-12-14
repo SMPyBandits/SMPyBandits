@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The Aggregated bandit algorithm
+""" The Aggregated bandit algorithm, similar to Exp4.
 Reference: https://github.com/Naereen/AlgoBandits
 """
 from __future__ import print_function
@@ -15,14 +15,19 @@ from .BasePolicy import BasePolicy
 # Default values for the parameters
 update_all_children = False
 
+# self.unbiased is a flag to know if the rewards are used as biased estimator,
+# ie just r_t, or unbiased estimators, r_t / p_t
+UNBIASED = True
+UNBIASED = False
+
 
 class Aggr(BasePolicy):
-    """ The Aggregated bandit algorithm
+    """ The Aggregated bandit algorithm, similar to Exp4.
     Reference: https://github.com/Naereen/AlgoBandits
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 decreaseRate=None, lower=0., amplitude=1.,
+                 decreaseRate=None, unbiased=UNBIASED, lower=0., amplitude=1.,
                  update_all_children=update_all_children, prior='uniform'):
         # Attributes
         self.nbArms = nbArms
@@ -30,6 +35,7 @@ class Aggr(BasePolicy):
         self.amplitude = amplitude
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
+        self.unbiased = unbiased
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
         self.t = -1
@@ -54,7 +60,6 @@ class Aggr(BasePolicy):
     def __str__(self):
         return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def startGame(self):
         self.t = 0
         # Start all child children
@@ -62,27 +67,33 @@ class Aggr(BasePolicy):
             self.children[i].startGame()
         self.choices.fill(-1)
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def getReward(self, arm, reward):
-        reward = (reward - self.lower) / self.amplitude
         self.t += 1
+        # First, give reward to all child children
+        for i in range(self.nbChildren):
+            self.children[i].getReward(arm, reward)
+        # Then compute the new learning rate
+        trusts = self.trusts
         if self.decreaseRate is None:
             learningRate = self.learningRate
+        elif self.decreaseRate == 'auto':
+            # Implement the smart value given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+            learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.t * self.nbArms))
         else:
             # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
             learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
-        # Give reward to all child children
-        for i in range(self.nbChildren):
-            self.children[i].getReward(arm, reward)
+        reward = (reward - self.lower) / self.amplitude
+        if self.unbiased:
+            reward /= trusts
         scalingConstant = np.exp(reward * learningRate)
         # 3. increase self.trusts for the children who were true
-        self.trusts[self.choices == arm] *= scalingConstant
+        trusts[self.choices == arm] *= scalingConstant
         # DONE test both, by changing the option self.update_all_children
         if self.update_all_children:
-            self.trusts[self.choices != arm] /= scalingConstant
+            trusts[self.choices != arm] /= scalingConstant
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
-        self.trusts = self.trusts / np.sum(self.trusts)
+        self.trusts = trusts / np.sum(trusts)
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
@@ -97,7 +108,6 @@ class Aggr(BasePolicy):
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def choiceWithRank(self, rank=1):
         # 1. make vote every child children
         for i in range(self.nbChildren):
