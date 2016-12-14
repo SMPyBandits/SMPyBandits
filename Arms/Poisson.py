@@ -59,7 +59,6 @@ class Poisson(Arm):
 
     kl = klPoisson
 
-    @classmethod
-    def oneLR(mumax, mu):
+    def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Poisson arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klPoisson(mu, mumax)
