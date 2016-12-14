@@ -6,7 +6,9 @@ __version__ = "$Revision: 1.5 $"
 
 from math import isinf, exp, log
 from random import random
+
 from .Arm import Arm
+from .kullback import klExp
 
 
 class Exponential(Arm):
@@ -43,3 +45,13 @@ class Exponential(Arm):
         else:
             # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ", " + repr(self.trunc) + ">"
             return "Exp({}, {})".format(self.p, self.trunc)
+
+    def lowerbound(self, means):
+        """ Compute the Lai & Robbins lower bounds for a list of Exponential arms. """
+        bestMean = max(means)
+        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+
+
+def oneLR(mumax, mu):
+    """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
+    return (mumax - mu) / klExp(mu, mumax)

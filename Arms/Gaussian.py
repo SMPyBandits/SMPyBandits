@@ -5,7 +5,9 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.4 $"
 
 from random import gauss
+
 from .Arm import Arm
+from .kullback import klGauss
 
 # oo = float('+inf')  # Nice way to write +infinity
 
@@ -38,3 +40,13 @@ class Gaussian(Arm):
 
     def __repr__(self):
         return "G({}, {})".format(self.mu, self.sigma)
+
+    def lowerbound(self, means):
+        """ Compute the Lai & Robbins lower bounds for a list of Gaussian arms. """
+        bestMean = max(means)
+        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+
+
+def oneLR(mumax, mu):
+    """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
+    return (mumax - mu) / klGauss(mu, mumax)

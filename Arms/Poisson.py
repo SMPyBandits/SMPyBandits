@@ -6,7 +6,9 @@ __version__ = "$Revision: 1.6 $"
 
 from math import isinf, exp
 from scipy.stats import poisson
+
 from .Arm import Arm
+from .kullback import klPoisson
 
 
 class Poisson(Arm):
@@ -48,3 +50,13 @@ class Poisson(Arm):
             return "P({})".format(self.p)
         else:
             return "P({}, {})".format(self.p, self.trunc)
+
+    def lowerbound(self, means):
+        """ Compute the Lai & Robbins lower bounds for a list of Poisson arms. """
+        bestMean = max(means)
+        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+
+
+def oneLR(mumax, mu):
+    """ One term of the Lai & Robbins lower bound for Poisson arms: (mumax - mu) / KL(mu, mumax). """
+    return (mumax - mu) / klPoisson(mu, mumax)
