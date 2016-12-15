@@ -100,14 +100,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.9]
         # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
-        #     "params": [t / 10.0 for t in range(1, 10)]
+        #     "params": [0.1, 0.5, 0.9]
         # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [t / 10.0 for t in range(1, 10)]
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
@@ -160,7 +160,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
-    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
     # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
@@ -172,7 +172,7 @@ configuration.update({
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
     # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-    # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
 
     # --- DONE Using single-player Musical Chair policy
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
