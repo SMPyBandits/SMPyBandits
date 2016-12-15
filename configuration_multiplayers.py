@@ -100,14 +100,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # }
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
             "arm_type": Bernoulli,
-            "params": [t / 10.0 for t in range(1, 10)]
+            "params": [0.1, 0.5, 0.9]
         }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [t / 10.0 for t in range(1, 10)]
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
@@ -167,12 +167,12 @@ configuration.update({
     # --- DONE Using multi-player Centralized policy
     # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
     # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-    # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    "players": CentralizedFair(NB_PLAYERS, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
     # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-    "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
 
     # --- DONE Using single-player Musical Chair policy
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds

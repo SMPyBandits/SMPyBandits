@@ -196,7 +196,7 @@ class Evaluator(object):
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
-            plt.plot(lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound", lw=3)
+            plt.plot(lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))

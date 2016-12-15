@@ -58,6 +58,7 @@ class EvaluatorMultiPlayers(object):
         self.rewardsSquared = dict()
         self.pulls = dict()
         self.collisions = dict()
+        self.NbSwitchs = dict()
         self.BestArmPulls = dict()
         self.FreeTransmissions = dict()
         print("Number of environments to try:", len(self.envs))
@@ -66,6 +67,7 @@ class EvaluatorMultiPlayers(object):
             self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
+            self.NbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.BestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
 
@@ -115,12 +117,16 @@ class EvaluatorMultiPlayers(object):
             self.pulls[envId] += r.pulls
             self.collisions[envId] += r.collisions
             for playerId in range(self.nbPlayers):
+                self.NbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
                 self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
                 # FIXME there is probably a bug in this computation
                 self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.horizon)])
 
     def getPulls(self, playerId, environmentId=0):
         return self.pulls[environmentId][playerId, :] / float(self.repetitions)
+
+    def getNbSwitchs(self, playerId, environmentId=0):
+        return self.NbSwitchs[environmentId][playerId, :] / float(self.repetitions)
 
     def getBestArmPulls(self, playerId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
@@ -193,11 +199,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(Y, label="{}Cumulated centralized regret".format("Normalized " if normalizedRegret else " "), 'r')
+            plt.semilogx(Y, 'r', label="{}Cumulated centralized regret".format("Normalized " if normalizedRegret else " "))
             # We plot a horizontal line ----- at the best arm mean
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(Y, label="{}Cumulated centralized regret".format("Normalized " if normalizedRegret else " "), 'r')
+            plt.plot(Y, 'r', label="{}Cumulated centralized regret".format("Normalized " if normalizedRegret else " "))
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -214,6 +220,36 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalizedRegret else " "))
         plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalizedRegret else " ", self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+        plt.show()
+
+    # Plotting cumulated number of switchs (switching costs)
+    def plotNbSwitchs(self, environmentId=0, savefig=None, semilogx=False, cumulated=False):
+        plt.figure()
+        ymin = 0
+        colors = palette(self.nbPlayers)
+        markers = makemarkers(self.nbPlayers)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
+        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        for i, player in enumerate(self.players):
+            label = 'Player #{}: {}'.format(i + 1, str(player))
+            Y = self.getNbSwitchs(i, environmentId)
+            if cumulated:
+                Y = np.cumsum(Y)
+            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            if semilogx:
+                plt.semilogx(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+            else:
+                plt.plot(Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        ymax = max(plt.ylim()[1], 1)
+        plt.ylim(ymin, ymax)
+        plt.ylabel("{}Number of switches by player".format("Cumulated " if cumulated else " "))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}number of switches for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -237,18 +273,20 @@ class EvaluatorMultiPlayers(object):
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
-    def plotFreeTransmissions(self, environmentId=0, savefig=None):
+    def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
         plt.figure()
         colors = palette(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getFreeTransmissions(i, environmentId)
+            if cumulated:
+                Y = np.cumsum(Y)
             plt.plot(Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
             # TODO should only plot with markers
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
-        plt.ylabel("Transmission on a free channel")
-        plt.title("Multi-players $M = {}$ (collision model: {}): free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else " "))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")

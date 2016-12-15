@@ -92,12 +92,14 @@ class MAB(object):
         worstMeans = sortedMeans[:-nbPlayers]
         worstOfBestMean = bestMeans[0]
         oneLR = self.arms[0].oneLR
+        print("  Using oneLR =", oneLR)  # DEBUG
         # Our lower bound is this:
-        our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, mean) for mean in worstMeans)
+        our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
         print("- Our lower bound gave = {} ...".format(our_lowerbound))  # DEBUG
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
-        anandkumar_lowerbound = sum(sum((worstOfBestMean - mean) / kl(mean, oneOfBestMean) for mean in worstMeans) for oneOfBestMean in bestMeans)
+        print("  Using kl =", kl)  # DEBUG
+        anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
         print("- The initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(anandkumar_lowerbound))  # DEBUG
         # assert our_lowerbound <= anandkumar_lowerbound, "Error, our lower bound is not smaller than the one in Theorem 6 from [Anandkumar et al., 2010]..."  # FIXME?
         return our_lowerbound, anandkumar_lowerbound

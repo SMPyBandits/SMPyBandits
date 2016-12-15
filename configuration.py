@@ -101,14 +101,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -187,14 +187,14 @@ configuration.update({
         #     "archtype": UCB,   # This basic UCB is very worse than the other
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCBplus,   # This other basic UCB is very worse than the other
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBopt,
-        #     "params": {}
-        # },
+        {
+            "archtype": UCBplus,
+            "params": {}
+        },
+        {
+            "archtype": UCBopt,
+            "params": {}
+        },
         # {
         #     "archtype": UCBrandomInit,
         #     "params": {}
@@ -232,22 +232,22 @@ configuration.update({
         #     }
         # },
         # # --- Softmax algorithms
-        {
-            "archtype": Softmax,   # This basic Softmax is very bad
-            "params": {
-                "temperature": TEMPERATURE
-            }
-        },
+        # {
+        #     "archtype": Softmax,   # This basic Softmax is very bad
+        #     "params": {
+        #         "temperature": TEMPERATURE
+        #     }
+        # },
         {
             "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
             "params": {}
         },
-        {
-            "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
-            "params": {
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,
