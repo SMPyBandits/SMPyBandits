@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -38,7 +38,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
 # REPETITIONS = 100
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -167,7 +167,7 @@ configuration.update({
     # --- DONE Using multi-player Centralized policy
     # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
     # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-    "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -185,7 +185,7 @@ configuration.update({
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+    "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs

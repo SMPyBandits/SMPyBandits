@@ -22,7 +22,7 @@ plot_dir = "plots"
 semilogx = False
 piechart = True
 averageRegret = True
-normalizedRegret = True
+normalized = True
 
 # Whether to do the plots or not
 do_plot = False
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):
         # Evaluate just that env
-        evaluation.start_one_env(envId, env)
+        evaluation.startOneEnv(envId, env)
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.printFinalRanking(envId)
@@ -79,17 +79,17 @@ if __name__ == '__main__':
         evaluation.plotRewards(envId, savefig=savefig, semilogx=semilogx)
         # evaluation.plotRewards(envId, semilogx=semilogx)  # XXX To plot without saving
 
-        # Plotting the centralized rewards
-        savefig = mainfig.replace('main', 'main_RewardsCentralized')
-        print("\n\n- Plotting the centralized rewards, and saving the plot to {} ...".format(savefig))
-        evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=False)
-        # evaluation.plotRegretsCentralized(envId, semilogx=semilogx, normalizedRegret=False)  # XXX To plot without saving
+        # Plotting the centralized regret
+        savefig = mainfig.replace('main', 'main_RegretCentralized')
+        print("\n\n- Plotting the centralized regret, and saving the plot to {} ...".format(savefig))
+        evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=semilogx, normalized=False)
+        # evaluation.plotRegretCentralized(envId, semilogx=semilogx, normalized=False)  # XXX To plot without saving
 
         # Plotting the normalized centralized rewards
-        savefig = mainfig.replace('main', 'main_RewardsCentralized')
+        savefig = mainfig.replace('main', 'main_NormalizedRewardsCentralized')
         print("\n\n- Plotting the normalized centralized rewards, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)
-        evaluation.plotRegretsCentralized(envId, semilogx=semilogx, normalizedRegret=True)  # XXX To plot without saving
+        # evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=semilogx, normalized=True)
+        evaluation.plotRegretCentralized(envId, semilogx=semilogx, normalized=True)  # XXX To plot without saving
 
         # Plotting the number of switches
         savefig = mainfig.replace('main', 'main_NbSwitchs')
@@ -98,7 +98,7 @@ if __name__ == '__main__':
         evaluation.plotNbSwitchs(envId, semilogx=semilogx, cumulated=False)  # XXX To plot without saving
 
         # Plotting the cumulative number of switches
-        savefig = mainfig.replace('main', 'main_NbSwitchs')
+        savefig = mainfig.replace('main', 'main_CumNbSwitchs')
         print("\n\n- Plotting the cumulative number of switches, and saving the plot to {} ...".format(savefig))
         # evaluation.plotRegretsCentralized(envId, savefig=savefig, semilogx=semilogx, cumulated=True)
         evaluation.plotNbSwitchs(envId, semilogx=semilogx, cumulated=True)  # XXX To plot without saving
@@ -115,17 +115,35 @@ if __name__ == '__main__':
         # evaluation.plotFreeTransmissions(envId, savefig=savefig)
         # evaluation.plotFreeTransmissions(envId)  # XXX To plot without saving
 
+        # Also plotting the number of pulls of all arms
+        savefig = mainfig.replace('main', 'main_AllPulls')
+        print(" - Plotting the number of pulls of all arms, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=False, normalized=False)
+        evaluation.plotAllPulls(envId, cumulated=False, normalized=False)  # XXX To plot without saving
+
+        # Also plotting the cumulative number of pulls of all arms
+        savefig = mainfig.replace('main', 'main_CumAllPulls')
+        print(" - Plotting the cumulative number of pulls of all arms, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=True, normalized=False)
+        evaluation.plotAllPulls(envId, cumulated=True, normalized=False)  # XXX To plot without saving
+
+        # Also plotting the cumulative number of pulls of all arms
+        savefig = mainfig.replace('main', 'main_NormalizedAllPulls')
+        print(" - Plotting the cumulative number of pulls of all arms, and saving the plot to {} ...".format(savefig))
+        # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=True, normalized=True)
+        evaluation.plotAllPulls(envId, cumulated=True, normalized=True)  # XXX To plot without saving
+
         # Also plotting the total nb of collision as a function of time
         savefig = mainfig.replace('main', 'main_NbCollisions')
         print(" - Plotting the total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=False)
-        evaluation.plotNbCollisions(envId, cumsum=False)  # XXX To plot without saving
+        # evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=False)
+        evaluation.plotNbCollisions(envId, cumulated=False)  # XXX To plot without saving
 
         # Also plotting the total nb of collision as a function of time
-        savefig = mainfig.replace('main', 'main_NbCollisionsCum')
+        savefig = mainfig.replace('main', 'main_CumNbCollisions')
         print(" - Plotting the cumulated total nb of collision as a function of time, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotNbCollisions(envId, savefig=savefig, cumsum=True)
-        evaluation.plotNbCollisions(envId, cumsum=True)  # XXX To plot without saving
+        # evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=True)
+        evaluation.plotNbCollisions(envId, cumulated=True)  # XXX To plot without saving
 
         # if not interactive:
         #     plt.interactive(True)

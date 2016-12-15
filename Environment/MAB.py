@@ -48,7 +48,7 @@ class MAB(object):
         print(" - with 'arms' =", self.arms)  # DEBUG
         self.nbArms = len(self.arms)
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
-        self.maxArm = max([arm.mean() for arm in self.arms])
+        self.maxArm = np.max(self.means())
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
 
     def __repr__(self):
@@ -91,15 +91,19 @@ class MAB(object):
         bestMeans = sortedMeans[-nbPlayers:]
         worstMeans = sortedMeans[:-nbPlayers]
         worstOfBestMean = bestMeans[0]
-        oneLR = self.arms[0].oneLR
-        print("  Using oneLR =", oneLR)  # DEBUG
+
         # Our lower bound is this:
+        oneLR = self.arms[0].oneLR
+        print("    Using oneLR =", oneLR)  # DEBUG
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
-        print("- Our lower bound gave = {} ...".format(our_lowerbound))  # DEBUG
+        print("  - Our lower bound gave = {} ...".format(our_lowerbound))  # DEBUG
+
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
-        print("  Using kl =", kl)  # DEBUG
+        print("    Using kl =", kl)  # DEBUG
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
-        print("- The initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(anandkumar_lowerbound))  # DEBUG
-        # assert our_lowerbound <= anandkumar_lowerbound, "Error, our lower bound is not smaller than the one in Theorem 6 from [Anandkumar et al., 2010]..."  # FIXME?
+        print("  - The initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(anandkumar_lowerbound))  # DEBUG
+
+        # Check that our bound is better (ie bigger)
+        assert anandkumar_lowerbound <= our_lowerbound, "Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better..."
         return our_lowerbound, anandkumar_lowerbound

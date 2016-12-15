@@ -77,12 +77,12 @@ class Evaluator(object):
                 print("  Using this already created policy 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
                 self.policies.append(policy)
 
-    def start_all_env(self):
+    def startAllEnv(self):
         for envId, env in enumerate(self.envs):
-            self.start_one_env(envId, env)
+            self.startOneEnv(envId, env)
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-    def start_one_env(self, envId, env):
+    def startOneEnv(self, envId, env):
         print("\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
