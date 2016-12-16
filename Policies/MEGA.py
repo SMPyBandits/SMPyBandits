@@ -39,7 +39,7 @@ class MEGA(BasePolicy):
 
         Example:
         >>> nbArms, p0, alpha, beta, c, d = 17, 0.5, 0.5, 0.5, 0.1, 0.01
-        >>> player1 = MEGA(nbArms, nbArms, p0, alpha, beta, c, d)
+        >>> player1 = MEGA(nbArms, p0, alpha, beta, c, d)
 
         For multi-players use:
         >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).childs
