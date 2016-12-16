@@ -70,7 +70,7 @@ class MEGA(BasePolicy):
         self.tnext.fill(1)
 
     def choice(self):
-        """ Chose an arm, as described by the MEGA algorithm."""
+        """ Choose an arm, as described by the MEGA algorithm."""
         self.t += 1
         if self.chosenArm is not None:  # We can still exploit that arm
             return self.chosenArm
@@ -100,6 +100,7 @@ class MEGA(BasePolicy):
 
         - If not collision, receive a reward after pulling the arm.
         """
+        assert self.chosenArm == arm, "Error: a MEGA player can only get a reward on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
         # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
         self.rewards[arm] += (reward - self.lower) / self.amplitude
         self.pulls[arm] += 1
@@ -111,6 +112,7 @@ class MEGA(BasePolicy):
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         - Note: we do not care on which arm the collision occured.
         """
+        assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
         if rn.random() < self.p:
