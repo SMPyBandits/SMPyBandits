@@ -35,30 +35,56 @@ class oneALOHA(ChildPointer):
     - Except for the handleCollision method: the ALOHA collision avoidance protocol is implemented here.
     """
 
-    def __init__(self, nbPlayers, mother, playerId, p0=0.5, alpha=0.5, ftnext=tnext_beta):
+    def __init__(self, nbPlayers, mother, playerId, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta):
         super(oneALOHA, self).__init__(mother, playerId)
         self.nbPlayers = nbPlayers
         # Parameters for the ALOHA protocol
-        self.p0 = p0
-        self.alpha = alpha
+        assert 0 <= p0 <= 1, "Error: parameter 'p0' for a ALOHA player should be in [0, 1]."
+        self.p0 = p0  # Should not be modified
+        self.p = p0   # Can be modified
+        assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
+        self.alpha_p0 = alpha_p0
         self.ftnext = ftnext
+        # Internal memory
+        self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
 
     def __str__(self):   # Better to recompute it automatically
-        return '#{}<ALOHA, {}, p0: {}, alpha: {}, beta: {}, FIXME>'.format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha, self.ftnext.__name__, FIXME)
+        return '#{}<ALOHA, {}, p0: {}, alpha_p0: {}, beta: {}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
 
     def startGame(self):
         super(oneALOHA, self).startGame()
+        self.p = self.p0
+        self.tnext.fill(1)
         # FIXME ?
 
     def handleCollision(self, arm):
-        # super(oneALOHA, self).handleCollision(arm)  # No need for that, there is a collision avoidance RIGHT HERE
-        FIXME ?
-        # print(" - A oneALOHA player {} saw a collision, so FIXME ...".format(self, FIXME))  # DEBUG
+        """ Handle a collision, on arm of index 'arm'.
+
+        - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
+        - Note: we do not care on which arm the collision occured.
+        """
+        # print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
+        # 1. With proba p, persist
+        if rn.random() < self.p:
+            self.chosenArm = self.chosenArm  # XXX remove after
+        # 2. With proba 1 - p, give up
+        else:
+            # Random time offset until when this arm self.chosenArm is not sampled
+            delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
+            self.tnext[self.chosenArm] = self.t + delta_tnext_k
+            # Reinitialize the proba p
+            self.p = self.p0
+            # We give up this arm
+            self.chosenArm = None
 
     def choice(self):
         result = super(oneALOHA, self).choice()
         # print(" - A oneALOHA player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
         return result
+
+    # def choiceWithRank(self, rank=1):
+    #     """ Ignore the rank."""
+    #     return self.choice()
 
 
 # --- Class ALOHA
@@ -67,21 +93,24 @@ class ALOHA(BaseMPPolicy):
     """ ALOHA: implementation of the multi-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, p0=0.5, alpha=0.5, ftnext=tnext_beta, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
+    def __init__(self, nbPlayers, playerAlgo, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
 
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
-        - alpha: scaling in the update for p(t+1) <- alpha p(t) + (1 - alpha(t))
+        - alpha_p0: scaling in the update for p(t+1) <- alpha_p0 p(t) + (1 - alpha_p0(t))
         - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(t) instead
 
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
 
         Example:
-        >>> nbArms, p0, alpha, tnext = 17, 0.5, 0.5, tnext_beta
-        >>> s = ALOHA(NB_PLAYERS, Thompson, nbArms, p0, alpha, beta, c, d)
+        >>> nbArms = 17
+        >>> NB_PLAYERS = 6
+        >>> p0, alpha_p0, tnext = 0.6, 0.5, tnext_beta
+        >>> s = ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext)
+        >>> s = ALOHA(NB_PLAYERS, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext, alpha=1)
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use ONLY!
@@ -94,7 +123,7 @@ class ALOHA(BaseMPPolicy):
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, p0=p0, alpha=alpha, ftnext=ftnext)
+            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext)
         self.nbArms = nbArms
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
@@ -109,16 +138,11 @@ class ALOHA(BaseMPPolicy):
     def _getReward_one(self, playerId, arm, reward):
         return self._players[playerId].getReward(arm, reward)
 
-    def _choiceWithRank_one(self, playerId, rank):
-        return self._players[playerId].choiceWithRank(rank)
+    def _choice_one(self, playerId):
+        return self._players[playerId].choice(rank)
+
+    def _choiceWithRank(self, playerId, rank):
+        raise NotImplementedError("Error: a oneRhoRand player should only use choice() method, not the choiceWithRank() method.")
 
     def _handleCollision_one(self, playerId, arm):
-        player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):
-            # player.handleCollision(arm) is called to inform the user that there were a collision
-            player.handleCollision(arm)
-        else:
-            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            player.getReward(arm, 0)
-            # print("   - rhoRand _handleCollision_one({}, {}) called getReward({}, 0) for player = {} ...".format(playerId, arm, arm, player))  # DEBUG
-            # FIXME Strong assumption on the model
+        raise NotImplementedError("Error: a oneALOHA player should use the internal handleCollision() method, not the proxy one given to mother class.")

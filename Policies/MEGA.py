@@ -117,12 +117,13 @@ class MEGA(BasePolicy):
             self.chosenArm = self.chosenArm  # XXX remove after
         # 2. With proba 1 - p, give up
         else:
-            self.chosenArm = None  # We give up
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.t**self.beta))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
             # Reinitialize the proba p
             self.p = self.p0
+            # We give up this arm
+            self.chosenArm = None
 
     # def choiceWithRank(self, rank=1):
     #     """ Ignore the rank."""
