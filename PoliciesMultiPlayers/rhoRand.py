@@ -18,7 +18,7 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
-# --- Class oneRhoRand
+# --- Class oneRhoRand, for children
 
 class oneRhoRand(ChildPointer):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
@@ -56,7 +56,7 @@ class rhoRand(BaseMPPolicy):
     """ rhoRand: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, *args, **kwargs):
+    def __init__(self, nbPlayers, playerAlgo, nbArms, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -74,7 +74,7 @@ class rhoRand(BaseMPPolicy):
         self._players = [None] * nbPlayers
         self.childs = [None] * nbPlayers
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.childs[playerId] = oneRhoRand(nbPlayers, self, playerId)
         self.nbArms = nbArms
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
