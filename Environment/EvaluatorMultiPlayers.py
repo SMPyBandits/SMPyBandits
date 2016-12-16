@@ -309,15 +309,18 @@ class EvaluatorMultiPlayers(object):
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
         mainfig = savefig
         colors = palette(self.nbPlayers)
+        markers = makemarkers(self.nbPlayers)
+        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
+        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
         for armId in range(self.envs[environmentId].nbArms):
+            plt.figure()
             for playerId, player in enumerate(self.players):
                 Y = self.getAllPulls(playerId, armId, environmentId)
                 if cumulated:
                     Y = np.cumsum(Y)
                 if normalized:
-                    Y /= np.log(np.arange(2, self.horizon + 2))
-                plt.plot(Y, label=str(player), color=colors[playerId])
-            plt.figure()
+                    Y /= np.arange(1, self.horizon + 1)
+                plt.plot(Y, label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(delta_marker * (playerId % self.envs[environmentId].nbArms) + markers_on))
             plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
