@@ -46,7 +46,7 @@ class CentralizedFair(BaseMPPolicy):
     """ CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 
-    def __init__(self, nbPlayers, nbArms):
+    def __init__(self, nbPlayers, nbArms, lower=0., amplitude=1.):
         """
         - nbPlayers: number of players to create (in self._players).
         - nbArms: number of arms.

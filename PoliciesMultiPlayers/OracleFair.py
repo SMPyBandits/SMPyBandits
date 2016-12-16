@@ -52,7 +52,7 @@ class OracleFair(BaseMPPolicy):
     """ OracleFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
     """
 
-    def __init__(self, nbPlayers, armsMAB):
+    def __init__(self, nbPlayers, armsMAB, lower=0., amplitude=1.):
         """
         - nbPlayers: number of players to create (in self._players).
         - armsMAB: MAB object that represents the arms.

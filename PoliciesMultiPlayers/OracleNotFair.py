@@ -46,7 +46,7 @@ class OracleNotFair(BaseMPPolicy):
     """ OracleNotFair: a multi-player policy which uses a centralized intelligence to affect users to affect users to a FIXED arm, among the best arms.
     """
 
-    def __init__(self, nbPlayers, armsMAB):
+    def __init__(self, nbPlayers, armsMAB, lower=0., amplitude=1.):
         """
         - nbPlayers: number of players to create (in self._players).
         - armsMAB: MAB object that represents the arms.

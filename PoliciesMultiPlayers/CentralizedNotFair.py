@@ -22,7 +22,7 @@ class Fixed(BaseCentralizedPolicy):
     """ Fixed: always select a fixed arm, as decided by the CentralizedNotFair multi-player policy.
     """
 
-    def __init__(self, nbArms, armIndex):
+    def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
         self.nbArms = nbArms
         self.armIndex = armIndex
         self.params = str(armIndex)
