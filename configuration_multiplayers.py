@@ -36,8 +36,8 @@ HORIZON = 20000
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-REPETITIONS = 100
-REPETITIONS = 2000
+# REPETITIONS = 100
+# REPETITIONS = 2000
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -161,8 +161,8 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
-    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
-    # "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
+    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player Centralized policy
@@ -187,6 +187,7 @@ configuration.update({
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+    "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs

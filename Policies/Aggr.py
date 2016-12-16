@@ -17,6 +17,7 @@ update_all_children = False
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
 # ie just r_t, or unbiased estimators, r_t / p_t
+# FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
 UNBIASED = True
 UNBIASED = False
 
@@ -77,13 +78,14 @@ class Aggr(BasePolicy):
         if self.decreaseRate is None:
             learningRate = self.learningRate
         elif self.decreaseRate == 'auto':
-            # Implement the smart value given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+            # DONE Implement the smart value given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
             learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.t * self.nbArms))
         else:
             # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
             learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
         reward = (reward - self.lower) / self.amplitude
         if self.unbiased:
+            # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
             reward /= trusts
         scalingConstant = np.exp(reward * learningRate)
         # 3. increase self.trusts for the children who were true
@@ -97,7 +99,6 @@ class Aggr(BasePolicy):
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof)
     def choice(self):
         # 1. make vote every child children
         for i in range(self.nbChildren):

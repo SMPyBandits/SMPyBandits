@@ -54,6 +54,7 @@ class Softmax(BasePolicy):
             arm = self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
         else:
             if self.unbiased:
+                # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
                 estimator_rewards = rewards / self.trusts
             else:
                 estimator_rewards = rewards
@@ -69,6 +70,7 @@ class Softmax(BasePolicy):
             arm = self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
         else:
             if self.unbiased:
+                # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
                 estimator_rewards = rewards / self.trusts
             else:
                 estimator_rewards = rewards
