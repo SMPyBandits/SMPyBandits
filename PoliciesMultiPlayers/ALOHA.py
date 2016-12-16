@@ -35,7 +35,7 @@ class oneALOHA(ChildPointer):
     - Except for the handleCollision method: the ALOHA collision avoidance protocol is implemented here.
     """
 
-    def __init__(self, nbPlayers, mother, playerId, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta):
+    def __init__(self, nbPlayers, mother, playerId, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, lower=0., amplitude=1.):
         super(oneALOHA, self).__init__(mother, playerId)
         self.nbPlayers = nbPlayers
         # Parameters for the ALOHA protocol
@@ -56,6 +56,16 @@ class oneALOHA(ChildPointer):
         self.p = self.p0
         self.tnext.fill(1)
         # FIXME ?
+
+    def getReward(self, arm, reward):
+        """ Receive a reward on arm of index 'arm', as described by the ALOHA protocol.
+
+        - If not collision, receive a reward after pulling the arm.
+        """
+        # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
+        self.rewards[arm] += (reward - self.lower) / self.amplitude
+        self.pulls[arm] += 1
+        self.p = self.p * self.alpha + (1 - self.alpha)  # Update proba p
 
     def handleCollision(self, arm):
         """ Handle a collision, on arm of index 'arm'.
@@ -123,7 +133,7 @@ class ALOHA(BaseMPPolicy):
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext)
+            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, lower=lower, amplitude=amplitude)
         self.nbArms = nbArms
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
@@ -139,7 +149,7 @@ class ALOHA(BaseMPPolicy):
         return self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
-        return self._players[playerId].choice(rank)
+        return self._players[playerId].choice()
 
     def _choiceWithRank(self, playerId, rank):
         raise NotImplementedError("Error: a oneRhoRand player should only use choice() method, not the choiceWithRank() method.")

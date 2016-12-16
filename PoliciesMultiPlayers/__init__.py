@@ -8,6 +8,8 @@
 
 - OracleNotFair: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
 - OracleFair: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
+
+- rhoRand, ALOHA: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. UCB, Thompson etc).
 """
 
 __author__ = "Lilian Besson"
@@ -24,8 +26,9 @@ from .CentralizedFair import CentralizedFair
 from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
-# FIXME implement it
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
+
+from .ALOHA import ALOHA, tnext_beta, tnext_log
 
 # FIXME implement it
 # from .TDFS import TDFS

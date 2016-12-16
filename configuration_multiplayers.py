@@ -184,10 +184,13 @@ configuration.update({
     # --- DONE Using single-player MEGA policy
     # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
+    # --- FIXME Using single-player ALOHA policy
+    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5).childs  # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
+
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-    "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
