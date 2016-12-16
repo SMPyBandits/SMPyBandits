@@ -93,13 +93,8 @@ class rhoRand(BaseMPPolicy):
     def _choiceWithRank_one(self, playerId, rank):
         return self._players[playerId].choiceWithRank(rank)
 
+    def _choice(self, playerId):
+        raise NotImplementedError("Error: a oneRhoRand player should only use choiceWithRank() method, not the choice() method.")
+
     def _handleCollision_one(self, playerId, arm):
-        player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):
-            # player.handleCollision(arm) is called to inform the user that there were a collision
-            player.handleCollision(arm)
-        else:
-            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            player.getReward(arm, 0)
-            # print("   - rhoRand _handleCollision_one({}, {}) called getReward({}, 0) for player = {} ...".format(playerId, arm, arm, player))  # DEBUG
-            # FIXME Strong assumption on the model
+        raise NotImplementedError("Error: a oneRhoRand player should use the internal handleCollision() method, not the proxy one given to mother class.")
