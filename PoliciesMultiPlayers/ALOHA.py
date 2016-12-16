@@ -88,13 +88,19 @@ class oneALOHA(ChildPointer):
             self.chosenArm = None
 
     def choice(self):
-        result = super(oneALOHA, self).choice()
-        # print(" - A oneALOHA player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
-        return result
+        """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
 
-    # def choiceWithRank(self, rank=1):
-    #     """ Ignore the rank."""
-    #     return self.choice()
+        - FIXME the policy has to have a method choiceFromSubSet
+        """
+        self.t += 1
+        if self.chosenArm is not None:  # We can still exploit that arm
+            return self.chosenArm
+        else:  # We have to chose a new arm
+            # Identify available arms
+            availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]
+            result = self.mother._choiceFromSubSet(self.playerId, availableArms)
+            # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
+            return result
 
 
 # --- Class ALOHA
@@ -150,6 +156,9 @@ class ALOHA(BaseMPPolicy):
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()
+
+    def _choiceFromSubSet_one(self, playerId, availableArms):
+        return self._players[playerId].choiceFromSubSet(availableArms)
 
     def _choiceWithRank(self, playerId, rank):
         raise NotImplementedError("Error: a oneRhoRand player should only use choice() method, not the choiceWithRank() method.")

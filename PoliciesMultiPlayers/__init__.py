@@ -15,7 +15,7 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-# Mine, stupid and decentralized ones
+# Mine, fully decentralized one
 from .Selfish import Selfish
 
 # Mine, centralized ones (but only knowledge of nbArms)
@@ -25,6 +25,9 @@ from .CentralizedFair import CentralizedFair
 # Mine, centralized ones (with perfect knowledge)
 from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
+
+# TODO CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
+# from .CentralizedMultiplePlay import CentralizedMultiplePlay
 
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 

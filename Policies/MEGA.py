@@ -127,10 +127,6 @@ class MEGA(BasePolicy):
             # We give up this arm
             self.chosenArm = None
 
-    # def choiceWithRank(self, rank=1):
-    #     """ Ignore the rank."""
-    #     return self.choice()
-
     # --- Internal methods
 
     def _epsilon_t(self):
