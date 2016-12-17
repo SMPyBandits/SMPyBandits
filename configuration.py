@@ -101,10 +101,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        {   # Another very easy problem: 3 arms, two very bad, one bad
-            "arm_type": Bernoulli,
-            "params": [0.04, 0.05, 0.1]
-        },
+        # {   # Another very easy problem: 3 arms, two very bad, one bad
+        #     "arm_type": Bernoulli,
+        #     "params": [0.04, 0.05, 0.1]
+        # },
         # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -117,10 +117,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
-        # {   # One optimal arm, much better than the others, but *lots* of bad arms
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        # },
+        {   # One optimal arm, much better than the others, but *lots* of bad arms
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        },
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -187,71 +187,71 @@ configuration.update({
         #     }
         # },
         # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
-        {
-            "archtype": UCBplus,
-            "params": {}
-        },
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBplus,
+        #     "params": {}
+        # },
         {
             "archtype": UCBopt,
             "params": {}
         },
-        {
-            "archtype": UCBrandomInit,
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
-        {
-            "archtype": UCBtuned,   # UCB with variance term and one trick
-            "params": {}
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBrandomInit,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBV,   # UCB with variance term
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBtuned,   # UCB with variance term and one trick
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 4          # Below the alpha=4 like old classic UCB
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # --- Softmax algorithms
-        {
-            "archtype": Softmax,   # This basic Softmax is very bad
-            "params": {
-                "temperature": TEMPERATURE
-            }
-        },
+        # {
+        #     "archtype": Softmax,   # This basic Softmax is very bad
+        #     "params": {
+        #         "temperature": TEMPERATURE
+        #     }
+        # },
         {
             "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
             "params": {}
         },
-        {
-            "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
-            "params": {
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,
@@ -263,14 +263,14 @@ configuration.update({
             "params": {}
         },
         # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
         # {
-        #     "archtype": klUCBPlus,
+        #     "archtype": klUCB,
         #     "params": {}
         # },
+        {
+            "archtype": klUCBPlus,
+            "params": {}
+        },
         # {
         #     "archtype": klUCBHPlus,
         #     "params": {

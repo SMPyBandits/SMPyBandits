@@ -2,25 +2,25 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   214	Lilian Besson
+   221	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
   - Number of files changed: 179
-  - Number of lines added: 269274
-  - Number of lines deleted: 250063
+  - Number of lines added: 269889
+  - Number of lines deleted: 250603
   - Number of merges: 0
-      Dec   Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec 
-                                                                                                        o o   .   
-    M                                                                                                   O O   O   
-                                                                                                        . o . O   
-    W                                                                                                   0 o . O   
-                                                                                                      o 0 0 . .   
-    F                                                                                                   o   O O   
-                                                                                                      o .     .   
+    Dec   Jan       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec 
+                                                                                                      o o   . . 
+    M                                                                                                 O O   O   
+                                                                                                      . o . O   
+    W                                                                                                 0 o . O   
+                                                                                                    o 0 0 . .   
+    F                                                                                                 o   O O   
+                                                                                                    o .     O   
 
-                                                                                            Less   . o O 0  More
- 213: Total commits
+                                                                                          Less   . o O 0  More
+ 220: Total commits
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
-  11: Days ( Dec  6 2016 - Dec 17 2016 ) - Current streak                          
+  12: Days ( Dec  6 2016 - Dec 18 2016 ) - Current streak                          
