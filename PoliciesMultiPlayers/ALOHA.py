@@ -98,7 +98,7 @@ class oneALOHA(ChildPointer):
         else:  # We have to chose a new arm
             # Identify available arms
             # availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]  # DONE do this computation using numpy arrays
-            availableArms = np.nonzero(self.tnext <= self.t)
+            availableArms = np.nonzero(self.tnext <= self.t)[0]
             result = self.mother._choiceFromSubSet(self.playerId, availableArms)
             # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
             self.chosenArm = result

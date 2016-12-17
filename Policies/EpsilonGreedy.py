@@ -31,7 +31,7 @@ class EpsilonGreedy(BasePolicy):
             arm = random.randint(0, self.nbArms - 1)
         else:  # Proba 1-epsilon : exploit
             # Uniform choice among the best arms
-            arm = np.random.choice(np.nonzero(self.rewards == np.max(self.rewards)))
+            arm = np.random.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
         return arm
 
     def choiceWithRank(self, rank=1):
@@ -41,5 +41,5 @@ class EpsilonGreedy(BasePolicy):
             sortedRewards = np.sort(self.rewards)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms
-            arm = np.random.choice(np.nonzero(self.index == chosenIndex))
+            arm = np.random.choice(np.nonzero(self.index == chosenIndex)[0])
         return arm

@@ -58,7 +58,7 @@ class AdBandits(BasePolicy):
             expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
             upperbounds = [self.posterior[arm].quantile(1. - 1. / self.t) for arm in range(self.nbArms)]
             regret = np.max(upperbounds) - expectations
-            admissible = np.where(regret == np.min(regret))[0]
+            admissible = np.nonzero(regret == np.min(regret))[0]
             arm = rn.choice(admissible)
         return arm
 

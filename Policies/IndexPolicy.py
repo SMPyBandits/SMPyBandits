@@ -35,7 +35,7 @@ class IndexPolicy(BasePolicy):
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
         # Uniform choice among the best arms
-        return np.random.choice(np.nonzero(self.index == np.max(self.index)))
+        return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
 
     # --- Others choice...() methods
 
@@ -61,7 +61,7 @@ class IndexPolicy(BasePolicy):
             sortedRewards = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms
-            return np.random.choice(np.nonzero(self.index == chosenIndex))
+            return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
 
     def choiceFromSubSet(self, availableArms='all'):
         if availableArms == 'all':
