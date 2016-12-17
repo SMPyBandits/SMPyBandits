@@ -3,7 +3,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
 
 class ChildPointer(object):
@@ -29,9 +29,17 @@ class ChildPointer(object):
         """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
         return self.mother._choice_one(self.playerId)
 
-    def choiceWithRank(self, rank):
-        """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
+    def choiceWithRank(self, rank=1):
+        """ Pass the call to self.mother._choiceWithRank_one(playerId) with the player's ID number. """
         return self.mother._choiceWithRank_one(self.playerId, rank)
+
+    def choiceFromSubSet(self, availableArms='all'):
+        """ Pass the call to self.mother._choiceFromSubSet_one(playerId) with the player's ID number. """
+        return self.mother._choiceFromSubSet_one(self.playerId, availableArms)
+
+    def choiceMultiple(self, nb=1):
+        """ Pass the call to self.mother._choiceMultiple_one(playerId) with the player's ID number. """
+        return self.mother._choiceMultiple_one(self.playerId, nb)
 
     def handleCollision(self, arm):
         """ Pass the call to self.mother._handleCollision_one(playerId, arm) with the player's ID number. """

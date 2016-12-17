@@ -53,7 +53,7 @@ class IndexPolicy(BasePolicy):
             assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
-            # FIXME be more efficient?
+            # FIXME do we need to dp to do this trick?
             # try:
             #     sortedUniqueRewards = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
             #     chosenIndex = sortedUniqueRewards[-rank]

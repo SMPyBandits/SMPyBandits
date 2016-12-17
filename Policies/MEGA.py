@@ -47,6 +47,7 @@ class MEGA(BasePolicy):
         # Store parameters
         super(MEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = c
+        # FIXME we should not require two parameters, as they are just used in the formula for epsilon_t
         self.d = d
         assert 0 <= p0 <= 1, "Error: parameter 'p0' for a MEGA player should be in [0, 1]."
         self.p0 = p0  # Should not be modified

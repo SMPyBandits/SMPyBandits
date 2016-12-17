@@ -31,12 +31,14 @@
 
 ## Multi-players simulations
 - [x] implement a multi-player simulation environment as well! Done, in [EvaluatorMultiPlayers](Environment/EvaluatorMultiPlayers.py). TODO Keep improving it.
-- [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms).
-- [x] implement the basic multi-player policies, as [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
+- [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms etc).
+- [x] implement the basic multi-player policies: the fully decentralized [`Selfish`](PoliciesMultiPlayers/Selfish.py) policy (where every player runs her own policy, without even knowing that there is other player, but receiving `0` reward in case of collision), two stupid centralized policies [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py) and [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), and two oracle policies [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py) and [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
+- [ ] implement a centralized non-oracle policy, which is just a multiple-play single-player policy
 - [ ] plot several "multi-players" policy on the same graphs (e.g., the cumulative centralized regret of `M` players following `Selfish[UCB]` against the regret of `M` players following `Selfish[klCUB]`).
 
 ### Implement the state-of-the-art algorithms:
 - [x] I implemented the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](Policies/MusicalChair.py). TODO ["Dynamic Musical Chair"](https://arxiv.org/abs/1512.02866).
-- [x] I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421). FIXME it has too much parameter, how to chose them??
-- [x] I implemented the ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/).
+- [x] I implemented the ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/), in [`rhoRand`](PoliciesMultiPlayers/rhoRand.py). It consists of the rho_rand collision avoidance protocol, and *any* single-player policy.
+- [x] I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) multi-player policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](Policies/MEGA.py). It consists of the ALOHA collision avoidance protocol and a Epsilon-greedy arm selection algorithm. FIXME it has too much parameter, how to chose them??
+- [ ] I also generalized it by implementing the ALOHA collision avoidance protocol for *any* single-player policy, in [`ALOHA`](PoliciesMultiPlayers/ALOHA.py). FIXME try it!
 - [ ] TODO ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
