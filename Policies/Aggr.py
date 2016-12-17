@@ -56,14 +56,14 @@ class Aggr(BasePolicy):
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # Internal vectorial memory
-        self.choices = (-1) * np.ones(self.nbChildren, dtype=int)
+        self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
 
     def __str__(self):
         return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
 
     def startGame(self):
         self.t = 0
-        # Start all child children
+        # Start all children
         for i in range(self.nbChildren):
             self.children[i].startGame()
         self.choices.fill(-1)
@@ -99,22 +99,41 @@ class Aggr(BasePolicy):
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
-    def choice(self):
-        # 1. make vote every child children
+    def makeChildrenChose(self):
+        """ Convenience method to make every children chose their best arm."""
         for i in range(self.nbChildren):
             self.choices[i] = self.children[i].choice()
             # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
             # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
         # print("self.choices =", self.choices)  # DEBUG
+
+    def choice(self):
+        # 1. make vote every child children
+        self.makeChildrenChose()
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
-        # 1. make vote every child children
-        for i in range(self.nbChildren):
-            self.choices[i] = self.children[i].choiceWithRank(rank)
-            # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
-            # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
-        # print("self.choices =", self.choices)  # DEBUG
-        # 2. select the vote to trust, randomly
-        return rn.choice(self.choices, p=self.trusts)
+        if rank == 1:
+            return self.choice()
+        else:
+            for i in range(self.nbChildren):
+                self.choices[i] = self.children[i].choiceWithRank(rank)
+            return rn.choice(self.choices, p=self.trusts)
+
+    def choiceFromSubSet(self, availableArms='all'):
+        if availableArms == 'all':
+            return self.choice()
+        else:
+            for i in range(self.nbChildren):
+                self.choices[i] = self.children[i].choiceFromSubSet(availableArms)
+            return rn.choice(self.choices, p=self.trusts)
+
+    def choiceMultiple(self, nb=1):
+        if nb == 1:
+            return self.choice()
+        else:
+            for i in range(self.nbChildren):
+                self.choices[i] = self.children[i].choiceMultiple(nb)
+            return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
+            # FIXME there is something more to do

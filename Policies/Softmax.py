@@ -73,14 +73,12 @@ class Softmax(BasePolicy):
             return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
 
     def choiceFromSubSet(self, availableArms='all'):
-        """ Choose the best arm from sub set availableArms."""
         if (self.t < self.nbArms) or (availableArms == 'all'):
             return self.choice()
         else:
             return np.random.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
-        """ Choose uniformly at random nb arms with maximal indexes."""
         if (self.t < self.nbArms) or (nb == 1):
             return self.choice()
         else:
