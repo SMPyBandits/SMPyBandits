@@ -5,7 +5,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.3"
 
 import numpy as np
 
@@ -19,6 +19,8 @@ class IndexPolicy(BasePolicy):
         super(IndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.index = np.zeros(nbArms)
 
+    # --- Start game, and receive rewards
+
     def startGame(self):
         super(IndexPolicy, self).startGame()
         self.index.fill(0)
@@ -26,12 +28,16 @@ class IndexPolicy(BasePolicy):
     def computeIndex(self, arm):
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")
 
+    # --- Basic choice() method
+
     def choice(self):
         """ In an index policy, choose uniformly at random an arm with maximal index."""
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
-        # FIXED Uniform choice among the best arms
+        # Uniform choice among the best arms
         return np.random.choice(np.nonzero(self.index == np.max(self.index)))
+
+    # --- Others choice...() methods
 
     def choiceWithRank(self, rank=1):
         """ In an index policy, choose uniformly at random an arm with index is the (1+rank)-th best.
@@ -54,7 +60,7 @@ class IndexPolicy(BasePolicy):
             # except IndexError:
             sortedRewards = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = sortedRewards[-rank]
-            # FIXED Uniform choice among the rank-th best arms
+            # Uniform choice among the rank-th best arms
             return np.random.choice(np.nonzero(self.index == chosenIndex))
 
     def choiceFromSubSet(self, availableArms='all'):
@@ -63,5 +69,16 @@ class IndexPolicy(BasePolicy):
         else:
             for arm in availableArms:
                 self.index[arm] = self.computeIndex(arm)
-            # FIXED Uniform choice among the best arms
+            # Uniform choice among the best arms
             return np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms])))
+
+    def choiceMultiple(self, nb=1):
+        """ In an index policy, choose uniformly at random nb arms with maximal indexes."""
+        if nb == 1:
+            return self.choice()
+        else:
+            for arm in range(self.nbArms):
+                self.index[arm] = self.computeIndex(arm)
+            sortedRewards = np.sort(self.index)
+            # Uniform choice of nb different arms among the best arms
+            return np.random.choice(np.nonzero(self.index >= sortedRewards[-nb])[0], size=nb, replace=False)

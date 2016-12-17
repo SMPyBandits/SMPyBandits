@@ -24,6 +24,8 @@ class BasePolicy(object):
     def __str__(self):
         return self.__class__.__name__
 
+    # --- Start game, and receive rewards
+
     def startGame(self):
         self.t = 0
         self.pulls.fill(0)
@@ -34,8 +36,12 @@ class BasePolicy(object):
         self.pulls[arm] += 1
         self.rewards[arm] += (reward - self.lower) / self.amplitude
 
+    # --- Basic choice() method
+
     def choice(self):
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BasePolicy.")
+
+    # --- Others choice...() methods
 
     def choiceWithRank(self, rank=1):
         if rank == 1:
@@ -48,3 +54,9 @@ class BasePolicy(object):
             return self.choice()
         else:
             raise NotImplementedError("This method choiceFromSubSet(availableArms) has to be implemented in the child class inheriting from BasePolicy.")
+
+    def choiceMultiple(self, nb=1):
+        if nb == 1:
+            return self.choice()
+        else:
+            raise NotImplementedError("This method choiceMultiple(nb) has to be implemented in the child class inheriting from BasePolicy.")
