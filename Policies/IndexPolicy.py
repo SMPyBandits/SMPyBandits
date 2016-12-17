@@ -53,7 +53,7 @@ class IndexPolicy(BasePolicy):
             assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
-            # FIXME do we need to dp to do this trick?
+            # FIXME do we need to do to do this trick?
             # try:
             #     sortedUniqueRewards = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
             #     chosenIndex = sortedUniqueRewards[-rank]
@@ -64,6 +64,7 @@ class IndexPolicy(BasePolicy):
             return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
 
     def choiceFromSubSet(self, availableArms='all'):
+        """ In an index policy, choose the best arm from sub set availableArms."""
         if availableArms == 'all':
             return self.choice()
         else:

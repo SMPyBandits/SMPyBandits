@@ -7,7 +7,7 @@ Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit P
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.4"
 
 import numpy as np
 from .BasePolicy import BasePolicy
@@ -28,16 +28,16 @@ class Softmax(BasePolicy):
 
     def __init__(self, nbArms, temperature=None, unbiased=UNBIASED, lower=0., amplitude=1.):
         super(Softmax, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        if temperature is None:
+        if temperature is None:  # Use a default value for the temperature
             temperature = np.sqrt(np.log(nbArms) / nbArms)
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
         self._temperature = temperature
         self.unbiased = unbiased
-        self.trusts = np.ones(nbArms) / nbArms
+        # self.trusts = np.ones(nbArms) / nbArms
 
     def startGame(self):
         super(Softmax, self).startGame()
-        self.trusts.fill(1. / self.nbArms)
+        # self.trusts.fill(1. / self.nbArms)
 
     def __str__(self):
         return "Softmax(temp: {})".format(self.temperature)
@@ -47,37 +47,44 @@ class Softmax(BasePolicy):
     def temperature(self):
         return self._temperature
 
-    def choice(self):
+    @property
+    def trusts(self, p_t=None):
         rewards = (self.rewards - self.lower) / self.amplitude
+        if self.unbiased:
+            # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
+            rewards = rewards / p_t
+        # trusts = np.exp(rewards / (self.temperature * self.pulls))
+        trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))
+        # self.trusts = trusts / np.sum(trusts)
+        return trusts / np.sum(trusts)
+        # return self.trusts
+
+    def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            arm = self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
+            return self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
         else:
-            if self.unbiased:
-                # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-                estimator_rewards = rewards / self.trusts
-            else:
-                estimator_rewards = rewards
-            trusts = np.exp(estimator_rewards / (self.temperature * self.pulls))
-            self.trusts = trusts / np.sum(trusts)
-            arm = np.random.choice(self.nbArms, p=self.trusts)
-        return arm
+            return np.random.choice(self.nbArms, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
-        rewards = (self.rewards - self.lower) / self.amplitude
-        # Force to first visit each arm once in the first steps
-        if self.t < self.nbArms:
-            arm = self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
+        if (self.t < self.nbArms) or (rank == 1):
+            return self.choice()
         else:
-            if self.unbiased:
-                # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-                estimator_rewards = rewards / self.trusts
-            else:
-                estimator_rewards = rewards
-            trusts = np.exp(estimator_rewards / (self.temperature * self.pulls))
-            self.trusts = trusts / np.sum(trusts)
-            arm = np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
-        return arm
+            return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
+
+    def choiceFromSubSet(self, availableArms='all'):
+        """ Choose the best arm from sub set availableArms."""
+        if (self.t < self.nbArms) or (availableArms == 'all'):
+            return self.choice()
+        else:
+            return np.random.choice(availableArms, p=self.trusts[availableArms])
+
+    def choiceMultiple(self, nb=1):
+        """ Choose uniformly at random nb arms with maximal indexes."""
+        if (self.t < self.nbArms) or (nb == 1):
+            return self.choice()
+        else:
+            return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
 
 # --- Two special cases
