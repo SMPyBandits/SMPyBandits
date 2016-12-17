@@ -28,12 +28,12 @@ HORIZON = 10000
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 500
-REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
-# REPETITIONS = 20
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 500
+# REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -72,8 +72,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False
+TEST_AGGR = True
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
@@ -101,14 +101,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
+        {   # Another very easy problem: 3 arms, two very bad, one bad
+            "arm_type": Bernoulli,
+            "params": [0.04, 0.05, 0.1]
+        },
         # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -182,11 +186,11 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
-        # # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
+        # --- UCB algorithms
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
         {
             "archtype": UCBplus,
             "params": {}
@@ -195,59 +199,59 @@ configuration.update({
             "archtype": UCBopt,
             "params": {}
         },
-        # {
-        #     "archtype": UCBrandomInit,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBV,   # UCB with variance term
-        #     "params": {}
-        # },
+        {
+            "archtype": UCBrandomInit,
+            "params": {}
+        },
+        {
+            "archtype": UCBV,   # UCB with variance term
+            "params": {}
+        },
         {
             "archtype": UCBtuned,   # UCB with variance term and one trick
             "params": {}
         },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 4          # Below the alpha=4 like old classic UCB
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # # --- Softmax algorithms
-        # {
-        #     "archtype": Softmax,   # This basic Softmax is very bad
-        #     "params": {
-        #         "temperature": TEMPERATURE
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 4          # Below the alpha=4 like old classic UCB
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
+        # --- Softmax algorithms
+        {
+            "archtype": Softmax,   # This basic Softmax is very bad
+            "params": {
+                "temperature": TEMPERATURE
+            }
+        },
         {
             "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
             "params": {}
         },
-        # {
-        #     "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
-        #     "params": {
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": SoftmaxWithHorizon,  # Parameter-free Softmax knowing the horizon
+            "params": {
+                "horizon": HORIZON
+            }
+        },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,

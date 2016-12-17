@@ -186,26 +186,27 @@ class Evaluator(object):
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         lowerbound = self.envs[environmentId].lowerbound()
-        ymax = max(plt.ylim()[1], 1)
+        # ymax = max(plt.ylim()[1], 1)  # XXX Not smart, if maxmu = 0.1 we don't see anything
+        ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
             plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
             plt.plot(lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         else:
             # We also plot the Lai & Robbins lower bound
             plt.plot(lowerbound * np.log(1 + X), 'k-', label="Lai & Robbins lower bound", lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -225,7 +226,7 @@ class Evaluator(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\nArms: ${}${}".format(self.repetitions, repr(self.envs[environmentId].arms), signature))
+        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")

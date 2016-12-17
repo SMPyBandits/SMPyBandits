@@ -199,7 +199,7 @@ class EvaluatorMultiPlayers(object):
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
-        plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -216,7 +216,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylabel("Centralized measure of fairness (reward of best player - reward of worst player)")
-        plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -252,7 +252,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalized else " "))
-        plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalized else " ", self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalized else " ", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -282,7 +282,7 @@ class EvaluatorMultiPlayers(object):
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         plt.ylabel("{}Number of switches by player".format("Cumulated " if cumulated else " "))
-        plt.title("Multi-players $M = {}$ (collision model: {}): {}number of switches for each player, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}number of switches for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -299,7 +299,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel("Frequency of pulls of the optimal arm")
-        plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -325,7 +325,7 @@ class EvaluatorMultiPlayers(object):
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
-            plt.title("Multi-players $M = {}$ (collision model: {}): {} of pulls of the arm #{} for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+            plt.title("Multi-players $M = {}$ (collision model: {}): {} of pulls of the arm #{} for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
             maximizeWindow()
             if savefig is not None:
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
@@ -346,7 +346,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else " "))
-        plt.title("Multi-players $M = {}$ (collision model: {}): {}free transmission for each players, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}free transmission for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else " ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -373,7 +373,7 @@ class EvaluatorMultiPlayers(object):
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         plt.plot(Y, '-' if cumulated else '.')
         plt.legend(loc='lower right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.title("Multi-players $M = {}$ (collision model: {}): {}of collisions, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "cumulated number " if cumulated else "frequency ", self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): {}of collisions, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "cumulated number " if cumulated else "frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -414,7 +414,7 @@ class EvaluatorMultiPlayers(object):
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='center right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.title("Multi-players $M = {}$ (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
