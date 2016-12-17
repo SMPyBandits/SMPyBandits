@@ -30,7 +30,7 @@ class EpsilonGreedy(BasePolicy):
         if random.random() < self.epsilon:  # Proba epsilon : explore
             arm = random.randint(0, self.nbArms - 1)
         else:  # Proba 1-epsilon : exploit
-            # FIXED Uniform choice among the best arms
+            # Uniform choice among the best arms
             arm = np.random.choice(np.nonzero(self.rewards == np.max(self.rewards)))
         return arm
 
@@ -38,13 +38,8 @@ class EpsilonGreedy(BasePolicy):
         if random.random() < self.epsilon:  # Proba epsilon : explore
             arm = random.randint(0, self.nbArms - 1)
         else:  # Proba 1-epsilon : exploit
-            # FIXME be more efficient
-            try:
-                uniqueValues = np.sort(np.unique(self.rewards))  # XXX Should we do a np.unique here ??
-                chosenIndex = uniqueValues[-rank]
-            except IndexError:
-                values = np.sort(self.rewards)  # XXX What happens here if two arms has the same index, being the max?
-                chosenIndex = values[-rank]
-            # FIXED Uniform choice among the rank-th best arms
+            sortedRewards = np.sort(self.rewards)  # XXX What happens here if two arms has the same index, being the max?
+            chosenIndex = sortedRewards[-rank]
+            # Uniform choice among the rank-th best arms
             arm = np.random.choice(np.nonzero(self.index == chosenIndex))
         return arm

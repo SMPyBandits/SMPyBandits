@@ -48,11 +48,20 @@ class IndexPolicy(BasePolicy):
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
             # FIXME be more efficient?
-            try:
-                uniqueValues = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
-                chosenIndex = uniqueValues[-rank]
-            except IndexError:
-                values = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
-                chosenIndex = values[-rank]
+            # try:
+            #     sortedUniqueRewards = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
+            #     chosenIndex = sortedUniqueRewards[-rank]
+            # except IndexError:
+            sortedRewards = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
+            chosenIndex = sortedRewards[-rank]
             # FIXED Uniform choice among the rank-th best arms
             return np.random.choice(np.nonzero(self.index == chosenIndex))
+
+    def choiceFromSubSet(self, availableArms='all'):
+        if availableArms == 'all':
+            return self.choice()
+        else:
+            for arm in availableArms:
+                self.index[arm] = self.computeIndex(arm)
+            # FIXED Uniform choice among the best arms
+            return np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms])))
