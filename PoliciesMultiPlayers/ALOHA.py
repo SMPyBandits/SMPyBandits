@@ -97,9 +97,11 @@ class oneALOHA(ChildPointer):
             return self.chosenArm
         else:  # We have to chose a new arm
             # Identify available arms
-            availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]
+            # availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]  # DONE do this computation using numpy arrays
+            availableArms = np.nonzero(self.tnext <= self.t)
             result = self.mother._choiceFromSubSet(self.playerId, availableArms)
             # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
+            self.chosenArm = result
             return result
 
 
@@ -116,17 +118,17 @@ class ALOHA(BaseMPPolicy):
         - nbArms: number of arms, given as first argument to playerAlgo.
 
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
-        - alpha_p0: scaling in the update for p(t+1) <- alpha_p0 p(t) + (1 - alpha_p0(t))
+        - alpha_p0: scaling in the update for p[t+1] <- alpha_p0 p[t] + (1 - alpha_p0)
         - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(t) instead
 
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
 
         Example:
         >>> nbArms = 17
-        >>> NB_PLAYERS = 6
+        >>> nbPlayers = 6
         >>> p0, alpha_p0, tnext = 0.6, 0.5, tnext_beta
-        >>> s = ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext)
-        >>> s = ALOHA(NB_PLAYERS, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext, alpha=1)
+        >>> s = ALOHA(nbPlayers, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext)
+        >>> s = ALOHA(nbPlayers, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext, alpha=1)
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use ONLY!
@@ -154,14 +156,5 @@ class ALOHA(BaseMPPolicy):
     def _getReward_one(self, playerId, arm, reward):
         return self._players[playerId].getReward(arm, reward)
 
-    def _choice_one(self, playerId):
-        return self._players[playerId].choice()
-
     def _choiceFromSubSet_one(self, playerId, availableArms):
         return self._players[playerId].choiceFromSubSet(availableArms)
-
-    def _choiceWithRank(self, playerId, rank):
-        raise NotImplementedError("Error: a oneRhoRand player should only use choice() method, not the choiceWithRank() method.")
-
-    def _handleCollision_one(self, playerId, arm):
-        raise NotImplementedError("Error: a oneALOHA player should use the internal handleCollision() method, not the proxy one given to mother class.")

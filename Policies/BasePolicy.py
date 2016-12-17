@@ -38,4 +38,13 @@ class BasePolicy(object):
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BasePolicy.")
 
     def choiceWithRank(self, rank=1):
-        raise NotImplementedError("This method choiceWithRank(rank) has to be implemented in the child class inheriting from BasePolicy.")
+        if rank == 1:
+            return self.choice()
+        else:
+            raise NotImplementedError("This method choiceWithRank(rank) has to be implemented in the child class inheriting from BasePolicy.")
+
+    def choiceFromSubSet(self, availableArms='all'):
+        if availableArms == 'all':
+            return self.choice()
+        else:
+            raise NotImplementedError("This method choiceFromSubSet(availableArms) has to be implemented in the child class inheriting from BasePolicy.")

@@ -31,7 +31,7 @@ class IndexPolicy(BasePolicy):
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
         # FIXED Uniform choice among the best arms
-        return np.random.choice(np.where(self.index == np.max(self.index))[0])
+        return np.random.choice(np.nonzero(self.index == np.max(self.index)))
 
     def choiceWithRank(self, rank=1):
         """ In an index policy, choose uniformly at random an arm with index is the (1+rank)-th best.
@@ -41,15 +41,18 @@ class IndexPolicy(BasePolicy):
 
         - Note: this method is *required* for the rhoRand policy.
         """
-        assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
-        for arm in range(self.nbArms):
-            self.index[arm] = self.computeIndex(arm)
-        # FIXME be more efficient?
-        try:
-            uniqueValues = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
-            chosenIndex = uniqueValues[-rank]
-        except IndexError:
-            values = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
-            chosenIndex = values[-rank]
-        # FIXED Uniform choice among the rank-th best arms
-        return np.random.choice(np.where(self.index == chosenIndex)[0])
+        if rank == 1:
+            return self.choice()
+        else:
+            assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
+            for arm in range(self.nbArms):
+                self.index[arm] = self.computeIndex(arm)
+            # FIXME be more efficient?
+            try:
+                uniqueValues = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
+                chosenIndex = uniqueValues[-rank]
+            except IndexError:
+                values = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
+                chosenIndex = values[-rank]
+            # FIXED Uniform choice among the rank-th best arms
+            return np.random.choice(np.nonzero(self.index == chosenIndex))
