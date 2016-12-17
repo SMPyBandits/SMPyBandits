@@ -139,7 +139,8 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
                 i = players_who_chose_it[np.argmin(distancesChosen)]
                 # print("Only one user is at minimal distance, of index i =", i)  # DEBUG
             else:   # XXX very low probability, if the distances are randomly chosen
-                i = players_who_chose_it[np.random.choice(np.argwhere(distancesChosen == smaller_distance))]
+                # i = players_who_chose_it[np.random.choice(np.argwhere(distancesChosen == smaller_distance))]
+                i = players_who_chose_it[np.random.choice(np.nonzero(distancesChosen == smaller_distance))]
                 print("  Randomly choosing one user at minimal distance = {:.4g}, among {}... Index i = {} was chose !".format(smaller_distance, np.count_nonzero(distancesChosen == smaller_distance), i + 1))  # DEBUG
             # Player i can pull the arm
             rewards[i] = arms[arm].draw(t)

@@ -40,7 +40,6 @@ class oneRhoRand(ChildPointer):
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def handleCollision(self, arm):
-        # super(oneRhoRand, self).handleCollision(arm)  # No need for that, there is a collision avoidance RIGHT HERE
         self.rank = 1 + rn.randint(self.nbPlayers)  # New random rank
         # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
@@ -64,7 +63,7 @@ class rhoRand(BaseMPPolicy):
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
 
         Examples:
-        >>> s = rhoRand(NB_PLAYERS, Thompson, nbArms)
+        >>> s = rhoRand(nbPlayers, Thompson, nbArms)
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use ONLY!
@@ -92,9 +91,3 @@ class rhoRand(BaseMPPolicy):
 
     def _choiceWithRank_one(self, playerId, rank):
         return self._players[playerId].choiceWithRank(rank)
-
-    def _choice(self, playerId):
-        raise NotImplementedError("Error: a oneRhoRand player should only use choiceWithRank() method, not the choice() method.")
-
-    def _handleCollision_one(self, playerId, arm):
-        raise NotImplementedError("Error: a oneRhoRand player should use the internal handleCollision() method, not the proxy one given to mother class.")

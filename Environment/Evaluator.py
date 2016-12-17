@@ -102,7 +102,8 @@ class Evaluator(object):
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
             bestarm = np.max(means)
-            index_bestarm = np.argwhere(np.isclose(means, bestarm))
+            # index_bestarm = np.argwhere(np.isclose(means, bestarm))
+            index_bestarm, = np.nonzero(np.isclose(means, bestarm))
             # Store the results
             for r in results:
                 self.rewards[policyId, envId, :] += r.rewards

@@ -76,7 +76,8 @@ class MEGA(BasePolicy):
             return self.chosenArm
         else:  # We have to chose a new arm
             # Identify available arms
-            availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]
+            # availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]
+            availableArms = np.nonzero(self.tnext <= self.t)
             if len(availableArms) == 0:
                 print("Error: MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET ... Choosing a random arm.")  # DEBUG
                 self.chosenArm = rn.randint(self.nbArms)  # XXX Chose a random arm
