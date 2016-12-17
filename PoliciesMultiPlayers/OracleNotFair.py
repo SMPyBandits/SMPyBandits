@@ -104,10 +104,10 @@ class OracleNotFair(BaseMPPolicy):
 
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
-        return self._players[playerId].startGame()
+        self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()

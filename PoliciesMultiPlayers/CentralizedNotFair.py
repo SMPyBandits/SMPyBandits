@@ -25,10 +25,9 @@ class Fixed(BaseCentralizedPolicy):
     def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
         self.nbArms = nbArms
         self.armIndex = armIndex
-        self.params = str(armIndex)
 
     def __str__(self):
-        return "Fixed({})".format(self.params)
+        return "Fixed({})".format(self.armIndex)
 
     def startGame(self):
         pass
@@ -103,10 +102,10 @@ class CentralizedNotFair(BaseMPPolicy):
 
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
-        return self._players[playerId].startGame()
+        self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()

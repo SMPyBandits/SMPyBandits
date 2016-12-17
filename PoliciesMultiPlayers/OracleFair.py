@@ -30,12 +30,11 @@ class CyclingBest(BaseCentralizedPolicy):
             bestArms = list(range(nbArms))
         self.bestArms = bestArms
         self.nb_bestArms = len(bestArms)
-        # self.params = '{}, {}'.format(str(offset), str(bestArms))
-        self.params = str(offset)
         self.t = -1
 
     def __str__(self):
-        return "CyclingBest({})".format(self.params)
+        return "CyclingBest({}, {})".format(self.offset, self.bestArms)
+        return "CyclingBest({})".format(self.offset)
 
     def startGame(self):
         pass
@@ -115,10 +114,10 @@ class OracleFair(BaseMPPolicy):
 
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
-        return self._players[playerId].startGame()
+        self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()

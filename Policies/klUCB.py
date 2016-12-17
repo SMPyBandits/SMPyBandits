@@ -24,11 +24,10 @@ class klUCB(IndexPolicy):
         self.c = 1.
         self.klucb = klucb
         self.tolerance = tolerance
-        self.params = "amplitude: {}, lower: {}".format(self.amplitude, self.lower)
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
-            # Could adapt tolerance to the value of self.t
+            # XXX We could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)

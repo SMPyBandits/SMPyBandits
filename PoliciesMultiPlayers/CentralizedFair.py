@@ -25,11 +25,10 @@ class Cycling(BaseCentralizedPolicy):
         self.nbArms = nbArms
         self.offset = offset
         # XXX It could be a random permutation, instead of a cycling
-        self.params = str(offset)
         self.t = -1
 
     def __str__(self):
-        return "Cycling({})".format(self.params)
+        return "Cycling({})".format(self.offset)
 
     def startGame(self):
         pass
@@ -103,10 +102,10 @@ class CentralizedFair(BaseMPPolicy):
 
     def _startGame_one(self, playerId):
         # FIXME It should re-generate the affectations every time a game is started!
-        return self._players[playerId].startGame()
+        self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()

@@ -48,3 +48,14 @@ Evaluating environment: <MAB{'nbArms': 34, 'arms': [B(0.001), B(0.001), B(0.001)
 - Evaluating policy #6/7: BayesUCB ...
 
 - Evaluating policy #7/7: Aggr(nb: 6, rate: 0.01) ...
+Giving the final ranks ...
+
+Final ranking for this environment #0 :
+- Policy 'Softmax(decreasing)'	was ranked	1 / 7 for this simulation (last regret = 62.9).
+- Policy 'klUCBPlus'	was ranked	2 / 7 for this simulation (last regret = 181.15).
+- Policy 'MOSS'	was ranked	3 / 7 for this simulation (last regret = 209.15).
+- Policy 'Thompson'	was ranked	4 / 7 for this simulation (last regret = 213.35).
+- Policy 'BayesUCB'	was ranked	5 / 7 for this simulation (last regret = 233.4).
+- Policy 'Aggr(nb: 6, rate: 0.01)'	was ranked	6 / 7 for this simulation (last regret = 235.55).
+- Policy 'UCBopt'	was ranked	7 / 7 for this simulation (last regret = 288.35).
+plots/T10000_N20__7_algos is already a directory here...
