@@ -205,17 +205,17 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
-        # XXX I should compute a measure of fairness, from these personal rewards
+        # FIXME I should compute a certain measure of "fairness", from these personal rewards
         plt.figure()
-        fairness = np.std(cumRewards, axis=0) / np.max(cumRewards)
-        print("fairness =", fairness)  # DEBUG
+        # amplitudeRewards = np.std(cumRewards, axis=0) / np.max(cumRewards)  # XXX It was weird to use a std/var
+        amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)  # TODO try it!
         if semilogx:
-            plt.semilogx(fairness, '+-')
+            plt.semilogx(amplitudeRewards, '+-')
         else:
-            plt.plot(fairness, '+-')
+            plt.plot(amplitudeRewards, '+-')
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        plt.ylabel("Centralized measure of fairness (normalized 1-std of the rewards)")
+        plt.ylabel("Centralized measure of fairness (reward of best player - reward of worst player)")
         plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\nArms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:

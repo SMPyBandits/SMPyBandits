@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -39,7 +39,7 @@ REPETITIONS = 20
 # REPETITIONS = 100
 # REPETITIONS = 2000
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -97,14 +97,14 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        # {   # A damn simple problem: 2 arms, one bad, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]
-        # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
+        {   # A damn simple problem: 2 arms, one bad, one good
             "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
+            "params": [0.1, 0.9]
         }
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
@@ -150,7 +150,7 @@ configuration.update({
     # --- Defining each player as one child of a multi-player policy
 
     # --- DONE Using multi-player Selfish policy
-    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+    "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
@@ -185,7 +185,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
     # --- FIXME Using single-player ALOHA policy
-    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5).childs  # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5).childs  # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
