@@ -160,7 +160,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
-    "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player Centralized policy
@@ -177,21 +177,21 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.01, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
 
     # --- DONE Using single-player MEGA policy
-    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
+    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=0.5).childs  # FIXME how to chose the 5 parameters ??
 
     # --- FIXME Using single-player ALOHA policy
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5).childs  # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, klUCB, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
+    "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
