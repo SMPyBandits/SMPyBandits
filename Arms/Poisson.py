@@ -51,9 +51,9 @@ class Poisson(Arm):
 
     def __repr__(self):
         if isinf(self.trunc):
-            return "P({})".format(self.p)
+            return "P({:.3g})".format(self.p)
         else:
-            return "P({}, {})".format(self.p, self.trunc)
+            return "P({:.3g}, {:.3g})".format(self.p, self.trunc)
 
     # --- Lower bound
 

@@ -6,6 +6,9 @@ __author__ = "Lilian Besson"
 __version__ = "0.3"
 
 import numpy as np
+import matplotlib.pyplot as plt
+# Local imports
+from .plotsettings import DPI, signature, maximizeWindow
 
 
 class MAB(object):
@@ -77,6 +80,8 @@ class MAB(object):
                 for armId, arm in enumerate(self.arms))
             )
 
+    # --- Compute lower bounds
+
     def lowerbound(self):
         """ Compute the [Lai & Robbins] lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         means = self.means()
@@ -88,22 +93,46 @@ class MAB(object):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means())
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
+        # FIXME it is weird to have a lowerbound = 0 if nbPlayers = nbArms
         bestMeans = sortedMeans[-nbPlayers:]
+        # print("  bestMeans = ", bestMeans)  # DEBUG
         worstMeans = sortedMeans[:-nbPlayers]
+        # print("  worstMeans = ", worstMeans)  # DEBUG
         worstOfBestMean = bestMeans[0]
+        # print("  worstOfBestMean = ", worstOfBestMean)  # DEBUG
 
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
-        print("    Using oneLR =", oneLR)  # DEBUG
+        # print("    Using oneLR =", oneLR)  # DEBUG
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
-        print("  - Our lower bound gave = {} ...".format(our_lowerbound))  # DEBUG
+        print("  - For {} player, our lower bound gave = {} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
-        print("    Using kl =", kl)  # DEBUG
+        # print("    Using kl =", kl)  # DEBUG
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
-        print("  - The initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(anandkumar_lowerbound))  # DEBUG
+        print("  - For {} player, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
 
         # Check that our bound is better (ie bigger)
         assert anandkumar_lowerbound <= our_lowerbound, "Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better..."
         return our_lowerbound, anandkumar_lowerbound
+
+    # --- Plot a comparison of our lowerbound and their
+    def plotComparison_our_anandkumar(self, savefig=None):
+        nbPlayers = self.nbArms
+        lowerbounds = np.zeros((2, nbPlayers))
+        for i in range(nbPlayers):
+            lowerbounds[:, i] = self.lowerbound_multiplayers(i + 1)
+        plt.figure()
+        X = np.arange(1, 1 + nbPlayers)
+        plt.plot(X, lowerbounds[0, :], 'ro-', label="Kaufmann & Besson lowerbound")
+        plt.plot(X, lowerbounds[1, :], 'bd-', label="Anandkumar et al. lowerbound")
+        plt.legend()
+        plt.xlabel("Number of players in the multi-players game.")
+        plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
+        plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}${}".format(self.nbArms, self.reprarms(), signature))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+        plt.show()

@@ -43,7 +43,7 @@ class Gaussian(Arm):
         return "Gaussian"
 
     def __repr__(self):
-        return "G({}, {})".format(self.mu, self.sigma)
+        return "G({:.3g}, {:.3g})".format(self.mu, self.sigma)
 
     # --- Lower bound
 

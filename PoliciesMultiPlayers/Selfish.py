@@ -64,6 +64,5 @@ class Selfish(BaseMPPolicy):
             player.handleCollision(arm)
         else:
             # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            # player.getReward(arm, 0)
-            player.getReward(arm, player.lower)
+            player.getReward(arm, getattr(player, 'lower', 0))
             # FIXME Strong assumption on the model

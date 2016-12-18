@@ -33,7 +33,7 @@ class Bernoulli(Arm):
 
     def __repr__(self):
         # return "<" + self.__class__.__name__ + ": " + repr(self.probability) + ">"
-        return "B({})".format(self.probability)
+        return "B({:.3g})".format(self.probability)
 
     # --- Lower bound
 

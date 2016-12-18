@@ -45,10 +45,10 @@ class Exponential(Arm):
     def __repr__(self):
         if isinf(self.trunc):
             # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ">"
-            return "Exp({})".format(self.p)
+            return "Exp({:.3g})".format(self.p)
         else:
             # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ", " + repr(self.trunc) + ">"
-            return "Exp({}, {})".format(self.p, self.trunc)
+            return "Exp({:.3g}, {:.3g})".format(self.p, self.trunc)
 
     # --- Lower bound
 

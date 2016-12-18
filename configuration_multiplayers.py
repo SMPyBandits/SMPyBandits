@@ -38,8 +38,8 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
 # REPETITIONS = 100
 # REPETITIONS = 2000
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -97,14 +97,14 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        {   # A damn simple problem: 2 arms, one bad, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.9]
-        }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        # {   # A damn simple problem: 2 arms, one bad, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
+        #     "params": [0.1, 0.9]
         # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]

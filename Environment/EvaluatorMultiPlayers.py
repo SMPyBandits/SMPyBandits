@@ -241,6 +241,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
         lowerbound, anandkumar_lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
+        print(" - Our lowerbound = {},\n - anandkumar_lowerbound = {}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
         # We also plot our lower bound
         if normalized:
             plt.plot(lowerbound * np.ones_like(X), 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
