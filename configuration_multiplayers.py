@@ -155,12 +155,12 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
-    "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
-    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
-    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
-    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs  # XXX works fine!
-    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player Centralized policy

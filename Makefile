@@ -10,6 +10,8 @@ single:
 multi:
 	make clean ; clear ; make multiplayers3
 
+toto:	lint lint3 pyreverse stats
+
 # Runners
 main2:
 	time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt

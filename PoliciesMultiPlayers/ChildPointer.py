@@ -3,7 +3,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.3"
 
 
 class ChildPointer(object):
@@ -16,6 +16,9 @@ class ChildPointer(object):
 
     def __str__(self):   # Better to recompute it automatically
         return '#{}<{}>'.format(self.playerId + 1, self.mother._players[self.playerId])
+
+    def __repr__(self):
+        return '{}'.format(self.mother._players[self.playerId])
 
     def startGame(self):
         """ Pass the call to self.mother._startGame_one(playerId) with the player's ID number. """
