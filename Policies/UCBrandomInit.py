@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
+""" The UCB index policy, modified to take a random permutation order for the initial exploration of each arm (could reduce collisions in the multi-players setting).
 Reference: [Lai & Robbins, 1985].
 """
 
@@ -11,7 +11,7 @@ from .UCB import UCB
 
 
 class UCBrandomInit(UCB):
-    """ The UCB index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
+    """ The UCB index policy, modified to take a random permutation order for the initial exploration of each arm (could reduce collisions in the multi-players setting).
     Reference: [Lai & Robbins, 1985].
     """
 

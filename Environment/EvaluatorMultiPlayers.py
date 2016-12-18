@@ -312,7 +312,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
-        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.horizon / 100.0)  # XXX put back 0 if needed
         for armId in range(self.envs[environmentId].nbArms):
             plt.figure()
             for playerId, player in enumerate(self.players):

@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -38,7 +38,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
 # REPETITIONS = 100
 # REPETITIONS = 2000
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -150,14 +150,12 @@ configuration.update({
     # --- Defining each player as one child of a multi-player policy
 
     # --- DONE Using multi-player Selfish policy
-    "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./2).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
-    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./8).childs
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
+    "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # XXX doesnot work fine!
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs  # XXX doesnot work fine!
