@@ -47,15 +47,17 @@ class oneALOHA(ChildPointer):
         self.ftnext = ftnext
         # Internal memory
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
+        self.t = -1
+        self.chosenArm = None
 
     def __str__(self):   # Better to recompute it automatically
-        return '#{}<ALOHA, {}, p0: {}, alpha_p0: {}, beta: {}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
+        return "#{}<ALOHA, {}, p0: {}, alpha_p0: {}, beta: {}>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
 
     def startGame(self):
         super(oneALOHA, self).startGame()
         self.p = self.p0
         self.tnext.fill(1)
-        # FIXME ?
+        self.chosenArm = None
 
     def getReward(self, arm, reward):
         """ Receive a reward on arm of index 'arm', as described by the ALOHA protocol.
@@ -99,7 +101,7 @@ class oneALOHA(ChildPointer):
             # Identify available arms
             # availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]  # DONE do this computation using numpy arrays
             availableArms = np.nonzero(self.tnext <= self.t)[0]
-            result = self.mother._choiceFromSubSet(self.playerId, availableArms)
+            result = self.mother._choiceFromSubSet_one(self.playerId, availableArms)
             # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
             self.chosenArm = result
             return result
