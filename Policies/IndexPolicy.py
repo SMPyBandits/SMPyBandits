@@ -16,22 +16,29 @@ class IndexPolicy(BasePolicy):
     """ Class that implements a generic index policy."""
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
+        """ New generic index policy.
+
+        - nbArms: the number of arms,
+        - lower, amplitude: lower value and known amplitude of the rewards.
+        """
         super(IndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.index = np.zeros(nbArms)
 
     # --- Start game, and receive rewards
 
     def startGame(self):
+        """ Initialize the policy for a new game."""
         super(IndexPolicy, self).startGame()
         self.index.fill(0)
 
     def computeIndex(self, arm):
+        """ Compute the current index of arm 'arm'."""
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")
 
     # --- Basic choice() method
 
     def choice(self):
-        """ In an index policy, choose uniformly at random an arm with maximal index."""
+        """ In an index policy, choose an arm with maximal index (uniformly at random)."""
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
         # Uniform choice among the best arms
@@ -40,7 +47,7 @@ class IndexPolicy(BasePolicy):
     # --- Others choice...() methods
 
     def choiceWithRank(self, rank=1):
-        """ In an index policy, choose uniformly at random an arm with index is the (1+rank)-th best.
+        """ In an index policy, choose an arm with index is the (1+rank)-th best (uniformly at random).
 
         - For instance, if rank is 1, the best arm is chosen (the 1-st best).
         - If rank is 4, the 4-th best arm is chosen.
@@ -64,7 +71,7 @@ class IndexPolicy(BasePolicy):
             return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
 
     def choiceFromSubSet(self, availableArms='all'):
-        """ In an index policy, choose the best arm from sub set availableArms."""
+        """ In an index policy, choose the best arm from sub-set availableArms (uniformly at random)."""
         if availableArms == 'all':
             return self.choice()
         else:
@@ -74,7 +81,7 @@ class IndexPolicy(BasePolicy):
             return np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms])))
 
     def choiceMultiple(self, nb=1):
-        """ In an index policy, choose uniformly at random nb arms with maximal indexes."""
+        """ In an index policy, choose nb arms with maximal indexes (uniformly at random)."""
         if nb == 1:
             return self.choice()
         else:

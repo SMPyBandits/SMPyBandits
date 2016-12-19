@@ -14,9 +14,11 @@ class BasePolicy(object):
     """ Base class for any policy."""
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
+        # Parameters
         self.nbArms = nbArms
         self.lower = lower
         self.amplitude = amplitude
+        # Internal memory
         self.t = -1
         self.pulls = np.zeros(nbArms, dtype=int)
         self.rewards = np.zeros(nbArms)
