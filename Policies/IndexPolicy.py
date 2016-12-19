@@ -7,6 +7,7 @@
 __author__ = "Lilian Besson"
 __version__ = "0.3"
 
+from warnings import warn
 import numpy as np
 
 from .BasePolicy import BasePolicy
@@ -72,8 +73,15 @@ class IndexPolicy(BasePolicy):
 
     def choiceFromSubSet(self, availableArms='all'):
         """ In an index policy, choose the best arm from sub-set availableArms (uniformly at random)."""
-        if availableArms == 'all':
+        if isinstance(availableArms, str) and isinstance == 'all':
             return self.choice()
+        # If availableArms are all arms?
+        # elif len(availableArms) == self.nbArms:
+        #     return self.choice()
+        elif len(availableArms) == 0:
+            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
+            warn("IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)), RuntimeWarning)
+            return np.random.randint(self.nbArms)
         else:
             for arm in availableArms:
                 self.index[arm] = self.computeIndex(arm)
