@@ -64,10 +64,12 @@ class oneALOHA(ChildPointer):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
-        self.rewards[arm] += (reward - self.lower) / self.amplitude
-        self.pulls[arm] += 1
-        self.p = self.p * self.alpha + (1 - self.alpha)  # Update proba p
+        print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
+        # self.rewards[arm] += (reward - self.lower) / self.amplitude
+        # self.pulls[arm] += 1
+        # XXX Call ChildPointer method
+        super(oneALOHA, self).getReward(arm, reward)
+        self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
 
     def handleCollision(self, arm):
         """ Handle a collision, on arm of index 'arm'.
@@ -75,7 +77,7 @@ class oneALOHA(ChildPointer):
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         - Note: we do not care on which arm the collision occured.
         """
-        # print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
+        print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
         if rn.random() < self.p:
             self.chosenArm = self.chosenArm  # XXX remove after
@@ -91,18 +93,19 @@ class oneALOHA(ChildPointer):
 
     def choice(self):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
-
-        - FIXME the policy has to have a method choiceFromSubSet
         """
         self.t += 1
         if self.chosenArm is not None:  # We can still exploit that arm
             return self.chosenArm
         else:  # We have to chose a new arm
             # Identify available arms
-            # availableArms = [k for k in range(self.nbArms) if self.tnext[k] <= self.t]  # DONE do this computation using numpy arrays
+            print("self.tnext = ", self.tnext)  # DEBUG
+            print("self.t = ", self.t)  # DEBUG
+            print("np.nonzero(self.tnext <= self.t) = ", np.nonzero(self.tnext <= self.t))  # DEBUG
             availableArms = np.nonzero(self.tnext <= self.t)[0]
-            result = self.mother._choiceFromSubSet_one(self.playerId, availableArms)
-            # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
+            # XXX Call ChildPointer method
+            result = super(oneALOHA, self).choiceFromSubSet(availableArms)
+            print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
             self.chosenArm = result
             return result
 
