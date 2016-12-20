@@ -73,7 +73,7 @@ class Softmax(BasePolicy):
             return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
 
     def choiceFromSubSet(self, availableArms='all'):
-        if (self.t < self.nbArms) or (availableArms == 'all'):
+        if (self.t < self.nbArms) or (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
             return np.random.choice(availableArms, p=self.trusts[availableArms])
@@ -108,6 +108,7 @@ class SoftmaxWithHorizon(Softmax):
 
     def __init__(self, nbArms, horizon, lower=0., amplitude=1.):
         super(SoftmaxWithHorizon, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        assert horizon > 0, "Error: the 'horizon' parameter for SoftmaxWithHorizon class has to be > 0."
         self.horizon = horizon
 
     def __str__(self):

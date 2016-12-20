@@ -122,7 +122,7 @@ class Aggr(BasePolicy):
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceFromSubSet(self, availableArms='all'):
-        if availableArms == 'all':
+        if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
             for i in range(self.nbChildren):
