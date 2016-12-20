@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" CentralizedFixedNotFair: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
+""" CentralizedFixed: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
 
 - It allows to have absolutely *no* collision, if there is more channels than users (always assumed).
 - But it is NOT fair on ONE run: the best arm is played only by one player.
@@ -19,7 +19,7 @@ from .ChildPointer import ChildPointer
 
 
 class Fixed(BaseCentralizedPolicy):
-    """ Fixed: always select a fixed arm, as decided by the CentralizedFixedNotFair multi-player policy.
+    """ Fixed: always select a fixed arm, as decided by the CentralizedFixed multi-player policy.
     """
 
     def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
@@ -39,8 +39,8 @@ class Fixed(BaseCentralizedPolicy):
         return self.armIndex
 
 
-class CentralizedFixedNotFair(BaseMPPolicy):
-    """ CentralizedFixedNotFair: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
+class CentralizedFixed(BaseMPPolicy):
+    """ CentralizedFixed: a multi-player policy which uses a centralized intelligence to affect users to a FIXED arm.
     """
 
     def __init__(self, nbPlayers, nbArms):
@@ -49,12 +49,12 @@ class CentralizedFixedNotFair(BaseMPPolicy):
         - nbArms: number of arms.
 
         Examples:
-        >>> s = CentralizedFixedNotFair(10, 14)
+        >>> s = CentralizedFixed(10, 14)
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use
         """
-        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedFixedNotFair class has to be > 0."
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedFixed class has to be > 0."
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
@@ -75,7 +75,7 @@ class CentralizedFixedNotFair(BaseMPPolicy):
             # self._affectations[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
         # Shuffle it once, just to be fair, IN AVERAGE (by repetitions)
         np.random.shuffle(self._affectations)
-        print("CentralizedFixedNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        print("CentralizedFixed: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
@@ -88,7 +88,7 @@ class CentralizedFixedNotFair(BaseMPPolicy):
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "CentralizedFixedNotFair({})".format(self.params)
+        return "CentralizedFixed({})".format(self.params)
 
     def _printNbCollisions(self):
         """ Print number of collisions. """

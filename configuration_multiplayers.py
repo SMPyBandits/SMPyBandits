@@ -142,6 +142,9 @@ configuration = {
 nbArms = len(configuration['environment'][0]['params'])
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+# XXX compute optimal values for d (MEGA's parameter)
+# D = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+
 configuration.update({
     # --- DONE Defining manually each child
     # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
@@ -163,10 +166,12 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
-    # --- DONE Using multi-player Centralized policy
-    # XXX each player needs to now the number of players, OF COURSE this is not very physically plausible
-    # "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-    # "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    # --- DONE Using multi-player dummy Centralized policy
+    # XXX each player needs to now the number of players
+    # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
+    # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
+    # FIXME implement a smart Centralized policy, based on choiceMultiple()
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -174,10 +179,11 @@ configuration.update({
     # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
 
     # --- DONE Using single-player Musical Chair policy
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs  # OK Estimate nbPlayers in Time0 initial rounds
+    # OK Estimate nbPlayers in Time0 initial rounds
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??

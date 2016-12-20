@@ -19,14 +19,14 @@ __version__ = "0.1"
 from .Selfish import Selfish
 
 # Mine, centralized ones (but only knowledge of nbArms)
-from .CentralizedNotFair import CentralizedNotFair
-from .CentralizedFair import CentralizedFair
+from .CentralizedFixed import CentralizedFixed
+from .CentralizedCycling import CentralizedCycling
 
 # Mine, centralized ones (with perfect knowledge)
 from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
-# TODO CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
+# FIXME CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
 # from .CentralizedMultiplePlay import CentralizedMultiplePlay
 
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)

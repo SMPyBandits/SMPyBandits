@@ -20,9 +20,10 @@ def epsilon0(c, d, nbArms):
 
 
 class EpsilonDecreasing(EpsilonGreedy):
-    """ The epsilon-decreasing random policy.
+    """ The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
 
     - epsilon(t) = epsilon0 / t
+    - epsilon0 = (c * nbArms**2) / (d**2 * (nbArms - 1))
     - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
