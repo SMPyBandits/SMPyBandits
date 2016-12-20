@@ -44,20 +44,28 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     # --- Proxy methods
 
     def _startGame_one(self, playerId):
-        return self._players[playerId].startGame()
+        if playerId == 0:  # For the first player, run the method
+            self.player.startGame()
+        else:  # For the other players, use the pre-computed result
+            pass
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        if playerId == 0:  # For the first player, run the method
+            self.player.startGame()
+        else:  # For the other players, use the pre-computed result
+            pass
 
     def _choice_one(self, playerId):
-        return self._players[playerId].choice()
+        if playerId == 0:  # For the first player, run the method
+            self.choices = self.player.choiceMultiple(self.nbPlayers)
+            return self.choices[0]
+        else:  # For the other players, use the pre-computed result
+            return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm):
-        player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):
-            # player.handleCollision(arm) is called to inform the user that there were a collision
-            player.handleCollision(arm)
-        else:
-            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            player.getReward(arm, getattr(player, 'lower', 0))
-            # FIXME Strong assumption on the model
+        raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed.")
+        # if playerId == 0:  # For the first player, run the method
+        #     self.player.handleCollision(arm)
+        # else:  # For the other players, use the pre-computed result
+        #     # FIXME this is not enough!!!
+        #     pass
