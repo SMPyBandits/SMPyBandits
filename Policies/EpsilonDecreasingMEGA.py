@@ -19,7 +19,7 @@ def epsilon0(c, d, nbArms):
     return (c * nbArms**2) / (d**2 * (nbArms - 1))
 
 
-class EpsilonDecreasing(EpsilonGreedy):
+class EpsilonDecreasingMEGA(EpsilonGreedy):
     """ The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
 
     - epsilon(t) = epsilon0 / t
@@ -28,11 +28,11 @@ class EpsilonDecreasing(EpsilonGreedy):
     """
 
     def __init__(self, nbArms, c=C, d=D, lower=0., amplitude=1.):
-        super(EpsilonDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        super(EpsilonDecreasingMEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self._epsilon = epsilon0(c, d, nbArms)
 
     def __str__(self):
-        return "EpsilonDecreasing(e:{})".format(self._epsilon)
+        return "EpsilonDecreasingMEGA(e:{})".format(self._epsilon)
 
     # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
     @property

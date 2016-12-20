@@ -59,6 +59,7 @@ class MEGA(BasePolicy):
         # Internal memory
         self.chosenArm = None
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
+        self.meanRewards = np.zeros(nbArms)
 
     def __str__(self):
         return "MEGA(c: {}, d: {}, p0: {}, alpha: {}, beta: {})".format(self.c, self.d, self.p0, self.alpha, self.beta)
@@ -69,6 +70,7 @@ class MEGA(BasePolicy):
         self.p = self.p0
         self.chosenArm = rn.randint(self.nbArms)  # Start on a random arm
         self.tnext.fill(1)
+        self.meanRewards.fill(float('-inf'))  # Null reward if not pulled
 
     def choice(self):
         """ Choose an arm, as described by the MEGA algorithm."""
@@ -89,10 +91,9 @@ class MEGA(BasePolicy):
                     if self.chosenArm != newArm:
                         self.p = self.p0  # Reinitialize proba p
                 else:  # Exploit: select the arm with highest meanRewards
-                    meanRewards = self.rewards / self.pulls
-                    meanRewards[self.pulls == 0] = float('-inf')  # Null reward if not pulled
+                    self.meanRewards[self.pulls != 0] = self.rewards[self.pulls != 0] / self.pulls[self.pulls != 0]
                     # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
-                    newArm = np.argmax(meanRewards)
+                    newArm = np.argmax(self.meanRewards)
                 self.chosenArm = newArm
             return self.chosenArm
 
@@ -116,10 +117,10 @@ class MEGA(BasePolicy):
         assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
-        if rn.random() < self.p:
-            self.chosenArm = self.chosenArm  # XXX remove after
+        # if rn.random() < self.p:
+        #     self.chosenArm = self.chosenArm
         # 2. With proba 1 - p, give up
-        else:
+        if rn.random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.t**self.beta))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
