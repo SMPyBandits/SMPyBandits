@@ -25,6 +25,8 @@ from .TakeRandomFixedArm import TakeRandomFixedArm
 from .EpsilonGreedy import EpsilonGreedy
 from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
+from .EpsilonDecreasingMEGA import EpsilonDecreasingMEGA
+from .EpsilonExpDecreasing import EpsilonExpDecreasing
 
 # --- Mine, Exp3-like policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftmaxWithHorizon

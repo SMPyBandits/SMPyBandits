@@ -25,7 +25,7 @@ class EpsilonGreedy(BasePolicy):
 
     # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
     @property
-    def epsilon(self):
+    def epsilon(self):  # Allow child classes to use time-dependent epsilon coef
         return self._epsilon
 
     def __str__(self):

@@ -19,7 +19,7 @@ from .BasePolicy import BasePolicy
 def epsilon_t(c, d, nbArms, t):
     """ Cf. Algorithm 1 in [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)."""
     epsilon = min(1, (c * nbArms**2) / (d**2 * (nbArms - 1) * t))
-    assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, nbArms, t, epsilon)  # DEBUG
+    # assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, nbArms, t, epsilon)  # DEBUG
     return epsilon
 
 
