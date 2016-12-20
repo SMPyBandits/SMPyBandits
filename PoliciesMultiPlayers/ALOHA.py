@@ -60,13 +60,15 @@ class oneALOHA(ChildPointer):
         self.p = p0   # Can be modified
         assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
         self.alpha_p0 = alpha_p0
+        # Parameters for the ftnext function
+        self.beta = beta
         self._ftnext = ftnext  # Can be a callable or None
         if ftnext is None:
             self._ftnext_name = 't --> t ** {}'.format(beta)
         else:
             self._ftnext_name = self._ftnext.__name__
         # Internal memory
-        self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
+        self.tnext = np.zeros(nbArms, dtype=int)  # Only store the delta time
         self.t = -1
         self.chosenArm = None
 
@@ -76,7 +78,7 @@ class oneALOHA(ChildPointer):
     def startGame(self):
         super(oneALOHA, self).startGame()  # XXX Call ChildPointer method
         self.p = self.p0
-        self.tnext.fill(1)
+        self.tnext.fill(0)
         self.chosenArm = None
 
     def ftnext(self, t):
@@ -118,15 +120,14 @@ class oneALOHA(ChildPointer):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
         """
         self.t += 1
-        print("\n\n- Call of oneALOHA.choice() ...")  # DEBUG
         if self.chosenArm is not None:  # We can still exploit that arm
             return self.chosenArm
         else:  # We have to chose a new arm
             # Identify available arms
             print("self.tnext = ", self.tnext)  # DEBUG
             print("self.t = ", self.t)  # DEBUG
-            print("np.nonzero(self.tnext <= self.t) = ", np.nonzero(self.tnext <= self.t))  # DEBUG
             availableArms = np.nonzero(self.tnext <= self.t)[0]
+            print("availableArms = ", availableArms)  # DEBUG
             # XXX Call ChildPointer method
             result = super(oneALOHA, self).choiceFromSubSet(availableArms)
             print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG

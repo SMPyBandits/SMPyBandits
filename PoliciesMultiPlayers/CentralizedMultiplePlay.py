@@ -9,6 +9,18 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
+class CentralizedChildPointer(ChildPointer):
+    """ Centralized version of the ChildPointer class."""
+    def __init__(self, mother, playerId):
+        super(CentralizedChildPointer, self).__init__(mother, playerId)
+
+    def __str__(self):   # Better to recompute it automatically
+        return "#{}<CentralizedMultiplePlay: {}>".format(self.playerId + 1, self.mother.player)
+
+    def __repr__(self):  # Better to recompute it automatically
+        return "CentralizedMultiplePlay: {}".format(self.mother.player)
+
+
 class CentralizedMultiplePlay(BaseMPPolicy):
     """ CentralizedMultiplePlay: a multi-player policy where ONE policy is used by a centralized agent; asking the policy to select nbPlayers arms at each step.
     """
@@ -34,9 +46,9 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         # But nbPlayers children
         self.childs = [None] * nbPlayers
         for playerId in range(nbPlayers):
-            self.childs[playerId] = ChildPointer(self, playerId)
+            self.childs[playerId] = CentralizedChildPointer(self, playerId)
         self.nbArms = nbArms
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
+        self.params = '{} x {}'.format(nbPlayers, str(self.player))
 
     def __str__(self):
         return "CentralizedMultiplePlay({})".format(self.params)

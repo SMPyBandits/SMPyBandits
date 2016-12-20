@@ -27,7 +27,7 @@ from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
 # FIXME CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
-# from .CentralizedMultiplePlay import CentralizedMultiplePlay
+from .CentralizedMultiplePlay import CentralizedMultiplePlay
 
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 

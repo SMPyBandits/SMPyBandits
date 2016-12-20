@@ -29,15 +29,15 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
+# HORIZON = 40000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-# REPETITIONS = 100
-# REPETITIONS = 2000
+# REPETITIONS = 1000
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -59,9 +59,9 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 13   # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
-# NB_PLAYERS = 25   # More than the number of arms !!
+# NB_PLAYERS = 25   # XXX More than the number of arms !!
 
 # Collision model
 collisionModel = rewardIsSharedUniformly
@@ -100,6 +100,8 @@ configuration = {
         {   # A damn simple problem: 2 arms, one bad, one good
             "arm_type": Bernoulli,
             "params": [0.1, 0.9]
+            # "params": [0.9, 0.9]
+            # "params": [0.85, 0.9]
         }
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
@@ -143,7 +145,7 @@ nbArms = len(configuration['environment'][0]['params'])
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
 # XXX compute optimal values for d (MEGA's parameter)
-D = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+D = max(0.01, np.min(np.diff(np.sort(configuration['environment'][0]['params']))) / 2)
 
 configuration.update({
     # --- DONE Defining manually each child
@@ -171,7 +173,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # FIXME implement a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms).childs
+    "players": CentralizedMultiplePlay(NB_PLAYERS, MOSS, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -187,12 +189,17 @@ configuration.update({
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??
-    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=D).childs
+    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).childs
 
     # --- FIXME Using single-player ALOHA policy
     # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
-    "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.5, alpha_p0=0.5, beta=0.5, c=0.1, d=D).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.5, alpha_p0=0.5).childs
+    # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.5, alpha_p0=0.5).childs  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
