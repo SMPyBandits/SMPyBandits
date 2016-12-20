@@ -132,11 +132,11 @@ if __name__ == '__main__':
         # # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=True, normalized=False)
         # evaluation.plotAllPulls(envId, cumulated=True, normalized=False)  # XXX To plot without saving
 
-        # Also plotting the cumulative number of pulls of all arms
-        savefig = mainfig.replace('main', 'main_NormalizedAllPulls')
-        print(" - Plotting the cumulative number of pulls of all arms, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=True, normalized=True)
-        evaluation.plotAllPulls(envId, cumulated=True, normalized=True)  # XXX To plot without saving
+        # # XXX Also plotting the cumulative number of pulls of all arms
+        # savefig = mainfig.replace('main', 'main_NormalizedAllPulls')
+        # print(" - Plotting the cumulative number of pulls of all arms, and saving the plot to {} ...".format(savefig))
+        # # evaluation.plotAllPulls(envId, savefig=savefig, cumulated=True, normalized=True)
+        # evaluation.plotAllPulls(envId, cumulated=True, normalized=True)  # XXX To plot without saving
 
         # Also plotting the total nb of collision as a function of time
         savefig = mainfig.replace('main', 'main_NbCollisions')

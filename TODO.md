@@ -33,7 +33,7 @@
 - [x] implement a multi-player simulation environment as well! Done, in [EvaluatorMultiPlayers](Environment/EvaluatorMultiPlayers.py). TODO Keep improving it.
 - [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms etc).
 - [x] implement the basic multi-player policies: the fully decentralized [`Selfish`](PoliciesMultiPlayers/Selfish.py) policy (where every player runs her own policy, without even knowing that there is other player, but receiving `0` reward in case of collision), two stupid centralized policies [`CentralizedFixed`](PoliciesMultiPlayers/CentralizedFixed.py) and [`CentralizedCycling`](PoliciesMultiPlayers/CentralizedCycling.py), and two oracle policies [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py) and [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
-- [ ] implement a centralized non-oracle policy, which is just a multiple-play single-player policy, in [`CentralizedMultiplePlay`](PoliciesMultiPlayers/CentralizedMultiplePlay.py).
+- [x] implement a centralized non-oracle policy, which is just a multiple-play single-player policy, in [`CentralizedMultiplePlay`](PoliciesMultiPlayers/CentralizedMultiplePlay.py). The single-player policy uses the `choiceMultiple(nb)` method to chose directly `M` arms for the `M` players.
 - [ ] plot several "multi-players" policy on the same graphs (e.g., the cumulative centralized regret of `M` players following `Selfish[UCB]` against the regret of `M` players following `Selfish[klCUB]`).
 
 ### Implement the state-of-the-art algorithms:

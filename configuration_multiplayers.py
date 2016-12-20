@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -59,7 +59,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 12   # Less that the number of arms
+NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -97,12 +97,12 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
     "environment": [
-        {   # A damn simple problem: 2 arms, one bad, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.9]
-            # "params": [0.9, 0.9]
-            # "params": [0.85, 0.9]
-        }
+        # {   # A damn simple problem: 2 arms, one bad, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.9]
+        #     # "params": [0.9, 0.9]
+        #     # "params": [0.85, 0.9]
+        # }
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
@@ -119,10 +119,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [t / 20.0 for t in range(1, 20)]
         # }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # }
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -172,8 +172,8 @@ configuration.update({
     # XXX each player needs to now the number of players
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
-    # FIXME implement a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, MOSS, nbArms).childs
+    # --- DONE Using a smart Centralized policy, based on choiceMultiple()
+    "players": CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all

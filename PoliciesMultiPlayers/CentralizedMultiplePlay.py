@@ -3,7 +3,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
@@ -58,26 +58,20 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     def _startGame_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
             self.player.startGame()
-        else:  # For the other players, use the pre-computed result
-            pass
+        # For the other players, nothing to do
 
     def _getReward_one(self, playerId, arm, reward):
-        if playerId == 0:  # For the first player, run the method
-            self.player.startGame()
-        else:  # For the other players, use the pre-computed result
-            pass
+        self.player.getReward(arm, reward)
+        if playerId != 0:  # We have to be sure that the internal player.t is not messed up
+            self.player.t -= 1
 
     def _choice_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
             self.choices = self.player.choiceMultiple(self.nbPlayers)
+            # print("At time t = {} the {} centralized policy chosed arms = {} ...".format(self.player.t, self, self.choices))  # DEBUG
             return self.choices[0]
         else:  # For the other players, use the pre-computed result
             return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm):
         raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed.")
-        # if playerId == 0:  # For the first player, run the method
-        #     self.player.handleCollision(arm)
-        # else:  # For the other players, use the pre-computed result
-        #     # FIXME this is not enough!!!
-        #     pass
