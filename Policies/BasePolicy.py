@@ -15,8 +15,10 @@ class BasePolicy(object):
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
         # Parameters
+        assert nbArms > 0, "Error: the 'nbArms' parameter of a BasePolicy class cannot be <= 0."
         self.nbArms = nbArms
         self.lower = lower
+        assert amplitude > 0, "Error: the 'amplitude' parameter of a BasePolicy class cannot be <= 0."
         self.amplitude = amplitude
         # Internal memory
         self.t = -1

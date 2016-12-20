@@ -528,7 +528,7 @@
 <text text-anchor="start" x="2892" y="-1421.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2892" y="-1406.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2892" y="-1391.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2892" y="-1376.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="2892" y="-1376.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="2892" y="-1361.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2892" y="-1346.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2884,-1339 3099,-1339 "/>
@@ -771,7 +771,7 @@
 <polygon fill="none" stroke="black" points="3676,-1000 3676,-1114 3933,-1114 3933,-1000 3676,-1000"/>
 <text text-anchor="middle" x="3804.5" y="-1098.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="3676,-1091 3933,-1091 "/>
-<text text-anchor="start" x="3684" y="-1075.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="3684" y="-1075.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="3684" y="-1060.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="3676,-1053 3933,-1053 "/>
 <text text-anchor="start" x="3684" y="-1037.8" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -862,23 +862,24 @@
 </g>
 <!-- 44 -->
 <g id="node45" class="node"><title>44</title>
-<polygon fill="none" stroke="black" points="5618,-218 5618,-452 5869,-452 5869,-218 5618,-218"/>
-<text text-anchor="middle" x="5743.5" y="-436.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ALOHA.oneALOHA</text>
-<polyline fill="none" stroke="black" points="5618,-429 5869,-429 "/>
-<text text-anchor="start" x="5626" y="-413.8" font-family="Times,serif" font-size="14.00">alpha_p0 : float</text>
-<text text-anchor="start" x="5626" y="-398.8" font-family="Times,serif" font-size="14.00">chosenArm : NoneType</text>
-<text text-anchor="start" x="5626" y="-383.8" font-family="Times,serif" font-size="14.00">ftnext</text>
-<text text-anchor="start" x="5626" y="-368.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="5626" y="-353.8" font-family="Times,serif" font-size="14.00">p : float</text>
-<text text-anchor="start" x="5626" y="-338.8" font-family="Times,serif" font-size="14.00">p0 : float</text>
-<text text-anchor="start" x="5626" y="-323.8" font-family="Times,serif" font-size="14.00">tnext</text>
-<polyline fill="none" stroke="black" points="5618,-316 5869,-316 "/>
-<text text-anchor="start" x="5626" y="-300.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5626" y="-285.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="5626" y="-270.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="5626" y="-255.8" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="5626" y="-240.8" font-family="Times,serif" font-size="14.00">handleCollision()</text>
-<text text-anchor="start" x="5626" y="-225.8" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="5618,-210.5 5618,-459.5 5869,-459.5 5869,-210.5 5618,-210.5"/>
+<text text-anchor="middle" x="5743.5" y="-444.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ALOHA.oneALOHA</text>
+<polyline fill="none" stroke="black" points="5618,-436.5 5869,-436.5 "/>
+<text text-anchor="start" x="5626" y="-421.3" font-family="Times,serif" font-size="14.00">alpha_p0 : float</text>
+<text text-anchor="start" x="5626" y="-406.3" font-family="Times,serif" font-size="14.00">chosenArm : NoneType</text>
+<text text-anchor="start" x="5626" y="-391.3" font-family="Times,serif" font-size="14.00">ftnext</text>
+<text text-anchor="start" x="5626" y="-376.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="5626" y="-361.3" font-family="Times,serif" font-size="14.00">p : float</text>
+<text text-anchor="start" x="5626" y="-346.3" font-family="Times,serif" font-size="14.00">p0 : float</text>
+<text text-anchor="start" x="5626" y="-331.3" font-family="Times,serif" font-size="14.00">t : int</text>
+<text text-anchor="start" x="5626" y="-316.3" font-family="Times,serif" font-size="14.00">tnext</text>
+<polyline fill="none" stroke="black" points="5618,-308.5 5869,-308.5 "/>
+<text text-anchor="start" x="5626" y="-293.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5626" y="-278.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="5626" y="-263.3" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="5626" y="-248.3" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="5626" y="-233.3" font-family="Times,serif" font-size="14.00">handleCollision()</text>
+<text text-anchor="start" x="5626" y="-218.3" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 51 -->
 <g id="node52" class="node"><title>51</title>
@@ -901,8 +902,8 @@
 </g>
 <!-- 44&#45;&gt;51 -->
 <g id="edge37" class="edge"><title>44&#45;&gt;51</title>
-<path fill="none" stroke="black" d="M5776.27,-452.258C5797.14,-526.327 5824.11,-622.011 5845.1,-696.508"/>
-<polygon fill="none" stroke="black" points="5841.81,-697.735 5847.9,-706.411 5848.55,-695.836 5841.81,-697.735"/>
+<path fill="none" stroke="black" d="M5778.35,-459.666C5798.91,-532.603 5824.79,-624.42 5845.09,-696.448"/>
+<polygon fill="none" stroke="black" points="5841.83,-697.801 5847.91,-706.476 5848.57,-695.902 5841.83,-697.801"/>
 </g>
 <!-- 45 -->
 <g id="node46" class="node"><title>45</title>

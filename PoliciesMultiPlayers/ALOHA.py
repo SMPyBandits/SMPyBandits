@@ -22,6 +22,13 @@ def tnext_beta(t, beta=0.5):
     return t ** beta
 
 
+def make_tnext_beta(beta=0.5):
+    """ Returns the function t --> t ** beta. """
+    def tnext(t):
+        return t ** beta
+    return tnext
+
+
 def tnext_log(t, scaling=1.):
     """ Other function, not the one used in MEGA, but our proposal: upper_tnext(t) = scaling * log(t). """
     return scaling * np.log(t)
@@ -35,7 +42,9 @@ class oneALOHA(ChildPointer):
     - Except for the handleCollision method: the ALOHA collision avoidance protocol is implemented here.
     """
 
-    def __init__(self, nbPlayers, mother, playerId, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, lower=0., amplitude=1.):
+    def __init__(self, nbPlayers, mother, playerId, nbArms,
+                 p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None,
+                 lower=0., amplitude=1.):
         super(oneALOHA, self).__init__(mother, playerId)
         self.nbPlayers = nbPlayers
         # Parameters for the ALOHA protocol
@@ -44,17 +53,20 @@ class oneALOHA(ChildPointer):
         self.p = p0   # Can be modified
         assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
         self.alpha_p0 = alpha_p0
-        self.ftnext = ftnext
+        if beta is not None:
+            self.ftnext = make_tnext_beta(beta)
+        else:
+            self.ftnext = ftnext
         # Internal memory
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
         self.t = -1
         self.chosenArm = None
 
-    def __str__(self):   # Better to recompute it automatically
-        return "#{}<ALOHA, {}, p0: {}, alpha_p0: {}, beta: {}>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
+    def __str__(self):
+        return "#{}<ALOHA, {}, p0: {}, alpha_p0: {}, ftnext: {}>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
 
     def startGame(self):
-        super(oneALOHA, self).startGame()
+        super(oneALOHA, self).startGame()  # XXX Call ChildPointer method
         self.p = self.p0
         self.tnext.fill(1)
         self.chosenArm = None
@@ -64,11 +76,8 @@ class oneALOHA(ChildPointer):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
-        # self.rewards[arm] += (reward - self.lower) / self.amplitude
-        # self.pulls[arm] += 1
-        # XXX Call ChildPointer method
-        super(oneALOHA, self).getReward(arm, reward)
+        # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
+        super(oneALOHA, self).getReward(arm, reward)  # XXX Call ChildPointer method
         self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
 
     def handleCollision(self, arm):
@@ -116,7 +125,7 @@ class ALOHA(BaseMPPolicy):
     """ ALOHA: implementation of the multi-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
+    def __init__(self, nbPlayers, playerAlgo, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -125,15 +134,16 @@ class ALOHA(BaseMPPolicy):
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
         - alpha_p0: scaling in the update for p[t+1] <- alpha_p0 p[t] + (1 - alpha_p0)
         - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(t) instead
+        - (optional) beta: if present, overwrites ftnext which will be t --> t^beta.
 
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
 
         Example:
         >>> nbArms = 17
         >>> nbPlayers = 6
-        >>> p0, alpha_p0, tnext = 0.6, 0.5, tnext_beta
-        >>> s = ALOHA(nbPlayers, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext)
-        >>> s = ALOHA(nbPlayers, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, tnext=tnext, alpha=1)
+        >>> p0, alpha_p0 = 0.6, 0.5
+        >>> s = ALOHA(nbPlayers, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
+        >>> s = ALOHA(nbPlayers, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
 
         - To get a list of usable players, use s.childs.
         - Warning: s._players is for internal use ONLY!
@@ -146,7 +156,8 @@ class ALOHA(BaseMPPolicy):
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, lower=lower, amplitude=amplitude)
+            # Initialize proxy child
+            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta, lower=lower, amplitude=amplitude)
         self.nbArms = nbArms
         self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 

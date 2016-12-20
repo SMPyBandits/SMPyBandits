@@ -10,7 +10,7 @@ single:
 multi:
 	make clean ; clear ; make multiplayers3
 
-toto:	lint lint3 pyreverse stats
+alllint:	lint lint3 pyreverse stats
 
 # Runners
 main2:
