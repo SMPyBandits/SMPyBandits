@@ -49,10 +49,10 @@ class Selfish(BaseMPPolicy):
     # --- Proxy methods
 
     def _startGame_one(self, playerId):
-        return self._players[playerId].startGame()
+        self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
-        return self._players[playerId].getReward(arm, reward)
+        self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
         return self._players[playerId].choice()

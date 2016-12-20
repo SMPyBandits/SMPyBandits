@@ -143,7 +143,7 @@ nbArms = len(configuration['environment'][0]['params'])
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
 # XXX compute optimal values for d (MEGA's parameter)
-# D = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+D = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
 
 configuration.update({
     # --- DONE Defining manually each child
@@ -187,11 +187,11 @@ configuration.update({
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??
-    "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=0.5).childs
+    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.5, alpha=0.5, beta=0.5, c=0.1, d=D).childs
 
     # --- FIXME Using single-player ALOHA policy
     # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
-    # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.5, alpha_p0=0.5, beta=0.5, c=0.1, d=0.5).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
+    "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.5, alpha_p0=0.5, beta=0.5, c=0.1, d=D).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.5, alpha_p0=0.5).childs
 
     # --- DONE Using single-player rhoRand policy

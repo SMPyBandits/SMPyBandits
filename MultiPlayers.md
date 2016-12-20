@@ -19,7 +19,7 @@ Have a look to:
 - [`main_multiplayers.py`](./main_multiplayers.py) and [`configuration_multiplayers.py`](./configuration_multiplayers.py) to run and configure the simulation,
 - the [`EvaluatorMultiPlayers`](./Environment/EvaluatorMultiPlayers.py) class that performs the simulation,
 - the [`ResultMultiPlayers`](./Environment/ResultMultiPlayers.py) class to store the results,
-- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) multi-players policy.
+- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedFixed`](PoliciesMultiPlayers/CentralizedFixed.py), [`CentralizedCycling`](PoliciesMultiPlayers/CentralizedCycling.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) multi-players policy.
 
 ### Policies designed to be used in the multi-players setting
 - The first one I implemented is the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](Policies/MusicalChair.py).
@@ -42,8 +42,8 @@ configuration.update({
     "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs  # Based on empirical means
     "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # --- Using multi-player Centralized policy, un-fair or fair
-    "players": CentralizedNotFair(NB_PLAYERS, nbArms).childs
-    "players": CentralizedFair(NB_PLAYERS, nbArms).childs
+    "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
+    "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # --- Using multi-player Oracle policy, un-fair or fair
     # Note: they need a perfect knowledge on the arms, even this is not physically plausible
     "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
@@ -53,7 +53,7 @@ configuration.update({
 })
 ```
 
-- The multi-players policies are added by giving a list of their children (`CentralizedFair(*args).childs`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedFair`), who can then handle the calls as it wants (can be centralized or not).
+- The multi-players policies are added by giving a list of their children (`CentralizedCycling(*args).childs`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedCycling`), who can then handle the calls as it wants (can be centralized or not).
 - *I know*, it's not perfectly clear yet and not simple to use. Just read the code. I will improve the documentation!
 
 ----
@@ -129,7 +129,7 @@ make lint lint3  # check the code with pylint
 - [`main_multiplayers.py`](./main_multiplayers.py) and [`configuration_multiplayers.py`](./configuration_multiplayers.py) to run and configure the simulation,
 - the [`EvaluatorMultiPlayers`](./Environment/EvaluatorMultiPlayers.py) class that performs the simulation,
 - the [`ResultMultiPlayers`](./Environment/ResultMultiPlayers.py) class to store the results,
-- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedNotFair`](PoliciesMultiPlayers/CentralizedNotFair.py), [`CentralizedFair`](PoliciesMultiPlayers/CentralizedFair.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) multi-players policy.
+- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](PoliciesMultiPlayers/Selfish.py), [`CentralizedFixed`](PoliciesMultiPlayers/CentralizedFixed.py), [`CentralizedCycling`](PoliciesMultiPlayers/CentralizedCycling.py), [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](PoliciesMultiPlayers/OracleFair.py) multi-players policy.
 
 ### UML diagrams
 For more details, see [these UML diagrams](uml_diagrams/):
