@@ -34,6 +34,13 @@ def tnext_log(t, scaling=1.):
     return scaling * np.log(t)
 
 
+def make_tnext_log_scaling(scaling=0.5):
+    """ Returns the function t --> scaling * log(t). """
+    def tnext(t):
+        return scaling * np.log(t)
+    return tnext
+
+
 # --- Class oneALOHA, for children
 
 class oneALOHA(ChildPointer):
@@ -53,23 +60,30 @@ class oneALOHA(ChildPointer):
         self.p = p0   # Can be modified
         assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
         self.alpha_p0 = alpha_p0
-        if beta is not None:
-            self.ftnext = make_tnext_beta(beta)
+        self._ftnext = ftnext  # Can be a callable or None
+        if ftnext is None:
+            self._ftnext_name = 't --> t ** {}'.format(beta)
         else:
-            self.ftnext = ftnext
+            self._ftnext_name = self._ftnext.__name__
         # Internal memory
         self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
         self.t = -1
         self.chosenArm = None
 
     def __str__(self):
-        return "#{}<ALOHA, {}, p0: {}, alpha_p0: {}, ftnext: {}>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self.ftnext.__name__)
+        return "#{}<ALOHA, {}, p0: {}, alpha_p0: {}, ftnext: {}>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
 
     def startGame(self):
         super(oneALOHA, self).startGame()  # XXX Call ChildPointer method
         self.p = self.p0
         self.tnext.fill(1)
         self.chosenArm = None
+
+    def ftnext(self, t):
+        if self.beta is not None:
+            return t ** self.beta
+        else:
+            return self._ftnext(t)
 
     def getReward(self, arm, reward):
         """ Receive a reward on arm of index 'arm', as described by the ALOHA protocol.
@@ -88,10 +102,10 @@ class oneALOHA(ChildPointer):
         """
         print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
-        if rn.random() < self.p:
-            self.chosenArm = self.chosenArm  # XXX remove after
+        # if rn.random() < self.p:
+        #     self.chosenArm = self.chosenArm
         # 2. With proba 1 - p, give up
-        else:
+        if rn.random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
@@ -104,6 +118,7 @@ class oneALOHA(ChildPointer):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
         """
         self.t += 1
+        print("\n\n- Call of oneALOHA.choice() ...")  # DEBUG
         if self.chosenArm is not None:  # We can still exploit that arm
             return self.chosenArm
         else:  # We have to chose a new arm
@@ -134,7 +149,7 @@ class ALOHA(BaseMPPolicy):
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
         - alpha_p0: scaling in the update for p[t+1] <- alpha_p0 p[t] + (1 - alpha_p0)
         - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(t) instead
-        - (optional) beta: if present, overwrites ftnext which will be t --> t^beta.
+        - (optional) beta: if present, overwrites ftnext, which will be t --> t^beta.
 
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
 
