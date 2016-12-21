@@ -23,7 +23,7 @@ class EpsilonGreedy(BasePolicy):
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."
         self._epsilon = epsilon
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):  # Allow child classes to use time-dependent epsilon coef
         return self._epsilon

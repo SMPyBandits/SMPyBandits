@@ -21,7 +21,7 @@ class klUCBHPlus(klUCB):
         super(klUCBHPlus, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, lower=lower, amplitude=amplitude)
         self._horizon = horizon
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def horizon(self):
         """ If the 'horizon' parameter was not provided, acts like the klUCBPlus policy. """

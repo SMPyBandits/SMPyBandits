@@ -28,7 +28,7 @@ class EpsilonDecreasing(EpsilonGreedy):
     def __str__(self):
         return "EpsilonDecreasing(e:{})".format(self._epsilon)
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
         return min(1, self._epsilon / max(1, self.t))

@@ -6,8 +6,6 @@ Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-import numpy as np
-
 from .EpsilonGreedy import EpsilonGreedy
 
 EPSILON = 0.01
@@ -28,7 +26,7 @@ class EpsilonFirst(EpsilonGreedy):
     def __str__(self):
         return "EpsilonFirst(e:{}, h:{})".format(self._epsilon, self.horizon)
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
         if self.t <= self._epsilon * self.horizon:
