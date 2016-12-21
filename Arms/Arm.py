@@ -1,24 +1,38 @@
 # -*- coding: utf-8 -*-
-""" Basis class for an arm."""
+""" Base class for an arm class."""
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 
 class Arm(object):
-    """ Basis class for an arm."""
+    """ Base class for an arm class."""
 
     def __init__(self):
         pass
+
+    # --- Printing
 
     def __str__(self):
         return self.__class__.__name__
 
     def __repr__(self):
-        return self.__class__.__name__ + "(" + repr(self.__dir__) + ")"
+        return "{}({})".format(self.__class__.__name__, self.__dir__)
+
+    # --- Random samples
 
     def draw(self, t=None):
-        raise NotImplementedError("This method draw() has to be implemented in the child class.")
+        raise NotImplementedError("This method draw(t) has to be implemented in the child class.")
 
     def mean(self):
         raise NotImplementedError("This method mean() has to be implemented in the child class.")
+
+    # --- Lower bound
+
+    @staticmethod
+    def kl(x, y):
+        raise NotImplementedError("This method kl(x, y) has to be implemented in the child class.")
+
+    @staticmethod
+    def oneLR(mumax, mu):
+        raise NotImplementedError("This method oneLR(mumax, mu) has to be implemented in the child class.")
