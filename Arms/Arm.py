@@ -8,9 +8,6 @@ __version__ = "0.1"
 class Arm(object):
     """ Base class for an arm class."""
 
-    def __init__(self):
-        pass
-
     # --- Printing
 
     def __str__(self):

@@ -55,7 +55,7 @@ class EvaluatorMultiPlayers(object):
         self.__initEnvironments__()
         # Internal vectorial memory
         self.rewards = dict()
-        self.rewardsSquared = dict()
+        # self.rewardsSquared = dict()
         self.pulls = dict()
         self.allPulls = dict()
         self.collisions = dict()
@@ -65,7 +65,7 @@ class EvaluatorMultiPlayers(object):
         print("Number of environments to try:", len(self.envs))
         for envId in range(len(self.envs)):  # Zeros everywhere
             self.rewards[envId] = np.zeros((self.nbPlayers, self.horizon))
-            self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
+            # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
             self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon))
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
@@ -117,9 +117,10 @@ class EvaluatorMultiPlayers(object):
         bestarm = np.max(means)
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
         # Get and merge the results from all the 'repetitions'
+        # FIXME having this list of results consumes too much RAM !
         for r in results:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
-            self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
+            # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
             self.pulls[envId] += r.pulls
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions

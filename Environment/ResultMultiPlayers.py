@@ -13,7 +13,7 @@ class ResultMultiPlayers(object):
     def __init__(self, nbArms, horizon, nbPlayers):
         self.choices = np.zeros((nbPlayers, horizon), dtype=int)
         self.rewards = np.zeros((nbPlayers, horizon))         # To compute the mean
-        self.rewardsSquared = np.zeros((nbPlayers, horizon))  # To compute the variance
+        # self.rewardsSquared = np.zeros((nbPlayers, horizon))  # To compute the variance
         self.pulls = np.zeros((nbPlayers, nbArms), dtype=int)
         self.allPulls = np.zeros((nbPlayers, nbArms, horizon), dtype=int)
         self.collisions = np.zeros((nbArms, horizon), dtype=int)
@@ -21,7 +21,7 @@ class ResultMultiPlayers(object):
     def store(self, time, choices, rewards, pulls, collisions):
         self.choices[:, time] = choices
         self.rewards[:, time] = rewards
-        self.rewardsSquared[:, time] = rewards ** 2
+        # self.rewardsSquared[:, time] = rewards ** 2
         self.pulls += pulls
         self.allPulls[:, :, time] = pulls
         self.collisions[:, time] = collisions
