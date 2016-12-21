@@ -101,7 +101,7 @@ class SoftmaxDecreasing(Softmax):
         return np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
 
 
-class SoftMix(SoftmaxDecreasing):
+class SoftMix(Softmax):
     """ Another Softmax with decreasing temperature eta_t."""
 
     def __str__(self):

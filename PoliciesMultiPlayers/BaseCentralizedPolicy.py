@@ -4,8 +4,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.3"
 
-import numpy as np
-
 
 class BaseCentralizedPolicy(object):
     """ Base class for any centralized policy, for the multi-players setting."""
