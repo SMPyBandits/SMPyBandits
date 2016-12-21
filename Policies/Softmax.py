@@ -2,7 +2,7 @@
 """ The Boltzmann Exploration (Softmax) index policy.
 Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
 
-Very similar to Exp3 but in the bandit setting and not the full information setting.
+Very similar to Exp3 but uses a Boltzmann distribution.
 Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
 """
 
@@ -22,7 +22,7 @@ class Softmax(BasePolicy):
     """The Boltzmann Exploration (Softmax) index policy.
     Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
 
-    Very similar to Exp3 but in the bandit setting and not the full information setting.
+    Very similar to Exp3 but uses a Boltzmann distribution.
     Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
     """
 
@@ -40,19 +40,22 @@ class Softmax(BasePolicy):
     def __str__(self):
         return "Softmax(temp: {})".format(self.temperature)
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def temperature(self):
         return self._temperature
 
     @property
     def trusts(self, p_t=None):
-        rewards = (self.rewards - self.lower) / self.amplitude
-        if self.unbiased:
+        # rewards = (self.rewards - self.lower) / self.amplitude  # XXX we don't need this, the BasePolicy.getReward does it already
+        rewards = self.rewards
+        if self.unbiased and p_t is not None:
             # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
             rewards = rewards / p_t
-        trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))
+        trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         return trusts / np.sum(trusts)
+
+    # --- Choice methods
 
     def choice(self):
         # Force to first visit each arm once in the first steps
@@ -88,7 +91,7 @@ class SoftmaxDecreasing(Softmax):
     def __str__(self):
         return "Softmax(decreasing)"
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def temperature(self):
         """ Decreasing temperature with the time: sqrt(log(K) / (t * K)).
@@ -104,7 +107,7 @@ class SoftMix(SoftmaxDecreasing):
     def __str__(self):
         return "SoftMix"
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def temperature(self, c=None):
         """ Decreasing temperature with the time: c * log(t) / t.
@@ -128,7 +131,7 @@ class SoftmaxWithHorizon(Softmax):
     def __str__(self):
         return "Softmax(horizon: {})".format(self.horizon)
 
-    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def temperature(self):
         """ Fixed temperature, small, knowing the horizon: sqrt(2 * log(K) / (horizon * K)).
