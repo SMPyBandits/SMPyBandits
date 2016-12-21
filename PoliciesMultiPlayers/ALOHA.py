@@ -102,7 +102,7 @@ class oneALOHA(ChildPointer):
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         - Note: we do not care on which arm the collision occured.
         """
-        print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
+        # print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
         # if rn.random() < self.p:
         #     self.chosenArm = self.chosenArm
@@ -124,13 +124,13 @@ class oneALOHA(ChildPointer):
             return self.chosenArm
         else:  # We have to chose a new arm
             # Identify available arms
-            print("self.tnext = ", self.tnext)  # DEBUG
-            print("self.t = ", self.t)  # DEBUG
+            # print("self.tnext = ", self.tnext)  # DEBUG
+            # print("self.t = ", self.t)  # DEBUG
             availableArms = np.nonzero(self.tnext <= self.t)[0]
-            print("availableArms = ", availableArms)  # DEBUG
+            # print("availableArms = ", availableArms)  # DEBUG
             # XXX Call ChildPointer method
             result = super(oneALOHA, self).choiceFromSubSet(availableArms)
-            print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
+            # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
             self.chosenArm = result
             return result
 
