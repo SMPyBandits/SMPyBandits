@@ -173,7 +173,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).childs
+    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
