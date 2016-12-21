@@ -236,7 +236,32 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
 
 
 def klucbBern(x, d, precision=1e-6):
-    """ KL-UCB index computation for Bernoulli distributions, using :fun:`klucb`."""
+    """ KL-UCB index computation for Bernoulli distributions, using :fun:`klucb`.
+
+    - Influence of x:
+    >>> klucbBern(0.1, 0.2)
+    0.37839145109809247
+    >>> klucbBern(0.5, 0.2)
+    0.7870888710021973
+    >>> klucbBern(0.9, 0.2)
+    0.9944896697998048
+
+    - Influence of d:
+    >>> klucbBern(0.1, 0.4)
+    0.5194755673450786
+    >>> klucbBern(0.1, 0.9)
+    0.734714937210083
+
+    >>> klucbBern(0.5, 0.4)
+    0.8710360527038574
+    >>> klucbBern(0.5, 0.9)
+    0.9568095207214355
+
+    >>> klucbBern(0.9, 0.4)
+    0.9992855072021485
+    >>> klucbBern(0.9, 0.9)
+    0.9999950408935546
+    """
     upperbound = min(1., klucbGauss(x, d))
     # upperbound = min(1., klucbPoisson(x,d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
@@ -247,24 +272,98 @@ def klucbGauss(x, d, sig2=1., precision=0.):
 
     - Note that it does not require any search.
     - Warning: it works only if the good variance constant is given.
+
+    - Influence of x:
+    >>> klucbGauss(0.1, 0.2)
+    0.7324555320336759
+    >>> klucbGauss(0.5, 0.2)
+    1.132455532033676
+    >>> klucbGauss(0.9, 0.2)
+    1.532455532033676
+
+    - Influence of d:
+    >>> klucbGauss(0.1, 0.4)
+    0.9944271909999158
+    >>> klucbGauss(0.1, 0.9)
+    1.441640786499874
+
+    >>> klucbGauss(0.5, 0.4)
+    1.3944271909999157
+    >>> klucbGauss(0.5, 0.9)
+    1.8416407864998738
+
+    >>> klucbGauss(0.9, 0.4)
+    1.7944271909999159
+    >>> klucbGauss(0.9, 0.9)
+    2.241640786499874
     """
     return x + sqrt(2 * sig2 * d)
 
 
 def klucbPoisson(x, d, precision=1e-6):
-    """ KL-UCB index computation for Poisson distributions, using :fun:`klucb`."""
+    """ KL-UCB index computation for Poisson distributions, using :fun:`klucb`.
+
+    - Influence of x:
+    >>> klucbPoisson(0.1, 0.2)
+    0.45052392780119604
+    >>> klucbPoisson(0.5, 0.2)
+    1.0893765430263218
+    >>> klucbPoisson(0.9, 0.2)
+    1.6401128559741487
+
+    - Influence of d:
+    >>> klucbPoisson(0.1, 0.4)
+    0.6936844019642616
+    >>> klucbPoisson(0.1, 0.9)
+    1.2527967047658155
+
+    >>> klucbPoisson(0.5, 0.4)
+    1.4229339603816749
+    >>> klucbPoisson(0.5, 0.9)
+    2.122985165630671
+
+    >>> klucbPoisson(0.9, 0.4)
+    2.033691887156203
+    >>> klucbPoisson(0.9, 0.9)
+    2.8315738094979777
+    """
     upperbound = x + d + sqrt(d * d + 2 * x * d)  # looks safe, to check: left (Gaussian) tail of Poisson dev
     return klucb(x, d, klPoisson, upperbound, precision)
 
 
 def klucbExp(x, d, precision=1e-6):
-    """ KL-UCB index computation for exponential distributions, using :fun:`klucb`."""
-    if d < 0.77:
+    """ KL-UCB index computation for exponential distributions, using :fun:`klucb`.
+
+    - Influence of x:
+    >>> klucbExp(0.1, 0.2)
+    0.20274118449172676
+    >>> klucbExp(0.5, 0.2)
+    1.013706285168157
+    >>> klucbExp(0.9, 0.2)
+    1.8246716397412546
+
+    - Influence of d:
+    >>> klucbExp(0.1, 0.4)
+    0.2857928251730546
+    >>> klucbExp(0.1, 0.9)
+    0.5590884945251575
+
+    >>> klucbExp(0.5, 0.4)
+    1.428962647183463
+    >>> klucbExp(0.5, 0.9)
+    2.7954420946912126
+
+    >>> klucbExp(0.9, 0.4)
+    2.572132498767508
+    >>> klucbExp(0.9, 0.9)
+    5.031795430303065
+    """
+    if d < 0.77:  # XXX where does this value come from?
         upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
         # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
     else:
         upperbound = x * exp(d + 1)
-    if d > 1.61:
+    if d > 1.61:  # XXX where does this value come from?
         lowerbound = x * exp(d)
     else:
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
