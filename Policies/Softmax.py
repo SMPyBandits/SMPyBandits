@@ -33,11 +33,9 @@ class Softmax(BasePolicy):
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
         self._temperature = temperature
         self.unbiased = unbiased
-        # self.trusts = np.ones(nbArms) / nbArms
 
     def startGame(self):
         super(Softmax, self).startGame()
-        # self.trusts.fill(1. / self.nbArms)
 
     def __str__(self):
         return "Softmax(temp: {})".format(self.temperature)
@@ -53,11 +51,8 @@ class Softmax(BasePolicy):
         if self.unbiased:
             # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
             rewards = rewards / p_t
-        # trusts = np.exp(rewards / (self.temperature * self.pulls))
         trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))
-        # self.trusts = trusts / np.sum(trusts)
         return trusts / np.sum(trusts)
-        # return self.trusts
 
     def choice(self):
         # Force to first visit each arm once in the first steps
@@ -85,10 +80,10 @@ class Softmax(BasePolicy):
             return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
 
-# --- Two special cases
+# --- Special cases
 
 class SoftmaxDecreasing(Softmax):
-    """ Softmax / Exp3 with decreasing temperature eta_t."""
+    """ Softmax with decreasing temperature eta_t."""
 
     def __str__(self):
         return "Softmax(decreasing)"
@@ -103,8 +98,27 @@ class SoftmaxDecreasing(Softmax):
         return np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
 
 
+class SoftMix(SoftmaxDecreasing):
+    """ Another Softmax with decreasing temperature eta_t."""
+
+    def __str__(self):
+        return "SoftMix"
+
+    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def temperature(self, c=None):
+        """ Decreasing temperature with the time: c * log(t) / t.
+
+        - Cf. [Cesa-Bianchi & Fisher, 1998].
+        - Default value for c = sqrt(log(K) / K).
+        """
+        if c is None:
+            c = np.sqrt(np.log(self.nbArms) / self.nbArms)
+        return c * np.log(self.t) / self.t
+
+
 class SoftmaxWithHorizon(Softmax):
-    """ Softmax / Exp3 with fixed temperature eta chosen with a knowledge of the horizon."""
+    """ Softmax with fixed temperature eta chosen with a knowledge of the horizon."""
 
     def __init__(self, nbArms, horizon, lower=0., amplitude=1.):
         super(SoftmaxWithHorizon, self).__init__(nbArms, lower=lower, amplitude=amplitude)

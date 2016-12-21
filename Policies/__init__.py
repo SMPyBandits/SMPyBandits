@@ -29,7 +29,8 @@ from .EpsilonDecreasingMEGA import EpsilonDecreasingMEGA
 from .EpsilonExpDecreasing import EpsilonExpDecreasing
 
 # --- Mine, Exp3-like policies
-from .Softmax import Softmax, SoftmaxDecreasing, SoftmaxWithHorizon
+from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
+from .Exp3 import Exp3
 
 # --- From pymaBandits v1.0
 from .UCB import UCB
