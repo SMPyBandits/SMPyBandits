@@ -7,6 +7,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from math import log
+
 from .kullback import klucbBern
 from .klUCB import klUCB
 
@@ -18,15 +19,17 @@ class klUCBHPlus(klUCB):
 
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, lower=0., amplitude=1.):
         super(klUCBHPlus, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, lower=lower, amplitude=amplitude)
-        self.horizon = horizon
+        self._horizon = horizon
 
-    def getHorizon(self):
-        """ If the 'horizon' parameter was not provided, act like the klUCBPlus policy. """
-        return self.t if self.horizon is None else self.horizon
+    # This decorator @property makes this method an attributes, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def horizon(self):
+        """ If the 'horizon' parameter was not provided, acts like the klUCBPlus policy. """
+        return self.t if self._horizon is None else self._horizon
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
-            # Could adapt tolerance to the value of self.t
-            return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.getHorizon() / self.pulls[arm]) / self.pulls[arm], self.tolerance)
+            # XXX We could adapt tolerance to the value of self.t
+            return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.horizon / self.pulls[arm]) / self.pulls[arm], self.tolerance)
