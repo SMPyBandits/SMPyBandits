@@ -23,7 +23,17 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-from functools import lru_cache
+try:
+    from functools import lru_cache  # Only for Python 3.2+
+except ImportError:
+    # from functools import wraps  # XXX could it help?
+    print("ImportError: functools.lru_cache is not available, using a fake implementation.")
+    def lru_cache(maxsize=128, typed=False):
+        """ Fake implementation of functools.lru_cache, not available in Python 2."""
+        def lru_cache_internal(f):
+            return f
+        return lru_cache_internal
+
 import numpy as np
 
 
