@@ -30,10 +30,13 @@ class oneRhoRand(ChildPointer):
     def __init__(self, nbPlayers, *args, **kwargs):
         super(oneRhoRand, self).__init__(*args, **kwargs)
         self.nbPlayers = nbPlayers
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        self.rank = None
 
     def __str__(self):   # Better to recompute it automatically
-        return '#{}<rhoRand, {}, rank:{}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.rank)
+        if self.rank is not None:
+            return '#{}<rhoRand, {}, rank:{}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.rank)
+        else:
+            return '#{}<rhoRand, {}>'.format(self.playerId + 1, self.mother._players[self.playerId])
 
     def startGame(self):
         super(oneRhoRand, self).startGame()
@@ -76,10 +79,9 @@ class rhoRand(BaseMPPolicy):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.childs[playerId] = oneRhoRand(nbPlayers, self, playerId)
         self.nbArms = nbArms
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "rhoRand({})".format(self.params)
+        return "rhoRand({} x {})".format(self.nbPlayers, str(self._players[0]))
 
     # --- Proxy methods
 

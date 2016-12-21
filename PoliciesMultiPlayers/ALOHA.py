@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-""" ALOHA: generalized implementation of the single-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
+""" ALOHA: generalized implementation of the single-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421), for a generic single-player policy.
 
-This policy uses the collision avoidance mechanism that is inspired by the classical ALOHA protocol, and any single player policy.
+This policy uses the collision avoidance mechanism that is inspired by the classical ALOHA protocol, and any single-player policy.
 """
 from __future__ import print_function
 
@@ -15,7 +15,7 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
-# --- Functions to define tnext intervals
+# --- Functions to define [t, t + tnext] intervals
 
 def tnext_beta(t, beta=0.5):
     """ Simple function, as used in MEGA: upper_tnext(t) = t ** beta. Default to t ** 0.5. """
@@ -64,7 +64,7 @@ class oneALOHA(ChildPointer):
         self.beta = beta
         self._ftnext = ftnext  # Can be a callable or None
         if ftnext is None:
-            self._ftnext_name = 't --> t ** {}'.format(beta)
+            self._ftnext_name = "t --> t ** {}".format(beta)
         else:
             self._ftnext_name = self._ftnext.__name__
         # Internal memory
@@ -103,42 +103,34 @@ class oneALOHA(ChildPointer):
         - Note: we do not care on which arm the collision occured.
         """
         # print("- A ALOHA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
-        # 1. With proba p, persist
-        # if rn.random() < self.p:
-        #     self.chosenArm = self.chosenArm
+        # 1. With proba p, persist: nothing to do
         # 2. With proba 1 - p, give up
         if rn.random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
-            # Reinitialize the proba p
-            self.p = self.p0
-            # We give up this arm
-            self.chosenArm = None
+            self.p = self.p0  # Reinitialize the proba p
+            self.chosenArm = None  # We give up this arm
 
     def choice(self):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
         """
         self.t += 1
-        if self.chosenArm is not None:  # We can still exploit that arm
-            return self.chosenArm
-        else:  # We have to chose a new arm
+        # if self.chosenArm is not None:  We can still exploit that arm
+        if self.chosenArm is None:
+            # We have to chose a new arm
             # Identify available arms
-            # print("self.tnext = ", self.tnext)  # DEBUG
-            # print("self.t = ", self.t)  # DEBUG
             availableArms = np.nonzero(self.tnext <= self.t)[0]
-            # print("availableArms = ", availableArms)  # DEBUG
-            # XXX Call ChildPointer method
-            result = super(oneALOHA, self).choiceFromSubSet(availableArms)
+            result = super(oneALOHA, self).choiceFromSubSet(availableArms)  # XXX Call ChildPointer method
             # print(" - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {} ...".format(self, availableArms, result))  # DEBUG
             self.chosenArm = result
-            return result
+        return self.chosenArm
 
 
 # --- Class ALOHA
 
 class ALOHA(BaseMPPolicy):
-    """ ALOHA: implementation of the multi-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
+    """ ALOHA: implementation of the multi-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421), for a generic single-player policy.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order

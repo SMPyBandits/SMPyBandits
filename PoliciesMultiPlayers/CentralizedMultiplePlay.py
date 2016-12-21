@@ -9,6 +9,8 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
+# --- Class for a child player
+
 class CentralizedChildPointer(ChildPointer):
     """ Centralized version of the ChildPointer class."""
     def __init__(self, mother, playerId):
@@ -20,6 +22,8 @@ class CentralizedChildPointer(ChildPointer):
     def __repr__(self):  # Better to recompute it automatically
         return "CentralizedMultiplePlay: {}".format(self.mother.player)
 
+
+# --- Class for the mother
 
 class CentralizedMultiplePlay(BaseMPPolicy):
     """ CentralizedMultiplePlay: a multi-player policy where ONE policy is used by a centralized agent; asking the policy to select nbPlayers arms at each step.
@@ -41,29 +45,27 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedMultiplePlay class has to be > 0."
         self.nbPlayers = nbPlayers
-        # Only one policy
-        self.player = playerAlgo(nbArms, *args, **kwargs)
-        # But nbPlayers children
-        self.childs = [None] * nbPlayers
+        self.player = playerAlgo(nbArms, *args, **kwargs)  # Only one policy
+        self.childs = [None] * nbPlayers  # But nbPlayers children
         for playerId in range(nbPlayers):
             self.childs[playerId] = CentralizedChildPointer(self, playerId)
         self.nbArms = nbArms
-        self.params = '{} x {}'.format(nbPlayers, str(self.player))
 
     def __str__(self):
-        return "CentralizedMultiplePlay({})".format(self.params)
+        return "CentralizedMultiplePlay({} x {})".format(self.nbPlayers, str(self.player))
 
     # --- Proxy methods
 
     def _startGame_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
             self.player.startGame()
-        # For the other players, nothing to do
+        # For the other players, nothing to do? Yes
 
     def _getReward_one(self, playerId, arm, reward):
         self.player.getReward(arm, reward)
         if playerId != 0:  # We have to be sure that the internal player.t is not messed up
-            self.player.t -= 1
+            if hasattr(self.player, 't'):
+                self.player.t -= 1
 
     def _choice_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
