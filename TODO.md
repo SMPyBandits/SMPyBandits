@@ -20,8 +20,8 @@
 
 ## More single-player MAB algorithms
 - [x] I implemented two variants of the [`KL-UCB`](Policies/klUCB.py) policy: [`KL-UCB-Plus`](Policies/klUCBPlus.py) from [[Cappé et al., 2013]](https://arxiv.org/pdf/1210.1136.pdf), and [`KL-UCB-H-Plus`](Policies/klUCBHPlus.py) from [[Lai, 1987]](https://projecteuclid.org/download/pdf_1/euclid.aos/1176350495).
-- [x] I implemented all the algorithms from [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf).
-- [ ] implement some more algorithms, e.g., from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py) (`EXP3`), or [this survey [Bubeck & Cesa-Bianchi, 2012]](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf).
+- [x] I implemented all the algorithms from [this document](http://www.cs.mcgill.ca/~vkules/bandits.pdf), and from [this repository](https://github.com/johnmyleswhite/BanditsBook/blob/master/python/algorithms/exp3/exp3.py) ([`Exp3`](Policies/Exp3.py)).
+- [ ] implement some more algorithms, from [this survey [Bubeck & Cesa-Bianchi, 2012]](http://homes.di.unimi.it/~cesabian/Pubblicazioni/banditSurvey.pdf).
 
 -----
 

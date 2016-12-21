@@ -29,7 +29,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -37,7 +37,7 @@ HORIZON = 20000
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-# REPETITIONS = 1000
+REPETITIONS = 100
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -58,8 +58,8 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 12   # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -115,14 +115,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
         # }
-        # {   # An easy problem (19 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": [t / 20.0 for t in range(1, 20)]
-        # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        {   # An easy problem (19 arms)
             "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+            "params": [t / 20.0 for t in range(1, 20)]
         }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -173,7 +173,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -199,7 +199,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.5, alpha_p0=0.5).childs  # TODO try this one!
+    "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
