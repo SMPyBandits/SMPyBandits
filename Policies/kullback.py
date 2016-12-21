@@ -2,99 +2,263 @@
 """ Kullback-Leibler utilities.
 Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
 """
+from __future__ import division, print_function
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.26 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.3"
 
 from math import log, sqrt, exp
 import numpy as np
 
-# warning: np.dot is miserably slow!
+# Warning: np.dot is miserably slow!
 
-eps = 1e-15
+eps = 1e-15  # Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+
+
+# --- Simple Kullback-Leibler divergence for known distributions
 
 
 def klBern(x, y):
-    """ Kullback-Leibler divergence for Bernoulli distributions."""
+    """ Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution
+
+    >>> klBern(0.5, 0.5)
+    0.0
+    >>> klBern(0.1, 0.9)
+    1.7577796618689758
+    >>> klBern(0.9, 0.1)  # And this KL is symetric
+    1.7577796618689758
+    >>> klBern(0.4, 0.5)
+    0.020135513550688863
+    >>> klBern(0.01, 0.99)
+    4.503217453131898
+
+    - Special values:
+    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
+    34.53957599234081
+    """
     x = min(max(x, eps), 1 - eps)
     y = min(max(y, eps), 1 - eps)
     return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))
 
 
 def klPoisson(x, y):
-    """ Kullback-Leibler divergence for Poison distributions."""
+    """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution
+
+    >>> klPoisson(3, 3)
+    0.0
+    >>> klPoisson(2, 1)
+    0.3862943611198906
+    >>> klPoisson(1, 2)  # And this KL is non-symetric
+    0.3068528194400547
+    >>> klPoisson(3, 6)
+    0.9205584583201643
+    >>> klPoisson(6, 8)
+    0.2739075652893146
+
+    - Special values:
+    >>> klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
+    33.538776394910684
+    >>> klPoisson(0, 0)
+    0.0
+    """
     x = max(x, eps)
     y = max(y, eps)
     return y - x + x * log(x / y)
 
 
 def klExp(x, y):
-    """ Kullback-Leibler divergence for exponential distributions."""
-    x = max(x, eps)
-    y = max(y, eps)
+    """ Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution
+
+    >>> klExp(3, 3)
+    0.0
+    >>> klExp(3, 6)
+    0.1931471805599453
+    >>> klExp(1, 2)  # Only the proportion between x and y is used
+    0.1931471805599453
+    >>> klExp(2, 1)  # And this KL is non-symetric
+    0.3068528194400547
+    >>> klExp(4, 2)  # Only the proportion between x and y is used
+    0.3068528194400547
+    >>> klExp(6, 8)
+    0.0376820724517809
+
+    - x, y have to be positive:
+    >>> klExp(-3, 2)
+    inf
+    >>> klExp(3, -2)
+    inf
+    >>> klExp(-3, -2)
+    inf
+    """
     if x <= 0 or y <= 0:
         return float('+inf')
     else:
+        x = max(x, eps)
+        y = max(y, eps)
         return x / y - 1 - log(x / y)
 
 
 def klGamma(x, y, a=1):
-    """ Kullback-Leibler divergence for gamma distributions."""
-    x = max(x, eps)
-    y = max(y, eps)
-    return a * (x / y - 1 - log(x / y))
+    """ Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution
+
+    >>> klGamma(3, 3)
+    0.0
+    >>> klGamma(3, 6)
+    0.1931471805599453
+    >>> klGamma(1, 2)  # Only the proportion between x and y is used
+    0.1931471805599453
+    >>> klGamma(2, 1)  # And this KL is non-symetric
+    0.3068528194400547
+    >>> klGamma(4, 2)  # Only the proportion between x and y is used
+    0.3068528194400547
+    >>> klGamma(6, 8)
+    0.0376820724517809
+
+    - x, y have to be positive:
+    >>> klGamma(-3, 2)
+    inf
+    >>> klGamma(3, -2)
+    inf
+    >>> klGamma(-3, -2)
+    inf
+    """
+    if x <= 0 or y <= 0:
+        return float('+inf')
+    else:
+        x = max(x, eps)
+        y = max(y, eps)
+        return a * (x / y - 1 - log(x / y))
 
 
 def klNegBin(x, y, r=1):
-    """ Kullback-Leibler divergence for negative binomial distributions."""
+    """ Kullback-Leibler divergence for negative binomial distributions. https://en.wikipedia.org/wiki/Gamma_distribution
+
+    >>> klNegBin(0.5, 0.5)
+    0.0
+    >>> klNegBin(0.1, 0.9)
+    -0.7116117934648849
+    >>> klNegBin(0.9, 0.1)  # And this KL is non-symetric
+    2.0321564902394043
+    >>> klNegBin(0.4, 0.5)
+    -0.13065314341785483
+    >>> klNegBin(0.01, 0.99)
+    -0.7173536633057466
+
+    - Special values:
+    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
+    34.53957599234081
+
+    - With other values for `r`:
+    >>> klNegBin(0.5, 0.5, r=2)
+    0.0
+    >>> klNegBin(0.1, 0.9, r=2)
+    -0.8329919030334189
+    >>> klNegBin(0.1, 0.9, r=4)
+    -0.9148905602182661
+    >>> klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric
+    2.332552851091954
+    >>> klNegBin(0.4, 0.5, r=2)
+    -0.15457261175809217
+    >>> klNegBin(0.01, 0.99, r=2)
+    -0.8362571425112515
+    """
+    x = max(x, eps)
+    y = max(y, eps)
     return r * log((r + x) / (r + y)) - x * log(y * (r + x) / (x * (r + y)))
 
 
 def klGauss(x, y, sig2=0.25):
-    """ Kullback-Leibler divergence for Gaussian distributions."""
-    return (x - y) * (x - y) / (2 * sig2)
+    """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution
+
+    >>> klGauss(3, 3)
+    0.0
+    >>> klGauss(3, 6)
+    18.0
+    >>> klGauss(1, 2)
+    2.0
+    >>> klGauss(2, 1)  # And this KL is symetric
+    2.0
+    >>> klGauss(4, 2)
+    8.0
+    >>> klGauss(6, 8)
+    8.0
+
+    - x, y can be negative:
+    >>> klGauss(-3, 2)
+    50.0
+    >>> klGauss(3, -2)
+    50.0
+    >>> klGauss(-3, -2)
+    2.0
+    >>> klGauss(3, 2)
+    2.0
+
+    - With other values for `r`:
+
+    >>> klGauss(3, 3, sig2=10)
+    0.0
+    >>> klGauss(3, 6, sig2=10)
+    0.45
+    >>> klGauss(1, 2, sig2=10)
+    0.05
+    >>> klGauss(2, 1, sig2=10)  # And this KL is symetric
+    0.05
+    >>> klGauss(4, 2, sig2=10)
+    0.2
+    >>> klGauss(6, 8, sig2=10)
+    0.2
+    """
+    return (x - y) ** 2 / (2 * sig2)
 
 
-def klucb(x, d, div, upperbound, lowerbound=float('-inf'), precision=1e-6):
-    """ The generic klUCB index computation.
+# --- KL functions, for the KL-UCB policy
 
-    Input args.: x, d, div, upperbound, lowerbound=float('-inf'), precision=1e-6,
-    where div is the KL divergence to be used.
+def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
+    """ The generic KL-UCB index computation.
+
+    - x: value of the cum reward,
+    - d: upper bound on the divergence,
+    - kl: the KL divergence to be used (klBern, klGauss, etc),
+    - upperbound, lowerbound=float('-inf'): the known bound of the values x,
+    - precision=1e-6: the threshold from where to stop the research,
+
+    - Note: it uses a bisection search.
     """
     value = max(x, lowerbound)
     u = upperbound
     while u - value > precision:
-        m = (value + u) / 2
-        if div(x, m) > d:
+        m = (value + u) / 2.
+        if kl(x, m) > d:
             u = m
         else:
             value = m
-    return (value + u) / 2
-
-
-def klucbGauss(x, d, sig2=1., precision=0.):
-    """ klUCB index computation for Gaussian distributions.
-
-    Note that it does not require any search.
-    """
-    return x + sqrt(2 * sig2 * d)
-
-
-def klucbPoisson(x, d, precision=1e-6):
-    """ klUCB index computation for Poisson distributions."""
-    upperbound = x + d + sqrt(d * d + 2 * x * d)  # looks safe, to check: left (Gaussian) tail of Poisson dev
-    return klucb(x, d, klPoisson, upperbound, precision)
+    return (value + u) / 2.
 
 
 def klucbBern(x, d, precision=1e-6):
-    """ klUCB index computation for Bernoulli distributions."""
+    """ KL-UCB index computation for Bernoulli distributions, using :fun:`klucb`."""
     upperbound = min(1., klucbGauss(x, d))
     # upperbound = min(1., klucbPoisson(x,d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
 
+def klucbGauss(x, d, sig2=1., precision=0.):
+    """ KL-UCB index computation for Gaussian distributions.
+
+    - Note that it does not require any search.
+    - Warning: it works only if the good variance constant is given.
+    """
+    return x + sqrt(2 * sig2 * d)
+
+
+def klucbPoisson(x, d, precision=1e-6):
+    """ KL-UCB index computation for Poisson distributions, using :fun:`klucb`."""
+    upperbound = x + d + sqrt(d * d + 2 * x * d)  # looks safe, to check: left (Gaussian) tail of Poisson dev
+    return klucb(x, d, klPoisson, upperbound, precision)
+
+
 def klucbExp(x, d, precision=1e-6):
-    """ klUCB index computation for exponential distributions."""
+    """ KL-UCB index computation for exponential distributions, using :fun:`klucb`."""
     if d < 0.77:
         upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
         # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
@@ -107,12 +271,13 @@ def klucbExp(x, d, precision=1e-6):
     return klucb(x, d, klGamma, upperbound, lowerbound, precision)
 
 
+# --- max EV functions
+
 def maxEV(p, V, klMax):
-    """ Maximize expectation of V wrt. q st. KL(p,q) < klMax.
+    """ Maximize expectation of V wrt. q st. KL(p, q) < klMax.
 
-    Input args.: p, V, klMax.
-
-    Reference: Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Input args.: p, V, klMax.
+    - Reference: Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
     """
     Uq = np.zeros(len(p))
     Kb = p > 0.
@@ -145,11 +310,11 @@ def maxEV(p, V, klMax):
 
 
 def reseqp(p, V, klMax):
-    """ Solve f(reseqp(p, V, klMax)) = klMax using Newton method.
+    """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
 
-    Note: This is a subroutine of maxEV.
-
-    Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Note: This is a subroutine of maxEV.
+    - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Warning: `np.dot` is very slow!
     """
     mV = max(V)
     value = mV + 0.1
@@ -158,47 +323,66 @@ def reseqp(p, V, klMax):
         return float('inf')
     u = np.dot(p, (1 / (value - V)))
     y = np.dot(p, np.log(value - V)) + log(u) - klMax
-    # print("value =", value, ", y = ", y)
+    # print("value =", value, ", y = ", y)  # DEBUG
     while abs(y) > tol:
         yp = u - np.dot(p, (1 / (value - V)**2)) / u  # derivative
         value = value - y / yp
-        # print("value = ", value)  # newton iteration
+        # print("value = ", value)  # DEBUG  # newton iteration
         if value < mV:
             value = (value + y / yp + mV) / 2  # unlikely, but not impossible
         u = np.dot(p, (1 / (value - V)))
-        y = np.dot(p, np.log(value - V)) + log(u) - klMax
-        # print("value = ", value, ", y = ", y)  # function
+        y = np.dot(p, np.log(value - V)) + np.log(u) - klMax
+        # print("value = ", value, ", y = ", y)  # DEBUG  # function
     return value
 
 
+# --- Debugging
+
 if __name__ == "__main__":
     """ Code for debugging purposes."""
-    # from matplotlib.pyplot import *
-    # t = linspace(0, 1)
-    # subplot(2, 1, 1)
-    # plot(t, kl(t, 0.6))
-    # subplot(2, 1, 2)
-    # d = linspace(0, 1, 100)
-    # plot(d, [klucb(0.3, dd) for dd in d])
-    # show()
-    print(klucbGauss(0.9, 0.2))
-    print(klucbBern(0.9, 0.2))
-    print(klucbPoisson(0.9, 0.2))
-    p = np.array([0.3, 0.5, 0.2])
-    p = np.array([0., 1.])
-    V = np.array([10, 3])
-    klMax = 0.1
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
 
+    # import matplotlib.pyplot as plt
+    # t = np.linspace(0, 1)
+    # plt.subplot(2, 1, 1)
+    # plt.plot(t, kl(t, 0.6))
+    # plt.subplot(2, 1, 2)
+    # d = np.linspace(0, 1, 100)
+    # plt.plot(d, [klucb(0.3, dd) for dd in d])
+    # plt.show()
+
+    print("\nklucbGauss(0.9, 0.2) =", klucbGauss(0.9, 0.2))
+    print("klucbBern(0.9, 0.2) =", klucbBern(0.9, 0.2))
+    print("klucbPoisson(0.9, 0.2) =", klucbPoisson(0.9, 0.2))
+
+    p = np.array([0., 1.])
+    print("\np =", p)
+    V = np.array([10, 3])
+    print("V =", V)
+    klMax = 0.1
+    print("klMax =", klMax)
+    print("eta = ", reseqp(p, V, klMax))
+    print("Uq = ", maxEV(p, V, klMax))
+
+    print("\np =", p)
     p = np.array([0.11794872, 0.27948718, 0.31538462, 0.14102564, 0.0974359, 0.03076923, 0.00769231, 0.01025641, 0.])
+    print("V =", V)
     V = np.array([0, 1, 2, 3, 4, 5, 6, 7, 10])
     klMax = 0.0168913409484
-
+    print("klMax =", klMax)
     print("eta = ", reseqp(p, V, klMax))
     print("Uq = ", maxEV(p, V, klMax))
 
     x = 2
+    print("\nx =", x)
     d = 2.51
-    print("klucb = ", klucbExp(x, d))
+    print("d =", d)
+    print("klucbExp(x, d) = ", klucbExp(x, d))
+
     ub = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
-    print("majoration = ", ub)
-    print("maj bete = ", x * exp(d + 1))
+    print("Upper bound = ", ub)
+    print("Stupid upperbound = ", x * exp(d + 1))
+
+    print("\nDone for tests of 'kullback.py' ...")
