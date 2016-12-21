@@ -559,12 +559,12 @@
 <text text-anchor="middle" x="2746.5" y="-1489.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="2639,-1482 2854,-1482 "/>
 <text text-anchor="start" x="2647" y="-1466.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="2647" y="-1451.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="2647" y="-1451.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="2647" y="-1436.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="2647" y="-1421.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2647" y="-1406.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2647" y="-1391.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2647" y="-1376.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
+<text text-anchor="start" x="2647" y="-1376.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
 <text text-anchor="start" x="2647" y="-1361.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2647" y="-1346.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2639,-1339 2854,-1339 "/>
@@ -807,7 +807,7 @@
 <polygon fill="none" stroke="black" points="3628,-1000 3628,-1114 3885,-1114 3885,-1000 3628,-1000"/>
 <text text-anchor="middle" x="3756.5" y="-1098.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="3628,-1091 3885,-1091 "/>
-<text text-anchor="start" x="3636" y="-1075.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="3636" y="-1075.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="3636" y="-1060.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="3628,-1053 3885,-1053 "/>
 <text text-anchor="start" x="3636" y="-1037.8" font-family="Times,serif" font-size="14.00">__init__()</text>
