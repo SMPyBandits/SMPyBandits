@@ -61,11 +61,6 @@ class IndexPolicy(BasePolicy):
             assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
-            # FIXME do we need to do to do this trick?
-            # try:
-            #     sortedUniqueRewards = np.sort(np.unique(self.index))  # XXX Should we do a np.unique here ??
-            #     chosenIndex = sortedUniqueRewards[-rank]
-            # except IndexError:
             sortedRewards = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms

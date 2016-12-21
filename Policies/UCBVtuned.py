@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB-Tuned policy for bounded bandits, with a tuned variance correction term.
+""" The UCBV-Tuned policy for bounded bandits, with a tuned variance correction term.
 Reference: [Auer et al. 02].
 """
 
@@ -11,8 +11,8 @@ from math import sqrt, log
 from .UCBV import UCBV
 
 
-class UCBtuned(UCBV):
-    """ The UCB-Tuned policy for bounded bandits, with a tuned variance correction term.
+class UCBVtuned(UCBV):
+    """ The UCBV-Tuned policy for bounded bandits, with a tuned variance correction term.
     Reference: [Auer et al. 02].
     """
 

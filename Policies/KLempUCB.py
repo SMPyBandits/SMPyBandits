@@ -6,7 +6,6 @@ Reference: [Maillard, Munos & Stoltz - COLT, 2011], [Cappé, Garivier,  Maillard
 __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.8 $"
 
-from math import log
 import numpy as np
 
 from .kullback import maxEV   # XXX Not detected as in the kullback.py file ?
@@ -35,7 +34,7 @@ class KLempUCB(IndexPolicy):
 
     def computeIndex(self, arm):
         if self.pulls[arm] > 0:
-            return self._KLucb(self.obs[arm], self.c * log(self.t) / self.pulls[arm])
+            return self._KLucb(self.obs[arm], self.c * np.log(self.t) / self.pulls[arm])
         else:
             return float('+infinity')
 

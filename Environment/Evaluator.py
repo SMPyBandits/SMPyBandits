@@ -259,8 +259,11 @@ def delayed_play(env, policy, horizon,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
-    random.seed(seed)
-    np.random.seed(seed)
+    try:
+        random.seed(seed)
+        np.random.seed(seed)
+    except SystemError:
+        print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)

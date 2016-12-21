@@ -36,9 +36,9 @@ from .UCB import UCB
 from .UCBalpha import UCBalpha  # Different indexes
 from .UCBopt import UCBopt      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
-from .UCBtuned import UCBtuned  # Different indexes
 from .UCBrandomInit import UCBrandomInit      # Different indexes
 from .UCBV import UCBV          # Different indexes
+from .UCBVtuned import UCBVtuned  # Different indexes
 
 from .MOSS import MOSS
 

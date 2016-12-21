@@ -454,8 +454,11 @@ class EvaluatorMultiPlayers(object):
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, players, horizon, collisionModel, seed=None):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
-    random.seed(seed)
-    np.random.seed(seed)
+    try:
+        np.random.seed(seed)
+        random.seed(seed)
+    except SystemError:
+        print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     nbArms = env.nbArms

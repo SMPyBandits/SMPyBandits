@@ -127,6 +127,7 @@ configuration = {
         # },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
+    # FIXME if using Exponential arms, gives klExp to KL-UCB-like policies!
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
@@ -134,7 +135,8 @@ configuration = {
     #     },
     # ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # "environment": [  # Exponential arms
+    # FIXME if using Gaussian arms, gives klGauss to KL-UCB-like policies!
+    # "environment": [  # Gaussian arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
     #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
