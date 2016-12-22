@@ -74,14 +74,15 @@ class IndexPolicy(BasePolicy):
         # elif len(availableArms) == self.nbArms:
         #     return self.choice()
         elif len(availableArms) == 0:
-            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
             warn("IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)), RuntimeWarning)
-            return np.random.randint(self.nbArms)
+            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
+            return self.choice()
+            # return np.random.randint(self.nbArms)
         else:
             for arm in availableArms:
                 self.index[arm] = self.computeIndex(arm)
             # Uniform choice among the best arms
-            return np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms]))[0])
+            return availableArms[np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms]))[0])]
 
     def choiceMultiple(self, nb=1):
         """ In an index policy, choose nb arms with maximal indexes (uniformly at random)."""
