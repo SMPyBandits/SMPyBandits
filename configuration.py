@@ -14,6 +14,8 @@ from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
 # Import algorithms
 from Policies import *
+# Import KL indeces
+from Policies.kullback import klucbBern, klucbExp, klucbGauss
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
@@ -21,18 +23,18 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 500
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 500
+REPETITIONS = 200
+REPETITIONS = 100
+REPETITIONS = 50
 REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -72,8 +74,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 
 
-TEST_AGGR = False  # XXX do not let this = False
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
@@ -90,7 +92,7 @@ configuration = {
     "repetitions": REPETITIONS,
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 6,  # Max joblib verbosity
+    "verbosity": 6,      # Max joblib verbosity
     # # --- Random events - TODO finish the improvement on Evaluator.py to support these parameters
     # "random_shuffle": True,
     # # "random_invert": False,
@@ -127,7 +129,7 @@ configuration = {
         },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
-    # FIXME if using Exponential arms, gives klExp to KL-UCB-like policies!
+    # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
@@ -135,7 +137,7 @@ configuration = {
     #     },
     # ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # FIXME if using Gaussian arms, gives klGauss to KL-UCB-like policies!
+    # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
     # "environment": [  # Gaussian arms
     #     {   # An example problem with  arms
     #         "arm_type": Gaussian,
@@ -188,6 +190,50 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
+        # --- Softmax algorithms
+        # {
+        #     "archtype": Softmax,   # This basic Softmax is very bad
+        #     "params": {
+        #         "temperature": TEMPERATURE
+        #     }
+        # },
+        {
+            "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
+            "params": {}
+        },
+        # {
+        #     "archtype": SoftMix,   # Another parameter-free Softmax
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # --- Exp3 algorithms - Very bad !!!!
+        # {
+        #     "archtype": Exp3,   # This basic Exp3 is not very good
+        #     "params": {
+        #         "gamma": 0.001
+        #     }
+        # },
+        # {
+        #     "archtype": Exp3Decreasing,
+        #     "params": {
+        #         "gamma": 0.001
+        #     }
+        # },
+        # {
+        #     "archtype": Exp3SoftMix,   # Another parameter-free Exp3
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": Exp3WithHorizon,  # Other Exp3, knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -237,23 +283,6 @@ configuration.update({
         #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # --- Softmax algorithms
-        # {
-        #     "archtype": Softmax,   # This basic Softmax is very bad
-        #     "params": {
-        #         "temperature": TEMPERATURE
-        #     }
-        # },
-        {
-            "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
-            "params": {}
-        },
-        # {
-        #     "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
-        #     "params": {
-        #         "horizon": HORIZON
-        #     }
-        # },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,
@@ -265,18 +294,23 @@ configuration.update({
             "params": {}
         },
         # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {}
-        # },
         {
-            "archtype": klUCBPlus,
-            "params": {}
+            "archtype": klUCB,
+            # "params": {
+            #     "klucb": klucbBern
+            # }
         },
+        # {
+        #     "archtype": klUCBPlus,
+        #     # "params": {
+        #     #     "klucb": klucbBern
+        #     # }
+        # },
         # {
         #     "archtype": klUCBHPlus,
         #     "params": {
-        #         "horizon": HORIZON
+        #          "horizon": HORIZON,
+        #     #     "klucb": klucbBern
         #     }
         # },
         # # {

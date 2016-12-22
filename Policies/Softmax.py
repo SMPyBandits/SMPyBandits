@@ -117,7 +117,10 @@ class SoftMix(Softmax):
         """
         if c is None:
             c = np.sqrt(np.log(self.nbArms) / self.nbArms)
-        return c * np.log(self.t) / self.t
+        if self.t <= 1:
+            return c
+        else:
+            return c * np.log(self.t) / self.t
 
 
 class SoftmaxWithHorizon(Softmax):

@@ -15,7 +15,7 @@ UNBIASED = True
 UNBIASED = False
 
 # Default gamma parameter
-GAMMA = 0.5
+GAMMA = 0.01
 
 
 class Exp3(BasePolicy):
@@ -53,7 +53,7 @@ class Exp3(BasePolicy):
         return p_t / np.sum(p_t)
 
     def getReward(self, arm, reward):
-        super(Exp3, self).__init__(arm, reward)  # XXX Call to BasePolicy
+        super(Exp3, self).getReward(arm, reward)  # XXX Call to BasePolicy
         # Update weight of THIS arm, with this biased or unbiased reward
         if self.unbiased:
             reward /= self.trusts[arm]
@@ -112,7 +112,7 @@ class Exp3SoftMix(Exp3):
     """ Another Exp3 with decreasing gamma eta_t."""
 
     def __str__(self):
-        return "Exp3(decreasing)"
+        return "Exp3(SoftMix)"
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
