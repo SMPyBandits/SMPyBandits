@@ -18,6 +18,7 @@ from Environment.MAB import MAB
 # Import algorithms, both single-player and multi-player
 from Policies import *
 from PoliciesMultiPlayers import *
+from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX
 # Collision Models
 from Environment.CollisionModels import *
 
@@ -58,9 +59,9 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
-# NB_PLAYERS = 17   # Just the number of arms
+# # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
 # Collision model
@@ -198,8 +199,9 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
+    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.5, ftnext=tnext_log).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs

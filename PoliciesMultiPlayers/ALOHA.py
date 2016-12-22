@@ -30,14 +30,14 @@ def make_tnext_beta(beta=0.5):
 
 
 def tnext_log(t, scaling=1.):
-    """ Other function, not the one used in MEGA, but our proposal: upper_tnext(t) = scaling * log(t). """
-    return scaling * np.log(t)
+    """ Other function, not the one used in MEGA, but our proposal: upper_tnext(t) = scaling * log(1 + t). """
+    return scaling * np.log(1 + t)
 
 
 def make_tnext_log_scaling(scaling=0.5):
-    """ Returns the function t --> scaling * log(t). """
+    """ Returns the function t --> scaling * log(1 + t). """
     def tnext(t):
-        return scaling * np.log(t)
+        return scaling * np.log(1 + t)
     return tnext
 
 
@@ -141,7 +141,7 @@ class ALOHA(BaseMPPolicy):
 
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
         - alpha_p0: scaling in the update for p[t+1] <- alpha_p0 p[t] + (1 - alpha_p0)
-        - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(t) instead
+        - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(1 + t) instead
         - (optional) beta: if present, overwrites ftnext, which will be t --> t^beta.
 
         - *args, **kwargs: arguments, named arguments, given to playerAlgo.
