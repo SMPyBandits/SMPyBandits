@@ -93,7 +93,7 @@ class oneALOHA(ChildPointer):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        print(" - A oneALOHA player received reward = {} on arm {}, at time t = {}...".format(reward, arm, self.t))  # DEBUG
+        # print(" - A oneALOHA player received reward = {} on arm {}, at time t = {}...".format(reward, arm, self.t))  # DEBUG
         super(oneALOHA, self).getReward(arm, reward)  # XXX Call ChildPointer method
         self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
 
@@ -103,7 +103,7 @@ class oneALOHA(ChildPointer):
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
         - Note: we do not care on which arm the collision occured.
         """
-        print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
+        # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
         # self.getReward(arm, self.mother.lower)  # XXX should we give a 0 reward ?
         # 1. With proba p, persist: nothing to do
         # 2. With proba 1 - p, give up
@@ -111,7 +111,7 @@ class oneALOHA(ChildPointer):
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
             self.tnext[self.chosenArm] = self.t + 1 + delta_tnext_k
-            print("   - Reaction to collision on arm {}, at time t = {} : delta_tnext_k = {}, tnext[{}] = {} ...".format(arm, self.t, delta_tnext_k, self.chosenArm, self.tnext[self.chosenArm]))  # DEBUG
+            # print("   - Reaction to collision on arm {}, at time t = {} : delta_tnext_k = {}, tnext[{}] = {} ...".format(arm, self.t, delta_tnext_k, self.chosenArm, self.tnext[self.chosenArm]))  # DEBUG
             self.p = self.p0  # Reinitialize the proba p
             self.chosenArm = None  # We give up this arm
 
@@ -124,7 +124,7 @@ class oneALOHA(ChildPointer):
             # We have to chose a new arm
             availableArms = np.nonzero(self.tnext <= self.t)[0]  # Identify available arms
             result = super(oneALOHA, self).choiceFromSubSet(availableArms)  # XXX Call ChildPointer method
-            print("\n - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {}, at time t = {} ...".format(self, availableArms, result, self.t))  # DEBUG
+            # print("\n - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {}, at time t = {} ...".format(self, availableArms, result, self.t))  # DEBUG
             self.chosenArm = result
         return self.chosenArm
 

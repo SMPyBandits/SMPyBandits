@@ -6,7 +6,7 @@ Reference: [Audibert & Bubeck, 2010].
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from math import sqrt, log
+from numpy import sqrt, log
 
 from .IndexPolicy import IndexPolicy
 
