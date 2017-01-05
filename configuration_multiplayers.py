@@ -5,20 +5,20 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.3"
 
 # Import arms
 from Arms.Bernoulli import Bernoulli
-# from Arms.Exponential import Exponential
-# from Arms.Gaussian import Gaussian
-# from Arms.Poisson import Poisson
+from Arms.Exponential import Exponential
+from Arms.Gaussian import Gaussian
+from Arms.Poisson import Poisson
 
 # Import contained classes
 from Environment.MAB import MAB
 # Import algorithms, both single-player and multi-player
 from Policies import *
 from PoliciesMultiPlayers import *
-from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX
+from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better for these imports
 # Collision Models
 from Environment.CollisionModels import *
 
@@ -28,18 +28,18 @@ from Environment.CollisionModels import *
 HORIZON = 50
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 40000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
+HORIZON = 20000
+HORIZON = 40000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -62,7 +62,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
-# # NB_PLAYERS = 17   # Just the number of arms
+# NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
 # Collision model
@@ -98,41 +98,41 @@ configuration = {
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
     # --- Arms
-    "environment": [
-        # {   # A damn simple problem: 2 arms, one bad, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]
-        #     # "params": [0.9, 0.9]
-        #     # "params": [0.85, 0.9]
-        # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [t / 10.0 for t in range(1, 10)]
-        # }
-        # {   # An easy problem (14 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
-        # }
-        # {   # An easy problem (19 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": [t / 20.0 for t in range(1, 20)]
-        # }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # }
-    ],
-    # DONE I tried with other arms distribution: Exponential, it works similarly
-    # "environment": [  # Exponential arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Exponential,
-    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # "environment": [
+    #     # {   # A damn simple problem: 2 arms, one bad, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.9]
+    #     #     # "params": [0.9, 0.9]
+    #     #     # "params": [0.85, 0.9]
+    #     # }
+    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.5, 0.9]
+    #     # }
+    #     # {   # A very easy problem (9 arms), but it is used in a lot of articles
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [t / 10.0 for t in range(1, 10)]
+    #     # }
+    #     # {   # An easy problem (14 arms)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
+    #     # }
+    #     # {   # An easy problem (19 arms)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [t / 20.0 for t in range(1, 20)]
+    #     # }
+    #     {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+    #         "arm_type": Bernoulli,
+    #         "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
     #     }
     # ],
+    # DONE I tried with other arms distribution: Exponential, it works similarly
+    "environment": [  # Exponential arms
+        {   # An example problem with  arms
+            "arm_type": Exponential,
+            "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+        }
+    ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
@@ -166,7 +166,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
@@ -176,6 +176,7 @@ configuration.update({
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
     # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs  # FIXME try it !
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -199,7 +200,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=1, beta=0.5).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=1, beta=0.5).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
