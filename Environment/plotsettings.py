@@ -13,7 +13,7 @@ import seaborn as sns
 
 
 # Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Dec.2016 - Code on https://github.com/Naereen/AlgoBandits)"
+signature = "\n(By Lilian Besson, Jan.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
 
 DPI = 140
 HLS = True

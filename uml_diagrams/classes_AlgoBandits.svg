@@ -646,7 +646,7 @@
 <text text-anchor="middle" x="2847.5" y="-1474.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="2740,-1467 2955,-1467 "/>
 <text text-anchor="start" x="2748" y="-1451.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="2748" y="-1436.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="2748" y="-1436.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="2748" y="-1421.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="2748" y="-1406.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2748" y="-1391.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -1188,7 +1188,7 @@
 <polygon fill="none" stroke="black" points="7780.5,-233 7780.5,-422 8042.5,-422 8042.5,-233 7780.5,-233"/>
 <text text-anchor="middle" x="7911.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="7780.5,-399 8042.5,-399 "/>
-<text text-anchor="start" x="7788.5" y="-383.8" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
+<text text-anchor="start" x="7788.5" y="-383.8" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
 <text text-anchor="start" x="7788.5" y="-368.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7788.5" y="-353.8" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="7788.5" y="-338.8" font-family="Times,serif" font-size="14.00">offset</text>
