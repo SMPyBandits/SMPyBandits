@@ -1,0 +1,23 @@
+[default]
+bears = LineCountBear, InvalidLinkBear, FilenameBear, SpaceConsistencyBear
+files = **.md, **.py
+ignore =
+use_spaces = True
+max_lines_per_file = 500
+file_naming_convention = pascal
+language = python
+
+[markdown]
+bears = LineLengthBear, MarkdownBear, SpaceConsistencyBear, KeywordBear, SpellCheckBear, ProseLintBear, AlexBear
+files = **.md
+use_spaces = True
+language = python
+
+[Makefile]
+bears = LineLengthBear
+files = Makefile
+
+[python]
+bears = PycodestyleBear, PythonPackageInitBear, PyUnusedCodeBear, PyDocStyleBear, PyCommentedCodeBear, BanditBear
+files = **.py
+max_line_length = 129
