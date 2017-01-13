@@ -65,6 +65,10 @@ install2:
 install3:
 	sudo -H pip3 install -U -r requirements.txt
 
+# Senders:
+send_ws3:
+	CP ../AlgoBandits.git lilian_besson@ws3:~/These/src/
+
 # Cleaner
 clean:
 	-mv -vf *.pyc */*.pyc /tmp/
