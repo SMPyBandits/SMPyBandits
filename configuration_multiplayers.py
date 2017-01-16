@@ -31,15 +31,15 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 20000
+# HORIZON = 40000
+# HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
-REPETITIONS = 1000
+# REPETITIONS = 1000
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -61,7 +61,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 12   # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -166,7 +166,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
-    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
@@ -175,7 +175,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
+    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs  # FIXME try it !
 
     # --- DONE Using multi-player Oracle policy
