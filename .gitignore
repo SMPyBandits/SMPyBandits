@@ -1,11 +1,18 @@
+# Cache
 *.pyc
 __pycache__/
 */__pycache__/
+
+# Backup
 *~
+
+# Useless files
 *.so
 *.dot
 *.lprof
 *.gdf
 *.log
+
+# Documentation
 _build/
 rst/*.rst

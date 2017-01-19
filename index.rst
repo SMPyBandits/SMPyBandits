@@ -12,6 +12,7 @@ A research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algor
    :maxdepth: 3
    :caption: Contents:
 
+   rst/modules.rst
    rst/*
 
 

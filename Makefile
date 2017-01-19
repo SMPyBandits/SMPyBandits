@@ -122,8 +122,10 @@ ignorelogs:
 #
 
 # You can set these variables from the command line.
+PYTHON        = python3
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+# SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build
 SPHINXPROJ    = AlgoBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
@@ -133,6 +135,14 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 .PHONY: help
+
+apidoc:
+	-mkdir -vf /tmp/AlgoBandits/rst/
+	-mv -vf rst/*.rst /tmp/AlgoBandits/rst/
+	sphinx-apidoc -n -o rst -e -M .
+	@echo "OK to generate these files ?"
+	@read
+	sphinx-apidoc -o rst -e -M .
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

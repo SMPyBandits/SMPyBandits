@@ -18,9 +18,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
 from __future__ import print_function  # Python 2/3 compatibility !
+
 import sys
 import os
-
 sys.path.insert(0, os.path.abspath('.'))
 
 print("Using python, version %s on %s." % (sys.version, sys.platform))
@@ -38,6 +38,7 @@ needs_sphinx = '1.5'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
+    'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',  # http://www.sphinx-doc.org/en/stable/ext/intersphinx.html
     # From https://bitbucket.org/birkenfeld/sphinx-contrib/
     'sphinxcontrib.googleanalytics',
@@ -81,6 +82,10 @@ googleanalytics_id = 'UA-38514290-2'
 # Usually you set "language" from the command line for these cases.
 language = None
 
+# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
+# using the given strftime format.
+html_last_updated_fmt = '%d %b %Y, %Hh:%Mm:%Ss'
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
@@ -105,10 +110,16 @@ autodoc_member_order = 'bysource'
 #
 html_theme = 'alabaster'
 
-# A installer avec 'pip install sphinx_rtd_theme'
-import sphinx_rtd_theme
-html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    # A installer avec 'pip install sphinx_rtd_theme'
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
