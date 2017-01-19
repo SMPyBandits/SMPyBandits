@@ -7,7 +7,7 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
-from os import cpu_count
+from multiprocessing import cpu_count
 CPU_COUNT = cpu_count()
 # Import arms
 from Arms.Bernoulli import Bernoulli
