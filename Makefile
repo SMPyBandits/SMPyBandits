@@ -3,6 +3,9 @@
 # - lint the Python code (make lint lint3)
 # - install the requirements (make install)
 
+# Using bash and not sh, cf. http://stackoverflow.com/a/589300/
+SHELL := /bin/bash -o pipefail
+
 run:
 	make clean ; clear ; make multi
 single:

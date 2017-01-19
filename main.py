@@ -83,7 +83,7 @@ if __name__ == '__main__':
             savefig = os.path.join(plot_dir, imagename)
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
-        else
+        else:
             evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
             if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 

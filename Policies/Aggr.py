@@ -59,7 +59,10 @@ class Aggr(BasePolicy):
         self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
 
     def __str__(self):
-        return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
+        if self.decreaseRate is not None:
+            return "Aggr(nb: {}, rate: {}, dRate: {})".format(self.nbChildren, self.learningRate, self.decreaseRate)
+        else:
+            return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
 
     def startGame(self):
         self.t = 0
