@@ -8,12 +8,14 @@ Welcome to AlgoBandits's documentation!
 
 A research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms: UCB, KL-UCB, Thompson... and MusicalChair, ALOHA, MEGA, rhoRand etc
 
+See more on `the GitHub page for this project <https://naereen.github.io/AlgoBandits/>`_:
+`<https://naereen.github.io/AlgoBandits/>`_.
+
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 5
    :caption: Contents:
 
-   rst/modules.rst
-   rst/*
+   docs/modules.rst
 
 
 Indices and tables
@@ -21,4 +23,9 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
+  + :ref:`classindex`,
+  + :ref:`funcindex`,
+  + :ref:`methindex`,
+  + :ref:`staticmethindex`,
+  + :ref:`attrindex`,
 * :ref:`search`

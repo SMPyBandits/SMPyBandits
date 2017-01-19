@@ -125,7 +125,7 @@ ignorelogs:
 PYTHON        = python3
 SPHINXOPTS    =
 # SPHINXBUILD   = sphinx-build
-SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build
+SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
 SPHINXPROJ    = AlgoBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
@@ -134,15 +134,20 @@ BUILDDIR      = _build
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+clean-doc:
+	-rm -rfv /tmp/$(BUILDDIR)/
+	mv -vf $(BUILDDIR)/ /tmp/
+	mkdir --parents $(BUILDDIR)/html/
+
 .PHONY: help
 
 apidoc:
-	-mkdir -vf /tmp/AlgoBandits/rst/
-	-mv -vf rst/*.rst /tmp/AlgoBandits/rst/
-	sphinx-apidoc -n -o rst -e -M .
+	-mkdir -vf /tmp/AlgoBandits/docs/
+	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
+	sphinx-apidoc -n -o docs -e -M .
 	@echo "OK to generate these files ?"
 	@read
-	sphinx-apidoc -o rst -e -M .
+	sphinx-apidoc -o docs -e -M .
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

@@ -15,4 +15,4 @@ __pycache__/
 
 # Documentation
 _build/
-rst/*.rst
+docs/*.rst
