@@ -51,6 +51,7 @@ class CentralizedCycling(BaseMPPolicy):
         - nbArms: number of arms.
 
         Examples:
+
         >>> s = CentralizedCycling(10, 14)
 
         - To get a list of usable players, use s.childs.

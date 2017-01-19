@@ -13,7 +13,9 @@ single:
 multi:
 	make clean ; clear ; make multiplayers3
 
-alllint:	lint lint3 pyreverse stats
+alllint:	lint lint3 pyreverse stats doc
+doc:	clean-doc
+	make html clean
 
 # Runners
 main2:
@@ -90,9 +92,9 @@ stats:
 NPROC = `getconf _NPROCESSORS_ONLN`
 
 lint:
-	pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
+	-pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
 lint3:
-	pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
+	-pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
 
 2to3:
 	-echo "FIXME this does not work from make (Makefile), but work from Bash"

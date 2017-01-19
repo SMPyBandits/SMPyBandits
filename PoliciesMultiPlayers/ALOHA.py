@@ -151,6 +151,7 @@ class ALOHA(BaseMPPolicy):
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
+
         >>> nbArms = 17
         >>> nbPlayers = 6
         >>> p0, alpha_p0 = 0.6, 0.5

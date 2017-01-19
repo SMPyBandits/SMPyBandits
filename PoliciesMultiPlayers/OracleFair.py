@@ -57,6 +57,7 @@ class OracleFair(BaseMPPolicy):
         - armsMAB: MAB object that represents the arms.
 
         Examples:
+
         >>> s = OracleFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
 
         - To get a list of usable players, use s.childs.

@@ -37,6 +37,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Examples:
+
         >>> s = CentralizedMultiplePlay(10, TakeFixedArm, 14)
         >>> s = CentralizedMultiplePlay(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
 

@@ -66,6 +66,7 @@ class rhoRand(BaseMPPolicy):
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Examples:
+
         >>> s = rhoRand(nbPlayers, Thompson, nbArms)
 
         - To get a list of usable players, use s.childs.

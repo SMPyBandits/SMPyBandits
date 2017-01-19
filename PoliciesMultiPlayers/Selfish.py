@@ -27,6 +27,7 @@ class Selfish(BaseMPPolicy):
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Examples:
+
         >>> s = Selfish(10, TakeFixedArm, 14)
         >>> s = Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
 
@@ -62,7 +63,7 @@ class Selfish(BaseMPPolicy):
         if hasattr(player, 'handleCollision'):
             # player.handleCollision(arm) is called to inform the user that there were a collision
             player.handleCollision(arm)
-        else:
+        e"lse:
             # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
             player.getReward(arm, getattr(player, 'lower', 0))
             # FIXME Strong assumption on the model

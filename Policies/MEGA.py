@@ -38,10 +38,12 @@ class MEGA(BasePolicy):
         - c, d: used to compute the exploration probability epsilon_t, cf the function epsilon_t.
 
         Example:
+
         >>> nbArms, p0, alpha, beta, c, d = 17, 0.5, 0.5, 0.5, 0.1, 0.01
         >>> player1 = MEGA(nbArms, p0, alpha, beta, c, d)
 
         For multi-players use:
+
         >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).childs
         """
         # Store parameters

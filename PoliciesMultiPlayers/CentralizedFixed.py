@@ -49,6 +49,7 @@ class CentralizedFixed(BaseMPPolicy):
         - nbArms: number of arms.
 
         Examples:
+
         >>> s = CentralizedFixed(10, 14)
 
         - To get a list of usable players, use s.childs.

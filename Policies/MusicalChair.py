@@ -73,10 +73,12 @@ class MusicalChair(BasePolicy):
         - Time1: optionnal, only used to compute Time0 if Time0 is fractional (eg. 0.2).
 
         Example:
+
         >>> nbArms, Time0, Time1, N = 17, 0.1, 10000, 6
         >>> player1 = MusicalChair(nbArms, Time0, Time1, N)
 
         For multi-players use:
+
         >>> configuration["players"] = Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.25, Time1=HORIZON, N=NB_PLAYERS).childs
         """
         super(MusicalChair, self).__init__(nbArms, lower=lower, amplitude=amplitude)
