@@ -22,7 +22,9 @@ plot_dir = "plots"
 piechart = True
 averageRegret = True
 normalized = True
-saveallfigs = True
+
+saveallfigs = True  # XXX dont keep it like this
+saveallfigs = False
 
 # Whether to do the plots or not
 do_plot = False

@@ -44,6 +44,8 @@ class Evaluator(object):
         print("Time horizon:", self.horizon)
         self.repetitions = self.cfg['repetitions']
         print("Number of repetitions:", self.repetitions)
+        self.delta_t_save = self.cfg['delta_t_save']
+        print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
@@ -54,14 +56,25 @@ class Evaluator(object):
         self.policies = []
         self.__initEnvironments__()
         # Internal vectorial memory
-        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))
-        self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.horizon))
+        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+        self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
         self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
-            self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
+            self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
         print("Number of environments to try:", len(self.envs))
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def duration(self):
+        return int(self.horizon / self.delta_t_save)
+
+    @property
+    def times(self):
+        return np.arange(1, 1 + self.horizon, self.delta_t_save)
+
+    # --- Init methods
 
     def __initEnvironments__(self):
         for configuration_arms in self.cfg['environment']:
@@ -77,6 +90,8 @@ class Evaluator(object):
                 print("  Using this already created policy 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
                 self.policies.append(policy)
 
+    # --- Start computation
+
     def startAllEnv(self):
         for envId, env in enumerate(self.envs):
             self.startOneEnv(envId, env)
@@ -91,13 +106,13 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon, seed=seeds[i])
+                    joblib.delayed(delayed_play)(env, policy, self.horizon, delta_t_save=self.delta_t_save, seed=seeds[i])
                     for i in range(self.repetitions)
                 )
             else:
                 results = []
                 for _ in range(self.repetitions):
-                    r = delayed_play(env, policy, self.horizon)
+                    r = delayed_play(env, policy, self.horizon, delta_t_save=self.delta_t_save)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -110,12 +125,14 @@ class Evaluator(object):
                 self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                 self.pulls[envId][policyId, :] += r.pulls
 
+    # --- Getter methods
+
     def getPulls(self, policyId, environmentId=0):
         return self.pulls[environmentId][policyId, :] / float(self.repetitions)
 
     def getBestArmPulls(self, policyId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(start=1, stop=1 + self.horizon))
+        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * self.times)
 
     def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
@@ -124,18 +141,18 @@ class Evaluator(object):
         return np.max(self.rewards[:, environmentId, :] / float(self.repetitions))
 
     def getCumulatedRegret(self, policyId, environmentId=0):
-        # return np.arange(1, 1 + self.horizon) * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))
+        # return self.times * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))
         return np.cumsum(self.envs[environmentId].maxArm - self.getRewards(policyId, environmentId))
 
     def getAverageRewards(self, policyId, environmentId=0):
-        return np.cumsum(self.getRewards(policyId, environmentId)) / np.arange(1, 1 + self.horizon)
+        return np.cumsum(self.getRewards(policyId, environmentId)) / np.arange(1, 1 + self.duration)
 
     def getRewardsSquared(self, policyId, environmentId=0):
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, environmentId=0, meanRegret=False):
+        X = self.times
         YMAX = self.getMaxRewards(environmentId=environmentId)
-        X = np.arange(1, 1 + self.horizon)
         Y = self.getRewards(policyId, environmentId)
         Y2 = self.getRewardsSquared(policyId, environmentId)
         if meanRegret:  # Cumulated expectation on time
@@ -148,11 +165,13 @@ class Evaluator(object):
             # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
             # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
             stdY = np.cumsum(np.sqrt(Y2 - Y**2))
-            YMAX *= np.log(2 + self.horizon)  # Normalize the std variation
+            YMAX *= np.log(2 + self.duration)  # Normalize the std variation
             YMAX *= 50  # XXX make it look larger, for the plots
         # Renormalize this standard deviation
         stdY /= YMAX
         return stdY
+
+    # --- Plotting methods
 
     def plotRegrets(self, environmentId,
                     savefig=None, meanRegret=False, plotSTD=True, semilogx=False, normalizedRegret=False
@@ -161,9 +180,9 @@ class Evaluator(object):
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
-        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
-        X = np.arange(self.horizon)
+        markers_on = np.arange(0, self.duration, self.delta_t_save * int(self.duration / 10.0))
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
+        X = self.times - 1
         for i, policy in enumerate(self.policies):
             if meanRegret:
                 Y = self.getAverageRewards(i, environmentId)
@@ -184,6 +203,10 @@ class Evaluator(object):
                     stdY /= np.log(2 + X)
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
+        # DEBUG >>>
+        print("X.shape =", X.shape)
+        print("Y.shape =", Y.shape)
+        # <<< DEBUG
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         lowerbound = self.envs[environmentId].lowerbound()
         # ymax = max(plt.ylim()[1], 1)  # XXX Not smart, if maxmu = 0.1 we don't see anything
@@ -217,8 +240,8 @@ class Evaluator(object):
         plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = np.arange(0, self.horizon, int(self.horizon / 10.0))
-        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        markers_on = np.arange(0, self.duration, self.delta_t_save * int(self.duration / 10.0))
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
@@ -241,7 +264,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getCumulatedRegret(i, environmentId)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last 0.5% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
         # Sort lastY and give ranking
@@ -255,7 +278,7 @@ class Evaluator(object):
 # Helper function for the parallelization
 
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-def delayed_play(env, policy, horizon,
+def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
@@ -267,10 +290,9 @@ def delayed_play(env, policy, horizon,
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
     policy = deepcopy(policy)
-    horizon = deepcopy(horizon)
     # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon)  # One Result object, for every policy
+    result = Result(env.nbArms, horizon, delta_t_save=delta_t_save)  # One Result object, for every policy
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
     if nb_random_events is None or nb_random_events <= 0:
@@ -281,7 +303,9 @@ def delayed_play(env, policy, horizon,
         choice = policy.choice()
         reward = env.arms[choice].draw(t)
         policy.getReward(choice, reward)
-        result.store(t, choice, reward)
+        if t % delta_t_save == 0:
+            # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
+            result.store(t, choice, reward)
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle:
             if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'

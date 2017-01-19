@@ -42,6 +42,8 @@ class EvaluatorMultiPlayers(object):
         print("Time horizon:", self.horizon)
         self.repetitions = self.cfg['repetitions']
         print("Number of repetitions:", self.repetitions)
+        self.delta_t_save = self.cfg['delta_t_save']
+        print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
         print("Using collision model:", self.collisionModel.__name__)
         print("  Detail:", self.collisionModel.__doc__)
@@ -73,6 +75,11 @@ class EvaluatorMultiPlayers(object):
             self.BestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def duration(self):
+        return int(self.horizon / self.delta_t_save)
+
     # --- Init methods
 
     def __initEnvironments__(self):
@@ -103,13 +110,13 @@ class EvaluatorMultiPlayers(object):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                joblib.delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[i])
+                joblib.delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[i])
                 for i in range(self.repetitions)
             )
         else:
             results = []
             for _ in range(self.repetitions):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save)
                 results.append(r)
         # Get the position of the best arms
         env = self.envs[envId]
@@ -453,7 +460,8 @@ class EvaluatorMultiPlayers(object):
 
 # Helper function for the parallelization
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
-def delayed_play(env, players, horizon, collisionModel, seed=None):
+def delayed_play(env, players, horizon, collisionModel,
+                 delta_t_save=1, seed=None):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
     try:
         np.random.seed(seed)
@@ -471,7 +479,7 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
     for player in players:
         player.startGame()
     # Store results
-    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
+    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers, delta_t_save=delta_t_save)
     rewards = np.zeros(nbPlayers)
     choices = np.zeros(nbPlayers, dtype=int)
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
@@ -490,8 +498,10 @@ def delayed_play(env, players, horizon, collisionModel, seed=None):
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
-        # Finally we store the results
-        result.store(t, choices, rewards, pulls, collisions)
+        if t % delta_t_save == 0:
+            # Finally we store the results
+            if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
+            result.store(t, choices, rewards, pulls, collisions)
 
     # # Prints the ranks
     # ranks = [player.rank if hasattr(player, 'rank') else None for player in players]

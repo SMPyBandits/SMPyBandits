@@ -27,8 +27,12 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # HORIZON = 100000
+
+# DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
+DELTA_T_SAVE = 50 if HORIZON > 10000 else 1
+DELTA_T_SAVE = 1  # XXX to disable this optimisation
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
@@ -39,7 +43,7 @@ REPETITIONS = 1000
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -96,6 +100,8 @@ configuration = {
     "horizon": HORIZON,
     # --- Number of repetition of the experiment (to have an average)
     "repetitions": REPETITIONS,
+    # --- DELTA_T_SAVE
+    "delta_t_save": DELTA_T_SAVE,
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 6,      # Max joblib verbosity
