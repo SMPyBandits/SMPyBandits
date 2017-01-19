@@ -63,7 +63,7 @@ class Selfish(BaseMPPolicy):
         if hasattr(player, 'handleCollision'):
             # player.handleCollision(arm) is called to inform the user that there were a collision
             player.handleCollision(arm)
-        e"lse:
+        else:
             # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
             player.getReward(arm, getattr(player, 'lower', 0))
             # FIXME Strong assumption on the model
