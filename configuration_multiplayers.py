@@ -164,7 +164,7 @@ configuration.update({
     # --- DONE Using multi-player Selfish policy
     # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
-    "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
@@ -192,7 +192,7 @@ configuration.update({
     # OK Estimate nbPlayers in Time0 initial rounds
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs
+    "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs
     # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs
 
     # --- DONE Using single-player MEGA policy
