@@ -7,3 +7,4 @@ __pycache__/
 *.lprof
 *.gdf
 *.log
+_build/
