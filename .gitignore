@@ -8,3 +8,4 @@ __pycache__/
 *.gdf
 *.log
 _build/
+rst/*.rst
