@@ -7,6 +7,8 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.3"
 
+from os import cpu_count
+CPU_COUNT = cpu_count()
 # Import arms
 from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
@@ -47,6 +49,8 @@ DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn 
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
+if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
+    N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1

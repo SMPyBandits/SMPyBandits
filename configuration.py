@@ -7,6 +7,8 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+from os import cpu_count
+CPU_COUNT = cpu_count()
 # Import arms
 from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
@@ -24,7 +26,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # HORIZON = 100000
 
 # REPETITIONS : number of repetitions of the experiments
@@ -32,16 +34,18 @@ HORIZON = 30000
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 500
-REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
+if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
+    N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -72,10 +76,11 @@ LEARNING_RATES = [LEARNING_RATE]
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
+DECREASE_RATE = 'auto'
 
 
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+TEST_AGGR = True
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
@@ -111,10 +116,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -123,10 +128,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        },
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
@@ -296,9 +301,9 @@ configuration.update({
         # --- KL algorithms
         {
             "archtype": klUCB,
-            # "params": {
-            #     "klucb": klucbBern
-            # }
+            "params": {
+                # "klucb": klucbBern
+            }
         },
         # {
         #     "archtype": klUCBPlus,
