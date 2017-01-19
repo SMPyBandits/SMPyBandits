@@ -46,6 +46,7 @@ class Evaluator(object):
         print("Number of repetitions:", self.repetitions)
         self.delta_t_save = self.cfg['delta_t_save']
         print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
+        self.duration = int(self.horizon / self.delta_t_save)
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
@@ -64,15 +65,8 @@ class Evaluator(object):
             self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
         print("Number of environments to try:", len(self.envs))
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def duration(self):
-        return int(self.horizon / self.delta_t_save)
-
-    @property
-    def times(self):
-        return np.arange(1, 1 + self.horizon, self.delta_t_save)
+        # To speed up plotting
+        self.times = np.arange(1, 1 + self.horizon, self.delta_t_save)
 
     # --- Init methods
 
@@ -192,9 +186,9 @@ class Evaluator(object):
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
             if semilogx:
-                plt.semilogx(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.semilogx(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             else:
-                plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, environmentId, meanRegret=meanRegret)
@@ -240,11 +234,12 @@ class Evaluator(object):
         plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = np.arange(0, self.duration, self.delta_t_save * int(self.duration / 10.0))
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
+        markers_on = np.arange(0, self.horizon, self.delta_t_save * int(self.horizon / 10.0))
+        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        X = self.times
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
