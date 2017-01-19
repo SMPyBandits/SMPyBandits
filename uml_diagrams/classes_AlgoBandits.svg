@@ -651,7 +651,7 @@
 <text text-anchor="start" x="2748" y="-1406.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2748" y="-1391.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2748" y="-1376.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2748" y="-1361.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="2748" y="-1361.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="2748" y="-1346.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2748" y="-1331.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2740,-1324 2955,-1324 "/>
@@ -908,7 +908,7 @@
 <polygon fill="none" stroke="black" points="3972,-985 3972,-1099 4229,-1099 4229,-985 3972,-985"/>
 <text text-anchor="middle" x="4100.5" y="-1083.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="3972,-1076 4229,-1076 "/>
-<text text-anchor="start" x="3980" y="-1060.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="3980" y="-1060.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="3980" y="-1045.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="3972,-1038 4229,-1038 "/>
 <text text-anchor="start" x="3980" y="-1022.8" font-family="Times,serif" font-size="14.00">__init__()</text>
