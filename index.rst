@@ -12,7 +12,7 @@ See more on `the GitHub page for this project <https://naereen.github.io/AlgoBan
 `<https://naereen.github.io/AlgoBandits/>`_.
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 8
    :caption: Contents:
 
    docs/modules.rst
@@ -23,9 +23,9 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-  + :ref:`classindex`,
-  + :ref:`funcindex`,
-  + :ref:`methindex`,
-  + :ref:`staticmethindex`,
-  + :ref:`attrindex`,
+* :ref:`classindex`,
+* :ref:`funcindex`,
+* :ref:`methindex`,
+* :ref:`staticmethindex`,
+* :ref:`attrindex`,
 * :ref:`search`

@@ -33,6 +33,7 @@ def klBern(x, y):
     4.503217453131898
 
     - Special values:
+
     >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
     34.53957599234081
     """
@@ -56,6 +57,7 @@ def klPoisson(x, y):
     0.2739075652893146
 
     - Special values:
+
     >>> klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
     33.538776394910684
     >>> klPoisson(0, 0)
@@ -83,6 +85,7 @@ def klExp(x, y):
     0.0376820724517809
 
     - x, y have to be positive:
+
     >>> klExp(-3, 2)
     inf
     >>> klExp(3, -2)
@@ -115,6 +118,7 @@ def klGamma(x, y, a=1):
     0.0376820724517809
 
     - x, y have to be positive:
+
     >>> klGamma(-3, 2)
     inf
     >>> klGamma(3, -2)
@@ -145,10 +149,12 @@ def klNegBin(x, y, r=1):
     -0.7173536633057466
 
     - Special values:
+
     >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
     34.53957599234081
 
     - With other values for `r`:
+
     >>> klNegBin(0.5, 0.5, r=2)
     0.0
     >>> klNegBin(0.1, 0.9, r=2)
@@ -184,6 +190,7 @@ def klGauss(x, y, sig2=0.25):
     8.0
 
     - x, y can be negative:
+
     >>> klGauss(-3, 2)
     50.0
     >>> klGauss(3, -2)
@@ -236,9 +243,10 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
 
 
 def klucbBern(x, d, precision=1e-6):
-    """ KL-UCB index computation for Bernoulli distributions, using :fun:`klucb`.
+    """ KL-UCB index computation for Bernoulli distributions, using :func:`klucb`.
 
     - Influence of x:
+
     >>> klucbBern(0.1, 0.2)
     0.37839145109809247
     >>> klucbBern(0.5, 0.2)
@@ -247,6 +255,7 @@ def klucbBern(x, d, precision=1e-6):
     0.9944896697998048
 
     - Influence of d:
+
     >>> klucbBern(0.1, 0.4)
     0.5194755673450786
     >>> klucbBern(0.1, 0.9)
@@ -274,6 +283,7 @@ def klucbGauss(x, d, sig2=1., precision=0.):
     - Warning: it works only if the good variance constant is given.
 
     - Influence of x:
+
     >>> klucbGauss(0.1, 0.2)
     0.7324555320336759
     >>> klucbGauss(0.5, 0.2)
@@ -282,6 +292,7 @@ def klucbGauss(x, d, sig2=1., precision=0.):
     1.532455532033676
 
     - Influence of d:
+
     >>> klucbGauss(0.1, 0.4)
     0.9944271909999158
     >>> klucbGauss(0.1, 0.9)
@@ -301,9 +312,10 @@ def klucbGauss(x, d, sig2=1., precision=0.):
 
 
 def klucbPoisson(x, d, precision=1e-6):
-    """ KL-UCB index computation for Poisson distributions, using :fun:`klucb`.
+    """ KL-UCB index computation for Poisson distributions, using :func:`klucb`.
 
     - Influence of x:
+
     >>> klucbPoisson(0.1, 0.2)
     0.45052392780119604
     >>> klucbPoisson(0.5, 0.2)
@@ -312,6 +324,7 @@ def klucbPoisson(x, d, precision=1e-6):
     1.6401128559741487
 
     - Influence of d:
+
     >>> klucbPoisson(0.1, 0.4)
     0.6936844019642616
     >>> klucbPoisson(0.1, 0.9)
@@ -332,9 +345,10 @@ def klucbPoisson(x, d, precision=1e-6):
 
 
 def klucbExp(x, d, precision=1e-6):
-    """ KL-UCB index computation for exponential distributions, using :fun:`klucb`.
+    """ KL-UCB index computation for exponential distributions, using :func:`klucb`.
 
     - Influence of x:
+
     >>> klucbExp(0.1, 0.2)
     0.20274118449172676
     >>> klucbExp(0.5, 0.2)
@@ -343,6 +357,7 @@ def klucbExp(x, d, precision=1e-6):
     1.8246716397412546
 
     - Influence of d:
+
     >>> klucbExp(0.1, 0.4)
     0.2857928251730546
     >>> klucbExp(0.1, 0.9)

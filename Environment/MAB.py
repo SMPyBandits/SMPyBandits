@@ -18,7 +18,7 @@ class MAB(object):
     - 'arm_type' is a class from the Arms module
     - 'params' is a dict, used as a list/tuple/iterable of named parameters given to 'arm_type'.
 
-    Example:
+    Example::
 
         configuration = {
             'arm_type': Bernoulli,

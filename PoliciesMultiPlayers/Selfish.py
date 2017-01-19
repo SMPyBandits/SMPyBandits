@@ -24,7 +24,7 @@ class Selfish(BaseMPPolicy):
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - *args, **kwargs: arguments, named arguments, given to playerAlgo.
+        - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Examples:
         >>> s = Selfish(10, TakeFixedArm, 14)

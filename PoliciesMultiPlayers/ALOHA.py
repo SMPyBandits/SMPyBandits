@@ -148,7 +148,7 @@ class ALOHA(BaseMPPolicy):
         - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(1 + t) instead
         - (optional) beta: if present, overwrites ftnext, which will be t --> t^beta.
 
-        - *args, **kwargs: arguments, named arguments, given to playerAlgo.
+        - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
         >>> nbArms = 17
