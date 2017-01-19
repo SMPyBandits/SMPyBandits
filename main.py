@@ -23,6 +23,7 @@ semilogx = False
 meanRegret = True
 normalizedRegret = True
 plotSTD = True
+saveallfigs = True
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
@@ -78,31 +79,39 @@ if __name__ == '__main__':
         if interactive:
             plt.interactive(True)
 
-        # savefig = os.path.join(plot_dir, imagename)
-        # print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
-        evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
-        if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
+        if saveallfigs:
+            savefig = os.path.join(plot_dir, imagename)
+            print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
+            evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
+        else
+            evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
+            if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 
         if meanRegret:
-            # savefig = savefig.replace('main', 'main_MeanRewards')
-            # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, meanRegret=True)  # XXX To save the figure
-            evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=False)
-            # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=True)
+            if saveallfigs:
+                savefig = savefig.replace('main', 'main_MeanRewards')
+                print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, meanRegret=True)  # XXX To save the figure
+            else:
+                evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=False)
+                # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=True)
 
         if normalizedRegret:
-            # savefig = savefig.replace('main', 'main_Normalized')
-            # print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
-            # evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
-            evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=False)
-            # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
+            if saveallfigs:
+                savefig = savefig.replace('main', 'main_Normalized')
+                print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
+            else:
+                evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=False)
+                # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
 
         # --- Also plotting the probability of picking the best arm
-        # savefig = savefig.replace('main', 'main_BestArmPulls')
-        # print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-        # evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
-        evaluation.plotBestArmPulls(envId)
+        if saveallfigs:
+            savefig = savefig.replace('main', 'main_BestArmPulls')
+            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+            evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotBestArmPulls(envId)
 
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))

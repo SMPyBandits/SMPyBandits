@@ -9,6 +9,7 @@ __version__ = "0.2"
 
 from multiprocessing import cpu_count
 CPU_COUNT = cpu_count()
+
 # Import arms
 from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
