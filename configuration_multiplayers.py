@@ -38,8 +38,8 @@ HORIZON = 20000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
-DELTA_T_SAVE = 50 if HORIZON > 10000 else 1
-DELTA_T_SAVE = 1  # XXX to disable this optimisation
+DELTA_T_SAVE = 1 * (HORIZON <= 10000) + 50 * (10000 < HORIZON < 100000) + 100 * (HORIZON >= 100000)
+# DELTA_T_SAVE = 1  # XXX to disable this optimisation
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy

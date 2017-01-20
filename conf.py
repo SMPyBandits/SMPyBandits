@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'AlgoBandits'
-copyright = '2017, Lilian Besson'
+copyright = '2016-2017, Lilian Besson'
 author = 'Lilian Besson'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -131,3 +131,9 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# If given, this must be the name of an image file
+# (path relative to the configuration directory) that is the logo of the docs.
+# It is placed at the top of the sidebar; its width should therefore not exceed 200 pixels. Default: None.
+html_logo = 'logo.png'
