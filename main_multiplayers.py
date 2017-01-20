@@ -61,14 +61,15 @@ if __name__ == '__main__':
         subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
-        # Create the sub folder
-        plot_dir = os.path.join(plot_dir, subfolder)
-        if os.path.isdir(plot_dir):
-            print("{} is already a directory here...".format(plot_dir))
-        elif os.path.isfile(plot_dir):
-            raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-        else:
-            mkdir(plot_dir)
+        if saveallfigs:
+            # Create the sub folder
+            plot_dir = os.path.join(plot_dir, subfolder)
+            if os.path.isdir(plot_dir):
+                print("{} is already a directory here...".format(plot_dir))
+            elif os.path.isfile(plot_dir):
+                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+            else:
+                mkdir(plot_dir)
 
         # Set plotting mode to interactive
         if interactive:
