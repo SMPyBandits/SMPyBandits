@@ -27,8 +27,9 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 30000
 HORIZON = 100000
+# HORIZON = 300000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON <= 10000) + 50 * (10000 < HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -41,9 +42,9 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -111,10 +112,10 @@ configuration = {
     # "nb_random_events": 5,
     # --- Arms
     "environment": [  # Bernoulli arms
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        },
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
         # {   # Another very easy problem: 3 arms, two very bad, one bad
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
@@ -123,10 +124,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -312,19 +313,19 @@ configuration.update({
                 # "klucb": klucbBern
             }
         },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                # "klucb": klucbBern
-            }
-        },
-        {
-            "archtype": klUCBHPlus,
-            "params": {
-                "horizon": HORIZON,
-                # "klucb": klucbBern
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBHPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         # "klucb": klucbBern
+        #     }
+        # },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}
@@ -372,7 +373,7 @@ if TEST_AGGR:
                 "decreaseRate": DECREASE_RATE,
                 "update_all_children": UPDATE_ALL_CHILDREN,
                 "children": NON_AGGR_POLICIES,
-                "horizon": HORIZON
+                # "horizon": HORIZON
             },
         }]
 

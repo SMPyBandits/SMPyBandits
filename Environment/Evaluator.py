@@ -126,7 +126,7 @@ class Evaluator(object):
 
     def getBestArmPulls(self, policyId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * self.times)
+        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(1, 1 + self.duration))
 
     def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
@@ -174,7 +174,7 @@ class Evaluator(object):
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = np.arange(0, self.duration, self.delta_t_save * int(self.duration / 10.0))
+        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
         delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times - 1
         for i, policy in enumerate(self.policies):
@@ -197,10 +197,6 @@ class Evaluator(object):
                     stdY /= np.log(2 + X)
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
-        # DEBUG >>>
-        print("X.shape =", X.shape)
-        print("Y.shape =", Y.shape)
-        # <<< DEBUG
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         lowerbound = self.envs[environmentId].lowerbound()
         # ymax = max(plt.ylim()[1], 1)  # XXX Not smart, if maxmu = 0.1 we don't see anything
@@ -208,19 +204,19 @@ class Evaluator(object):
         plt.ylim(ymin, ymax)
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
+            plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
             plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
-            plt.plot(lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
+            plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         else:
             # We also plot the Lai & Robbins lower bound
-            plt.plot(lowerbound * np.log(1 + X), 'k-', label="Lai & Robbins lower bound", lw=3)
+            plt.plot(X, lowerbound * np.log(1 + X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
@@ -234,8 +230,8 @@ class Evaluator(object):
         plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = np.arange(0, self.horizon, self.delta_t_save * int(self.horizon / 10.0))
-        delta_marker = 1 + int(self.horizon / 200.0)  # XXX put back 0 if needed
+        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
