@@ -77,6 +77,7 @@ class EvaluatorMultiPlayers(object):
             self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
         # To speed up plotting
         self.times = np.arange(1, 1 + self.horizon, self.delta_t_save)
+        # self.subtimes = np.arange(1, 1 + self.duration)
 
     # --- Init methods
 

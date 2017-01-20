@@ -40,7 +40,7 @@ HORIZON = 10000
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
 DELTA_T_SAVE = 10
-DELTA_T_SAVE = 1  # XXX to disable this optimisation
+DELTA_T_SAVE = 1  # XXX to disable this optimization
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
@@ -187,7 +187,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # FIXME this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... ?
-    "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player dummy Centralized policy
@@ -232,7 +232,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
+    "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

@@ -268,19 +268,20 @@
 </g>
 <!-- 11 -->
 <g id="node12" class="node"><title>11</title>
-<polygon fill="none" stroke="black" points="746.5,-1316 746.5,-1490 928.5,-1490 928.5,-1316 746.5,-1316"/>
-<text text-anchor="middle" x="837.5" y="-1474.8" font-family="Times,serif" font-size="14.00">Policies.AdBandits.AdBandits</text>
-<polyline fill="none" stroke="black" points="746.5,-1467 928.5,-1467 "/>
-<text text-anchor="start" x="754.5" y="-1451.8" font-family="Times,serif" font-size="14.00">alpha</text>
-<text text-anchor="start" x="754.5" y="-1436.8" font-family="Times,serif" font-size="14.00">horizon</text>
-<text text-anchor="start" x="754.5" y="-1421.8" font-family="Times,serif" font-size="14.00">posterior</text>
-<polyline fill="none" stroke="black" points="746.5,-1414 928.5,-1414 "/>
-<text text-anchor="start" x="754.5" y="-1398.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="754.5" y="-1383.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="754.5" y="-1368.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="754.5" y="-1353.8" font-family="Times,serif" font-size="14.00">computeIndex()</text>
-<text text-anchor="start" x="754.5" y="-1338.8" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="754.5" y="-1323.8" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="746.5,-1308.5 746.5,-1497.5 928.5,-1497.5 928.5,-1308.5 746.5,-1308.5"/>
+<text text-anchor="middle" x="837.5" y="-1482.3" font-family="Times,serif" font-size="14.00">Policies.AdBandits.AdBandits</text>
+<polyline fill="none" stroke="black" points="746.5,-1474.5 928.5,-1474.5 "/>
+<text text-anchor="start" x="754.5" y="-1459.3" font-family="Times,serif" font-size="14.00">alpha</text>
+<text text-anchor="start" x="754.5" y="-1444.3" font-family="Times,serif" font-size="14.00">epsilon</text>
+<text text-anchor="start" x="754.5" y="-1429.3" font-family="Times,serif" font-size="14.00">horizon</text>
+<text text-anchor="start" x="754.5" y="-1414.3" font-family="Times,serif" font-size="14.00">posterior</text>
+<polyline fill="none" stroke="black" points="746.5,-1406.5 928.5,-1406.5 "/>
+<text text-anchor="start" x="754.5" y="-1391.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="754.5" y="-1376.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="754.5" y="-1361.3" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="754.5" y="-1346.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="754.5" y="-1331.3" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="754.5" y="-1316.3" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 13 -->
 <g id="node14" class="node"><title>13</title>
@@ -305,7 +306,7 @@
 </g>
 <!-- 11&#45;&gt;13 -->
 <g id="edge6" class="edge"><title>11&#45;&gt;13</title>
-<path fill="none" stroke="black" d="M863.999,-1490.36C879.565,-1526.43 903.117,-1565.18 937.5,-1588 1063.22,-1671.43 2109.87,-1727.32 2447.18,-1743.3"/>
+<path fill="none" stroke="black" d="M867.19,-1497.54C882.725,-1531.48 905.389,-1566.69 937.5,-1588 1063.22,-1671.43 2109.87,-1727.32 2447.18,-1743.3"/>
 <polygon fill="none" stroke="black" points="2447.28,-1746.8 2457.43,-1743.78 2447.61,-1739.81 2447.28,-1746.8"/>
 </g>
 <!-- 12 -->
@@ -1311,7 +1312,7 @@
 <text text-anchor="middle" x="7052.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="6925.5,-399 7179.5,-399 "/>
 <text text-anchor="start" x="6933.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="6933.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="6933.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="6925.5,-361 7179.5,-361 "/>
 <text text-anchor="start" x="6933.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="6933.5" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
