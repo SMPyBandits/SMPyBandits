@@ -28,7 +28,7 @@ class Aggr(BasePolicy):
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 decreaseRate=None, unbiased=UNBIASED, lower=0., amplitude=1.,
+                 decreaseRate=None, unbiased=UNBIASED, horizon=None, lower=0., amplitude=1.,
                  update_all_children=update_all_children, prior='uniform'):
         # Attributes
         self.nbArms = nbArms
@@ -37,6 +37,7 @@ class Aggr(BasePolicy):
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
         self.unbiased = unbiased
+        self.horizon = horizon
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
         self.t = -1
@@ -81,8 +82,11 @@ class Aggr(BasePolicy):
         if self.decreaseRate is None:
             learningRate = self.learningRate
         elif self.decreaseRate == 'auto':
-            # DONE Implement the smart value given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
-            learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.t * self.nbArms))
+            # DONE Implement the two smart values given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+            if self.horizon is None:
+                learningRate = np.sqrt(np.log(self.nbChildren) / (self.t * self.nbArms))
+            else:
+                learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
         else:
             # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
             learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
