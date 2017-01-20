@@ -39,7 +39,8 @@ HORIZON = 10000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
-# DELTA_T_SAVE = 1  # XXX to disable this optimisation
+DELTA_T_SAVE = 10
+DELTA_T_SAVE = 1  # XXX to disable this optimisation
 
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
@@ -70,9 +71,9 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 12   # Less that the number of arms
-NB_PLAYERS = 17   # Just the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
+# NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
 # Collision model
@@ -117,10 +118,10 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [t / 10.0 for t in range(1, 10)]
@@ -129,10 +130,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [round(t / 15.0, 2) for t in range(1, 15)]
         # }
-        {   # An easy problem (19 arms)
-            "arm_type": Bernoulli,
-            "params": [t / 20.0 for t in range(1, 20)]
-        }
+        # {   # An easy problem (19 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": [t / 20.0 for t in range(1, 20)]
+        # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -183,10 +184,10 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
-    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
-    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
-    # FIXME this Selfish[AdBandits] works crazily good... ?
+    # FIXME this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... ?
+    "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player dummy Centralized policy

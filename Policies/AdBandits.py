@@ -42,14 +42,15 @@ class AdBandits(BasePolicy):
         reward = (reward - self.lower) / self.amplitude
         self.posterior[arm].update(reward)
 
-    def computeIndex(self, arm):
-        return self.posterior[arm].sample()
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def epsilon(self):
+        return float(self.t / (self.horizon * self.alpha))
 
     def choice(self):
         # Thompson Exploration
-        if rn.random() > 1.0 * self.t / (self.horizon * self.alpha):
-            # XXX if possible, this part should also use numpy arrays to be faster?
-            upperbounds = [self.computeIndex(i) for i in range(self.nbArms)]
+        if rn.random() > self.epsilon:
+            upperbounds = [self.posterior[i].sample() for i in range(self.nbArms)]
             maxIndex = max(upperbounds)
             bestArms = [arm for (arm, index) in enumerate(upperbounds) if index == maxIndex]
             arm = rn.choice(bestArms)
@@ -62,6 +63,21 @@ class AdBandits(BasePolicy):
             arm = rn.choice(admissible)
         return arm
 
-    # def choiceWithRank(self, rank=1):
-    #     """ FIXME I should do it directly, here."""
-    #     return self.choice()
+    def choiceWithRank(self, rank=1):
+        if rank == 1:
+            return self.choice()
+        else:
+            assert rank >= 1, "Error: for AdBandits = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
+            # Thompson Exploration
+            if rn.random() > self.epsilon:
+                indexes = [self.posterior[i].sample() for i in range(self.nbArms)]
+            # UCB-Bayes
+            else:
+                expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
+                upperbounds = [self.posterior[arm].quantile(1. - 1. / self.t) for arm in range(self.nbArms)]
+                indexes = expectations - np.max(upperbounds)
+            # We computed the indexes, OK let's use them
+            sortedRewards = np.sort(indexes)  # XXX What happens here if two arms has the same index, being the max?
+            chosenIndex = sortedRewards[-rank]
+            # Uniform choice among the rank-th best arms
+            return np.random.choice(np.nonzero(indexes == chosenIndex)[0])

@@ -126,7 +126,7 @@ class Evaluator(object):
 
     def getBestArmPulls(self, policyId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * np.arange(1, 1 + self.duration))
+        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * self.times)
 
     def getRewards(self, policyId, environmentId=0):
         return self.rewards[policyId, environmentId, :] / float(self.repetitions)
@@ -139,7 +139,7 @@ class Evaluator(object):
         return np.cumsum(self.envs[environmentId].maxArm - self.getRewards(policyId, environmentId))
 
     def getAverageRewards(self, policyId, environmentId=0):
-        return np.cumsum(self.getRewards(policyId, environmentId)) / np.arange(1, 1 + self.duration)
+        return np.cumsum(self.getRewards(policyId, environmentId)) / self.times
 
     def getRewardsSquared(self, policyId, environmentId=0):
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)

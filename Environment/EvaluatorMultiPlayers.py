@@ -148,7 +148,7 @@ class EvaluatorMultiPlayers(object):
 
     def getBestArmPulls(self, playerId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * np.arange(1, 1 + self.duration))
+        return self.BestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * self.times)
 
     def getFreeTransmissions(self, playerId, environmentId=0):
         return self.FreeTransmissions[environmentId][playerId, :] / float(self.repetitions)
@@ -162,7 +162,7 @@ class EvaluatorMultiPlayers(object):
     def getRegretMean(self, playerId, environmentId=0):
         """ Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
         """
-        return np.arange(1, 1 + self.duration) * self.envs[environmentId].maxArm - self.getRewards(playerId, environmentId)
+        return (self.times - 1) * self.envs[environmentId].maxArm - self.getRewards(playerId, environmentId)
 
     def getCentralizedRegret(self, environmentId=0):
         meansArms = np.sort(np.array([arm.mean() for arm in self.envs[environmentId].arms]))
@@ -174,7 +174,7 @@ class EvaluatorMultiPlayers(object):
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
-        averageBestRewards = np.arange(1, 1 + self.duration) * sumBestMeans
+        averageBestRewards = (self.times - 1) * sumBestMeans
         # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
         actualRewards = sum(self.getRewards(playerId, environmentId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
