@@ -54,6 +54,17 @@ templates_path = ['_templates']
 # source_suffix = ['.rst', '.md']
 source_suffix = '.rst'
 
+# The recommonmark Sphinx extension adds support for Markdown files
+# https://github.com/rtfd/recommonmark (and it works very well)
+try:
+    from recommonmark.parser import CommonMarkParser
+    source_parsers = {
+        '.md': CommonMarkParser,  # README.md is the only concerned file
+    }
+    source_suffix = ['.rst', '.md']
+except ImportError:
+    print("recommonmark.parser.CommonMarkParser was not found.\nrecommonmark can be installed with 'pip install recommonmark' (from https://github.com/rtfd/recommonmark)")
+
 # The master toctree document.
 master_doc = 'index'
 

@@ -6,16 +6,28 @@
 Welcome to AlgoBandits's documentation!
 =======================================
 
-A research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms: UCB, KL-UCB, Thompson... and MusicalChair, ALOHA, MEGA, rhoRand etc
+A research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms: UCB, KL-UCB, Thompson... and MusicalChair, ALOHA, MEGA, rhoRand etc.
 
 See more on `the GitHub page for this project <https://naereen.github.io/AlgoBandits/>`_:
 `<https://naereen.github.io/AlgoBandits/>`_.
+
+
+.. include:: README.md
+
+----
 
 .. toctree::
    :maxdepth: 8
    :caption: Contents:
 
+   Aggr.md
+   MultiPlayers.md
+   API.md
+   TODO.md
    docs/modules.rst
+   plots/README.md
+   logs/README.md
+   uml_diagrams/README.md
 
 
 Indices and tables
