@@ -91,6 +91,8 @@ class Aggr(BasePolicy):
             # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
             learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
         reward = (reward - self.lower) / self.amplitude
+        # FIXME try this trick of receiving a loss instead of a reward ?
+        # reward = 1 - reward
         if self.unbiased:
             # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
             reward /= trusts

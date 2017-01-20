@@ -403,7 +403,7 @@ class EvaluatorMultiPlayers(object):
             # Y[armId] = np.sum(self.getCollisions(armId, environmentId) >= 1)  # XXX no, we should not count just the fact that there were collisions, but instead count all collisions
             Y[armId] = np.sum(self.getCollisions(armId, environmentId))
             labels[armId] = "#${}$: ${}$".format(armId, repr(arm))
-        Y /= (self.duration * self.nbPlayers)
+        Y /= (self.horizon * self.nbPlayers)
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))

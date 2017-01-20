@@ -33,7 +33,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -137,8 +137,7 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # }
-        # {
-        #     # Testing just the orthogonalization (collision avoidance) protocol
+        # {   # FIXME Testing just the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
         # }
@@ -185,9 +184,10 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
-    "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
+    # FIXME this Selfish[AdBandits] works crazily good... ?
+    # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player dummy Centralized policy
     # XXX each player needs to now the number of players
@@ -231,6 +231,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
