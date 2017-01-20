@@ -11,15 +11,13 @@ A research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algor
 See more on `the GitHub page for this project <https://naereen.github.io/AlgoBandits/>`_:
 `<https://naereen.github.io/AlgoBandits/>`_.
 
-
-.. include:: README.md
-
 ----
 
 .. toctree::
-   :maxdepth: 8
+   :maxdepth: 4
    :caption: Contents:
 
+   README.md
    Aggr.md
    MultiPlayers.md
    API.md

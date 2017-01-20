@@ -159,6 +159,8 @@ apidoc:
 html:
 	$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
+	\cp logs/*.txt "$(BUILDDIR)"/html/logs/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
