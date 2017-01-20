@@ -26,13 +26,13 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-HORIZON = 100000
+# HORIZON = 20000
+# HORIZON = 30000
+# HORIZON = 100000
 # HORIZON = 300000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
-DELTA_T_SAVE = 1 * (HORIZON <= 10000) + 50 * (10000 < HORIZON < 100000) + 100 * (HORIZON >= 100000)
+DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
 # DELTA_T_SAVE = 1  # XXX to disable this optimisation
 
 # REPETITIONS : number of repetitions of the experiments

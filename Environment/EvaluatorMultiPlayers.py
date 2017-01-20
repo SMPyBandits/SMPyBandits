@@ -188,7 +188,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
         X = self.times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
         for i, player in enumerate(self.players):
@@ -275,7 +275,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
             Y = self.getNbSwitchs(i, environmentId)
@@ -322,7 +322,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
         for armId in range(self.envs[environmentId].nbArms):
             plt.figure()
             for playerId, player in enumerate(self.players):

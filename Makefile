@@ -19,47 +19,47 @@ doc:	clean-doc
 
 # Runners
 main2:
-	# time nice -n 20 python2 ./main.py | tee ./logs/main_py2_log.txt  # DEBUG
-	time nice -n 20 ipython2 ./main.py | tee ./logs/main_py2_log.txt
+	# time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt  # DEBUG
+	time nice -n 19 ipython2 ./main.py | tee ./logs/main_py2_log.txt
 
 main: main3
 main3:
-	# time nice -n 20 python3 ./main.py | tee ./logs/main_py3_log.txt  # DEBUG
-	time nice -n 20 ipython3 ./main.py | tee ./logs/main_py3_log.txt
+	# time nice -n 19 python3 ./main.py | tee ./logs/main_py3_log.txt  # DEBUG
+	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
 
 multiplayers2:
-	# time nice -n 20 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
-	time nice -n 20 ipython2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	# time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
+	time nice -n 19 ipython2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
 multiplayers: multiplayers3
 multiplayers3:
-	# time nice -n 20 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
-	time nice -n 20 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	# time nice -n 19 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
+	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
 # Time profilers
 profile:
-	time nice -n 20 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
+	time nice -n 19 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
 profile3:
-	time nice -n 20 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
+	time nice -n 19 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
 
 # Line time profilers
 line_profiler: kernprof lprof
 kernprof:
 	@echo "Running the script 'main.py' with the 'kernprof' command line profiler ..."
 	@echo "See 'https://github.com/rkern/line_profiler#kernprof' if needed"
-	time nice -n 20 kernprof -l ./main.py | tee ./logs/main_py3_log.txt
+	time nice -n 19 kernprof -l ./main.py | tee ./logs/main_py3_log.txt
 lprof:
 	@echo "Time profile, line by line, for the script 'main.py' ..."
 	@echo "See 'https://github.com/rkern/line_profiler#line-profiler' if needed"
-	time nice -n 20 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
+	time nice -n 19 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
 
 # Python Call Graph, XXX does not work well as far as now
 callgraph:
 	@echo "Running the script 'main.py' with the pycallgraph command line profiler ..."
 	@echo "See 'http://pycallgraph.slowchop.com/en/master/guide/command_line_usage.html#examples' if needed"
-	# time nice -n 20 pycallgraph --verbose --max-depth 10 graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
-	# time nice -n 20 /usr/local/bin/pycallgraph --verbose --threaded --memory graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
-	time nice -n 20 pycallgraph --verbose --max-depth 10 gephi --output-file=logs/pycallgraph.gdf -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 19 pycallgraph --verbose --max-depth 10 graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 19 /usr/local/bin/pycallgraph --verbose --threaded --memory graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	time nice -n 19 pycallgraph --verbose --max-depth 10 gephi --output-file=logs/pycallgraph.gdf -- ./main.py | tee ./logs/main_pycallgraph_log.txt
 	# -convert logs/pycallgraph.svg logs/pycallgraph.png
 
 # Installers
