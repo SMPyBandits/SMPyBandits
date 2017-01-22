@@ -86,6 +86,13 @@ stats:
 	git-cal --ascii | tee -a complete-stats.txt
 	git wdiff complete-stats.txt
 
+# Backup
+ZIPFILE = ~/Dropbox/AlgoBandits.git.zip
+zip:	clean
+	zip -r -9 -y -v $(ZIPFILE) ./ -x plots/*/ plots/*/*
+	zipinfo $(ZIPFILE) | tac
+	ls -larth $(ZIPFILE)
+
 # Linters
 # NPROC = `nproc`
 # NPROC = 1
