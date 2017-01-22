@@ -144,6 +144,7 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 clean-doc:
+	mkdir --parents $(BUILDDIR)/html
 	-rm -rfv /tmp/$(BUILDDIR)/
 	mv -vf $(BUILDDIR)/ /tmp/
 	mkdir --parents $(BUILDDIR)/html/
@@ -153,8 +154,9 @@ clean-doc:
 apidoc:
 	-mkdir -vf /tmp/AlgoBandits/docs/
 	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
+	@echo "==> Showing you which .rst files will be created in docs/"
 	sphinx-apidoc -n -o docs -e -M .
-	@echo "OK to generate these files ?"
+	@echo "==> OK to generate these files ? [Enter for OK, Ctrl+C to cancel]"
 	@read
 	sphinx-apidoc -o docs -e -M .
 
