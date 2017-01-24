@@ -20,15 +20,22 @@ update_all_children = False
 unbiased = False
 unbiased = True
 
+# Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
+update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
+update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
+
 
 class Aggr(BasePolicy):
     """ The Aggregated bandit algorithm, similar to Exp4.
     Reference: https://github.com/Naereen/AlgoBandits
     """
 
-    def __init__(self, nbArms, learningRate, children,
-                 decreaseRate=None, unbiased=unbiased, horizon=None, lower=0., amplitude=1.,
-                 update_all_children=update_all_children, prior='uniform'):
+    def __init__(self, nbArms, children,
+                 learningRate=None, decreaseRate=None, horizon=None,
+                 update_all_children=update_all_children, update_like_exp4=update_like_exp4,
+                 unbiased=unbiased, prior='uniform',
+                 lower=0., amplitude=1.,
+                 ):
         # Attributes
         self.nbArms = nbArms
         self.lower = lower
@@ -37,13 +44,16 @@ class Aggr(BasePolicy):
         self.decreaseRate = decreaseRate
         self.unbiased = unbiased
         self.horizon = horizon
-        # If possible, pre compute the learning rate
-        if horizon is not None and self.decreaseRate == 'auto':
-            self.learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
-            self.decreaseRate = None
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
         self.t = -1
+        self.update_like_exp4 = update_like_exp4
+        # If possible, pre compute the learning rate
+        if horizon is not None and decreaseRate == 'auto':
+            self.learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
+            self.decreaseRate = None
+        elif learningRate is None:
+            self.decreaseRate = 'auto'
         # Internal object memory
         self.children = []
         for childId, child in enumerate(children):
@@ -61,6 +71,7 @@ class Aggr(BasePolicy):
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # Internal vectorial memory
         self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
+        self.children_cumulated_rewards = np.zeros(self.nbChildren)
 
     # Print, different output according to the learning rate
     def __str__(self):
@@ -117,12 +128,18 @@ class Aggr(BasePolicy):
             proba_of_observing_arm = np.sum(trusts[self.choices == arm])
             # print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
             reward /= proba_of_observing_arm
-        scalingConstant = np.exp(reward * rate)
-        # 3. increase self.trusts for the children who were true
-        trusts[self.choices == arm] *= scalingConstant
-        # DONE test both, by changing the option self.update_all_children
-        if self.update_all_children:
-            trusts[self.choices != arm] /= scalingConstant
+        # 3. Compute the new trust proba, like in Exp4
+        if self.update_like_exp4:
+            # Update estimated cumulated rewards for each player
+            self.children_cumulated_rewards[self.choices == arm] += reward
+            trusts = np.exp(rate * self.children_cumulated_rewards)
+        # 3'. increase self.trusts for the children who were true
+        else:
+            scalingConstant = np.exp(reward * rate)
+            trusts[self.choices == arm] *= scalingConstant
+            # DONE test both, by changing the option self.update_all_children
+            if self.update_all_children:
+                trusts[self.choices != arm] /= scalingConstant
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         self.trusts = trusts / np.sum(trusts)

@@ -188,7 +188,7 @@ class Evaluator(object):
     # --- Plotting methods
 
     def plotRegrets(self, environmentId,
-                    savefig=None, meanRegret=False, plotSTD=True, semilogx=False, normalizedRegret=False
+                    savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False
                     ):
         plt.figure()
         ymin = 0

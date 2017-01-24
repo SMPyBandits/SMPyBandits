@@ -84,15 +84,16 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'
 
-
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
-
 # UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
 UNBIASED = False
 UNBIASED = True
+# Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
+UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
+UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 
 
 # Parameters for the arms
@@ -392,9 +393,10 @@ if TEST_AGGR:
             "params": {
                 "unbiased": UNBIASED,
                 "update_all_children": UPDATE_ALL_CHILDREN,
-                "learningRate": LEARNING_RATE,
                 "decreaseRate": DECREASE_RATE,
+                "learningRate": LEARNING_RATE,
                 "children": NON_AGGR_POLICIES,
+                "update_like_exp4": UPDATE_LIKE_EXP4,
                 # "horizon": HORIZON
             },
         }]
