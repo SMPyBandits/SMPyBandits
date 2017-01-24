@@ -22,7 +22,7 @@ plot_dir = "plots"
 semilogx = False
 meanRegret = True
 normalizedRegret = True
-plotSTD = True
+plotSTD = False
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
         else:
             evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
-            if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
+            # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 
         if meanRegret:
             if saveallfigs:

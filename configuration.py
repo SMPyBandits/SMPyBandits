@@ -5,7 +5,7 @@ Configuration for the simulations.
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.5"
 
 from multiprocessing import cpu_count
 CPU_COUNT = cpu_count()
@@ -25,7 +25,7 @@ from Policies.kullback import klucbBern, klucbExp, klucbGauss
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-# HORIZON = 10000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
@@ -42,8 +42,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -115,8 +115,8 @@ configuration = {
     # # "random_invert": False,
     # "nb_random_events": 5,
     # --- Cache rewards
+    # "cache_rewards": False,
     "cache_rewards": True,  # FIXME does it work?
-    "cache_rewards": False,
     # --- Arms
     "environment": [  # Bernoulli arms
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
@@ -131,10 +131,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -143,10 +143,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
@@ -218,10 +218,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        {
-            "archtype": SoftmaxDecreasing,   # Parameter-free Softmax
-            "params": {}
-        },
+        # {
+        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+        #     "params": {}
+        # },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
@@ -289,6 +289,18 @@ configuration.update({
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
+                "alpha": 3
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 2
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
                 "alpha": 1
             }
         },
@@ -304,23 +316,23 @@ configuration.update({
                 "alpha": 0.1          # XXX Below the theoretically acceptable value!
             }
         },
-        # --- MOSS algorithm, quite efficient
-        {
-            "archtype": MOSS,
-            "params": {}
-        },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {
-                # "klucb": klucbBern
-            }
-        },
+        # # --- MOSS algorithm, quite efficient
+        # {
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         # "klucb": klucbBern
+        #     }
+        # },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
@@ -338,10 +350,11 @@ configuration.update({
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}
         # # },
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
+        # # --- Bayes UCB algorithms
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {}
+        # },
         # # --- AdBandits with different alpha paramters
         # {
         #     "archtype": AdBandits,
@@ -382,7 +395,7 @@ if TEST_AGGR:
                 "learningRate": LEARNING_RATE,
                 "decreaseRate": DECREASE_RATE,
                 "children": NON_AGGR_POLICIES,
-                "horizon": HORIZON
+                # "horizon": HORIZON
             },
         }]
 

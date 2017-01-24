@@ -52,6 +52,7 @@ class Evaluator(object):
         self.averageOn = averageOn
         self.useJoblibForPolicies = useJoblibForPolicies
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
+        self.cache_rewards = self.cfg.get('cache_rewards', False)
         # Internal object memory
         self.envs = []
         self.policies = []
@@ -86,6 +87,18 @@ class Evaluator(object):
 
     # --- Start computation
 
+    def compute_cache_rewards(self, arms):
+        """ Compute only once the rewards, then launch the experiments with the same matrix (r_{k,t})."""
+        rewards = np.zeros((len(arms), self.horizon))
+        print("\n===> Pre-computing the rewards ... Of shape {} ...\n".format(np.shape(rewards)))
+        for armId, arm in enumerate(arms):
+            if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
+                rewards[armId] = arm.draw_nparray((self.horizon,))
+            else:  # Slower
+                for t in range(self.horizon):
+                    rewards[armId, t] = arm.draw(t)
+        self.allrewards = rewards
+
     def startAllEnv(self):
         for envId, env in enumerate(self.envs):
             self.startOneEnv(envId, env)
@@ -95,18 +108,25 @@ class Evaluator(object):
         print("\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
+        # Precompute rewards
+        if self.cache_rewards:
+            allrewards = self.compute_cache_rewards(env.arms)
+        else:
+            allrewards = None
+
+        # Start for all policies
         for policyId, policy in enumerate(self.policies):
             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon, delta_t_save=self.delta_t_save, seed=seeds[i])
+                    joblib.delayed(delayed_play)(env, policy, self.horizon, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i])
                     for i in range(self.repetitions)
                 )
             else:
                 results = []
                 for _ in range(self.repetitions):
-                    r = delayed_play(env, policy, self.horizon, delta_t_save=self.delta_t_save)
+                    r = delayed_play(env, policy, self.horizon, delta_t_save=self.delta_t_save, allrewards=allrewards)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -271,7 +291,7 @@ class Evaluator(object):
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
-                 seed=None):
+                 seed=None, allrewards=None):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
     try:
         random.seed(seed)
@@ -292,11 +312,20 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
     for t in range(horizon):
         choice = policy.choice()
-        reward = env.arms[choice].draw(t)
+
+        # XXX do this quicker!
+        if allrewards is None:
+            reward = env.arms[choice].draw(t)
+        else:
+            reward = allrewards[choice, t]
+
         policy.getReward(choice, reward)
-        if t % delta_t_save == 0:
-            # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
-            result.store(t, choice, reward)
+
+        # if t % delta_t_save == 0:  # XXX inefficient and does not work yet
+        #     # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
+        #     result.store(t, choice, reward)
+        result.store(t, choice, reward)
+
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle:
             if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
