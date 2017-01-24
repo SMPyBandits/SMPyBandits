@@ -37,6 +37,10 @@ class Gaussian(Arm):
         """ The parameter t is ignored in this Arm."""
         return min(max(self.mu + self.sigma * gauss(0, 1), self.min), self.max)
 
+    def draw_nparray(self, shape=(1,)):
+        """ The parameter t is ignored in this Arm."""
+        return min(max(self.mu + self.sigma * gauss(0, 1, shape), self.min), self.max)
+
     # --- Printing
 
     def __str__(self):

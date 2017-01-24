@@ -37,6 +37,10 @@ class Exponential(Arm):
         """ The parameter t is ignored in this Arm."""
         return min(-1. / self.p * log(random()), self.trunc)
 
+    def draw_nparray(self, shape=(1,)):
+        """ The parameter t is ignored in this Arm."""
+        return min(-1. / self.p * log(random(shape)), self.trunc)
+
     # --- Printing
 
     def __str__(self):

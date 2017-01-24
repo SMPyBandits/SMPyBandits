@@ -21,6 +21,9 @@ class Arm(object):
     def draw(self, t=None):
         raise NotImplementedError("This method draw(t) has to be implemented in the child class.")
 
+    def draw_nparray(self, shape=(1,)):
+        raise NotImplementedError("This method draw_nparray(t) has to be implemented in the child class.")
+
     def mean(self):
         raise NotImplementedError("This method mean() has to be implemented in the child class.")
 

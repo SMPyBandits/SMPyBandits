@@ -114,6 +114,9 @@ configuration = {
     # "random_shuffle": True,
     # # "random_invert": False,
     # "nb_random_events": 5,
+    # --- Cache rewards
+    "cache_rewards": True,  # FIXME does it work?
+    "cache_rewards": False,
     # --- Arms
     "environment": [  # Bernoulli arms
         # {   # A very very easy problem: 3 arms, one bad, one average, one good

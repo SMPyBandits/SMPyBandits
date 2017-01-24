@@ -22,6 +22,10 @@ class Uniform(Arm):
         """ The parameter t is ignored in this Arm."""
         return self.lower + (random() * self.amplitude)
 
+    def draw_nparray(self, shape=(1,)):
+        """ The parameter t is ignored in this Arm."""
+        return self.lower + (random(shape) * self.amplitude)
+
     def mean(self):
         return self.lower + (0.5 * self.amplitude)
 
