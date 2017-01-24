@@ -17,9 +17,8 @@ update_all_children = False
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
 # ie just r_t, or unbiased estimators, r_t / p_t
-# FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-UNBIASED = True
-UNBIASED = False
+unbiased = False
+unbiased = True
 
 
 class Aggr(BasePolicy):
@@ -28,7 +27,7 @@ class Aggr(BasePolicy):
     """
 
     def __init__(self, nbArms, learningRate, children,
-                 decreaseRate=None, unbiased=UNBIASED, horizon=None, lower=0., amplitude=1.,
+                 decreaseRate=None, unbiased=unbiased, horizon=None, lower=0., amplitude=1.,
                  update_all_children=update_all_children, prior='uniform'):
         # Attributes
         self.nbArms = nbArms
@@ -59,11 +58,38 @@ class Aggr(BasePolicy):
         # Internal vectorial memory
         self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
 
+    # Print, different output according to the learning rate
     def __str__(self):
-        if self.decreaseRate is not None:
+        if self.decreaseRate == 'auto':
+            if self.horizon:
+                return "Aggr(nb: {}, dRate: {}, horizon: {})".format(self.nbChildren, self.decreaseRate, self.horizon)
+            else:
+                return "Aggr(nb: {}, dRate: {})".format(self.nbChildren, self.decreaseRate)
+        elif self.decreaseRate is not None:
             return "Aggr(nb: {}, rate: {}, dRate: {})".format(self.nbChildren, self.learningRate, self.decreaseRate)
         else:
             return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def rate(self):
+        """ Learning rate, can be constant if self.decreaseRate is None, or decreasing.
+
+        - if horizon is known, use the formula which uses it,
+        - if horizon is not known, use the formula which uses current time t,
+        - else, if decreaseRate is a number, use an exponentionally decreasing learning rate, rate = learningRate * exp(- t / decreaseRate). Bad.
+        """
+        if self.decreaseRate is None:  # Constant learning rate
+            return self.learningRate
+        elif self.decreaseRate == 'auto':
+            # DONE Implement the two smart values given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+            if self.horizon is None:
+                return np.sqrt(np.log(self.nbChildren) / (self.t * self.nbArms))
+            else:
+                return np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
+        else:
+            # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
+            return self.learningRate * np.exp(- self.t / self.decreaseRate)
 
     def startGame(self):
         self.t = 0
@@ -79,24 +105,15 @@ class Aggr(BasePolicy):
             self.children[i].getReward(arm, reward)
         # Then compute the new learning rate
         trusts = self.trusts
-        if self.decreaseRate is None:
-            learningRate = self.learningRate
-        elif self.decreaseRate == 'auto':
-            # DONE Implement the two smart values given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
-            if self.horizon is None:
-                learningRate = np.sqrt(np.log(self.nbChildren) / (self.t * self.nbArms))
-            else:
-                learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
-        else:
-            # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
-            learningRate = self.learningRate * np.exp(- self.t / self.decreaseRate)
+        rate = self.rate
         reward = (reward - self.lower) / self.amplitude
-        # FIXME try this trick of receiving a loss instead of a reward ?
-        # reward = 1 - reward
+        # reward = 1 - reward  # FIXME try this trick of receiving a loss instead of a reward ?
+        # FIXED? compute the proba that we observed this arm, p_t
         if self.unbiased:
-            # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-            reward /= trusts
-        scalingConstant = np.exp(reward * learningRate)
+            proba_of_observing_arm = np.sum(trusts[self.choices == arm])
+            print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
+            reward /= proba_of_observing_arm
+        scalingConstant = np.exp(reward * rate)
         # 3. increase self.trusts for the children who were true
         trusts[self.choices == arm] *= scalingConstant
         # DONE test both, by changing the option self.update_all_children
@@ -145,4 +162,4 @@ class Aggr(BasePolicy):
             for i in range(self.nbChildren):
                 self.choices[i] = self.children[i].choiceMultiple(nb)
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
-            # FIXME there is something more to do
+            # XXX is there something more to do??
