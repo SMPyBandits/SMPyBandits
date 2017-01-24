@@ -37,6 +37,10 @@ class Aggr(BasePolicy):
         self.decreaseRate = decreaseRate
         self.unbiased = unbiased
         self.horizon = horizon
+        # If possible, pre compute the learning rate
+        if horizon is not None and self.decreaseRate == 'auto':
+            self.learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
+            self.decreaseRate = None
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
         self.t = -1
@@ -107,11 +111,11 @@ class Aggr(BasePolicy):
         trusts = self.trusts
         rate = self.rate
         reward = (reward - self.lower) / self.amplitude
-        # reward = 1 - reward  # FIXME try this trick of receiving a loss instead of a reward ?
-        # FIXED? compute the proba that we observed this arm, p_t
+        # reward = reward - 1  # FIXME try this trick of receiving a loss instead of a reward ?
+        # FIXED compute the proba that we observed this arm, p_t
         if self.unbiased:
             proba_of_observing_arm = np.sum(trusts[self.choices == arm])
-            print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
+            # print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
             reward /= proba_of_observing_arm
         scalingConstant = np.exp(reward * rate)
         # 3. increase self.trusts for the children who were true
