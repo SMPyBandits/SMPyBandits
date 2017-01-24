@@ -25,7 +25,7 @@ from Policies.kullback import klucbBern, klucbExp, klucbGauss
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
@@ -39,10 +39,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
-REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 1000
+# REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -89,6 +89,10 @@ TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr pol
 TEST_AGGR = True
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
+
+# UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
+UNBIASED = False
+UNBIASED = True
 
 
 # Parameters for the arms
@@ -182,6 +186,7 @@ configuration.update({
         # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
         # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
         # TakeFixedArm(nbArms, 0),  # Take worse arm!
+        # TakeFixedArm(nbArms, 1),  # Take second worse arm!
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -256,10 +261,10 @@ configuration.update({
         #     "archtype": UCBplus,
         #     "params": {}
         # },
-        {
-            "archtype": UCBopt,
-            "params": {}
-        },
+        # {
+        #     "archtype": UCBopt,
+        #     "params": {}
+        # },
         # {
         #     "archtype": UCBrandomInit,
         #     "params": {}
@@ -272,30 +277,30 @@ configuration.update({
         #     "archtype": UCBtuned,   # UCB with variance term and one trick
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 4          # Below the alpha=4 like old classic UCB
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 4          # Below the alpha=4 like old classic UCB
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
         # --- MOSS algorithm, quite efficient
         {
             "archtype": MOSS,
@@ -369,11 +374,12 @@ if TEST_AGGR:
         configuration["policies"] = CURRENT_POLICIES + [{
             "archtype": Aggr,
             "params": {
+                "unbiased": UNBIASED,
+                "update_all_children": UPDATE_ALL_CHILDREN,
                 "learningRate": LEARNING_RATE,
                 "decreaseRate": DECREASE_RATE,
-                "update_all_children": UPDATE_ALL_CHILDREN,
                 "children": NON_AGGR_POLICIES,
-                # "horizon": HORIZON
+                "horizon": HORIZON
             },
         }]
 
