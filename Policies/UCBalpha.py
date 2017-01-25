@@ -22,7 +22,7 @@ class UCBalpha(UCB):
         self.alpha = alpha
 
     def __str__(self):
-        return "UCB(alpha: {})".format(self.alpha)
+        return r"UCB($\alpha: {}$)".format(self.alpha)
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:

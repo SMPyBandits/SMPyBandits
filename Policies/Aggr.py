@@ -71,19 +71,19 @@ class Aggr(BasePolicy):
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # Internal vectorial memory
         self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
-        self.children_cumulated_rewards = np.zeros(self.nbChildren)
+        self.children_cumulated_losses = np.zeros(self.nbChildren)
 
     # Print, different output according to the learning rate
     def __str__(self):
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return "Aggr(nb: {}, dRate: {}, horizon: {})".format(self.nbChildren, self.decreaseRate, self.horizon)
+                return r"Aggr($N={}$, $T={}$)".format(self.nbChildren, self.horizon)
             else:
-                return "Aggr(nb: {}, dRate: {})".format(self.nbChildren, self.decreaseRate)
+                return r"Aggr($N={}$)".format(self.nbChildren)
         elif self.decreaseRate is not None:
-            return "Aggr(nb: {}, rate: {}, dRate: {})".format(self.nbChildren, self.learningRate, self.decreaseRate)
+            return r"Aggr($N={}$, $rate={}$, $dRate={}$)".format(self.nbChildren, self.learningRate, self.decreaseRate)
         else:
-            return "Aggr(nb: {}, rate: {})".format(self.nbChildren, self.learningRate)
+            return r"Aggr($N={}$, $\eta={}$)".format(self.nbChildren, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

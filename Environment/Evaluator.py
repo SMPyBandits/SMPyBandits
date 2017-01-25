@@ -248,7 +248,7 @@ class Evaluator(object):
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         else:
             # We also plot the Lai & Robbins lower bound
-            plt.plot(X, lowerbound * np.log(1 + X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
+            plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))

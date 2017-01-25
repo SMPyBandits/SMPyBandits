@@ -26,8 +26,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -42,7 +42,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -418,7 +418,7 @@ if TEST_AGGR:
     for LEARNING_RATE in LEARNING_RATES:
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
-        configuration["policies"] = CURRENT_POLICIES + [{
+        configuration["policies"] = [{
             "archtype": Aggr,
             "params": {
                 "unbiased": UNBIASED,
@@ -429,7 +429,7 @@ if TEST_AGGR:
                 "update_like_exp4": UPDATE_LIKE_EXP4,
                 # "horizon": HORIZON
             },
-        }]
+        }] + CURRENT_POLICIES
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
