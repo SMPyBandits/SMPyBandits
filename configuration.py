@@ -26,7 +26,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
@@ -41,8 +41,8 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -95,16 +95,16 @@ DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck 
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
 
-UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 UPDATE_ALL_CHILDREN = True
+UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
 # UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
 UNBIASED = False
 UNBIASED = True
 
 # Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
-UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
+UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 
 # Parameters for the arms

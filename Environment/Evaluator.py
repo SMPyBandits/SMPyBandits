@@ -94,7 +94,7 @@ class Evaluator(object):
     def compute_cache_rewards(self, arms):
         """ Compute only once the rewards, then launch the experiments with the same matrix (r_{k,t})."""
         rewards = np.zeros((len(arms), self.horizon))
-        print("\n===> Pre-computing the rewards ... Of shape {} ...\n".format(np.shape(rewards)))
+        print("\n===> Pre-computing the rewards ... Of shape {} ...\n    In order for all simulated algorithms to face the same random rewards (robust comparaison of A1,..,An vs Aggr(A1,..,An)) ...\n".format(np.shape(rewards)))  # DEBUG
         for armId, arm in enumerate(arms):
             if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
                 rewards[armId] = arm.draw_nparray((self.horizon,))
@@ -216,7 +216,7 @@ class Evaluator(object):
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
-            lw = 4 if str(policy)[:4] == 'Aggr' else 1
+            lw = 4 if str(policy)[:4] == 'Aggr' else 2
             if semilogx:
                 plt.semilogx(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
             else:
@@ -267,7 +267,7 @@ class Evaluator(object):
         X = self.times
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            lw = 4 if str(policy)[:4] == 'Aggr' else 1
+            lw = 4 if str(policy)[:4] == 'Aggr' else 2
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))

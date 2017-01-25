@@ -143,6 +143,11 @@ class Aggr(BasePolicy):
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         self.trusts = trusts / np.sum(trusts)
+        # FIXME experiment dynamic resetting of proba
+        # FIXME put this as a parameter
+        # if self.t % 2000 == 0:
+        #     print("   => t % 2000 == 0 : reinitializing the trust proba ...")  # DEBUG
+        #     self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
