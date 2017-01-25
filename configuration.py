@@ -99,8 +99,8 @@ UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
 # UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
-UNBIASED = False
 UNBIASED = True
+UNBIASED = False
 
 # Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
@@ -403,12 +403,12 @@ configuration.update({
     ]
 })
 
-# # XXX Only test with fixed arms
-# configuration.update({
-#     "policies": [  # --- Full or partial knowledge algorithms
-#         TakeFixedArm(nbArms, k) for k in range(nbArms)
-#     ]
-# })
+# XXX Only test with fixed arms
+configuration.update({
+    "policies": [  # --- Full or partial knowledge algorithms
+        TakeFixedArm(nbArms, k) for k in range(nbArms)
+    ]
+})
 
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined

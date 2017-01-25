@@ -81,9 +81,9 @@ class Aggr(BasePolicy):
             else:
                 return r"Aggr($N={}$)".format(self.nbChildren)
         elif self.decreaseRate is not None:
-            return r"Aggr($N={}$, $rate={}$, $dRate={}$)".format(self.nbChildren, self.learningRate, self.decreaseRate)
+            return r"Aggr($N={}$, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, self.learningRate, self.decreaseRate)
         else:
-            return r"Aggr($N={}$, $\eta={}$)".format(self.nbChildren, self.learningRate)
+            return r"Aggr($N={}$, $\eta={:.3g}$)".format(self.nbChildren, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
