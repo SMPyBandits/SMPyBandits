@@ -267,18 +267,18 @@ configuration.update({
         #     }
         # },
         # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBplus,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBopt,
-        #     "params": {}
-        # },
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
+        {
+            "archtype": UCBplus,
+            "params": {}
+        },
+        {
+            "archtype": UCBopt,
+            "params": {}
+        },
         # {
         #     "archtype": UCBrandomInit,
         #     "params": {}
@@ -288,74 +288,74 @@ configuration.update({
         #     "params": {}
         # },
         # {
-        #     "archtype": UCBtuned,   # UCB with variance term and one trick
+        #     "archtype": UCBVtuned,   # UCB with variance term and one trick
         #     "params": {}
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 3
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 2
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.25          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.05         # XXX Below the theoretically acceptable value!
-            }
-        },
-        # # --- MOSS algorithm, quite efficient
         # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         # "klucb": klucbBern
+        #         "alpha": 4          # Below the alpha=4 like old classic UCB
         #     }
         # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 3
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 2
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.05         # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # --- MOSS algorithm, quite efficient
+        {
+            "archtype": MOSS,
+            "params": {}
+        },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
+        # --- KL algorithms
+        {
+            "archtype": klUCB,
+            "params": {
+                # "klucb": klucbBern
+            }
+        },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
@@ -373,11 +373,11 @@ configuration.update({
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}
         # # },
-        # # --- Bayes UCB algorithms
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
-        # },
+        # --- Bayes UCB algorithms
+        {
+            "archtype": BayesUCB,
+            "params": {}
+        },
         # # --- AdBandits with different alpha paramters
         # {
         #     "archtype": AdBandits,
@@ -403,12 +403,12 @@ configuration.update({
     ]
 })
 
-# XXX Only test with fixed arms
-configuration.update({
-    "policies": [  # --- Full or partial knowledge algorithms
-        TakeFixedArm(nbArms, k) for k in range(nbArms)
-    ]
-})
+# # XXX Only test with fixed arms
+# configuration.update({
+#     "policies": [  # --- Full or partial knowledge algorithms
+#         TakeFixedArm(nbArms, k) for k in range(nbArms)
+#     ]
+# })
 
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
