@@ -26,7 +26,7 @@ from .MAB import MAB
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
-nb_random_events = 4
+nb_random_events = 5
 
 
 class Evaluator(object):
@@ -47,6 +47,10 @@ class Evaluator(object):
         self.delta_t_save = self.cfg['delta_t_save']
         print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
         self.duration = int(self.horizon / self.delta_t_save)
+        # Parameters for the random events
+        self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)
+        self.random_invert = self.cfg.get('random_invert', random_invert)
+        self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage
         self.averageOn = averageOn
@@ -120,13 +124,19 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i])
+                    joblib.delayed(delayed_play)(env, policy, self.horizon,
+                        random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events,
+                        delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i]
+                    )
                     for i in range(self.repetitions)
                 )
             else:
                 results = []
                 for _ in range(self.repetitions):
-                    r = delayed_play(env, policy, self.horizon, delta_t_save=self.delta_t_save, allrewards=allrewards)
+                    r = delayed_play(env, policy, self.horizon,
+                        random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events,
+                        delta_t_save=self.delta_t_save, allrewards=allrewards
+                        )
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -137,6 +147,7 @@ class Evaluator(object):
                 self.rewards[policyId, envId, :] += r.rewards
                 self.rewardsSquared[policyId, envId, :] += r.rewardsSquared
                 self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
+                # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
                 self.pulls[envId][policyId, :] += r.pulls
 
     # --- Getter methods
