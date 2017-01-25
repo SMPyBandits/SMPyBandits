@@ -53,11 +53,10 @@ N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
 
-
 # Random events
 RANDOM_SHUFFLE = True
 RANDOM_INVERT = False
-NB_RANDOM_EVENTS = 10
+NB_RANDOM_EVENTS = 5
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -93,8 +92,8 @@ DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck 
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
 
-UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
+UPDATE_ALL_CHILDREN = True
 
 # UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
 UNBIASED = False
@@ -323,7 +322,19 @@ configuration.update({
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
+                "alpha": 0.25          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
                 "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.05         # XXX Below the theoretically acceptable value!
             }
         },
         # # --- MOSS algorithm, quite efficient

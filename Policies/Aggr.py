@@ -5,7 +5,7 @@ Reference: https://github.com/Naereen/AlgoBandits
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.5"
 
 import numpy as np
 import numpy.random as rn
@@ -18,11 +18,11 @@ update_all_children = False
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
 # ie just r_t, or unbiased estimators, r_t / p_t
 unbiased = False
-unbiased = True
+unbiased = True    # XXX Better
 
 # Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
 update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
-update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
+update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)  # XXX Better
 
 
 class Aggr(BasePolicy):
@@ -56,12 +56,12 @@ class Aggr(BasePolicy):
             self.decreaseRate = 'auto'
         # Internal object memory
         self.children = []
-        for childId, child in enumerate(children):
+        for (i, child) in enumerate(children):
             if isinstance(child, dict):
-                print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(childId, child))  # DEBUG
+                print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child['archtype'](nbArms, lower=lower, amplitude=amplitude, **child['params']))
             else:
-                print("  Using this already created player 'children[{}]' = {} ...".format(childId, child))  # DEBUG
+                print("  Using this already created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child)
         # Initialize the arrays
         if prior is not None and prior != 'uniform':
@@ -116,26 +116,26 @@ class Aggr(BasePolicy):
     def getReward(self, arm, reward):
         self.t += 1
         # First, give reward to all child children
-        for i in range(self.nbChildren):
-            self.children[i].getReward(arm, reward)
+        for child in self.children:
+            child.getReward(arm, reward)
         # Then compute the new learning rate
         trusts = self.trusts
         rate = self.rate
-        reward = (reward - self.lower) / self.amplitude
-        # reward = reward - 1  # FIXME try this trick of receiving a loss instead of a reward ?
-        # FIXED compute the proba that we observed this arm, p_t
+        reward = (reward - self.lower) / self.amplitude  # Normalize
+        # DONE compute the proba that we observed this arm, p_t
         if self.unbiased:
             proba_of_observing_arm = np.sum(trusts[self.choices == arm])
             # print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
             reward /= proba_of_observing_arm
         # 3. Compute the new trust proba, like in Exp4
         if self.update_like_exp4:
+            reward = reward - 1  # FIXME try this trick of receiving a loss instead of a reward ?
             # Update estimated cumulated rewards for each player
             self.children_cumulated_rewards[self.choices == arm] += reward
             trusts = np.exp(rate * self.children_cumulated_rewards)
         # 3'. increase self.trusts for the children who were true
         else:
-            scalingConstant = np.exp(reward * rate)
+            scalingConstant = np.exp(rate * reward)
             trusts[self.choices == arm] *= scalingConstant
             # DONE test both, by changing the option self.update_all_children
             if self.update_all_children:
@@ -148,8 +148,8 @@ class Aggr(BasePolicy):
 
     def makeChildrenChose(self):
         """ Convenience method to make every children chose their best arm."""
-        for i in range(self.nbChildren):
-            self.choices[i] = self.children[i].choice()
+        for (i, child) in enumerate(self.children):
+            self.choices[i] = child.choice()
             # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
             # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
         # print("self.choices =", self.choices)  # DEBUG
@@ -164,23 +164,22 @@ class Aggr(BasePolicy):
         if rank == 1:
             return self.choice()
         else:
-            for i in range(self.nbChildren):
-                self.choices[i] = self.children[i].choiceWithRank(rank)
+            for (i, child) in enumerate(self.children):
+                self.choices[i] = child.choiceWithRank(rank)
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceFromSubSet(self, availableArms='all'):
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
-            for i in range(self.nbChildren):
-                self.choices[i] = self.children[i].choiceFromSubSet(availableArms)
+            for (i, child) in enumerate(self.children):
+                self.choices[i] = child.choiceFromSubSet(availableArms)
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceMultiple(self, nb=1):
         if nb == 1:
             return self.choice()
         else:
-            for i in range(self.nbChildren):
-                self.choices[i] = self.children[i].choiceMultiple(nb)
+            for (i, child) in enumerate(self.children):
+                self.choices[i] = child.choiceMultiple(nb)
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
-            # XXX is there something more to do??

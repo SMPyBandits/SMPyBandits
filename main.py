@@ -109,12 +109,16 @@ if __name__ == '__main__':
                 # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
 
         # --- Also plotting the probability of picking the best arm
-        if saveallfigs:
-            savefig = savefig.replace('main', 'main_BestArmPulls')
-            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-            evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
+        if evaluation.random_shuffle or evaluation.random_invert:
+            print(" - Not plotting probability of picking the best arm as we used random events ...")
+            print("   ==> FIXME correct this bug")
         else:
-            evaluation.plotBestArmPulls(envId)
+            if saveallfigs:
+                savefig = savefig.replace('main', 'main_BestArmPulls')
+                print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+                evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
+            else:
+                evaluation.plotBestArmPulls(envId)
 
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))
