@@ -26,7 +26,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
@@ -43,7 +43,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -54,9 +54,12 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
 
 # Random events
-RANDOM_SHUFFLE = True
+RANDOM_SHUFFLE = False
 RANDOM_INVERT = False
 NB_RANDOM_EVENTS = 5
+
+# Cache rewards
+CACHE_REWARDS = True
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -124,8 +127,7 @@ configuration = {
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
     # --- Cache rewards
-    # "cache_rewards": False,
-    "cache_rewards": True,  # FIXME does it work?
+    "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # Bernoulli arms
         # {   # A very very easy problem: 3 arms, one bad, one average, one good

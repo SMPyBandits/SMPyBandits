@@ -56,7 +56,7 @@ class Aggr(BasePolicy):
             self.decreaseRate = 'auto'
         # Internal object memory
         self.children = []
-        for (i, child) in enumerate(children):
+        for i, child in enumerate(children):
             if isinstance(child, dict):
                 print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child['archtype'](nbArms, lower=lower, amplitude=amplitude, **child['params']))
@@ -148,7 +148,7 @@ class Aggr(BasePolicy):
 
     def makeChildrenChose(self):
         """ Convenience method to make every children chose their best arm."""
-        for (i, child) in enumerate(self.children):
+        for i, child in enumerate(self.children):
             self.choices[i] = child.choice()
             # Could we be faster here? Idea: first sample according to self.trusts, then make it decide
             # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
@@ -164,7 +164,7 @@ class Aggr(BasePolicy):
         if rank == 1:
             return self.choice()
         else:
-            for (i, child) in enumerate(self.children):
+            for i, child in enumerate(self.children):
                 self.choices[i] = child.choiceWithRank(rank)
             return rn.choice(self.choices, p=self.trusts)
 
@@ -172,7 +172,7 @@ class Aggr(BasePolicy):
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
-            for (i, child) in enumerate(self.children):
+            for i, child in enumerate(self.children):
                 self.choices[i] = child.choiceFromSubSet(availableArms)
             return rn.choice(self.choices, p=self.trusts)
 
@@ -180,6 +180,6 @@ class Aggr(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
-            for (i, child) in enumerate(self.children):
+            for i, child in enumerate(self.children):
                 self.choices[i] = child.choiceMultiple(nb)
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)

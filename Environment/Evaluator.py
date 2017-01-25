@@ -216,10 +216,11 @@ class Evaluator(object):
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
+            lw = 4 if str(policy)[:4] == 'Aggr' else 1
             if semilogx:
-                plt.semilogx(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.semilogx(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
             else:
-                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, environmentId, meanRegret=meanRegret)
@@ -266,7 +267,8 @@ class Evaluator(object):
         X = self.times
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+            lw = 4 if str(policy)[:4] == 'Aggr' else 1
+            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
