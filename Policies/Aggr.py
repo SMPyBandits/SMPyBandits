@@ -121,30 +121,29 @@ class Aggr(BasePolicy):
         # Then compute the new learning rate
         trusts = self.trusts
         rate = self.rate
-        reward = (reward - self.lower) / self.amplitude  # Normalize
-        # DONE compute the proba that we observed this arm, p_t
+        reward = (reward - self.lower) / self.amplitude  # Normalize it to [0, 1]
+        # DONE compute the proba that we observed this arm, p_t, if unbiased
         if self.unbiased:
             proba_of_observing_arm = np.sum(trusts[self.choices == arm])
             # print("  Observing arm", arm, "with reward", reward, "and the estimated proba of observing it was", proba_of_observing_arm)  # DEBUG
             reward /= proba_of_observing_arm
         # 3. Compute the new trust proba, like in Exp4
         if self.update_like_exp4:
-            reward = reward - 1  # FIXME try this trick of receiving a loss instead of a reward ?
+            loss = 1 - reward  # FIXME try this trick of receiving a loss instead of a reward ?
             # Update estimated cumulated rewards for each player
-            self.children_cumulated_rewards[self.choices == arm] += reward
-            trusts = np.exp(rate * self.children_cumulated_rewards)
+            self.children_cumulated_losses[self.choices == arm] += loss
+            trusts = np.exp(- rate * self.children_cumulated_losses)
         # 3'. increase self.trusts for the children who were true
         else:
-            scalingConstant = np.exp(rate * reward)
-            trusts[self.choices == arm] *= scalingConstant
+            scaling = np.exp(rate * reward)
+            trusts[self.choices == arm] *= scaling
             # DONE test both, by changing the option self.update_all_children
             if self.update_all_children:
-                trusts[self.choices != arm] /= scalingConstant
+                trusts[self.choices != arm] /= scaling
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         self.trusts = trusts / np.sum(trusts)
-        # FIXME experiment dynamic resetting of proba
-        # FIXME put this as a parameter
+        # FIXME experiment dynamic resetting of proba, put this as a parameter
         # if self.t % 2000 == 0:
         #     print("   => t % 2000 == 0 : reinitializing the trust proba ...")  # DEBUG
         #     self.trusts = np.ones(self.nbChildren) / self.nbChildren

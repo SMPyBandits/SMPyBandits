@@ -51,8 +51,9 @@ class Softmax(BasePolicy):
         rewards = self.rewards
         if self.unbiased and p_t is not None:
             # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-            rewards = rewards / p_t
-        trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
+            rewards /= p_t
+        # trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
+        trusts = np.exp(rewards / (self.temperature * self.pulls))
         return trusts / np.sum(trusts)
 
     # --- Choice methods
@@ -78,7 +79,7 @@ class Softmax(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         if (self.t < self.nbArms) or (nb == 1):
-            return self.choice()
+            return self.choice()  # FIXME wrong size if nb > 1 but t < nbArms
         else:
             return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
