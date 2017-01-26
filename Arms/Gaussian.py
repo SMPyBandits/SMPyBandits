@@ -5,6 +5,8 @@ __author__ = "Olivier Cappé, Aurélien Garivier"
 __version__ = "$Revision: 1.4 $"
 
 from random import gauss
+from numpy.random import standard_normal
+import numpy as np
 
 from .Arm import Arm
 from .kullback import klGauss
@@ -39,7 +41,7 @@ class Gaussian(Arm):
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
-        return min(max(self.mu + self.sigma * gauss(0, 1, shape), self.min), self.max)
+        return np.minimum(np.maximum(self.mu + self.sigma * standard_normal(shape), self.min), self.max)
 
     # --- Printing
 

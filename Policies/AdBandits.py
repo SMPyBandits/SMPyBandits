@@ -29,8 +29,9 @@ class AdBandits(BasePolicy):
             self.posterior[arm] = posterior()
 
     def __str__(self):
-        # return r"AdBandits($\alpha={:.3g}$, $T={:.3g}$)".format(self.alpha, self.horizon)
-        return r"AdBandits($\alpha={:.3g}$)".format(self.alpha)
+        # return r"AdBandits($\alpha={:.3g}$)".format(self.alpha)
+        # OK, they all have knowledge of T, but it's good to display it to, remember it
+        return r"AdBandits($\alpha={:.3g}$, $T={:.5g}$)".format(self.alpha, self.horizon)
 
     def startGame(self):
         super(AdBandits, self).startGame()

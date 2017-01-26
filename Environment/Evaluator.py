@@ -206,7 +206,7 @@ class Evaluator(object):
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times - 1
         for i, policy in enumerate(self.policies):
             if meanRegret:
@@ -263,11 +263,11 @@ class Evaluator(object):
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, environmentId)
-            lw = 4 if str(policy)[:4] == 'Aggr' else 2
+            lw = 5 if str(policy)[:4] == 'Aggr' else 3
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))

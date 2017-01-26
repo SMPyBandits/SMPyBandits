@@ -6,6 +6,8 @@ __version__ = "$Revision: 1.5 $"
 
 from math import isinf, exp, log
 from random import random
+import numpy as np
+import numpy.random as rn
 
 from .Arm import Arm
 from .kullback import klExp
@@ -35,11 +37,11 @@ class Exponential(Arm):
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""
-        return min(-1. / self.p * log(random()), self.trunc)
+        return min((-1. / self.p) * log(random()), self.trunc)
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
-        return min(-1. / self.p * log(random(shape)), self.trunc)
+        return np.minimum((-1. / self.p) * np.log(rn.random(shape)), self.trunc)
 
     # --- Printing
 

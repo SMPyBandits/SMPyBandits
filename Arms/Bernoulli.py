@@ -4,7 +4,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-# from random import random
 from numpy.random import random
 
 from .Arm import Arm

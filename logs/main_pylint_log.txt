@@ -28,49 +28,45 @@ E: 21, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 E: 21, 0: No name 'klucbExp' in module 'Policies.kullback' (no-name-in-module)
 E: 21, 0: No name 'klucbGauss' in module 'Policies.kullback' (no-name-in-module)
 C: 21, 0: Import "from Policies.kullback import klucbBern, klucbExp, klucbGauss" should be placed at the top of the module (wrong-import-position)
+R: 93, 0: Redefinition of DECREASE_RATE type from float to str (redefined-variable-type)
+R: 71, 0: Redefinition of TEMPERATURE type from float to int (redefined-variable-type)
 W: 15, 0: Unused Exponential imported from Arms.Exponential (unused-import)
 W: 16, 0: Unused Gaussian imported from Arms.Gaussian (unused-import)
 W: 17, 0: Unused Poisson imported from Arms.Poisson (unused-import)
-W: 19, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Thompson from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCBopt from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
 W: 19, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import BayesUCB from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 19, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
 W: 19, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused klucbBern imported from Policies.kullback (unused-import)
+W: 19, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCB from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBopt from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 19, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused klucbExp imported from Policies.kullback (unused-import)
 W: 21, 0: Unused klucbGauss imported from Policies.kullback (unused-import)
-R: 71, 0: Redefinition of TEMPERATURE type from float to int (redefined-variable-type)
-R: 93, 0: Redefinition of DECREASE_RATE type from float to str (redefined-variable-type)
+W: 21, 0: Unused klucbBern imported from Policies.kullback (unused-import)
 ************* Module conf
-W: 73, 0: Redefining built-in 'copyright' (redefined-builtin)
 C:  1, 0: Missing module docstring (missing-docstring)
+W: 73, 0: Redefining built-in 'copyright' (redefined-builtin)
 R: 64, 4: Redefinition of source_suffix type from str to list (redefined-variable-type)
 ************* Module Arms.Arm
 C: 21, 4: Missing method docstring (missing-docstring)
@@ -121,54 +117,54 @@ W: 14, 0: Unused Exponential imported from Arms.Exponential (unused-import)
 W: 15, 0: Unused Gaussian imported from Arms.Gaussian (unused-import)
 W: 16, 0: Unused Poisson imported from Arms.Poisson (unused-import)
 W: 19, 0: Unused MAB imported from Environment.MAB (unused-import)
-W: 21, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Aggr from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Thompson from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBopt from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCB from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused import BayesUCB from wildcard import (unused-wildcard-import)
-W: 21, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBopt from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Aggr from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
 W: 21, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Thompson from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
+W: 21, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
 W: 22, 0: Unused import Selfish from wildcard import (unused-wildcard-import)
-W: 22, 0: Unused import OracleNotFair from wildcard import (unused-wildcard-import)
+W: 22, 0: Unused import CentralizedFixed from wildcard import (unused-wildcard-import)
+W: 22, 0: Unused import CentralizedMultiplePlay from wildcard import (unused-wildcard-import)
 W: 22, 0: Unused import OracleFair from wildcard import (unused-wildcard-import)
 W: 22, 0: Unused import ALOHA from wildcard import (unused-wildcard-import)
-W: 22, 0: Unused import CentralizedFixed from wildcard import (unused-wildcard-import)
+W: 22, 0: Unused import tnext_log from wildcard import (unused-wildcard-import)
 W: 22, 0: Unused import tnext_beta from wildcard import (unused-wildcard-import)
 W: 22, 0: Unused import CentralizedCycling from wildcard import (unused-wildcard-import)
-W: 22, 0: Unused import tnext_log from wildcard import (unused-wildcard-import)
-W: 22, 0: Unused import CentralizedMultiplePlay from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import lru_cache from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import closerUserGetsReward from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import handleCollision_or_getZeroReward from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import defaultCollisionModel from wildcard import (unused-wildcard-import)
+W: 22, 0: Unused import OracleNotFair from wildcard import (unused-wildcard-import)
 W: 25, 0: Unused import collision_models from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import closerUserGetsReward from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import lru_cache from wildcard import (unused-wildcard-import)
 W: 25, 0: Unused import random_distances from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import defaultCollisionModel from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import handleCollision_or_getZeroReward from wildcard import (unused-wildcard-import)
 C: 25, 0: Imports from package Environment are not grouped (ungrouped-imports)
 ************* Module main
 W: 28, 0: XXX dont keep it like this (fixme)
@@ -179,6 +175,8 @@ W:119, 0: XXX To save the figure (fixme)
 C: 53, 0: Wrong continued indentation (remove 1 space).
                            )
                           |^ (bad-continuation)
+************* Module Arms.Gaussian
+E: 42,46: Too many positional arguments for method call (too-many-function-args)
 ************* Module main_multiplayers
 W: 26, 0: XXX dont keep it like this (fixme)
 W: 86, 0: XXX To plot without saving (fixme)
@@ -196,8 +194,26 @@ W:176, 0: XXX To plot without saving (fixme)
 W:185, 0: XXX To plot without saving (fixme)
 W:194, 0: XXX To plot without saving (fixme)
 W:205, 0: XXX To plot without saving (fixme)
-************* Module Arms.Gaussian
-E: 42,46: Too many positional arguments for method call (too-many-function-args)
+************* Module Environment.CollisionModels
+W: 29, 0: XXX could it help? (fixme)
+W: 47, 0: XXX Should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ? (fixme)
+W: 48, 0: XXX Strong assumption on the model (fixme)
+W:116, 0: XXX Using a cache to not regenerate a random vector of distances. Siooooux! (fixme)
+W:117, 0: XXX size is NOT bounded... bad! (fixme)
+W:151, 0: XXX very low probability, if the distances are randomly chosen (fixme)
+C: 33, 8: Missing function docstring (missing-docstring)
+W: 31,31: Unused argument 'typed' (unused-argument)
+W: 31,18: Unused argument 'maxsize' (unused-argument)
+W: 76,59: Unused argument 'collisions' (unused-argument)
+C: 98, 4: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:137, 4: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+************* Module Environment.MAB
+W: 96, 0: FIXME it is weird to have a lowerbound = 0 if nbPlayers = nbArms (fixme)
+C: 81, 0: Wrong continued indentation (add 20 spaces).
+            )
+            ^                   | (bad-continuation)
+C: 60, 4: Missing method docstring (missing-docstring)
+C:121, 4: Missing method docstring (missing-docstring)
 ************* Module Arms.kullback
 W:376, 0: XXX where does this value come from? (fixme)
 W:381, 0: XXX where does this value come from? (fixme)
@@ -218,26 +234,23 @@ W:314,20: Redefining name 'd' from outer scope (line 494) (redefined-outer-name)
 W:314,17: Redefining name 'x' from outer scope (line 492) (redefined-outer-name)
 W:347,16: Redefining name 'd' from outer scope (line 494) (redefined-outer-name)
 W:347,13: Redefining name 'x' from outer scope (line 492) (redefined-outer-name)
-W:390,10: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:390,13: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
+W:390,10: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:390,16: Redefining name 'klMax' from outer scope (line 478) (redefined-outer-name)
+W:426,14: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
 W:426,11: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:426,17: Redefining name 'klMax' from outer scope (line 478) (redefined-outer-name)
-W:426,14: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
 W:456, 4: String statement has no effect (pointless-string-statement)
-************* Module Environment.CollisionModels
-W: 29, 0: XXX could it help? (fixme)
-W: 47, 0: XXX Should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ? (fixme)
-W: 48, 0: XXX Strong assumption on the model (fixme)
-W:116, 0: XXX Using a cache to not regenerate a random vector of distances. Siooooux! (fixme)
-W:117, 0: XXX size is NOT bounded... bad! (fixme)
-W:151, 0: XXX very low probability, if the distances are randomly chosen (fixme)
-C: 33, 8: Missing function docstring (missing-docstring)
-W: 31,18: Unused argument 'maxsize' (unused-argument)
-W: 31,31: Unused argument 'typed' (unused-argument)
-W: 76,59: Unused argument 'collisions' (unused-argument)
-C: 98, 4: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:137, 4: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+************* Module Environment.ResultMultiPlayers
+C: 23, 4: Missing method docstring (missing-docstring)
+R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
+************* Module Environment.Result
+C: 21, 4: Missing method docstring (missing-docstring)
+R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
+************* Module Policies.AdBandits
+W: 80, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
+W: 40, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
+C: 47, 4: Missing method docstring (missing-docstring)
 ************* Module Environment.plotsettings
 W: 17, 0: FIXME revert to ↑ after having generating the figures for the paper (fixme)
 C: 28, 0: Wrong continued indentation (remove 1 space).
@@ -247,23 +260,6 @@ W: 60, 4: No exception type(s) specified (bare-except)
 W: 64, 8: No exception type(s) specified (bare-except)
 W: 68,12: No exception type(s) specified (bare-except)
 W: 72,16: No exception type(s) specified (bare-except)
-************* Module Environment.ResultMultiPlayers
-C: 23, 4: Missing method docstring (missing-docstring)
-R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
-************* Module Environment.Result
-C: 21, 4: Missing method docstring (missing-docstring)
-R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
-************* Module Environment.MAB
-W: 96, 0: FIXME it is weird to have a lowerbound = 0 if nbPlayers = nbArms (fixme)
-C: 81, 0: Wrong continued indentation (add 20 spaces).
-            )
-            ^                   | (bad-continuation)
-C: 60, 4: Missing method docstring (missing-docstring)
-C:121, 4: Missing method docstring (missing-docstring)
-************* Module Policies.AdBandits
-W: 80, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
-W: 40, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
-C: 47, 4: Missing method docstring (missing-docstring)
 ************* Module Policies.BasePolicy
 W: 41, 0: XXX we could check here if the reward is outside the bounds (fixme)
 C: 33, 4: Missing method docstring (missing-docstring)
@@ -272,23 +268,26 @@ C: 50, 4: Missing method docstring (missing-docstring)
 C: 55, 4: Missing method docstring (missing-docstring)
 C: 61, 4: Missing method docstring (missing-docstring)
 C: 67, 4: Missing method docstring (missing-docstring)
-************* Module Policies.BayesianIndexPolicy
-W: 25, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 ************* Module Policies.Aggr
 W: 21, 0: XXX Better (fixme)
 W: 25, 0: XXX Better (fixme)
-W:132, 0: FIXME try this trick of receiving a loss instead of a reward ? (fixme)
-W:146, 0: FIXME experiment dynamic resetting of proba, put this as a parameter (fixme)
-W:158, 0: XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities! (fixme)
+W: 97, 0: FIXME remove this experiment (fixme)
+W: 99, 0: FIXME remove this experiment (fixme)
+W:135, 0: FIXME try this trick of receiving a loss instead of a reward ? (fixme)
+W:149, 0: FIXME experiment dynamic resetting of proba, put this as a parameter (fixme)
+W:161, 0: XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities! (fixme)
 C: 38, 0: Wrong continued indentation (remove 1 space).
                  ):
                 |^ (bad-continuation)
 R: 28, 0: Too many instance attributes (15/7) (too-many-instance-attributes)
-W: 36,17: Redefining name 'unbiased' from outer scope (line 20) (redefined-outer-name)
 W: 35,58: Redefining name 'update_like_exp4' from outer scope (line 24) (redefined-outer-name)
+W: 36,17: Redefining name 'unbiased' from outer scope (line 20) (redefined-outer-name)
 W: 35,17: Redefining name 'update_all_children' from outer scope (line 16) (redefined-outer-name)
 W: 33, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
-W:116, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
+W:100, 8: Unreachable code (unreachable)
+W:119, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
+************* Module Policies.BayesianIndexPolicy
+W: 25, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 ************* Module Policies.EpsilonDecreasingMEGA
 C: 18, 0: Missing function docstring (missing-docstring)
 ************* Module Environment.EvaluatorMultiPlayers
@@ -344,6 +343,11 @@ C:455, 4: Missing method docstring (missing-docstring)
 R: 31, 0: Too many public methods (21/20) (too-many-public-methods)
 C:468, 0: Missing function docstring (missing-docstring)
 R:468, 0: Too many local variables (16/15) (too-many-locals)
+************* Module Policies.EpsilonGreedy
+W: 48, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
+C: 28, 4: Missing method docstring (missing-docstring)
+E: 51,51: Instance of 'EpsilonGreedy' has no 'index' member (no-member)
+E: 72,51: Instance of 'EpsilonGreedy' has no 'index' member (no-member)
 ************* Module Environment.Evaluator
 W: 99, 0: XXX Use this method to speed up computation (fixme)
 W:150, 0: FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations (fixme)
@@ -399,15 +403,10 @@ R:201, 4: Too many local variables (20/15) (too-many-locals)
 C:261, 4: Missing method docstring (missing-docstring)
 C:283, 4: Missing method docstring (missing-docstring)
 W:104, 8: Attribute 'allrewards' defined outside __init__ (attribute-defined-outside-init)
-W:306,17: Redefining name 'random_shuffle' from outer scope (line 27) (redefined-outer-name)
-W:306,48: Redefining name 'random_invert' from outer scope (line 28) (redefined-outer-name)
-W:306,77: Redefining name 'nb_random_events' from outer scope (line 29) (redefined-outer-name)
 C:305, 0: Missing function docstring (missing-docstring)
-************* Module Policies.EpsilonGreedy
-W: 48, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
-C: 28, 4: Missing method docstring (missing-docstring)
-E: 51,51: Instance of 'EpsilonGreedy' has no 'index' member (no-member)
-E: 72,51: Instance of 'EpsilonGreedy' has no 'index' member (no-member)
+W:306,48: Redefining name 'random_invert' from outer scope (line 28) (redefined-outer-name)
+W:306,17: Redefining name 'random_shuffle' from outer scope (line 27) (redefined-outer-name)
+W:306,77: Redefining name 'nb_random_events' from outer scope (line 29) (redefined-outer-name)
 ************* Module Policies.Exp3
 W: 56, 0: XXX Call to BasePolicy (fixme)
 W: 70, 0: TODO? random permutation instead of deterministic order! (fixme)
@@ -415,20 +414,23 @@ C: 46, 4: Missing method docstring (missing-docstring)
 C: 50, 4: Missing method docstring (missing-docstring)
 W: 55, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 W:119, 4: Arguments number differs from overridden 'gamma' method (arguments-differ)
-************* Module Policies.__init__
-W: 58, 0: XXX fix it before importing it (fixme)
-W: 70, 0: FIXME write it! Can be just a subclass of MusicalChair (fixme)
 ************* Module Policies.Beta
 W: 30, 4: __init__ method from base class 'Posterior' is not called (super-init-not-called)
 W: 38, 4: Arguments number differs from overridden 'reset' method (arguments-differ)
-************* Module Policies.klUCBHPlus
-W: 34, 0: XXX We could adapt tolerance to the value of self.t (fixme)
-E: 11, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 ************* Module Policies.IndexPolicy
 W: 64, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
 W: 78, 0: FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all' (fixme)
 ************* Module Policies.klUCBPlus
 W: 23, 0: XXX We could adapt tolerance to the value of self.t (fixme)
+************* Module Policies.__init__
+W: 58, 0: XXX fix it before importing it (fixme)
+W: 70, 0: FIXME write it! Can be just a subclass of MusicalChair (fixme)
+************* Module Policies.klUCBHPlus
+W: 34, 0: XXX We could adapt tolerance to the value of self.t (fixme)
+E: 11, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
+************* Module Policies.klUCB
+W: 32, 0: XXX We could adapt tolerance to the value of self.t (fixme)
+E: 12, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 ************* Module Policies.KLempUCB
 W: 11, 0: XXX Not detected as in the kullback.py file ? (fixme)
 W: 46, 0: FIXME this does not work apparently... (fixme)
@@ -436,15 +438,10 @@ E: 11, 0: No name 'maxEV' in module 'Policies.kullback' (no-name-in-module)
 W: 41, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 C: 47, 4: Missing method docstring (missing-docstring)
 R: 47, 4: Method could be a function (no-self-use)
-************* Module Policies.klUCB
-W: 32, 0: XXX We could adapt tolerance to the value of self.t (fixme)
-E: 12, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 ************* Module PoliciesMultiPlayers.BaseCentralizedPolicy
 C: 17, 4: Missing method docstring (missing-docstring)
 C: 20, 4: Missing method docstring (missing-docstring)
 C: 23, 4: Missing method docstring (missing-docstring)
-************* Module PoliciesMultiPlayers.BaseMPPolicy
-R: 11, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module Policies.MEGA
 W: 52, 0: FIXME we should not require two parameters, as they are just used in the formula for epsilon_t (fixme)
 W: 87, 0: XXX Chose a random arm (fixme)
@@ -452,6 +449,87 @@ W: 97, 0: TODO should be uniformly chosen if more than one arm has the highest i
 R: 28, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
 W:102, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 C:136, 4: Missing method docstring (missing-docstring)
+************* Module PoliciesMultiPlayers.ALOHA
+W: 79, 0: XXX Call ChildPointer method (fixme)
+W: 97, 0: XXX Call ChildPointer method (fixme)
+W:107, 0: XXX should we give a 0 reward ? (fixme)
+W:123, 0: FIXME check the algorithm (fixme)
+W:126, 0: XXX Call ChildPointer method (fixme)
+C: 27, 4: Missing function docstring (missing-docstring)
+C: 39, 4: Missing function docstring (missing-docstring)
+R: 46, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
+W: 54,27: Unused argument 'amplitude' (unused-argument)
+W: 54,17: Unused argument 'lower' (unused-argument)
+W: 76,92: Access to a protected member _players of a client class (protected-access)
+C: 85, 4: Missing method docstring (missing-docstring)
+W:138, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+C:182, 4: Missing method docstring (missing-docstring)
+C:185, 4: Missing method docstring (missing-docstring)
+C:188, 4: Missing method docstring (missing-docstring)
+R:134, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.BaseMPPolicy
+R: 11, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.CentralizedCycling
+W: 27, 0: XXX It could be a random permutation, instead of a cycling (fixme)
+W: 76, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
+W:105, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
+W: 24, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 48, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 48,42: Unused argument 'lower' (unused-argument)
+W: 48,52: Unused argument 'amplitude' (unused-argument)
+C:104, 4: Missing method docstring (missing-docstring)
+C:108, 4: Missing method docstring (missing-docstring)
+C:111, 4: Missing method docstring (missing-docstring)
+R: 44, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.CentralizedMultiplePlay
+W: 32, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+C: 60, 4: Missing method docstring (missing-docstring)
+C: 65, 4: Missing method docstring (missing-docstring)
+C: 71, 4: Missing method docstring (missing-docstring)
+C: 79, 4: Missing method docstring (missing-docstring)
+W: 79,45: Unused argument 'arm' (unused-argument)
+W: 79,35: Unused argument 'playerId' (unused-argument)
+R: 79, 4: Method could be a function (no-self-use)
+W: 73,12: Attribute 'choices' defined outside __init__ (attribute-defined-outside-init)
+R: 28, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.ChildPointer
+W: 18,51: Access to a protected member _players of a client class (protected-access)
+W: 21,27: Access to a protected member _players of a client class (protected-access)
+W: 25,15: Access to a protected member _startGame_one of a client class (protected-access)
+W: 29,15: Access to a protected member _getReward_one of a client class (protected-access)
+W: 33,15: Access to a protected member _choice_one of a client class (protected-access)
+W: 37,15: Access to a protected member _choiceWithRank_one of a client class (protected-access)
+W: 41,15: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
+W: 45,15: Access to a protected member _choiceMultiple_one of a client class (protected-access)
+W: 49,15: Access to a protected member _handleCollision_one of a client class (protected-access)
+************* Module PoliciesMultiPlayers.__init__
+W: 29, 0: FIXME CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players (fixme)
+W: 36, 0: FIXME implement it (fixme)
+************* Module PoliciesMultiPlayers.CentralizedFixed
+W: 73, 0: XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!) (fixme)
+W:105, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
+W: 25, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 25,51: Unused argument 'amplitude' (unused-argument)
+W: 25,41: Unused argument 'lower' (unused-argument)
+W: 46, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+C:104, 4: Missing method docstring (missing-docstring)
+C:108, 4: Missing method docstring (missing-docstring)
+C:111, 4: Missing method docstring (missing-docstring)
+R: 42, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.OracleFair
+W: 85, 0: FIXME improve this, when there is more player than arms, this is not optimal (fixme)
+W: 86, 0: FIXME indeed, all the collisions will first be in worseArm, but they all cycle! That's bad (fixme)
+W: 87, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
+W:117, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
+W: 26, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 37, 8: Unreachable code (unreachable)
+W: 54, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 54,53: Unused argument 'amplitude' (unused-argument)
+W: 54,43: Unused argument 'lower' (unused-argument)
+C:116, 4: Missing method docstring (missing-docstring)
+C:120, 4: Missing method docstring (missing-docstring)
+C:123, 4: Missing method docstring (missing-docstring)
+R: 50, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module Policies.kullback
 W:376, 0: XXX where does this value come from? (fixme)
 W:381, 0: XXX where does this value come from? (fixme)
@@ -472,78 +550,13 @@ W:314,20: Redefining name 'd' from outer scope (line 494) (redefined-outer-name)
 W:314,17: Redefining name 'x' from outer scope (line 492) (redefined-outer-name)
 W:347,16: Redefining name 'd' from outer scope (line 494) (redefined-outer-name)
 W:347,13: Redefining name 'x' from outer scope (line 492) (redefined-outer-name)
-W:390,10: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:390,13: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
+W:390,10: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:390,16: Redefining name 'klMax' from outer scope (line 478) (redefined-outer-name)
+W:426,14: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
 W:426,11: Redefining name 'p' from outer scope (line 474) (redefined-outer-name)
 W:426,17: Redefining name 'klMax' from outer scope (line 478) (redefined-outer-name)
-W:426,14: Redefining name 'V' from outer scope (line 476) (redefined-outer-name)
 W:456, 4: String statement has no effect (pointless-string-statement)
-************* Module PoliciesMultiPlayers.ALOHA
-W: 79, 0: XXX Call ChildPointer method (fixme)
-W: 97, 0: XXX Call ChildPointer method (fixme)
-W:107, 0: XXX should we give a 0 reward ? (fixme)
-W:123, 0: FIXME check the algorithm (fixme)
-W:126, 0: XXX Call ChildPointer method (fixme)
-C: 27, 4: Missing function docstring (missing-docstring)
-C: 39, 4: Missing function docstring (missing-docstring)
-R: 46, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
-W: 54,17: Unused argument 'lower' (unused-argument)
-W: 54,27: Unused argument 'amplitude' (unused-argument)
-W: 76,92: Access to a protected member _players of a client class (protected-access)
-C: 85, 4: Missing method docstring (missing-docstring)
-W:138, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-C:182, 4: Missing method docstring (missing-docstring)
-C:185, 4: Missing method docstring (missing-docstring)
-C:188, 4: Missing method docstring (missing-docstring)
-R:134, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.CentralizedMultiplePlay
-W: 32, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-C: 60, 4: Missing method docstring (missing-docstring)
-C: 65, 4: Missing method docstring (missing-docstring)
-C: 71, 4: Missing method docstring (missing-docstring)
-C: 79, 4: Missing method docstring (missing-docstring)
-W: 79,35: Unused argument 'playerId' (unused-argument)
-W: 79,45: Unused argument 'arm' (unused-argument)
-R: 79, 4: Method could be a function (no-self-use)
-R: 28, 0: Too few public methods (0/2) (too-few-public-methods)
-W: 73,12: Attribute 'choices' defined outside __init__ (attribute-defined-outside-init)
-************* Module PoliciesMultiPlayers.CentralizedCycling
-W: 27, 0: XXX It could be a random permutation, instead of a cycling (fixme)
-W: 76, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
-W:105, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
-W: 24, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 48, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 48,52: Unused argument 'amplitude' (unused-argument)
-W: 48,42: Unused argument 'lower' (unused-argument)
-C:104, 4: Missing method docstring (missing-docstring)
-C:108, 4: Missing method docstring (missing-docstring)
-C:111, 4: Missing method docstring (missing-docstring)
-R: 44, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.CentralizedFixed
-W: 73, 0: XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!) (fixme)
-W:105, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
-W: 25, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 25,41: Unused argument 'lower' (unused-argument)
-W: 25,51: Unused argument 'amplitude' (unused-argument)
-W: 46, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-C:104, 4: Missing method docstring (missing-docstring)
-C:108, 4: Missing method docstring (missing-docstring)
-C:111, 4: Missing method docstring (missing-docstring)
-R: 42, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.ChildPointer
-W: 18,51: Access to a protected member _players of a client class (protected-access)
-W: 21,27: Access to a protected member _players of a client class (protected-access)
-W: 25,15: Access to a protected member _startGame_one of a client class (protected-access)
-W: 29,15: Access to a protected member _getReward_one of a client class (protected-access)
-W: 33,15: Access to a protected member _choice_one of a client class (protected-access)
-W: 37,15: Access to a protected member _choiceWithRank_one of a client class (protected-access)
-W: 41,15: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
-W: 45,15: Access to a protected member _choiceMultiple_one of a client class (protected-access)
-W: 49,15: Access to a protected member _handleCollision_one of a client class (protected-access)
-************* Module PoliciesMultiPlayers.__init__
-W: 29, 0: FIXME CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players (fixme)
-W: 36, 0: FIXME implement it (fixme)
 ************* Module PoliciesMultiPlayers.rhoRand
 W: 37,73: Access to a protected member _players of a client class (protected-access)
 W: 39,64: Access to a protected member _players of a client class (protected-access)
@@ -552,6 +565,17 @@ C: 89, 4: Missing method docstring (missing-docstring)
 C: 92, 4: Missing method docstring (missing-docstring)
 C: 95, 4: Missing method docstring (missing-docstring)
 R: 57, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.OracleNotFair
+W: 78, 0: XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal! (fixme)
+W:107, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
+W: 27, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 49, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 49,53: Unused argument 'amplitude' (unused-argument)
+W: 49,43: Unused argument 'lower' (unused-argument)
+C:106, 4: Missing method docstring (missing-docstring)
+C:110, 4: Missing method docstring (missing-docstring)
+C:113, 4: Missing method docstring (missing-docstring)
+R: 45, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module PoliciesMultiPlayers.Selfish
 W: 69, 0: FIXME Strong assumption on the model (fixme)
 W: 22, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
@@ -560,17 +584,18 @@ C: 55, 4: Missing method docstring (missing-docstring)
 C: 58, 4: Missing method docstring (missing-docstring)
 C: 61, 4: Missing method docstring (missing-docstring)
 R: 15, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.OracleNotFair
-W: 78, 0: XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal! (fixme)
-W:107, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
-W: 27, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 49, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 49,43: Unused argument 'lower' (unused-argument)
-W: 49,53: Unused argument 'amplitude' (unused-argument)
-C:106, 4: Missing method docstring (missing-docstring)
-C:110, 4: Missing method docstring (missing-docstring)
-C:113, 4: Missing method docstring (missing-docstring)
-R: 45, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module Policies.TakeFixedArm
+W: 17, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
+W: 27, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
+************* Module Policies.TakeRandomFixedArm
+W: 17, 4: __init__ method from base class 'TakeFixedArm' is not called (super-init-not-called)
+************* Module Policies.MusicalChair
+W: 99, 0: XXX it will then be of size nbPlayers! (fixme)
+W:143, 0: TODO remove this (fixme)
+R: 64, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
+W:146, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
+C:165, 4: Missing method docstring (missing-docstring)
+W:183,30: Unused argument 'arm' (unused-argument)
 ************* Module Policies.Posterior
 C: 14, 4: Missing method docstring (missing-docstring)
 C: 17, 4: Missing method docstring (missing-docstring)
@@ -578,25 +603,6 @@ C: 20, 4: Missing method docstring (missing-docstring)
 C: 23, 4: Missing method docstring (missing-docstring)
 C: 26, 4: Missing method docstring (missing-docstring)
 C: 29, 4: Missing method docstring (missing-docstring)
-************* Module PoliciesMultiPlayers.OracleFair
-W: 85, 0: FIXME improve this, when there is more player than arms, this is not optimal (fixme)
-W: 86, 0: FIXME indeed, all the collisions will first be in worseArm, but they all cycle! That's bad (fixme)
-W: 87, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
-W:117, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
-W: 26, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 37, 8: Unreachable code (unreachable)
-W: 54, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 54,43: Unused argument 'lower' (unused-argument)
-W: 54,53: Unused argument 'amplitude' (unused-argument)
-C:116, 4: Missing method docstring (missing-docstring)
-C:120, 4: Missing method docstring (missing-docstring)
-C:123, 4: Missing method docstring (missing-docstring)
-R: 50, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module Policies.TakeFixedArm
-W: 17, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
-W: 27, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
-************* Module Policies.TakeRandomFixedArm
-W: 17, 4: __init__ method from base class 'TakeFixedArm' is not called (super-init-not-called)
 ************* Module Policies.Softmax
 W: 50, 0: XXX we don't need this, the BasePolicy.getReward does it already (fixme)
 W: 53, 0: FIXME we should divide by the proba p_t of selecting actions, not by the trusts ! (fixme)
@@ -605,23 +611,16 @@ W: 82, 0: FIXME wrong size if nb > 1 but t < nbArms (fixme)
 C: 45, 4: Missing method docstring (missing-docstring)
 C: 49, 4: Missing method docstring (missing-docstring)
 W:113, 4: Arguments number differs from overridden 'temperature' method (arguments-differ)
-************* Module Policies.MusicalChair
-W: 99, 0: XXX it will then be of size nbPlayers! (fixme)
-W:143, 0: TODO remove this (fixme)
-R: 64, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
-W:146, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
-C:165, 4: Missing method docstring (missing-docstring)
-W:183,30: Unused argument 'arm' (unused-argument)
 ************* Module Policies.UCBrandomInit
 W: 20, 0: XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games (fixme)
 W: 21, 0: XXX do even more randomized, take a random permutation of the arm (fixme)
 ************* Module Policies.UniformOnSome
 W: 17, 4: __init__ method from base class 'Uniform' is not called (super-init-not-called)
+************* Module Policies.UCBV
+W: 28, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 ************* Module Policies.Uniform
 W: 16, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
 W: 22, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
-************* Module Policies.UCBV
-W: 28, 4: Arguments number differs from overridden 'getReward' method (arguments-differ)
 
 
 Report
@@ -638,9 +637,9 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |class    |69     |69         |=          |100.00      |8.70     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |356    |356        |=          |73.88       |23.60    |
+|method   |356    |0          |+356.00    |73.88       |23.60    |
 +---------+-------+-----------+-----------+------------+---------+
-|function |51     |51         |=          |88.24       |60.78    |
+|function |51     |0          |+51.00     |88.24       |60.78    |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -673,14 +672,14 @@ External dependencies
       \-Posterior (Policies.Beta)
       \-TakeFixedArm (Policies.TakeRandomFixedArm)
       \-UCB (Policies.UCBV)
-      \-Uniform (Policies.UniformOnSome)
-      \-klUCB (Policies.klUCBPlus)
-      \-kullback (Policies.klUCB)
+      \-UCBV (Policies.UCBVtuned)
+      \-klUCB (Policies.klUCBHPlus)
+      \-kullback (Policies.KLempUCB)
     PoliciesMultiPlayers 
       \-ALOHA (configuration_multiplayers)
-      \-BaseCentralizedPolicy (PoliciesMultiPlayers.OracleFair)
-      \-BaseMPPolicy (PoliciesMultiPlayers.OracleFair)
-      \-ChildPointer (PoliciesMultiPlayers.OracleFair)
+      \-BaseCentralizedPolicy (PoliciesMultiPlayers.OracleNotFair)
+      \-BaseMPPolicy (PoliciesMultiPlayers.Selfish)
+      \-ChildPointer (PoliciesMultiPlayers.Selfish)
     configuration 
       \-configuration (main)
     configuration_multiplayers 
@@ -706,11 +705,11 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |3433   |48.90 |3429     |+4.00      |
+|code      |3428   |48.81 |3433     |-5.00      |
 +----------+-------+------+---------+-----------+
-|docstring |1432   |20.40 |1432     |=          |
+|docstring |1428   |20.33 |1432     |-4.00      |
 +----------+-------+------+---------+-----------+
-|comment   |1134   |16.15 |1137     |-3.00      |
+|comment   |1146   |16.32 |1134     |+12.00     |
 +----------+-------+------+---------+-----------+
 |empty     |1021   |14.54 |1021     |=          |
 +----------+-------+------+---------+-----------+
@@ -736,13 +735,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |129    |129      |=          |
+|convention |129    |0        |+129.00    |
 +-----------+-------+---------+-----------+
-|refactor   |28     |28       |=          |
+|refactor   |28     |0        |+28.00     |
 +-----------+-------+---------+-----------+
-|warning    |384    |383      |+1.00      |
+|warning    |383    |0        |+383.00    |
 +-----------+-------+---------+-----------+
-|error      |9      |11       |-2.00      |
+|error      |9      |0        |+9.00      |
 +-----------+-------+---------+-----------+
 
 
@@ -753,7 +752,7 @@ Messages by category
 +---------------------------------------------+------+--------+---------+-----------+
 |module                                       |error |warning |refactor |convention |
 +=============================================+======+========+=========+===========+
-|configuration                                |33.33 |15.10   |7.14     |4.65       |
+|configuration                                |33.33 |14.10   |7.14     |4.65       |
 +---------------------------------------------+------+--------+---------+-----------+
 |Policies.EpsilonGreedy                       |22.22 |0.26    |0.00     |0.78       |
 +---------------------------------------------+------+--------+---------+-----------+
@@ -765,39 +764,39 @@ Messages by category
 +---------------------------------------------+------+--------+---------+-----------+
 |Arms.Gaussian                                |11.11 |0.00    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|configuration_multiplayers                   |0.00  |21.09   |0.00     |7.75       |
+|configuration_multiplayers                   |0.00  |21.15   |0.00     |7.75       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.kullback                            |0.00  |6.77    |0.00     |0.00       |
+|Policies.kullback                            |0.00  |6.79    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Arms.kullback                                |0.00  |6.77    |0.00     |0.00       |
+|Arms.kullback                                |0.00  |6.79    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.EvaluatorMultiPlayers            |0.00  |6.51    |21.43    |16.28      |
+|Environment.EvaluatorMultiPlayers            |0.00  |6.53    |21.43    |16.28      |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.Evaluator                        |0.00  |5.47    |7.14     |16.28      |
+|Environment.Evaluator                        |0.00  |5.48    |7.14     |16.28      |
 +---------------------------------------------+------+--------+---------+-----------+
-|main_multiplayers                            |0.00  |4.17    |0.00     |0.00       |
+|main_multiplayers                            |0.00  |4.18    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.Aggr                                |0.00  |2.60    |3.57     |0.78       |
+|Policies.Aggr                                |0.00  |3.39    |3.57     |0.78       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.ALOHA                   |0.00  |2.34    |7.14     |4.65       |
+|PoliciesMultiPlayers.ALOHA                   |0.00  |2.35    |7.14     |4.65       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.OracleFair              |0.00  |2.34    |3.57     |2.33       |
+|PoliciesMultiPlayers.OracleFair              |0.00  |2.35    |3.57     |2.33       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.CollisionModels                  |0.00  |2.34    |0.00     |2.33       |
+|Environment.CollisionModels                  |0.00  |2.35    |0.00     |2.33       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.ChildPointer            |0.00  |2.34    |0.00     |0.00       |
+|PoliciesMultiPlayers.ChildPointer            |0.00  |2.35    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedCycling      |0.00  |1.82    |3.57     |2.33       |
+|PoliciesMultiPlayers.CentralizedCycling      |0.00  |1.83    |3.57     |2.33       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.OracleNotFair           |0.00  |1.56    |3.57     |2.33       |
+|PoliciesMultiPlayers.OracleNotFair           |0.00  |1.57    |3.57     |2.33       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedFixed        |0.00  |1.56    |3.57     |2.33       |
+|PoliciesMultiPlayers.CentralizedFixed        |0.00  |1.57    |3.57     |2.33       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.Softmax                             |0.00  |1.30    |0.00     |1.55       |
+|Policies.Softmax                             |0.00  |1.31    |0.00     |1.55       |
 +---------------------------------------------+------+--------+---------+-----------+
-|main                                         |0.00  |1.30    |0.00     |0.78       |
+|main                                         |0.00  |1.31    |0.00     |0.78       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.plotsettings                     |0.00  |1.30    |0.00     |0.78       |
+|Environment.plotsettings                     |0.00  |1.31    |0.00     |0.78       |
 +---------------------------------------------+------+--------+---------+-----------+
 |PoliciesMultiPlayers.CentralizedMultiplePlay |0.00  |1.04    |7.14     |3.10       |
 +---------------------------------------------+------+--------+---------+-----------+
@@ -866,11 +865,11 @@ Messages
 +-------------------------------+------------+
 |message id                     |occurrences |
 +===============================+============+
-|fixme                          |168         |
+|fixme                          |170         |
 +-------------------------------+------------+
 |missing-docstring              |100         |
 +-------------------------------+------------+
-|unused-wildcard-import         |80          |
+|unused-wildcard-import         |76          |
 +-------------------------------+------------+
 |redefined-outer-name           |50          |
 +-------------------------------+------------+
@@ -902,6 +901,8 @@ Messages
 +-------------------------------+------------+
 |redefined-variable-type        |3           |
 +-------------------------------+------------+
+|unreachable                    |2           |
++-------------------------------+------------+
 |pointless-string-statement     |2           |
 +-------------------------------+------------+
 |no-self-use                    |2           |
@@ -911,8 +912,6 @@ Messages
 |consider-using-enumerate       |2           |
 +-------------------------------+------------+
 |attribute-defined-outside-init |2           |
-+-------------------------------+------------+
-|unreachable                    |1           |
 +-------------------------------+------------+
 |ungrouped-imports              |1           |
 +-------------------------------+------------+
@@ -929,5 +928,5 @@ Messages
 
 Global evaluation
 -----------------
-Your code has been rated at 8.09/10 (previous run: 8.06/10, +0.03)
+Your code has been rated at 8.09/10 (previous run: 10.00/10, -1.91)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The Aggregated bandit algorithm, similar to Exp4.
+""" My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
 Reference: https://github.com/Naereen/AlgoBandits
 """
 from __future__ import print_function
@@ -26,7 +26,7 @@ update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto
 
 
 class Aggr(BasePolicy):
-    """ The Aggregated bandit algorithm, similar to Exp4.
+    """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
     Reference: https://github.com/Naereen/AlgoBandits
     """
 
@@ -71,19 +71,21 @@ class Aggr(BasePolicy):
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # Internal vectorial memory
         self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
-        self.children_cumulated_losses = np.zeros(self.nbChildren)
+        if self.update_like_exp4:
+            self.children_cumulated_losses = np.zeros(self.nbChildren)
 
-    # Print, different output according to the learning rate
+    # Print, different output according to the parameters
     def __str__(self):
+        exp4 = ", Exp4" if self.update_like_exp4 else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"Aggr($N={}$, $T={}$)".format(self.nbChildren, self.horizon)
+                return r"Aggr($N={}${}, $T={}$)".format(self.nbChildren, exp4, self.horizon)
             else:
-                return r"Aggr($N={}$)".format(self.nbChildren)
+                return r"Aggr($N={}${})".format(self.nbChildren, exp4)
         elif self.decreaseRate is not None:
-            return r"Aggr($N={}$, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, self.learningRate, self.decreaseRate)
+            return r"Aggr($N={}${}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, self.learningRate, self.decreaseRate)
         else:
-            return r"Aggr($N={}$, $\eta={:.3g}$)".format(self.nbChildren, self.learningRate)
+            return r"Aggr($N={}${}, $\eta={:.3g}$)".format(self.nbChildren, exp4, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
