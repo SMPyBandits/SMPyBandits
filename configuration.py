@@ -26,8 +26,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -38,12 +38,12 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -129,36 +129,36 @@ configuration = {
     # --- Cache rewards
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
-    # "environment": [  # Bernoulli arms
-    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.5, 0.9]
-    #     # },
-    #     # {   # Another very easy problem: 3 arms, two very bad, one bad
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.04, 0.05, 0.1]
-    #     # },
-    #     # {   # A very easy problem, but it is used in a lot of articles
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    #     # },
-    #     {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-    #         "arm_type": Bernoulli,
-    #         "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-    #     },
-    #     # {   # Lots of bad arms, significative difference between the best and the others
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-    #     # },
-    #     # {   # One optimal arm, much better than the others, but *lots* of bad arms
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-    #     # },
-    #     # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-    #     # },
-    # ],
+    "environment": [  # Bernoulli arms
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
+        # {   # Another very easy problem: 3 arms, two very bad, one bad
+        #     "arm_type": Bernoulli,
+        #     "params": [0.04, 0.05, 0.1]
+        # },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
+        # {   # Lots of bad arms, significative difference between the best and the others
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        # },
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        # },
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # },
+    ],
     # # DONE I tried with other arms distribution: Exponential, it works similarly
     # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
     # "environment": [  # Exponential arms
@@ -167,14 +167,14 @@ configuration = {
     #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
     #     },
     # ],
-    # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
-    "environment": [  # Gaussian arms
-        {   # An example problem with  arms
-            "arm_type": Gaussian,
-            "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-        },
-    ],
+    # # DONE I tried with other arms distribution: Gaussian, it works similarly
+    # # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
+    # "environment": [  # Gaussian arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Gaussian,
+    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #     },
+    # ],
 }
 
 if len(configuration['environment']) > 1:

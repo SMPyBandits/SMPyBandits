@@ -24,6 +24,10 @@ unbiased = True    # XXX Better
 update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)  # XXX Better
 
+# Non parametric flag to know if the Exp4-like update uses losses or rewards
+USE_LOSSES = False
+USE_LOSSES = True
+
 
 class Aggr(BasePolicy):
     """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
@@ -131,10 +135,16 @@ class Aggr(BasePolicy):
             reward /= proba_of_observing_arm
         # 3. Compute the new trust proba, like in Exp4
         if self.update_like_exp4:
-            loss = 1 - reward  # FIXME try this trick of receiving a loss instead of a reward ?
-            # Update estimated cumulated rewards for each player
-            self.children_cumulated_losses[self.choices == arm] += loss
-            trusts = np.exp(- rate * self.children_cumulated_losses)
+            if USE_LOSSES:
+                # FIXME try this trick of receiving a loss instead of a reward ?
+                loss = 1 - reward
+                # Update estimated cumulated rewards for each player
+                self.children_cumulated_losses[self.choices == arm] += loss
+                trusts = np.exp(- rate * self.children_cumulated_losses)
+            else:
+                # Update estimated cumulated rewards for each player
+                self.children_cumulated_losses[self.choices == arm] += reward
+                trusts = np.exp(rate * self.children_cumulated_losses)
         # 3'. increase self.trusts for the children who were true
         else:
             scaling = np.exp(rate * reward)
