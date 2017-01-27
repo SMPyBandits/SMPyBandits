@@ -79,12 +79,15 @@ class MyPolicy(object):
         pass  # Can be non-trivial, TODO if needed
 
     def choice(self):
-        # TODO Returns the mean of this arm
+        # TODO Do a smart choice of arm
         return random.randint(self.nbArms)
 
     def handleCollision(self, arm):
         pass  # Can be non-trivial, TODO if needed
 ```
+
+> Other `choice...()` methods can be added, if this policy `MyPolicy` has to be used for multiple play, ranked play, etc.
+
 
 ----
 
