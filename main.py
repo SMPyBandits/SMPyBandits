@@ -24,8 +24,8 @@ meanRegret = True
 normalizedRegret = True
 plotSTD = False
 
+saveallfigs = True  # XXX dont keep it like this when experimenting
 saveallfigs = False
-saveallfigs = True  # XXX dont keep it like this
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
@@ -82,17 +82,22 @@ if __name__ == '__main__':
         if interactive:
             plt.interactive(True)
 
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+
         if saveallfigs:
-            savefig = os.path.join(plot_dir, imagename)
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
-            evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx)  # XXX To save the figure
+            evaluation.plotRegrets(envId, savefig=savefig, semilogx=False)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_semilogx')
+            evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
         else:
-            evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=False)
+            evaluation.plotRegrets(envId, semilogx=False, plotSTD=False)
+            evaluation.plotRegrets(envId, semilogx=True, plotSTD=False)
             # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 
         if meanRegret:
             if saveallfigs:
-                savefig = savefig.replace('main', 'main_MeanRewards')
+                savefig = mainfig.replace('main', 'main_MeanRewards')
                 print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, meanRegret=True)  # XXX To save the figure
             else:
@@ -101,7 +106,7 @@ if __name__ == '__main__':
 
         if normalizedRegret:
             if saveallfigs:
-                savefig = savefig.replace('main', 'main_Normalized')
+                savefig = mainfig.replace('main', 'main_Normalized')
                 print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
             else:
@@ -114,7 +119,7 @@ if __name__ == '__main__':
             print("   ==> FIXME correct this bug")
         else:
             if saveallfigs:
-                savefig = savefig.replace('main', 'main_BestArmPulls')
+                savefig = mainfig.replace('main', 'main_BestArmPulls')
                 print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
                 evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
             else:
