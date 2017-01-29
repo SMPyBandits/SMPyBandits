@@ -31,6 +31,7 @@
 
 ## Better storing of the simulation results
 - [ ] use [hdf5](https://www.hdfgroup.org/HDF5/) (with [`h5py`](http://docs.h5py.org/en/latest/quick.html#core-concepts)) to store the data, *on the run* (to never lose data, even if the simulation gets killed).
+- [ ] even more secure: be able to interrupt the simulation, save its state and then load it back if needed (for instance if you want to leave for the day)
 
 -----
 
