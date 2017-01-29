@@ -25,8 +25,8 @@ update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)  # XXX Better
 
 # Non parametric flag to know if the Exp4-like update uses losses or rewards
-USE_LOSSES = False
 USE_LOSSES = True
+USE_LOSSES = False
 
 
 class Aggr(BasePolicy):
@@ -46,7 +46,9 @@ class Aggr(BasePolicy):
         self.amplitude = amplitude
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
-        self.unbiased = unbiased
+        self.unbiased = unbiased or update_like_exp4  # FIXME talk about this
+        # XXX If we use the Exp4 update rule, it's better to be unbiased
+        # XXX If we use my update rule, it seems to be better to be "biased"
         self.horizon = horizon
         self.update_all_children = update_all_children
         self.nbChildren = len(children)
