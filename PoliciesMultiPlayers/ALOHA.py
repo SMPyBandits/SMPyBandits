@@ -172,10 +172,9 @@ class ALOHA(BaseMPPolicy):
             # Initialize proxy child
             self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta, lower=lower, amplitude=amplitude)
         self.nbArms = nbArms
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "ALOHA({})".format(self.params)
+        return "ALOHA({} x {})".format(self.nbPlayers, str(self._players[0]))
 
     # --- Proxy methods
 

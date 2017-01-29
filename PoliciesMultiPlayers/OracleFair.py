@@ -98,10 +98,9 @@ class OracleFair(BaseMPPolicy):
             self._players[playerId] = CyclingBest(nbArms, self._offsets[playerId], bestArms)
             self.childs[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "OracleFair({})".format(self.params)
+        return "OracleFair({} x {})".format(self.nbPlayers, str(self._players[0]))
 
     def _printNbCollisions(self):
         """ Print number of collisions. """
