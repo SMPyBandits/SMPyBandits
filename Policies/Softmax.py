@@ -33,6 +33,10 @@ class Softmax(BasePolicy):
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
         self._temperature = temperature
         self.unbiased = unbiased
+        # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
+        # XXX do even more randomized, take a random permutation of the arm
+        self._initial_exploration = np.random.permutation(nbArms)
+        # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
     def startGame(self):
         super(Softmax, self).startGame()
@@ -53,7 +57,8 @@ class Softmax(BasePolicy):
             # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
             rewards /= p_t
         # trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
-        trusts = np.exp(rewards / (self.temperature * self.pulls))
+        # trusts = np.exp(rewards / (self.temperature * self.pulls))
+        trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         return trusts / np.sum(trusts)
 
     # --- Choice methods
@@ -61,7 +66,8 @@ class Softmax(BasePolicy):
     def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            return self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
+            # return self.t  # TODO? random permutation instead of deterministic order!
+            return self._initial_exploration[self.t]  # DONE
         else:
             return np.random.choice(self.nbArms, p=self.trusts)
 
@@ -69,17 +75,20 @@ class Softmax(BasePolicy):
         if (self.t < self.nbArms) or (rank == 1):
             return self.choice()
         else:
-            return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
+            return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[-1]
 
     def choiceFromSubSet(self, availableArms='all'):
-        if (self.t < self.nbArms) or (availableArms == 'all') or (len(availableArms) == self.nbArms):
+        if (self.t < self.nbArms):
+            return availableArms[self.t % len(availableArms)]
+        elif (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
             return np.random.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
         if (self.t < self.nbArms) or (nb == 1):
-            return self.choice()  # FIXME wrong size if nb > 1 but t < nbArms
+            # return self.choice()  # XXX wrong size if n > 1
+            return np.array([self.choice() for _ in range(nb)])  # FIXED good size if nb > 1 but t < nbArms
         else:
             return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
@@ -133,7 +142,7 @@ class SoftmaxWithHorizon(Softmax):
         self.horizon = horizon
 
     def __str__(self):
-        return "Softmax(horizon: {})".format(self.horizon)
+        return "Softmax($T={}$)".format(self.horizon)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
