@@ -10,7 +10,7 @@ __version__ = "$Revision: 1.7 $"
 
 from random import random
 try:
-    from numpy.random import beta as betavariate  # Faster
+    from numpy.random import beta as betavariate  # Faster? Not sure!
 except ImportError:
     from random import betavariate
 from scipy.special import btdtri
@@ -20,8 +20,13 @@ from .Posterior import Posterior
 
 def bernoulliBinarization(r_t):
     """ Return a (random) binarization of a reward r_t in the continuous interval [0, 1] as an observation in discrete {0, 1}."""
-    assert 0 <= r_t <= 1, "Error: only bounded rewards in [0, 1] are supported by this Beta posterior right now."
-    return int(random() < r_t)
+    if r_t == 0:
+        return 0  # Returns a int!
+    elif r_t == 1:
+        return 1  # Returns a int!
+    else:
+        assert 0 <= r_t <= 1, "Error: only bounded rewards in [0, 1] are supported by this Beta posterior right now."
+        return int(random() < r_t)
 
 
 class Beta(Posterior):
