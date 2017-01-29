@@ -42,10 +42,9 @@ class Selfish(BaseMPPolicy):
             self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.childs[playerId] = ChildPointer(self, playerId)
         self.nbArms = nbArms
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "Selfish({})".format(self.params)
+        return "Selfish({} x {})".format(self.nbPlayers, str(self._players[0]))
 
     # --- Proxy methods
 
