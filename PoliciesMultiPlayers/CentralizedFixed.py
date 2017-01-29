@@ -86,10 +86,9 @@ class CentralizedFixed(BaseMPPolicy):
             self._players[playerId] = Fixed(nbArms, self._affectations[playerId])
             self.childs[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG
-        self.params = '{} x {}'.format(nbPlayers, str(self._players[0]))
 
     def __str__(self):
-        return "CentralizedFixed({})".format(self.params)
+        return "CentralizedFixed({} x {})".format(self.nbPlayers, str(self._players[0]))
 
     def _printNbCollisions(self):
         """ Print number of collisions. """

@@ -27,10 +27,9 @@ class Fixed(BaseCentralizedPolicy):
     def __init__(self, nbArms, armIndex):
         self.nbArms = nbArms
         self.armIndex = armIndex
-        self.params = str(armIndex)
 
     def __str__(self):
-        return "Fixed({})".format(self.params)
+        return "Fixed({})".format(self.armIndex)
 
     def startGame(self):
         pass
