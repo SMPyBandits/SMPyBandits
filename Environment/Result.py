@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Result.Result class to wrap the simulation results."""
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.26 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.5"
 
 import numpy as np
 
@@ -24,3 +24,4 @@ class Result(object):
         self.rewards[time] = reward
         self.rewardsSquared[time] = reward ** 2
         self.pulls[choice] += 1
+        # FIXME find a way to store the result while learning?

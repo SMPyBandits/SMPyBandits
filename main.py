@@ -12,6 +12,9 @@ __version__ = "0.2"
 from os import mkdir
 import os.path
 import matplotlib.pyplot as plt
+# Backup evaluation object
+import pickle
+# import h5py
 # Local imports
 from Environment import Evaluator
 from configuration import configuration
@@ -56,34 +59,55 @@ if __name__ == '__main__':
     for envId, env in enumerate(evaluation.envs):
         # (almost) unique hash from the configuration
         hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
+
+        # Sub folder with a useful name
+        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        plot_dir = os.path.join(plot_dir, subfolder)
+
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+
+        # FIXME finish this!
+        # h5pyname = mainfig.replace('.png', '.hdf5')
+        picklename = mainfig.replace('.png', '.pickle')
+        # h5pyfile = h5py.File(h5pyname, 'w')
+
+        # Set plotting mode to interactive
+        if interactive:
+            plt.interactive(True)
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
+
+        # Save it to a pickle file
+        # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+        with open(picklename, 'wb') as picklefile:
+            print("Saving the 'evaluation' objet to", picklefile, "...")
+            pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+
+        # h5pydb = h5pyfile.create_dataset("results", (XXX, XXX))
+        # Save the internal vectorial memory of the evaluator object
+        # rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+        # rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+        # BestArmPulls = np.zeros((self.nbPolicies, self.duration))
+        # pulls = np.zeros((self.nbPolicies, env.nbArms))
+
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.printFinalRanking(envId)
         if not do_plot:
             break
 
-        # Sub folder with a useful name
-        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        # Get the name of the output file
-        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
         if saveallfigs:
             # Create the sub folder
-            plot_dir = os.path.join(plot_dir, subfolder)
             if os.path.isdir(plot_dir):
                 print("{} is already a directory here...".format(plot_dir))
             elif os.path.isfile(plot_dir):
                 raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
             else:
                 mkdir(plot_dir)
-
-        # Set plotting mode to interactive
-        if interactive:
-            plt.interactive(True)
-
-        mainfig = os.path.join(plot_dir, imagename)
-        savefig = mainfig
 
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))

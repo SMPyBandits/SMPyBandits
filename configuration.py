@@ -27,7 +27,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -41,7 +41,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
@@ -411,11 +411,15 @@ configuration.update({
 # })
 
 
+# from itertools import product  # XXX If needed!
+
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     NON_AGGR_POLICIES = configuration["policies"]
     # for LEARNING_RATE in LEARNING_RATES:
+    # for UNBIASED in [False, True]:
+    # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
     for UPDATE_LIKE_EXP4 in [False, True]:
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
