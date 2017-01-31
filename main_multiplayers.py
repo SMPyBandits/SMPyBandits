@@ -23,8 +23,8 @@ piechart = True
 averageRegret = True
 normalized = True
 
-saveallfigs = True  # XXX dont keep it like this
 saveallfigs = False
+saveallfigs = True  # XXX dont keep it like this
 
 # Whether to do the plots or not
 do_plot = False

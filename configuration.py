@@ -7,10 +7,15 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
-from multiprocessing import cpu_count
-CPU_COUNT = cpu_count()
+# Tries to know number of CPU
+try:
+    from multiprocessing import cpu_count
+    CPU_COUNT = cpu_count()
+except ImportError:
+    CPU_COUNT = 1
 
 # Import arms
+from Arms import makeMeans
 from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
 from Arms.Gaussian import Gaussian
