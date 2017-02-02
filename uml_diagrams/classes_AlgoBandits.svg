@@ -330,7 +330,7 @@
 <text text-anchor="start" x="937" y="-1579.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="937" y="-1564.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="937" y="-1549.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="937" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="937" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="937" y="-1519.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="937" y="-1504.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="937" y="-1489.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -671,12 +671,12 @@
 <text text-anchor="middle" x="2847.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="2740,-1542 2955,-1542 "/>
 <text text-anchor="start" x="2748" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="2748" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="2748" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="2748" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="2748" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2748" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2748" y="-1451.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2748" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="2748" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="2748" y="-1421.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2748" y="-1406.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2740,-1399 2955,-1399 "/>
