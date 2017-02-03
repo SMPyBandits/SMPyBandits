@@ -35,6 +35,7 @@ from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
 # --- Simple UCB policies
 from .UCB import UCB
+from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
 from .UCBopt import UCBopt      # Different indexes
 from .UCBplus import UCBplus    # Different indexes

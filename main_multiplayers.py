@@ -12,6 +12,7 @@ __version__ = "0.1"
 from os import mkdir
 import os.path
 import matplotlib.pyplot as plt
+
 # Local imports
 from Environment import EvaluatorMultiPlayers
 from configuration_multiplayers import configuration
