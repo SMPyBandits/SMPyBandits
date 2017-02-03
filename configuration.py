@@ -277,6 +277,10 @@ configuration.update({
         #     "params": {}
         # },
         # {
+        #     "archtype": UCBwrong,  # This wrong UCB is very very worse than the other
+        #     "params": {}
+        # },
+        # {
         #     "archtype": UCBplus,
         #     "params": {}
         # },

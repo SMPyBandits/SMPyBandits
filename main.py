@@ -12,9 +12,11 @@ __version__ = "0.2"
 from os import mkdir
 import os.path
 import matplotlib.pyplot as plt
+
 # Backup evaluation object
 import pickle
 # import h5py
+
 # Local imports
 from Environment import Evaluator
 from configuration import configuration
@@ -81,11 +83,20 @@ if __name__ == '__main__':
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 
-        # Save it to a pickle file
-        # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
-        with open(picklename, 'wb') as picklefile:
-            print("Saving the 'evaluation' objet to", picklefile, "...")
-            pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+        if saveallfigs:
+            # Create the sub folder
+            if os.path.isdir(plot_dir):
+                print("{} is already a directory here...".format(plot_dir))
+            elif os.path.isfile(plot_dir):
+                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+            else:
+                mkdir(plot_dir)
+
+            # Save it to a pickle file
+            # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+            with open(picklename, 'wb') as picklefile:
+                print("Saving the 'evaluation' objet to", picklefile, "...")
+                pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
 
         # h5pydb = h5pyfile.create_dataset("results", (XXX, XXX))
         # Save the internal vectorial memory of the evaluator object
@@ -99,15 +110,6 @@ if __name__ == '__main__':
         evaluation.printFinalRanking(envId)
         if not do_plot:
             break
-
-        if saveallfigs:
-            # Create the sub folder
-            if os.path.isdir(plot_dir):
-                print("{} is already a directory here...".format(plot_dir))
-            elif os.path.isfile(plot_dir):
-                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-            else:
-                mkdir(plot_dir)
 
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
