@@ -152,7 +152,7 @@ clean-doc:
 .PHONY: help
 
 apidoc:
-	-mkdir -vf /tmp/AlgoBandits/docs/
+	-mkdir -vp /tmp/AlgoBandits/docs/
 	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
 	@echo "==> Showing you which .rst files will be created in docs/"
 	sphinx-apidoc -n -o docs -e -M .
