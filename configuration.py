@@ -44,11 +44,11 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
-# REPETITIONS = 200
+REPETITIONS = 1000
+REPETITIONS = 200
 REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -135,10 +135,10 @@ configuration = {
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # Bernoulli arms
-        {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
-            "arm_type": Bernoulli,
-            "params": [0, 1]
-        },
+        # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
+        #     "arm_type": Bernoulli,
+        #     "params": [0, 1]
+        # },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
@@ -151,10 +151,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -423,12 +423,12 @@ configuration.update({
 #     ]
 # })
 
-# XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
-from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
-NB_PLAYERS = 4
-configuration.update({
-    "policies": Scenario1(NB_PLAYERS, nbArms).childs
-})
+# # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
+# from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
+# NB_PLAYERS = 10
+# configuration.update({
+#     "policies": Scenario1(NB_PLAYERS, nbArms).childs
+# })
 
 
 # from itertools import product  # XXX If needed!
