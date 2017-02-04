@@ -50,6 +50,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         self.childs = [None] * nbPlayers  # But nbPlayers children
         for playerId in range(nbPlayers):
             self.childs[playerId] = CentralizedChildPointer(self, playerId)
+            print(" - One new child, of index {}, and class {} ...".format(playerId, self.childs[playerId]))  # DEBUG
         self.nbArms = nbArms
 
     def __str__(self):
@@ -72,9 +73,8 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         if playerId == 0:  # For the first player, run the method
             self.choices = self.player.choiceMultiple(self.nbPlayers)
             # print("At time t = {} the {} centralized policy chosed arms = {} ...".format(self.player.t, self, self.choices))  # DEBUG
-            return self.choices[0]
-        else:  # For the other players, use the pre-computed result
-            return self.choices[playerId]
+        # For the all players, use the pre-computed result
+        return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm):
         raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed.")

@@ -239,6 +239,7 @@ class Evaluator(object):
             plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
             plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.ylim(min(-0.03, 1.03 * self.envs[environmentId].minArm), max(1.03 * self.envs[environmentId].maxArm, 1.03))
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound

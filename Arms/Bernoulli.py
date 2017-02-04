@@ -21,11 +21,11 @@ class Bernoulli(Arm):
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""
-        return float(random() < self.probability)
+        return float(random() <= self.probability)
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
-        return 1.0 * (random(shape) < self.probability)
+        return 1.0 * (random(shape) <= self.probability)
 
     def mean(self):
         return self.probability

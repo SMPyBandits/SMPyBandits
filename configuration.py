@@ -31,8 +31,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -46,9 +46,9 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -135,14 +135,14 @@ configuration = {
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # Bernoulli arms
+        {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
+            "arm_type": Bernoulli,
+            "params": [1, 0]
+        },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
-            "arm_type": Bernoulli,
-            "params": [0, 1]
-        },
         # {   # Another very easy problem: 3 arms, two very bad, one bad
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
@@ -422,6 +422,13 @@ configuration.update({
 #         TakeFixedArm(nbArms, k) for k in range(nbArms)
 #     ]
 # })
+
+# XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
+from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
+NB_PLAYERS = 4
+configuration.update({
+    "policies": Scenario1(NB_PLAYERS, nbArms).childs
+})
 
 
 # from itertools import product  # XXX If needed!

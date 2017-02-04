@@ -19,7 +19,7 @@ DPI = 140
 HLS = True
 
 if __name__ != '__main__':
-    # plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
+    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
     # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
     sns.set(context="talk",
             style="darkgrid",

@@ -29,12 +29,12 @@ meanRegret = True
 normalizedRegret = True
 plotSTD = False
 
-saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this when experimenting
+saveallfigs = False
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
-averageOn = 5e-3               # Average the final rank on the 0.5% last time steps
+averageOn = 1e-2               # Average the final rank on the 1% last time steps
 
 # Whether to do the plots or not
 do_plot = False

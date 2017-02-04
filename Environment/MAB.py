@@ -53,6 +53,8 @@ class MAB(object):
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
         self.maxArm = np.max(self.means())
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
+        self.minArm = np.min(self.means())
+        print(" - with 'minArm' =", self.minArm)  # DEBUG
 
     def __repr__(self):
         return '<' + self.__class__.__name__ + repr(self.__dict__) + '>'
