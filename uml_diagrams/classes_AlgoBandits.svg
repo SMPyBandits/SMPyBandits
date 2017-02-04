@@ -947,7 +947,7 @@
 <polygon fill="none" stroke="black" points="4181,-1030 4181,-1144 4438,-1144 4438,-1030 4181,-1030"/>
 <text text-anchor="middle" x="4309.5" y="-1128.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4181,-1121 4438,-1121 "/>
-<text text-anchor="start" x="4189" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
+<text text-anchor="start" x="4189" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
 <text text-anchor="start" x="4189" y="-1090.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4181,-1083 4438,-1083 "/>
 <text text-anchor="start" x="4189" y="-1067.8" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1334,7 +1334,7 @@
 <text text-anchor="middle" x="7052.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="6925.5,-399 7179.5,-399 "/>
 <text text-anchor="start" x="6933.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="6933.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="6933.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="6925.5,-361 7179.5,-361 "/>
 <text text-anchor="start" x="6933.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="6933.5" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>

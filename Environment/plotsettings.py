@@ -11,7 +11,6 @@ __version__ = "0.2"
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 # Customize here if you want a signature on the titles of each plot
 signature = "\n(By Lilian Besson, Jan.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
@@ -19,13 +18,15 @@ signature = "\n(By Lilian Besson, Jan.2017 - Code on https://Naereen.GitHub.io/A
 DPI = 140
 HLS = True
 
-# FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-sns.set(context="talk",
-        style="darkgrid",
-        palette="hls" if HLS else "husl",
-        font="sans-serif",
-        font_scale=1.0
-        )
+if __name__ != '__main__':
+    # plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
+    # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
+    sns.set(context="talk",
+            style="darkgrid",
+            palette="hls" if HLS else "husl",
+            font="sans-serif",
+            font_scale=1.0
+            )
 
 
 def palette(nb, hls=HLS):

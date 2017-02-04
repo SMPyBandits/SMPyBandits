@@ -32,7 +32,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -47,8 +47,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -139,6 +139,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
+        {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
+            "arm_type": Bernoulli,
+            "params": [0, 1]
+        },
         # {   # Another very easy problem: 3 arms, two very bad, one bad
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
@@ -147,10 +151,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -426,9 +430,10 @@ configuration.update({
 if TEST_AGGR:
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     NON_AGGR_POLICIES = configuration["policies"]
-    # for LEARNING_RATE in LEARNING_RATES:
-    # for UNBIASED in [False, True]:
+    # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
+    # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
     # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+    # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
     for UPDATE_LIKE_EXP4 in [False, True]:
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
@@ -441,7 +446,7 @@ if TEST_AGGR:
                 "learningRate": LEARNING_RATE,
                 "children": NON_AGGR_POLICIES,
                 "update_like_exp4": UPDATE_LIKE_EXP4,
-                # "horizon": HORIZON
+                # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
             },
         }] + CURRENT_POLICIES
 

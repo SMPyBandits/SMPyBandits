@@ -26,7 +26,7 @@ from .CentralizedCycling import CentralizedCycling
 from .OracleNotFair import OracleNotFair
 from .OracleFair import OracleFair
 
-# FIXME CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
+# CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
 from .CentralizedMultiplePlay import CentralizedMultiplePlay
 
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
@@ -35,3 +35,6 @@ from .ALOHA import ALOHA, tnext_beta, tnext_log
 
 # FIXME implement it
 # from .TDFS import TDFS
+
+# Adversarial settings, from some research papers
+from .Scenario1 import Scenario1
