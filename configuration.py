@@ -137,7 +137,7 @@ configuration = {
     "environment": [  # Bernoulli arms
         {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
             "arm_type": Bernoulli,
-            "params": [1, 0]
+            "params": [0, 1]
         },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
