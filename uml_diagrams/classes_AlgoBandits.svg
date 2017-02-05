@@ -672,19 +672,19 @@
 <text text-anchor="middle" x="2961.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="2854,-1542 3069,-1542 "/>
 <text text-anchor="start" x="2862" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="2862" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="2862" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="2862" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="2862" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2862" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2862" y="-1451.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2862" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
+<text text-anchor="start" x="2862" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
 <text text-anchor="start" x="2862" y="-1421.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2862" y="-1406.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2854,-1399 3069,-1399 "/>
 <text text-anchor="start" x="2862" y="-1383.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="2862" y="-1368.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="2862" y="-1353.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="2862" y="-1338.8" font-family="Times,serif" font-size="14.00">endInitialPhase()</text>
+<text text-anchor="start" x="2862" y="-1353.8" font-family="Times,serif" font-size="14.00">_endInitialPhase()</text>
+<text text-anchor="start" x="2862" y="-1338.8" font-family="Times,serif" font-size="14.00">choice()</text>
 <text text-anchor="start" x="2862" y="-1323.8" font-family="Times,serif" font-size="14.00">getReward()</text>
 <text text-anchor="start" x="2862" y="-1308.8" font-family="Times,serif" font-size="14.00">handleCollision()</text>
 <text text-anchor="start" x="2862" y="-1293.8" font-family="Times,serif" font-size="14.00">startGame()</text>
@@ -948,7 +948,7 @@
 <polygon fill="none" stroke="black" points="4181,-1030 4181,-1144 4438,-1144 4438,-1030 4181,-1030"/>
 <text text-anchor="middle" x="4309.5" y="-1128.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4181,-1121 4438,-1121 "/>
-<text text-anchor="start" x="4189" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
+<text text-anchor="start" x="4189" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
 <text text-anchor="start" x="4189" y="-1090.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4181,-1083 4438,-1083 "/>
 <text text-anchor="start" x="4189" y="-1067.8" font-family="Times,serif" font-size="14.00">__init__()</text>
