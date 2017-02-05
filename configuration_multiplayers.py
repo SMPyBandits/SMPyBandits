@@ -187,7 +187,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
-    "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
@@ -237,7 +237,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
+    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 })
