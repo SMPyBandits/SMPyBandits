@@ -24,11 +24,11 @@ piechart = True
 averageRegret = True
 normalized = True
 
-saveallfigs = True  # XXX dont keep it like this
 saveallfigs = False
+saveallfigs = True  # XXX dont keep it like this
 
-if not saveallfigs:
-    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
+# if not saveallfigs:
+#     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Whether to do the plots or not
 do_plot = False
