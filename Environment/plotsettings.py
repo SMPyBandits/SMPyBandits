@@ -8,6 +8,7 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -26,6 +27,13 @@ if __name__ != '__main__':
             font="sans-serif",
             font_scale=1.1
             )
+
+    # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
+    # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX
+    mpl.rcParams['font.family'] = "sans-serif"
+    mpl.rcParams['font.sans-serif'] = "DejaVu Sans"
+    mpl.rcParams['mathtext.fontset'] = "cm"
+    mpl.rcParams['mathtext.rm'] = "serif"
 
 
 def palette(nb, hls=HLS):

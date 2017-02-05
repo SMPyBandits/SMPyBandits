@@ -31,7 +31,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
@@ -159,14 +159,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
-        {   # One optimal arm, much better than the others, but *lots* of bad arms
-            "arm_type": Bernoulli,
-            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        },
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        # {   # One optimal arm, much better than the others, but *lots* of bad arms
         #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        },
     ],
     # # DONE I tried with other arms distribution: Exponential, it works similarly
     # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!

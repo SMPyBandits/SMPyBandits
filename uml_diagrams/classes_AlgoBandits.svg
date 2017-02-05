@@ -346,12 +346,12 @@
 <polyline fill="none" stroke="black" points="929,-1361.5 1106,-1361.5 "/>
 <text text-anchor="start" x="937" y="-1346.3" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="937" y="-1331.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="937" y="-1316.3" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="937" y="-1301.3" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
-<text text-anchor="start" x="937" y="-1286.3" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
-<text text-anchor="start" x="937" y="-1271.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
-<text text-anchor="start" x="937" y="-1256.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="937" y="-1241.3" font-family="Times,serif" font-size="14.00">makeChildrenChose()</text>
+<text text-anchor="start" x="937" y="-1316.3" font-family="Times,serif" font-size="14.00">_makeChildrenChose()</text>
+<text text-anchor="start" x="937" y="-1301.3" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="937" y="-1286.3" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
+<text text-anchor="start" x="937" y="-1271.3" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
+<text text-anchor="start" x="937" y="-1256.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="937" y="-1241.3" font-family="Times,serif" font-size="14.00">getReward()</text>
 <text text-anchor="start" x="937" y="-1226.3" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 12&#45;&gt;13 -->
@@ -672,12 +672,12 @@
 <text text-anchor="middle" x="2961.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="2854,-1542 3069,-1542 "/>
 <text text-anchor="start" x="2862" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="2862" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="2862" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="2862" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="2862" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="2862" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="2862" y="-1451.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="2862" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="2862" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="2862" y="-1421.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="2862" y="-1406.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="2854,-1399 3069,-1399 "/>

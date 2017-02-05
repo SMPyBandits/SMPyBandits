@@ -32,8 +32,8 @@ plotSTD = False
 saveallfigs = True  # XXX dont keep it like this when experimenting
 saveallfigs = False
 
-if not saveallfigs:
-    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
+# if not saveallfigs:
+#     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
@@ -74,10 +74,10 @@ if __name__ == '__main__':
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
 
-        # FIXME finish this!
+        # FIXME finish this to also save result in a HDF5 file!
         # h5pyname = mainfig.replace('.png', '.hdf5')
-        picklename = mainfig.replace('.png', '.pickle')
         # h5pyfile = h5py.File(h5pyname, 'w')
+        picklename = mainfig.replace('.png', '.pickle')
 
         # Set plotting mode to interactive
         if interactive:
