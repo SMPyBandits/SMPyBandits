@@ -37,17 +37,17 @@ class EvaluatorMultiPlayers(object):
         self.cfg = configuration
         # Attributes
         self.nbPlayers = len(self.cfg['players'])
-        print("Number of players in the multi-players game:", self.nbPlayers)
+        print("Number of players in the multi-players game:", self.nbPlayers)  # DEBUG
         self.horizon = self.cfg['horizon']
-        print("Time horizon:", self.horizon)
+        print("Time horizon:", self.horizon)  # DEBUG
         self.repetitions = self.cfg['repetitions']
-        print("Number of repetitions:", self.repetitions)
+        print("Number of repetitions:", self.repetitions)  # DEBUG
         self.delta_t_save = self.cfg['delta_t_save']
-        print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
+        print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)  # DEBUG
         self.duration = int(self.horizon / self.delta_t_save)
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
-        print("Using collision model:", self.collisionModel.__name__)
-        print("  Detail:", self.collisionModel.__doc__)
+        print("Using collision model:", self.collisionModel.__name__)  # DEBUG
+        print("  Detail:", self.collisionModel.__doc__)  # DEBUG
         # Flags
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)
         self.averageOn = self.cfg.get('averageOn', 5e-3)
@@ -65,7 +65,7 @@ class EvaluatorMultiPlayers(object):
         self.NbSwitchs = dict()
         self.BestArmPulls = dict()
         self.FreeTransmissions = dict()
-        print("Number of environments to try:", len(self.envs))
+        print("Number of environments to try:", len(self.envs))  # DEBUG
         for envId in range(len(self.envs)):  # Zeros everywhere
             self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.duration))
@@ -103,7 +103,7 @@ class EvaluatorMultiPlayers(object):
 
     # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
     def startOneEnv(self, envId, env):
-        print("\nEvaluating environment:", repr(env))
+        print("\nEvaluating environment:", repr(env))  # DEBUG
         self.players = []
         self.__initPlayers__(env)
         if self.useJoblib:
@@ -189,7 +189,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
         for i, player in enumerate(self.players):
@@ -204,13 +204,13 @@ class EvaluatorMultiPlayers(object):
         # TODO add std
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        ymax = max(plt.ylim()[1], 1)
+        ymax = max(plt.ylim()[1], 1)  # FIXME no that's weird !
         plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
         # FIXME I should compute a certain measure of "fairness", from these personal rewards
@@ -227,7 +227,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -264,7 +264,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalized else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -276,7 +276,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
             Y = self.getNbSwitchs(i, environmentId)
@@ -295,7 +295,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): {}number of switches for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -313,7 +313,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -323,7 +323,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 2000.0)  # XXX put back 0 if needed
+        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         for armId in range(self.envs[environmentId].nbArms):
             plt.figure()
             for playerId, player in enumerate(self.players):
@@ -341,7 +341,7 @@ class EvaluatorMultiPlayers(object):
             maximizeWindow()
             if savefig is not None:
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
-                print("Saving to", savefig, "...")
+                print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
             plt.show()
 
@@ -362,7 +362,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): {}free transmission for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -390,7 +390,7 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): {}of collisions, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "cumulated number " if cumulated else "frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
@@ -407,11 +407,11 @@ class EvaluatorMultiPlayers(object):
         Y /= (self.horizon * self.nbPlayers)
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
-            print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))
+            print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))  # DEBUG
             if Y[armId] < 1e-4:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
-            print("==> No collisions to plot ... Stopping now  ...")
+            print("==> No collisions to plot ... Stopping now  ...")  # DEBUG
             # return  # XXX
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
@@ -431,13 +431,13 @@ class EvaluatorMultiPlayers(object):
         plt.title("Multi-players $M = {}$ (collision model: {}): Frequency of collision for each arm, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
-            print("Saving to", savefig, "...")
+            print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
-        print("\nFinal ranking for this environment #{} :".format(environmentId))
+        print("\nFinal ranking for this environment #{} :".format(environmentId))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getRewards(i, environmentId)
@@ -449,11 +449,11 @@ class EvaluatorMultiPlayers(object):
         index_of_sorting = np.argsort(-lastY)  # Get them by INCREASING rewards, not decreasing regrets
         for i, k in enumerate(index_of_sorting):
             player = self.players[k]
-            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))
+            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
     def strPlayers(self, width=130):
-        listStrPlayers = [extract(str(player)) for player in self.players]
+        listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
             text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
@@ -497,7 +497,7 @@ def delayed_play(env, players, horizon, collisionModel,
         # Every player decides which arm to pull
         for i, player in enumerate(players):
             # FIXME here, the environment should apply a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
-            # choices[i] = random_arm_orders[i][player.choice()]  # FIXME try it!
+            # choices[i] = random_arm_orders[i][player.choice()]
             choices[i] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
@@ -508,7 +508,7 @@ def delayed_play(env, players, horizon, collisionModel,
             # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
             result.store(t, choices, rewards, pulls, collisions)
 
-    # # Prints the ranks
+    # # XXX Prints the ranks
     # ranks = [player.rank if hasattr(player, 'rank') else None for player in players]
     # if len(set(ranks)) != nbPlayers:
     #     for (player, rank) in zip(players, ranks):
@@ -520,7 +520,8 @@ def delayed_play(env, players, horizon, collisionModel,
     return result
 
 
-def extract(text):
+# Utility function...
+def _extract(text):
     """ Extract the str of a player, if it is a child, printed as '#[0-9]+<...>' --> ... """
     m = search('<[^>]+>', text).group(0)
     if m[0] == '<' and m[-1] == '>':
