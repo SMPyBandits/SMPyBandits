@@ -2,21 +2,28 @@
 """ Selfish: a multi-player policy where every player is selfish, playing on their side.
 
 - without knowing how many players there is,
-- and not even knowing that they should try to avoid collisions.
+- and not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receive a 0 reward for the chosen arm.
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
+
+
+# Customize here the value given to a user after a collision
+# PENALTY = -1
+# PENALTY = 0
+# XXX If it is None, then player.lower (default to 0) is used instead
+PENALTY = None
 
 
 class Selfish(BaseMPPolicy):
     """ Selfish: a multi-player policy where every player is selfish, playing on their side.
 
     - without nowing how many players there is, and
-    - not even knowing that they should try to avoid collisions.
+    - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receive a 0 reward for the chosen arm.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, *args, **kwargs):
@@ -59,10 +66,9 @@ class Selfish(BaseMPPolicy):
 
     def _handleCollision_one(self, playerId, arm):
         player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):
-            # player.handleCollision(arm) is called to inform the user that there were a collision
-            player.handleCollision(arm)
-        else:
-            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            player.getReward(arm, getattr(player, 'lower', 0))
-            # FIXME Strong assumption on the model
+        # if hasattr(player, 'handleCollision'):  # XXX nope, that's not what I want
+        #     # player.handleCollision(arm) is called to inform the user that there were a collision
+        #     player.handleCollision(arm)
+        # else:
+        # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
+        player.getReward(arm, PENALTY if PENALTY is not None else getattr(player, 'lower', 0))

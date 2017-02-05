@@ -10,7 +10,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 import numpy.random as rn
 
@@ -47,9 +47,9 @@ class oneRhoRand(ChildPointer):
         # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
     def choice(self):
-        # FIXME here we could do another randomization step:
+        # XXX here we could do another randomization step, but it would just weaken the algorithm!
         # I could select again a random rank to aim, uniformly from [1, ..., rank] ?
-        # rank = super(oneRhoRand, self).choiceWithRank(1 + rn.randint(self.rank))  # TODO to try!
+        # rank = super(oneRhoRand, self).choiceWithRank(1 + rn.randint(self.rank))
         result = super(oneRhoRand, self).choiceWithRank(self.rank)
         # print(" - A oneRhoRand player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
         return result

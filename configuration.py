@@ -151,10 +151,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -163,10 +163,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        },
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # },
     ],
     # # DONE I tried with other arms distribution: Exponential, it works similarly
     # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
@@ -375,13 +375,13 @@ configuration.update({
                 # "klucb": klucbBern
             }
         },
-        {
-            "archtype": klUCBHPlus,
-            "params": {
-                "horizon": HORIZON,
-                # "klucb": klucbBern
-            }
-        },
+        # {
+        #     "archtype": klUCBHPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         # "klucb": klucbBern
+        #     }
+        # },
         # # {
         # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
         # #     "params": {}
@@ -392,27 +392,27 @@ configuration.update({
             "params": {}
         },
         # # --- AdBandits with different alpha paramters
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.125,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.01,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
     ]
 })
 

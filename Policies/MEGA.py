@@ -94,8 +94,9 @@ class MEGA(BasePolicy):
                         self.p = self.p0  # Reinitialize proba p
                 else:  # Exploit: select the arm with highest meanRewards
                     self.meanRewards[self.pulls != 0] = self.rewards[self.pulls != 0] / self.pulls[self.pulls != 0]
-                    # TODO should be uniformly chosen if more than one arm has the highest index, but that's unlikely
-                    newArm = np.argmax(self.meanRewards)
+                    # newArm = np.argmax(self.meanRewards)
+                    # Uniformly chosen if more than one arm has the highest index, but that's unlikely
+                    newArm = np.random.choice(np.nonzero(self.meanRewards == np.max(self.meanRewards))[0])
                 self.chosenArm = newArm
             return self.chosenArm
 

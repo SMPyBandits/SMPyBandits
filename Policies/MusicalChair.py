@@ -16,7 +16,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 from enum import Enum  # For the different states
 import numpy as np
@@ -56,10 +56,10 @@ def boundOnFinalRegret(T0, nbPlayers):
     return T0 * nbPlayers + 2 * np.exp(2) * nbPlayers
 
 
-# --- Class MusicalChair
-
 State = Enum('State', ['NotStarted', 'InitialPhase', 'MusicalChair', 'Sitted'])
 
+
+# --- Class MusicalChair
 
 class MusicalChair(BasePolicy):
     """ MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
@@ -140,7 +140,7 @@ class MusicalChair(BasePolicy):
             self.chair = i  # Assume that it would be a good chair
             # print("\n- A MusicalChair player chose a random arm i={} of index={} among the {}-best arms in [1,...,{}] as it is in state MusicalChair, and time t = {} ...".format(i, k, self.nbPlayers, self.nbArms, self.t))  # DEBUG
             return i
-        else:  # TODO remove this
+        else:
             raise ValueError("MusicalChair.choice() should never be in this case. Fix this code, quickly!")
 
     def getReward(self, arm, reward):
@@ -160,9 +160,9 @@ class MusicalChair(BasePolicy):
 
         # And if t = Time0, we are do with the initial phase
         if self.t >= self.Time0 and self.state == State.InitialPhase:
-            self.endInitialPhase()
+            self._endInitialPhase()
 
-    def endInitialPhase(self):
+    def _endInitialPhase(self):
         # print("\n- A MusicalChair player has to switch from InitialPhase to MusicalChair ...")  # DEBUG
         self.state = State.MusicalChair  # Switch ONCE to state 2
         # First, we compute the empirical means mu_i
@@ -192,7 +192,3 @@ class MusicalChair(BasePolicy):
         elif self.state == State.MusicalChair:
             assert self.chair is not None, "Error: bug in my code in handleCollision() for MusicalChair class."
             self.chair = None  # Cannot stay sitted here
-
-    # def choiceWithRank(self, rank=1):
-    #     """ Ignore the rank."""
-    #     return self.choice()
