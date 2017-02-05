@@ -6,7 +6,7 @@ Script to load the config, run the simulations, and plot them, for the multi-pla
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 # Generic imports
 from os import mkdir
@@ -26,6 +26,9 @@ normalized = True
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
+
+if not saveallfigs:
+    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Whether to do the plots or not
 do_plot = False

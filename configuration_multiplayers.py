@@ -5,7 +5,7 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.5"
 
 # Tries to know number of CPU
 try:

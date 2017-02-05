@@ -6,7 +6,7 @@ Script to load the config, run the simulations, and plot them.
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.5"
 
 # Generic imports
 from os import mkdir
@@ -31,6 +31,9 @@ plotSTD = False
 
 saveallfigs = True  # XXX dont keep it like this when experimenting
 saveallfigs = False
+
+if not saveallfigs:
+    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies

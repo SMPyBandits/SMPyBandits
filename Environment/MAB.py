@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.5"
 
 import numpy as np
 import matplotlib.pyplot as plt

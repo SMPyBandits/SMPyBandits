@@ -6,7 +6,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.5"
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -15,17 +15,16 @@ import seaborn as sns
 signature = "\n(By Lilian Besson, Jan.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
-DPI = 140
+DPI = 160
 HLS = True
 
 if __name__ != '__main__':
-    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
     # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
     sns.set(context="talk",
             style="darkgrid",
             palette="hls" if HLS else "husl",
             font="sans-serif",
-            font_scale=1.0
+            font_scale=1.1
             )
 
 

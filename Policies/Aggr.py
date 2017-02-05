@@ -114,6 +114,8 @@ class Aggr(BasePolicy):
             # DONE I tried to reduce the learning rate (geometrically) when t increase: it does not improve much
             return self.learningRate * np.exp(- self.t / self.decreaseRate)
 
+    # --- Start and get a reward
+
     def startGame(self):
         self.t = 0
         # Start all children
@@ -138,7 +140,6 @@ class Aggr(BasePolicy):
         # 3. Compute the new trust proba, like in Exp4
         if self.update_like_exp4:
             if USE_LOSSES:
-                # FIXME try this trick of receiving a loss instead of a reward ?
                 loss = 1 - reward
                 # Update estimated cumulated rewards for each player
                 self.children_cumulated_losses[self.choices == arm] += loss
@@ -164,7 +165,9 @@ class Aggr(BasePolicy):
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
-    def makeChildrenChose(self):
+    # --- Internal method
+
+    def _makeChildrenChose(self):
         """ Convenience method to make every children chose their best arm."""
         for i, child in enumerate(self.children):
             self.choices[i] = child.choice()
@@ -172,9 +175,11 @@ class Aggr(BasePolicy):
             # XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities!
         # print("self.choices =", self.choices)  # DEBUG
 
+    # --- Choice of arm methods
+
     def choice(self):
         # 1. make vote every child children
-        self.makeChildrenChose()
+        self._makeChildrenChose()
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 
