@@ -31,7 +31,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
@@ -48,7 +48,7 @@ REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -356,115 +356,73 @@ configuration.update({
                 "alpha": 0.05         # XXX Below the theoretically acceptable value!
             }
         },
+        # --- MOSS algorithm, quite efficient
         {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "archtype": MOSS,
+            "params": {}
+        },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
+        # --- KL algorithms
+        {
+            "archtype": klUCB,
             "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
+                # "klucb": klucbBern
             }
         },
         {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "archtype": klUCBlog10,
             "params": {
-                "alpha": 3
+                # "klucb": klucbBern
             }
         },
         {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "archtype": klUCBPlus,
             "params": {
-                "alpha": 2
+                # "klucb": klucbBern
             }
         },
-        {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.25          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
-        {
-            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.05         # XXX Below the theoretically acceptable value!
-            }
-        },
-        # # --- MOSS algorithm, quite efficient
         # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
-        # # --- Thompson algorithms
-        # {
-        #     "archtype": Thompson,
-        #     "params": {}
-        # },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
+        #     "archtype": klUCBHPlus,
         #     "params": {
-        #         # "klucb": klucbBern
-        #     }
-        # },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
+        #         "horizon": HORIZON,
         #         # "klucb": klucbBern
         #     }
         # },
         # # {
-        # #     "archtype": klUCBHPlus,
-        # #     "params": {
-        # #         "horizon": HORIZON,
-        # #         # "klucb": klucbBern
-        # #     }
+        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # #     "params": {}
         # # },
-        # # # {
-        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # # #     "params": {}
-        # # # },
-        # # --- Bayes UCB algorithms
+        # --- Bayes UCB algorithms
+        {
+            "archtype": BayesUCB,
+            "params": {}
+        },
+        # # --- AdBandits with different alpha paramters
         # {
-        #     "archtype": BayesUCB,
-        #     "params": {}
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
         # },
-        # # # --- AdBandits with different alpha paramters
-        # # {
-        # #     "archtype": AdBandits,
-        # #     "params": {
-        # #         "alpha": 0.5,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": AdBandits,
-        # #     "params": {
-        # #         "alpha": 0.125,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": AdBandits,
-        # #     "params": {
-        # #         "alpha": 0.01,
-        # #         "horizon": HORIZON
-        # #     }
-        # # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
     ]
 })
 

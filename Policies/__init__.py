@@ -43,7 +43,7 @@ from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
 # --- Simple UCB policies
 from .UCB import UCB
-from .UCBlog10 import UCBlog10
+from .UCBlog10 import UCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
 from .UCBlog10alpha import UCBlog10alpha  # Different indexes
@@ -64,6 +64,7 @@ from .BayesUCB import BayesUCB
 
 # --- Kullback-Leibler based index policy
 from .klUCB import klUCB
+from .klUCBlog10 import klUCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 # from .KLempUCB import KLempUCB  # XXX fix it before importing it

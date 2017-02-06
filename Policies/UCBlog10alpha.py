@@ -24,7 +24,7 @@ class UCBlog10alpha(UCBlog10):
         self.alpha = alpha
 
     def __str__(self):
-        return r"UCB($\alpha={:.3g}$, {})".format(self.alpha, r"$\log_\{10\}$")
+        return r"UCB($\alpha={:.3g}$, {})".format(self.alpha, r"$\log_{10}$")
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
