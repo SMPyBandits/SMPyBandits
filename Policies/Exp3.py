@@ -67,7 +67,7 @@ class Exp3(BasePolicy):
     def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            return self.t % self.nbArms  # TODO? random permutation instead of deterministic order!
+            return self.t  # we could use a random permutation instead of deterministic order!
         else:
             return np.random.choice(self.nbArms, p=self.trusts)
 

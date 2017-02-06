@@ -238,10 +238,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # {
-        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-        #     "params": {}
-        # },
+        {
+            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+            "params": {}
+        },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
