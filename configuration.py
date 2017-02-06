@@ -29,8 +29,8 @@ from Policies.kullback import klucbBern, klucbExp, klucbGauss
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 10000
+HORIZON = 3000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
@@ -97,8 +97,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
@@ -147,14 +147,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -238,10 +238,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        {
-            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-            "params": {}
-        },
+        # {
+        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+        #     "params": {}
+        # },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
@@ -281,6 +281,10 @@ configuration.update({
         #     "params": {}
         # },
         # {
+        #     "archtype": UCBlog10,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
+        # {
         #     "archtype": UCBwrong,  # This wrong UCB is very very worse than the other
         #     "params": {}
         # },
@@ -304,24 +308,24 @@ configuration.update({
         #     "archtype": UCBVtuned,   # UCB with variance term and one trick
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 4          # Below the alpha=4 like old classic UCB
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 3
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 2
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 4          # Below the alpha=4 like old classic UCB
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 3
+            }
+        },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 2
+            }
+        },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
@@ -352,67 +356,115 @@ configuration.update({
                 "alpha": 0.05         # XXX Below the theoretically acceptable value!
             }
         },
-        # --- MOSS algorithm, quite efficient
         {
-            "archtype": MOSS,
-            "params": {}
-        },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {}
-        },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
             "params": {
-                # "klucb": klucbBern
+                "alpha": 4          # Below the alpha=4 like old classic UCB
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
             "params": {
-                # "klucb": klucbBern
+                "alpha": 3
             }
         },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 2
+            }
+        },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.25          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.1          # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": UCBlog10alpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.05         # XXX Below the theoretically acceptable value!
+            }
+        },
+        # # --- MOSS algorithm, quite efficient
         # {
-        #     "archtype": klUCBHPlus,
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
+        # # --- Thompson algorithms
+        # {
+        #     "archtype": Thompson,
+        #     "params": {}
+        # },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
         #     "params": {
-        #         "horizon": HORIZON,
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
         #         # "klucb": klucbBern
         #     }
         # },
         # # {
-        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # #     "params": {}
+        # #     "archtype": klUCBHPlus,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         # "klucb": klucbBern
+        # #     }
         # # },
-        # --- Bayes UCB algorithms
-        {
-            "archtype": BayesUCB,
-            "params": {}
-        },
-        # # --- AdBandits with different alpha paramters
+        # # # {
+        # # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
+        # # #     "params": {}
+        # # # },
+        # # --- Bayes UCB algorithms
         # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
+        #     "archtype": BayesUCB,
+        #     "params": {}
         # },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.125,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.01,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # # # --- AdBandits with different alpha paramters
+        # # {
+        # #     "archtype": AdBandits,
+        # #     "params": {
+        # #         "alpha": 0.5,
+        # #         "horizon": HORIZON
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": AdBandits,
+        # #     "params": {
+        # #         "alpha": 0.125,
+        # #         "horizon": HORIZON
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": AdBandits,
+        # #     "params": {
+        # #         "alpha": 0.01,
+        # #         "horizon": HORIZON
+        # #     }
+        # # },
     ]
 })
 

@@ -1,19 +1,27 @@
 # -*- coding: utf-8 -*-
 """ Policies : contains various bandits algorithms:
 
-- Stupid ones: Uniform, UniformOnSome, TakeFixedArm, TakeRandomFixedArm
-- Greedy ones: EpsilonGreedy, EpsilonFirst, EpsilonDecreasing
-- Probabilist ones: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
-- Index based: UCB, UCBalpha, UCBopt, UCBplus, UCBrandomInit, UCBV, UCBVtuned
-- Bayesian: Thompson, BayesUCB
-- Based on Kullback-Leibler ones: klUCB, klUCBPlus, klUCBHPlus
-- Hybrids: AdBandit
-- Aggregated ones: Aggr
+- "Stupid" algorithms: Uniform, UniformOnSome, TakeFixedArm, TakeRandomFixedArm
+
+- Greedy algorithms: EpsilonGreedy, EpsilonFirst, EpsilonDecreasing
+
+- Probabilistic algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
+
+- Index based algorithms: UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBopt, UCBplus, UCBrandomInit, UCBV, UCBVtuned
+
+- Bayesian algorithms: Thompson, BayesUCB
+
+- Based on Kullback-Leibler divergence: klUCB, klUCBPlus, klUCBHPlus
+
+- Hybrids algorithms: AdBandit
+
+- Aggregated algorithms: Aggr
+
 - Designed for multi-player games: MusicalChair, MEGA
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.5"
 
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
@@ -35,11 +43,13 @@ from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
 # --- Simple UCB policies
 from .UCB import UCB
+from .UCBlog10 import UCBlog10
 from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
+from .UCBlog10alpha import UCBlog10alpha  # Different indexes
 from .UCBopt import UCBopt      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
-from .UCBrandomInit import UCBrandomInit      # Different indexes
+from .UCBrandomInit import UCBrandomInit
 # --- UCB policies with variance terms
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
@@ -61,7 +71,7 @@ from .klUCBHPlus import klUCBHPlus  # Different indexes
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
 
-# --- Mine, aggregated ones, like Exp4
+# --- Mine, aggregated ones, like Exp4  FIXME give it a better name!
 from .Aggr import Aggr
 
 

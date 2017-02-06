@@ -33,13 +33,12 @@ from Environment.CollisionModels import *
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
-HORIZON = 50
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -129,26 +128,26 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": makeMeans(9, 0.1)
-        }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(9, 0.1)
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(14, 1/(1.0 + 14))
+        #     "params": makeMeans(14, 1 / (1.0 + 14))
         # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(19, 1/(1.0 + 19))
+        #     "params": makeMeans(19, 1 / (1.0 + 19))
         # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # }
-        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-        #     "arm_type": Bernoulli,
-        #     "params": [1] * NB_PLAYERS
-        # }
+        {   # XXX To only test the orthogonalization (collision avoidance) protocol
+            "arm_type": Bernoulli,
+            "params": [1] * NB_PLAYERS
+        }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -185,7 +184,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
     # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
+    "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
@@ -237,7 +236,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 })

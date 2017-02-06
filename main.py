@@ -29,8 +29,8 @@ meanRegret = True
 normalizedRegret = True
 plotSTD = False
 
-saveallfigs = True  # XXX dont keep it like this when experimenting
 saveallfigs = False
+saveallfigs = True  # XXX dont keep it like this when experimenting
 
 # if not saveallfigs:
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
