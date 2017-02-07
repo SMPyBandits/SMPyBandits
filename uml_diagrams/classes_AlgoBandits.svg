@@ -137,49 +137,48 @@
 </g>
 <!-- 6 -->
 <g id="node7" class="node"><title>6</title>
-<polygon fill="none" stroke="black" points="875.5,-38 875.5,-662 1075.5,-662 1075.5,-38 875.5,-38"/>
-<text text-anchor="middle" x="975.5" y="-646.8" font-family="Times,serif" font-size="14.00">Environment.Evaluator.Evaluator</text>
-<polyline fill="none" stroke="black" points="875.5,-639 1075.5,-639 "/>
-<text text-anchor="start" x="883.5" y="-623.8" font-family="Times,serif" font-size="14.00">BestArmPulls : dict</text>
-<text text-anchor="start" x="883.5" y="-608.8" font-family="Times,serif" font-size="14.00">allrewards</text>
-<text text-anchor="start" x="883.5" y="-593.8" font-family="Times,serif" font-size="14.00">averageOn : float</text>
-<text text-anchor="start" x="883.5" y="-578.8" font-family="Times,serif" font-size="14.00">cache_rewards</text>
-<text text-anchor="start" x="883.5" y="-563.8" font-family="Times,serif" font-size="14.00">cfg</text>
-<text text-anchor="start" x="883.5" y="-548.8" font-family="Times,serif" font-size="14.00">delta_t_save</text>
-<text text-anchor="start" x="883.5" y="-533.8" font-family="Times,serif" font-size="14.00">duration : int</text>
-<text text-anchor="start" x="883.5" y="-518.8" font-family="Times,serif" font-size="14.00">envs : list</text>
-<text text-anchor="start" x="883.5" y="-503.8" font-family="Times,serif" font-size="14.00">finalRanksOnAverage : bool</text>
-<text text-anchor="start" x="883.5" y="-488.8" font-family="Times,serif" font-size="14.00">horizon</text>
-<text text-anchor="start" x="883.5" y="-473.8" font-family="Times,serif" font-size="14.00">nbPolicies</text>
-<text text-anchor="start" x="883.5" y="-458.8" font-family="Times,serif" font-size="14.00">nb_random_events</text>
-<text text-anchor="start" x="883.5" y="-443.8" font-family="Times,serif" font-size="14.00">policies : list</text>
-<text text-anchor="start" x="883.5" y="-428.8" font-family="Times,serif" font-size="14.00">pulls : dict</text>
-<text text-anchor="start" x="883.5" y="-413.8" font-family="Times,serif" font-size="14.00">random_invert</text>
-<text text-anchor="start" x="883.5" y="-398.8" font-family="Times,serif" font-size="14.00">random_shuffle</text>
-<text text-anchor="start" x="883.5" y="-383.8" font-family="Times,serif" font-size="14.00">repetitions</text>
-<text text-anchor="start" x="883.5" y="-368.8" font-family="Times,serif" font-size="14.00">rewards</text>
-<text text-anchor="start" x="883.5" y="-353.8" font-family="Times,serif" font-size="14.00">rewardsSquared</text>
-<text text-anchor="start" x="883.5" y="-338.8" font-family="Times,serif" font-size="14.00">times</text>
-<text text-anchor="start" x="883.5" y="-323.8" font-family="Times,serif" font-size="14.00">useJoblib</text>
-<text text-anchor="start" x="883.5" y="-308.8" font-family="Times,serif" font-size="14.00">useJoblibForPolicies : bool</text>
-<polyline fill="none" stroke="black" points="875.5,-301 1075.5,-301 "/>
-<text text-anchor="start" x="883.5" y="-285.8" font-family="Times,serif" font-size="14.00">__initEnvironments__()</text>
-<text text-anchor="start" x="883.5" y="-270.8" font-family="Times,serif" font-size="14.00">__initPolicies__()</text>
-<text text-anchor="start" x="883.5" y="-255.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="883.5" y="-240.8" font-family="Times,serif" font-size="14.00">compute_cache_rewards()</text>
-<text text-anchor="start" x="883.5" y="-225.8" font-family="Times,serif" font-size="14.00">getAverageRewards()</text>
-<text text-anchor="start" x="883.5" y="-210.8" font-family="Times,serif" font-size="14.00">getBestArmPulls()</text>
-<text text-anchor="start" x="883.5" y="-195.8" font-family="Times,serif" font-size="14.00">getCumulatedRegret()</text>
-<text text-anchor="start" x="883.5" y="-180.8" font-family="Times,serif" font-size="14.00">getMaxRewards()</text>
-<text text-anchor="start" x="883.5" y="-165.8" font-family="Times,serif" font-size="14.00">getPulls()</text>
-<text text-anchor="start" x="883.5" y="-150.8" font-family="Times,serif" font-size="14.00">getRewards()</text>
-<text text-anchor="start" x="883.5" y="-135.8" font-family="Times,serif" font-size="14.00">getRewardsSquared()</text>
-<text text-anchor="start" x="883.5" y="-120.8" font-family="Times,serif" font-size="14.00">getSTDRegret()</text>
-<text text-anchor="start" x="883.5" y="-105.8" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
-<text text-anchor="start" x="883.5" y="-90.8" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
-<text text-anchor="start" x="883.5" y="-75.8" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
-<text text-anchor="start" x="883.5" y="-60.8" font-family="Times,serif" font-size="14.00">startAllEnv()</text>
-<text text-anchor="start" x="883.5" y="-45.8" font-family="Times,serif" font-size="14.00">startOneEnv()</text>
+<polygon fill="none" stroke="black" points="875.5,-45.5 875.5,-654.5 1075.5,-654.5 1075.5,-45.5 875.5,-45.5"/>
+<text text-anchor="middle" x="975.5" y="-639.3" font-family="Times,serif" font-size="14.00">Environment.Evaluator.Evaluator</text>
+<polyline fill="none" stroke="black" points="875.5,-631.5 1075.5,-631.5 "/>
+<text text-anchor="start" x="883.5" y="-616.3" font-family="Times,serif" font-size="14.00">BestArmPulls : dict</text>
+<text text-anchor="start" x="883.5" y="-601.3" font-family="Times,serif" font-size="14.00">allrewards</text>
+<text text-anchor="start" x="883.5" y="-586.3" font-family="Times,serif" font-size="14.00">averageOn : float</text>
+<text text-anchor="start" x="883.5" y="-571.3" font-family="Times,serif" font-size="14.00">cache_rewards</text>
+<text text-anchor="start" x="883.5" y="-556.3" font-family="Times,serif" font-size="14.00">cfg</text>
+<text text-anchor="start" x="883.5" y="-541.3" font-family="Times,serif" font-size="14.00">delta_t_save</text>
+<text text-anchor="start" x="883.5" y="-526.3" font-family="Times,serif" font-size="14.00">duration : int</text>
+<text text-anchor="start" x="883.5" y="-511.3" font-family="Times,serif" font-size="14.00">envs : list</text>
+<text text-anchor="start" x="883.5" y="-496.3" font-family="Times,serif" font-size="14.00">finalRanksOnAverage : bool</text>
+<text text-anchor="start" x="883.5" y="-481.3" font-family="Times,serif" font-size="14.00">horizon</text>
+<text text-anchor="start" x="883.5" y="-466.3" font-family="Times,serif" font-size="14.00">nbPolicies</text>
+<text text-anchor="start" x="883.5" y="-451.3" font-family="Times,serif" font-size="14.00">nb_random_events</text>
+<text text-anchor="start" x="883.5" y="-436.3" font-family="Times,serif" font-size="14.00">policies : list</text>
+<text text-anchor="start" x="883.5" y="-421.3" font-family="Times,serif" font-size="14.00">pulls : dict</text>
+<text text-anchor="start" x="883.5" y="-406.3" font-family="Times,serif" font-size="14.00">random_invert</text>
+<text text-anchor="start" x="883.5" y="-391.3" font-family="Times,serif" font-size="14.00">random_shuffle</text>
+<text text-anchor="start" x="883.5" y="-376.3" font-family="Times,serif" font-size="14.00">repetitions</text>
+<text text-anchor="start" x="883.5" y="-361.3" font-family="Times,serif" font-size="14.00">rewards</text>
+<text text-anchor="start" x="883.5" y="-346.3" font-family="Times,serif" font-size="14.00">times</text>
+<text text-anchor="start" x="883.5" y="-331.3" font-family="Times,serif" font-size="14.00">useJoblib</text>
+<text text-anchor="start" x="883.5" y="-316.3" font-family="Times,serif" font-size="14.00">useJoblibForPolicies : bool</text>
+<polyline fill="none" stroke="black" points="875.5,-308.5 1075.5,-308.5 "/>
+<text text-anchor="start" x="883.5" y="-293.3" font-family="Times,serif" font-size="14.00">__initEnvironments__()</text>
+<text text-anchor="start" x="883.5" y="-278.3" font-family="Times,serif" font-size="14.00">__initPolicies__()</text>
+<text text-anchor="start" x="883.5" y="-263.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="883.5" y="-248.3" font-family="Times,serif" font-size="14.00">compute_cache_rewards()</text>
+<text text-anchor="start" x="883.5" y="-233.3" font-family="Times,serif" font-size="14.00">getAverageRewards()</text>
+<text text-anchor="start" x="883.5" y="-218.3" font-family="Times,serif" font-size="14.00">getBestArmPulls()</text>
+<text text-anchor="start" x="883.5" y="-203.3" font-family="Times,serif" font-size="14.00">getCumulatedRegret()</text>
+<text text-anchor="start" x="883.5" y="-188.3" font-family="Times,serif" font-size="14.00">getMaxRewards()</text>
+<text text-anchor="start" x="883.5" y="-173.3" font-family="Times,serif" font-size="14.00">getPulls()</text>
+<text text-anchor="start" x="883.5" y="-158.3" font-family="Times,serif" font-size="14.00">getRewards()</text>
+<text text-anchor="start" x="883.5" y="-143.3" font-family="Times,serif" font-size="14.00">getRewardsSquared()</text>
+<text text-anchor="start" x="883.5" y="-128.3" font-family="Times,serif" font-size="14.00">getSTDRegret()</text>
+<text text-anchor="start" x="883.5" y="-113.3" font-family="Times,serif" font-size="14.00">plotBestArmPulls()</text>
+<text text-anchor="start" x="883.5" y="-98.3" font-family="Times,serif" font-size="14.00">plotRegrets()</text>
+<text text-anchor="start" x="883.5" y="-83.3" font-family="Times,serif" font-size="14.00">printFinalRanking()</text>
+<text text-anchor="start" x="883.5" y="-68.3" font-family="Times,serif" font-size="14.00">startAllEnv()</text>
+<text text-anchor="start" x="883.5" y="-53.3" font-family="Times,serif" font-size="14.00">startOneEnv()</text>
 </g>
 <!-- 7 -->
 <g id="node8" class="node"><title>7</title>
@@ -252,17 +251,16 @@
 </g>
 <!-- 9 -->
 <g id="node10" class="node"><title>9</title>
-<polygon fill="none" stroke="black" points="1683.5,-278 1683.5,-422 1847.5,-422 1847.5,-278 1683.5,-278"/>
-<text text-anchor="middle" x="1765.5" y="-406.8" font-family="Times,serif" font-size="14.00">Environment.Result.Result</text>
-<polyline fill="none" stroke="black" points="1683.5,-399 1847.5,-399 "/>
-<text text-anchor="start" x="1691.5" y="-383.8" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1691.5" y="-368.8" font-family="Times,serif" font-size="14.00">delta_t_save : int</text>
-<text text-anchor="start" x="1691.5" y="-353.8" font-family="Times,serif" font-size="14.00">pulls</text>
-<text text-anchor="start" x="1691.5" y="-338.8" font-family="Times,serif" font-size="14.00">rewards</text>
-<text text-anchor="start" x="1691.5" y="-323.8" font-family="Times,serif" font-size="14.00">rewardsSquared</text>
-<polyline fill="none" stroke="black" points="1683.5,-316 1847.5,-316 "/>
-<text text-anchor="start" x="1691.5" y="-300.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="1691.5" y="-285.8" font-family="Times,serif" font-size="14.00">store()</text>
+<polygon fill="none" stroke="black" points="1683.5,-285.5 1683.5,-414.5 1847.5,-414.5 1847.5,-285.5 1683.5,-285.5"/>
+<text text-anchor="middle" x="1765.5" y="-399.3" font-family="Times,serif" font-size="14.00">Environment.Result.Result</text>
+<polyline fill="none" stroke="black" points="1683.5,-391.5 1847.5,-391.5 "/>
+<text text-anchor="start" x="1691.5" y="-376.3" font-family="Times,serif" font-size="14.00">choices</text>
+<text text-anchor="start" x="1691.5" y="-361.3" font-family="Times,serif" font-size="14.00">delta_t_save : int</text>
+<text text-anchor="start" x="1691.5" y="-346.3" font-family="Times,serif" font-size="14.00">pulls</text>
+<text text-anchor="start" x="1691.5" y="-331.3" font-family="Times,serif" font-size="14.00">rewards</text>
+<polyline fill="none" stroke="black" points="1683.5,-323.5 1847.5,-323.5 "/>
+<text text-anchor="start" x="1691.5" y="-308.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="1691.5" y="-293.3" font-family="Times,serif" font-size="14.00">store()</text>
 </g>
 <!-- 10 -->
 <g id="node11" class="node"><title>10</title>
@@ -331,7 +329,7 @@
 <text text-anchor="start" x="1137" y="-1579.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1137" y="-1564.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1137" y="-1549.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1137" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="1137" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="1137" y="-1519.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1137" y="-1504.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1137" y="-1489.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -530,23 +528,24 @@
 </g>
 <!-- 22 -->
 <g id="node23" class="node"><title>22</title>
-<polygon fill="none" stroke="black" points="1881,-1308.5 1881,-1542.5 2010,-1542.5 2010,-1308.5 1881,-1308.5"/>
-<text text-anchor="middle" x="1945.5" y="-1527.3" font-family="Times,serif" font-size="14.00">Policies.Exp3.Exp3</text>
-<polyline fill="none" stroke="black" points="1881,-1519.5 2010,-1519.5 "/>
-<text text-anchor="start" x="1889" y="-1504.3" font-family="Times,serif" font-size="14.00">_gamma : float</text>
-<text text-anchor="start" x="1889" y="-1489.3" font-family="Times,serif" font-size="14.00">gamma</text>
-<text text-anchor="start" x="1889" y="-1474.3" font-family="Times,serif" font-size="14.00">trusts</text>
-<text text-anchor="start" x="1889" y="-1459.3" font-family="Times,serif" font-size="14.00">unbiased : bool</text>
-<text text-anchor="start" x="1889" y="-1444.3" font-family="Times,serif" font-size="14.00">weights</text>
-<polyline fill="none" stroke="black" points="1881,-1436.5 2010,-1436.5 "/>
-<text text-anchor="start" x="1889" y="-1421.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="1889" y="-1406.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="1889" y="-1391.3" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="1889" y="-1376.3" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
-<text text-anchor="start" x="1889" y="-1361.3" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
-<text text-anchor="start" x="1889" y="-1346.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
-<text text-anchor="start" x="1889" y="-1331.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="1889" y="-1316.3" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="1881,-1301 1881,-1550 2010,-1550 2010,-1301 1881,-1301"/>
+<text text-anchor="middle" x="1945.5" y="-1534.8" font-family="Times,serif" font-size="14.00">Policies.Exp3.Exp3</text>
+<polyline fill="none" stroke="black" points="1881,-1527 2010,-1527 "/>
+<text text-anchor="start" x="1889" y="-1511.8" font-family="Times,serif" font-size="14.00">_gamma : float</text>
+<text text-anchor="start" x="1889" y="-1496.8" font-family="Times,serif" font-size="14.00">_initial_exploration</text>
+<text text-anchor="start" x="1889" y="-1481.8" font-family="Times,serif" font-size="14.00">gamma</text>
+<text text-anchor="start" x="1889" y="-1466.8" font-family="Times,serif" font-size="14.00">trusts</text>
+<text text-anchor="start" x="1889" y="-1451.8" font-family="Times,serif" font-size="14.00">unbiased : bool</text>
+<text text-anchor="start" x="1889" y="-1436.8" font-family="Times,serif" font-size="14.00">weights</text>
+<polyline fill="none" stroke="black" points="1881,-1429 2010,-1429 "/>
+<text text-anchor="start" x="1889" y="-1413.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="1889" y="-1398.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="1889" y="-1383.8" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="1889" y="-1368.8" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
+<text text-anchor="start" x="1889" y="-1353.8" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
+<text text-anchor="start" x="1889" y="-1338.8" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="1889" y="-1323.8" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="1889" y="-1308.8" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 22&#45;&gt;13 -->
 <g id="edge16" class="edge"><title>22&#45;&gt;13</title>
@@ -578,8 +577,8 @@
 </g>
 <!-- 24&#45;&gt;22 -->
 <g id="edge18" class="edge"><title>24&#45;&gt;22</title>
-<path fill="none" stroke="black" d="M1854.65,-1121.81C1867.02,-1163.02 1888.63,-1235.04 1907.68,-1298.49"/>
-<polygon fill="none" stroke="black" points="1904.36,-1299.62 1910.59,-1308.19 1911.07,-1297.61 1904.36,-1299.62"/>
+<path fill="none" stroke="black" d="M1854.65,-1121.81C1866.54,-1161.43 1886.98,-1229.54 1905.47,-1291.13"/>
+<polygon fill="none" stroke="black" points="1902.19,-1292.38 1908.42,-1300.95 1908.89,-1290.36 1902.19,-1292.38"/>
 </g>
 <!-- 25 -->
 <g id="node26" class="node"><title>25</title>
@@ -594,8 +593,8 @@
 </g>
 <!-- 25&#45;&gt;22 -->
 <g id="edge19" class="edge"><title>25&#45;&gt;22</title>
-<path fill="none" stroke="black" d="M2031.07,-1136.57C2018.49,-1178.9 1999.68,-1242.17 1982.9,-1298.63"/>
-<polygon fill="none" stroke="black" points="1979.51,-1297.78 1980.01,-1308.36 1986.22,-1299.77 1979.51,-1297.78"/>
+<path fill="none" stroke="black" d="M2031.07,-1136.57C2019.05,-1177.01 2001.35,-1236.56 1985.16,-1291.03"/>
+<polygon fill="none" stroke="black" points="1981.76,-1290.2 1982.27,-1300.78 1988.47,-1292.19 1981.76,-1290.2"/>
 </g>
 <!-- 26&#45;&gt;13 -->
 <g id="edge20" class="edge"><title>26&#45;&gt;13</title>
@@ -672,7 +671,7 @@
 <text text-anchor="middle" x="3236.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3129,-1542 3344,-1542 "/>
 <text text-anchor="start" x="3137" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3137" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="3137" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="3137" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3137" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3137" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -977,7 +976,7 @@
 <polygon fill="none" stroke="black" points="4667,-1030 4667,-1144 4924,-1144 4924,-1030 4667,-1030"/>
 <text text-anchor="middle" x="4795.5" y="-1128.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4667,-1121 4924,-1121 "/>
-<text text-anchor="start" x="4675" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
+<text text-anchor="start" x="4675" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
 <text text-anchor="start" x="4675" y="-1090.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4667,-1083 4924,-1083 "/>
 <text text-anchor="start" x="4675" y="-1067.8" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1444,7 +1443,7 @@
 <text text-anchor="middle" x="8876.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="8749.5,-399 9003.5,-399 "/>
 <text text-anchor="start" x="8757.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="8757.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="8757.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="8749.5,-361 9003.5,-361 "/>
 <text text-anchor="start" x="8757.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="8757.5" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -1484,7 +1483,7 @@
 <text text-anchor="middle" x="9177.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.oneRhoRandRand</text>
 <polyline fill="none" stroke="black" points="9022,-399 9333,-399 "/>
 <text text-anchor="start" x="9030" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="9022,-361 9333,-361 "/>
 <text text-anchor="start" x="9030" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="9030" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
