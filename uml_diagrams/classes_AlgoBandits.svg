@@ -672,7 +672,7 @@
 <text text-anchor="middle" x="3169.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3062,-1542 3277,-1542 "/>
 <text text-anchor="start" x="3070" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3070" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="3070" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="3070" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3070" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3070" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -977,7 +977,7 @@
 <polygon fill="none" stroke="black" points="4664,-1030 4664,-1144 4921,-1144 4921,-1030 4664,-1030"/>
 <text text-anchor="middle" x="4792.5" y="-1128.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4664,-1121 4921,-1121 "/>
-<text text-anchor="start" x="4672" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
+<text text-anchor="start" x="4672" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
 <text text-anchor="start" x="4672" y="-1090.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4664,-1083 4921,-1083 "/>
 <text text-anchor="start" x="4672" y="-1067.8" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1271,7 +1271,7 @@
 <polygon fill="none" stroke="black" points="8589.5,-255.5 8589.5,-444.5 8851.5,-444.5 8851.5,-255.5 8589.5,-255.5"/>
 <text text-anchor="middle" x="8720.5" y="-429.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="8589.5,-421.5 8851.5,-421.5 "/>
-<text text-anchor="start" x="8597.5" y="-406.3" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
+<text text-anchor="start" x="8597.5" y="-406.3" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
 <text text-anchor="start" x="8597.5" y="-391.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="8597.5" y="-376.3" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="8597.5" y="-361.3" font-family="Times,serif" font-size="14.00">offset</text>
@@ -1416,7 +1416,7 @@
 <text text-anchor="middle" x="7861.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="7734.5,-399 7988.5,-399 "/>
 <text text-anchor="start" x="7742.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="7742.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="7742.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="7734.5,-361 7988.5,-361 "/>
 <text text-anchor="start" x="7742.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="7742.5" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
