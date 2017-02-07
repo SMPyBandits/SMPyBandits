@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Configuration for the simulations.
+Configuration for the simulations, for the single-player case.
 """
 from __future__ import print_function
 
@@ -47,7 +47,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -97,8 +97,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+TEST_AGGR = True
 
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
@@ -238,10 +238,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        {
-            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-            "params": {}
-        },
+        # {
+        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+        #     "params": {}
+        # },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
@@ -356,29 +356,64 @@ configuration.update({
                 "alpha": 0.05         # XXX Below the theoretically acceptable value!
             }
         },
-        # --- MOSS algorithm, quite efficient
-        {
-            "archtype": MOSS,
-            "params": {}
-        },
+        # # --- MOSS algorithm, like UCB
+        # {
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
             "params": {}
         },
         # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {
-                # "klucb": klucbBern
-            }
-        },
-        {
-            "archtype": klUCBlog10,
-            "params": {
-                # "klucb": klucbBern
-            }
-        },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         # "c": 1.
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         "c": 0.434294  # = 1. / np.log(10) ==> like klUCBlog10
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         "c": 3.
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBloglog,
+        #     "params": {
+        #         "c": 1.
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBloglog,
+        #     "params": {
+        #         "c": 3.
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBlog10,
+        #     "params": {
+        #         # "klucb": klucbBern
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBloglog10,
+        #     "params": {
+        #         # "klucb": klucbBern
+        #     }
+        # },
         {
             "archtype": klUCBPlus,
             "params": {
