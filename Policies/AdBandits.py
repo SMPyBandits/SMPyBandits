@@ -10,6 +10,7 @@ __version__ = "0.1"
 
 import random as rn
 import numpy as np
+
 from .Beta import Beta
 from .BasePolicy import BasePolicy
 

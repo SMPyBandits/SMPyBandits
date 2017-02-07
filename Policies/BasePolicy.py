@@ -5,7 +5,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.5"
 
 import numpy as np
 
@@ -35,13 +35,14 @@ class BasePolicy(object):
         self.pulls.fill(0)
         self.rewards.fill(0)
 
-    def getReward(self, arm, reward, checkBounds=False):
+    # def getReward(self, arm, reward, checkBounds=False):  # XXX useless checkBounds feature
+    def getReward(self, arm, reward):
         self.t += 1
         self.pulls[arm] += 1
-        # XXX we could check here if the reward is outside the bounds
-        if checkBounds:
-            if not 0 <= reward - self.lower <= self.amplitude:
-                print("[Warning] {} received on arm {} a reward = {} that is outside the interval [{}, {}] : the policy will probably fail to work correctly...".format(self, arm, reward, self.lower, self.lower + self.amplitude))
+        # # XXX we could check here if the reward is outside the bounds
+        # if checkBounds:
+        #     if not 0 <= reward - self.lower <= self.amplitude:
+        #         print("[Warning] {} received on arm {} a reward = {} that is outside the interval [{}, {}] : the policy will probably fail to work correctly...".format(self, arm, reward, self.lower, self.lower + self.amplitude))
         reward = (reward - self.lower) / self.amplitude
         self.rewards[arm] += reward
 

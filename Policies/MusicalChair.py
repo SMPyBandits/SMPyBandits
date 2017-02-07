@@ -56,6 +56,7 @@ def boundOnFinalRegret(T0, nbPlayers):
     return T0 * nbPlayers + 2 * np.exp(2) * nbPlayers
 
 
+#: Different states during the Musical Chair algorithm
 State = Enum('State', ['NotStarted', 'InitialPhase', 'MusicalChair', 'Sitted'])
 
 

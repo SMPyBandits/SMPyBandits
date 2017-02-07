@@ -10,7 +10,7 @@ import numpy as np
 from .BasePolicy import BasePolicy
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
-# ie just r_t, or unbiased estimators, r_t / p_t
+# ie just r_t, or unbiased estimators, r_t / trusts_t
 UNBIASED = True
 UNBIASED = False
 
@@ -33,6 +33,10 @@ class Exp3(BasePolicy):
         self.unbiased = unbiased
         # Internal memory
         self.weights = np.ones(nbArms) / nbArms
+        # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
+        # XXX do even more randomized, take a random permutation of the arm ?
+        self._initial_exploration = np.random.permutation(nbArms)
+        # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
     def startGame(self):
         super(Exp3, self).startGame()
@@ -68,6 +72,7 @@ class Exp3(BasePolicy):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
             return self.t  # we could use a random permutation instead of deterministic order!
+            return self._initial_exploration[self.t]  # DONE
         else:
             return np.random.choice(self.nbArms, p=self.trusts)
 

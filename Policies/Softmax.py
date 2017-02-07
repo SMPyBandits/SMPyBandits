@@ -7,13 +7,13 @@ Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit P
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.4"
+__version__ = "0.5"
 
 import numpy as np
 from .BasePolicy import BasePolicy
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
-# ie just r_t, or unbiased estimators, r_t / p_t
+# ie just r_t, or unbiased estimators, r_t / trusts_t
 UNBIASED = True
 UNBIASED = False
 
@@ -33,8 +33,8 @@ class Softmax(BasePolicy):
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
         self._temperature = temperature
         self.unbiased = unbiased
-        # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
-        # XXX do even more randomized, take a random permutation of the arm
+        # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
+        # XXX do even more randomized, take a random permutation of the arm ?
         self._initial_exploration = np.random.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
@@ -50,15 +50,15 @@ class Softmax(BasePolicy):
         return self._temperature
 
     @property
-    def trusts(self, p_t=None):
+    def trusts(self):
         # rewards = (self.rewards - self.lower) / self.amplitude  # XXX we don't need this, the BasePolicy.getReward does it already
         rewards = self.rewards
-        if self.unbiased and p_t is not None:
-            # FIXME we should divide by the proba p_t of selecting actions, not by the trusts !
-            rewards /= p_t
         # trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         # trusts = np.exp(rewards / (self.temperature * self.pulls))
         trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
+        if self.unbiased:
+            rewards /= trusts
+            trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         return trusts / np.sum(trusts)
 
     # --- Choice methods
@@ -66,7 +66,7 @@ class Softmax(BasePolicy):
     def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            # return self.t  # TODO? random permutation instead of deterministic order!
+            # return self.t  # random permutation instead of deterministic order!
             return self._initial_exploration[self.t]  # DONE
         else:
             return np.random.choice(self.nbArms, p=self.trusts)
