@@ -15,13 +15,13 @@ class Result(object):
         self.delta_t_save = delta_t_save
         self.choices = np.zeros(duration, dtype=int)
         self.rewards = np.zeros(duration)         # To compute the mean
-        self.rewardsSquared = np.zeros(duration)  # To compute the variance
+        # self.rewardsSquared = np.zeros(duration)  # To compute the variance
         self.pulls = np.zeros(nbArms, dtype=int)
 
     def store(self, time, choice, reward):
         time = int(time / self.delta_t_save)
         self.choices[time] = choice
         self.rewards[time] = reward
-        self.rewardsSquared[time] = reward ** 2
+        # self.rewardsSquared[time] = reward ** 2
         self.pulls[choice] += 1
         # FIXME find a way to store the result while learning?

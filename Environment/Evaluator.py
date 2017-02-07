@@ -63,7 +63,7 @@ class Evaluator(object):
         self.__initEnvironments__()
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
-        self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+        # self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
         self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
@@ -124,19 +124,13 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon,
-                        random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events,
-                        delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i]
-                    )
+                    joblib.delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i])
                     for i in range(self.repetitions)
                 )
             else:
                 results = []
                 for _ in range(self.repetitions):
-                    r = delayed_play(env, policy, self.horizon,
-                        random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events,
-                        delta_t_save=self.delta_t_save, allrewards=allrewards
-                        )
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -145,7 +139,8 @@ class Evaluator(object):
             # Store the results
             for r in results:
                 self.rewards[policyId, envId, :] += r.rewards
-                self.rewardsSquared[policyId, envId, :] += r.rewardsSquared
+                # # self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # No need for this!
+                # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
                 self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
                 # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
                 self.pulls[envId][policyId, :] += r.pulls

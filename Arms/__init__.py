@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Arms : contains different types of bandit arms:
 Uniform, Bernoulli, Poisson, Gaussian, Exponential.
+
+Also contain makeMeans, a small function to generate uniformly spacen means of arms.
 """
 
 __author__ = "Lilian Besson"

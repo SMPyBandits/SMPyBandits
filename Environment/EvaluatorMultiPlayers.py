@@ -126,6 +126,7 @@ class EvaluatorMultiPlayers(object):
         # FIXME having this list of results consumes too much RAM !
         for r in results:
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
+            # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
             self.pulls[envId] += r.pulls
             self.allPulls[envId] += r.allPulls

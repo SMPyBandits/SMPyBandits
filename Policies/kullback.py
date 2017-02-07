@@ -5,10 +5,13 @@ Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
 from __future__ import division, print_function
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.5"
 
 from math import log, sqrt, exp
 import numpy as np
+
+# # TODO try numba.jit() on some functions
+# from numba.decorators import jit
 
 # Warning: np.dot is miserably slow!
 
@@ -220,6 +223,7 @@ def klGauss(x, y, sig2=0.25):
 
 # --- KL functions, for the KL-UCB policy
 
+# @jit()  # TODO try numba.jit() on this function
 def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
     """ The generic KL-UCB index computation.
 
@@ -387,6 +391,7 @@ def klucbExp(x, d, precision=1e-6):
 
 # --- max EV functions
 
+# @jit()  # TODO try numba.jit() on this function
 def maxEV(p, V, klMax):
     """ Maximize expectation of V wrt. q st. KL(p, q) < klMax.
 
@@ -423,6 +428,7 @@ def maxEV(p, V, klMax):
     return Uq
 
 
+# @jit()  # TODO try numba.jit() on this function
 def reseqp(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
 

@@ -7,6 +7,7 @@ __version__ = "0.5"
 
 import numpy as np
 import matplotlib.pyplot as plt
+
 # Local imports
 from .plotsettings import DPI, signature, maximizeWindow
 
@@ -82,6 +83,7 @@ class MAB(object):
                 for armId, arm in enumerate(self.arms))
             )
 
+    #
     # --- Compute lower bounds
 
     def lowerbound(self):
@@ -95,7 +97,7 @@ class MAB(object):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means())
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
-        # FIXME it is weird to have a lowerbound = 0 if nbPlayers = nbArms
+        # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms
         bestMeans = sortedMeans[-nbPlayers:]
         # print("  bestMeans = ", bestMeans)  # DEBUG
         worstMeans = sortedMeans[:-nbPlayers]
@@ -119,7 +121,8 @@ class MAB(object):
         assert anandkumar_lowerbound <= our_lowerbound, "Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better..."
         return our_lowerbound, anandkumar_lowerbound
 
-    # --- Plot a comparison of our lowerbound and their
+    # --- Plot a comparison of our lowerbound and their lowerbound
+    # FIXME we should also print the actual term we lower bound, on an other graph, to check how far it is from the theoretical lower bound
     def plotComparison_our_anandkumar(self, savefig=None):
         nbPlayers = self.nbArms
         lowerbounds = np.zeros((2, nbPlayers))

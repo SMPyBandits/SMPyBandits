@@ -15,10 +15,10 @@ class BaseCentralizedPolicy(object):
         return self.__class__.__name__
 
     def startGame(self):
-        pass
+        raise NotImplementedError("This method startGame() has to be implemented in the child class inheriting from BaseCentralizedPolicy.")
 
     def getReward(self, arm, reward):
-        pass
+        raise NotImplementedError("This method getReward(arm, reward) has to be implemented in the child class inheriting from BaseCentralizedPolicy.")
 
     def choice(self):
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BaseCentralizedPolicy.")

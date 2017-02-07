@@ -73,7 +73,7 @@ class Scenario1(BaseMPPolicy):
             self.chosenOne = np.random.randint(self.nbPlayers)  # New random choice
         # print("  Currently, the only sub-player that can pull arm #0 is", self.chosenOne, "and playerId =", playerId)  # DEBUG
         if self.chosenOne == playerId:
-            return 0  # Chose worse arm
+            return 0  # Choose worse arm
         else:
             # return np.random.randint(low=1, high=1 + self.nbArms)  # XXX to be general for nbArms > 2 setting
-            return 1  # Chose best arm
+            return 1  # Choose best arm

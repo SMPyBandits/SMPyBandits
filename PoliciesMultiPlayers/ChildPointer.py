@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" ChildPointer: Class that acts as a child policy, but in fact it pass all its method calls to the mother class (that can pass it to its i-th player, or use any centralized computation).
+""" ChildPointer: Class that acts as a child policy, but in fact it passes all its method calls to the mother class (that can pass it to its internal i-th player, or use any centralized computation).
 """
 
 __author__ = "Lilian Besson"
@@ -7,7 +7,7 @@ __version__ = "0.3"
 
 
 class ChildPointer(object):
-    """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class (that can pass it to its i-th player, or use any centralized computation).
+    """ Class that acts as a child policy, but in fact it passes all its method calls to the mother class (that can pass it to its internal i-th player, or use any centralized computation).
     """
 
     def __init__(self, mother, playerId):

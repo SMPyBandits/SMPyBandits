@@ -8,10 +8,15 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 from .MAB import MAB
+
 from .Result import Result
+from .ResultMultiPlayers import ResultMultiPlayers
+
 from .Evaluator import Evaluator
 from .EvaluatorMultiPlayers import EvaluatorMultiPlayers
 # from .CollisionModels import *
+
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers

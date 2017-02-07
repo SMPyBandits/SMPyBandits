@@ -105,8 +105,7 @@ class oneALOHA(ChildPointer):
         """
         # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
         # self.getReward(arm, self.mother.lower)  # XXX should we give a 0 reward ?
-        # 1. With proba p, persist: nothing to do
-        # 2. With proba 1 - p, give up
+        # 1. With proba 1 - p, give up
         if rn.random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
@@ -114,6 +113,9 @@ class oneALOHA(ChildPointer):
             # print("   - Reaction to collision on arm {}, at time t = {} : delta_tnext_k = {}, tnext[{}] = {} ...".format(arm, self.t, delta_tnext_k, self.chosenArm, self.tnext[self.chosenArm]))  # DEBUG
             self.p = self.p0  # Reinitialize the proba p
             self.chosenArm = None  # We give up this arm
+        # 2. With proba p, persist: nothing to do
+        # else:
+        #     pass
 
     def choice(self):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
@@ -145,7 +147,7 @@ class ALOHA(BaseMPPolicy):
 
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
         - alpha_p0: scaling in the update for p[t+1] <- alpha_p0 p[t] + (1 - alpha_p0)
-        - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. FIXME try with a t -> log(1 + t) instead
+        - ftnext: general function, default to t -> t^beta, to know from where to sample a random time t_next(k), until when the chosenArm is unavailable. t -> log(1 + t) is also possible.
         - (optional) beta: if present, overwrites ftnext, which will be t --> t^beta.
 
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
