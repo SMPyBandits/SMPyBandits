@@ -65,6 +65,8 @@ from .BayesUCB import BayesUCB
 # --- Kullback-Leibler based index policy
 from .klUCB import klUCB
 from .klUCBlog10 import klUCBlog10  # With log10(t) instead of log(t) = ln(t)
+from .klUCBloglog import klUCBloglog  # With log(t) + c log(log(t)) and c = 1 (variable)
+from .klUCBloglog10 import klUCBloglog10  # With log10(t) + c log10(log10(t)) and c = 1 (variable)
 from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 # from .KLempUCB import KLempUCB  # XXX fix it before importing it

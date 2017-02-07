@@ -16,6 +16,9 @@ class klUCBPlus(klUCB):
     Reference: [Cappé et al. 13](https://arxiv.org/pdf/1210.1136.pdf)
     """
 
+    def __str__(self):
+        return r"KL-UCB+{}".format("" if self.c == 1 else r"($c={:.3g}$)".format(self.c))
+
     def computeIndex(self, arm):
         if self.pulls[arm] < 2:
             return float('+inf')
