@@ -74,6 +74,9 @@ install3:
 send_ws3:
 	CP ../AlgoBandits.git lilian_besson@ws3:~/These/src/
 
+receive_plots_ws3:
+	CP lilian_besson@ws3:~/These/src/AlgoBandits.git/plots ./
+
 # Cleaner
 clean:
 	-mv -vf *.pyc */*.pyc /tmp/
