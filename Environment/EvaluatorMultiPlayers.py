@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Evaluator class to wrap and run the simulations, for the multi-players case. """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"
@@ -226,7 +226,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X, amplitudeRewards, '+-')
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\nFairness := (rewards of best player - rewards of worst player) / rewards of best player")
+        plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
         plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -262,7 +262,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X, lowerbound * np.log(2 + X), 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.plot(X, anandkumar_lowerbound * np.log(2 + X), 'k:', label="Anandkumar lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)
         # Labels and legends
-        plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalized else ""))
         plt.title("Multi-players $M = {}$ (collision model: {}): {}cumulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalized else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
@@ -405,7 +405,7 @@ class EvaluatorMultiPlayers(object):
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
-        Y = np.zeros(1 + nbArms)
+        Y = np.zeros(1 + nbArms)  # One extra arm for "no collision"
         labels = [''] * (1 + nbArms)  # Empty labels
         colors = palette(1 + nbArms)  # Get colors
         # All the other arms
@@ -432,7 +432,6 @@ class EvaluatorMultiPlayers(object):
             plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
-            # , autopct='%.4g%%'
         else:  # TODO do an histogram instead of this piechart
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts

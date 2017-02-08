@@ -3,7 +3,7 @@
 """
 Script to load the config, run the simulations, and plot them.
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

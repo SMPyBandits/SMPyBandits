@@ -13,7 +13,7 @@
   - ==> constant regret if N* is well estimated and if the estimated N* best arms were correct
   - ==> linear regret otherwise
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

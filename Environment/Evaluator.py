@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Evaluator class to wrap and run the simulations."""
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"
