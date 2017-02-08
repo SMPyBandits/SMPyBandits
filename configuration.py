@@ -2,7 +2,7 @@
 """
 Configuration for the simulations, for the single-player case.
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"
@@ -22,8 +22,6 @@ from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
 # Import algorithms
 from Policies import *
-# Import KL indeces
-from Policies.kullback import klucbBern, klucbExp, klucbGauss
 
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
@@ -31,7 +29,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
@@ -47,8 +45,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 50
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -134,48 +132,48 @@ configuration = {
     # --- Cache rewards
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
-    "environment": [  # Bernoulli arms
-        # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
-        #     "arm_type": Bernoulli,
-        #     "params": [0, 1]
-        # },
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # },
-        # {   # Another very easy problem: 3 arms, two very bad, one bad
-        #     "arm_type": Bernoulli,
-        #     "params": [0.04, 0.05, 0.1]
-        # },
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
-        # {   # One optimal arm, much better than the others, but *lots* of bad arms
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        # },
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
-    ],
-    # # DONE I tried with other arms distribution: Exponential, it works similarly
-    # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
-    # "environment": [  # Exponential arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Exponential,
-    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
-    #     },
+    # "environment": [  # Bernoulli arms
+    #     # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0, 1]
+    #     # },
+    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.5, 0.9]
+    #     # },
+    #     # {   # Another very easy problem: 3 arms, two very bad, one bad
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.04, 0.05, 0.1]
+    #     # },
+    #     # {   # A very easy problem, but it is used in a lot of articles
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    #     # },
+    #     # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+    #     # },
+    #     # {   # Lots of bad arms, significative difference between the best and the others
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+    #     # },
+    #     # {   # One optimal arm, much better than the others, but *lots* of bad arms
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+    #     # },
+    #     # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+    #     # },
     # ],
+    # DONE I tried with other arms distribution: Exponential, it works similarly
+    # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
+    "environment": [  # Exponential arms
+        {   # An example problem with  arms
+            "arm_type": Exponential,
+            "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+        },
+    ],
     # # DONE I tried with other arms distribution: Gaussian, it works similarly
     # # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
     # "environment": [  # Gaussian arms
@@ -188,7 +186,10 @@ configuration = {
 
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+    # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
 nbArms = len(configuration['environment'][0]['params'])
+klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
+
 
 configuration.update({
     "policies": [
@@ -370,67 +371,61 @@ configuration.update({
         # {
         #     "archtype": klUCB,
         #     "params": {
-        #         # "c": 1.
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCB,
         #     "params": {
         #         "c": 0.434294  # = 1. / np.log(10) ==> like klUCBlog10
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCB,
         #     "params": {
         #         "c": 3.
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCBloglog,
         #     "params": {
-        #         "c": 1.
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCBloglog,
         #     "params": {
         #         "c": 3.
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCBlog10,
         #     "params": {
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCBloglog10,
         #     "params": {
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
         {
             "archtype": klUCBPlus,
             "params": {
-                # "klucb": klucbBern
+                "klucb": klucb
             }
         },
         # {
         #     "archtype": klUCBHPlus,
         #     "params": {
         #         "horizon": HORIZON,
-        #         # "klucb": klucbBern
+        #         "klucb": klucb
         #     }
         # },
-        # # {
-        # #     "archtype": KLempUCB,   # Empirical KL-UCB algorithm non-parametric policy - XXX does not work as far as now
-        # #     "params": {}
-        # # },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,

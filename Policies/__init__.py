@@ -23,6 +23,15 @@
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
+# --- KL-UCB index functions
+from Policies.kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson
+klucb_mapping = {
+    "Bernoulli": klucbBern,
+    "Exponential": klucbExp,
+    "Gaussian": klucbGauss,
+    "Poisson": klucbPoisson
+}
+
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
 from .UniformOnSome import UniformOnSome
