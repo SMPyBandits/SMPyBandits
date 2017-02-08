@@ -20,7 +20,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -205,7 +205,7 @@ class EvaluatorMultiPlayers(object):
         # TODO add std
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        ymax = max(plt.ylim()[1], 1)  # FIXME no that's weird !
+        ymax = max(plt.ylim()[1], 1.03)  # XXX no that's weird !
         plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players $M = {}$ (collision model: {}): personal reward for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
@@ -214,20 +214,23 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
-        # FIXME I should compute a certain measure of "fairness", from these personal rewards
+        # DONE compute a certain measure of "fairness", from these personal rewards
         plt.figure()
         # amplitudeRewards = np.std(cumRewards, axis=0) / np.max(cumRewards)  # XXX It was weird to use a std/var
-        amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)  # TODO try it!
+        amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
+        plt.ylim(0, 1)
+        add_percent_formatter("yaxis", 1.0)
         if semilogx:
             plt.semilogx(X, amplitudeRewards, '+-')
         else:
             plt.plot(X, amplitudeRewards, '+-')
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
-        plt.ylabel("Centralized measure of fairness (reward of best player - reward of worst player)")
+        plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\nFairness := (rewards of best player - rewards of worst player) / rewards of best player")
         plt.title("Multi-players $M = {}$ (collision model: {}): centralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
+            savefig = savefig.replace('main', 'main_Fairness')
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
         plt.show()
@@ -292,7 +295,9 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
-        plt.ylabel("{}Number of switches by player".format("Cumulated " if cumulated else ""))
+        if not cumulated:
+            add_percent_formatter("yaxis", 1.0)
+        plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ (collision model: {}): {}number of switches for each player, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -310,6 +315,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
+        add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}): best arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
@@ -359,6 +365,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
+        add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else ""))
         plt.title("Multi-players $M = {}$ (collision model: {}): {}free transmission for each players, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
@@ -381,7 +388,8 @@ class EvaluatorMultiPlayers(object):
         if cumulated:
             Y = np.cumsum(Y)
         else:
-            plt.ylim([-0.03, 1.03])
+            plt.ylim(-0.03, 1.03)
+            add_percent_formatter("yaxis", 1.0)
         Y /= (self.nbPlayers)  # XXX To normalized the count?
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
@@ -409,7 +417,7 @@ class EvaluatorMultiPlayers(object):
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
             print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))  # DEBUG
-            if Y[armId] < 1e-4:  # Do not display small slices
+            if Y[armId] < 5e-3:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")  # DEBUG

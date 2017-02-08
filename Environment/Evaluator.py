@@ -18,7 +18,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
+from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .Result import Result
 from .MAB import MAB
 
@@ -269,6 +269,7 @@ class Evaluator(object):
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
+        add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()

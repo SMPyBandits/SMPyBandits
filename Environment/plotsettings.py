@@ -3,13 +3,14 @@
 
 >>> from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 import seaborn as sns
 
 # Customize here if you want a signature on the titles of each plot
@@ -80,3 +81,31 @@ def maximizeWindow():
                 except:
                     print("Unable to maximize window...")
     # plt.show()
+
+
+def add_percent_formatter(which="xaxis", amplitude=1.0):
+    """Small function to use a Percentage formatter for xaxis or yaxis, of a certain amplitude.
+
+    - which can be "xaxis" or "yaxis"
+    - amplitude is a float, default to 1
+
+    - More detail at http://stackoverflow.com/a/36320013/
+    - Not that the use of matplotlib.ticker.PercentFormatter require matplotlib >= 2.0.1
+    - But if it is not available, matplotlib.ticker.StrMethodFormatter("{:.0%}") is used instead
+    """
+    # Which axis to use ?
+    if which == "xaxis":
+        ax = plt.axes().xaxis
+    elif which == "yaxis":
+        ax = plt.axes().yaxis
+    else:
+        raise ValueError("Unknown value {} for 'which' in function add_percent_formatter() .".format(which))
+    # Which formatter to use ?
+    if hasattr(mtick, 'PercentFormatter'):
+        frmt = mtick.PercentFormatter(amplitude)
+    else:
+        # frmt = mtick.FormatStrFormatter("%.0f%%")
+        frmt = mtick.StrMethodFormatter("{x:.0%}")
+        print("Warning: ")
+    # Use it!
+    ax.set_major_formatter(frmt)
