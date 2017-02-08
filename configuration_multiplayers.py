@@ -235,7 +235,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-    "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
@@ -243,7 +243,7 @@ configuration.update({
     # --- TODO Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-    # "players": rhoRandRand(NB_PLAYERS, Thompson, nbArms).childs
+    "players": rhoRandRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
 })
