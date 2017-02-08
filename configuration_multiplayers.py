@@ -2,7 +2,7 @@
 """
 Configuration for the simulations, for the multi-players case.
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"
@@ -53,7 +53,7 @@ REPETITIONS = 20
 REPETITIONS = 1000
 REPETITIONS = 100
 REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -76,9 +76,9 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 9    # Less that the number of arms
-NB_PLAYERS = 12   # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 9    # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -124,10 +124,10 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-        # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(9, 0.1)
@@ -136,10 +136,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1.0 + 14))
         # }
-        {   # An easy problem (19 arms)
-            "arm_type": Bernoulli,
-            "params": makeMeans(19, 1 / (1.0 + 19))
-        }
+        # {   # An easy problem (19 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(19, 1 / (1.0 + 19))
+        # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -193,7 +193,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
-    "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
     # --- DONE Using multi-player dummy Centralized policy
@@ -218,9 +218,9 @@ configuration.update({
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??
-    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).childs
+    "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).childs
 
-    # --- FIXME Using single-player ALOHA policy
+    # --- DONE Using single-player ALOHA policy
     # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
     # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
     # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
