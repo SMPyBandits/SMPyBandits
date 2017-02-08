@@ -64,7 +64,7 @@ class MEGA(BasePolicy):
         self.meanRewards = np.zeros(nbArms)
 
     def __str__(self):
-        return "MEGA(c: {}, d: {}, p0: {}, alpha: {}, beta: {})".format(self.c, self.d, self.p0, self.alpha, self.beta)
+        return r"MEGA($c={}$, $d={}$, $p_0={}$, $\alpha={}$, $\beta={}$)".format(self.c, self.d, self.p0, self.alpha, self.beta)
 
     def startGame(self):
         """ Just reinitialize all the internal memory."""

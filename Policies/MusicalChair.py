@@ -103,8 +103,8 @@ class MusicalChair(BasePolicy):
         self.t = -1
 
     def __str__(self):
-        # return "MusicalChair(N*: {}, T0: {})".format(self.nbPlayers, self.Time0)  # Use current estimate
-        return "MusicalChair(T0: {})".format(self.Time0)  # Use current estimate
+        # return r"MusicalChair($N^*={}$, $T_0={}$)".format(self.nbPlayers, self.Time0)  # Use current estimate
+        return r"MusicalChair($T_0={}$)".format(self.Time0)  # Use current estimate
 
     def startGame(self):
         """ Just reinitialize all the internal memory, and decide how to start (state 1 or 2)."""
