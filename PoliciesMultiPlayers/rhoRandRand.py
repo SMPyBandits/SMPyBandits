@@ -33,10 +33,7 @@ class oneRhoRandRand(ChildPointer):
         self.rank = None
 
     def __str__(self):   # Better to recompute it automatically
-        if self.rank is not None:
-            return '#{}<rhoRandRand, {}, rank:{}>'.format(self.playerId + 1, self.mother._players[self.playerId], self.rank)
-        else:
-            return '#{}<rhoRandRand, {}>'.format(self.playerId + 1, self.mother._players[self.playerId])
+        return r"#{}<{}, {}{}>".format(self.playerId + 1, r"$\rho^{\text{Rand}\text{Rand}}$", self.mother._players[self.playerId], "rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
         super(oneRhoRandRand, self).startGame()
