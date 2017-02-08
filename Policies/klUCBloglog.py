@@ -21,7 +21,7 @@ class klUCBloglog(klUCB):
     """
 
     def __str__(self):
-        return r"KL-UCB({}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), r"$\log\log$")
+        return r"KL-UCB({}{}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), r"$\log\log$", self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:

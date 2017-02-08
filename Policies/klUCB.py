@@ -30,7 +30,7 @@ class klUCB(IndexPolicy):
         self.tolerance = tolerance
 
     def __str__(self):
-        return r"KL-UCB{}".format("" if self.c == 1 else r"($c={:.3g}$)".format(self.c))
+        return r"KL-UCB({}{})".format("" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
         if self.pulls[arm] < 1:

@@ -22,7 +22,7 @@ class klUCBHPlus(klUCB):
         self._horizon = horizon
 
     def __str__(self):
-        return r"KL-UCB-H+{}".format("" if self.c == 1 else r"($c={:.3g}$)".format(self.c))
+        return r"KL-UCB-H+({}{})".format("" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
