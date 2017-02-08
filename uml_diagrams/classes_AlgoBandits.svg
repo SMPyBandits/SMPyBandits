@@ -676,7 +676,7 @@
 <text text-anchor="start" x="3137" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3137" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="3137" y="-1451.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="3137" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
+<text text-anchor="start" x="3137" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
 <text text-anchor="start" x="3137" y="-1421.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="3137" y="-1406.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="3129,-1399 3344,-1399 "/>
@@ -976,7 +976,7 @@
 <polygon fill="none" stroke="black" points="4667,-1030 4667,-1144 4924,-1144 4924,-1030 4667,-1030"/>
 <text text-anchor="middle" x="4795.5" y="-1128.8" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4667,-1121 4924,-1121 "/>
-<text text-anchor="start" x="4675" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="4675" y="-1105.8" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="4675" y="-1090.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4667,-1083 4924,-1083 "/>
 <text text-anchor="start" x="4675" y="-1067.8" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1483,7 +1483,7 @@
 <text text-anchor="middle" x="9177.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.oneRhoRandRand</text>
 <polyline fill="none" stroke="black" points="9022,-399 9333,-399 "/>
 <text text-anchor="start" x="9030" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
+<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
 <polyline fill="none" stroke="black" points="9022,-361 9333,-361 "/>
 <text text-anchor="start" x="9030" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="9030" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
