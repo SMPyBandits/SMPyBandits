@@ -65,7 +65,9 @@ class Aggr(BasePolicy):
         for i, child in enumerate(children):
             if isinstance(child, dict):
                 print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, child))  # DEBUG
-                self.children.append(child['archtype'](nbArms, lower=lower, amplitude=amplitude, **child['params']))
+                localparams = {'lower': lower, 'amplitude': amplitude}
+                localparams.update(child['params'])
+                self.children.append(child['archtype'](nbArms, **localparams))
             else:
                 print("  Using this already created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child)
