@@ -6,7 +6,7 @@
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -17,8 +17,13 @@ import seaborn as sns
 signature = "\n(By Lilian Besson, Fev.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
-DPI = 160
+DPI = 110
+FIGSIZE = (19.80, 10.80)  # in inches!
 HLS = True
+
+# Bbox in inches. Only the given portion of the figure is saved. If ‘tight’, try to figure out the tight bbox of the figure.
+BBOX_INCHES = 'tight'
+BBOX_INCHES = None
 
 if __name__ != '__main__':
     # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
@@ -26,7 +31,7 @@ if __name__ != '__main__':
             style="darkgrid",
             palette="hls" if HLS else "husl",
             font="sans-serif",
-            font_scale=1.1
+            font_scale=1.05
             )
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
@@ -36,9 +41,18 @@ if __name__ != '__main__':
     mpl.rcParams['mathtext.fontset'] = "cm"
     mpl.rcParams['mathtext.rm'] = "serif"
 
+    # Configure the DPI of all images, once and for all!
+    mpl.rcParams['figure.dpi'] = DPI
+    print(" - Setting dpi of all figures to", DPI, "...")
+
+    # Configure figure size, even of if saved directly and not displayed, use HD screen
+    # cf. https://en.wikipedia.org/wiki/Computer_display_standard
+    mpl.rcParams['figure.figsize'] = FIGSIZE
+    print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")
+
 
 def palette(nb, hls=HLS):
-    """ Use a smart palette from seaborn, for nb different things to plot.
+    """ Use a smart palette from seaborn, for nb different plots on the same figure.
 
     - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
     """
@@ -79,7 +93,7 @@ def maximizeWindow():
                     # print("Calling 'figManager.full_screen_toggle()' ...")  # DEBUG
                     figManager.full_screen_toggle()
                 except:
-                    print("Unable to maximize window...")
+                    print("  Note: Unable to maximize window...")
     # plt.show()
 
 
@@ -91,7 +105,7 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
 
     - More detail at http://stackoverflow.com/a/36320013/
     - Not that the use of matplotlib.ticker.PercentFormatter require matplotlib >= 2.0.1
-    - But if it is not available, matplotlib.ticker.StrMethodFormatter("{:.0%}") is used instead
+    - But if not available, use matplotlib.ticker.StrMethodFormatter("{:.0%}") instead
     """
     # Which axis to use ?
     if which == "xaxis":

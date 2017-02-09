@@ -20,7 +20,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -212,7 +212,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
         # DONE compute a certain measure of "fairness", from these personal rewards
         plt.figure()
@@ -232,7 +232,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             savefig = savefig.replace('main', 'main_Fairness')
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     # Plotting centralized regret (sum)
@@ -269,7 +269,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     # Plotting cumulated number of switchs (switching costs)
@@ -302,7 +302,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def plotBestArmPulls(self, environmentId=0, savefig=None):
@@ -321,7 +321,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
@@ -349,7 +349,7 @@ class EvaluatorMultiPlayers(object):
             if savefig is not None:
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
                 print("Saving to", savefig, "...")  # DEBUG
-                plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+                plt.savefig(savefig, bbox_inches=BBOX_INCHES)
             plt.show()
 
     def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
@@ -371,7 +371,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
@@ -400,7 +400,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
@@ -440,7 +440,7 @@ class EvaluatorMultiPlayers(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def printFinalRanking(self, environmentId=0):

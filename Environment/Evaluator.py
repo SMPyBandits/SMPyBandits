@@ -18,7 +18,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .Result import Result
 from .MAB import MAB
 
@@ -252,7 +252,7 @@ class Evaluator(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
@@ -275,7 +275,7 @@ class Evaluator(object):
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show()
 
     def printFinalRanking(self, environmentId=0):
