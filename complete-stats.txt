@@ -2,13 +2,13 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   387	Lilian Besson
+   390	Lilian Besson
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 211
-  - Number of lines added: 337852
-  - Number of lines deleted: 315128
+  - Number of files changed: 212
+  - Number of lines added: 339398
+  - Number of lines deleted: 316776
   - Number of merges: 0
       Feb     Mar     Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec       Jan     Feb 
                                                                                         o o   . o         . O o 
@@ -20,7 +20,7 @@ Statistics for: Lilian
                                                                                       o .     O .           o   
 
                                                                                           Less   . o O 0  More
- 385: Total commits
+ 388: Total commits
   16: Days ( Dec  6 2016 - Dec 22 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
    8: Days ( Feb  2 2017 - Feb  9 2017 ) - Current streak                          
