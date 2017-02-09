@@ -20,6 +20,7 @@ from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
 from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
+
 # Import algorithms
 from Policies import *
 

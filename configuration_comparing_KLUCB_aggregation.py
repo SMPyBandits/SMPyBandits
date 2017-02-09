@@ -20,6 +20,7 @@ from Arms.Bernoulli import Bernoulli
 from Arms.Exponential import Exponential
 from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
+
 # Import algorithms
 from Policies import *
 
@@ -64,37 +65,6 @@ NB_RANDOM_EVENTS = 5
 # Cache rewards
 CACHE_REWARDS = True
 
-# Parameters for the epsilon-greedy and epsilon-... policies
-EPSILON = 0.1
-
-# Temperature for the softmax
-TEMPERATURE = 0.01  # When -> 0, more greedy
-TEMPERATURE = 0.1
-TEMPERATURE = 0.5
-TEMPERATURE = 1
-TEMPERATURE = 10
-TEMPERATURE = 100   # When -> oo, more uniformly at random
-# TEMPERATURE = 10.0 / HORIZON  # Not sure ??!
-TEMPERATURE = 0.05
-
-# XXX try different values for the learning rate for my aggregated bandit
-LEARNING_RATE = 0.05
-LEARNING_RATE = 0.1
-LEARNING_RATE = 0.2
-LEARNING_RATE = 0.5
-LEARNING_RATE = 0.01
-
-# To try more learning rates in one run
-LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
-LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
-LEARNING_RATES = [LEARNING_RATE]
-
-# XXX try different values for time tau for the decreasing rate for my aggregated bandit
-# FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
-DECREASE_RATE = None
-DECREASE_RATE = HORIZON / 2.0
-DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
-
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
 
@@ -111,7 +81,11 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 
 
 # Parameters for the arms
-VARIANCE = 0.05   # Variance of Gaussian arms
+TRUNC = 10  # Trunc parameter, ie amplitude, for Exponential arms
+
+VARIANCE = 1   # Variance of Gaussian arms
+MINI = -10  # lower bound on rewards from Gaussian arms
+MAXI = 10   # upper bound on rewards from Gaussian arms, ie amplitude = 20
 
 
 # XXX This dictionary configures the experiments
@@ -132,19 +106,7 @@ configuration = {
     # --- Cache rewards
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
-    # "environment": [  # Bernoulli arms
-    #     # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0, 1]
-    #     # },
-    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.5, 0.9]
-    #     # },
-    #     # {   # Another very easy problem: 3 arms, two very bad, one bad
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.04, 0.05, 0.1]
-    #     # },
+    # "environment": [  # 1)  Bernoulli arms
     #     {   # A very easy problem, but it is used in a lot of articles
     #         "arm_type": Bernoulli,
     #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -153,33 +115,18 @@ configuration = {
     #     #     "arm_type": Bernoulli,
     #     #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
     #     # },
-    #     # {   # Lots of bad arms, significative difference between the best and the others
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-    #     # },
-    #     # {   # One optimal arm, much better than the others, but *lots* of bad arms
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-    #     # },
-    #     # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-    #     # },
     # ],
-    # # DONE I tried with other arms distribution: Exponential, it works similarly
-    # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
-    # "environment": [  # Exponential arms
+    # "environment": [  # 2)  Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
-    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # ],
-    # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
-    "environment": [  # Gaussian arms
+    "environment": [  # 3)  Gaussian arms
         {   # An example problem with  arms
             "arm_type": Gaussian,
-            "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
         },
     ],
 }
@@ -187,117 +134,70 @@ configuration = {
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
-nbArms = len(configuration['environment'][0]['params'])
-klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
+env = configuration['environment'][0]
+nbArms = len(env['params'])
+arm_type = env['arm_type']
+
+# And get LOWER, AMPLITUDE values
+LOWER, AMPLITUDE = 0, 1
+try:
+    for param in env['params']:
+        arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
+        l, a = arm.lower_amplitude
+        LOWER = min(LOWER, l)
+        AMPLITUDE = max(AMPLITUDE, a)
+    mini, maxi = LOWER, LOWER + AMPLITUDE
+    print("Apparently, the arms have rewards in [{}, {}] (lower = {}, amplitude = {})".format(LOWER, LOWER + AMPLITUDE, LOWER, AMPLITUDE))
+except Exception as e:
+    print("Warning: Possibly wrong estimate of lower, amplitude ....")
 
 
 configuration.update({
     "policies": [
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- Bayes UCB algorithms
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- KL algorithms
-        # --- klUCB
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucbBern
-            }
-        },
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucbExp
-            }
-        },
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucbGauss
-            }
-        },
-        # --- klUCBlog10
-        {
-            "archtype": klUCBlog10,
-            "params": {
-                "klucb": klucbBern
-            }
-        },
-        {
-            "archtype": klUCBlog10,
-            "params": {
-                "klucb": klucbExp
-            }
-        },
-        {
-            "archtype": klUCBlog10,
-            "params": {
-                "klucb": klucbGauss
-            }
-        },
-        # --- klUCBloglog
-        {
-            "archtype": klUCBloglog,
-            "params": {
-                "klucb": klucbBern
-            }
-        },
-        {
-            "archtype": klUCBloglog,
-            "params": {
-                "klucb": klucbExp
-            }
-        },
-        {
-            "archtype": klUCBloglog,
-            "params": {
-                "klucb": klucbGauss
-            }
-        },
         # --- klUCBPlus
         {
             "archtype": klUCBPlus,
             "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbBern
             }
         },
         {
             "archtype": klUCBPlus,
             "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbExp
             }
         },
         {
             "archtype": klUCBPlus,
             "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbGauss
             }
         },
     ]
 })
 
-# # XXX Only test with fixed arms
-# configuration.update({
-#     "policies": [  # --- Full or partial knowledge algorithms
-#         TakeFixedArm(nbArms, k) for k in range(nbArms)
-#     ]
-# })
-
-# # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
-# from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
-# NB_PLAYERS = 10
-# configuration.update({
-#     "policies": Scenario1(NB_PLAYERS, nbArms).childs
-# })
-
-
-# from itertools import product  # XXX If needed!
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
-    # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     NON_AGGR_POLICIES = configuration["policies"]
-    # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
-    # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
-    # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-    # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
     for UPDATE_LIKE_EXP4 in [False, True]:
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
@@ -306,11 +206,9 @@ if TEST_AGGR:
             "params": {
                 "unbiased": UNBIASED,
                 "update_all_children": UPDATE_ALL_CHILDREN,
-                "decreaseRate": DECREASE_RATE,
-                "learningRate": LEARNING_RATE,
+                "decreaseRate": "auto",
                 "children": NON_AGGR_POLICIES,
-                "update_like_exp4": UPDATE_LIKE_EXP4,
-                # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+                "update_like_exp4": UPDATE_LIKE_EXP4
             },
         }] + CURRENT_POLICIES
 

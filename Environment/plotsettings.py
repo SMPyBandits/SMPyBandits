@@ -113,13 +113,11 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
     elif which == "yaxis":
         ax = plt.axes().yaxis
     else:
-        raise ValueError("Unknown value {} for 'which' in function add_percent_formatter() .".format(which))
+        raise ValueError("Unknown value '{}' for 'which' in function add_percent_formatter() : only xaxis,yaxis are accepted...".format(which))
     # Which formatter to use ?
     if hasattr(mtick, 'PercentFormatter'):
         frmt = mtick.PercentFormatter(amplitude)
     else:
-        # frmt = mtick.FormatStrFormatter("%.0f%%")
         frmt = mtick.StrMethodFormatter("{x:.0%}")
-        print("Warning: ")
     # Use it!
     ax.set_major_formatter(frmt)
