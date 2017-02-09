@@ -18,11 +18,11 @@ update_all_children = False
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
 # ie just r_t, or unbiased estimators, r_t / p_t
 unbiased = False
-unbiased = True    # XXX Better
+unbiased = True    # Better
 
 # Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
-update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
-update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)  # XXX Better
+update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
+update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)  # Better
 
 # Non parametric flag to know if the Exp4-like update uses losses or rewards
 USE_LOSSES = True

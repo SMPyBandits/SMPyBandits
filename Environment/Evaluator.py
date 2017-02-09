@@ -101,7 +101,7 @@ class Evaluator(object):
             else:  # Slower
                 for t in range(self.horizon):
                     rewards[armId, t] = arm.draw(t)
-        self.allrewards = rewards
+        return rewards
 
     def startAllEnv(self):
         for envId, env in enumerate(self.envs):

@@ -83,7 +83,7 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 # Parameters for the arms
 TRUNC = 10  # Trunc parameter, ie amplitude, for Exponential arms
 
-VARIANCE = 1   # Variance of Gaussian arms
+VARIANCE = 4   # Variance of Gaussian arms
 MINI = -10  # lower bound on rewards from Gaussian arms
 MAXI = 10   # upper bound on rewards from Gaussian arms, ie amplitude = 20
 
@@ -125,8 +125,8 @@ configuration = {
     "environment": [  # 3)  Gaussian arms
         {   # An example problem with  arms
             "arm_type": Gaussian,
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+            # "params": [(mean, 0.05) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            "params": [(mean, 1, MINI, MAXI) for mean in list(range(-8, 10, 2))]
         },
     ],
 }

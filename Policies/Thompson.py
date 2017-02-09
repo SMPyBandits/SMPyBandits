@@ -3,8 +3,8 @@
 Reference: [Thompson - Biometrika, 1933].
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
-__version__ = "$Revision: 1.9 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
+__version__ = "0.5"
 
 from .BayesianIndexPolicy import BayesianIndexPolicy
 

@@ -11,15 +11,19 @@ __version__ = "0.5"
 # Generic imports
 from os import mkdir
 import os.path
-import matplotlib.pyplot as plt
 
 # Backup evaluation object
 import pickle
 # import h5py
 
+import matplotlib.pyplot as plt
+
 # Local imports
 from Environment import Evaluator
-from configuration import configuration
+
+# Import a configuration file
+# from configuration import configuration
+from configuration_comparing_KLUCB_aggregation import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw
@@ -55,10 +59,7 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
     else:
         mkdir(plot_dir)
-    evaluation = Evaluator(configuration,
-                           finalRanksOnAverage=finalRanksOnAverage,
-                           averageOn=averageOn
-                           )
+    evaluation = Evaluator(configuration, finalRanksOnAverage=finalRanksOnAverage, averageOn=averageOn)
     # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
     for envId, env in enumerate(evaluation.envs):

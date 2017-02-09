@@ -75,5 +75,7 @@ class Scenario1(BaseMPPolicy):
         if self.chosenOne == playerId:
             return 0  # Choose worse arm
         else:
-            # return np.random.randint(low=1, high=1 + self.nbArms)  # XXX to be general for nbArms > 2 setting
-            return 1  # Choose best arm
+            if self.nbArms > 2:
+                return np.random.randint(low=1, high=1 + self.nbArms)  # to be general for nbArms > 2 setting
+            else:
+                return 1  # Choose best arm

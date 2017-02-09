@@ -45,7 +45,7 @@ class EpsilonGreedy(BasePolicy):
             if np.random.random() < self.epsilon:  # Proba epsilon : explore
                 return np.random.randint(0, self.nbArms - 1)
             else:  # Proba 1 - epsilon : exploit
-                sortedRewards = np.sort(self.rewards)  # XXX What happens here if two arms has the same index, being the max?
+                sortedRewards = np.sort(self.rewards)
                 chosenIndex = sortedRewards[-rank]
                 # Uniform choice among the rank-th best arms
                 return np.random.choice(np.nonzero(self.index == chosenIndex)[0])

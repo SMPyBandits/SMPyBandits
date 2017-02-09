@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Poisson distributed arm, possibly truncated."""
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.6 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.5"
 
 from math import isinf, exp
 from scipy.stats import poisson

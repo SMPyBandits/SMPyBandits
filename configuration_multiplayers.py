@@ -23,12 +23,14 @@ from Arms.Poisson import Poisson
 
 # Import contained classes
 from Environment.MAB import MAB
+
+# Collision Models
+from Environment.CollisionModels import *
+
 # Import algorithms, both single-player and multi-player
 from Policies import *
 from PoliciesMultiPlayers import *
 from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better for these imports
-# Collision Models
-from Environment.CollisionModels import *
 
 
 # HORIZON : number of time steps of the experiments

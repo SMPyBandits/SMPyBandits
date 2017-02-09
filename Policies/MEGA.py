@@ -14,15 +14,6 @@ import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 
-# --- Help functions
-
-def epsilon_t(c, d, nbArms, t):
-    """ Cf. Algorithm 1 in [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)."""
-    epsilon = min(1, (c * nbArms**2) / (d**2 * (nbArms - 1) * t))
-    # assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, nbArms, t, epsilon)  # DEBUG
-    return epsilon
-
-
 # --- Class MEGA
 
 class MEGA(BasePolicy):
@@ -135,4 +126,6 @@ class MEGA(BasePolicy):
     # --- Internal methods
 
     def _epsilon_t(self):
-        return epsilon_t(self.c, self.d, self.nbArms, self.t)
+        """Compute the value of decreasing epsilon(t), cf. Algorithm 1 in [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)."""
+        return min(1, (self.c * self.nbArms**2) / (self.d**2 * (self.nbArms - 1) * self.t))
+        # assert 0 <= epsilon <= 1, "Error, epsilon_t({}, {}, {}, {}) computed an epsilon = {} which is NOT in [0, 1] ...".format(c, d, nbArms, t, epsilon)  # DEBUG

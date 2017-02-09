@@ -37,13 +37,10 @@ class MAB(object):
             print(" - with 'arm_type' =", arm_type)  # DEBUG
             params = configuration["params"]
             print(" - with 'params' =", params)  # DEBUG
-            # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian)
+            # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian) or a dictionnary
             self.arms = []
             for param in params:
-                try:
-                    self.arms.append(arm_type(*param))
-                except TypeError:
-                    self.arms.append(arm_type(param))
+                self.arms.append(arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param))
         else:
             print("  Taking arms of this MAB problem from a list of arms 'configuration' = {} ...".format(configuration))  # DEBUG
             self.arms = []
@@ -58,9 +55,10 @@ class MAB(object):
         print(" - with 'minArm' =", self.minArm)  # DEBUG
 
     def __repr__(self):
-        return '<' + self.__class__.__name__ + repr(self.__dict__) + '>'
+        return "<{}{}>".format(self.__class__.__name__, repr(self.__dict__))
 
     def means(self):
+        """Return list of means."""
         return np.array([arm.mean() for arm in self.arms])
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*'):
@@ -121,9 +119,10 @@ class MAB(object):
         assert anandkumar_lowerbound <= our_lowerbound, "Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better..."
         return our_lowerbound, anandkumar_lowerbound
 
-    # --- Plot a comparison of our lowerbound and their lowerbound
+    # --- plot
     # FIXME we should also print the actual term we lower bound, on an other graph, to check how far it is from the theoretical lower bound
     def plotComparison_our_anandkumar(self, savefig=None):
+        """Plot a comparison of our lowerbound and their lowerbound."""
         nbPlayers = self.nbArms
         lowerbounds = np.zeros((2, nbPlayers))
         for i in range(nbPlayers):

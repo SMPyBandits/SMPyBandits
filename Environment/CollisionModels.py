@@ -31,6 +31,7 @@ except ImportError:
     def lru_cache(maxsize=128, typed=False):
         """ Fake implementation of functools.lru_cache, not available in Python 2."""
         def lru_cache_internal(f):
+            """Fake wrapped f, in fact it's just f."""
             return f
         return lru_cache_internal
 
@@ -95,22 +96,22 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
     - Note: it can also model a choice from the users point of view: in a time frame (eg. 1 second), when there is a collision, each colliding user chose (uniformly) a random small time offset (eg. 20 ms), and start sensing + emitting again after that time. The first one to sense is alone, it transmits, and the next ones find the channel used when sensing. So only one player is transmitting, and from the base station point of view, it is the same as if it was chosen uniformly among the colliding users.
     """
     # For each arm, explore who chose it
-    for arm in range(len(arms)):
+    for armId, arm in enumerate(arms):
         # If he is alone, sure to be chosen, otherwise only one get randomly chosen
-        players_who_chose_it = np.nonzero(choices == arm)[0]
+        players_who_chose_it = np.nonzero(choices == armId)[0]
         # print("players_who_chose_it =", players_who_chose_it)  # DEBUG
         # print("np.shape(players_who_chose_it) =", np.shape(players_who_chose_it))  # DEBUG
         # if len(players_who_chose_it) > 1:  # DEBUG
-        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, len(players_who_chose_it) - 1, t))  # DEBUG
+        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, len(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
-            collisions[arm] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision)
+            collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision)
             i = np.random.choice(players_who_chose_it)
-            rewards[i] = arms[arm].draw(t)
-            players[i].getReward(arm, rewards[i])
-            pulls[i, arm] += 1
+            rewards[i] = arm.draw(t)
+            players[i].getReward(armId, rewards[i])
+            pulls[i, armId] += 1
             for j in players_who_chose_it:
                 if i != j:
-                    handleCollision_or_getZeroReward(players[j], arm)
+                    handleCollision_or_getZeroReward(players[j], armId)
 
 
 # XXX Using a cache to not regenerate a random vector of distances. Siooooux!
@@ -134,31 +135,31 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     elif distances == 'random':  # Or fully uniform
         distances = random_distances(len(players))
     # For each arm, explore who chose it
-    for arm in range(len(arms)):
+    for armId, arm in enumerate(arms):
         # If he is alone, sure to be chosen, otherwise only the closest one can sample
-        players_who_chose_it = np.nonzero(choices == arm)[0]
+        players_who_chose_it = np.nonzero(choices == armId)[0]
         # print("players_who_chose_it =", players_who_chose_it)  # DEBUG
         # if np.size(players_who_chose_it) > 1:  # DEBUG
-        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(arm, np.size(players_who_chose_it) - 1, t))  # DEBUG
+        #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, np.size(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
-            collisions[arm] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision as the closest gets it)
+            collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision as the closest gets it)
             distancesChosen = distances[players_who_chose_it]
             smaller_distance = np.min(distancesChosen)
-            # print("Using distances to chose the user who can pull arm {} : only users at the minimal distance = {} can transmit ...".format(arm, smaller_distance))  # DEBUG
+            # print("Using distances to chose the user who can pull arm {} : only users at the minimal distance = {} can transmit ...".format(armId, smaller_distance))  # DEBUG
             if np.count_nonzero(distancesChosen == smaller_distance) == 1:
                 i = players_who_chose_it[np.argmin(distancesChosen)]
                 # print("Only one user is at minimal distance, of index i =", i)  # DEBUG
             else:   # XXX very low probability, if the distances are randomly chosen
                 i = players_who_chose_it[np.random.choice(np.nonzero(distancesChosen == smaller_distance))]
                 print("  Randomly choosing one user at minimal distance = {:.4g}, among {}... Index i = {} was chose !".format(smaller_distance, np.count_nonzero(distancesChosen == smaller_distance), i + 1))  # DEBUG
-            # Player i can pull the arm
-            rewards[i] = arms[arm].draw(t)
-            players[i].getReward(arm, rewards[i])
-            pulls[i, arm] += 1
+            # Player i can pull the armId
+            rewards[i] = arm.draw(t)
+            players[i].getReward(armId, rewards[i])
+            pulls[i, armId] += 1
             for j in players_who_chose_it:
                 # The other players cannot
                 if i != j:
-                    handleCollision_or_getZeroReward(players[j], arm)
+                    handleCollision_or_getZeroReward(players[j], armId)
 
 
 # List of possible collision models

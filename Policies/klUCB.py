@@ -4,8 +4,8 @@ By default, it uses a Beta posterior and assumes Bernoulli arms.
 Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.15 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.5"
 
 from math import log
 

@@ -5,6 +5,8 @@
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+import numpy as np
+
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
@@ -52,6 +54,8 @@ class CentralizedMultiplePlay(BaseMPPolicy):
             self.childs[playerId] = CentralizedChildPointer(self, playerId)
             print(" - One new child, of index {}, and class {} ...".format(playerId, self.childs[playerId]))  # DEBUG
         self.nbArms = nbArms
+        # Internal memory
+        self.choices = (-10000) * np.ones(nbArms, dtype=int)
 
     def __str__(self):
         return "CentralizedMultiplePlay({} x {})".format(self.nbPlayers, str(self.player))
@@ -77,4 +81,4 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm):
-        raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed.")
+        raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(playerId, arm))

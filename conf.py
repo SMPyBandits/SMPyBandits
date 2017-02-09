@@ -50,9 +50,7 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst']
 
 # The recommonmark Sphinx extension adds support for Markdown files
 # https://github.com/rtfd/recommonmark (and it works very well)

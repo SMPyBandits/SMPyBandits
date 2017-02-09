@@ -3,8 +3,8 @@
 Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann"
-__version__ = "$Revision: 1.7 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
+__version__ = "0.5"
 
 from .BayesianIndexPolicy import BayesianIndexPolicy
 

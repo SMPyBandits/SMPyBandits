@@ -17,8 +17,7 @@ class UCBrandomInit(UCB):
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
         super(UCBrandomInit, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        # XXX trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
-        # XXX do even more randomized, take a random permutation of the arm
+        # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         self._initial_exploration = np.random.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
         # print("One UCB player with _initial_exploration =", self._initial_exploration)  # DEBUG

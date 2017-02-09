@@ -10,7 +10,7 @@ __version__ = "0.5"
 from math import log, sqrt, exp
 import numpy as np
 
-# # TODO try numba.jit() on some functions
+# TODO try numba.jit() on some functions
 # from numba.decorators import jit
 
 # Warning: np.dot is miserably slow!
@@ -459,7 +459,7 @@ def reseqp(p, V, klMax):
 # --- Debugging
 
 if __name__ == "__main__":
-    """ Code for debugging purposes."""
+    # Code for debugging purposes.
     from doctest import testmod
     print("\nTesting automatically all the docstring written in each functions of this module :")
     testmod(verbose=True)

@@ -66,7 +66,7 @@ class Selfish(BaseMPPolicy):
 
     def _handleCollision_one(self, playerId, arm):
         player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):  # XXX nope, that's not what I want
+        if hasattr(player, 'handleCollision'):  # XXX they should not ave such method!
             # player.handleCollision(arm) is called to inform the user that there were a collision
             player.handleCollision(arm)
         else:

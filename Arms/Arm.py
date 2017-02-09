@@ -8,6 +8,13 @@ __version__ = "0.1"
 class Arm(object):
     """ Base class for an arm class."""
 
+    def __init__(self, lower=0., amplitude=1.):
+        """ Base class for an arm class."""
+        self.lower = lower
+        self.amplitude = amplitude
+        self.min = lower
+        self.max = lower + amplitude
+
     # --- Printing
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property

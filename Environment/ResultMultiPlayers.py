@@ -11,20 +11,22 @@ class ResultMultiPlayers(object):
     """ ResultMultiPlayers accumulators, for the multi-players case. """
 
     def __init__(self, nbArms, horizon, nbPlayers, delta_t_save=1):
+        """Create ResultMultiPlayers."""
         duration = int(horizon / delta_t_save)
         self.delta_t_save = delta_t_save
         self.choices = np.zeros((nbPlayers, duration), dtype=int)
         self.rewards = np.zeros((nbPlayers, duration))         # To compute the mean
-        # self.rewardsSquared = np.zeros((nbPlayers, duration))  # To compute the variance
+        # self.rewardsSquared = np.zeros((nbPlayers, duration))  # To compute the variance  # XXX uncomment if needed
         self.pulls = np.zeros((nbPlayers, nbArms), dtype=int)
         self.allPulls = np.zeros((nbPlayers, nbArms, duration), dtype=int)
         self.collisions = np.zeros((nbArms, duration), dtype=int)
 
     def store(self, time, choices, rewards, pulls, collisions):
+        """Store results."""
         time = int(time / self.delta_t_save)
         self.choices[:, time] = choices
         self.rewards[:, time] = rewards
-        # self.rewardsSquared[:, time] = rewards ** 2
+        # self.rewardsSquared[:, time] = rewards ** 2  # XXX uncomment if needed
         self.pulls += pulls
         self.allPulls[:, :, time] = pulls
         self.collisions[:, time] = collisions

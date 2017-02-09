@@ -26,13 +26,8 @@ BBOX_INCHES = 'tight'
 BBOX_INCHES = None
 
 if __name__ != '__main__':
-    # FIXED use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk",
-            style="darkgrid",
-            palette="hls" if HLS else "husl",
-            font="sans-serif",
-            font_scale=1.05
-            )
+    # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
+    sns.set(context="talk", style="darkgrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=1.05)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX
@@ -80,19 +75,19 @@ def maximizeWindow():
         figManager = plt.get_current_fig_manager()
         # print("Calling 'figManager.window.showMaximized()' ...")  # DEBUG
         figManager.window.showMaximized()
-    except:
+    except Exception:
         try:
             # print("Calling 'figManager.frame.Maximize(True)' ...")  # DEBUG
             figManager.frame.Maximize(True)
-        except:
+        except Exception:
             try:
                 # print("Calling 'figManager.window.state('zoomed')' ...")  # DEBUG
                 figManager.window.state('zoomed')  # works fine on Windows!
-            except:
+            except Exception:
                 try:
                     # print("Calling 'figManager.full_screen_toggle()' ...")  # DEBUG
                     figManager.full_screen_toggle()
-                except:
+                except Exception:
                     print("  Note: Unable to maximize window...")
     # plt.show()
 
@@ -115,9 +110,8 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
     else:
         raise ValueError("Unknown value '{}' for 'which' in function add_percent_formatter() : only xaxis,yaxis are accepted...".format(which))
     # Which formatter to use ?
+    my_frmt = mtick.StrMethodFormatter("{x:.0%}")
     if hasattr(mtick, 'PercentFormatter'):
-        frmt = mtick.PercentFormatter(amplitude)
-    else:
-        frmt = mtick.StrMethodFormatter("{x:.0%}")
+        my_frmt = mtick.PercentFormatter(amplitude)
     # Use it!
-    ax.set_major_formatter(frmt)
+    ax.set_major_formatter(my_frmt)

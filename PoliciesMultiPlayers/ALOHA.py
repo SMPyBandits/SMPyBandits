@@ -6,7 +6,7 @@ This policy uses the collision avoidance mechanism that is inspired by the class
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 import numpy as np
 import numpy.random as rn
@@ -50,8 +50,7 @@ class oneALOHA(ChildPointer):
     """
 
     def __init__(self, nbPlayers, mother, playerId, nbArms,
-                 p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None,
-                 lower=0., amplitude=1.):
+                 p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None):
         super(oneALOHA, self).__init__(mother, playerId)
         self.nbPlayers = nbPlayers
         # Parameters for the ALOHA protocol
@@ -64,19 +63,22 @@ class oneALOHA(ChildPointer):
         self.beta = beta
         self._ftnext = ftnext  # Can be a callable or None
         if ftnext is None:
-            self._ftnext_name = "t --> t ** {}".format(beta)
+            self._ftnext_name = "t^{%s}" % "{:.3g}".format(beta)
+        elif ftnext == tnext_log:
+            self._ftnext_name = r"\log(t)"
         else:
-            self._ftnext_name = self._ftnext.__name__
+            self._ftnext_name = self._ftnext.__name__.replace("tnext_", "")
         # Internal memory
         self.tnext = np.zeros(nbArms, dtype=int)  # Only store the delta time
         self.t = -1
         self.chosenArm = None
 
     def __str__(self):
-        return r"#{}<ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
+        # return r"#{}<ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
+        return r"ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)".format(self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
 
     def startGame(self):
-        super(oneALOHA, self).startGame()  # XXX Call ChildPointer method
+        self.mother._startGame_one(self.playerId)
         self.t = 0
         self.p = self.p0
         self.tnext.fill(0)
@@ -94,7 +96,7 @@ class oneALOHA(ChildPointer):
         - If not collision, receive a reward after pulling the arm.
         """
         # print(" - A oneALOHA player received reward = {} on arm {}, at time t = {}...".format(reward, arm, self.t))  # DEBUG
-        super(oneALOHA, self).getReward(arm, reward)  # XXX Call ChildPointer method
+        self.mother._getReward_one(self.playerId, arm, reward)
         self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
 
     def handleCollision(self, arm):
@@ -104,7 +106,7 @@ class oneALOHA(ChildPointer):
         - Note: we do not care on which arm the collision occured.
         """
         # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
-        # self.getReward(arm, self.mother.lower)  # XXX should we give a 0 reward ?
+        # self.getReward(arm, self.mother.lower)  # FIXED should we give a 0 reward ? Not in this model!
         # 1. With proba 1 - p, give up
         if rn.random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
@@ -121,11 +123,13 @@ class oneALOHA(ChildPointer):
         """ Identify the available arms, and use the underlying single-player policy (UCB, Thompson etc) to choose an arm from this sub-set of arms.
         """
         self.t += 1
-        # if self.chosenArm is not None:  We can still exploit that arm
-        if True or self.chosenArm is None:  # FIXME check the algorithm
+        if self.chosenArm is not None:
+            # We can still exploit that arm
+            pass
+        else:  # FIXME check the algorithm
             # We have to chose a new arm
             availableArms = np.nonzero(self.tnext <= self.t)[0]  # Identify available arms
-            result = super(oneALOHA, self).choiceFromSubSet(availableArms)  # XXX Call ChildPointer method
+            result = self.mother._choiceFromSubSet_one(self.playerId, availableArms)
             # print("\n - A oneALOHA player {} had to choose an arm among the set of available arms = {}, her choice was : {}, at time t = {} ...".format(self, availableArms, result, self.t))  # DEBUG
             self.chosenArm = result
         return self.chosenArm
@@ -172,7 +176,7 @@ class ALOHA(BaseMPPolicy):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             # Initialize proxy child
-            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta, lower=lower, amplitude=amplitude)
+            self.childs[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta)
         self.nbArms = nbArms
 
     def __str__(self):

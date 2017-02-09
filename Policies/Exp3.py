@@ -71,8 +71,8 @@ class Exp3(BasePolicy):
     def choice(self):
         # Force to first visit each arm once in the first steps
         if self.t < self.nbArms:
-            return self.t  # we could use a random permutation instead of deterministic order!
-            return self._initial_exploration[self.t]  # DONE
+            # DONE we could use a random permutation instead of deterministic order!
+            return self._initial_exploration[self.t]
         else:
             return np.random.choice(self.nbArms, p=self.trusts)
 
@@ -121,14 +121,13 @@ class Exp3SoftMix(Exp3):
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
-    def gamma(self, c=None):
+    def gamma(self):
         """ Decreasing gamma with the time: c * log(t) / t.
 
         - Cf. [Cesa-Bianchi & Fisher, 1998].
         - Default value for c = sqrt(log(K) / K).
         """
-        if c is None:
-            c = np.sqrt(np.log(self.nbArms) / self.nbArms)
+        c = np.sqrt(np.log(self.nbArms) / self.nbArms)
         return c * np.log(self.t) / self.t
 
 

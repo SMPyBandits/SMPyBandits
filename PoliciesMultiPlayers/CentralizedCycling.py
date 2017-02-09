@@ -24,7 +24,6 @@ class Cycling(BaseCentralizedPolicy):
     def __init__(self, nbArms, offset):
         self.nbArms = nbArms
         self.offset = offset
-        # XXX It could be a random permutation, instead of a cycling
         self.t = -1
 
     def __str__(self):

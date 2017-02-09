@@ -44,10 +44,10 @@ class oneRhoRandRand(ChildPointer):
         # print(" - A oneRhoRandRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
     def choice(self):
-        # XXX here we could do another randomization step, but it would just weaken the algorithm!
-        # I could select again a random rank to aim, uniformly from [1, ..., rank] ?
-        result = super(oneRhoRandRand, self).choiceWithRank(1 + rn.randint(self.rank))  # XXX rhoRandRand
-        # result = super(oneRhoRandRand, self).choiceWithRank(self.rank)              # XXX rhoRand
+        # We added another randomization step, but it would just weaken the algorithm!
+        # I could select again a random rank to aim, uniformly from [1, ..., rank]
+        result = super(oneRhoRandRand, self).choiceWithRank(1 + rn.randint(self.rank))  # That's rhoRandRand
+        # result = super(oneRhoRandRand, self).choiceWithRank(self.rank)              # And that was rhoRand
         # print(" - A oneRhoRandRand player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
         return result
 

@@ -3,8 +3,8 @@
 Reference: [Auer et al. 02].
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.7 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.5"
 
 from math import sqrt, log
 

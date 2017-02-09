@@ -34,7 +34,7 @@ class Softmax(BasePolicy):
         self._temperature = temperature
         self.unbiased = unbiased
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
-        # XXX do even more randomized, take a random permutation of the arm ?
+        # Even more randomized, take a random permutation of the arm ?
         self._initial_exploration = np.random.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
@@ -53,8 +53,6 @@ class Softmax(BasePolicy):
     def trusts(self):
         # rewards = (self.rewards - self.lower) / self.amplitude  # XXX we don't need this, the BasePolicy.getReward does it already
         rewards = self.rewards
-        # trusts = np.exp((1 + rewards) / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
-        # trusts = np.exp(rewards / (self.temperature * self.pulls))
         trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         if self.unbiased:
             rewards /= trusts
@@ -78,7 +76,7 @@ class Softmax(BasePolicy):
             return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[-1]
 
     def choiceFromSubSet(self, availableArms='all'):
-        if (self.t < self.nbArms):
+        if self.t < self.nbArms:
             return availableArms[self.t % len(availableArms)]
         elif (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
@@ -87,8 +85,7 @@ class Softmax(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         if (self.t < self.nbArms) or (nb == 1):
-            # return self.choice()  # XXX wrong size if n > 1
-            return np.array([self.choice() for _ in range(nb)])  # FIXED good size if nb > 1 but t < nbArms
+            return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
             return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
@@ -119,14 +116,13 @@ class SoftMix(Softmax):
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
-    def temperature(self, c=None):
+    def temperature(self):
         """ Decreasing temperature with the time: c * log(t) / t.
 
         - Cf. [Cesa-Bianchi & Fisher, 1998].
         - Default value for c = sqrt(log(K) / K).
         """
-        if c is None:
-            c = np.sqrt(np.log(self.nbArms) / self.nbArms)
+        c = np.sqrt(np.log(self.nbArms) / self.nbArms)
         if self.t <= 1:
             return c
         else:

@@ -23,15 +23,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
-# --- KL-UCB index functions
-from Policies.kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson
-klucb_mapping = {
-    "Bernoulli": klucbBern,
-    "Exponential": klucbExp,
-    "Gaussian": klucbGauss,
-    "Poisson": klucbPoisson
-}
-
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
 from .UniformOnSome import UniformOnSome
@@ -93,3 +84,13 @@ from .MusicalChair import MusicalChair  # Cf. [Shamir et al., 2015](https://arxi
 # from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
 
 from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)
+
+
+# --- KL-UCB index functions
+from .kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson
+klucb_mapping = {
+    "Bernoulli": klucbBern,
+    "Exponential": klucbExp,
+    "Gaussian": klucbGauss,
+    "Poisson": klucbPoisson
+}
