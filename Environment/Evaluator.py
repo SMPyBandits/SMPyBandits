@@ -93,14 +93,15 @@ class Evaluator(object):
 
     def compute_cache_rewards(self, arms):
         """ Compute only once the rewards, then launch the experiments with the same matrix (r_{k,t})."""
-        rewards = np.zeros((len(arms), self.horizon))
+        rewards = np.zeros((len(arms), self.repetitions, self.horizon))
         print("\n===> Pre-computing the rewards ... Of shape {} ...\n    In order for all simulated algorithms to face the same random rewards (robust comparaison of A1,..,An vs Aggr(A1,..,An)) ...\n".format(np.shape(rewards)))  # DEBUG
         for armId, arm in enumerate(arms):
             if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
-                rewards[armId] = arm.draw_nparray((self.horizon,))
+                rewards[armId] = arm.draw_nparray((self.repetitions, self.horizon))
             else:  # Slower
-                for t in range(self.horizon):
-                    rewards[armId, t] = arm.draw(t)
+                for repeatId in range(self.repetitions):
+                    for t in range(self.horizon):
+                        rewards[armId, repeatId, t] = arm.draw(t)
         return rewards
 
     def startAllEnv(self):
@@ -124,13 +125,13 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i])
+                    joblib.delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i], repeatId=i)
                     for i in range(self.repetitions)
                 )
             else:
                 results = []
-                for _ in range(self.repetitions):
-                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards)
+                for i in range(self.repetitions):
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=i)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -232,7 +233,7 @@ class Evaluator(object):
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
-            plt.legend(loc='lower right', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             # plt.ylim(min(-0.03, 1.03 * self.envs[environmentId].minArm), max(1.03 * self.envs[environmentId].maxArm, 1.03))  # Force view on [0,1], even if maxArm << 1: that's WEIRD
             plt.ylim(1.06 * self.envs[environmentId].minArm, 1.06 * self.envs[environmentId].maxArm)
@@ -240,13 +241,13 @@ class Evaluator(object):
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
-            plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         else:
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
-            plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         maximizeWindow()
@@ -302,7 +303,7 @@ class Evaluator(object):
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
-                 seed=None, allrewards=None):
+                 seed=None, allrewards=None, repeatId=0):
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
     try:
         random.seed(seed)
@@ -324,11 +325,11 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     for t in range(horizon):
         choice = policy.choice()
 
-        # XXX do this quicker!
+        # FIXME do this quicker!
         if allrewards is None:
             reward = env.arms[choice].draw(t)
         else:
-            reward = allrewards[choice, t]
+            reward = allrewards[choice, repeatId, t]
 
         policy.getReward(choice, reward)
 
