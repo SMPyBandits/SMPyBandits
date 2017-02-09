@@ -166,22 +166,23 @@ configuration = {
     #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
     #     # },
     # ],
-    # DONE I tried with other arms distribution: Exponential, it works similarly
-    # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
-    "environment": [  # Exponential arms
-        {   # An example problem with  arms
-            "arm_type": Exponential,
-            "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
-        },
-    ],
-    # # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
-    # "environment": [  # Gaussian arms
+    # # DONE I tried with other arms distribution: Exponential, it works similarly
+    # # XXX if using Exponential arms, gives klExp to KL-UCB-like policies!
+    # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
-    #         "arm_type": Gaussian,
-    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #         "arm_type": Exponential,
+    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
     #     },
     # ],
+    # DONE I tried with other arms distribution: Gaussian, it works similarly
+    # XXX if using Gaussian arms, gives klGauss to KL-UCB-like policies!
+    "environment": [  # Gaussian arms
+        {   # An example problem with  arms
+            "arm_type": Gaussian,
+            "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+        },
+    ],
+    # FIXME try rewards in [-10,10] by setting lower=10, amplitude=20 for all policies
 }
 
 if len(configuration['environment']) > 1:
