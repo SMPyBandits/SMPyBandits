@@ -11,86 +11,90 @@
 <polygon fill="white" stroke="none" points="-4,4 -4,-1923 10463.5,-1923 10463.5,4 -4,4"/>
 <!-- 0 -->
 <g id="node1" class="node"><title>0</title>
-<polygon fill="none" stroke="black" points="402.5,-766 402.5,-926 508.5,-926 508.5,-766 402.5,-766"/>
-<text text-anchor="middle" x="455.5" y="-910.8" font-family="Times,serif" font-size="14.00">Arms.Arm.Arm</text>
-<polyline fill="none" stroke="black" points="402.5,-903 508.5,-903 "/>
-<polyline fill="none" stroke="black" points="402.5,-879 508.5,-879 "/>
-<text text-anchor="start" x="410.5" y="-863.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
-<text text-anchor="start" x="410.5" y="-848.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="410.5" y="-833.8" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="410.5" y="-818.8" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
-<text text-anchor="start" x="410.5" y="-803.8" font-family="Times,serif" font-size="14.00">kl()</text>
-<text text-anchor="start" x="410.5" y="-788.8" font-family="Times,serif" font-size="14.00">mean()</text>
-<text text-anchor="start" x="410.5" y="-773.8" font-family="Times,serif" font-size="14.00">oneLR()</text>
+<polygon fill="none" stroke="black" points="401,-766.5 401,-925.5 510,-925.5 510,-766.5 401,-766.5"/>
+<text text-anchor="middle" x="455.5" y="-910.3" font-family="Times,serif" font-size="14.00">Arms.Arm.Arm</text>
+<polyline fill="none" stroke="black" points="401,-902.5 510,-902.5 "/>
+<text text-anchor="start" x="409" y="-887.3" font-family="Times,serif" font-size="14.00">lower_amplitude</text>
+<polyline fill="none" stroke="black" points="401,-879.5 510,-879.5 "/>
+<text text-anchor="start" x="409" y="-864.3" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="409" y="-849.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="409" y="-834.3" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="409" y="-819.3" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
+<text text-anchor="start" x="409" y="-804.3" font-family="Times,serif" font-size="14.00">kl()</text>
+<text text-anchor="start" x="409" y="-789.3" font-family="Times,serif" font-size="14.00">mean()</text>
+<text text-anchor="start" x="409" y="-774.3" font-family="Times,serif" font-size="14.00">oneLR()</text>
 </g>
 <!-- 1 -->
 <g id="node2" class="node"><title>1</title>
-<polygon fill="none" stroke="black" points="0,-263 0,-437 157,-437 157,-263 0,-263"/>
-<text text-anchor="middle" x="78.5" y="-421.8" font-family="Times,serif" font-size="14.00">Arms.Bernoulli.Bernoulli</text>
-<polyline fill="none" stroke="black" points="0,-414 157,-414 "/>
-<text text-anchor="start" x="8" y="-398.8" font-family="Times,serif" font-size="14.00">probability</text>
-<polyline fill="none" stroke="black" points="0,-391 157,-391 "/>
-<text text-anchor="start" x="8" y="-375.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="8" y="-360.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
-<text text-anchor="start" x="8" y="-345.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="8" y="-330.8" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="8" y="-315.8" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
-<text text-anchor="start" x="8" y="-300.8" font-family="Times,serif" font-size="14.00">kl()</text>
-<text text-anchor="start" x="8" y="-285.8" font-family="Times,serif" font-size="14.00">mean()</text>
-<text text-anchor="start" x="8" y="-270.8" font-family="Times,serif" font-size="14.00">oneLR()</text>
+<polygon fill="none" stroke="black" points="0,-255.5 0,-444.5 157,-444.5 157,-255.5 0,-255.5"/>
+<text text-anchor="middle" x="78.5" y="-429.3" font-family="Times,serif" font-size="14.00">Arms.Bernoulli.Bernoulli</text>
+<polyline fill="none" stroke="black" points="0,-421.5 157,-421.5 "/>
+<text text-anchor="start" x="8" y="-406.3" font-family="Times,serif" font-size="14.00">lower_amplitude</text>
+<text text-anchor="start" x="8" y="-391.3" font-family="Times,serif" font-size="14.00">probability</text>
+<polyline fill="none" stroke="black" points="0,-383.5 157,-383.5 "/>
+<text text-anchor="start" x="8" y="-368.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="8" y="-353.3" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="8" y="-338.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="8" y="-323.3" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="8" y="-308.3" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
+<text text-anchor="start" x="8" y="-293.3" font-family="Times,serif" font-size="14.00">kl()</text>
+<text text-anchor="start" x="8" y="-278.3" font-family="Times,serif" font-size="14.00">mean()</text>
+<text text-anchor="start" x="8" y="-263.3" font-family="Times,serif" font-size="14.00">oneLR()</text>
 </g>
 <!-- 1&#45;&gt;0 -->
 <g id="edge1" class="edge"><title>1&#45;&gt;0</title>
-<path fill="none" stroke="black" d="M80.2827,-437.328C86.0866,-513.913 105.352,-624.967 165.5,-700 223.267,-772.063 326.113,-811.316 392.524,-830.214"/>
-<polygon fill="none" stroke="black" points="391.881,-833.668 402.453,-832.965 393.75,-826.922 391.881,-833.668"/>
+<path fill="none" stroke="black" d="M80.859,-444.511C87.314,-520.73 107.208,-627.282 165.5,-700 222.765,-771.437 324.328,-810.631 390.783,-829.716"/>
+<polygon fill="none" stroke="black" points="390.156,-833.175 400.729,-832.498 392.042,-826.434 390.156,-833.175"/>
 </g>
 <!-- 2 -->
 <g id="node3" class="node"><title>2</title>
-<polygon fill="none" stroke="black" points="175,-248 175,-452 360,-452 360,-248 175,-248"/>
-<text text-anchor="middle" x="267.5" y="-436.8" font-family="Times,serif" font-size="14.00">Arms.Exponential.Exponential</text>
-<polyline fill="none" stroke="black" points="175,-429 360,-429 "/>
-<text text-anchor="start" x="183" y="-413.8" font-family="Times,serif" font-size="14.00">expectation</text>
-<text text-anchor="start" x="183" y="-398.8" font-family="Times,serif" font-size="14.00">p</text>
-<text text-anchor="start" x="183" y="-383.8" font-family="Times,serif" font-size="14.00">trunc : int</text>
-<polyline fill="none" stroke="black" points="175,-376 360,-376 "/>
-<text text-anchor="start" x="183" y="-360.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="183" y="-345.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
-<text text-anchor="start" x="183" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="183" y="-315.8" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="183" y="-300.8" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
-<text text-anchor="start" x="183" y="-285.8" font-family="Times,serif" font-size="14.00">kl()</text>
-<text text-anchor="start" x="183" y="-270.8" font-family="Times,serif" font-size="14.00">mean()</text>
-<text text-anchor="start" x="183" y="-255.8" font-family="Times,serif" font-size="14.00">oneLR()</text>
+<polygon fill="none" stroke="black" points="175,-240.5 175,-459.5 360,-459.5 360,-240.5 175,-240.5"/>
+<text text-anchor="middle" x="267.5" y="-444.3" font-family="Times,serif" font-size="14.00">Arms.Exponential.Exponential</text>
+<polyline fill="none" stroke="black" points="175,-436.5 360,-436.5 "/>
+<text text-anchor="start" x="183" y="-421.3" font-family="Times,serif" font-size="14.00">expectation</text>
+<text text-anchor="start" x="183" y="-406.3" font-family="Times,serif" font-size="14.00">lower_amplitude</text>
+<text text-anchor="start" x="183" y="-391.3" font-family="Times,serif" font-size="14.00">p</text>
+<text text-anchor="start" x="183" y="-376.3" font-family="Times,serif" font-size="14.00">trunc : int</text>
+<polyline fill="none" stroke="black" points="175,-368.5 360,-368.5 "/>
+<text text-anchor="start" x="183" y="-353.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="183" y="-338.3" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="183" y="-323.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="183" y="-308.3" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="183" y="-293.3" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
+<text text-anchor="start" x="183" y="-278.3" font-family="Times,serif" font-size="14.00">kl()</text>
+<text text-anchor="start" x="183" y="-263.3" font-family="Times,serif" font-size="14.00">mean()</text>
+<text text-anchor="start" x="183" y="-248.3" font-family="Times,serif" font-size="14.00">oneLR()</text>
 </g>
 <!-- 2&#45;&gt;0 -->
 <g id="edge2" class="edge"><title>2&#45;&gt;0</title>
-<path fill="none" stroke="black" d="M289.939,-452.249C307.374,-523.203 334.475,-619.378 369.5,-700 377.806,-719.119 388.147,-738.822 398.747,-757.306"/>
-<polygon fill="none" stroke="black" points="395.743,-759.103 403.796,-765.988 401.795,-755.584 395.743,-759.103"/>
+<path fill="none" stroke="black" d="M291.757,-459.597C309.232,-529.746 335.669,-622.128 369.5,-700 377.856,-719.235 388.272,-739.061 398.94,-757.642"/>
+<polygon fill="none" stroke="black" points="395.964,-759.487 404.02,-766.368 402.014,-755.965 395.964,-759.487"/>
 </g>
 <!-- 3 -->
 <g id="node4" class="node"><title>3</title>
-<polygon fill="none" stroke="black" points="378.5,-233 378.5,-467 532.5,-467 532.5,-233 378.5,-233"/>
-<text text-anchor="middle" x="455.5" y="-451.8" font-family="Times,serif" font-size="14.00">Arms.Gaussian.Gaussian</text>
-<polyline fill="none" stroke="black" points="378.5,-444 532.5,-444 "/>
-<text text-anchor="start" x="386.5" y="-428.8" font-family="Times,serif" font-size="14.00">expectation</text>
-<text text-anchor="start" x="386.5" y="-413.8" font-family="Times,serif" font-size="14.00">max : int</text>
-<text text-anchor="start" x="386.5" y="-398.8" font-family="Times,serif" font-size="14.00">min : int</text>
-<text text-anchor="start" x="386.5" y="-383.8" font-family="Times,serif" font-size="14.00">mu</text>
-<text text-anchor="start" x="386.5" y="-368.8" font-family="Times,serif" font-size="14.00">sigma : float</text>
-<polyline fill="none" stroke="black" points="378.5,-361 532.5,-361 "/>
-<text text-anchor="start" x="386.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="386.5" y="-330.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
-<text text-anchor="start" x="386.5" y="-315.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="386.5" y="-300.8" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="386.5" y="-285.8" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
-<text text-anchor="start" x="386.5" y="-270.8" font-family="Times,serif" font-size="14.00">kl()</text>
-<text text-anchor="start" x="386.5" y="-255.8" font-family="Times,serif" font-size="14.00">mean()</text>
-<text text-anchor="start" x="386.5" y="-240.8" font-family="Times,serif" font-size="14.00">oneLR()</text>
+<polygon fill="none" stroke="black" points="378.5,-225.5 378.5,-474.5 532.5,-474.5 532.5,-225.5 378.5,-225.5"/>
+<text text-anchor="middle" x="455.5" y="-459.3" font-family="Times,serif" font-size="14.00">Arms.Gaussian.Gaussian</text>
+<polyline fill="none" stroke="black" points="378.5,-451.5 532.5,-451.5 "/>
+<text text-anchor="start" x="386.5" y="-436.3" font-family="Times,serif" font-size="14.00">expectation</text>
+<text text-anchor="start" x="386.5" y="-421.3" font-family="Times,serif" font-size="14.00">lower_amplitude</text>
+<text text-anchor="start" x="386.5" y="-406.3" font-family="Times,serif" font-size="14.00">max : int</text>
+<text text-anchor="start" x="386.5" y="-391.3" font-family="Times,serif" font-size="14.00">min : int</text>
+<text text-anchor="start" x="386.5" y="-376.3" font-family="Times,serif" font-size="14.00">mu</text>
+<text text-anchor="start" x="386.5" y="-361.3" font-family="Times,serif" font-size="14.00">sigma : float</text>
+<polyline fill="none" stroke="black" points="378.5,-353.5 532.5,-353.5 "/>
+<text text-anchor="start" x="386.5" y="-338.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="386.5" y="-323.3" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="386.5" y="-308.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="386.5" y="-293.3" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="386.5" y="-278.3" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
+<text text-anchor="start" x="386.5" y="-263.3" font-family="Times,serif" font-size="14.00">kl()</text>
+<text text-anchor="start" x="386.5" y="-248.3" font-family="Times,serif" font-size="14.00">mean()</text>
+<text text-anchor="start" x="386.5" y="-233.3" font-family="Times,serif" font-size="14.00">oneLR()</text>
 </g>
 <!-- 3&#45;&gt;0 -->
 <g id="edge3" class="edge"><title>3&#45;&gt;0</title>
-<path fill="none" stroke="black" d="M455.5,-467.133C455.5,-555.342 455.5,-674.86 455.5,-755.677"/>
-<polygon fill="none" stroke="black" points="452,-755.829 455.5,-765.829 459,-755.829 452,-755.829"/>
+<path fill="none" stroke="black" d="M455.5,-474.701C455.5,-562.225 455.5,-677.53 455.5,-756.067"/>
+<polygon fill="none" stroke="black" points="452,-756.417 455.5,-766.417 459,-756.417 452,-756.417"/>
 </g>
 <!-- 4 -->
 <g id="node5" class="node"><title>4</title>
@@ -112,28 +116,31 @@
 </g>
 <!-- 4&#45;&gt;0 -->
 <g id="edge4" class="edge"><title>4&#45;&gt;0</title>
-<path fill="none" stroke="black" d="M606.229,-452.025C594.14,-523.089 573.562,-619.487 541.5,-700 533.916,-719.045 524.045,-738.522 513.705,-756.77"/>
-<polygon fill="none" stroke="black" points="510.564,-755.21 508.6,-765.622 516.628,-758.708 510.564,-755.21"/>
+<path fill="none" stroke="black" d="M606.229,-452.025C594.14,-523.089 573.562,-619.487 541.5,-700 533.788,-719.366 523.711,-739.179 513.181,-757.692"/>
+<polygon fill="none" stroke="black" points="510.131,-755.975 508.152,-766.383 516.19,-759.481 510.131,-755.975"/>
 </g>
 <!-- 5 -->
 <g id="node6" class="node"><title>5</title>
-<polygon fill="none" stroke="black" points="708,-270.5 708,-429.5 857,-429.5 857,-270.5 708,-270.5"/>
-<text text-anchor="middle" x="782.5" y="-414.3" font-family="Times,serif" font-size="14.00">Arms.Uniform.Uniform</text>
-<polyline fill="none" stroke="black" points="708,-406.5 857,-406.5 "/>
-<text text-anchor="start" x="716" y="-391.3" font-family="Times,serif" font-size="14.00">amplitude : float</text>
-<text text-anchor="start" x="716" y="-376.3" font-family="Times,serif" font-size="14.00">lower : float</text>
-<polyline fill="none" stroke="black" points="708,-368.5 857,-368.5 "/>
-<text text-anchor="start" x="716" y="-353.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="716" y="-338.3" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="716" y="-323.3" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
-<text text-anchor="start" x="716" y="-308.3" font-family="Times,serif" font-size="14.00">kl()</text>
-<text text-anchor="start" x="716" y="-293.3" font-family="Times,serif" font-size="14.00">mean()</text>
-<text text-anchor="start" x="716" y="-278.3" font-family="Times,serif" font-size="14.00">oneLR()</text>
+<polygon fill="none" stroke="black" points="708,-248 708,-452 857,-452 857,-248 708,-248"/>
+<text text-anchor="middle" x="782.5" y="-436.8" font-family="Times,serif" font-size="14.00">Arms.Uniform.Uniform</text>
+<polyline fill="none" stroke="black" points="708,-429 857,-429 "/>
+<text text-anchor="start" x="716" y="-413.8" font-family="Times,serif" font-size="14.00">amplitude : float</text>
+<text text-anchor="start" x="716" y="-398.8" font-family="Times,serif" font-size="14.00">lower : float</text>
+<text text-anchor="start" x="716" y="-383.8" font-family="Times,serif" font-size="14.00">lower_amplitude</text>
+<polyline fill="none" stroke="black" points="708,-376 857,-376 "/>
+<text text-anchor="start" x="716" y="-360.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="716" y="-345.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="716" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="716" y="-315.8" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="716" y="-300.8" font-family="Times,serif" font-size="14.00">draw_nparray()</text>
+<text text-anchor="start" x="716" y="-285.8" font-family="Times,serif" font-size="14.00">kl()</text>
+<text text-anchor="start" x="716" y="-270.8" font-family="Times,serif" font-size="14.00">mean()</text>
+<text text-anchor="start" x="716" y="-255.8" font-family="Times,serif" font-size="14.00">oneLR()</text>
 </g>
 <!-- 5&#45;&gt;0 -->
 <g id="edge5" class="edge"><title>5&#45;&gt;0</title>
-<path fill="none" stroke="black" d="M780.708,-429.692C775.301,-505.619 757.053,-620.447 698.5,-700 653.353,-761.339 573.769,-801.563 518.015,-823.75"/>
-<polygon fill="none" stroke="black" points="516.638,-820.53 508.589,-827.42 519.178,-827.053 516.638,-820.53"/>
+<path fill="none" stroke="black" d="M778.804,-452.231C771.486,-527.037 751.512,-627.976 698.5,-700 653.766,-760.778 575.222,-800.825 519.551,-823.137"/>
+<polygon fill="none" stroke="black" points="518.161,-819.922 510.13,-826.832 520.717,-826.439 518.161,-819.922"/>
 </g>
 <!-- 6 -->
 <g id="node7" class="node"><title>6</title>
@@ -329,7 +336,7 @@
 <text text-anchor="start" x="1137" y="-1579.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1137" y="-1564.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1137" y="-1549.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1137" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
+<text text-anchor="start" x="1137" y="-1534.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
 <text text-anchor="start" x="1137" y="-1519.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1137" y="-1504.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1137" y="-1489.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -671,12 +678,12 @@
 <text text-anchor="middle" x="3236.5" y="-1549.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3129,-1542 3344,-1542 "/>
 <text text-anchor="start" x="3137" y="-1526.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3137" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="3137" y="-1511.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="3137" y="-1496.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3137" y="-1481.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3137" y="-1466.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="3137" y="-1451.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="3137" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="3137" y="-1436.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="3137" y="-1421.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="3137" y="-1406.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="3129,-1399 3344,-1399 "/>
