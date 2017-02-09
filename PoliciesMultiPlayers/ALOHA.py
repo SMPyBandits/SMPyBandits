@@ -62,10 +62,18 @@ class oneALOHA(ChildPointer):
         # Parameters for the ftnext function
         self.beta = beta
         self._ftnext = ftnext  # Can be a callable or None
+        # Find the name of the function
         if ftnext is None:
-            self._ftnext_name = "t^{%s}" % "{:.3g}".format(beta)
+            if beta > 1:
+                self._ftnext_name = "t^{%.3g}" % beta
+            elif 0 < beta < 1:
+                self._ftnext_name = r"\sqrt[%.3g]{t}" % (1. / beta)
+            else:
+                self._ftnext_name = "t"
         elif ftnext == tnext_log:
             self._ftnext_name = r"\log(t)"
+        elif ftnext == tnext_beta:
+            self._ftnext_name = r"\sqrt{t}"
         else:
             self._ftnext_name = self._ftnext.__name__.replace("tnext_", "")
         # Internal memory
@@ -74,8 +82,7 @@ class oneALOHA(ChildPointer):
         self.chosenArm = None
 
     def __str__(self):
-        # return r"#{}<ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
-        return r"ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)".format(self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
+        return r"#{}<ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
 
     def startGame(self):
         self.mother._startGame_one(self.playerId)

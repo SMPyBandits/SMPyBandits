@@ -71,8 +71,8 @@ class IndexPolicy(BasePolicy):
         if isinstance(availableArms, str) and isinstance == 'all':
             return self.choice()
         # If availableArms are all arms?
-        # elif len(availableArms) == self.nbArms:
-        #     return self.choice()
+        elif len(availableArms) == self.nbArms:
+            return self.choice()
         elif len(availableArms) == 0:
             warn("IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)), RuntimeWarning)
             # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'

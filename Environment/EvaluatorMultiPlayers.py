@@ -194,7 +194,7 @@ class EvaluatorMultiPlayers(object):
         X = self.times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
         for i, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(i + 1, str(player))
+            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
             Y = self.getRewards(i, environmentId)
             cumRewards[i, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -224,7 +224,7 @@ class EvaluatorMultiPlayers(object):
         else:
             plt.plot(X, amplitudeRewards, '+-')
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
@@ -530,8 +530,11 @@ def delayed_play(env, players, horizon, collisionModel,
 # Utility function...
 def _extract(text):
     """ Extract the str of a player, if it is a child, printed as '#[0-9]+<...>' --> ... """
-    m = search("<[^>]+>", text).group(0)
-    if m[0] == '<' and m[-1] == '>':
-        return m[1:-1]  # Extract text between < ... >
-    else:
+    try:
+        m = search("<[^>]+>", text).group(0)
+        if m[0] == '<' and m[-1] == '>':
+            return m[1:-1]  # Extract text between < ... >
+        else:
+            return text
+    except AttributeError:
         return text

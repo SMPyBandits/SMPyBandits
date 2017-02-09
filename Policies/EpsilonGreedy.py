@@ -6,6 +6,7 @@ Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+from warnings import warn
 import numpy as np
 
 from .BasePolicy import BasePolicy
@@ -53,6 +54,11 @@ class EpsilonGreedy(BasePolicy):
     def choiceFromSubSet(self, availableArms='all'):
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
+        elif len(availableArms) == 0:
+            warn("EpsilonGreedy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)), RuntimeWarning)
+            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
+            return self.choice()
+            # return np.random.randint(self.nbArms)
         else:
             if np.random.random() < self.epsilon:  # Proba epsilon : explore
                 return np.random.choice(availableArms)

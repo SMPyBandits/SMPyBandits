@@ -56,7 +56,7 @@ REPETITIONS = 1000
 REPETITIONS = 100
 REPETITIONS = 50
 REPETITIONS = 20
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -228,7 +228,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=1, beta=0.5).childs  # TODO try this one!
+    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=1, beta=0.5).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
@@ -245,7 +245,7 @@ configuration.update({
     # --- TODO Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-    "players": rhoRandRand(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": rhoRandRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRandRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
 })
