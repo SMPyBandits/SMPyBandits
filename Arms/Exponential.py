@@ -45,16 +45,16 @@ class Exponential(Arm):
 
     # --- Printing
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def lower_amplitude(self):
+        return (0., self.trunc)
+
     def __str__(self):
         return "Exponential"
 
     def __repr__(self):
-        if isinf(self.trunc):
-            # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ">"
-            return "Exp({:.3g})".format(self.p)
-        else:
-            # return "<" + self.__class__.__name__ + ": " + repr(self.p) + ", " + repr(self.trunc) + ">"
-            return "Exp({:.3g}, {:.3g})".format(self.p, self.trunc)
+        return "Exp({:.3g}{})".format(self.p, '' if isinf(self.trunc) else ', {:.3g}'.format(self.trunc))
 
     # --- Lower bound
 

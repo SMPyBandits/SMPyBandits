@@ -45,6 +45,11 @@ class Gaussian(Arm):
 
     # --- Printing
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def lower_amplitude(self):
+        return (self.min, self.max - self.min)
+
     def __str__(self):
         return "Gaussian"
 

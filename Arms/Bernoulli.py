@@ -32,11 +32,15 @@ class Bernoulli(Arm):
 
     # --- Printing
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def lower_amplitude(self):
+        return (0., 1.)
+
     def __str__(self):
         return "Bernoulli"
 
     def __repr__(self):
-        # return "<" + self.__class__.__name__ + ": " + repr(self.probability) + ">"
         return "B({:.3g})".format(self.probability)
 
     # --- Lower bound

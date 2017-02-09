@@ -29,6 +29,19 @@ class Uniform(Arm):
     def mean(self):
         return self.lower + (0.5 * self.amplitude)
 
+    # --- Printing
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def lower_amplitude(self):
+        return (self.lower, self.amplitude)
+
+    def __str__(self):
+        return "Uniform"
+
+    def __repr__(self):
+        return "U({:.3g}, {:.3g})".format(self.lower, self.amplitude)
+
     # --- Lower bound
 
     @staticmethod

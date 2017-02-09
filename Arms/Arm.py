@@ -10,6 +10,16 @@ class Arm(object):
 
     # --- Printing
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def lower_amplitude(self):
+        if hasattr(self, 'lower') and hasattr(self, 'amplitude'):
+            return (self.lower, self.amplitude)
+        elif hasattr(self, 'min') and hasattr(self, 'max'):
+            return (self.min, self.max - self.min)
+        else:
+            raise NotImplementedError("This method lower_amplitude() has to be implemented in the class inheriting from Arm.")
+
     def __str__(self):
         return self.__class__.__name__
 
@@ -18,14 +28,14 @@ class Arm(object):
 
     # --- Random samples
 
+    def mean(self):
+        raise NotImplementedError("This method mean() has to be implemented in the class inheriting from Arm.")
+
     def draw(self, t=None):
         raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")
 
     def draw_nparray(self, shape=(1,)):
         raise NotImplementedError("This method draw_nparray(t) has to be implemented in the class inheriting from Arm.")
-
-    def mean(self):
-        raise NotImplementedError("This method mean() has to be implemented in the class inheriting from Arm.")
 
     # --- Lower bound
 
