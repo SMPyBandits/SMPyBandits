@@ -32,7 +32,7 @@ class EpsilonDecreasingMEGA(EpsilonGreedy):
         self._epsilon = epsilon0(c, d, nbArms)
 
     def __str__(self):
-        return "EpsilonDecreasingMEGA(e:{})".format(self._epsilon)
+        return r"EpsilonDecreasingMEGA($\varepsilon=%.3g$)" % self._epsilon
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

@@ -46,8 +46,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
-REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 50
+# REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -106,29 +106,29 @@ configuration = {
     # --- Cache rewards
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
-    # "environment": [  # 1)  Bernoulli arms
-    #     {   # A very easy problem, but it is used in a lot of articles
-    #         "arm_type": Bernoulli,
-    #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    #     },
-    #     # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-    #     # },
-    # ],
+    "environment": [  # 1)  Bernoulli arms
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
+    ],
     # "environment": [  # 2)  Exponential arms
     #     {   # An example problem with  arms
     #         "arm_type": Exponential,
     #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # ],
-    "environment": [  # 3)  Gaussian arms
-        {   # An example problem with  arms
-            "arm_type": Gaussian,
-            # "params": [(mean, 0.05) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            "params": [(mean, 1, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-        },
-    ],
+    # "environment": [  # 3)  Gaussian arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Gaussian,
+    #         # "params": [(mean, 0.05) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+    #         "params": [(mean, 1, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+    #     },
+    # ],
 }
 
 if len(configuration['environment']) > 1:

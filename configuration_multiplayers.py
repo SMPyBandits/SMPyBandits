@@ -56,7 +56,7 @@ REPETITIONS = 1000
 REPETITIONS = 100
 REPETITIONS = 50
 REPETITIONS = 20
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -117,7 +117,7 @@ configuration = {
     "collisionModel": collisionModel,
     # --- Other parameters for the Evaluator
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
-    "averageOn": 1e-3,  # Average the final rank on the 1.0% last time steps
+    "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Arms
     "environment": [
         # {   # A damn simple problem: 2 arms, one bad, one good
@@ -126,21 +126,21 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-        }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(9, 0.1)
+        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": makeMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(14, 1 / (1.0 + 14))
+        #     "params": makeMeans(14, 1 / (1. + 14))
         # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(19, 1 / (1.0 + 19))
+        #     "params": makeMeans(19, 1 / (1. + 19))
         # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
@@ -181,6 +181,14 @@ configuration.update({
 
     # --- Defining each player as one child of a multi-player policy
 
+    # --- DONE Using multi-player dummy Centralized policy
+    # XXX each player needs to now the number of players
+    # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
+    # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
+    # --- DONE Using a smart Centralized policy, based on choiceMultiple()
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs
+
     # --- DONE Using multi-player Selfish policy
     # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
@@ -197,14 +205,6 @@ configuration.update({
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
-
-    # --- DONE Using multi-player dummy Centralized policy
-    # XXX each player needs to now the number of players
-    # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
-    # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
-    # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -228,7 +228,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=1, beta=0.5).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=0.01, beta=0.2).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
@@ -236,7 +236,7 @@ configuration.update({
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+    "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
