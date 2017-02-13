@@ -61,7 +61,9 @@ class IndexPolicy(BasePolicy):
             assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
-            sortedRewards = np.sort(self.index)  # XXX What happens here if two arms has the same index, being the max?
+            sortedRewards = np.sort(self.index)
+            # Question: What happens here if two arms has the same index, being the max?
+            # Then it is fair to chose a random arm with best index, instead of aiming at an arm with index being ranked rank
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms
             return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
