@@ -30,7 +30,7 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -42,7 +42,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
@@ -112,37 +112,38 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         },
-    ],
+    # ],
     # "environment": [  # 2)  Exponential arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Exponential,
-    #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
-    #     },
+        {   # An example problem with  arms
+            "arm_type": Exponential,
+            "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
+        },
     # ],
     # "environment": [  # 3)  Gaussian arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Gaussian,
-    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-    #         "params": [(mean, 0.05) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-    #     },
-    # ],
+        {   # An example problem with  arms
+            "arm_type": Gaussian,
+            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+            "params": [(mean, 0.05) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+        },
+    ],
 }
 
-if len(configuration['environment']) > 1:
-    raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
-    # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
-env = configuration['environment'][0]
-nbArms = len(env['params'])
-arm_type = env['arm_type']
+# if len(configuration['environment']) > 1:
+#     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+#     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
+
 
 # And get LOWER, AMPLITUDE values
 LOWER, AMPLITUDE = 0, 1
 try:
-    for param in env['params']:
-        arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
-        l, a = arm.lower_amplitude
-        LOWER = min(LOWER, l)
-        AMPLITUDE = max(AMPLITUDE, a)
+    for env in configuration['environment']:
+        nbArms = len(env['params'])
+        arm_type = env['arm_type']
+        for param in env['params']:
+            arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
+            l, a = arm.lower_amplitude
+            LOWER = min(LOWER, l)
+            AMPLITUDE = max(AMPLITUDE, a)
     mini, maxi = LOWER, LOWER + AMPLITUDE
     print("Apparently, the arms have rewards in [{}, {}] (lower = {}, amplitude = {})".format(LOWER, LOWER + AMPLITUDE, LOWER, AMPLITUDE))
 except Exception as e:
