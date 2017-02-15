@@ -189,8 +189,6 @@ class EvaluatorMultiPlayers(object):
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)
         X = self.times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
         for i, player in enumerate(self.players):
@@ -199,9 +197,9 @@ class EvaluatorMultiPlayers(object):
             cumRewards[i, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on))
+                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
         # TODO add std
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
@@ -220,9 +218,9 @@ class EvaluatorMultiPlayers(object):
         plt.ylim(0, 1)
         add_percent_formatter("yaxis", 1.0)
         if semilogx:
-            plt.semilogx(X, amplitudeRewards, '+-')
+            plt.semilogx(X[2:], amplitudeRewards[2:], '+-')
         else:
-            plt.plot(X, amplitudeRewards, '+-')
+            plt.plot(X[2:], amplitudeRewards[2:], '+-')
         plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
@@ -278,8 +276,6 @@ class EvaluatorMultiPlayers(object):
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)
         for i, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(i + 1, str(player))
             Y = self.getNbSwitchs(i, environmentId)
@@ -287,10 +283,10 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), linestyle='-' if cumulated else '')
+                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), linestyle='-' if cumulated else '')
-        plt.legend(loc='lower right' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+        plt.legend(loc='best' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
@@ -308,9 +304,10 @@ class EvaluatorMultiPlayers(object):
         X = self.times - 1
         plt.figure()
         colors = palette(self.nbPlayers)
+        markers = makemarkers(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(X, Y, label=str(player), color=colors[i])
+            plt.plot(X, Y, label=str(player), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
         plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
@@ -328,8 +325,6 @@ class EvaluatorMultiPlayers(object):
         mainfig = savefig
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)
         for armId in range(self.envs[environmentId].nbArms):
             plt.figure()
             for playerId, player in enumerate(self.players):
@@ -338,7 +333,7 @@ class EvaluatorMultiPlayers(object):
                     Y = np.cumsum(Y)
                 if normalized:
                     Y /= 1 + X
-                plt.plot(X, Y, label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(delta_marker * (playerId % self.envs[environmentId].nbArms) + markers_on))
+                plt.plot(X, Y, label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1))
             plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
