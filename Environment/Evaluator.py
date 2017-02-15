@@ -261,9 +261,9 @@ class Evaluator(object):
         plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        X = self.times[1:]
+        X = self.times[2:]
         for i, policy in enumerate(self.policies):
-            Y = self.getBestArmPulls(i, environmentId)[1:]
+            Y = self.getBestArmPulls(i, environmentId)[2:]
             lw = 5 if str(policy)[:4] == 'Aggr' else 3
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
