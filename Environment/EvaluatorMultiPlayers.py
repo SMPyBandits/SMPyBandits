@@ -241,16 +241,16 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'r-+', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
-            # We plot a horizontal line ----- at the best arm mean
+            plt.semilogx(X, Y, 'r-+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            # We plot a horizontal line ----- at the mean regret
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'r-+', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
-            # We plot a horizontal line ----- at the best arm mean
+            plt.plot(X, Y, 'r-+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            # We plot a horizontal line ----- at the mean regret
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
         lowerbound, anandkumar_lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
-        print(" - Our lowerbound = {},\n - anandkumar_lowerbound = {}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
+        print(" - Our lowerbound = {:.3g},\n - anandkumar_lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
         # We also plot our lower bound
         if normalized:
             plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
@@ -262,7 +262,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalized else ""))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}cumulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized " if normalized else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
+        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
@@ -283,9 +283,9 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markersize=2, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markersize=3, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markersize=2, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markersize=3, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
         plt.legend(loc='best' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
