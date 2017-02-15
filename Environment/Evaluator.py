@@ -201,8 +201,6 @@ class Evaluator(object):
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
         X = self.times - 1
         for i, policy in enumerate(self.policies):
             if meanRegret:
@@ -215,10 +213,9 @@ class Evaluator(object):
             lw = 4 if str(policy)[:4] == 'Aggr' else 2
             if semilogx:
                 # FIXED for semilogx plots, truncate to only show t >= 100
-                # FIXME use logarithmic values for markers_on
-                plt.semilogx(X[X >= 100], Y[X >= 100], label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on)[1:], lw=lw)
+                plt.semilogx(X[X >= 100], Y[X >= 100], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
-                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
+                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, environmentId, meanRegret=meanRegret)
@@ -226,10 +223,9 @@ class Evaluator(object):
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
-                # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), alpha=0.9)
+                # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         lowerbound = self.envs[environmentId].lowerbound()
-        # ymax = max(plt.ylim()[1], 1)  # XXX Not smart, if maxmu = 0.1 we don't see anything
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         if meanRegret:
@@ -265,13 +261,11 @@ class Evaluator(object):
         plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        markers_on = int(self.duration / 10.0) * np.arange(0, 10)
-        delta_marker = 1 + int(self.duration / 200.0)  # XXX put back 0 if needed
-        X = self.times
+        X = self.times[1:]
         for i, policy in enumerate(self.policies):
-            Y = self.getBestArmPulls(i, environmentId)
+            Y = self.getBestArmPulls(i, environmentId)[1:]
             lw = 5 if str(policy)[:4] == 'Aggr' else 3
-            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
+            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
