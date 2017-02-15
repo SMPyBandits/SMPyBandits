@@ -201,7 +201,7 @@ class EvaluatorMultiPlayers(object):
             else:
                 plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
         # TODO add std
-        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1.03)  # XXX no that's weird !
         plt.ylim(ymin, ymax)
@@ -221,7 +221,7 @@ class EvaluatorMultiPlayers(object):
             plt.semilogx(X[2:], amplitudeRewards[2:], '+-')
         else:
             plt.plot(X[2:], amplitudeRewards[2:], '+-')
-        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
@@ -241,11 +241,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'r', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
+            plt.semilogx(X, Y, 'r-+', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
             # We plot a horizontal line ----- at the best arm mean
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'r', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
+            plt.plot(X, Y, 'r-+', label="{}Cumulated centralized regret".format("Normalized " if normalized else ""))
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -283,9 +283,9 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markersize=2, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markersize=2, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
         plt.legend(loc='best' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)
@@ -308,7 +308,7 @@ class EvaluatorMultiPlayers(object):
         for i, player in enumerate(self.players):
             Y = self.getBestArmPulls(i, environmentId)
             plt.plot(X, Y, label=str(player), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
-        plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         add_percent_formatter("yaxis", 1.0)
@@ -334,7 +334,7 @@ class EvaluatorMultiPlayers(object):
                 if normalized:
                     Y /= 1 + X
                 plt.plot(X, Y, label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1))
-            plt.legend(loc='upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
@@ -356,7 +356,7 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             plt.plot(X, Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
             # should only plot with markers
-        plt.legend(loc='upper left', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         plt.ylim(-0.03, 1.03)
         add_percent_formatter("yaxis", 1.0)
@@ -389,7 +389,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         plt.plot(X, Y, '-' if cumulated else '.')
-        plt.legend(loc='lower right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "cumulated number " if cumulated else "frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -429,7 +429,7 @@ class EvaluatorMultiPlayers(object):
         else:  # TODO do an histogram instead of this piechart?
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='center right', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
