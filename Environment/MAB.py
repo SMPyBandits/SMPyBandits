@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow
+from .plotsettings import DPI, signature, maximizeWindow, wraptext
 
 
 class MAB(object):
@@ -71,15 +71,16 @@ class MAB(object):
         - Example: openTag = r'\textcolor{red}{', endTag = '}' for LaTeX tags.
         """
         if nbPlayers is None:
-            return repr(self.arms)
+            text = repr(self.arms)
         else:
             assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
             means = self.means()
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
-            return '[{}]'.format(', '.join(
+            text = '[{}]'.format(', '.join(
                 openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
+        return wraptext(text)
 
     #
     # --- Compute lower bounds

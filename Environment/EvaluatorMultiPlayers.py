@@ -7,7 +7,6 @@ __version__ = "0.1"
 
 # Generic imports
 from copy import deepcopy
-from textwrap import wrap
 from re import search
 import random
 # Scientific imports
@@ -20,7 +19,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -261,7 +260,7 @@ class EvaluatorMultiPlayers(object):
         # Labels and legends
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
-        plt.ylabel("{}Cumulative Centralized Regret $R_t$".format("Normalized " if normalized else ""))
+        plt.ylabel("{}umulative Centralized Regret $R_t$".format("Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -454,13 +453,13 @@ class EvaluatorMultiPlayers(object):
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
-    def strPlayers(self, width=130):
+    def strPlayers(self):
         listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
             text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
             text = ', '.join(listStrPlayers)
-        text = '\n'.join(wrap(text, width=width))
+        text = wraptext(text)
         text = '{} players: {}'.format(self.nbPlayers, text)
         return text
 

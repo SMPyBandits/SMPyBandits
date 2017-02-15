@@ -78,9 +78,9 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 9    # Less that the number of arms
-# NB_PLAYERS = 12   # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 9    # Less that the number of arms
+NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -130,18 +130,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": makeMeans(9, 1 / (1. + 9))
-        }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(9, 1 / (1. + 9))
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
         # }
-        # {   # An easy problem (19 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(19, 1 / (1. + 19))
-        # }
+        {   # An easy problem (19 arms)
+            "arm_type": Bernoulli,
+            "params": makeMeans(19, 1 / (1. + 19))
+        }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]

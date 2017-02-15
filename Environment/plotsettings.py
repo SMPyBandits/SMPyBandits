@@ -8,6 +8,7 @@ from __future__ import print_function, division
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+from textwrap import wrap
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
@@ -115,3 +116,8 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
         my_frmt = mtick.PercentFormatter(amplitude)
     # Use it!
     ax.set_major_formatter(my_frmt)
+
+
+def wraptext(text, width=130):
+    """Wrap the text, using textwrap module, and width."""
+    return '\n'.join(wrap(text, width=width))
