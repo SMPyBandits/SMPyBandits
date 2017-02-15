@@ -200,7 +200,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
@@ -236,7 +236,7 @@ configuration.update({
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
-    "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
+    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs

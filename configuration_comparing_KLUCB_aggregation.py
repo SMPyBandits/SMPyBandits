@@ -28,9 +28,9 @@ from Policies import *
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 3000
+HORIZON = 10000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 100000
 
@@ -44,10 +44,10 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 1000
 REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 100
+REPETITIONS = 50
 # REPETITIONS = 20
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -82,7 +82,7 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 # Parameters for the arms
 TRUNC = 1  # Trunc parameter, ie amplitude, for Exponential arms
 
-VARIANCE = 0.1   # Variance of Gaussian arms
+VARIANCE = 0.05   # Variance of Gaussian arms
 MINI = 0  # lower bound on rewards from Gaussian arms
 MAXI = 1  # upper bound on rewards from Gaussian arms, ie amplitude = 20
 
