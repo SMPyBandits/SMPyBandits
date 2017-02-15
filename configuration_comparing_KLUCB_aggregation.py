@@ -31,6 +31,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -41,7 +42,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
+REPETITIONS = 1000
+# REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -78,11 +80,11 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 
 
 # Parameters for the arms
-TRUNC = 10  # Trunc parameter, ie amplitude, for Exponential arms
+TRUNC = 1  # Trunc parameter, ie amplitude, for Exponential arms
 
 VARIANCE = 1   # Variance of Gaussian arms
 MINI = 0  # lower bound on rewards from Gaussian arms
-MAXI = 10  # upper bound on rewards from Gaussian arms, ie amplitude = 20
+MAXI = 1  # upper bound on rewards from Gaussian arms, ie amplitude = 20
 
 
 # XXX This dictionary configures the experiments

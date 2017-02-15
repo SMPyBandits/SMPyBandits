@@ -214,7 +214,9 @@ class Evaluator(object):
             ymin = min(ymin, np.min(Y))
             lw = 4 if str(policy)[:4] == 'Aggr' else 2
             if semilogx:
-                plt.semilogx(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
+                # FIXED for semilogx plots, truncate to only show t >= 100
+                # FIXME use logarithmic values for markers_on
+                plt.semilogx(X[X >= 100], Y[X >= 100], label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on)[1:], lw=lw)
             else:
                 plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(delta_marker * (i % self.envs[environmentId].nbArms) + markers_on), lw=lw)
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
@@ -245,6 +247,9 @@ class Evaluator(object):
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}${}".format(self.repetitions, self.envs[environmentId].nbArms, repr(self.envs[environmentId].arms), signature))
         else:
+            # FIXED for semilogx plots, truncate to only show t >= 100
+            if semilogx:
+                X = X[X >= 100]
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
