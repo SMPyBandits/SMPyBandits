@@ -20,3 +20,5 @@ from .EvaluatorMultiPlayers import EvaluatorMultiPlayers
 # from .CollisionModels import *
 
 from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
+
+from .notify import notify

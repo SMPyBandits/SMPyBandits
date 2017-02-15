@@ -14,7 +14,7 @@ import os.path
 import matplotlib.pyplot as plt
 
 # Local imports
-from Environment import EvaluatorMultiPlayers
+from Environment import EvaluatorMultiPlayers, notify
 from configuration_multiplayers import configuration
 
 
@@ -211,3 +211,5 @@ if __name__ == '__main__':
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done
+    print("Done for simulations main_multiplayers.py ...")
+    notify("Done for simulations main_multiplayers.py ...")

@@ -19,7 +19,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 # Local imports
-from Environment import Evaluator
+from Environment import Evaluator, notify
 
 # Import a configuration file
 # from configuration import configuration
@@ -158,3 +158,5 @@ if __name__ == '__main__':
         if interactive:
             print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done
+    print("Done for simulations main.py ...")
+    notify("Done for simulations main.py ...")
