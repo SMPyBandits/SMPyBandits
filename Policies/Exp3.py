@@ -51,7 +51,7 @@ class Exp3(BasePolicy):
         return self._gamma
 
     @property
-    def trusts(self, p_t=None):
+    def trusts(self):
         # Mixture between the weights and the uniform distribution
         p_t = ((1 - self.gamma) * self.weights) + (self.gamma / self.nbArms)
         return p_t / np.sum(p_t)

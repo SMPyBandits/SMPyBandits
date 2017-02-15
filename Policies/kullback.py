@@ -446,7 +446,7 @@ def reseqp(p, V, klMax):
     # print("value =", value, ", y = ", y)  # DEBUG
     while abs(y) > tol:
         yp = u - np.dot(p, (1 / (value - V)**2)) / u  # derivative
-        value = value - y / yp
+        value -= y / yp
         # print("value = ", value)  # DEBUG  # newton iteration
         if value < mV:
             value = (value + y / yp + mV) / 2  # unlikely, but not impossible

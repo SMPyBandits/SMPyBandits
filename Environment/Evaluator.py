@@ -169,6 +169,7 @@ class Evaluator(object):
         return np.cumsum(self.getRewards(policyId, environmentId)) / self.times
 
     def getRewardsSquared(self, policyId, environmentId=0):
+        # FIXME this won't work right away: you have to uncomment the lines with rewardsSquared
         return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, environmentId=0, meanRegret=False):

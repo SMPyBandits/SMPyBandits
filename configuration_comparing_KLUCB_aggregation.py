@@ -31,7 +31,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 30000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -46,7 +46,7 @@ REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing

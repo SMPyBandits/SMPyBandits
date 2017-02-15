@@ -52,6 +52,7 @@ class Scenario1(BaseMPPolicy):
         assert nbArms >= 2, "Error, the parameter 'nbArms' for Scenario1 class can only be >= 2."
         # Attributes
         self.nbPlayers = nbPlayers
+        self.nbArms = nbArms
         self.chosenOne = None
         # Internal object memory
         self.childs = [None] * nbPlayers

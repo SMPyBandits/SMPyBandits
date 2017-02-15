@@ -49,7 +49,7 @@ class EpsilonGreedy(BasePolicy):
                 sortedRewards = np.sort(self.rewards)
                 chosenIndex = sortedRewards[-rank]
                 # Uniform choice among the rank-th best arms
-                return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
+                return np.random.choice(np.nonzero(self.rewards == chosenIndex)[0])
 
     def choiceFromSubSet(self, availableArms='all'):
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
@@ -75,4 +75,4 @@ class EpsilonGreedy(BasePolicy):
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)
                 # Uniform choice among the best arms
-                return np.random.choice(np.nonzero(self.index >= sortedRewards[-nb])[0], size=nb, replace=False)
+                return np.random.choice(np.nonzero(self.rewards >= sortedRewards[-nb])[0], size=nb, replace=False)

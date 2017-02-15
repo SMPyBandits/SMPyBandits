@@ -70,9 +70,9 @@ def maximizeWindow():
     # print("Calling 'plt.tight_layout()' ...")  # DEBUG
     # plt.show()
     # plt.tight_layout()
+    # print("Calling 'figManager = plt.get_current_fig_manager()' ...")  # DEBUG
+    figManager = plt.get_current_fig_manager()
     try:
-        # print("Calling 'figManager = plt.get_current_fig_manager()' ...")  # DEBUG
-        figManager = plt.get_current_fig_manager()
         # print("Calling 'figManager.window.showMaximized()' ...")  # DEBUG
         figManager.window.showMaximized()
     except Exception:
@@ -89,7 +89,7 @@ def maximizeWindow():
                     figManager.full_screen_toggle()
                 except Exception:
                     print("  Note: Unable to maximize window...")
-    # plt.show()
+                    # plt.show()
 
 
 def add_percent_formatter(which="xaxis", amplitude=1.0):

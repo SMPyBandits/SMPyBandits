@@ -46,7 +46,7 @@ class KLempUCB(IndexPolicy):
     # FIXME this does not work apparently...
     def _KLucb(self, obs, klMax, debug=False):
         p = np.array(list(obs.values()))
-        p = p / np.sum(p)
+        p /= np.sum(p)
         v = np.array(list(obs.keys()))
         if debug:
             print("Calling maxEV(", p, ", ", v, ", ", klMax, ") ...")

@@ -384,7 +384,7 @@ class EvaluatorMultiPlayers(object):
         else:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)
-        Y /= (self.nbPlayers)  # XXX To normalized the count?
+        Y /= self.nbPlayers  # XXX To normalized the count?
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))

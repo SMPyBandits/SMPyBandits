@@ -28,8 +28,10 @@ try:
 except ImportError:
     # from functools import wraps  # XXX could it help?
     print("ImportError: functools.lru_cache is not available, using a fake implementation.")
+
     def lru_cache(maxsize=128, typed=False):
         """ Fake implementation of functools.lru_cache, not available in Python 2."""
+
         def lru_cache_internal(f):
             """Fake wrapped f, in fact it's just f."""
             return f

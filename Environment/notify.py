@@ -18,7 +18,7 @@ from subprocess import Popen
 
 # Constants for the program
 PROGRAM_NAME = "AlgoBandits"
-ICON_PATH    = join("..", "logo.png")
+ICON_PATH = join("..", "logo.png")
 
 
 # Define the icon loaded function
@@ -112,7 +112,7 @@ def notify_cli(body, summary=PROGRAM_NAME, icon="terminal",
     try:
         print("notify.notify(): Trying to use the command line program 'notify-send' ...")
         icon = join(getcwd(), icon)
-        Popen(["notify-send", "--expire-time=%s" % (timeout * 1000), "--icon=%s" % (icon), summary, body])
+        Popen(["notify-send", "--expire-time=%s" % (timeout * 1000), "--icon=%s" % icon, summary, body])
         print("notify.notify(): A notification have been sent, with summary = '%s', body = '%s', expire-time='%s' and icon='%s'." % (summary, body, timeout * 1000, icon))
         return 0
     # Ugly! XXX Catches too general exception
