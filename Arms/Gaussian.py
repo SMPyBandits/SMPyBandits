@@ -20,8 +20,8 @@ class Gaussian(Arm):
     - Default is to truncate into [0, 1] (so Gaussian.draw() is in [0, 1]).
     """
 
-    # def __init__(self, mu, sigma=0.1, mini=-oo, maxi=oo):
-    def __init__(self, mu, sigma=0.1, mini=0, maxi=1):
+    # def __init__(self, mu, sigma=0.05, mini=-oo, maxi=oo):
+    def __init__(self, mu, sigma=0.05, mini=0, maxi=1):
         self.mu = mu
         self.expectation = mu
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian class has to be > 0."
@@ -37,7 +37,7 @@ class Gaussian(Arm):
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""
-        return min(max(self.mu + self.sigma * gauss(0, 1), self.min), self.max)
+        return min(max(gauss(self.mu, self.sigma), self.min), self.max)
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""

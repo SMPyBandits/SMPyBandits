@@ -30,8 +30,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -152,6 +152,12 @@ except Exception as e:
     print("Warning: Possibly wrong estimate of lower, amplitude ....")
 
 
+# Custom klucb function
+def klucbGauss_withvar(x, d, precision=0.):
+    """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
+    return klucbGauss(x, d, VARIANCE)
+
+
 configuration.update({
     "policies": [
         # --- Thompson algorithm
@@ -187,7 +193,7 @@ configuration.update({
             "archtype": klUCBPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss
+                "klucb": klucbGauss_withvar
             }
         },
     ]
