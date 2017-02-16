@@ -176,7 +176,7 @@ def klNegBin(x, y, r=1):
     return r * log((r + x) / (r + y)) - x * log(y * (r + x) / (x * (r + y)))
 
 
-def klGauss(x, y, sig2=0.25):
+def klGauss(x, y, sig2=0.05):
     """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution
 
     >>> klGauss(3, 3)
@@ -280,7 +280,7 @@ def klucbBern(x, d, precision=1e-6):
     return klucb(x, d, klBern, upperbound, precision)
 
 
-def klucbGauss(x, d, sig2=1., precision=0.):
+def klucbGauss(x, d, sig2=0.05, precision=0.):
     """ KL-UCB index computation for Gaussian distributions.
 
     - Note that it does not require any search.
