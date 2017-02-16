@@ -134,9 +134,9 @@ class MAB(object):
         plt.plot(X, lowerbounds[0, :], 'ro-', label="Kaufmann & Besson lowerbound")
         plt.plot(X, lowerbounds[1, :], 'bd-', label="Anandkumar et al. lowerbound")
         plt.legend()
-        plt.xlabel("Number of players in the multi-players game.")
+        plt.xlabel("Number of players in the multi-players game.{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
-        plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}${}".format(self.nbArms, self.reprarms(), signature))
+        plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}$".format(self.nbArms, self.reprarms()))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
