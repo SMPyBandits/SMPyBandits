@@ -19,7 +19,7 @@ except ImportError:
     print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
     USE_JOBLIB = False
 # Local imports
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -240,11 +240,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'r-+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.semilogx(X, Y, 'r+-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'r-+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.plot(X, Y, 'r+-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -260,7 +260,7 @@ class EvaluatorMultiPlayers(object):
         # Labels and legends
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}".format(self.horizon, self.strPlayers()))
-        plt.ylabel("{}umulative Centralized Regret $R_t$".format("Normalized c" if normalized else "C"))
+        plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}${}".format(self.nbPlayers, self.collisionModel.__name__, "normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers), signature))
         maximizeWindow()
         if savefig is not None:
@@ -282,9 +282,9 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markersize=3, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markersize=3, markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
         plt.legend(loc='best' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$".format(self.horizon))
         ymax = max(plt.ylim()[1], 1)

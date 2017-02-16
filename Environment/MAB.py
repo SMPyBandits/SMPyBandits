@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, wraptext
+from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex
 
 
 class MAB(object):
@@ -80,7 +80,8 @@ class MAB(object):
                 openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
-        return wraptext(text)
+        # return wraptext(text)
+        return wraplatex(text)
 
     #
     # --- Compute lower bounds

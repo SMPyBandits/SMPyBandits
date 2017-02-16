@@ -118,6 +118,11 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
     ax.set_major_formatter(my_frmt)
 
 
-def wraptext(text, width=130):
+def wraptext(text, width=110):
     """Wrap the text, using textwrap module, and width."""
     return '\n'.join(wrap(text, width=width))
+
+
+def wraplatex(text, width=110):
+    """Wrap the text, for LaTeX, using textwrap module, and width."""
+    return '$\n$'.join(wrap(text, width=width))
