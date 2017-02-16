@@ -88,6 +88,7 @@ from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.
 
 # --- KL-UCB index functions
 from .kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson
+
 klucb_mapping = {
     "Bernoulli": klucbBern,
     "Exponential": klucbExp,

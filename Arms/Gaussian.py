@@ -13,6 +13,8 @@ from .kullback import klGauss
 
 # oo = float('+inf')  # Nice way to write +infinity
 
+VARIANCE = 0.05
+
 
 class Gaussian(Arm):
     """ Gaussian distributed arm, possibly truncated.
@@ -20,8 +22,8 @@ class Gaussian(Arm):
     - Default is to truncate into [0, 1] (so Gaussian.draw() is in [0, 1]).
     """
 
-    # def __init__(self, mu, sigma=0.05, mini=-oo, maxi=oo):
-    def __init__(self, mu, sigma=0.05, mini=0, maxi=1):
+    # def __init__(self, mu, sigma=VARIANCE, mini=-oo, maxi=oo):
+    def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
         self.mu = mu
         self.expectation = mu
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian class has to be > 0."
@@ -60,9 +62,9 @@ class Gaussian(Arm):
 
     @staticmethod
     def kl(x, y):
-        return klGauss(x, y)
+        return klGauss(x, y, VARIANCE)
 
     @staticmethod
     def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
-        return (mumax - mu) / klGauss(mu, mumax)
+        return (mumax - mu) / klGauss(mu, mumax, VARIANCE)

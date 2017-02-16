@@ -182,28 +182,28 @@ def klGauss(x, y, sig2=0.05):
     >>> klGauss(3, 3)
     0.0
     >>> klGauss(3, 6)
-    18.0
+    90.0
     >>> klGauss(1, 2)
-    2.0
+    10.0
     >>> klGauss(2, 1)  # And this KL is symetric
-    2.0
+    10.0
     >>> klGauss(4, 2)
-    8.0
+    40.0
     >>> klGauss(6, 8)
-    8.0
+    40.0
 
     - x, y can be negative:
 
     >>> klGauss(-3, 2)
-    50.0
+    250.0
     >>> klGauss(3, -2)
-    50.0
+    250.0
     >>> klGauss(-3, -2)
-    2.0
+    10.0
     >>> klGauss(3, 2)
-    2.0
+    10.0
 
-    - With other values for `r`:
+    - With other values for `sig2`:
 
     >>> klGauss(3, 3, sig2=10)
     0.0
@@ -275,8 +275,8 @@ def klucbBern(x, d, precision=1e-6):
     >>> klucbBern(0.9, 0.9)
     0.9999950408935546
     """
-    upperbound = min(1., klucbGauss(x, d))
-    # upperbound = min(1., klucbPoisson(x,d))  # also safe, and better ?
+    upperbound = min(1., klucbGauss(x, d, sig2=1.))
+    # upperbound = min(1., klucbPoisson(x, d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
 
@@ -288,29 +288,29 @@ def klucbGauss(x, d, sig2=0.05, precision=0.):
 
     - Influence of x:
 
-    >>> klucbGauss(0.1, 0.2)
-    0.7324555320336759
-    >>> klucbGauss(0.5, 0.2)
-    1.132455532033676
-    >>> klucbGauss(0.9, 0.2)
-    1.532455532033676
+    >>> klucbGauss(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.24142...
+    >>> klucbGauss(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.64142...
+    >>> klucbGauss(0.9, 0.2)  # doctest: +ELLIPSIS
+    1.04142...
 
     - Influence of d:
 
-    >>> klucbGauss(0.1, 0.4)
-    0.9944271909999158
-    >>> klucbGauss(0.1, 0.9)
-    1.441640786499874
+    >>> klucbGauss(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.3000...
+    >>> klucbGauss(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.4
 
-    >>> klucbGauss(0.5, 0.4)
-    1.3944271909999157
-    >>> klucbGauss(0.5, 0.9)
-    1.8416407864998738
+    >>> klucbGauss(0.5, 0.4)  # doctest: +ELLIPSIS
+    0.7
+    >>> klucbGauss(0.5, 0.9)  # doctest: +ELLIPSIS
+    0.8
 
-    >>> klucbGauss(0.9, 0.4)
-    1.7944271909999159
-    >>> klucbGauss(0.9, 0.9)
-    2.241640786499874
+    >>> klucbGauss(0.9, 0.4)  # doctest: +ELLIPSIS
+    1.1
+    >>> klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
+    1.2000...
     """
     return x + sqrt(2 * sig2 * d)
 
