@@ -40,7 +40,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -55,7 +55,7 @@ REPETITIONS = 20
 REPETITIONS = 1000
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -79,8 +79,8 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 9    # Less that the number of arms
-NB_PLAYERS = 12   # Less that the number of arms
+# NB_PLAYERS = 9    # Less that the number of arms
+# NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 
@@ -138,14 +138,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
         # }
-        {   # An easy problem (19 arms)
-            "arm_type": Bernoulli,
-            "params": makeMeans(19, 1 / (1. + 19))
-        }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        #     "params": makeMeans(19, 1 / (1. + 19))
         # }
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
@@ -198,9 +198,9 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
+    "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
-    "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
