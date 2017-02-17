@@ -38,7 +38,7 @@ class Beta(Posterior):
         self.N = [a, b]
 
     def __str__(self):
-        return "Beta({}, {})".format(self.a, self.b)
+        return "Beta({}, {})".format(self.N[1], self.N[0])
 
     def reset(self, a=0, b=0):
         if a == 0:
