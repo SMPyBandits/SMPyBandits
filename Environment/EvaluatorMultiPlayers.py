@@ -236,8 +236,7 @@ class EvaluatorMultiPlayers(object):
         X = self.times - 1
         Y = self.getCentralizedRegret(environmentId)
         if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
-            X = X[X >= 100]
-            Y = Y[X >= 100]
+            X, Y = X[X >= 100], Y[X >= 100]
         if normalized:
             Y /= np.log(2 + X)   # XXX prevent /0
         meanY = np.mean(Y)

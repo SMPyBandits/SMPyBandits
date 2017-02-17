@@ -57,7 +57,7 @@ REPETITIONS = 100
 REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
