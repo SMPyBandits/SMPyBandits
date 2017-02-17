@@ -17,3 +17,6 @@ __pycache__/
 # Documentation
 _build/
 docs/*.rst
+
+# Tests
+*slack-bot*.py

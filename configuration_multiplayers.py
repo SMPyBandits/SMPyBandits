@@ -39,8 +39,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 10000
+# HORIZON = 20000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -54,10 +54,10 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 20
 REPETITIONS = 1000
 REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -174,6 +174,7 @@ if len(configuration['environment']) > 1:
 # XXX compute optimal values for d (MEGA's parameter)
 D = max(0.01, np.min(np.diff(np.sort(configuration['environment'][0]['params']))) / 2)
 
+
 configuration.update({
     # --- DONE Defining manually each child
     # "players": [TakeFixedArm(nbArms, nbArms - 1) for _ in range(NB_PLAYERS)]
@@ -250,6 +251,25 @@ configuration.update({
     # "players": rhoRandRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
+
+
+# FIXME do this in a cleaner way
+configuration["successive_players"] = [
+    Selfish(NB_PLAYERS, Uniform, nbArms).childs,
+    Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs,
+    Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs,
+    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs,
+    Selfish(NB_PLAYERS, UCB, nbArms).childs,
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
+    Selfish(NB_PLAYERS, MOSS, nbArms).childs,
+    Selfish(NB_PLAYERS, klUCB, nbArms).childs,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
+    Selfish(NB_PLAYERS, Thompson, nbArms).childs,
+    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
+    Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+]
+
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration =", configuration)  # DEBUG

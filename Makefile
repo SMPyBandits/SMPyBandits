@@ -12,6 +12,8 @@ single:
 	make clean ; clear ; make main
 multi:
 	make clean ; clear ; make multiplayers3
+moremulti:
+	make clean ; clear ; make moremultiplayers3
 
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc
@@ -35,6 +37,9 @@ multiplayers: multiplayers3
 multiplayers3:
 	# time nice -n 19 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+
+moremultiplayers3:
+	time nice -n 19 ipython3 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
 # Time profilers
 profile:

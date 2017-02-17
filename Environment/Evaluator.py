@@ -256,7 +256,7 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()

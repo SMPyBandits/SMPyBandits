@@ -210,7 +210,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
         # DONE compute a certain measure of "fairness", from these personal rewards
         plt.figure()
         amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
@@ -229,7 +229,7 @@ class EvaluatorMultiPlayers(object):
             savefig = savefig.replace('main', 'main_Fairness')
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     # Plotting centralized regret (sum)
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False):
@@ -268,7 +268,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     # Plotting cumulated number of switchs (switching costs)
     def plotNbSwitchs(self, environmentId=0, savefig=None, semilogx=False, cumulated=False):
@@ -299,7 +299,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     def plotBestArmPulls(self, environmentId=0, savefig=None):
         X = self.times - 1
@@ -320,7 +320,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
         X = self.times - 1
@@ -346,7 +346,7 @@ class EvaluatorMultiPlayers(object):
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
                 print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-            if self.cfg['showplot']: plt.show()
+            plt.show() if self.cfg['showplot'] else plt.close()
 
     def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
         X = self.times - 1
@@ -368,7 +368,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
@@ -397,7 +397,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
@@ -437,7 +437,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
