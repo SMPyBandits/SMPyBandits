@@ -33,8 +33,8 @@ meanRegret = True
 normalizedRegret = True
 plotSTD = False
 
-saveallfigs = True  # XXX dont keep it like this when experimenting
 saveallfigs = False
+saveallfigs = True  # XXX dont keep it like this when experimenting
 
 # if not saveallfigs:
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
@@ -47,9 +47,12 @@ averageOn = 1e-2               # Average the final rank on the 1% last time step
 do_plot = False
 do_plot = True
 
-# Whether to show all plots, or one by one
-interactive = True
+# Whether to show plots, one by one, or not at all and just save them
 interactive = False  # Seems to be the only mode which is working well
+interactive = True
+
+# Update configuration
+configuration['showplot'] = not interactive
 
 
 if __name__ == '__main__':
@@ -79,10 +82,6 @@ if __name__ == '__main__':
         # h5pyname = mainfig.replace('.png', '.hdf5')
         # h5pyfile = h5py.File(h5pyname, 'w')
         picklename = mainfig.replace('.png', '.pickle')
-
-        # Set plotting mode to interactive
-        if interactive:
-            plt.interactive(True)
 
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
@@ -154,9 +153,6 @@ if __name__ == '__main__':
                 evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
             else:
                 evaluation.plotBestArmPulls(envId)
-
-        if interactive:
-            print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done
     print("Done for simulations main.py ...")
     notify("Done for simulations main.py ...")

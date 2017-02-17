@@ -210,7 +210,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
         # DONE compute a certain measure of "fairness", from these personal rewards
         plt.figure()
         amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
@@ -229,7 +229,7 @@ class EvaluatorMultiPlayers(object):
             savefig = savefig.replace('main', 'main_Fairness')
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     # Plotting centralized regret (sum)
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False):
@@ -240,11 +240,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'r+-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.semilogx(X, Y, 'r-', marker='+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'r+-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.plot(X, Y, 'r-', marker='+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -266,7 +266,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     # Plotting cumulated number of switchs (switching costs)
     def plotNbSwitchs(self, environmentId=0, savefig=None, semilogx=False, cumulated=False):
@@ -297,7 +297,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def plotBestArmPulls(self, environmentId=0, savefig=None):
         X = self.times - 1
@@ -317,7 +317,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
         X = self.times - 1
@@ -343,7 +343,7 @@ class EvaluatorMultiPlayers(object):
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
                 print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-            plt.show()
+            if self.cfg['showplot']: plt.show()
 
     def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
         X = self.times - 1
@@ -365,7 +365,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
@@ -394,7 +394,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
@@ -422,20 +422,19 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.figure()
         if piechart:
-            plt.xlabel(self.strPlayers())  # DONE split this in new lines if it is too long!
+            plt.xlabel("{}{}".format(self.strPlayers(), signature))
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
         else:  # TODO do an histogram instead of this piechart?
             plt.hist(Y, bins=len(Y), colors=colors)
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel("{}".format(signature))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)

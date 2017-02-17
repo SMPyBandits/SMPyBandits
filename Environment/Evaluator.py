@@ -256,7 +256,7 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def plotBestArmPulls(self, environmentId, savefig=None):
         plt.figure()
@@ -277,7 +277,7 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show()
+        if self.cfg['showplot']: plt.show()
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)

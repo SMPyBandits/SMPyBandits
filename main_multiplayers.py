@@ -24,8 +24,8 @@ piechart = True
 averageRegret = True
 normalized = True
 
-saveallfigs = True  # XXX dont keep it like this
 saveallfigs = False
+saveallfigs = True  # XXX dont keep it like this
 
 # if not saveallfigs:
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
@@ -34,9 +34,12 @@ saveallfigs = False
 do_plot = False
 do_plot = True
 
-# Whether to show all plots, or one by one
-interactive = True
+# Whether to show plots, one by one, or not at all and just save them
 interactive = False  # Seems to be the only mode which is working well
+interactive = True
+
+# Update configuration
+configuration['showplot'] = not interactive
 
 
 if __name__ == '__main__':
@@ -74,10 +77,6 @@ if __name__ == '__main__':
                 raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
             else:
                 mkdir(plot_dir)
-
-        # Set plotting mode to interactive
-        if interactive:
-            plt.interactive(True)
 
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
@@ -197,8 +196,6 @@ if __name__ == '__main__':
         else:
             evaluation.plotNbCollisions(envId, cumulated=True)  # XXX To plot without saving
 
-        # if not interactive:
-        #     plt.interactive(True)
         # Also plotting the frequency of collision in each arm
         savefig = mainfig.replace('main', 'main_FrequencyCollisions')
         print(" - Plotting the frequency of collision in each arm")
@@ -207,9 +204,6 @@ if __name__ == '__main__':
             evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
         else:
             evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
-
-        if interactive:
-            print(input("\n\nCan we continue to the next environment? [Enter]"))
     # Done
     print("Done for simulations main_multiplayers.py ...")
     notify("Done for simulations main_multiplayers.py ...")

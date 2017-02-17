@@ -31,7 +31,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -42,10 +42,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
+# REPETITIONS = 1000
 REPETITIONS = 200
 REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
@@ -57,7 +57,7 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
 
 # Random events
-RANDOM_SHUFFLE = False
+RANDOM_SHUFFLE = True
 RANDOM_INVERT = False
 NB_RANDOM_EVENTS = 5
 
@@ -106,13 +106,13 @@ configuration = {
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # 1)  Bernoulli arms
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        },
         {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
             "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
         },
     # ],
     # "environment": [  # 2)  Exponential arms
@@ -157,6 +157,7 @@ _klucbGauss = klucbGauss
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
     return _klucbGauss(x, d, VARIANCE)
+    # return _klucbGauss(x, d, 1.0)
 
 
 configuration.update({
