@@ -235,6 +235,9 @@ class EvaluatorMultiPlayers(object):
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False):
         X = self.times - 1
         Y = self.getCentralizedRegret(environmentId)
+        if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
+            X = X[X >= 100]
+            Y = Y[X >= 100]
         if normalized:
             Y /= np.log(2 + X)   # XXX prevent /0
         meanY = np.mean(Y)
@@ -261,7 +264,7 @@ class EvaluatorMultiPlayers(object):
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
         plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
+        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
