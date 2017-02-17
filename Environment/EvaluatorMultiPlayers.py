@@ -217,9 +217,9 @@ class EvaluatorMultiPlayers(object):
         plt.ylim(0, 1)
         add_percent_formatter("yaxis", 1.0)
         if semilogx:
-            plt.semilogx(X[2:], amplitudeRewards[2:], 'o-')
+            plt.semilogx(X[2:], amplitudeRewards[2:], 'o-', markevery=(0.0, 0.1))
         else:
-            plt.plot(X[2:], amplitudeRewards[2:], 'o-')
+            plt.plot(X[2:], amplitudeRewards[2:], 'o-', markevery=(0.0, 0.1))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
@@ -240,11 +240,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.semilogx(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"), markevery=(0.0, 0.1))
             # We plot a horizontal line ----- at the mean regret
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.plot(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"), markevery=(0.0, 0.1))
             # We plot a horizontal line ----- at the mean regret
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -276,7 +276,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for i, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(i + 1, str(player))
+            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
             Y = self.getNbSwitchs(i, environmentId)
             if cumulated:
                 Y = np.cumsum(Y)
@@ -285,7 +285,7 @@ class EvaluatorMultiPlayers(object):
                 plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
             else:
                 plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
-        plt.legend(loc='best' if cumulated else 'upper right', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
@@ -387,7 +387,7 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
-        plt.plot(X, Y, 'o-' if cumulated else '.')
+        plt.plot(X, Y, 'o-' if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None))
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
