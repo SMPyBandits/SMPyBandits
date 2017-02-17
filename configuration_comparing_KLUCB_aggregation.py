@@ -47,7 +47,7 @@ REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -156,8 +156,8 @@ except Exception as e:
 _klucbGauss = klucbGauss
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
-    return _klucbGauss(x, d, VARIANCE)
     # return _klucbGauss(x, d, 1.0)
+    return _klucbGauss(x, d, VARIANCE)
 
 
 configuration.update({

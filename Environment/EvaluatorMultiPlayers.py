@@ -217,9 +217,9 @@ class EvaluatorMultiPlayers(object):
         plt.ylim(0, 1)
         add_percent_formatter("yaxis", 1.0)
         if semilogx:
-            plt.semilogx(X[2:], amplitudeRewards[2:], '+-')
+            plt.semilogx(X[2:], amplitudeRewards[2:], 'o-')
         else:
-            plt.plot(X[2:], amplitudeRewards[2:], '+-')
+            plt.plot(X[2:], amplitudeRewards[2:], 'o-')
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
@@ -240,11 +240,11 @@ class EvaluatorMultiPlayers(object):
         meanY = np.mean(Y)
         plt.figure()
         if semilogx:
-            plt.semilogx(X, Y, 'r-', marker='+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.semilogx(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         else:
-            plt.plot(X, Y, 'r-', marker='+', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
+            plt.plot(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"))
             # We plot a horizontal line ----- at the mean regret
             plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
         # TODO add std
@@ -387,9 +387,9 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
-        plt.plot(X, Y, '-' if cumulated else '.')
+        plt.plot(X, Y, 'o-' if cumulated else '.')
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "cumulated number " if cumulated else "frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
+        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
@@ -405,10 +405,10 @@ class EvaluatorMultiPlayers(object):
         for armId, arm in enumerate(self.envs[environmentId].arms):
             # Y[armId] = np.sum(self.getCollisions(armId, environmentId) >= 1)  # XXX no, we should not count just the fact that there were collisions, but instead count all collisions
             Y[armId] = np.sum(self.getCollisions(armId, environmentId))
-            labels[armId] = "#${}$: ${}$ (${:.1%}$$\%$)".format(armId, repr(arm), Y[armId])
         Y /= (self.horizon * self.nbPlayers)
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[environmentId].arms):
+            labels[armId] = "#${}$: ${}$ (${:.1%}$$\%$)".format(armId, repr(arm), Y[armId])
             print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))  # DEBUG
             if Y[armId] < 5e-3:  # Do not display small slices
                 labels[armId] = ''
