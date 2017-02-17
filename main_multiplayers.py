@@ -19,7 +19,7 @@ from configuration_multiplayers import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw
-plot_dir = "plots"
+PLOT_DIR = "plots"
 piechart = True
 averageRegret = True
 normalized = True
@@ -43,12 +43,12 @@ configuration['showplot'] = not interactive
 
 
 if __name__ == '__main__':
-    if os.path.isdir(plot_dir):
-        print("{}/ is already a directory here...".format(plot_dir))
-    elif os.path.isfile(plot_dir):
-        raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+    if os.path.isdir(PLOT_DIR):
+        print("{}/ is already a directory here...".format(PLOT_DIR))
+    elif os.path.isfile(PLOT_DIR):
+        raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(PLOT_DIR))
     else:
-        mkdir(plot_dir)
+        mkdir(PLOT_DIR)
     # (almost) unique hash from the configuration
     hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
     evaluation = EvaluatorMultiPlayers(configuration)
@@ -70,7 +70,7 @@ if __name__ == '__main__':
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
         if saveallfigs:
             # Create the sub folder
-            plot_dir = os.path.join(plot_dir, subfolder)
+            plot_dir = os.path.join(PLOT_DIR, subfolder)
             if os.path.isdir(plot_dir):
                 print("{} is already a directory here...".format(plot_dir))
             elif os.path.isfile(plot_dir):

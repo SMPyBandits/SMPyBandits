@@ -27,7 +27,7 @@ from configuration_comparing_KLUCB_aggregation import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw
-plot_dir = "plots"
+PLOT_DIR = "plots"
 semilogx = False
 meanRegret = True
 normalizedRegret = True
@@ -56,22 +56,23 @@ configuration['showplot'] = not interactive
 
 
 if __name__ == '__main__':
-    if os.path.isdir(plot_dir):
-        print("{}/ is already a directory here...".format(plot_dir))
-    elif os.path.isfile(plot_dir):
-        raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+    if os.path.isdir(PLOT_DIR):
+        print("{}/ is already a directory here...".format(PLOT_DIR))
+    elif os.path.isfile(PLOT_DIR):
+        raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(PLOT_DIR))
     else:
-        mkdir(plot_dir)
+        mkdir(PLOT_DIR)
     evaluation = Evaluator(configuration, finalRanksOnAverage=finalRanksOnAverage, averageOn=averageOn)
     # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
+
     for envId, env in enumerate(evaluation.envs):
         # (almost) unique hash from the configuration
         hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
 
         # Sub folder with a useful name
         subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        plot_dir = os.path.join(plot_dir, subfolder)
+        plot_dir = os.path.join(PLOT_DIR, subfolder)
 
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
