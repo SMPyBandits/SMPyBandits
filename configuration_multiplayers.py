@@ -64,7 +64,7 @@ DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
-    N_JOBS = max(int(CPU_COUNT / 2), CPU_COUNT - 4)
+    N_JOBS = max(int(CPU_COUNT / 3), CPU_COUNT - 8)
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1

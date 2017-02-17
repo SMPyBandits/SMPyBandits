@@ -305,8 +305,9 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for i, player in enumerate(self.players):
+            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
             Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(X, Y, label=str(player), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
+            plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         plt.ylim(-0.03, 1.03)
@@ -410,7 +411,7 @@ class EvaluatorMultiPlayers(object):
         for armId, arm in enumerate(self.envs[environmentId].arms):
             labels[armId] = "#${}$: ${}$ (${:.1%}$$\%$)".format(armId, repr(arm), Y[armId])
             print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))  # DEBUG
-            if Y[armId] < 5e-3:  # Do not display small slices
+            if Y[armId] < 1e-4:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")  # DEBUG

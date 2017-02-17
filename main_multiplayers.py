@@ -98,7 +98,7 @@ if __name__ == '__main__':
             evaluation.plotRegretCentralized(envId, semilogx=False, normalized=False)  # XXX To plot without saving
 
         # Plotting the centralized regret in semilogx
-        savefig = mainfig.replace('main', 'main_RegretCentralized')
+        savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
         print("\n\n- Plotting the centralized regret")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
