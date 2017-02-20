@@ -60,7 +60,7 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
 # Random events
 RANDOM_SHUFFLE = False
 RANDOM_INVERT = False
-NB_RANDOM_EVENTS = 5
+NB_RANDOM_EVENTS = 10
 
 # Cache rewards
 CACHE_REWARDS = True
@@ -114,6 +114,10 @@ configuration = {
         {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
             "arm_type": Bernoulli,
             "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
+        },
+        {   # A very hard problem, as used in [Cappé et al, 2012]
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
         },
     # ],
     # "environment": [  # 2)  Exponential arms
