@@ -184,7 +184,7 @@ class EvaluatorMultiPlayers(object):
 
     # Plotting decentralized (vectorial) rewards
     def plotRewards(self, environmentId=0, savefig=None, semilogx=False):
-        plt.figure()
+        fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
@@ -212,7 +212,7 @@ class EvaluatorMultiPlayers(object):
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
         # DONE compute a certain measure of "fairness", from these personal rewards
-        plt.figure()
+        fig = plt.figure()
         amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
         plt.ylim(0, 1)
         add_percent_formatter("yaxis", 1.0)
@@ -230,6 +230,7 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     # Plotting centralized regret (sum)
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False):
@@ -240,7 +241,7 @@ class EvaluatorMultiPlayers(object):
         if normalized:
             Y /= np.log(2 + X)   # XXX prevent /0
         meanY = np.mean(Y)
-        plt.figure()
+        fig = plt.figure()
         if semilogx:
             plt.semilogx(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"), markevery=(0.0, 0.1))
             # We plot a horizontal line ----- at the mean regret
@@ -269,11 +270,12 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     # Plotting cumulated number of switchs (switching costs)
     def plotNbSwitchs(self, environmentId=0, savefig=None, semilogx=False, cumulated=False):
         X = self.times - 1
-        plt.figure()
+        fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
@@ -300,10 +302,11 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def plotBestArmPulls(self, environmentId=0, savefig=None):
         X = self.times - 1
-        plt.figure()
+        fig = plt.figure()
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for i, player in enumerate(self.players):
@@ -321,14 +324,16 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
         X = self.times - 1
         mainfig = savefig
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
+        figs = []
         for armId in range(self.envs[environmentId].nbArms):
-            plt.figure()
+            figs.append(plt.figure())
             for playerId, player in enumerate(self.players):
                 Y = self.getAllPulls(playerId, armId, environmentId)
                 if cumulated:
@@ -347,10 +352,11 @@ class EvaluatorMultiPlayers(object):
                 print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, bbox_inches=BBOX_INCHES)
             plt.show() if self.cfg['showplot'] else plt.close()
+        return figs
 
     def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
         X = self.times - 1
-        plt.figure()
+        fig = plt.figure()
         colors = palette(self.nbPlayers)
         for i, player in enumerate(self.players):
             Y = self.getFreeTransmissions(i, environmentId)
@@ -369,6 +375,7 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
@@ -380,7 +387,7 @@ class EvaluatorMultiPlayers(object):
         for armId in range(self.envs[environmentId].nbArms):
             # Y += (self.getCollisions(armId, environmentId) >= 1)
             Y += self.getCollisions(armId, environmentId)
-        plt.figure()
+        fig = plt.figure()
         if cumulated:
             Y = np.cumsum(Y)
         else:
@@ -398,6 +405,7 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
         nbArms = self.envs[environmentId].nbArms
@@ -423,7 +431,7 @@ class EvaluatorMultiPlayers(object):
         labels[-1] = "No collision (${:.1%}$$\%$)".format(Y[-1]) if Y[-1] > 1e-4 else ''
         colors[-1] = 'lightgrey'
         # Start the figure
-        plt.figure()
+        fig = plt.figure()
         if piechart:
             plt.xlabel("{}{}".format(self.strPlayers(), signature))
             plt.axis('equal')
@@ -438,6 +446,7 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
