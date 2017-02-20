@@ -219,7 +219,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         for evaId, eva in enumerate(evaluators):
-            label = eva.strPlayers()
+            label = eva.strPlayers(short=True)
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
             for i, player in enumerate(eva.players):
                 cumRewards[i, :] = eva.getRewards(i, environmentId)
@@ -252,7 +252,7 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(len(evaluators))
         for evaId, eva in enumerate(evaluators):
             Y = eva.getCentralizedRegret(environmentId)
-            label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers()
+            label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
             if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
                 X, Y = X0[X0 >= 100], Y[X0 >= 100]
             if normalized:
@@ -413,7 +413,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             Y /= eva.nbPlayers  # XXX To normalized the count?
-            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None), label=eva.strPlayers(), color=colors[evaId])
+            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId])
         if not cumulated:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)
@@ -487,14 +487,15 @@ class EvaluatorMultiPlayers(object):
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
-    def strPlayers(self):
+    def strPlayers(self, short=False):
         listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
             text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
             text = ', '.join(listStrPlayers)
         text = wraptext(text)
-        text = '{} players: {}'.format(self.nbPlayers, text)
+        if not short:
+            text = '{} players: {}'.format(self.nbPlayers, text)
         return text
 
 

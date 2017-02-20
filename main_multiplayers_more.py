@@ -31,8 +31,8 @@ saveallfigs = True  # XXX dont keep it like this
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Whether to do the plots or not
-do_simple_plot = True
 do_simple_plot = False
+do_simple_plot = True
 
 do_all_plot = False
 do_all_plot = True
@@ -249,7 +249,7 @@ if __name__ == '__main__':
             e0.plotRewards(envId, semilogx=False, evaluators=eothers)  # XXX To plot without saving
 
         # Plotting the centralized regret
-        savefig = mainfig.replace('main', 'main_RegretCentralized')
+        savefig = mainfig.replace('all', 'all_RegretCentralized')
         print("\n\n- Plotting the centralized regret for all 'players' values")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
@@ -258,7 +258,7 @@ if __name__ == '__main__':
             e0.plotRegretCentralized(envId, semilogx=False, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
         # Plotting the centralized regret in semilogx
-        savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
+        savefig = mainfig.replace('all', 'all_RegretCentralized_semilogx')
         print("\n\n- Plotting the centralized regret for all 'players' values")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
@@ -267,7 +267,7 @@ if __name__ == '__main__':
             e0.plotRegretCentralized(envId, semilogx=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
         # Also plotting the total nb of collision as a function of time
-        savefig = mainfig.replace('main', 'main_NbCollisions')
+        savefig = mainfig.replace('all', 'all_NbCollisions')
         print(" - Plotting the total nb of collision as a function of time for all 'players' values")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
@@ -276,7 +276,7 @@ if __name__ == '__main__':
             e0.plotNbCollisions(envId, cumulated=False, evaluators=eothers)  # XXX To plot without saving
 
         # Also plotting the total nb of collision as a function of time
-        savefig = mainfig.replace('main', 'main_CumNbCollisions')
+        savefig = mainfig.replace('all', 'all_CumNbCollisions')
         print(" - Plotting the cumulated total nb of collision as a function of time for all 'players' values")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
