@@ -682,7 +682,7 @@
 <text text-anchor="middle" x="3236.5" y="-1564.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3129,-1557 3344,-1557 "/>
 <text text-anchor="start" x="3137" y="-1541.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3137" y="-1526.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="3137" y="-1526.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="3137" y="-1511.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3137" y="-1496.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3137" y="-1481.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -1455,7 +1455,7 @@
 <text text-anchor="middle" x="8876.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="8749.5,-399 9003.5,-399 "/>
 <text text-anchor="start" x="8757.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="8757.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="8757.5" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="8749.5,-361 9003.5,-361 "/>
 <text text-anchor="start" x="8757.5" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="8757.5" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -1495,7 +1495,7 @@
 <text text-anchor="middle" x="9177.5" y="-406.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.oneRhoRandRand</text>
 <polyline fill="none" stroke="black" points="9022,-399 9333,-399 "/>
 <text text-anchor="start" x="9030" y="-383.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
+<text text-anchor="start" x="9030" y="-368.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
 <polyline fill="none" stroke="black" points="9022,-361 9333,-361 "/>
 <text text-anchor="start" x="9030" y="-345.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="9030" y="-330.8" font-family="Times,serif" font-size="14.00">__str__()</text>
