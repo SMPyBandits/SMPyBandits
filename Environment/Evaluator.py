@@ -198,7 +198,7 @@ class Evaluator(object):
     def plotRegrets(self, environmentId,
                     savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False
                     ):
-        plt.figure()
+        fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
@@ -257,9 +257,10 @@ class Evaluator(object):
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def plotBestArmPulls(self, environmentId, savefig=None):
-        plt.figure()
+        fig = plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         X = self.times[2:]
@@ -277,7 +278,8 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        if self.cfg['showplot']: plt.show()
+        plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
 
     def printFinalRanking(self, environmentId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
