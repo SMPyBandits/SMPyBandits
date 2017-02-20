@@ -381,23 +381,27 @@ class EvaluatorMultiPlayers(object):
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
-    def plotNbCollisions(self, environmentId=0, savefig=None, cumulated=False):
+    def plotNbCollisions(self, environmentId=0, savefig=None, cumulated=False, evaluators=None):
         X = self.times - 1
-        Y = np.zeros(self.duration)
-        for armId in range(self.envs[environmentId].nbArms):
-            # Y += (self.getCollisions(armId, environmentId) >= 1)
-            Y += self.getCollisions(armId, environmentId)
         fig = plt.figure()
-        if cumulated:
-            Y = np.cumsum(Y)
-        else:
+        evaluators = [self] + evaluators if evaluators is not None else [self]
+        colors = palette(len(evaluators))
+        markers = makemarkers(len(evaluators))
+        for evaId, eva in enumerate(evaluators):
+            Y = np.zeros(eva.duration)
+            for armId in range(eva.envs[environmentId].nbArms):
+                # Y += (eva.getCollisions(armId, environmentId) >= 1)
+                Y += eva.getCollisions(armId, environmentId)
+            if cumulated:
+                Y = np.cumsum(Y)
+            Y /= eva.nbPlayers  # XXX To normalized the count?
+            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None), label=eva.strPlayers(), color=colors[evaId])
+        if not cumulated:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)
-        Y /= self.nbPlayers  # XXX To normalized the count?
         # Start the figure
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
-        plt.plot(X, Y, 'o-' if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None))
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
