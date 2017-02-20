@@ -39,9 +39,9 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 40000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 40000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -56,7 +56,7 @@ REPETITIONS = 1000
 REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -255,10 +255,10 @@ configuration.update({
 
 # FIXME do this in a cleaner way
 configuration["successive_players"] = [
-    Selfish(NB_PLAYERS, Uniform, nbArms).childs,
-    Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs,
-    Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs,
-    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs,
+    # Selfish(NB_PLAYERS, Uniform, nbArms).childs,
+    # Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs,
+    # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs,
+    # Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs,
     Selfish(NB_PLAYERS, UCB, nbArms).childs,
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
     Selfish(NB_PLAYERS, MOSS, nbArms).childs,

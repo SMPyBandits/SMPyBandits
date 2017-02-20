@@ -31,16 +31,18 @@ saveallfigs = False
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Whether to do the plots or not
-do_plot = False
 do_plot = True
+do_plot = False
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = True
 interactive = False  # Seems to be the only mode which is working well
+interactive = True
 
 # Update configuration
 configuration['showplot'] = not interactive
 del configuration['players']
+
+_hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
 
 
 if __name__ == '__main__':
@@ -77,7 +79,7 @@ if __name__ == '__main__':
                 break
 
             # Sub folder with a useful name
-            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
+            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(players))
             # Get the name of the output file
             imagename = "main____env{}-{}_{}.png".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             # Create the sub folder
@@ -92,6 +94,7 @@ if __name__ == '__main__':
 
             mainfig = os.path.join(plot_dir, imagename)
             savefig = mainfig
+
             # Plotting the decentralized rewards
             print("\n\n- Plotting the decentralized rewards")
             if saveallfigs:
@@ -217,14 +220,64 @@ if __name__ == '__main__':
             else:
                 evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
+    #
     # FIXME experimental support to compare different MP strategies on the same figures
-    # TODO add savefig cases like above
+    #
+    N = len(configuration["environment"])
     for envId, env in enumerate(configuration["environment"]):
         e0, eothers = evaluators[envId][0], evaluators[envId][1:]
-        e0.plotRewards(0, evaluators=eothers)
-        e0.plotNbCollisions(0, cumulated=False, evaluators=eothers)
-        e0.plotNbCollisions(0, cumulated=True, evaluators=eothers)
-        e0.plotRegretCentralized(0, evaluators=eothers)
+
+        M = e0.nbPlayers
+        # Get the name of the output file
+        imagename = "all____env{}-{}_{}.png".format(envId + 1, N, _hashvalue)
+
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+
+        # Plotting the decentralized rewards
+        print("\n\n- Plotting the decentralized rewards")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotRewards(envId, savefig=savefig, semilogx=False, evaluators=eothers)
+        else:
+            e0.plotRewards(envId, semilogx=False, evaluators=eothers)  # XXX To plot without saving
+
+        # Plotting the centralized regret
+        savefig = mainfig.replace('main', 'main_RegretCentralized')
+        print("\n\n- Plotting the centralized regret")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=False, evaluators=eothers)
+        else:
+            e0.plotRegretCentralized(envId, semilogx=False, normalized=False, evaluators=eothers)  # XXX To plot without saving
+
+        # Plotting the centralized regret in semilogx
+        savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
+        print("\n\n- Plotting the centralized regret")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False, evaluators=eothers)
+        else:
+            e0.plotRegretCentralized(envId, semilogx=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
+
+        # Also plotting the total nb of collision as a function of time
+        savefig = mainfig.replace('main', 'main_NbCollisions')
+        print(" - Plotting the total nb of collision as a function of time")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotNbCollisions(envId, savefig=savefig, cumulated=False, evaluators=eothers)
+        else:
+            e0.plotNbCollisions(envId, cumulated=False, evaluators=eothers)  # XXX To plot without saving
+
+        # Also plotting the total nb of collision as a function of time
+        savefig = mainfig.replace('main', 'main_CumNbCollisions')
+        print(" - Plotting the cumulated total nb of collision as a function of time")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotNbCollisions(envId, savefig=savefig, cumulated=True, evaluators=eothers)
+        else:
+            e0.plotNbCollisions(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
+
 
     # Done
     print("Done for simulations main_multiplayers.py ...")
