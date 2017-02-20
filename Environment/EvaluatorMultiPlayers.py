@@ -183,8 +183,8 @@ class EvaluatorMultiPlayers(object):
     # --- Plotting methods
 
     # Plotting decentralized (vectorial) rewards
-    def plotRewards(self, environmentId=0, savefig=None, semilogx=False):
-        fig = plt.figure()
+    def plotRewards(self, environmentId=0, savefig=None, semilogx=False, evaluators=None):
+        figs = [plt.figure()]
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
@@ -211,17 +211,28 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
+        #
         # DONE compute a certain measure of "fairness", from these personal rewards
-        fig = plt.figure()
-        amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
+        # FIXME do another method instead!
+        figs.append(plt.figure())
+        evaluators = [self] + evaluators if evaluators is not None else [self]
+        colors = palette(len(evaluators))
+        markers = makemarkers(len(evaluators))
+        for evaId, eva in enumerate(evaluators):
+            label = eva.strPlayers()
+            cumRewards = np.zeros((eva.nbPlayers, eva.duration))
+            for i, player in enumerate(eva.players):
+                cumRewards[i, :] = eva.getRewards(i, environmentId)
+            amplitudeRewards = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
+            if semilogx:
+                plt.semilogx(X[2:], amplitudeRewards[2:], markers[evaId]+'-', label=label, markevery=(0.0, 0.1), color=colors[evaId])
+            else:
+                plt.plot(X[2:], amplitudeRewards[2:], markers[evaId]+'-', label=label, markevery=(0.0, 0.1), color=colors[evaId])
         plt.ylim(0, 1)
         add_percent_formatter("yaxis", 1.0)
-        if semilogx:
-            plt.semilogx(X[2:], amplitudeRewards[2:], 'o-', markevery=(0.0, 0.1))
-        else:
-            plt.plot(X[2:], amplitudeRewards[2:], 'o-', markevery=(0.0, 0.1))
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
+        if len(evaluators) > 1:
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         plt.ylabel("Centralized measure of (relative) fairness for cumulative rewards\n(rewards best player - rewards worst player) / best rewards")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
@@ -230,7 +241,7 @@ class EvaluatorMultiPlayers(object):
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
         plt.show() if self.cfg['showplot'] else plt.close()
-        return fig
+        return figs
 
     # Plotting centralized regret (sum)
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False, evaluators=None):

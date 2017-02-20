@@ -53,7 +53,8 @@ if __name__ == '__main__':
 
     N_players = len(configuration["successive_players"])
 
-    evaluators = [None] * N_players
+    # List to keep all the EvaluatorMultiPlayers objects
+    evaluators = [[None] * N_players] * len(configuration["environment"])
 
     for playersId, players in enumerate(configuration["successive_players"]):
         print("\n\n\nConsidering the list of players :\n", players)  # DEBUG
@@ -68,7 +69,7 @@ if __name__ == '__main__':
         for envId, env in enumerate(evaluation.envs):
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
-            evaluators[playersId] = evaluation
+            evaluators[envId][playersId] = evaluation
             # Display the final rankings for that env
             print("Giving the final ranks ...")
             evaluation.printFinalRanking(envId)
@@ -215,6 +216,16 @@ if __name__ == '__main__':
                 evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
             else:
                 evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
+
+    # FIXME experimental support to compare different MP strategies on the same figures
+    # TODO add savefig cases like above
+    for envId, env in enumerate(configuration["environment"]):
+        e0, eothers = evaluators[envId][0], evaluators[envId][1:]
+        e0.plotRewards(0, evaluators=eothers)
+        e0.plotNbCollisions(0, cumulated=False, evaluators=eothers)
+        e0.plotNbCollisions(0, cumulated=True, evaluators=eothers)
+        e0.plotRegretCentralized(0, evaluators=eothers)
+
     # Done
     print("Done for simulations main_multiplayers.py ...")
     notify("Done for simulations main_multiplayers.py ...")
