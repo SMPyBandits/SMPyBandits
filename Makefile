@@ -24,7 +24,7 @@ main2:
 	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt  # DEBUG
 	# time nice -n 19 ipython2 ./main.py | tee ./logs/main_py2_log.txt
 
-main: main3
+main:	main3
 main3:
 	# time nice -n 19 python3 ./main.py | tee ./logs/main_py3_log.txt  # DEBUG
 	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
@@ -33,7 +33,7 @@ multiplayers2:
 	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
 	# time nice -n 19 ipython2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
-multiplayers: multiplayers3
+multiplayers:	multiplayers3
 multiplayers3:
 	# time nice -n 19 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
@@ -48,7 +48,7 @@ profile3:
 	time nice -n 19 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
 
 # Line time profilers
-line_profiler: kernprof lprof
+line_profiler:	kernprof lprof
 kernprof:
 	@echo "Running the script 'main.py' with the 'kernprof' command line profiler ..."
 	@echo "See 'https://github.com/rkern/line_profiler#kernprof' if needed"

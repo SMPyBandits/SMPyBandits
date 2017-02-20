@@ -24,8 +24,8 @@ piechart = True
 averageRegret = True
 normalized = True
 
-saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
+saveallfigs = False
 
 # if not saveallfigs:
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
@@ -35,8 +35,8 @@ do_plot = False
 do_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = False  # Seems to be the only mode which is working well
 interactive = True
+interactive = False  # Seems to be the only mode which is working well
 
 # Update configuration
 configuration['showplot'] = not interactive
@@ -52,6 +52,9 @@ if __name__ == '__main__':
         mkdir(PLOT_DIR)
 
     N_players = len(configuration["successive_players"])
+
+    evaluators = [None] * N_players
+
     for playersId, players in enumerate(configuration["successive_players"]):
         print("\n\n\nConsidering the list of players :\n", players)  # DEBUG
         configuration['players'] = players
@@ -65,6 +68,7 @@ if __name__ == '__main__':
         for envId, env in enumerate(evaluation.envs):
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
+            evaluators[playersId] = evaluation
             # Display the final rankings for that env
             print("Giving the final ranks ...")
             evaluation.printFinalRanking(envId)
@@ -114,8 +118,8 @@ if __name__ == '__main__':
                 evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False)  # XXX To plot without saving
 
             # Plotting the normalized centralized rewards
-            savefig = mainfig.replace('main', 'main_NormalizedRewardsCentralized')
-            print("\n\n- Plotting the normalized centralized rewards")
+            savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
+            print("\n\n- Plotting the normalized centralized regret")
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
                 evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
