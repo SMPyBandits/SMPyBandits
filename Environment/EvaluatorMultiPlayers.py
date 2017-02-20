@@ -233,23 +233,30 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     # Plotting centralized regret (sum)
-    def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False):
-        X = self.times - 1
-        Y = self.getCentralizedRegret(environmentId)
-        if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
-            X, Y = X[X >= 100], Y[X >= 100]
-        if normalized:
-            Y /= np.log(2 + X)   # XXX prevent /0
-        meanY = np.mean(Y)
+    def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False, evaluators=None):
+        X0 = X = self.times - 1
         fig = plt.figure()
-        if semilogx:
-            plt.semilogx(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"), markevery=(0.0, 0.1))
-            # We plot a horizontal line ----- at the mean regret
-            plt.semilogx(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
-        else:
-            plt.plot(X, Y, 'o-', label="{}umulated centralized regret".format("Normalized c" if normalized else "C"), markevery=(0.0, 0.1))
-            # We plot a horizontal line ----- at the mean regret
-            plt.plot(X, meanY * np.ones_like(X), 'r--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY))
+        evaluators = [self] + evaluators if evaluators is not None else [self]
+        colors = palette(len(evaluators))
+        markers = makemarkers(len(evaluators))
+        for evaId, eva in enumerate(evaluators):
+            Y = eva.getCentralizedRegret(environmentId)
+            label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers()
+            if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
+                X, Y = X0[X0 >= 100], Y[X0 >= 100]
+            if normalized:
+                Y /= np.log(2 + X)   # XXX prevent /0
+            meanY = np.mean(Y)
+            if semilogx:
+                plt.semilogx(X, Y, (markers[evaId] + '-'), markevery=(0.0, 0.1), label=label, color=colors[evaId])
+                if len(evaluators) == 1:
+                    # We plot a horizontal line ----- at the mean regret
+                    plt.semilogx(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY), color=colors[evaId])
+            else:
+                plt.plot(X, Y, (markers[evaId] + '-'), markevery=(0.0, 0.1), label=label, color=colors[evaId])
+                if len(evaluators) == 1:
+                    # We plot a horizontal line ----- at the mean regret
+                    plt.plot(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY), color=colors[evaId])
         # TODO add std
         lowerbound, anandkumar_lowerbound = self.envs[environmentId].lowerbound_multiplayers(self.nbPlayers)
         print(" - Our lowerbound = {:.3g},\n - anandkumar_lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
@@ -262,7 +269,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X, anandkumar_lowerbound * np.log(2 + X), 'k:', label="Anandkumar lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)
         # Labels and legends
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$\n{}{}".format(self.horizon, self.strPlayers(), signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
         maximizeWindow()
