@@ -36,11 +36,11 @@
 -----
 
 ## Multi-players simulations!
-- [x] implement a multi-player simulation environment as well! Done, in [EvaluatorMultiPlayers](Environment/EvaluatorMultiPlayers.py). TODO Keep improving it.
+- [x] implement a multi-player simulation environment as well! Done, in [EvaluatorMultiPlayers](Environment/EvaluatorMultiPlayers.py). TODO Keep improving it!
 - [x] implement [different collision models](Environment/CollisionModels.py) (4 different models as far as now), and try it on each, with different setting (K < M, M = K, M < K, static or dynamic, Bernoulli or non-Bernoulli arms etc).
 - [x] implement the basic multi-player policies: the fully decentralized [`Selfish`](PoliciesMultiPlayers/Selfish.py) policy (where every player runs her own policy, without even knowing that there is other player, but receiving `0` reward in case of collision), two stupid centralized policies [`CentralizedFixed`](PoliciesMultiPlayers/CentralizedFixed.py) and [`CentralizedCycling`](PoliciesMultiPlayers/CentralizedCycling.py), and two oracle policies [`OracleNotFair`](PoliciesMultiPlayers/OracleNotFair.py) and [`OracleFair`](PoliciesMultiPlayers/OracleFair.py).
 - [x] implement a centralized non-oracle policy, which is just a multiple-play single-player policy, in [`CentralizedMultiplePlay`](PoliciesMultiPlayers/CentralizedMultiplePlay.py). The single-player policy uses the `choiceMultiple(nb)` method to chose directly `M` arms for the `M` players. It works very well: no collision, and very fast identification of the best `M` arms!
-- [ ] FIXME plot several "multi-players" policy on the same graphs (e.g., the cumulative centralized regret of `M` players following `Selfish[UCB]` against the regret of `M` players following `Selfish[klCUB]`, or `ALOHA` vs `rhoRand` vs `MusicalChair`).
+- [x] plot several "multi-players" policy on the same graphs (e.g., the cumulative centralized regret of `M` players following `Selfish[UCB]` against the regret of `M` players following `Selfish[klCUB]`, or `ALOHA` vs `rhoRand` vs `MusicalChair`). TODO Keep improving it!
 
 ### State-of-the-art algorithms
 - [x] I implemented the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/1512.02866), in [`MusicalChair`](Policies/MusicalChair.py). FIXME the ["Dynamic Musical Chair"](https://arxiv.org/abs/1512.02866) that regularly reinitialize "Musical Chair"...
