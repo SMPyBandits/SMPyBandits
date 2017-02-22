@@ -23,6 +23,7 @@ PLOT_DIR = "plots"
 piechart = True
 averageRegret = True
 normalized = True
+fairnessAmplitude = False
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
@@ -68,9 +69,9 @@ if __name__ == '__main__':
         subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        plot_dir = os.path.join(PLOT_DIR, subfolder)
         if saveallfigs:
             # Create the sub folder
-            plot_dir = os.path.join(PLOT_DIR, subfolder)
             if os.path.isdir(plot_dir):
                 print("{} is already a directory here...".format(plot_dir))
             elif os.path.isfile(plot_dir):
@@ -87,6 +88,15 @@ if __name__ == '__main__':
             evaluation.plotRewards(envId, savefig=savefig, semilogx=False)
         else:
             evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
+
+        # Plotting the centralized fairness
+        savefig = savefig.replace('main', 'main_Fairness' if fairnessAmplitude else 'main_FairnessStd')
+        print("\n\n- Plotting the centralized fairness")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            evaluation.plotFairness(envId, savefig=savefig, semilogx=False, amplitude=fairnessAmplitude)
+        else:
+            evaluation.plotFairness(envId, semilogx=False, amplitude=fairnessAmplitude)  # XXX To plot without saving
 
         # Plotting the centralized regret
         savefig = mainfig.replace('main', 'main_RegretCentralized')

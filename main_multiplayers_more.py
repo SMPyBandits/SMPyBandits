@@ -23,6 +23,7 @@ PLOT_DIR = "plots"
 piechart = True
 averageRegret = True
 normalized = True
+fairnessAmplitude = False
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
@@ -106,6 +107,15 @@ if __name__ == '__main__':
                 evaluation.plotRewards(envId, savefig=savefig, semilogx=False)
             else:
                 evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
+
+            # Plotting the centralized fairness
+            savefig = savefig.replace('main', 'main_Fairness' if fairnessAmplitude else 'main_FairnessStd')
+            print("\n\n- Plotting the centralized fairness")
+            if saveallfigs:
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotFairness(envId, savefig=savefig, semilogx=False, amplitude=fairnessAmplitude)
+            else:
+                evaluation.plotFairness(envId, semilogx=False, amplitude=fairnessAmplitude)  # XXX To plot without saving
 
             # Plotting the centralized regret
             savefig = mainfig.replace('main', 'main_RegretCentralized')
