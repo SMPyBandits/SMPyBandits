@@ -40,8 +40,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 40000
+# HORIZON = 20000
+# HORIZON = 40000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -57,7 +57,7 @@ REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
+REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -83,6 +83,7 @@ NB_PLAYERS = 9    # Less that the number of arms
 NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
+NB_PLAYERS = 30   # XXX More than the number of arms !!
 
 # Collision model
 collisionModel = rewardIsSharedUniformly
@@ -138,10 +139,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
         # }
-        {   # An easy problem (19 arms)
-            "arm_type": Bernoulli,
-            "params": makeMeans(19, 1 / (1. + 19))
-        }
+        # {   # An easy problem (19 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(19, 1 / (1. + 19))
+        # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -150,6 +151,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
         # }
+        {   # An easy problem (50 arms)
+            "arm_type": Bernoulli,
+            "params": makeMeans(50, 1 / (1. + 50))
+        }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -255,6 +260,7 @@ configuration.update({
 
 configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
     rhoRand(NB_PLAYERS, MOSS, nbArms).childs,
     rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,
@@ -271,6 +277,7 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs,
     # Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs,
     # Selfish(NB_PLAYERS, UCB, nbArms).childs,
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
     Selfish(NB_PLAYERS, MOSS, nbArms).childs,
     Selfish(NB_PLAYERS, klUCB, nbArms).childs,
