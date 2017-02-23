@@ -96,8 +96,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
@@ -424,7 +424,7 @@ configuration.update({
         #         "klucb": klucb
         #     }
         # },
-        # --- Empirical KL-UCB algorithm, FIXME make it work!
+        # --- Empirical KL-UCB algorithm
         {
             "archtype": KLempUCB,
             "params": {}
@@ -463,6 +463,17 @@ configuration.update({
 # configuration.update({
 #     "policies": [  # --- Full or partial knowledge algorithms
 #         TakeFixedArm(nbArms, k) for k in range(nbArms)
+#     ]
+# })
+
+# # XXX Only test with fixed arms
+# configuration.update({
+#     "policies": [
+#         # --- Empirical KL-UCB algorithm
+#         {
+#             "archtype": KLempUCB,
+#             "params": {}
+#         },
 #     ]
 # })
 

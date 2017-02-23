@@ -31,8 +31,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
-HORIZON = 40000
+# HORIZON = 30000
+# HORIZON = 40000
 # HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -45,7 +45,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
@@ -212,8 +212,8 @@ from itertools import product  # XXX If needed!
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
     NON_AGGR_POLICIES = configuration["policies"]
-    # for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-    for UPDATE_LIKE_EXP4 in [False, True]:
+    # for UPDATE_LIKE_EXP4 in [False, True]:
+    for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
         configuration["policies"] = [{

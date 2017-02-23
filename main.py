@@ -22,8 +22,8 @@ import matplotlib.pyplot as plt
 from Environment import Evaluator, notify
 
 # Import a configuration file
-# from configuration import configuration
-from configuration_comparing_KLUCB_aggregation import configuration
+from configuration import configuration
+# from configuration_comparing_KLUCB_aggregation import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw

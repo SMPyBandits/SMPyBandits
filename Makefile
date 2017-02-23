@@ -76,7 +76,7 @@ install3:
 	sudo -H pip3 install -U -r requirements.txt
 
 # Senders:
-send_ws3:
+send_ws3:	clean
 	CP ../AlgoBandits.git lilian_besson@ws3:~/These/src/
 
 receive_plots_ws3:

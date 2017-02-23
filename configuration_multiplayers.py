@@ -281,6 +281,9 @@ configuration.update({
 
 configuration["successive_players"] = [
     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs,
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is efficient!

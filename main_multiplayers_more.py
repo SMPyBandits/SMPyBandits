@@ -250,14 +250,6 @@ if __name__ == '__main__':
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
 
-        # Plotting the decentralized rewards
-        print("\n\n- Plotting the decentralized rewards for all 'players' values")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            e0.plotRewards(envId, savefig=savefig, semilogx=False, evaluators=eothers)
-        else:
-            e0.plotRewards(envId, semilogx=False, evaluators=eothers)  # XXX To plot without saving
-
         # Plotting the centralized regret
         savefig = mainfig.replace('all', 'all_RegretCentralized')
         print("\n\n- Plotting the centralized regret for all 'players' values")
