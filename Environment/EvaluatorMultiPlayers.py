@@ -3,7 +3,7 @@
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.5"
 
 # Generic imports
 from copy import deepcopy
@@ -185,8 +185,8 @@ class EvaluatorMultiPlayers(object):
 
     # --- Plotting methods
 
-    # Plotting decentralized (vectorial) rewards
-    def plotRewards(self, environmentId=0, savefig=None, semilogx=False, evaluators=None):
+    def plotRewards(self, environmentId=0, savefig=None, semilogx=False):
+        """Plot the decentralized (vectorial) rewards, for each player."""
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
@@ -216,8 +216,8 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    # Plotting a certain measure of "fairness", from these personal rewards
     def plotFairness(self, environmentId=0, savefig=None, semilogx=False, evaluators=None, amplitude=True):
+        """Plot a certain measure of "fairness", from these personal rewards, support more than one environments (use evaluators to give a list of other environments)."""
         fig = plt.figure()
         X = self.times - 1
         evaluators = [self] + evaluators if evaluators is not None else [self]
@@ -253,8 +253,8 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    # Plotting centralized regret (sum)
     def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False, evaluators=None):
+        """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments)."""
         X0 = X = self.times - 1
         fig = plt.figure()
         evaluators = [self] + evaluators if evaluators is not None else [self]
@@ -300,8 +300,8 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    # Plotting cumulated number of switchs (switching costs)
     def plotNbSwitchs(self, environmentId=0, savefig=None, semilogx=False, cumulated=False):
+        """Plot cumulated number of switchs (to evaluate the switching costs), comparing each player."""
         X = self.times - 1
         fig = plt.figure()
         ymin = 0
@@ -332,8 +332,8 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    # Plotting cumulated number of switchs (switching costs)
     def plotNbSwitchsCentralized(self, environmentId=0, savefig=None, semilogx=False, cumulated=False, evaluators=None):
+        """Plot the centralized cumulated number of switchs (to evaluate the switching costs), support more than one environments (use evaluators to give a list of other environments)."""
         X = self.times - 1
         fig = plt.figure()
         ymin = 0
@@ -367,6 +367,7 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def plotBestArmPulls(self, environmentId=0, savefig=None):
+        """Plot the frequency of pulls of the best channel. Warning: does not adapt to dynamic settings!"""
         X = self.times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
@@ -389,6 +390,7 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def plotAllPulls(self, environmentId=0, savefig=None, cumulated=True, normalized=False):
+        """Plot the frequency of use of every channels, one figure for each channel. Not so useful."""
         X = self.times - 1
         mainfig = savefig
         colors = palette(self.nbPlayers)
@@ -417,6 +419,7 @@ class EvaluatorMultiPlayers(object):
         return figs
 
     def plotFreeTransmissions(self, environmentId=0, savefig=None, cumulated=False):
+        """Plot the frequency free transmission."""
         X = self.times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
@@ -444,6 +447,7 @@ class EvaluatorMultiPlayers(object):
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
     def plotNbCollisions(self, environmentId=0, savefig=None, cumulated=False, evaluators=None):
+        """Plot the frequency or cum number of collisions, support more than one environments (use evaluators to give a list of other environments)."""
         X = self.times - 1
         fig = plt.figure()
         evaluators = [self] + evaluators if evaluators is not None else [self]
@@ -474,6 +478,7 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def plotFrequencyCollisions(self, environmentId=0, savefig=None, piechart=True):
+        """Plot the frequency of collision, in a pie chart (histogram not supported yet)."""
         nbArms = self.envs[environmentId].nbArms
         Y = np.zeros(1 + nbArms)  # One extra arm for "no collision"
         labels = [''] * (1 + nbArms)  # Empty labels
@@ -515,6 +520,7 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def printFinalRanking(self, environmentId=0):
+        """Compute and print the ranking of the different players."""
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
         print("\nFinal ranking for this environment #{} :".format(environmentId))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
@@ -532,6 +538,7 @@ class EvaluatorMultiPlayers(object):
         return lastY, index_of_sorting
 
     def strPlayers(self, short=False):
+        """Get a string of the players for this environment."""
         listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
             text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
@@ -543,10 +550,10 @@ class EvaluatorMultiPlayers(object):
         return text
 
 
-# Helper function for the parallelization
 # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, players, horizon, collisionModel,
                  delta_t_save=1, seed=None):
+    """Helper function for the parallelization."""
     # XXX Try to give a unique seed to random & numpy.random for each call of this function
     try:
         np.random.seed(seed)
@@ -600,7 +607,6 @@ def delayed_play(env, players, horizon, collisionModel,
     return result
 
 
-# Utility function...
 def _extract(text):
     """ Extract the str of a player, if it is a child, printed as '#[0-9]+<...>' --> ... """
     try:
