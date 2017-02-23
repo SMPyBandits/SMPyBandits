@@ -84,7 +84,7 @@ class Softmax(BasePolicy):
             return np.random.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
-        if (self.t < self.nbArms) or (nb == 1):
+        if nb == 1:
             return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
             return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
