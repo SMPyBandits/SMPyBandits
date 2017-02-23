@@ -161,8 +161,8 @@ except Exception as e:
 _klucbGauss = klucbGauss
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
-    # return _klucbGauss(x, d, 1.0)
-    return _klucbGauss(x, d, VARIANCE)
+    return _klucbGauss(x, d, 1.0)
+    # return _klucbGauss(x, d, VARIANCE)
 
 
 configuration.update({
@@ -207,10 +207,13 @@ configuration.update({
 })
 
 
+from itertools import product  # XXX If needed!
+
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
     NON_AGGR_POLICIES = configuration["policies"]
-    for UPDATE_LIKE_EXP4 in [False, True]:
+    # for UPDATE_LIKE_EXP4 in [False, True]:
+    for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
         configuration["policies"] = [{
