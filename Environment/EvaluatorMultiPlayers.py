@@ -183,6 +183,20 @@ class EvaluatorMultiPlayers(object):
         actualRewards = sum(self.getRewards(playerId, environmentId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
 
+    def getFirstRegretTerm(self, environmentId=0):
+        arms = self.envs[environmentId].arms
+        meansArms = np.array([arm.mean() for arm in arms])
+        sortingIndex = np.argsort(meansArms)
+        meansArms = np.sort(meansArms)
+        deltaMeansWorstArms = meansArms[-self.nbPlayers] - meansArms[:-self.nbPlayers]
+        allPulls = self.allPulls[environmentId] / float(self.repetitions)
+        worstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
+        worstPulls = np.sum(worstPulls, axis=0)  # sum for all players
+        # (nbPlayers, nbArms, duration)
+        losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
+        firstRegretTerm = np.cumsum(losses)  # Accumulate losses
+        return firstRegretTerm
+
     # --- Plotting methods
 
     def plotRewards(self, environmentId=0, savefig=None, semilogx=False):
@@ -253,7 +267,7 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False, evaluators=None):
+    def plotRegretCentralized(self, environmentId=0, savefig=None, semilogx=False, normalized=False, evaluators=None, firstTerm=False):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments)."""
         X0 = X = self.times - 1
         fig = plt.figure()
@@ -261,8 +275,12 @@ class EvaluatorMultiPlayers(object):
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         for evaId, eva in enumerate(evaluators):
-            Y = eva.getCentralizedRegret(environmentId)
-            label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
+            if firstTerm:
+                Y = eva.getFirstRegretTerm(environmentId)
+                label = "Pulls of suboptimal arms"
+            else:
+                Y = eva.getCentralizedRegret(environmentId)
+                label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
             if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
                 X, Y = X0[X0 >= 100], Y[X0 >= 100]
             if normalized:
