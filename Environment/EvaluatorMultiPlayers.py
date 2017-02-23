@@ -147,6 +147,9 @@ class EvaluatorMultiPlayers(object):
     def getNbSwitchs(self, playerId, environmentId=0):
         return self.NbSwitchs[environmentId][playerId, :] / float(self.repetitions)
 
+    def getCentralizedNbSwitchs(self, environmentId=0):
+        return np.sum(self.NbSwitchs[environmentId], axis=0) / (float(self.repetitions) * self.nbPlayers)
+
     def getBestArmPulls(self, playerId, environmentId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.BestArmPulls[environmentId][playerId, :] / (float(self.repetitions) * self.times)
@@ -190,15 +193,15 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(self.nbPlayers)
         X = self.times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
-        for i, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
-            Y = self.getRewards(i, environmentId)
-            cumRewards[i, :] = Y
+        for playerId, player in enumerate(self.players):
+            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            Y = self.getRewards(playerId, environmentId)
+            cumRewards[playerId, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
+                plt.semilogx(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
+                plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         # TODO add std
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
@@ -223,16 +226,16 @@ class EvaluatorMultiPlayers(object):
         for evaId, eva in enumerate(evaluators):
             label = eva.strPlayers(short=True)
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
-            for i, player in enumerate(eva.players):
-                cumRewards[i, :] = eva.getRewards(i, environmentId)
+            for playerId, player in enumerate(eva.players):
+                cumRewards[playerId, :] = eva.getRewards(playerId, environmentId)
             if amplitude:
                 fairness = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
             else:
                 fairness = np.std(cumRewards, axis=0)
             if semilogx:
-                plt.semilogx(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(0.0, 0.1), color=colors[evaId])
+                plt.semilogx(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
             else:
-                plt.plot(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(0.0, 0.1), color=colors[evaId])
+                plt.plot(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
@@ -266,12 +269,12 @@ class EvaluatorMultiPlayers(object):
                 Y /= np.log(2 + X)   # XXX prevent /0
             meanY = np.mean(Y)
             if semilogx:
-                plt.semilogx(X, Y, (markers[evaId] + '-'), markevery=(0.0, 0.1), label=label, color=colors[evaId])
+                plt.semilogx(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
                 if len(evaluators) == 1:
                     # We plot a horizontal line ----- at the mean regret
                     plt.semilogx(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY), color=colors[evaId])
             else:
-                plt.plot(X, Y, (markers[evaId] + '-'), markevery=(0.0, 0.1), label=label, color=colors[evaId])
+                plt.plot(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
                 if len(evaluators) == 1:
                     # We plot a horizontal line ----- at the mean regret
                     plt.plot(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY), color=colors[evaId])
@@ -304,16 +307,16 @@ class EvaluatorMultiPlayers(object):
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        for i, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
-            Y = self.getNbSwitchs(i, environmentId)
+        for playerId, player in enumerate(self.players):
+            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            Y = self.getNbSwitchs(playerId, environmentId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.semilogx(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '')
             else:
-                plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), linestyle='-' if cumulated else '')
+                plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '')
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         ymax = max(plt.ylim()[1], 1)
@@ -329,15 +332,49 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
+    # Plotting cumulated number of switchs (switching costs)
+    def plotNbSwitchsCentralized(self, environmentId=0, savefig=None, semilogx=False, cumulated=False, evaluators=None):
+        X = self.times - 1
+        fig = plt.figure()
+        ymin = 0
+        evaluators = [self] + evaluators if evaluators is not None else [self]
+        colors = palette(len(evaluators))
+        markers = makemarkers(len(evaluators))
+        for evaId, eva in enumerate(evaluators):
+            label = "" if len(evaluators) == 1 else eva.strPlayers(short=True)
+            Y = self.getCentralizedNbSwitchs(environmentId)
+            if cumulated:
+                Y = np.cumsum(Y)
+            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            if semilogx:
+                plt.semilogx(X, Y, label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
+            else:
+                plt.plot(X, Y, label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
+        if len(evaluators) > 1:
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
+        ymax = max(plt.ylim()[1], 1)
+        plt.ylim(ymin, ymax)
+        if not cumulated:
+            add_percent_formatter("yaxis", 1.0)
+        plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
+        plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized {}number of switches, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "cumulated " if cumulated else "", self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(self.nbPlayers)))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")  # DEBUG
+            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
+        plt.show() if self.cfg['showplot'] else plt.close()
+        return fig
+
     def plotBestArmPulls(self, environmentId=0, savefig=None):
         X = self.times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        for i, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(i + 1, _extract(str(player)))
-            Y = self.getBestArmPulls(i, environmentId)
-            plt.plot(X, Y, label=label, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1))
+        for playerId, player in enumerate(self.players):
+            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            Y = self.getBestArmPulls(playerId, environmentId)
+            plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         plt.ylim(-0.03, 1.03)
@@ -383,11 +420,11 @@ class EvaluatorMultiPlayers(object):
         X = self.times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
-        for i, player in enumerate(self.players):
-            Y = self.getFreeTransmissions(i, environmentId)
+        for playerId, player in enumerate(self.players):
+            Y = self.getFreeTransmissions(playerId, environmentId)
             if cumulated:
                 Y = np.cumsum(Y)
-            plt.plot(X, Y, '.', label=str(player), color=colors[i], linewidth=1, markersize=1)
+            plt.plot(X, Y, '.', label=str(player), color=colors[playerId], linewidth=1, markersize=1)
             # should only plot with markers
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
@@ -420,7 +457,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             Y /= eva.nbPlayers  # XXX To normalized the count?
-            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((0.0, 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId])
+            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId])
         if not cumulated:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)
@@ -481,12 +518,12 @@ class EvaluatorMultiPlayers(object):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
         print("\nFinal ranking for this environment #{} :".format(environmentId))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
-        for i, player in enumerate(self.players):
-            Y = self.getRewards(i, environmentId)
+        for playerId, player in enumerate(self.players):
+            Y = self.getRewards(playerId, environmentId)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last averageOn% of the iterations
+                lastY[playerId] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last averageOn% of the iterations
             else:
-                lastY[i] = Y[-1]  # get the last value
+                lastY[playerId] = Y[-1]  # get the last value
         # Sort lastY and give ranking
         index_of_sorting = np.argsort(-lastY)  # Get them by INCREASING rewards, not decreasing regrets
         for i, k in enumerate(index_of_sorting):
@@ -538,10 +575,10 @@ def delayed_play(env, players, horizon, collisionModel,
         pulls.fill(0)
         collisions.fill(0)
         # Every player decides which arm to pull
-        for i, player in enumerate(players):
+        for playerId, player in enumerate(players):
             # FIXME here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
             # choices[i] = random_arm_orders[i][player.choice()]
-            choices[i] = player.choice()
+            choices[playerId] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
