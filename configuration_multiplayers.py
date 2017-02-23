@@ -258,47 +258,46 @@ configuration.update({
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 
-configuration["successive_players"] = [
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-    rhoRand(NB_PLAYERS, MOSS, nbArms).childs,
-    rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).childs,
-    rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,
-    rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
-]
+# configuration["successive_players"] = [
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, MOSS, nbArms).childs,
+#     rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
+#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,
+#     rhoRand(NB_PLAYERS, Thompson, nbArms).childs,
+#     rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
+#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,
+#     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+# ]
 
 
-configuration["successive_players"] = [
-    # Selfish(NB_PLAYERS, Uniform, nbArms).childs,
-    # Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs,
-    # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs,
-    # Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs,
-    # Selfish(NB_PLAYERS, UCB, nbArms).childs,
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
-    Selfish(NB_PLAYERS, MOSS, nbArms).childs,
-    Selfish(NB_PLAYERS, klUCB, nbArms).childs,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
-    Selfish(NB_PLAYERS, Thompson, nbArms).childs,
-    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
-    Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
-]
-
+# configuration["successive_players"] = [
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
+#     Selfish(NB_PLAYERS, MOSS, nbArms).childs,
+#     Selfish(NB_PLAYERS, klUCB, nbArms).childs,
+#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
+#     Selfish(NB_PLAYERS, Thompson, nbArms).childs,
+#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
+#     Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+# ]
 
 configuration["successive_players"] = [
     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
-    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
-    CentralizedMultiplePlay(NB_PLAYERS, MOSS, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).childs,
-    CentralizedMultiplePlay(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is not efficient!
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
+    # Selfish(NB_PLAYERS, MOSS, nbArms).childs,
+    Selfish(NB_PLAYERS, klUCB, nbArms).childs,
+    rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
+    Selfish(NB_PLAYERS, Thompson, nbArms).childs,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).childs,
+    # Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,
+    # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
 ]
 
 

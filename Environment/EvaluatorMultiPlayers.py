@@ -216,7 +216,7 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotFairness(self, environmentId=0, savefig=None, semilogx=False, evaluators=None, amplitude=True):
+    def plotFairness(self, environmentId=0, savefig=None, semilogx=False, amplitude=True, evaluators=None):
         """Plot a certain measure of "fairness", from these personal rewards, support more than one environments (use evaluators to give a list of other environments)."""
         fig = plt.figure()
         X = self.times - 1
