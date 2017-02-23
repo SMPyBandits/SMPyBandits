@@ -17,12 +17,10 @@ class KLempUCB(IndexPolicy):
     References: [Maillard, Munos & Stoltz - COLT, 2011], [Cappé, Garivier,  Maillard, Munos & Stoltz, 2012].
     """
 
-    def __init__(self, nbArms, maxReward=1.):
-        super(KLempUCB, self).__init__(nbArms)
+    def __init__(self, nbArms, maxReward=1., lower=0., amplitude=1.):
+        super(KLempUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = 1
         self.maxReward = maxReward
-        self.obs = [None] * nbArms  # List instead of dict, quicker access
-        self.t = -1
         self.pulls = np.zeros(self.nbArms, dtype=int)
         self.obs = [dict()] * self.nbArms
 
@@ -45,9 +43,9 @@ class KLempUCB(IndexPolicy):
 
     # FIXME this does not work apparently...
     def _KLucb(self, obs, klMax, debug=False):
-        p = np.array(list(obs.values()))
+        p = np.array(list(obs.values()), dtype=float)
         p /= np.sum(p)
-        v = np.array(list(obs.keys()))
+        v = np.array(list(obs.keys()), dtype=float)
         if debug:
             print("Calling maxEV(", p, ", ", v, ", ", klMax, ") ...")
         q = maxEV(p, v, klMax)

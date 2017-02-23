@@ -88,13 +88,13 @@ class Aggr(BasePolicy):
         all_children = ", updateAll" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"Aggr($N={}${}{}, $T={}$)".format(self.nbChildren, exp4, exp4, self.horizon)
+                return r"Aggr($N={}${}{}, $T={}$)".format(self.nbChildren, exp4, all_children, self.horizon)
             else:
-                return r"Aggr($N={}${}{})".format(self.nbChildren, exp4, exp4)
+                return r"Aggr($N={}${}{})".format(self.nbChildren, exp4, all_children)
         elif self.decreaseRate is not None:
-            return r"Aggr($N={}${}{}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, exp4, self.learningRate, self.decreaseRate)
+            return r"Aggr($N={}${}{}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate, self.decreaseRate)
         else:
-            return r"Aggr($N={}${}{}, $\eta={:.3g}$)".format(self.nbChildren, exp4, exp4, self.learningRate)
+            return r"Aggr($N={}${}{}, $\eta={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
