@@ -13,6 +13,19 @@ from .Arm import Arm
 from .kullback import klExp
 
 
+def p_of_expectation(expectation, trunc=1):
+    from scipy.optimize import minimize
+    if isinf(trunc):
+        def expp(p):
+            return 1. / p
+    else:
+        def expp(p):
+            return (1. - exp(-p * trunc)) / p
+    def objective(p):
+        return abs(expectation - expp(p))
+    return minimize(objective, 1).x[0]
+
+
 class Exponential(Arm):
     """ Exponentially distributed arm, possibly truncated.
 
@@ -66,3 +79,14 @@ class Exponential(Arm):
     def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Exponential arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klExp(mu, mumax)
+
+
+class ExponentialFromMean(Exponential):
+    """ Exponentially distributed arm, possibly truncated, defined by its mean and not its parameter.
+
+    - Default is to truncate to 1 (so Exponential.draw() is in [0, 1]).
+    """
+
+    def __init__(self, mean, trunc=1):
+        self.p = p_of_expectation(mean)
+        super(ExponentialFromMean, self).__init__(p, trunc=trunc)

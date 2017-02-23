@@ -13,7 +13,7 @@ from .Uniform import Uniform
 from .Bernoulli import Bernoulli
 from .Poisson import Poisson
 from .Gaussian import Gaussian
-from .Exponential import Exponential
+from .Exponential import Exponential, ExponentialFromMean
 
 
 def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
