@@ -294,6 +294,15 @@ if __name__ == '__main__':
         else:
             e0.plotNbCollisions(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
 
+        # Plotting the number of switches as a function of time
+        savefig = mainfig.replace('all', 'all_CumNbSwitchs')
+        print("\n\n- Plotting the number of switches as a function of time for all 'players' values")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotNbSwitchsCentralized(envId, savefig=savefig, semilogx=False, cumulated=True, evaluators=eothers)
+        else:
+            e0.plotNbSwitchsCentralized(envId, semilogx=False, cumulated=True, evaluators=eothers)  # XXX To plot without saving
+
 
     # Done
     print("Done for simulations main_multiplayers.py ...")
