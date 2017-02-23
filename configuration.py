@@ -30,8 +30,8 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 100000
 # HORIZON = 300000
 
@@ -424,6 +424,11 @@ configuration.update({
         #         "klucb": klucb
         #     }
         # },
+        # --- Empirical KL-UCB algorithm, FIXME make it work!
+        {
+            "archtype": KLempUCB,
+            "params": {}
+        },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,

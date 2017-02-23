@@ -212,8 +212,8 @@ from itertools import product  # XXX If needed!
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
     NON_AGGR_POLICIES = configuration["policies"]
-    # for UPDATE_LIKE_EXP4 in [False, True]:
-    for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+    # for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+    for UPDATE_LIKE_EXP4 in [False, True]:
         CURRENT_POLICIES = configuration["policies"]
         # Add one Aggr policy
         configuration["policies"] = [{

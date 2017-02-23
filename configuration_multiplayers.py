@@ -248,12 +248,8 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
 
-    # --- TODO Using single-player stupid rhoRandRand policy
+    # --- DONE Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).childs
-    # "players": rhoRandRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-    # "players": rhoRandRand(NB_PLAYERS, Thompson, nbArms).childs
-    # "players": rhoRandRand(NB_PLAYERS, BayesUCB, nbArms).childs
-    # "players": rhoRandRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
@@ -284,20 +280,15 @@ configuration.update({
 # ]
 
 configuration["successive_players"] = [
-    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
-    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is not efficient!
+    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-    # Selfish(NB_PLAYERS, MOSS, nbArms).childs,
-    Selfish(NB_PLAYERS, klUCB, nbArms).childs,
-    rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
-    Selfish(NB_PLAYERS, Thompson, nbArms).childs,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).childs,
-    # Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,
-    # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is efficient!
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is not efficient!
+    Selfish(NB_PLAYERS, Thompson, nbArms).childs,  # This one is efficient!
+    rhoRand(NB_PLAYERS, Thompson, nbArms).childs,  # This one is not efficient!
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is efficient!
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is not efficient!
 ]
 
 
