@@ -135,14 +135,14 @@ if __name__ == '__main__':
             else:
                 evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False)  # XXX To plot without saving
 
-            # Plotting the normalized centralized rewards
-            savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
-            print("\n\n- Plotting the normalized centralized regret")
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
-            else:
-                evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
+            # # Plotting the normalized centralized rewards
+            # savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
+            # print("\n\n- Plotting the normalized centralized regret")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
+            # else:
+            #     evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
 
             # Plotting the number of switches
             savefig = mainfig.replace('main', 'main_NbSwitchs')
@@ -267,6 +267,15 @@ if __name__ == '__main__':
             e0.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False, evaluators=eothers)
         else:
             e0.plotRegretCentralized(envId, semilogx=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
+
+        # Plotting the fairness
+        savefig = mainfig.replace('all', 'all_Fairness')
+        print("\n\n- Plotting the fairness for all 'players' values")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            e0.plotFairness(envId, savefig=savefig, semilogx=False, amplitude=fairnessAmplitude, evaluators=eothers)
+        else:
+            e0.plotFairness(envId, semilogx=False, amplitude=fairnessAmplitude, evaluators=eothers)  # XXX To plot without saving
 
         # Also plotting the total nb of collision as a function of time
         savefig = mainfig.replace('all', 'all_NbCollisions')

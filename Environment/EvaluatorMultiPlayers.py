@@ -173,7 +173,7 @@ class EvaluatorMultiPlayers(object):
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
         # FIXED how to count it when there is more players than arms ?
-        # FIXME it depend on the collision model !
+        # FIXME it depends on the collision model !
         if self.envs[environmentId].nbArms < self.nbPlayers:
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
@@ -342,7 +342,7 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(len(evaluators))
         for evaId, eva in enumerate(evaluators):
             label = "" if len(evaluators) == 1 else eva.strPlayers(short=True)
-            Y = self.getCentralizedNbSwitchs(environmentId)
+            Y = eva.getCentralizedNbSwitchs(environmentId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter

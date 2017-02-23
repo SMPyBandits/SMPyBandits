@@ -116,14 +116,14 @@ if __name__ == '__main__':
         else:
             evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False)  # XXX To plot without saving
 
-        # Plotting the normalized centralized rewards
-        savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
-        print("\n\n- Plotting the normalized centralized regret")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
-        else:
-            evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
+        # # Plotting the normalized centralized rewards
+        # savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
+        # print("\n\n- Plotting the normalized centralized regret")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
+        # else:
+        #     evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
 
         # Plotting the number of switches
         savefig = mainfig.replace('main', 'main_NbSwitchs')

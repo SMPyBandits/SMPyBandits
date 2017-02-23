@@ -30,7 +30,7 @@ from configuration import configuration
 PLOT_DIR = "plots"
 semilogx = False
 meanRegret = True
-normalizedRegret = True
+normalizedRegret = False
 plotSTD = False
 
 saveallfigs = False

@@ -42,7 +42,7 @@ HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
 # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -289,7 +289,7 @@ configuration["successive_players"] = [
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is efficient!
     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is not efficient!
     Selfish(NB_PLAYERS, Thompson, nbArms).childs,  # This one is efficient!
-    rhoRand(NB_PLAYERS, Thompson, nbArms).childs,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).childs,  # This one is not efficient!
     Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is efficient!
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is not efficient!
 ]
