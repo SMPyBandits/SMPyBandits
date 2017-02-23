@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex
+from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, makemarkers
 
 
 class MAB(object):
@@ -137,6 +137,31 @@ class MAB(object):
         plt.xlabel("Number of players in the multi-players game.{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
         plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}$".format(self.nbArms, self.reprarms()))
+        maximizeWindow()
+        if savefig is not None:
+            print("Saving to", savefig, "...")
+            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
+        plt.show()
+
+    def plotHistogram(self, horizon=10000, savefig=None):
+        """Plot a horizon=10000 draws of each arms."""
+        arms = self.arms
+        rewards = np.zeros((len(arms), horizon))
+        colors = palette(len(arms))
+        for armId, arm in enumerate(arms):
+            if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
+                rewards[armId] = arm.draw_nparray((horizon,))
+            else:  # Slower
+                for t in range(horizon):
+                    rewards[armId, t] = arm.draw(t)
+        # Now plot
+        plt.figure()
+        for armId, arm in enumerate(arms):
+            _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label=repr(arm))
+        plt.legend()
+        plt.xlabel("Rewards")
+        plt.ylabel("Mass repartition of the rewards")
+        plt.title("{} draws of rewards from these arms.\n{} arms: ${}$".format(horizon, self.nbArms, self.reprarms()))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
