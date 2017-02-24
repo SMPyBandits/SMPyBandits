@@ -119,13 +119,13 @@ configuration = {
         },
     # ],
     # "environment": [  # 2)  Exponential arms
-        {   # An example problem with  arms
+        {   # An example problem with 9 arms
             "arm_type": Exponential,
             "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
         },
     # ],
     # "environment": [  # 3)  Gaussian arms
-        {   # An example problem with  arms
+        {   # An example problem with 9 arms
             "arm_type": Gaussian,
             # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
             "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]

@@ -464,7 +464,6 @@ configuration.update({
 #     ]
 # })
 
-# # XXX Only test with fixed arms
 # configuration.update({
 #     "policies": [
 #         # --- Empirical KL-UCB algorithm
