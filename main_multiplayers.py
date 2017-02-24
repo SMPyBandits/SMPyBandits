@@ -66,7 +66,7 @@ if __name__ == '__main__':
             break
 
         # Sub folder with a useful name
-        subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(configuration['players']))
+        subfolder = "MP__M{}_T{}_N{}".format(len(configuration['players']), configuration['horizon'], configuration['repetitions'])
         # Get the name of the output file
         imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
         plot_dir = os.path.join(PLOT_DIR, subfolder)
@@ -90,13 +90,14 @@ if __name__ == '__main__':
             evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
 
         # Plotting the centralized fairness
-        savefig = savefig.replace('main', 'main_Fairness' if fairnessAmplitude else 'main_FairnessStd')
-        print("\n\n- Plotting the centralized fairness")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotFairness(envId, savefig=savefig, semilogx=False, amplitude=fairnessAmplitude)
-        else:
-            evaluation.plotFairness(envId, semilogx=False, amplitude=fairnessAmplitude)  # XXX To plot without saving
+        for fairnessAmplitude in [True, False]:
+            savefig = mainfig.replace('main', 'main_Fairness%s' % ('Ampl' if fairnessAmplitude else 'Std'))
+            print("\n\n- Plotting the centralized fairness")
+            if saveallfigs:
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotFairness(envId, savefig=savefig, semilogx=False, amplitude=fairnessAmplitude)
+            else:
+                evaluation.plotFairness(envId, semilogx=False, amplitude=fairnessAmplitude)  # XXX To plot without saving
 
         # Plotting the centralized regret
         savefig = mainfig.replace('main', 'main_RegretCentralized')

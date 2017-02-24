@@ -13,7 +13,7 @@ from os import mkdir
 import os.path
 
 # Backup evaluation object
-import pickle
+# import pickle
 # import h5py
 
 import matplotlib.pyplot as plt
@@ -96,11 +96,11 @@ if __name__ == '__main__':
             else:
                 mkdir(plot_dir)
 
-            # Save it to a pickle file
-            # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
-            with open(picklename, 'wb') as picklefile:
-                print("Saving the 'evaluation' objet to", picklefile, "...")
-                pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+            # # Save it to a pickle file
+            # # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+            # with open(picklename, 'wb') as picklefile:
+            #     print("Saving the 'evaluation' objet to", picklefile, "...")
+            #     pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
 
         # h5pydb = h5pyfile.create_dataset("results", (XXX, XXX))
         # Save the internal vectorial memory of the evaluator object
