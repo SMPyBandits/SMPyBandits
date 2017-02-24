@@ -88,5 +88,5 @@ class ExponentialFromMean(Exponential):
     """
 
     def __init__(self, mean, trunc=1):
-        self.p = p_of_expectation(mean)
+        p = p_of_expectation(mean)
         super(ExponentialFromMean, self).__init__(p, trunc=trunc)

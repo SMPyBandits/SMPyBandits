@@ -17,7 +17,7 @@ except ImportError:
 # Import arms
 from Arms import makeMeans
 from Arms.Bernoulli import Bernoulli
-from Arms.Exponential import Exponential
+from Arms.Exponential import Exponential, ExponentialFromMean
 from Arms.Gaussian import Gaussian
 from Arms.Poisson import Poisson
 
@@ -130,6 +130,13 @@ configuration = {
             # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
             "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
         },
+    # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
+        [
+            arm_type(mean)
+            for mean in [0.1, 0.5, 0.9]
+            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+        ],
+    # ],
     ],
 }
 

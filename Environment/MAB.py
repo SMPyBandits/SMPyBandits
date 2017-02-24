@@ -99,26 +99,22 @@ class MAB(object):
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
         # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms
         bestMeans = sortedMeans[-nbPlayers:]
-        # print("  bestMeans = ", bestMeans)  # DEBUG
         worstMeans = sortedMeans[:-nbPlayers]
-        # print("  worstMeans = ", worstMeans)  # DEBUG
         worstOfBestMean = bestMeans[0]
-        # print("  worstOfBestMean = ", worstOfBestMean)  # DEBUG
 
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
-        # print("    Using oneLR =", oneLR)  # DEBUG
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
         print("  - For {} player, our lower bound gave = {} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
-        # print("    Using kl =", kl)  # DEBUG
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
         print("  - For {} player, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
 
         # Check that our bound is better (ie bigger)
-        assert anandkumar_lowerbound <= our_lowerbound, "Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better..."
+        if anandkumar_lowerbound > our_lowerbound:
+            print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
         return our_lowerbound, anandkumar_lowerbound
 
     # --- plot
