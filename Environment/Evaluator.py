@@ -108,7 +108,6 @@ class Evaluator(object):
         for envId, env in enumerate(self.envs):
             self.startOneEnv(envId, env)
 
-    # @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
     def startOneEnv(self, envId, env):
         print("\nEvaluating environment:", repr(env))
         self.policies = []
@@ -148,35 +147,35 @@ class Evaluator(object):
 
     # --- Getter methods
 
-    def getPulls(self, policyId, environmentId=0):
-        return self.pulls[environmentId][policyId, :] / float(self.repetitions)
+    def getPulls(self, policyId, envId=0):
+        return self.pulls[envId][policyId, :] / float(self.repetitions)
 
-    def getBestArmPulls(self, policyId, environmentId=0):
+    def getBestArmPulls(self, policyId, envId=0):
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[environmentId][policyId, :] / (float(self.repetitions) * self.times)
+        return self.BestArmPulls[envId][policyId, :] / (float(self.repetitions) * self.times)
 
-    def getRewards(self, policyId, environmentId=0):
-        return self.rewards[policyId, environmentId, :] / float(self.repetitions)
+    def getRewards(self, policyId, envId=0):
+        return self.rewards[policyId, envId, :] / float(self.repetitions)
 
-    def getMaxRewards(self, environmentId=0):
-        return np.max(self.rewards[:, environmentId, :] / float(self.repetitions))
+    def getMaxRewards(self, envId=0):
+        return np.max(self.rewards[:, envId, :] / float(self.repetitions))
 
-    def getCumulatedRegret(self, policyId, environmentId=0):
-        # return self.times * self.envs[environmentId].maxArm - np.cumsum(self.getRewards(policyId, environmentId))
-        return np.cumsum(self.envs[environmentId].maxArm - self.getRewards(policyId, environmentId))
+    def getCumulatedRegret(self, policyId, envId=0):
+        # return self.times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
+        return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
 
-    def getAverageRewards(self, policyId, environmentId=0):
-        return np.cumsum(self.getRewards(policyId, environmentId)) / self.times
+    def getAverageRewards(self, policyId, envId=0):
+        return np.cumsum(self.getRewards(policyId, envId)) / self.times
 
-    def getRewardsSquared(self, policyId, environmentId=0):
+    def getRewardsSquared(self, policyId, envId=0):
         # FIXME this won't work right away: you have to uncomment the lines with rewardsSquared
-        return self.rewardsSquared[policyId, environmentId, :] / float(self.repetitions)
+        return self.rewardsSquared[policyId, envId, :] / float(self.repetitions)
 
-    def getSTDRegret(self, policyId, environmentId=0, meanRegret=False):
+    def getSTDRegret(self, policyId, envId=0, meanRegret=False):
         X = self.times
-        YMAX = self.getMaxRewards(environmentId=environmentId)
-        Y = self.getRewards(policyId, environmentId)
-        Y2 = self.getRewardsSquared(policyId, environmentId)
+        YMAX = self.getMaxRewards(envId=envId)
+        Y = self.getRewards(policyId, envId)
+        Y2 = self.getRewardsSquared(policyId, envId)
         if meanRegret:  # Cumulated expectation on time
             Ycum2 = (np.cumsum(Y) / X)**2
             Y2cum = np.cumsum(Y2) / X
@@ -195,7 +194,7 @@ class Evaluator(object):
 
     # --- Plotting methods
 
-    def plotRegrets(self, environmentId,
+    def plotRegrets(self, envId,
                     savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False
                     ):
         fig = plt.figure()
@@ -205,9 +204,9 @@ class Evaluator(object):
         X = self.times - 1
         for i, policy in enumerate(self.policies):
             if meanRegret:
-                Y = self.getAverageRewards(i, environmentId)
+                Y = self.getAverageRewards(i, envId)
             else:
-                Y = self.getCumulatedRegret(i, environmentId)
+                Y = self.getCumulatedRegret(i, envId)
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
@@ -219,30 +218,30 @@ class Evaluator(object):
                 plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
-                stdY = self.getSTDRegret(i, environmentId, meanRegret=meanRegret)
+                stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
                 plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        lowerbound = self.envs[environmentId].lowerbound()
+        lowerbound = self.envs[envId].lowerbound()
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(X, self.envs[environmentId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[environmentId].maxArm))
+            plt.plot(X, self.envs[envId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            # plt.ylim(min(-0.03, 1.03 * self.envs[environmentId].minArm), max(1.03 * self.envs[environmentId].maxArm, 1.03))  # Force view on [0,1], even if maxArm << 1: that's WEIRD
-            plt.ylim(1.06 * self.envs[environmentId].minArm, 1.06 * self.envs[environmentId].maxArm)
-            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(1)))
+            # plt.ylim(min(-0.03, 1.03 * self.envs[envId].minArm), max(1.03 * self.envs[envId].maxArm, 1.03))  # Force view on [0,1], even if maxArm << 1: that's WEIRD
+            plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
+            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(1)))
+            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         else:
             # FIXED for semilogx plots, truncate to only show t >= 100
             if semilogx:
@@ -251,7 +250,7 @@ class Evaluator(object):
             plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(1)))
+            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -259,13 +258,13 @@ class Evaluator(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotBestArmPulls(self, environmentId, savefig=None):
+    def plotBestArmPulls(self, envId, savefig=None):
         fig = plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         X = self.times[2:]
         for i, policy in enumerate(self.policies):
-            Y = self.getBestArmPulls(i, environmentId)[2:]
+            Y = self.getBestArmPulls(i, envId)[2:]
             lw = 5 if str(policy)[:4] == 'Aggr' else 3
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
@@ -273,7 +272,7 @@ class Evaluator(object):
         plt.ylim(-0.03, 1.03)
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[environmentId].nbArms, self.envs[environmentId].reprarms(1)))
+        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")
@@ -281,13 +280,13 @@ class Evaluator(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def printFinalRanking(self, environmentId=0):
+    def printFinalRanking(self, envId=0):
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
-        print("\nFinal ranking for this environment #{} :".format(environmentId))
+        print("\nFinal ranking for this environment #{} :".format(envId))
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
-            Y = self.getCumulatedRegret(i, environmentId)
+            Y = self.getCumulatedRegret(i, envId)
             if self.finalRanksOnAverage:
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last 0.5% of the iterations
             else:
@@ -302,7 +301,6 @@ class Evaluator(object):
 
 # Helper function for the parallelization
 
-# @profile  # DEBUG with kernprof (cf. https://github.com/rkern/line_profiler#kernprof
 def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None, allrewards=None, repeatId=0):

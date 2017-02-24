@@ -42,7 +42,7 @@ HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
-# HORIZON = 40000
+HORIZON = 40000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -55,7 +55,7 @@ REPETITIONS = 20
 REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -134,18 +134,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(9, 1 / (1. + 9))
         # }
-        {   # An easy problem (14 arms)
-            "arm_type": Bernoulli,
-            "params": makeMeans(14, 1 / (1. + 14))
-        }
+        # {   # An easy problem (14 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(14, 1 / (1. + 14))
+        # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(19, 1 / (1. + 19))
         # }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # }
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS

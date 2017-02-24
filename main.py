@@ -22,8 +22,8 @@ import matplotlib.pyplot as plt
 from Environment import Evaluator, notify
 
 # Import a configuration file
-from configuration import configuration
-# from configuration_comparing_KLUCB_aggregation import configuration
+# from configuration import configuration
+from configuration_comparing_KLUCB_aggregation import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw
@@ -154,6 +154,8 @@ if __name__ == '__main__':
                 evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
             else:
                 evaluation.plotBestArmPulls(envId)
+
+        print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
     # Done
     print("Done for simulations main.py ...")
     notify("Done for simulations main.py ...")

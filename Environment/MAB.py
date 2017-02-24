@@ -153,7 +153,7 @@ class MAB(object):
         # Now plot
         plt.figure()
         for armId, arm in enumerate(arms):
-            _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label=repr(arm))
+            _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm))
         plt.legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")

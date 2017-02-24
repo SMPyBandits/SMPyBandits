@@ -24,6 +24,7 @@ piechart = True
 averageRegret = True
 normalized = True
 fairnessAmplitude = False
+subTerms = True
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
@@ -123,27 +124,27 @@ if __name__ == '__main__':
             print("\n\n- Plotting the centralized regret")
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=False)
+                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=False, subTerms=subTerms)
             else:
-                evaluation.plotRegretCentralized(envId, semilogx=False, normalized=False)  # XXX To plot without saving
+                evaluation.plotRegretCentralized(envId, semilogx=False, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
             # Plotting the centralized regret in semilogx
             savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
             print("\n\n- Plotting the centralized regret")
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False)
+                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False, subTerms=subTerms)
             else:
-                evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False)  # XXX To plot without saving
+                evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
             # # Plotting the normalized centralized rewards
             # savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
             # print("\n\n- Plotting the normalized centralized regret")
             # if saveallfigs:
             #     print("  and saving the plot to {} ...".format(savefig))
-            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True, subTerms=subTerms)
             # else:
-            #     evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
+            #     evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True, subTerms=subTerms)  # XXX To plot without saving
 
             # Plotting the number of switches
             savefig = mainfig.replace('main', 'main_NbSwitchs')
@@ -235,8 +236,10 @@ if __name__ == '__main__':
             else:
                 evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
+            print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
+
     #
-    # FIXME experimental support to compare different MP strategies on the same figures
+    # Compare different MP strategies on the same figures
     #
     N = len(configuration["environment"])
     for envId, env in enumerate(configuration["environment"]):
@@ -306,6 +309,7 @@ if __name__ == '__main__':
         else:
             e0.plotNbSwitchsCentralized(envId, semilogx=False, cumulated=True, evaluators=eothers)  # XXX To plot without saving
 
+        print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "all*{}.png".format(_hashvalue)))  # DEBUG
 
     # Done
     print("Done for simulations main_multiplayers.py ...")

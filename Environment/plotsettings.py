@@ -10,6 +10,7 @@ __version__ = "0.6"
 
 from textwrap import wrap
 import matplotlib as mpl
+# mpl.use('Agg')  # XXX is it a good idea? Nope, use "export MPLBACKEND='Agg'" in your bashrc ... Cf. http://stackoverflow.com/a/4935945/ and http://matplotlib.org/faq/usage_faq.html#what-is-a-backend
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import seaborn as sns
@@ -45,6 +46,10 @@ if __name__ != '__main__':
     # cf. https://en.wikipedia.org/wiki/Computer_display_standard
     mpl.rcParams['figure.figsize'] = FIGSIZE
     print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")
+
+    # # Check that a XServer is available
+    # fig = plt.figure()
+    # fig.close()
 
 
 def palette(nb, hls=HLS):
