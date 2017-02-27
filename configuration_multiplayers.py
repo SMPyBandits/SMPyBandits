@@ -78,7 +78,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 9    # Less that the number of arms
+NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
@@ -200,10 +200,10 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs
     # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-    "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
+    "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs

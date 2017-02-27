@@ -257,11 +257,11 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotFairness(self, envId=0, savefig=None, semilogx=False, amplitude=True, evaluators=None):
+    def plotFairness(self, envId=0, savefig=None, semilogx=False, amplitude=True, evaluators=()):
         """Plot a certain measure of "fairness", from these personal rewards, support more than one environments (use evaluators to give a list of other environments)."""
         fig = plt.figure()
         X = self.times - 1
-        evaluators = [self] + evaluators if evaluators is not None else [self]
+        evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         plot_method = plt.semilogx if semilogx else plt.plot
@@ -292,15 +292,15 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotRegretCentralized(self, envId=0, savefig=None, semilogx=False, normalized=False, evaluators=None, subTerms=False):
+    def plotRegretCentralized(self, envId=0, savefig=None, semilogx=False, normalized=False, evaluators=(), subTerms=False):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments).
 
         - The lower bounds are also plotted (Besson & Kaufmann, and Anandkumar et al).
-        - The three terms of the regret are also plotting if evaluators = None.
+        - The three terms of the regret are also plotting if evaluators = () (that's the default).
         """
         X0 = X = self.times - 1
         fig = plt.figure()
-        evaluators = [self] + evaluators if evaluators is not None else [self]
+        evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         markers = makemarkers(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         plot_method = plt.semilogx if semilogx else plt.plot
@@ -386,12 +386,12 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=None):
+    def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
         """Plot the centralized cumulated number of switchs (to evaluate the switching costs), support more than one environments (use evaluators to give a list of other environments)."""
         X = self.times - 1
         fig = plt.figure()
         ymin = 0
-        evaluators = [self] + evaluators if evaluators is not None else [self]
+        evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         plot_method = plt.semilogx if semilogx else plt.plot
@@ -498,11 +498,11 @@ class EvaluatorMultiPlayers(object):
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
-    def plotNbCollisions(self, envId=0, savefig=None, cumulated=False, evaluators=None):
+    def plotNbCollisions(self, envId=0, savefig=None, cumulated=False, evaluators=()):
         """Plot the frequency or cum number of collisions, support more than one environments (use evaluators to give a list of other environments)."""
         X = self.times - 1
         fig = plt.figure()
-        evaluators = [self] + evaluators if evaluators is not None else [self]
+        evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         for evaId, eva in enumerate(evaluators):
