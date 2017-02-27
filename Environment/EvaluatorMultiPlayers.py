@@ -278,9 +278,9 @@ class EvaluatorMultiPlayers(object):
         if len(evaluators) > 1:
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
+        add_percent_formatter("yaxis", 1.0)
         if amplitude:
-            plt.ylim(0, 1)
-            add_percent_formatter("yaxis", 1.0)
+            # plt.ylim(0, 1)
             plt.ylabel("Centralized measure of fairness for cumulative rewards (amplitude)")
         else:
             plt.ylabel("Centralized measure of fairness for cumulative rewards (normalized std)")
@@ -508,12 +508,11 @@ class EvaluatorMultiPlayers(object):
         for evaId, eva in enumerate(evaluators):
             Y = np.zeros(eva.duration)
             for armId in range(eva.envs[envId].nbArms):
-                # Y += (eva.getCollisions(armId, envId) >= 1)
                 Y += eva.getCollisions(armId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
-            Y /= eva.nbPlayers  # XXX To normalized the count?
-            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId])
+            Y /= eva.nbPlayers  # To normalized the count?
+            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha= 1. if cumulated else 0.7, markersize=3 if cumulated else 1)
         if not cumulated:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)

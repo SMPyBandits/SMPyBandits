@@ -2,3 +2,5 @@ main*.png
 all*.png
 *log
 *.pickle
+.dirs*html
+.files*html
