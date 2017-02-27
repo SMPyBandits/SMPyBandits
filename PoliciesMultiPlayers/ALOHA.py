@@ -82,7 +82,7 @@ class oneALOHA(ChildPointer):
         self.chosenArm = None
 
     def __str__(self):
-        return r"#{}<ALOHA({}, $p_0={}$, $\alpha={}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
+        return r"#{}<ALOHA({}, $p_0={:.3g}$, $\alpha={:.3g}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
 
     def startGame(self):
         self.mother._startGame_one(self.playerId)

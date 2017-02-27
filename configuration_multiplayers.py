@@ -299,13 +299,15 @@ from itertools import product  # XXX If needed!
 
 
 p0 = 1. / NB_PLAYERS
+p0 = 0.75
+
 configuration["successive_players"] = [
     Selfish(NB_PLAYERS, Thompson, nbArms).childs,  # This one is efficient!
 ] + [
     ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).childs
     # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).childs,
-    for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
-    # for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
+    for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
+    # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
 ]
 
 
