@@ -186,23 +186,23 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- KL algorithms, here only klUCBPlus with different klucb functions
+        # --- KL algorithms, here only klUCBPlusPlus with different klucb functions
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbBern
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbExp
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbGauss
