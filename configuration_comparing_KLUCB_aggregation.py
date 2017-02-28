@@ -232,5 +232,6 @@ if TEST_AGGR:
             },
         }] + CURRENT_POLICIES
 
+
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

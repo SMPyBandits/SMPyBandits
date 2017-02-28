@@ -512,7 +512,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             Y /= eva.nbPlayers  # To normalized the count?
-            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha= 1. if cumulated else 0.7, markersize=3 if cumulated else 1)
+            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha= 1. if cumulated else 0.7)
         if not cumulated:
             plt.ylim(-0.03, 1.03)
             add_percent_formatter("yaxis", 1.0)

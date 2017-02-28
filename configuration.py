@@ -144,14 +144,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -335,24 +335,24 @@ configuration.update({
                 "alpha": 0.5          # XXX Below the theoretically acceptable value!
             }
         },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.25          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
                 "alpha": 0.1          # XXX Below the theoretically acceptable value!
             }
         },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.05         # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.05         # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # # --- MOSS algorithm, like UCB
         # {
         #     "archtype": MOSS,
@@ -364,12 +364,12 @@ configuration.update({
             "params": {}
         },
         # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {
-        #         "klucb": klucb
-        #     }
-        # },
+        {
+            "archtype": klUCB,
+            "params": {
+                "klucb": klucb
+            }
+        },
         # {
         #     "archtype": klUCB,
         #     "params": {
@@ -415,13 +415,20 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        # {
-        #     "archtype": klUCBHPlus,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb
-        #     }
-        # },
+        {
+            "archtype": klUCBHPlus,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb
+            }
+        },
+        {
+            "archtype": klUCBPlusPlus,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb
+            }
+        },
         # --- Empirical KL-UCB algorithm
         {
             "archtype": KLempUCB,
@@ -507,6 +514,7 @@ if TEST_AGGR:
                 # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
             },
         }] + CURRENT_POLICIES
+
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

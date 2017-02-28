@@ -71,6 +71,7 @@ from .klUCBloglog import klUCBloglog  # With log(t) + c log(log(t)) and c = 1 (v
 from .klUCBloglog10 import klUCBloglog10  # With log10(t) + c log10(log10(t)) and c = 1 (variable)
 from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBHPlus import klUCBHPlus  # Different indexes
+from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
 from .KLempUCB import KLempUCB  # Empirical KL UCB
 
 # From https://github.com/flaviotruzzi/AdBandits/
