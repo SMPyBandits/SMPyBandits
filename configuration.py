@@ -128,7 +128,7 @@ configuration = {
     "random_shuffle": RANDOM_SHUFFLE,
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
-    # --- Cache rewards
+    # --- Cache rewards: use the same random rewards for the Aggr[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # XXX Bernoulli arms
