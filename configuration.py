@@ -429,11 +429,11 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        # --- Empirical KL-UCB algorithm
-        {
-            "archtype": KLempUCB,
-            "params": {}
-        },
+        # # --- Empirical KL-UCB algorithm
+        # {
+        #     "archtype": KLempUCB,
+        #     "params": {}
+        # },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,
