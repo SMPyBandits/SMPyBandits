@@ -69,16 +69,16 @@ class rhoRandRand(BaseMPPolicy):
 
         >>> s = rhoRandRand(nbPlayers, Thompson, nbArms)
 
-        - To get a list of usable players, use s.childs.
+        - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRandRand class has to be > 0."
         self.nbPlayers = nbPlayers
         self._players = [None] * nbPlayers
-        self.childs = [None] * nbPlayers
+        self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.childs[playerId] = oneRhoRandRand(nbPlayers, self, playerId)
+            self.children[playerId] = oneRhoRandRand(nbPlayers, self, playerId)
         self.nbArms = nbArms
 
     def __str__(self):

@@ -38,16 +38,16 @@ class Selfish(BaseMPPolicy):
         >>> s = Selfish(10, TakeFixedArm, 14)
         >>> s = Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
 
-        - To get a list of usable players, use s.childs.
+        - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
         self.nbPlayers = nbPlayers
         self._players = [None] * nbPlayers
-        self.childs = [None] * nbPlayers
+        self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
-            self.childs[playerId] = ChildPointer(self, playerId)
+            self.children[playerId] = ChildPointer(self, playerId)
         self.nbArms = nbArms
 
     def __str__(self):

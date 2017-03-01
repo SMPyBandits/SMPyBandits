@@ -43,16 +43,16 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         >>> s = CentralizedMultiplePlay(10, TakeFixedArm, 14)
         >>> s = CentralizedMultiplePlay(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
 
-        - To get a list of usable players, use s.childs.
+        - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedMultiplePlay class has to be > 0."
         self.nbPlayers = nbPlayers
         self.player = playerAlgo(nbArms, *args, **kwargs)  # Only one policy
-        self.childs = [None] * nbPlayers  # But nbPlayers children
+        self.children = [None] * nbPlayers  # But nbPlayers children
         for playerId in range(nbPlayers):
-            self.childs[playerId] = CentralizedChildPointer(self, playerId)
-            print(" - One new child, of index {}, and class {} ...".format(playerId, self.childs[playerId]))  # DEBUG
+            self.children[playerId] = CentralizedChildPointer(self, playerId)
+            print(" - One new child, of index {}, and class {} ...".format(playerId, self.children[playerId]))  # DEBUG
         self.nbArms = nbArms
         # Internal memory
         self.choices = (-10000) * np.ones(nbArms, dtype=int)

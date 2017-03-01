@@ -95,7 +95,7 @@ class MyPolicy(object):
 1. Make a new file, e.g., `MyPolicyMultiPlayers.py`
 2. Save it in [`PoliciesMultiPlayers/`](PoliciesMultiPlayers/)
 3. The file should contain a class, of the same name, e.g., like this, `class MyPoliciesMultiPlayers(object):`
-4. This class `MyPoliciesMultiPlayers` has to **have at least** an `__init__` method to create the arm; a `__str__` method to print it as a string; and a `childs` **attribute** that gives a list of *players* ([single-player policies](#for-a-new-single-user-policy)).
+4. This class `MyPoliciesMultiPlayers` has to **have at least** an `__init__` method to create the arm; a `__str__` method to print it as a string; and a `children` **attribute** that gives a list of *players* ([single-player policies](#for-a-new-single-user-policy)).
 5. Finally, add it to the [`PoliciesMultiPlayers/__init__.py`](PoliciesMultiPlayers/__init__.py) file: `from .MyPoliciesMultiPlayers import MyPoliciesMultiPlayers`
 
 > For examples, see [`PolicyMultiPlayers.OracleNotFair`](PolicyMultiPlayers/OracleNotFair.py) and [`PolicyMultiPlayers.OracleFair`](PolicyMultiPlayers/OracleFair.py) for full-knowledge centralized policies (fair or not), [`PolicyMultiPlayers.CentralizedFixed`](PolicyMultiPlayers/CentralizedFixed.py) and [`PolicyMultiPlayers.CentralizedCycling`](PolicyMultiPlayers/CentralizedCycling.py) for non-full-knowledge centralized policies (fair or not). There is also the [`PolicyMultiPlayers.Selfish`](PolicyMultiPlayers/Selfish.py) decentralized policy, where all players runs in without any knowledge on the number of players, and no communication (decentralized).

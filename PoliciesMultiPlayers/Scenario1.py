@@ -45,7 +45,7 @@ class Scenario1(BaseMPPolicy):
 
         >>> s = Scenario1(10)
 
-        - To get a list of usable players, use s.childs.
+        - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Scenario1 class has to be > 0."
@@ -55,10 +55,10 @@ class Scenario1(BaseMPPolicy):
         self.nbArms = nbArms
         self.chosenOne = None
         # Internal object memory
-        self.childs = [None] * nbPlayers
+        self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
-            self.childs[playerId] = OneScenario1(self, playerId)
-            # print(" - One new child, of index {}, and class {} ...".format(playerId, self.childs[playerId]))  # DEBUG
+            self.children[playerId] = OneScenario1(self, playerId)
+            # print(" - One new child, of index {}, and class {} ...".format(playerId, self.children[playerId]))  # DEBUG
 
     def __str__(self):
         return "Scenario1({})".format(self.nbPlayers)

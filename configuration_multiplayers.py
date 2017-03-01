@@ -188,110 +188,110 @@ configuration.update({
 
     # --- DONE Using multi-player dummy Centralized policy
     # XXX each player needs to now the number of players
-    # "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
-    # "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
+    # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
+    # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).childs
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).childs
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children
 
     # --- DONE Using multi-player Selfish policy
-    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, UCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
-    # "players": Selfish(NB_PLAYERS, MOSS, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).childs
-    "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).childs  # Worse than simple klUCB and klUCBPlus
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
+    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).children
+    # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).children
+    # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children
+    # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, UCB, nbArms).children
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children  # This one is efficient!
+    # "players": Selfish(NB_PLAYERS, MOSS, nbArms).children
+    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).children
+    "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).children
+    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
+    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
+    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
-    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).childs
-    # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
-    # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-    # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    # "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).children
+    # "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).children
 
     # --- DONE Using single-player Musical Chair policy
     # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??
-    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).childs
+    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).children
 
     # --- DONE Using single-player ALOHA policy
     # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
-    # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).childs  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
-    # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=0.01, beta=0.2).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).childs  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).childs  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).children  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
+    # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=0.01, beta=0.2).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
-    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs
-    # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs
+    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player stupid rhoRandRand policy
-    # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).childs
+    # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 
 # configuration["successive_players"] = [
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, MOSS, nbArms).childs,
-#     rhoRand(NB_PLAYERS, klUCB, nbArms).childs,
-#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,
-#     rhoRand(NB_PLAYERS, Thompson, nbArms).childs,
-#     rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,
-#     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, MOSS, nbArms).children,
+#     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+#     rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+#     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
 # configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs,  # This one is efficient!
-#     Selfish(NB_PLAYERS, MOSS, nbArms).childs,
-#     Selfish(NB_PLAYERS, klUCB, nbArms).childs,
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,
-#     Selfish(NB_PLAYERS, Thompson, nbArms).childs,
-#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).childs,
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,
-#     Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).childs,
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, MOSS, nbArms).children,
+#     Selfish(NB_PLAYERS, klUCB, nbArms).children,
+#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     Selfish(NB_PLAYERS, Thompson, nbArms).children,
+#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+#     Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
 # configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).childs,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).childs,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).childs,
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).childs,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).childs,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).childs,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, Thompson, nbArms).childs,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, Thompson, nbArms).childs,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).childs,  # This one is not efficient!
+#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
+#     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
+#     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+#     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+#     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
 # ]
 
 
@@ -302,10 +302,10 @@ p0 = 1. / NB_PLAYERS
 p0 = 0.75
 
 configuration["successive_players"] = [
-    Selfish(NB_PLAYERS, Thompson, nbArms).childs,  # This one is efficient!
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
 ] + [
-    ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).childs
-    # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).childs,
+    ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
+    # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
 ]

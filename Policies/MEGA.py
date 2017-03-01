@@ -35,7 +35,7 @@ class MEGA(BasePolicy):
 
         For multi-players use:
 
-        >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).childs
+        >>> configuration["players"] = Selfish(NB_PLAYERS, MEGA, nbArms, p0, alpha, beta, c, d).children
         """
         # Store parameters
         super(MEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)

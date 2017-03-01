@@ -485,7 +485,7 @@ configuration.update({
 # from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
 # NB_PLAYERS = 10
 # configuration.update({
-#     "policies": Scenario1(NB_PLAYERS, nbArms).childs
+#     "policies": Scenario1(NB_PLAYERS, nbArms).children
 # })
 
 

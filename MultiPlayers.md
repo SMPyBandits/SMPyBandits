@@ -37,23 +37,23 @@ nbArms = len(configuration['environment'][0]['params'])
 configuration.update({
     # Uncomment the lines you don't want, keep ONLY one line
     # --- Using multi-player Selfish policy
-    "players": Selfish(NB_PLAYERS, Uniform, nbArms).childs   # Stupid one
-    "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).childs  # Also stupid one
-    "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).childs  # Based on empirical means
-    "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).childs  # This one is efficient!
+    "players": Selfish(NB_PLAYERS, Uniform, nbArms).children   # Stupid one
+    "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).children  # Also stupid one
+    "players": Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE).children  # Based on empirical means
+    "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children  # This one is efficient!
     # --- Using multi-player Centralized policy, un-fair or fair
-    "players": CentralizedFixed(NB_PLAYERS, nbArms).childs
-    "players": CentralizedCycling(NB_PLAYERS, nbArms).childs
+    "players": CentralizedFixed(NB_PLAYERS, nbArms).children
+    "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- Using multi-player Oracle policy, un-fair or fair
     # Note: they need a perfect knowledge on the arms, even this is not physically plausible
-    "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
-    "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).childs
+    "players": OracleNotFair(NB_PLAYERS, MAB(configuration['environment'][0])).children
+    "players": OracleFair(NB_PLAYERS, MAB(configuration['environment'][0])).children
     # --- Using single-player Musical Chair policy
-    "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).childs
+    "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children
 })
 ```
 
-- The multi-players policies are added by giving a list of their children (`CentralizedCycling(*args).childs`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedCycling`), who can then handle the calls as it wants (can be centralized or not).
+- The multi-players policies are added by giving a list of their children (`CentralizedCycling(*args).children`), who are instances of the proxy class [`ChildPointer`](PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `CentralizedCycling`), who can then handle the calls as it wants (can be centralized or not).
 - *I know*, it's not perfectly clear yet and not simple to use. Just read the code. I will improve the documentation!
 
 ----

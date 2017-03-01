@@ -54,7 +54,7 @@ class OracleNotFair(BaseMPPolicy):
 
         >>> s = OracleNotFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
 
-        - To get a list of usable players, use s.childs.
+        - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for OracleNotFair class has to be > 0."
@@ -81,11 +81,11 @@ class OracleNotFair(BaseMPPolicy):
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
-        self.childs = [None] * nbPlayers
+        self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
             print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
             self._players[playerId] = Fixed(nbArms, self._affectations[playerId])
-            self.childs[playerId] = ChildPointer(self, playerId)
+            self.children[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG
 
     def __str__(self):

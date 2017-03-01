@@ -80,7 +80,7 @@ class MusicalChair(BasePolicy):
 
         For multi-players use:
 
-        >>> configuration["players"] = Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.25, Time1=HORIZON, N=NB_PLAYERS).childs
+        >>> configuration["players"] = Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.25, Time1=HORIZON, N=NB_PLAYERS).children
         """
         super(MusicalChair, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         nbPlayers = N
