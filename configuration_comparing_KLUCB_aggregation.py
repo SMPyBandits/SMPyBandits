@@ -166,8 +166,8 @@ except Exception as e:
 _klucbGauss = klucbGauss
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
-    # return _klucbGauss(x, d, 1.0)
-    return _klucbGauss(x, d, VARIANCE)
+    return _klucbGauss(x, d, 1.0)
+    # return _klucbGauss(x, d, VARIANCE)
 
 
 configuration.update({
