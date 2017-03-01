@@ -60,9 +60,6 @@ RANDOM_SHUFFLE = False
 RANDOM_INVERT = False
 NB_RANDOM_EVENTS = 5
 
-# Cache rewards
-CACHE_REWARDS = True
-
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
 
@@ -96,6 +93,9 @@ DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck 
 
 TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+
+# Cache rewards
+CACHE_REWARDS = TEST_AGGR
 
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False

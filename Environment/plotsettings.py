@@ -16,7 +16,7 @@ import matplotlib.ticker as mtick
 import seaborn as sns
 
 # Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Fev.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
+signature = "\n(By Lilian Besson, Mar.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
 DPI = 110
