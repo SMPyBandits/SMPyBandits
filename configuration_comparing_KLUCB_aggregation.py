@@ -191,21 +191,21 @@ configuration.update({
             "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbBern
+                "klucb": klucbBern, "horizon": HORIZON,
             }
         },
         {
             "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbExp
+                "klucb": klucbExp, "horizon": HORIZON,
             }
         },
         {
             "archtype": klUCBPlusPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss
+                "klucb": klucbGauss, "horizon": HORIZON,
             }
         },
     ]

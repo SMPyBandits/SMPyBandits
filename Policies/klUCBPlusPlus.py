@@ -49,4 +49,4 @@ class klUCBPlusPlus(klUCB):
             return float('+inf')
         else:
             # XXX We could adapt tolerance to the value of self.t
-            return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms), self.tolerance)
+            return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
