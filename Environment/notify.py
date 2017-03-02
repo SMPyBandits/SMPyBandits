@@ -69,7 +69,7 @@ def notify_gi(body, summary=PROGRAM_NAME, icon="terminal",
     """
     Send a notification, with gi.repository.Notify.
 
-    - icon can be "dialog-information", "dialog-warn", "dialog-error". By default it is set to the 'pikachu.png' image
+    - icon can be "dialog-information", "dialog-warn", "dialog-error".
     """
     try:
         # Trying to fix a bug:
