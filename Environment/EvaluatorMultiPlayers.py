@@ -270,10 +270,18 @@ class EvaluatorMultiPlayers(object):
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
             for playerId, player in enumerate(eva.players):
                 cumRewards[playerId, :] = eva.getRewards(playerId, envId)
-            if amplitude:
-                fairness = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
-            else:
-                fairness = np.std(cumRewards, axis=0) / np.max(cumRewards, axis=0)
+            # Amplitude fairness, homemade formula
+            amplitude_fairness = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
+            print("  - Amplitude fairness index is:\n", amplitude_fairness)  # DEBUG
+            # Standard-variation fairness, homemade formula
+            std_fairness = np.std(cumRewards, axis=0) / np.max(cumRewards, axis=0)
+            print("  - Standard-variation fairness index is:\n", std_fairness)  # DEBUG
+            # Raj Jain's fairness index, cf. https://en.wikipedia.org/wiki/Fairness_measure#Jain.27s_fairness_index
+            n = len(eva.players)
+            rajjain_fairness = (n - (np.sum(cumRewards, axis=0) ** 2) / (np.sum(cumRewards ** 2, axis=0))) / (n - 1)
+            print("  - Raj Jain's fairness index is:\n", rajjain_fairness)  # DEBUG
+            # Plot only one fairness term
+            fairness = amplitude_fairness if amplitude else std_fairness
             plot_method(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
