@@ -360,7 +360,7 @@
 <text text-anchor="start" x="1318" y="-1744.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1318" y="-1729.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1318" y="-1714.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1318" y="-1699.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="1318" y="-1699.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="1318" y="-1684.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1318" y="-1669.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1318" y="-1654.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -702,7 +702,7 @@
 <text text-anchor="middle" x="3417.5" y="-1714.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3310,-1707 3525,-1707 "/>
 <text text-anchor="start" x="3318" y="-1691.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3318" y="-1676.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="3318" y="-1676.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="3318" y="-1661.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3318" y="-1646.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3318" y="-1631.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -1007,7 +1007,7 @@
 <polygon fill="none" stroke="black" points="4844,-1172.5 4844,-1286.5 5101,-1286.5 5101,-1172.5 4844,-1172.5"/>
 <text text-anchor="middle" x="4972.5" y="-1271.3" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4844,-1263.5 5101,-1263.5 "/>
-<text text-anchor="start" x="4852" y="-1248.3" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
+<text text-anchor="start" x="4852" y="-1248.3" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
 <text text-anchor="start" x="4852" y="-1233.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4844,-1225.5 5101,-1225.5 "/>
 <text text-anchor="start" x="4852" y="-1210.3" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1133,7 +1133,7 @@
 <text text-anchor="middle" x="5243.5" y="-466.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ALOHA.ALOHA</text>
 <polyline fill="none" stroke="black" points="5127.5,-459 5359.5,-459 "/>
 <text text-anchor="start" x="5135.5" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5135.5" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="5135.5" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="5135.5" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="5135.5" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="5127.5,-391 5359.5,-391 "/>
@@ -1225,7 +1225,7 @@
 <polyline fill="none" stroke="black" points="5378,-474 5725,-474 "/>
 <text text-anchor="start" x="5386" y="-458.8" font-family="Times,serif" font-size="14.00">_offsets</text>
 <text text-anchor="start" x="5386" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5386" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="5386" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="5386" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="5386" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="5378,-391 5725,-391 "/>
@@ -1268,7 +1268,7 @@
 <polyline fill="none" stroke="black" points="5743,-474 6066,-474 "/>
 <text text-anchor="start" x="5751" y="-458.8" font-family="Times,serif" font-size="14.00">_affectations</text>
 <text text-anchor="start" x="5751" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5751" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="5751" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="5751" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="5751" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="5743,-391 6066,-391 "/>
@@ -1323,7 +1323,7 @@
 <polygon fill="none" stroke="black" points="6084.5,-293 6084.5,-497 6488.5,-497 6488.5,-293 6084.5,-293"/>
 <text text-anchor="middle" x="6286.5" y="-481.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedMultiplePlay.CentralizedMultiplePlay</text>
 <polyline fill="none" stroke="black" points="6084.5,-474 6488.5,-474 "/>
-<text text-anchor="start" x="6092.5" y="-458.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="6092.5" y="-458.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="6092.5" y="-443.8" font-family="Times,serif" font-size="14.00">choices</text>
 <text text-anchor="start" x="6092.5" y="-428.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="6092.5" y="-413.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
@@ -1346,7 +1346,7 @@
 <polygon fill="none" stroke="black" points="10295.5,-300.5 10295.5,-489.5 10557.5,-489.5 10557.5,-300.5 10295.5,-300.5"/>
 <text text-anchor="middle" x="10426.5" y="-474.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="10295.5,-466.5 10557.5,-466.5 "/>
-<text text-anchor="start" x="10303.5" y="-451.3" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
+<text text-anchor="start" x="10303.5" y="-451.3" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
 <text text-anchor="start" x="10303.5" y="-436.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="10303.5" y="-421.3" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="10303.5" y="-406.3" font-family="Times,serif" font-size="14.00">offset</text>
@@ -1370,7 +1370,7 @@
 <polyline fill="none" stroke="black" points="6507,-474 6760,-474 "/>
 <text text-anchor="start" x="6515" y="-458.8" font-family="Times,serif" font-size="14.00">_offsets</text>
 <text text-anchor="start" x="6515" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="6515" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="6515" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="6515" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="6515" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="6507,-391 6760,-391 "/>
@@ -1412,7 +1412,7 @@
 <polyline fill="none" stroke="black" points="6778,-474 7071,-474 "/>
 <text text-anchor="start" x="6786" y="-458.8" font-family="Times,serif" font-size="14.00">_affectations</text>
 <text text-anchor="start" x="6786" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="6786" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="6786" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="6786" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="6786" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="6778,-391 7071,-391 "/>
@@ -1448,7 +1448,7 @@
 <polygon fill="none" stroke="black" points="7089,-308 7089,-482 7334,-482 7334,-308 7089,-308"/>
 <text text-anchor="middle" x="7211.5" y="-466.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Scenario1.Scenario1</text>
 <polyline fill="none" stroke="black" points="7089,-459 7334,-459 "/>
-<text text-anchor="start" x="7097" y="-443.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="7097" y="-443.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="7097" y="-428.8" font-family="Times,serif" font-size="14.00">chosenOne : NoneType</text>
 <text text-anchor="start" x="7097" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7097" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
@@ -1470,7 +1470,7 @@
 <text text-anchor="middle" x="7458.5" y="-474.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Selfish.Selfish</text>
 <polyline fill="none" stroke="black" points="7352.5,-466.5 7564.5,-466.5 "/>
 <text text-anchor="start" x="7360.5" y="-451.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="7360.5" y="-436.3" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="7360.5" y="-436.3" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="7360.5" y="-421.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7360.5" y="-406.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="7352.5,-398.5 7564.5,-398.5 "/>
@@ -1492,7 +1492,7 @@
 <text text-anchor="middle" x="9238.5" y="-451.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="9111.5,-444 9365.5,-444 "/>
 <text text-anchor="start" x="9119.5" y="-428.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="9119.5" y="-413.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
+<text text-anchor="start" x="9119.5" y="-413.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
 <polyline fill="none" stroke="black" points="9111.5,-406 9365.5,-406 "/>
 <text text-anchor="start" x="9119.5" y="-390.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="9119.5" y="-375.8" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -1511,7 +1511,7 @@
 <text text-anchor="middle" x="7697.5" y="-466.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.rhoRand</text>
 <polyline fill="none" stroke="black" points="7582.5,-459 7812.5,-459 "/>
 <text text-anchor="start" x="7590.5" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="7590.5" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="7590.5" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="7590.5" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7590.5" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="7582.5,-391 7812.5,-391 "/>
@@ -1532,7 +1532,7 @@
 <text text-anchor="middle" x="9539.5" y="-451.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.oneRhoRandRand</text>
 <polyline fill="none" stroke="black" points="9384,-444 9695,-444 "/>
 <text text-anchor="start" x="9392" y="-428.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="9392" y="-413.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="9392" y="-413.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="9384,-406 9695,-406 "/>
 <text text-anchor="start" x="9392" y="-390.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="9392" y="-375.8" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -1551,7 +1551,7 @@
 <text text-anchor="middle" x="7974.5" y="-466.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.rhoRandRand</text>
 <polyline fill="none" stroke="black" points="7831,-459 8118,-459 "/>
 <text text-anchor="start" x="7839" y="-443.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="7839" y="-428.8" font-family="Times,serif" font-size="14.00">childs</text>
+<text text-anchor="start" x="7839" y="-428.8" font-family="Times,serif" font-size="14.00">children</text>
 <text text-anchor="start" x="7839" y="-413.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="7839" y="-398.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
 <polyline fill="none" stroke="black" points="7831,-391 8118,-391 "/>

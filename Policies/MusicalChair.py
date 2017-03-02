@@ -167,19 +167,14 @@ class MusicalChair(BasePolicy):
         # print("\n- A MusicalChair player has to switch from InitialPhase to MusicalChair ...")  # DEBUG
         self.state = State.MusicalChair  # Switch ONCE to state 2
         # First, we compute the empirical means mu_i
-        # print("   - self.cumulatedRewards =", self.cumulatedRewards)  # DEBUG
-        # print("   - self.nbObservations =", self.nbObservations)  # DEBUG
-        empiricalMeans = self.cumulatedRewards / self.nbObservations
-        # print("   - empiricalMeans =", empiricalMeans)  # DEBUG
+        empiricalMeans = (1 + self.cumulatedRewards) / (1 + self.nbObservations)
         # Then, we compute the final estimate of N* = nbPlayers
         if self.nbCollision == self.Time0:  # 1st case, we only saw collisions!
             self.nbPlayers = self.nbArms  # Worst case, pessimist estimate of the nb of players
         else:  # 2nd case, we didn't see only collisions
             self.nbPlayers = int(round(1 + np.log((self.Time0 - self.nbCollision) / self.Time0) / np.log(1. - 1. / self.nbArms)))
-        # print("   - self.nbPlayers =", self.nbPlayers)  # DEBUG
         # Finally, sort their index by empirical means, decreasing order
         self.A = np.argsort(-empiricalMeans)[:self.nbPlayers]  # FIXED among the best M arms!
-        # print("   - self.A =", self.A)  # DEBUG
 
     def handleCollision(self, arm):
         """ Handle a collision, on arm of index 'arm'.
@@ -192,4 +187,4 @@ class MusicalChair(BasePolicy):
             self.nbCollision += 1
         elif self.state == State.MusicalChair:
             assert self.chair is not None, "Error: bug in my code in handleCollision() for MusicalChair class."
-            self.chair = None  # Cannot stay sitted here
+            self.chair = None  # Cannot stay sit here
