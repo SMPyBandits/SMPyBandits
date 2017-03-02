@@ -16,12 +16,12 @@ try:
     # from numba.decorators import jit as numbajit
     import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
     locale.setlocale(locale.LC_NUMERIC, 'C')
-    print("Info: numba seems to be available.")
+    print("Info: numba.jit seems to be available.")
 except ImportError:
-    print("Warning: numba seems to not be available. Using a dummy decorator for numba.jit() ...")
+    print("Warning: numba.jit seems to not be available. Using a dummy decorator for numba.jit() ...")
     USE_NUMBA = False
 
 if not USE_NUMBA:
-    print("Warning: numba seems to be disabled. Using a dummy decorator for numba.jit() ...")
+    print("Warning: numba.jit seems to be disabled. Using a dummy decorator for numba.jit() ...")
     def jit(f):
         return f
