@@ -14,6 +14,8 @@ try:
 except ImportError:
     CPU_COUNT = 1
 
+from os import getenv
+
 # Import arms
 from Arms import makeMeans
 from Arms.Bernoulli import Bernoulli
@@ -63,7 +65,7 @@ DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
-    N_JOBS = max(int(CPU_COUNT / 3), CPU_COUNT - 8)
+    N_JOBS = min(CPU_COUNT, int(getenv('N_JOBS', max(int(CPU_COUNT / 3), CPU_COUNT - 8))))
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -277,38 +279,37 @@ configuration.update({
 #     Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
-# configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
-#     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
-# ]
-
-
-from itertools import product  # XXX If needed!
-
-
-p0 = 1. / NB_PLAYERS
-p0 = 0.75
-
 configuration["successive_players"] = [
+    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-] + [
-    ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
-    # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
-    for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
-    # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
 ]
+
+
+# from itertools import product  # XXX If needed!
+
+# p0 = 1. / NB_PLAYERS
+# p0 = 0.75
+
+# configuration["successive_players"] = [
+#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+# ] + [
+#     ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
+#     # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
+#     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
+#     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
+# ]
 
 
 print("Loaded experiments configuration from 'configuration.py' :")
