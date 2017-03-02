@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Kullback-Leibler utilities.
 Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+Reference: [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf)
 """
 from __future__ import division, print_function
 
@@ -10,8 +11,8 @@ __version__ = "0.5"
 from math import log, sqrt, exp
 import numpy as np
 
-# TODO try numba.jit() on some functions
-# from numba.decorators import jit
+from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+
 
 # Warning: np.dot is miserably slow!
 
@@ -21,6 +22,7 @@ eps = 1e-15  # Threshold value: everything in [0, 1] is truncated to [eps, 1 - e
 # --- Simple Kullback-Leibler divergence for known distributions
 
 
+@jit
 def klBern(x, y):
     """ Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution
 
@@ -45,6 +47,7 @@ def klBern(x, y):
     return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))
 
 
+@jit
 def klPoisson(x, y):
     """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution
 
@@ -71,6 +74,7 @@ def klPoisson(x, y):
     return y - x + x * log(x / y)
 
 
+@jit
 def klExp(x, y):
     """ Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution
 
@@ -104,6 +108,7 @@ def klExp(x, y):
         return x / y - 1 - log(x / y)
 
 
+@jit
 def klGamma(x, y, a=1):
     """ Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution
 
@@ -137,6 +142,7 @@ def klGamma(x, y, a=1):
         return a * (x / y - 1 - log(x / y))
 
 
+@jit
 def klNegBin(x, y, r=1):
     """ Kullback-Leibler divergence for negative binomial distributions. https://en.wikipedia.org/wiki/Gamma_distribution
 
@@ -176,6 +182,7 @@ def klNegBin(x, y, r=1):
     return r * log((r + x) / (r + y)) - x * log(y * (r + x) / (x * (r + y)))
 
 
+@jit
 def klGauss(x, y, sig2=0.05):
     """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution
 
@@ -223,7 +230,7 @@ def klGauss(x, y, sig2=0.05):
 
 # --- KL functions, for the KL-UCB policy
 
-# @jit()  # TODO try numba.jit() on this function
+@jit
 def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
     """ The generic KL-UCB index computation.
 
@@ -246,6 +253,7 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
     return (value + u) / 2.
 
 
+@jit
 def klucbBern(x, d, precision=1e-6):
     """ KL-UCB index computation for Bernoulli distributions, using :func:`klucb`.
 
@@ -280,6 +288,7 @@ def klucbBern(x, d, precision=1e-6):
     return klucb(x, d, klBern, upperbound, precision)
 
 
+@jit
 def klucbGauss(x, d, sig2=0.05, precision=0.):
     """ KL-UCB index computation for Gaussian distributions.
 
@@ -315,6 +324,7 @@ def klucbGauss(x, d, sig2=0.05, precision=0.):
     return x + sqrt(2 * sig2 * d)
 
 
+@jit
 def klucbPoisson(x, d, precision=1e-6):
     """ KL-UCB index computation for Poisson distributions, using :func:`klucb`.
 
@@ -348,6 +358,7 @@ def klucbPoisson(x, d, precision=1e-6):
     return klucb(x, d, klPoisson, upperbound, precision)
 
 
+@jit
 def klucbExp(x, d, precision=1e-6):
     """ KL-UCB index computation for exponential distributions, using :func:`klucb`.
 
@@ -391,12 +402,12 @@ def klucbExp(x, d, precision=1e-6):
 
 # --- max EV functions
 
-# @jit()  # TODO try numba.jit() on this function
+@jit
 def maxEV(p, V, klMax):
     """ Maximize expectation of V wrt. q st. KL(p, q) < klMax.
 
     - Input args.: p, V, klMax.
-    - Reference: Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Reference: Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
     """
     Uq = np.zeros(len(p))
     Kb = p > 0.
@@ -428,32 +439,63 @@ def maxEV(p, V, klMax):
     return Uq
 
 
-# @jit()  # TODO try numba.jit() on this function
+@jit
 def reseqp(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
 
     - Note: This is a subroutine of maxEV.
-    - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
     - Warning: `np.dot` is very slow!
     """
-    mV = max(V)
-    value = mV + 0.1
+    MV = max(V)
+    mV = min(V)
+    value = MV + 0.1
     tol = 1e-4
-    if mV < min(V) + tol:
+    if MV < mV + tol:
         return float('inf')
     u = np.dot(p, (1 / (value - V)))
     y = np.dot(p, np.log(value - V)) + log(u) - klMax
-    # print("value =", value, ", y = ", y)  # DEBUG
+    print("value =", value, ", y = ", y)  # DEBUG
     while abs(y) > tol:
         yp = u - np.dot(p, (1 / (value - V)**2)) / u  # derivative
         value -= y / yp
-        # print("value = ", value)  # DEBUG  # newton iteration
-        if value < mV:
-            value = (value + y / yp + mV) / 2  # unlikely, but not impossible
+        print("value = ", value)  # DEBUG  # newton iteration
+        if value < MV:
+            value = (value + y / yp + MV) / 2  # unlikely, but not impossible
         u = np.dot(p, (1 / (value - V)))
         y = np.dot(p, np.log(value - V)) + np.log(u) - klMax
-        # print("value = ", value, ", y = ", y)  # DEBUG  # function
+        print("value = ", value, ", y = ", y)  # DEBUG  # function
     return value
+
+
+# https://www.docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.fixed_point
+from scipy.optimize import minimize
+
+def reseqp2(p, V, klMax):
+    """ Solve f(reseqp(p, V, klMax)) = klMax, using a blackbox minimizer, from scipy.optimize.
+
+    - FIXME it does not work well yet!
+    - Note: This is a subroutine of maxEV.
+    - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
+    - Warning: `np.dot` is very slow!
+    """
+    MV = max(V)
+    mV = min(V)
+    tol = 1e-4
+    value0 = mV + 0.1
+
+    @jit  # TODO try numba.jit() on this function
+    def f(value):
+        if MV < mV + tol:
+            y = float('inf')
+        else:
+            u = np.dot(p, (1 / (value - V)))
+            y = np.dot(p, np.log(value - V)) + log(u)
+        return abs(y - klMax)
+
+    res = minimize(f, value0)
+    print("scipy.optimize.minimize returned", res)
+    return res.x
 
 
 # --- Debugging
@@ -477,13 +519,14 @@ if __name__ == "__main__":
     print("klucbBern(0.9, 0.2) =", klucbBern(0.9, 0.2))
     print("klucbPoisson(0.9, 0.2) =", klucbPoisson(0.9, 0.2))
 
-    p = np.array([0., 1.])
+    p = np.array([0.5, 0.5])
     print("\np =", p)
     V = np.array([10, 3])
     print("V =", V)
     klMax = 0.1
     print("klMax =", klMax)
     print("eta = ", reseqp(p, V, klMax))
+    # print("eta 2 = ", reseqp2(p, V, klMax))
     print("Uq = ", maxEV(p, V, klMax))
 
     print("\np =", p)
@@ -493,6 +536,7 @@ if __name__ == "__main__":
     klMax = 0.0168913409484
     print("klMax =", klMax)
     print("eta = ", reseqp(p, V, klMax))
+    # print("eta 2 = ", reseqp2(p, V, klMax))
     print("Uq = ", maxEV(p, V, klMax))
 
     x = 2

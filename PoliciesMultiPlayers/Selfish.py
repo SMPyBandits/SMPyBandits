@@ -66,9 +66,8 @@ class Selfish(BaseMPPolicy):
 
     def _handleCollision_one(self, playerId, arm):
         player = self._players[playerId]
-        if hasattr(player, 'handleCollision'):  # XXX they should not ave such method!
-            # player.handleCollision(arm) is called to inform the user that there were a collision
+        if hasattr(player, 'handleCollision'):  # XXX they should not have such method!
             player.handleCollision(arm)
         else:
-            # And if it does not have this method, call players[j].getReward() with a reward = 0 to change the internals memory of the player ?
-            player.getReward(arm, PENALTY if PENALTY is not None else getattr(player, 'lower', 0))
+            # Else, call players[j].getReward() with a reward = 0 to change the internals memory of the player
+            player.getReward(arm, getattr(player, 'lower', 0) if PENALTY is None else PENALTY)
