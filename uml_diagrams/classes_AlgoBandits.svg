@@ -360,7 +360,7 @@
 <text text-anchor="start" x="1318" y="-1744.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1318" y="-1729.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1318" y="-1714.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1318" y="-1699.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
+<text text-anchor="start" x="1318" y="-1699.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
 <text text-anchor="start" x="1318" y="-1684.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1318" y="-1669.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1318" y="-1654.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -702,7 +702,7 @@
 <text text-anchor="middle" x="3417.5" y="-1714.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="3310,-1707 3525,-1707 "/>
 <text text-anchor="start" x="3318" y="-1691.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="3318" y="-1676.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="3318" y="-1676.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="3318" y="-1661.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="3318" y="-1646.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="3318" y="-1631.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -1007,7 +1007,7 @@
 <polygon fill="none" stroke="black" points="4844,-1172.5 4844,-1286.5 5101,-1286.5 5101,-1172.5 4844,-1172.5"/>
 <text text-anchor="middle" x="4972.5" y="-1271.3" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="4844,-1263.5 5101,-1263.5 "/>
-<text text-anchor="start" x="4852" y="-1248.3" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="4852" y="-1248.3" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="4852" y="-1233.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="4844,-1225.5 5101,-1225.5 "/>
 <text text-anchor="start" x="4852" y="-1210.3" font-family="Times,serif" font-size="14.00">__init__()</text>
