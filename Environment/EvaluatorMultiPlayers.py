@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 # Local imports
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
+from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
@@ -103,13 +104,13 @@ class EvaluatorMultiPlayers(object):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[i])
-                for i in range(self.repetitions)
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId)
+                for repeatId in range(self.repetitions)
             )
         else:
             results = []
             for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId)
                 results.append(r)
         # Get the position of the best arms
         env = self.envs[envId]
@@ -607,9 +608,9 @@ class EvaluatorMultiPlayers(object):
 
 
 def delayed_play(env, players, horizon, collisionModel,
-                 delta_t_save=1, seed=None):
+                 delta_t_save=1, seed=None, repeatId=0):
     """Helper function for the parallelization."""
-    # XXX Try to give a unique seed to random & numpy.random for each call of this function
+    # Give a unique seed to random & numpy.random for each call of this function
     try:
         np.random.seed(seed)
         random.seed(seed)
@@ -661,6 +662,20 @@ def delayed_play(env, players, horizon, collisionModel,
     # else:
     #     if set(ranks) != {None}:
     #         print(" - End of one game, rhoRand found orthogonal ranks: ranks = {} ...".format(ranks))
+
+    # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
+    if repeatId == 0:
+        for playerId, player in enumerate(players):
+            if hasattr(player, 'estimatedOrder'):
+                order = player.estimatedOrder()
+                print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
+                print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=nbPlayers)))
+                # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+                # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+                # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+                # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+                print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
+
     return result
 
 

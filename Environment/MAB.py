@@ -38,6 +38,9 @@ class MAB(object):
             params = configuration["params"]
             print(" - with 'params' =", params)  # DEBUG
             # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian) or a dictionnary
+            # XXX Maybe that's not a good idea...
+            # if isinstance(params, list):   # Sort the means
+            #     params = sorted(params)
             self.arms = []
             for param in params:
                 self.arms.append(arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param))
@@ -54,7 +57,7 @@ class MAB(object):
         self.minArm = np.min(self.means())
         print(" - with 'minArm' =", self.minArm)  # DEBUG
         # Print lower bound and HOI factor
-        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.3g} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
+        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
 
     def __repr__(self):
         return "<{}{}>".format(self.__class__.__name__, repr(self.__dict__))

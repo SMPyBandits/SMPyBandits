@@ -93,7 +93,13 @@ class IndexPolicy(BasePolicy):
         else:
             for arm in range(self.nbArms):
                 self.index[arm] = self.computeIndex(arm)
-            sortedRewards = np.sort(self.index)
+            sortedIndexes = np.sort(self.index)
             # Uniform choice of nb different arms among the best arms
             # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
-            return np.random.choice(np.nonzero(self.index >= sortedRewards[-nb])[0], size=nb, replace=False)
+            return np.random.choice(np.nonzero(self.index >= sortedIndexes[-nb])[0], size=nb, replace=False)
+
+    def estimatedOrder(self):
+        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
+        for arm in range(self.nbArms):
+            self.index[arm] = self.computeIndex(arm)
+        return np.argsort(self.index)

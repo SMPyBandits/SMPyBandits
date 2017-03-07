@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 # Local imports
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
+from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .Result import Result
 from .MAB import MAB
@@ -121,13 +122,13 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i], repeatId=i)
-                    for i in tqdm(range(self.repetitions), desc="Repetitions")
+                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
+                    for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
                 )
             else:
                 results = []
-                for i in tqdm(range(self.repetitions), desc="Repetitions"):
-                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=i)
+                for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
@@ -302,7 +303,7 @@ class Evaluator(object):
 def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None, allrewards=None, repeatId=0):
-    # XXX Try to give a unique seed to random & numpy.random for each call of this function
+    # Give a unique seed to random & numpy.random for each call of this function
     try:
         random.seed(seed)
         np.random.seed(seed)
@@ -346,4 +347,15 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
             if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
                 env.arms = env.arms[::-1]
                 # print("Inverting the order of the arms ...")  # DEBUG
+
+    # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
+    if repeatId == 0 and hasattr(policy, 'estimatedOrder'):
+        order = policy.estimatedOrder()
+        print("\nEstimated order by the policy {} after {} steps: {} ...".format(policy, horizon, order))
+        print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=1)))
+        # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+        # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+        # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+        # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+        print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
     return result
