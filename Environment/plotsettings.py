@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" plotsettings: use it like this:
+""" plotsettings: use it like this, in the Evaluator folder:
 
 >>> from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
 """
@@ -9,10 +9,12 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 from textwrap import wrap
+
 import matplotlib as mpl
 # mpl.use('Agg')  # XXX is it a good idea? Nope, use "export MPLBACKEND='Agg'" in your bashrc ... Cf. http://stackoverflow.com/a/4935945/ and http://matplotlib.org/faq/usage_faq.html#what-is-a-backend
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
+
 import seaborn as sns
 
 # Customize here if you want a signature on the titles of each plot
@@ -21,7 +23,10 @@ signature = "\n(By Lilian Besson, Mar.2017 - Code on https://Naereen.GitHub.io/A
 
 DPI = 110
 FIGSIZE = (19.80, 10.80)  # in inches!
+
+# Customize the colormap
 HLS = True
+VIRIDIS = False
 
 # Bbox in inches. Only the given portion of the figure is saved. If ‘tight’, try to figure out the tight bbox of the figure.
 BBOX_INCHES = 'tight'
@@ -47,17 +52,26 @@ if __name__ != '__main__':
     mpl.rcParams['figure.figsize'] = FIGSIZE
     print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")
 
+    # Set up a discrete version of the Viridis map for axes.prop_cycle
+
     # # Check that a XServer is available
     # fig = plt.figure()
     # fig.close()
 
 
-def palette(nb, hls=HLS):
+def palette(nb, hls=HLS, viridis=VIRIDIS):
     """ Use a smart palette from seaborn, for nb different plots on the same figure.
 
     - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
+
+    >>> sns.palplot(palette(10, hls=True))
+    >>> sns.palplot(palette(10, hls=False))  # use HUSL by default
+    >>> sns.palplot(palette(10, viridis=True))
     """
-    return sns.hls_palette(nb + 1)[:nb] if hls else sns.husl_palette(nb + 1)[:nb]
+    if viridis:
+        return sns.color_palette('viridis', nb)
+    else:
+        return sns.hls_palette(nb + 1)[:nb] if hls else sns.husl_palette(nb + 1)[:nb]
 
 
 def makemarkers(nb):
