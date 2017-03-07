@@ -1,0 +1,574 @@
+Warning: numba.jit seems to not be available. Using a dummy decorator for numba.jit() ...
+Warning: numba.jit seems to be disabled. Using a dummy decorator for numba.jit() ...
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    klBern(0.5, 0.5)
+Expecting:
+    0.0
+ok
+Trying:
+    klBern(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.757779...
+ok
+Trying:
+    klBern(0.9, 0.1)  # And this KL is symetric  # doctest: +ELLIPSIS
+Expecting:
+    1.757779...
+ok
+Trying:
+    klBern(0.4, 0.5)  # doctest: +ELLIPSIS
+Expecting:
+    0.020135...
+ok
+Trying:
+    klBern(0.01, 0.99)  # doctest: +ELLIPSIS
+Expecting:
+    4.503217...
+ok
+Trying:
+    klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    34.539575...
+ok
+Trying:
+    klExp(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klExp(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klExp(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klExp(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klExp(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klExp(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.037682...
+ok
+Trying:
+    klExp(-3, 2)
+Expecting:
+    inf
+ok
+Trying:
+    klExp(3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klExp(-3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klGamma(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klGamma(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klGamma(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klGamma(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klGamma(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.037682...
+ok
+Trying:
+    klGamma(-3, 2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(-3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGauss(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klGauss(3, 6)
+Expecting:
+    18.0
+ok
+Trying:
+    klGauss(1, 2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(2, 1)  # And this KL is symetric
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(4, 2)
+Expecting:
+    8.0
+ok
+Trying:
+    klGauss(6, 8)
+Expecting:
+    8.0
+ok
+Trying:
+    klGauss(-3, 2)
+Expecting:
+    50.0
+ok
+Trying:
+    klGauss(3, -2)
+Expecting:
+    50.0
+ok
+Trying:
+    klGauss(-3, -2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(3, 2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(3, 3, sig2=10)
+Expecting:
+    0.0
+ok
+Trying:
+    klGauss(3, 6, sig2=10)
+Expecting:
+    0.45
+ok
+Trying:
+    klGauss(1, 2, sig2=10)
+Expecting:
+    0.05
+ok
+Trying:
+    klGauss(2, 1, sig2=10)  # And this KL is symetric
+Expecting:
+    0.05
+ok
+Trying:
+    klGauss(4, 2, sig2=10)
+Expecting:
+    0.2
+ok
+Trying:
+    klGauss(6, 8, sig2=10)
+Expecting:
+    0.2
+ok
+Trying:
+    klNegBin(0.5, 0.5)
+Expecting:
+    0.0
+ok
+Trying:
+    klNegBin(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    -0.711611...
+ok
+Trying:
+    klNegBin(0.9, 0.1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    2.0321564...
+ok
+Trying:
+    klNegBin(0.4, 0.5)  # doctest: +ELLIPSIS
+Expecting:
+    -0.130653...
+ok
+Trying:
+    klNegBin(0.01, 0.99)  # doctest: +ELLIPSIS
+Expecting:
+    -0.717353...
+ok
+Trying:
+    klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    34.539575...
+ok
+Trying:
+    klNegBin(0.5, 0.5, r=2)
+Expecting:
+    0.0
+ok
+Trying:
+    klNegBin(0.1, 0.9, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.832991...
+ok
+Trying:
+    klNegBin(0.1, 0.9, r=4)  # doctest: +ELLIPSIS
+Expecting:
+    -0.914890...
+ok
+Trying:
+    klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    2.3325528...
+ok
+Trying:
+    klNegBin(0.4, 0.5, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.154572...
+ok
+Trying:
+    klNegBin(0.01, 0.99, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.836257...
+ok
+Trying:
+    klPoisson(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klPoisson(2, 1)  # doctest: +ELLIPSIS
+Expecting:
+    0.386294...
+ok
+Trying:
+    klPoisson(1, 2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klPoisson(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.920558...
+ok
+Trying:
+    klPoisson(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.273907...
+ok
+Trying:
+    klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    33.538776...
+ok
+Trying:
+    klPoisson(0, 0)
+Expecting:
+    0.0
+ok
+Trying:
+    klucbBern(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.378391...
+ok
+Trying:
+    klucbBern(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.787088...
+ok
+Trying:
+    klucbBern(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.994489...
+ok
+Trying:
+    klucbBern(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.519475...
+ok
+Trying:
+    klucbBern(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.734714...
+ok
+Trying:
+    klucbBern(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.871035...
+ok
+Trying:
+    klucbBern(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.956809...
+ok
+Trying:
+    klucbBern(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.999285...
+ok
+Trying:
+    klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.999995...
+ok
+Trying:
+    klucbExp(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.202741...
+ok
+Trying:
+    klucbExp(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.013706...
+ok
+Trying:
+    klucbExp(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.824671...
+ok
+Trying:
+    klucbExp(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.285792...
+ok
+Trying:
+    klucbExp(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.559088...
+ok
+Trying:
+    klucbExp(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.428962...
+ok
+Trying:
+    klucbExp(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.795442...
+ok
+Trying:
+    klucbExp(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    2.572132...
+ok
+Trying:
+    klucbExp(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    5.031795...
+ok
+Trying:
+    klucbGauss(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.416227...
+ok
+Trying:
+    klucbGauss(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.816227...
+ok
+Trying:
+    klucbGauss(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.216227...
+ok
+Trying:
+    klucbGauss(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.547213...
+ok
+Trying:
+    klucbGauss(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.770820...
+ok
+Trying:
+    klucbGauss(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.947213...
+ok
+Trying:
+    klucbGauss(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.170820...
+ok
+Trying:
+    klucbGauss(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.347213...
+ok
+Trying:
+    klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.570820...
+ok
+Trying:
+    klucbPoisson(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.450523...
+ok
+Trying:
+    klucbPoisson(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.089376...
+ok
+Trying:
+    klucbPoisson(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.640112...
+ok
+Trying:
+    klucbPoisson(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.693684...
+ok
+Trying:
+    klucbPoisson(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.252796...
+ok
+Trying:
+    klucbPoisson(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.422933...
+ok
+Trying:
+    klucbPoisson(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.122985...
+ok
+Trying:
+    klucbPoisson(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    2.033691...
+ok
+Trying:
+    klucbPoisson(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.831573...
+ok
+5 items had no tests:
+    __main__
+    __main__.klucb
+    __main__.maxEV
+    __main__.reseqp
+    __main__.reseqp2
+10 items passed all tests:
+   6 tests in __main__.klBern
+   9 tests in __main__.klExp
+   9 tests in __main__.klGamma
+  16 tests in __main__.klGauss
+  12 tests in __main__.klNegBin
+   7 tests in __main__.klPoisson
+   9 tests in __main__.klucbBern
+   9 tests in __main__.klucbExp
+   9 tests in __main__.klucbGauss
+   9 tests in __main__.klucbPoisson
+95 tests in 15 items.
+95 passed and 0 failed.
+Test passed.
+
+klucbGauss(0.9, 0.2) = 1.216227766016838
+klucbBern(0.9, 0.2) = 0.9944896697998048
+klucbPoisson(0.9, 0.2) = 1.6401128559741487
+
+p = [ 0.5  0.5]
+V = [10  3]
+klMax = 0.1
+value = 10.1 , y =  1.35217899994
+value =  10.3821362877
+value =  10.3821362877 , y =  0.737843038434
+value =  11.0417641811
+value =  11.0417641811 , y =  0.350533478401
+value =  12.130540708
+value =  12.130540708 , y =  0.144205119486
+value =  13.419920996
+value =  13.419920996 , y =  0.0477359005188
+value =  14.3808485948
+value =  14.3808485948 , y =  0.00984836596374
+value =  14.6967372023
+value =  14.6967372023 , y =  0.000647179588282
+value =  14.7205269989
+value =  14.7205269989 , y =  3.22150838103e-06
+eta =  14.7205269989
+value = 10.1 , y =  1.35217899994
+value =  10.3821362877
+value =  10.3821362877 , y =  0.737843038434
+value =  11.0417641811
+value =  11.0417641811 , y =  0.350533478401
+value =  12.130540708
+value =  12.130540708 , y =  0.144205119486
+value =  13.419920996
+value =  13.419920996 , y =  0.0477359005188
+value =  14.3808485948
+value =  14.3808485948 , y =  0.00984836596374
+value =  14.6967372023
+value =  14.6967372023 , y =  0.000647179588282
+value =  14.7205269989
+value =  14.7205269989 , y =  3.22150838103e-06
+Uq =  [ 0.71288173  0.28711827]
+
+p = [ 0.5  0.5]
+V = [10  3]
+klMax = 0.0168913409484
+value = 10.1 , y =  0.00524735986087
+value =  10.7870567456
+value =  10.7870567456 , y =  0.000867128774991
+value =  10.9501357303
+value =  10.9501357303 , y =  3.30943054054e-05
+eta =  10.9501357303
+value = 7.1 , y =  0.385314653792
+value =  7.22349143092
+value =  7.22349143092 , y =  0.195390047505
+value =  7.47931820927
+value =  7.47931820927 , y =  0.0982128086433
+value =  7.99046340808
+value =  7.99046340808 , y =  0.0470524353735
+value =  8.8671877561
+value =  8.8671877561 , y =  0.0198175700972
+value =  9.94778553797
+value =  9.94778553797 , y =  0.0064629711242
+value =  10.7217366699
+value =  10.7217366699 , y =  0.00122004836843
+value =  10.9439696195
+value =  10.9439696195 , y =  6.34682477773e-05
+Uq =  [ 0.09350345  0.24384361  0.30592818  0.1540174   0.1217364   0.04491065
+  0.01349865  0.02256166  0.        ]
+
+x = 2
+d = 2.51
+klucbExp(x, d) =  64.86538319246381
+Upper bound =  -16.246834368696188
+Stupid upperbound =  66.89653556788981
+
+Done for tests of 'kullback.py' ...

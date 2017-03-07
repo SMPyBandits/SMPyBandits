@@ -11,7 +11,10 @@ __version__ = "0.5"
 from math import log, sqrt, exp
 import numpy as np
 
-from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+try:
+    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+except SystemError:
+    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
 
 # Warning: np.dot is miserably slow!
@@ -28,19 +31,19 @@ def klBern(x, y):
 
     >>> klBern(0.5, 0.5)
     0.0
-    >>> klBern(0.1, 0.9)
-    1.7577796618689758
-    >>> klBern(0.9, 0.1)  # And this KL is symetric
-    1.7577796618689758
-    >>> klBern(0.4, 0.5)
-    0.020135513550688863
-    >>> klBern(0.01, 0.99)
-    4.503217453131898
+    >>> klBern(0.1, 0.9)  # doctest: +ELLIPSIS
+    1.757779...
+    >>> klBern(0.9, 0.1)  # And this KL is symetric  # doctest: +ELLIPSIS
+    1.757779...
+    >>> klBern(0.4, 0.5)  # doctest: +ELLIPSIS
+    0.020135...
+    >>> klBern(0.01, 0.99)  # doctest: +ELLIPSIS
+    4.503217...
 
     - Special values:
 
-    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
-    34.53957599234081
+    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+    34.539575...
     """
     x = min(max(x, eps), 1 - eps)
     y = min(max(y, eps), 1 - eps)
@@ -53,19 +56,19 @@ def klPoisson(x, y):
 
     >>> klPoisson(3, 3)
     0.0
-    >>> klPoisson(2, 1)
-    0.3862943611198906
-    >>> klPoisson(1, 2)  # And this KL is non-symetric
-    0.3068528194400547
-    >>> klPoisson(3, 6)
-    0.9205584583201643
-    >>> klPoisson(6, 8)
-    0.2739075652893146
+    >>> klPoisson(2, 1)  # doctest: +ELLIPSIS
+    0.386294...
+    >>> klPoisson(1, 2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    0.306852...
+    >>> klPoisson(3, 6)  # doctest: +ELLIPSIS
+    0.920558...
+    >>> klPoisson(6, 8)  # doctest: +ELLIPSIS
+    0.273907...
 
     - Special values:
 
-    >>> klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
-    33.538776394910684
+    >>> klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+    33.538776...
     >>> klPoisson(0, 0)
     0.0
     """
@@ -80,16 +83,16 @@ def klExp(x, y):
 
     >>> klExp(3, 3)
     0.0
-    >>> klExp(3, 6)
-    0.1931471805599453
-    >>> klExp(1, 2)  # Only the proportion between x and y is used
-    0.1931471805599453
-    >>> klExp(2, 1)  # And this KL is non-symetric
-    0.3068528194400547
-    >>> klExp(4, 2)  # Only the proportion between x and y is used
-    0.3068528194400547
-    >>> klExp(6, 8)
-    0.0376820724517809
+    >>> klExp(3, 6)  # doctest: +ELLIPSIS
+    0.193147...
+    >>> klExp(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+    0.193147...
+    >>> klExp(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    0.306852...
+    >>> klExp(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+    0.306852...
+    >>> klExp(6, 8)  # doctest: +ELLIPSIS
+    0.037682...
 
     - x, y have to be positive:
 
@@ -114,16 +117,16 @@ def klGamma(x, y, a=1):
 
     >>> klGamma(3, 3)
     0.0
-    >>> klGamma(3, 6)
-    0.1931471805599453
-    >>> klGamma(1, 2)  # Only the proportion between x and y is used
-    0.1931471805599453
-    >>> klGamma(2, 1)  # And this KL is non-symetric
-    0.3068528194400547
-    >>> klGamma(4, 2)  # Only the proportion between x and y is used
-    0.3068528194400547
-    >>> klGamma(6, 8)
-    0.0376820724517809
+    >>> klGamma(3, 6)  # doctest: +ELLIPSIS
+    0.193147...
+    >>> klGamma(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+    0.193147...
+    >>> klGamma(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    0.306852...
+    >>> klGamma(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+    0.306852...
+    >>> klGamma(6, 8)  # doctest: +ELLIPSIS
+    0.037682...
 
     - x, y have to be positive:
 
@@ -148,34 +151,34 @@ def klNegBin(x, y, r=1):
 
     >>> klNegBin(0.5, 0.5)
     0.0
-    >>> klNegBin(0.1, 0.9)
-    -0.7116117934648849
-    >>> klNegBin(0.9, 0.1)  # And this KL is non-symetric
-    2.0321564902394043
-    >>> klNegBin(0.4, 0.5)
-    -0.13065314341785483
-    >>> klNegBin(0.01, 0.99)
-    -0.7173536633057466
+    >>> klNegBin(0.1, 0.9)  # doctest: +ELLIPSIS
+    -0.711611...
+    >>> klNegBin(0.9, 0.1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    2.0321564...
+    >>> klNegBin(0.4, 0.5)  # doctest: +ELLIPSIS
+    -0.130653...
+    >>> klNegBin(0.01, 0.99)  # doctest: +ELLIPSIS
+    -0.717353...
 
     - Special values:
 
-    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps
-    34.53957599234081
+    >>> klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+    34.539575...
 
     - With other values for `r`:
 
     >>> klNegBin(0.5, 0.5, r=2)
     0.0
-    >>> klNegBin(0.1, 0.9, r=2)
-    -0.8329919030334189
-    >>> klNegBin(0.1, 0.9, r=4)
-    -0.9148905602182661
-    >>> klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric
-    2.332552851091954
-    >>> klNegBin(0.4, 0.5, r=2)
-    -0.15457261175809217
-    >>> klNegBin(0.01, 0.99, r=2)
-    -0.8362571425112515
+    >>> klNegBin(0.1, 0.9, r=2)  # doctest: +ELLIPSIS
+    -0.832991...
+    >>> klNegBin(0.1, 0.9, r=4)  # doctest: +ELLIPSIS
+    -0.914890...
+    >>> klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    2.3325528...
+    >>> klNegBin(0.4, 0.5, r=2)  # doctest: +ELLIPSIS
+    -0.154572...
+    >>> klNegBin(0.01, 0.99, r=2)  # doctest: +ELLIPSIS
+    -0.836257...
     """
     x = max(x, eps)
     y = max(y, eps)
@@ -183,32 +186,32 @@ def klNegBin(x, y, r=1):
 
 
 @jit
-def klGauss(x, y, sig2=0.05):
+def klGauss(x, y, sig2=0.25):
     """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution
 
     >>> klGauss(3, 3)
     0.0
     >>> klGauss(3, 6)
-    90.0
+    18.0
     >>> klGauss(1, 2)
-    10.0
+    2.0
     >>> klGauss(2, 1)  # And this KL is symetric
-    10.0
+    2.0
     >>> klGauss(4, 2)
-    40.0
+    8.0
     >>> klGauss(6, 8)
-    40.0
+    8.0
 
     - x, y can be negative:
 
     >>> klGauss(-3, 2)
-    250.0
+    50.0
     >>> klGauss(3, -2)
-    250.0
+    50.0
     >>> klGauss(-3, -2)
-    10.0
+    2.0
     >>> klGauss(3, 2)
-    10.0
+    2.0
 
     - With other values for `sig2`:
 
@@ -259,37 +262,37 @@ def klucbBern(x, d, precision=1e-6):
 
     - Influence of x:
 
-    >>> klucbBern(0.1, 0.2)
-    0.37839145109809247
-    >>> klucbBern(0.5, 0.2)
-    0.7870888710021973
-    >>> klucbBern(0.9, 0.2)
-    0.9944896697998048
+    >>> klucbBern(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.378391...
+    >>> klucbBern(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.787088...
+    >>> klucbBern(0.9, 0.2)  # doctest: +ELLIPSIS
+    0.994489...
 
     - Influence of d:
 
-    >>> klucbBern(0.1, 0.4)
-    0.5194755673450786
-    >>> klucbBern(0.1, 0.9)
-    0.734714937210083
+    >>> klucbBern(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.519475...
+    >>> klucbBern(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.734714...
 
-    >>> klucbBern(0.5, 0.4)
-    0.8710360527038574
-    >>> klucbBern(0.5, 0.9)
-    0.9568095207214355
+    >>> klucbBern(0.5, 0.4)  # doctest: +ELLIPSIS
+    0.871035...
+    >>> klucbBern(0.5, 0.9)  # doctest: +ELLIPSIS
+    0.956809...
 
-    >>> klucbBern(0.9, 0.4)
-    0.9992855072021485
-    >>> klucbBern(0.9, 0.9)
-    0.9999950408935546
+    >>> klucbBern(0.9, 0.4)  # doctest: +ELLIPSIS
+    0.999285...
+    >>> klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
+    0.999995...
     """
-    upperbound = min(1., klucbGauss(x, d, sig2=1.))
+    upperbound = min(1., klucbGauss(x, d, sig2=0.25))
     # upperbound = min(1., klucbPoisson(x, d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
 
 @jit
-def klucbGauss(x, d, sig2=0.05, precision=0.):
+def klucbGauss(x, d, sig2=0.25, precision=0.):
     """ KL-UCB index computation for Gaussian distributions.
 
     - Note that it does not require any search.
@@ -298,28 +301,28 @@ def klucbGauss(x, d, sig2=0.05, precision=0.):
     - Influence of x:
 
     >>> klucbGauss(0.1, 0.2)  # doctest: +ELLIPSIS
-    0.24142...
+    0.416227...
     >>> klucbGauss(0.5, 0.2)  # doctest: +ELLIPSIS
-    0.64142...
+    0.816227...
     >>> klucbGauss(0.9, 0.2)  # doctest: +ELLIPSIS
-    1.04142...
+    1.216227...
 
     - Influence of d:
 
     >>> klucbGauss(0.1, 0.4)  # doctest: +ELLIPSIS
-    0.3000...
+    0.547213...
     >>> klucbGauss(0.1, 0.9)  # doctest: +ELLIPSIS
-    0.4
+    0.770820...
 
     >>> klucbGauss(0.5, 0.4)  # doctest: +ELLIPSIS
-    0.7
+    0.947213...
     >>> klucbGauss(0.5, 0.9)  # doctest: +ELLIPSIS
-    0.8
+    1.170820...
 
     >>> klucbGauss(0.9, 0.4)  # doctest: +ELLIPSIS
-    1.1
+    1.347213...
     >>> klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
-    1.2000...
+    1.570820...
     """
     return x + sqrt(2 * sig2 * d)
 
@@ -330,29 +333,29 @@ def klucbPoisson(x, d, precision=1e-6):
 
     - Influence of x:
 
-    >>> klucbPoisson(0.1, 0.2)
-    0.45052392780119604
-    >>> klucbPoisson(0.5, 0.2)
-    1.0893765430263218
-    >>> klucbPoisson(0.9, 0.2)
-    1.6401128559741487
+    >>> klucbPoisson(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.450523...
+    >>> klucbPoisson(0.5, 0.2)  # doctest: +ELLIPSIS
+    1.089376...
+    >>> klucbPoisson(0.9, 0.2)  # doctest: +ELLIPSIS
+    1.640112...
 
     - Influence of d:
 
-    >>> klucbPoisson(0.1, 0.4)
-    0.6936844019642616
-    >>> klucbPoisson(0.1, 0.9)
-    1.2527967047658155
+    >>> klucbPoisson(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.693684...
+    >>> klucbPoisson(0.1, 0.9)  # doctest: +ELLIPSIS
+    1.252796...
 
-    >>> klucbPoisson(0.5, 0.4)
-    1.4229339603816749
-    >>> klucbPoisson(0.5, 0.9)
-    2.122985165630671
+    >>> klucbPoisson(0.5, 0.4)  # doctest: +ELLIPSIS
+    1.422933...
+    >>> klucbPoisson(0.5, 0.9)  # doctest: +ELLIPSIS
+    2.122985...
 
-    >>> klucbPoisson(0.9, 0.4)
-    2.033691887156203
-    >>> klucbPoisson(0.9, 0.9)
-    2.8315738094979777
+    >>> klucbPoisson(0.9, 0.4)  # doctest: +ELLIPSIS
+    2.033691...
+    >>> klucbPoisson(0.9, 0.9)  # doctest: +ELLIPSIS
+    2.831573...
     """
     upperbound = x + d + sqrt(d * d + 2 * x * d)  # looks safe, to check: left (Gaussian) tail of Poisson dev
     return klucb(x, d, klPoisson, upperbound, precision)
@@ -364,29 +367,29 @@ def klucbExp(x, d, precision=1e-6):
 
     - Influence of x:
 
-    >>> klucbExp(0.1, 0.2)
-    0.20274118449172676
-    >>> klucbExp(0.5, 0.2)
-    1.013706285168157
-    >>> klucbExp(0.9, 0.2)
-    1.8246716397412546
+    >>> klucbExp(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.202741...
+    >>> klucbExp(0.5, 0.2)  # doctest: +ELLIPSIS
+    1.013706...
+    >>> klucbExp(0.9, 0.2)  # doctest: +ELLIPSIS
+    1.824671...
 
     - Influence of d:
 
-    >>> klucbExp(0.1, 0.4)
-    0.2857928251730546
-    >>> klucbExp(0.1, 0.9)
-    0.5590884945251575
+    >>> klucbExp(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.285792...
+    >>> klucbExp(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.559088...
 
-    >>> klucbExp(0.5, 0.4)
-    1.428962647183463
-    >>> klucbExp(0.5, 0.9)
-    2.7954420946912126
+    >>> klucbExp(0.5, 0.4)  # doctest: +ELLIPSIS
+    1.428962...
+    >>> klucbExp(0.5, 0.9)  # doctest: +ELLIPSIS
+    2.795442...
 
-    >>> klucbExp(0.9, 0.4)
-    2.572132498767508
-    >>> klucbExp(0.9, 0.9)
-    5.031795430303065
+    >>> klucbExp(0.9, 0.4)  # doctest: +ELLIPSIS
+    2.572132...
+    >>> klucbExp(0.9, 0.9)  # doctest: +ELLIPSIS
+    5.031795...
     """
     if d < 0.77:  # XXX where does this value come from?
         upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
