@@ -53,3 +53,7 @@ class Arm(object):
     @staticmethod
     def oneLR(mumax, mu):
         raise NotImplementedError("This method oneLR(mumax, mu) has to be implemented in the class inheriting from Arm.")
+
+    @staticmethod
+    def oneHOI(mumax, mu):
+        return 1 - (mumax - mu)

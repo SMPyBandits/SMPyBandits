@@ -53,6 +53,8 @@ class MAB(object):
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
         self.minArm = np.min(self.means())
         print(" - with 'minArm' =", self.minArm)  # DEBUG
+        # Print lower bound and HOI factor
+        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.3g} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
 
     def __repr__(self):
         return "<{}{}>".format(self.__class__.__name__, repr(self.__dict__))
@@ -87,11 +89,18 @@ class MAB(object):
     # --- Compute lower bounds
 
     def lowerbound(self):
-        """ Compute the [Lai & Robbins] lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         means = self.means()
         bestMean = max(means)
         oneLR = self.arms[0].oneLR
         return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+
+    def hoifactor(self):
+        """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017)."""
+        means = self.means()
+        bestMean = max(means)
+        oneHOI = self.arms[0].oneHOI
+        return sum(oneHOI(bestMean, mean) for mean in means) / float(self.nbArms)
 
     def lowerbound_multiplayers(self, nbPlayers):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
