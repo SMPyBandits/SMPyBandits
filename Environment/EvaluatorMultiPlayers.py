@@ -12,13 +12,9 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-try:
-    import joblib
-    USE_JOBLIB = True
-except ImportError:
-    print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
-    USE_JOBLIB = False
 # Local imports
+from .usejoblib import USE_JOBLIB, Parallel, delayed
+from .usetqdm import USE_TQDM, tqdm
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
@@ -106,13 +102,13 @@ class EvaluatorMultiPlayers(object):
         self.__initPlayers__(env)
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
-            results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                joblib.delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[i])
+            results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[i])
                 for i in range(self.repetitions)
             )
         else:
             results = []
-            for _ in range(self.repetitions):
+            for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save)
                 results.append(r)
         # Get the position of the best arms
@@ -122,7 +118,7 @@ class EvaluatorMultiPlayers(object):
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
         # Get and merge the results from all the 'repetitions'
         # FIXME having this list of results consumes too much RAM !
-        for r in results:
+        for r in tqdm(results, desc="Storing"):
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
@@ -246,8 +242,8 @@ class EvaluatorMultiPlayers(object):
                 plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        ymax = max(plt.ylim()[1], 1.03)  # XXX no that's weird !
-        plt.ylim(ymin, ymax)
+        # ymax = max(plt.ylim()[1], 1.03)  # Don't force to view on [0%, 100%]
+        # plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         maximizeWindow()
@@ -287,7 +283,7 @@ class EvaluatorMultiPlayers(object):
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         add_percent_formatter("yaxis", 1.0)
-        plt.ylim(0, 1)
+        # plt.ylim(0, 1)
         if amplitude:
             plt.ylabel("Centralized measure of fairness for cumulative rewards (amplitude)")
         else:
@@ -340,7 +336,8 @@ class EvaluatorMultiPlayers(object):
             plot_method(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
             if len(evaluators) == 1:
                 # We plot a horizontal line ----- at the mean regret
-                plot_method(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret = ${:.3g}$".format(meanY), color=colors[evaId])
+                plot_method(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret", color=colors[evaId])
+                # " = ${:.3g}$".format(meanY)
                 if subTerms:
                     Ys.append(Ys[0] + Ys[1] + Ys[2])
                     labels.append("Sum of 3 terms")
@@ -413,8 +410,8 @@ class EvaluatorMultiPlayers(object):
         if len(evaluators) > 1:
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
-        ymax = max(plt.ylim()[1], 1)
-        plt.ylim(ymin, ymax)
+        # ymax = max(plt.ylim()[1], 1)
+        # plt.ylim(ymin, ymax)  # Don't force to view on [0%, 100%]
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
@@ -438,7 +435,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        plt.ylim(-0.03, 1.03)
+        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nBest arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
@@ -491,7 +488,7 @@ class EvaluatorMultiPlayers(object):
             # should only plot with markers
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        plt.ylim(-0.03, 1.03)
+        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else ""))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
@@ -522,7 +519,7 @@ class EvaluatorMultiPlayers(object):
             Y /= eva.nbPlayers  # To normalized the count?
             plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha= 1. if cumulated else 0.7)
         if not cumulated:
-            plt.ylim(-0.03, 1.03)
+            # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
             add_percent_formatter("yaxis", 1.0)
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))

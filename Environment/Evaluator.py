@@ -11,13 +11,10 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-try:
-    import joblib
-    USE_JOBLIB = True
-except ImportError:
-    print("joblib not found. Install it from pypi ('pip install joblib') or conda.")
-    USE_JOBLIB = False
+
 # Local imports
+from .usejoblib import USE_JOBLIB, Parallel, delayed
+from .usetqdm import USE_TQDM, tqdm
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .Result import Result
 from .MAB import MAB
@@ -95,12 +92,12 @@ class Evaluator(object):
         """ Compute only once the rewards, then launch the experiments with the same matrix (r_{k,t})."""
         rewards = np.zeros((len(arms), self.repetitions, self.horizon))
         print("\n===> Pre-computing the rewards ... Of shape {} ...\n    In order for all simulated algorithms to face the same random rewards (robust comparaison of A1,..,An vs Aggr(A1,..,An)) ...\n".format(np.shape(rewards)))  # DEBUG
-        for armId, arm in enumerate(arms):
+        for armId, arm in tqdm(enumerate(arms), desc="Arms"):
             if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
                 rewards[armId] = arm.draw_nparray((self.repetitions, self.horizon))
             else:  # Slower
-                for repeatId in range(self.repetitions):
-                    for t in range(self.horizon):
+                for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+                    for t in tqdm(range(self.horizon), desc="Time steps"):
                         rewards[armId, repeatId, t] = arm.draw(t)
         return rewards
 
@@ -123,21 +120,23 @@ class Evaluator(object):
             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
-                results = joblib.Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    joblib.delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i], repeatId=i)
-                    for i in range(self.repetitions)
+                results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[i], repeatId=i)
+                    for i in tqdm(range(self.repetitions), desc="Repetitions")
                 )
             else:
                 results = []
-                for i in range(self.repetitions):
+                for i in tqdm(range(self.repetitions), desc="Repetitions"):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=i)
                     results.append(r)
             # Get the position of the best arms
             means = np.array([arm.mean() for arm in env.arms])
             bestarm = np.max(means)
             index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
+            # Get and merge the results from all the 'repetitions'
+            # FIXME having this list of results consumes too much RAM !
             # Store the results
-            for r in results:
+            for r in tqdm(results, desc="Storing"):
                 self.rewards[policyId, envId, :] += r.rewards
                 # # self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # No need for this!
                 # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
@@ -233,7 +232,6 @@ class Evaluator(object):
             plt.plot(X, self.envs[envId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            # plt.ylim(min(-0.03, 1.03 * self.envs[envId].minArm), max(1.03 * self.envs[envId].maxArm, 1.03))  # Force view on [0,1], even if maxArm << 1: that's WEIRD
             plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         elif normalizedRegret:
@@ -269,7 +267,7 @@ class Evaluator(object):
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        plt.ylim(-0.03, 1.03)
+        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
