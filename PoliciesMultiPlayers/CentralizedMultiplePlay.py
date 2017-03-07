@@ -31,11 +31,12 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     """ CentralizedMultiplePlay: a multi-player policy where ONE policy is used by a centralized agent; asking the policy to select nbPlayers arms at each step.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, *args, **kwargs):
+    def __init__(self, nbPlayers, playerAlgo, nbArms, uniformAllocation=False, *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
+        - uniformAllocation: Should the affectations of users always be uniform, or fixed when UCB indexes have converged? First choice is more fair, but linear nb of switches, second choice is not fair, but cst nb of switches.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Examples:
@@ -54,8 +55,11 @@ class CentralizedMultiplePlay(BaseMPPolicy):
             self.children[playerId] = CentralizedChildPointer(self, playerId)
             print(" - One new child, of index {}, and class {} ...".format(playerId, self.children[playerId]))  # DEBUG
         self.nbArms = nbArms
+        # Option: in case of multiplay plays, should the affectations of users always be uniform, or fixed when UCB indexes have converged? First choice is more fair, but linear nb of switches, second choice is not fair, but cst nb of switches
+        self.uniformAllocation = uniformAllocation
         # Internal memory
         self.choices = (-10000) * np.ones(nbArms, dtype=int)
+        self.affectation_order = np.random.permutation(nbPlayers)
 
     def __str__(self):
         return "CentralizedMultiplePlay({} x {})".format(self.nbPlayers, str(self.player))
@@ -75,7 +79,11 @@ class CentralizedMultiplePlay(BaseMPPolicy):
 
     def _choice_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
-            self.choices = self.player.choiceMultiple(self.nbPlayers)
+            # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
+            if self.uniformAllocation:
+                self.choices = self.player.choiceMultiple(self.nbPlayers)
+            else:
+                self.choices = np.sort(self.player.choiceMultiple(self.nbPlayers))[self.affectation_order]
             # print("At time t = {} the {} centralized policy chosed arms = {} ...".format(self.player.t, self, self.choices))  # DEBUG
         # For the all players, use the pre-computed result
         return self.choices[playerId]
