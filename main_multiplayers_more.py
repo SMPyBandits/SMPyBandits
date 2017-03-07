@@ -40,11 +40,11 @@ do_all_plot = False
 do_all_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = False  # Seems to be the only mode which is working well
 interactive = True
+interactive = False  # Seems to be the only mode which is working well
 
 # Update configuration
-configuration['showplot'] = not interactive
+configuration['showplot'] = interactive
 del configuration['players']
 
 _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))

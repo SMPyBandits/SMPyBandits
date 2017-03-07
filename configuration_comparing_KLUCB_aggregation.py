@@ -62,11 +62,11 @@ RANDOM_SHUFFLE = False
 RANDOM_INVERT = False
 NB_RANDOM_EVENTS = 10
 
-# Cache rewards
-CACHE_REWARDS = True
-
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+
+# Cache rewards
+CACHE_REWARDS = TEST_AGGR
 
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
@@ -170,8 +170,8 @@ _klucbGauss = klucbGauss
 
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
-    # return _klucbGauss(x, d, 1.0)
-    return _klucbGauss(x, d, VARIANCE)
+    return _klucbGauss(x, d, 0.25)
+    # return _klucbGauss(x, d, VARIANCE)
 
 
 configuration.update({
