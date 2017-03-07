@@ -642,13 +642,15 @@ def delayed_play(env, players, horizon, collisionModel,
             # choices[i] = random_arm_orders[i][player.choice()]
             choices[playerId] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
+
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
+
+        # if t % delta_t_save == 0:  # XXX inefficient and does not work yet
+        #     if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
         # Finally we store the results
-        if t % delta_t_save == 0:
-            # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
-            result.store(t, choices, rewards, pulls, collisions)
+        result.store(t, choices, rewards, pulls, collisions)
 
     # # XXX Prints the ranks
     # ranks = [player.rank if hasattr(player, 'rank') else None for player in players]
