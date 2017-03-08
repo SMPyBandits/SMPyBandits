@@ -37,11 +37,11 @@ do_plot = False
 do_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = False  # Seems to be the only mode which is working well
 interactive = True
+interactive = False  # Seems to be the only mode which is working well
 
 # Update configuration
-configuration['showplot'] = not interactive
+configuration['showplot'] = interactive
 
 
 if __name__ == '__main__':

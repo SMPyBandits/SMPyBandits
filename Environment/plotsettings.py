@@ -17,8 +17,10 @@ import matplotlib.ticker as mtick
 
 import seaborn as sns
 
-# Customize here if you want a signature on the titles of each plot
-signature = "\n(By Lilian Besson, Mar.2017 - Code on https://Naereen.GitHub.io/AlgoBandits)"
+# Customize here if you want a signature on the titles or xlabel, of each plot
+from datetime import datetime
+monthyear = '{:%b.%Y}'.format(datetime.today()).title()
+signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
 DPI = 110
