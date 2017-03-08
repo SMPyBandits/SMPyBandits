@@ -10,13 +10,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 try:
-    from usenumba import jit
-except (ImportError, SystemError):
+    try:
+        from .usenumba import jit
+    except SystemError:
+        from usenumba import jit
+except ImportError:
     def jit(f):
         return f
 try:
-    from usetqdm import tqdm
-except (ImportError, SystemError):
+    try:
+        from .usetqdm import tqdm
+    except SystemError:
+        from usetqdm import tqdm
+except ImportError:
     def tqdm(f):
         return f
 
