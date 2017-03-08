@@ -19,4 +19,7 @@ except ImportError:
 
 
 # Only export and expose the useful functions defined here
-__all__ = [USE_TQDM, tqdm]
+__all__ = [
+    "USE_TQDM",
+    "tqdm",
+]

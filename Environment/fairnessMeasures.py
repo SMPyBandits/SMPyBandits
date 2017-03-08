@@ -146,12 +146,12 @@ fairness_mapping = {
 
 # Only export and expose the useful functions defined here
 __all__ = [
-    amplitude_fairness,
-    std_fairness,
-    rajjain_fairness,
-    mean_fairness,
-    fairnessMeasure,
-    fairness_mapping
+    "amplitude_fairness",
+    "std_fairness",
+    "rajjain_fairness",
+    "mean_fairness",
+    "fairnessMeasure",
+    "fairness_mapping",
 ]
 
 

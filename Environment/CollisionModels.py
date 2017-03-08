@@ -165,14 +165,19 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
 
 
 # List of possible collision models
-collision_models = [onlyUniqUserGetsReward, noCollision, rewardIsSharedUniformly, closerUserGetsReward, ]
-
-
-# Only export and expose the useful functions defined here
-__all__ = [
+collision_models = [
     onlyUniqUserGetsReward,
     noCollision,
     rewardIsSharedUniformly,
     closerUserGetsReward,
-    defaultCollisionModel
+]
+
+
+# Only export and expose the useful functions defined here
+__all__ = [
+    "onlyUniqUserGetsReward",
+    "noCollision",
+    "rewardIsSharedUniformly",
+    "closerUserGetsReward",
+    "defaultCollisionModel",
 ]

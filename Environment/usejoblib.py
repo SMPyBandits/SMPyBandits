@@ -24,4 +24,8 @@ except ImportError:
 
 
 # Only export and expose the useful functions defined here
-__all__ = [USE_JOBLIB, Parallel, delayed]
+__all__ = [
+    "USE_JOBLIB",
+    "Parallel",
+    "delayed"
+]

@@ -169,13 +169,13 @@ sortedDistance = meanDistance
 
 # Only export and expose the useful functions defined here
 __all__ = [
-    weightedDistance,
-    manhattan,
-    kendalltau,
-    spearmanr,
-    gestalt,
-    meanDistance,
-    sortedDistance
+    "weightedDistance",
+    "manhattan",
+    "kendalltau",
+    "spearmanr",
+    "gestalt",
+    "meanDistance",
+    "sortedDistance",
 ]
 
 
