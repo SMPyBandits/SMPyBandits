@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend
 from .Result import Result
 from .MAB import MAB
 
@@ -231,14 +231,14 @@ class Evaluator(object):
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X, self.envs[envId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         else:
@@ -247,7 +247,7 @@ class Evaluator(object):
                 X = X[X >= 100]
             # We also plot the Lai & Robbins lower bound
             plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         maximizeWindow()
@@ -266,7 +266,7 @@ class Evaluator(object):
             Y = self.getBestArmPulls(i, envId)[2:]
             lw = 5 if str(policy)[:4] == 'Aggr' else 3
             plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.7)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)

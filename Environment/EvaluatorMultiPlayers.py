@@ -16,7 +16,8 @@ import matplotlib.pyplot as plt
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
+from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -241,7 +242,7 @@ class EvaluatorMultiPlayers(object):
                 plt.semilogx(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
             else:
                 plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # ymax = max(plt.ylim()[1], 1.03)  # Don't force to view on [0%, 100%]
         # plt.ylim(ymin, ymax)
@@ -254,7 +255,7 @@ class EvaluatorMultiPlayers(object):
         plt.show() if self.cfg['showplot'] else plt.close()
         return fig
 
-    def plotFairness(self, envId=0, savefig=None, semilogx=False, amplitude=True, evaluators=()):
+    def plotFairness(self, envId=0, savefig=None, semilogx=False, fairness="default", evaluators=()):
         """Plot a certain measure of "fairness", from these personal rewards, support more than one environments (use evaluators to give a list of other environments)."""
         fig = plt.figure()
         X = self.times - 1
@@ -262,33 +263,27 @@ class EvaluatorMultiPlayers(object):
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
         plot_method = plt.semilogx if semilogx else plt.plot
+        # Decide which fairness function to use
+        fairnessFunction = fairness_mapping[fairness]
+        fairnessName = fairness.title()
         for evaId, eva in enumerate(evaluators):
             label = eva.strPlayers(short=True)
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
             for playerId, player in enumerate(eva.players):
                 cumRewards[playerId, :] = eva.getRewards(playerId, envId)
-            # Amplitude fairness, homemade formula
-            amplitude_fairness = (np.max(cumRewards, axis=0) - np.min(cumRewards, axis=0)) / np.max(cumRewards, axis=0)
-            print("  - Amplitude fairness index is:\n", amplitude_fairness)  # DEBUG
-            # Standard-variation fairness, homemade formula
-            std_fairness = np.std(cumRewards, axis=0) / np.max(cumRewards, axis=0)
-            print("  - Standard-variation fairness index is:\n", std_fairness)  # DEBUG
-            # Raj Jain's fairness index, cf. https://en.wikipedia.org/wiki/Fairness_measure#Jain.27s_fairness_index
-            n = len(eva.players)
-            rajjain_fairness = (n - (np.sum(cumRewards, axis=0) ** 2) / (np.sum(cumRewards ** 2, axis=0))) / (n - 1)
-            print("  - Raj Jain's fairness index is:\n", rajjain_fairness)  # DEBUG
+            # Print each fairness measure  # DEBUG
+            for fN, fF in fairness_mapping.items():
+                f = fF(cumRewards)
+                print("  - {} fairness index is = {} ...".format(fN, f))  # DEBUG
             # Plot only one fairness term
-            fairness = amplitude_fairness if amplitude else std_fairness
+            fairness = fairnessFunction(cumRewards)
             plot_method(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
-        if amplitude:
-            plt.ylabel("Centralized measure of fairness for cumulative rewards (amplitude)")
-        else:
-            plt.ylabel("Centralized measure of fairness for cumulative rewards (normalized std)")
+        plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         maximizeWindow()
         if savefig is not None:
@@ -351,7 +346,7 @@ class EvaluatorMultiPlayers(object):
         plot_method(X, lowerbound * T, 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
         plot_method(X, anandkumar_lowerbound * T, 'k:', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)
         # Labels and legends
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
@@ -377,7 +372,7 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             plot_method(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '')
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
@@ -409,7 +404,7 @@ class EvaluatorMultiPlayers(object):
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             plot_method(X, Y, label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
         if len(evaluators) > 1:
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         # ymax = max(plt.ylim()[1], 1)
         # plt.ylim(ymin, ymax)  # Don't force to view on [0%, 100%]
@@ -434,7 +429,7 @@ class EvaluatorMultiPlayers(object):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X, Y, label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
