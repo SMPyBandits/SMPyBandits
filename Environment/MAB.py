@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, makemarkers
+from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, legend
 
 
 class MAB(object):
@@ -66,7 +66,7 @@ class MAB(object):
         """Return list of means."""
         return np.array([arm.mean() for arm in self.arms])
 
-    def reprarms(self, nbPlayers=None, openTag='', endTag='^*'):
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """ Return a str representation of the list of the arms (repr(self.arms))
 
         - If nbPlayers > 0, it surrounds the representation of the best arms by openTag, endTag (for plot titles, in a multi-player setting).
@@ -85,8 +85,10 @@ class MAB(object):
                 openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
-        # return wraptext(text)
-        return wraplatex(text)
+        if latex:
+            return wraplatex(text)
+        else:
+            return wraptext(text)
 
     #
     # --- Compute lower bounds
@@ -141,7 +143,7 @@ class MAB(object):
         X = np.arange(1, 1 + nbPlayers)
         plt.plot(X, lowerbounds[0, :], 'ro-', label="Kaufmann & Besson lowerbound")
         plt.plot(X, lowerbounds[1, :], 'bd-', label="Anandkumar et al. lowerbound")
-        plt.legend()
+        legend()
         plt.xlabel("Number of players in the multi-players game.{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
         plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}$".format(self.nbArms, self.reprarms()))
@@ -166,7 +168,7 @@ class MAB(object):
         plt.figure()
         for armId, arm in enumerate(arms):
             _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm))
-        plt.legend()
+        legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: ${}$".format(horizon, self.nbArms, self.reprarms()))

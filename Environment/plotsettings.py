@@ -83,6 +83,11 @@ def makemarkers(nb):
     return longlist[:nb]  # Truncate
 
 
+def legend():
+    """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends."""
+    plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+
+
 def maximizeWindow():
     """ Experimental function to try to maximize a plot.
 

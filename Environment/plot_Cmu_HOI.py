@@ -27,6 +27,9 @@ except ImportError:
         return f
 
 # Local imports
+from .plotsettings import maximizeWindow, legend
+
+# Local imports
 from Arms import *
 
 oneLR = Bernoulli.oneLR
@@ -80,10 +83,11 @@ def main(K, N=50000, T=10):
         method(c1, o1, 'o', ms=2, label="Uniform")
         method(c2, o2, 'x', ms=2, label="Gaussian")
         method(c3, o3, 'd', ms=2, label="Evenly spacen")
-        plt.legend()
+        legend()
         plt.xlabel(r"Lai & Robbins complexity constant, $C_{\mu}$")
         plt.ylabel(r"Navikkumar Modi HOI factor, $H_{OI}(\mu)$")
         plt.title("Comparison of two complexity criterion, for Bernoulli MAB problems, with $K = {}$ arms.".format(K))
+        maximizeWindow()
         plt.show()
 
 
