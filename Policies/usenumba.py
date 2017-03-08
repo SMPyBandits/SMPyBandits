@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Configure the use of numba
 USE_NUMBA = False
@@ -25,3 +25,7 @@ if not USE_NUMBA:
     print("Warning: numba.jit seems to be disabled. Using a dummy decorator for numba.jit() ...")
     def jit(f):
         return f
+
+
+# Only export and expose the useful functions defined here
+__all__ = [USE_NUMBA, jit]

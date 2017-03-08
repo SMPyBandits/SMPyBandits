@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 try:
     from joblib import Parallel, delayed
@@ -21,3 +21,7 @@ except ImportError:
 
     def delayed(f, *args, **kwargs):
         return f
+
+
+# Only export and expose the useful functions defined here
+__all__ = [USE_JOBLIB, Parallel, delayed]
