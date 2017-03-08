@@ -89,8 +89,8 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 # Cache rewards
 CACHE_REWARDS = False  # XXX to disable manually this feature

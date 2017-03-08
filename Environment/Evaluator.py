@@ -92,7 +92,7 @@ class Evaluator(object):
     def compute_cache_rewards(self, arms):
         """ Compute only once the rewards, then launch the experiments with the same matrix (r_{k,t})."""
         rewards = np.zeros((len(arms), self.repetitions, self.horizon))
-        print("\n===> Pre-computing the rewards ... Of shape {} ...\n    In order for all simulated algorithms to face the same random rewards (robust comparaison of A1,..,An vs Aggr(A1,..,An)) ...\n".format(np.shape(rewards)))  # DEBUG
+        print("\n===> Pre-computing the rewards ... Of shape {} ...\n    In order for all simulated algorithms to face the same random rewards (robust comparison of A1,..,An vs Aggr(A1,..,An)) ...\n".format(np.shape(rewards)))  # DEBUG
         for armId, arm in tqdm(enumerate(arms), desc="Arms"):
             if hasattr(arm, 'draw_nparray'):  # XXX Use this method to speed up computation
                 rewards[armId] = arm.draw_nparray((self.repetitions, self.horizon))
