@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # Local imports
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
-from .sortedDistance import *
+from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
