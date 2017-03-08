@@ -51,8 +51,8 @@ do_plot = False
 do_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = True
-interactive = False  # Seems to be the only mode which is working well
+interactive = True  # XXX dont keep it like this
+interactive = False
 
 # Update configuration
 configuration['showplot'] = interactive

@@ -268,13 +268,13 @@ configuration.update({
 configuration["successive_players"] = [
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
-    Selfish(NB_PLAYERS, MOSS, nbArms).children,
+    # Selfish(NB_PLAYERS, MOSS, nbArms).children,
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     Selfish(NB_PLAYERS, Thompson, nbArms).children,
     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
+    # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 ]
 
 # configuration["successive_players"] = [

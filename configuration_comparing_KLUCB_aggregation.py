@@ -28,9 +28,9 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-# HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 10000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -41,8 +41,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 200
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -81,6 +81,7 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 TRUNC = 1  # Trunc parameter, ie amplitude, for Exponential arms
 
 VARIANCE = 0.05   # Variance of Gaussian arms
+# VARIANCE = 0.25   # Variance of Gaussian arms
 MINI = 0  # lower bound on rewards from Gaussian arms
 MAXI = 1  # upper bound on rewards from Gaussian arms, ie amplitude = 20
 
@@ -124,10 +125,11 @@ configuration = {
         },
     # ],
     # "environment": [  # 3)  Gaussian arms
-        {   # An example problem with 9 arms
+        {   # An example problem with 3 or 9 arms
             "arm_type": Gaussian,
             # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
             "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
         },
     # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
         [

@@ -19,6 +19,8 @@ import seaborn as sns
 
 # Customize here if you want a signature on the titles or xlabel, of each plot
 from datetime import datetime
+import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
+locale.setlocale(locale.LC_TIME, 'C')
 monthyear = '{:%b.%Y}'.format(datetime.today()).title()
 signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper

@@ -2,7 +2,7 @@
 """ Define some function to measure fairness of a vector of cumulated rewards, of shape (nbPlayers, horizon).
 
 - All functions are valued in [0, 1]: 100% means fully unfair (one player has 0 rewards, another one has >0 rewards), and 0% means fully fair (they all have exactly the same rewards).
-- Reference: https://en.wikipedia.org/wiki/Fairness_measure.
+- Reference: https://en.wikipedia.org/wiki/Fairness_measure and http://ica1www.epfl.ch/PS_files/LEB3132.pdf#search=%22max-min%20fairness%22.
 """
 from __future__ import division, print_function
 

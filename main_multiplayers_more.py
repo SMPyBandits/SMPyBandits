@@ -40,8 +40,8 @@ do_all_plot = False
 do_all_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = True
-interactive = False  # Seems to be the only mode which is working well
+interactive = True  # XXX dont keep it like this
+interactive = False
 
 # Update configuration
 configuration['showplot'] = interactive
@@ -110,7 +110,7 @@ if __name__ == '__main__':
                 evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
 
             # Plotting the centralized fairness
-            for fairness in ['RajJain'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+            for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
                 savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
                 print("\n\n- Plotting the centralized fairness (%s)" % fairness)
                 if saveallfigs:

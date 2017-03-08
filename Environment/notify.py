@@ -125,6 +125,7 @@ def notify_cli(body, summary=PROGRAM_NAME, icon="terminal",
 def notify(body, summary=PROGRAM_NAME, icon="terminal",
            timeout=5  # In seconds
            ):
+    """Send a notification, using one of the previously defined method, until it works. Usually it works."""
     # print("Notification: '{}', from '{}' with icon '{}'.".format(body, summary, icon))  # DEBUG
     if not has_Notify:
         print("notify.notify(): Warning, desktop notification from Python seems to not be available ...")

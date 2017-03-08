@@ -195,7 +195,7 @@ class Evaluator(object):
     # --- Plotting methods
 
     def plotRegrets(self, envId,
-                    savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False
+                    savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False, drawUpperBound=False,
                     ):
         fig = plt.figure()
         ymin = 0
@@ -243,6 +243,14 @@ class Evaluator(object):
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         else:
+            if drawUpperBound and not semilogx:
+                # XXX experiment to print also an upper bound
+                lower_amplitudes = np.asarray([arm.lower_amplitude for arm in self.envs[envId].arms])
+                lower, amplitude = np.min(lower_amplitudes[:, 0]), np.max(lower_amplitudes[:, 1])
+                maxVariance = max([p * (1 - p) for p in self.envs[envId].means()])
+                K = self.envs[envId].nbArms
+                upperbound = 76 * np.sqrt(maxVariance * K * X) + amplitude * K
+                plt.plot(X, upperbound, 'r-', label=r"Minimax upper-bound for kl-UCB++", lw=3)
             # FIXED for semilogx plots, truncate to only show t >= 100
             if semilogx:
                 X = X[X >= 100]

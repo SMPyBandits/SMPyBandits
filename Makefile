@@ -164,10 +164,10 @@ clean-doc:
 apidoc:
 	-mkdir -vp /tmp/AlgoBandits/docs/
 	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
-	@echo "==> Showing you which .rst files will be created in docs/"
-	sphinx-apidoc -n -o docs -e -M .
-	@echo "==> OK to generate these files ? [Enter for OK, Ctrl+C to cancel]"
-	@read
+	# @echo "==> Showing you which .rst files will be created in docs/"
+	# sphinx-apidoc -n -o docs -e -M .
+	# @echo "==> OK to generate these files ? [Enter for OK, Ctrl+C to cancel]"
+	# @read
 	sphinx-apidoc -o docs -e -M .
 
 # # Catch-all target: route all unknown targets to Sphinx using the new
