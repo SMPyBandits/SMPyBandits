@@ -98,6 +98,21 @@ class IndexPolicy(BasePolicy):
             # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
             return np.random.choice(np.nonzero(self.index >= sortedIndexes[-nb])[0], size=nb, replace=False)
 
+    def choiceIMP(self, nb=1):
+        """ In an index policy, the IMP strategy is hybrid: choose nb-1 arms with maximal empirical averages, then 1 arm with maximal index. Cf. algorithm IMP-TS [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]."""
+        if nb == 1:
+            return self.choice()
+        else:
+            # First choose nb-1 arms, from rewards
+            sortedRewards = np.sort(self.rewards)
+            exploitations = np.random.choice(np.nonzero(self.rewards >= sortedRewards[-nb])[0], size=nb-1, replace=False)
+            # Then choose 1 arm, from index now
+            availableArms = np.setdiff1d(np.arange(self.nbArms), exploitations)
+            exploration = self.choiceFromSubSet(availableArms)
+            # Affect a random location to is exploratory arm
+            choices = np.insert(exploitations, np.random.randint(np.size(exploration)), exploration)
+            return choices  # XXX remove this useless variable
+
     def estimatedOrder(self):
         """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
         for arm in range(self.nbArms):

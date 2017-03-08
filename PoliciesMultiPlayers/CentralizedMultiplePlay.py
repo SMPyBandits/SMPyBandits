@@ -60,7 +60,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         self.affectation_order = np.random.permutation(nbPlayers)
 
     def __str__(self):
-        return "CentralizedMultiplePlay({} x {}{})".format(self.nbPlayers, str(self.player), ", shuffle" if self.uniformAllocation else "")
+        return "{}({} x {}{})".format(self.__class__.__name__, self.nbPlayers, str(self.player), ", shuffle" if self.uniformAllocation else "")
 
     # --- Proxy methods
 
@@ -72,7 +72,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
 
     def _getReward_one(self, playerId, arm, reward):
         self.player.getReward(arm, reward)
-        # if playerId != 0:  # We have to be sure that the internal player.t is not messed up
+        # if playerId != 0:  # FIXME? We have to be sure that the internal player.t is not messed up
         #     if hasattr(self.player, 't'):
         #         self.player.t -= 1
 
@@ -89,4 +89,4 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm):
-        raise ValueError("Error: a CentralizedMultiplePlay policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(playerId, arm))
+        raise ValueError("Error: a {} policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(self.__class__.__name__, playerId, arm))
