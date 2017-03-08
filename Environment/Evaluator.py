@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # Local imports
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
-from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance
+from .sortedDistance import *
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter
 from .Result import Result
 from .MAB import MAB
@@ -353,9 +353,9 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         order = policy.estimatedOrder()
         print("\nEstimated order by the policy {} after {} steps: {} ...".format(policy, horizon, order))
         print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=1)))
-        # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-        # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
-        # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
-        # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+        print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+        print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+        print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+        print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
         print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
     return result

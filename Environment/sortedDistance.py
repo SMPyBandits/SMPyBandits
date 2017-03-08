@@ -138,7 +138,7 @@ def gestalt(permutation, comp=None):
     return SequenceMatcher(None, permutation, comp).ratio()
 
 
-def meanDistance(permutation, comp=None, methods=[manhattan, kendalltau, spearmanr, gestalt]):
+def meanDistance(permutation, comp=None, methods=(manhattan, kendalltau, spearmanr, gestalt)):
     """A certain measure of sortedness for the list A, based on mean of the 4 distances: manhattan, kendalltau, spearmanr, gestalt.
 
     >>> perm = [0, 1, 2, 3, 4]
@@ -162,6 +162,21 @@ def meanDistance(permutation, comp=None, methods=[manhattan, kendalltau, spearma
         distances.append(method(permutation, comp=comp))
     return np.mean(distances)
 
+
+# Default distance
+sortedDistance = meanDistance
+
+
+# Only export and expose the useful functions defined here
+__all__ = [
+    weightedDistance,
+    manhattan,
+    kendalltau,
+    spearmanr,
+    gestalt,
+    meanDistance,
+    sortedDistance
+]
 
 
 # --- Debugging

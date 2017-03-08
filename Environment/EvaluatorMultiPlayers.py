@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 # Local imports
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
-from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance
+from .sortedDistance import *
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
@@ -670,10 +670,10 @@ def delayed_play(env, players, horizon, collisionModel,
                 order = player.estimatedOrder()
                 print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
                 print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=nbPlayers)))
-                # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-                # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
-                # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
-                # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+                print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+                print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+                print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+                print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
                 print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
 
     return result
