@@ -341,6 +341,7 @@ class EvaluatorMultiPlayers(object):
                         plot_method(X, Y, (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
         # We also plot our lower bound
         lowerbound, anandkumar_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
+        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         print(" - Our lowerbound = {:.3g},\n - anandkumar_lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
         T = np.ones_like(X) if normalized else np.log(2 + X)
         plot_method(X, lowerbound * T, 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)

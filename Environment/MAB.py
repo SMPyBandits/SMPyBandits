@@ -107,7 +107,7 @@ class MAB(object):
         oneHOI = self.arms[0].oneHOI
         return sum(oneHOI(bestMean, mean) for mean in means) / float(self.nbArms)
 
-    def lowerbound_multiplayers(self, nbPlayers):
+    def lowerbound_multiplayers(self, nbPlayers=1):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means())
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))

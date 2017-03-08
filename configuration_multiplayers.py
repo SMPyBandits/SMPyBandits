@@ -18,7 +18,7 @@ from os import getenv
 import numpy as np
 
 # Import arms
-from Arms import makeMeans, Bernoulli, Exponential, Gaussian, Poisson
+from Arms import makeMeans, Bernoulli, Exponential, ExponentialFromMean, Gaussian, Poisson
 
 # Import contained classes
 from Environment import MAB

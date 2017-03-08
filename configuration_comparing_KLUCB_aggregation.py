@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 # Import arms
-from Arms import makeMeans, Bernoulli, Exponential, Gaussian, Poisson
+from Arms import makeMeans, Bernoulli, Exponential, ExponentialFromMean, Gaussian, Poisson
 
 # Import algorithms
 from Policies import *
@@ -27,9 +27,10 @@ from Policies import *
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+HORIZON = 5000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
@@ -179,13 +180,6 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- BayesUCB algorithm
-        {
-            "archtype": BayesUCB,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
         # --- KL algorithms, here only klUCBPlusPlus with different klucb functions
         {
             "archtype": klUCBPlusPlus,
@@ -206,6 +200,13 @@ configuration.update({
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbGauss, "horizon": HORIZON,
+            }
+        },
+        # --- BayesUCB algorithm
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
     ]

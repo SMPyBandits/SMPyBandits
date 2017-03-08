@@ -6,10 +6,8 @@
 # Using bash and not sh, cf. http://stackoverflow.com/a/589300/
 SHELL := /bin/bash -o pipefail
 
-run:
-	make clean ; clear ; make multi
 single:
-	make clean ; clear ; make main
+	make clean ; clear ; make singleplayer3
 multi:
 	make clean ; clear ; make multiplayers3
 moremulti:
@@ -20,19 +18,23 @@ doc:	clean-doc
 	make html clean
 
 # Runners
-main2:
+singleplayer:	singleplayer3
+singleplayer3:
+	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
+singleplayer2:
 	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt
 
-main:	main3
-main3:
-	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
-
-multiplayers2:
-	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+comparing_KLUCB_aggregation:	comparing_KLUCB_aggregation3
+comparing_KLUCB_aggregation3:
+	time nice -n 19 ipython3 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py3_log.txt
+comparing_KLUCB_aggregation2:
+	time nice -n 19 python2 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py2_log.txt
 
 multiplayers:	multiplayers3
 multiplayers3:
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+multiplayers2:
+	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
 moremultiplayers: moremultiplayers3
 moremultiplayers3:

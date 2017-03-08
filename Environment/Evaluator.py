@@ -226,6 +226,7 @@ class Evaluator(object):
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         lowerbound = self.envs[envId].lowerbound()
+        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         ymax = plt.ylim()[1]
         plt.ylim(ymin, ymax)
         if meanRegret:
