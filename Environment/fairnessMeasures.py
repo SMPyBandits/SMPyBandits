@@ -106,7 +106,7 @@ def rajjain_fairness(X, axis=0):
 
 
 def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_fairness)):
-    """A certain measure of sortedness for the list A, based on mean of the 4 distances: manhattan, kendalltau, spearmanr, gestalt.
+    """Fairness index, based on mean of the 3 fairness measures: Amplitude, STD and Raj Jain fairness.
 
     >>> rn.seed(1)
     >>> X = np.cumsum(rn.rand(10, 1000))
@@ -129,7 +129,8 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
     fairnesses = []
     for method in methods:
         fairnesses.append(method(X, axis=axis))
-    return np.mean(fairnesses)
+    fairnesses = np.array(fairnesses)
+    return np.mean(fairnesses, axis=0)
 
 
 # Default fairness measure

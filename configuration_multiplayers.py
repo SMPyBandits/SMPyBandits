@@ -15,16 +15,13 @@ except ImportError:
     CPU_COUNT = 1
 
 from os import getenv
+import numpy as np
 
 # Import arms
-from Arms import makeMeans
-from Arms.Bernoulli import Bernoulli
-from Arms.Exponential import Exponential
-from Arms.Gaussian import Gaussian
-from Arms.Poisson import Poisson
+from Arms import makeMeans, Bernoulli, Exponential, Gaussian, Poisson
 
 # Import contained classes
-from Environment.MAB import MAB
+from Environment import MAB
 
 # Collision Models
 from Environment.CollisionModels import *
@@ -41,10 +38,10 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-HORIZON = 40000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 30000
+# HORIZON = 40000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -53,12 +50,11 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 20
-REPETITIONS = 100
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 200
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -193,7 +189,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children
+    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children
 
     # --- DONE Using multi-player Selfish policy
@@ -205,7 +201,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).children
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).children
-    "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).children
+    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
@@ -267,34 +263,34 @@ configuration.update({
 #     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
-# configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
-#     Selfish(NB_PLAYERS, MOSS, nbArms).children,
-#     Selfish(NB_PLAYERS, klUCB, nbArms).children,
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-#     Selfish(NB_PLAYERS, Thompson, nbArms).children,
-#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-#     Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
-# ]
-
 configuration["successive_players"] = [
-    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+    Selfish(NB_PLAYERS, MOSS, nbArms).children,
+    Selfish(NB_PLAYERS, klUCB, nbArms).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 ]
+
+# configuration["successive_players"] = [
+#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+#     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+# ]
 
 
 # from itertools import product  # XXX If needed!

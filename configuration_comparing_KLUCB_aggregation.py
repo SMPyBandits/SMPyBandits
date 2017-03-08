@@ -17,11 +17,7 @@ except ImportError:
 from os import getenv
 
 # Import arms
-from Arms import makeMeans
-from Arms.Bernoulli import Bernoulli
-from Arms.Exponential import Exponential, ExponentialFromMean
-from Arms.Gaussian import Gaussian
-from Arms.Poisson import Poisson
+from Arms import makeMeans, Bernoulli, Exponential, Gaussian, Poisson
 
 # Import algorithms
 from Policies import *
@@ -44,11 +40,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be stastically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 200
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
