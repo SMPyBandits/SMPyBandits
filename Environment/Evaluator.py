@@ -116,34 +116,33 @@ class Evaluator(object):
         else:
             allrewards = None
 
+        # Get the position of the best arms
+        means = np.array([arm.mean() for arm in env.arms])
+        bestarm = np.max(means)
+        index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
+
+        def store(r):
+            self.rewards[policyId, envId, :] += r.rewards
+            # # self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # No need for this!
+            # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
+            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
+            # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
+            self.pulls[envId][policyId, :] += r.pulls
+
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
-                results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
                     for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
-                )
+                ):
+                    store(r)
             else:
-                results = []
                 for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
-                    results.append(r)
-            # Get the position of the best arms
-            means = np.array([arm.mean() for arm in env.arms])
-            bestarm = np.max(means)
-            index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
-            # Get and merge the results from all the 'repetitions'
-            # FIXME having this list of results consumes too much RAM !
-            # Store the results
-            for r in tqdm(results, desc="Storing"):
-                self.rewards[policyId, envId, :] += r.rewards
-                # # self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # No need for this!
-                # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
-                self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
-                # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
-                self.pulls[envId][policyId, :] += r.pulls
+                    store(r)
 
     # --- Getter methods
 

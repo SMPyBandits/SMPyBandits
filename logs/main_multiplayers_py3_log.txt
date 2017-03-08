@@ -9,7 +9,7 @@ Info: numba.jit seems to be available.
  - One new child, of index 4, and class #5<CentralizedMultiplePlay(UCB)> ...
  - One new child, of index 5, and class #6<CentralizedMultiplePlay(UCB)> ...
 Loaded experiments configuration from 'configuration.py' :
-configuration = {'repetitions': 4, 'players': [CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB)], 'averageOn': 0.001, 'horizon': 5000, 'successive_players': [[Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$))], [Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$))], [Selfish(MOSS), Selfish(MOSS), Selfish(MOSS), Selfish(MOSS), Selfish(MOSS), Selfish(MOSS)], [Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern))], [Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern))], [Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson)], [Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing))], [Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB)], [Selfish(AdBandits($\alpha=0.5$, $T=5000$)), Selfish(AdBandits($\alpha=0.5$, $T=5000$)), Selfish(AdBandits($\alpha=0.5$, $T=5000$)), Selfish(AdBandits($\alpha=0.5$, $T=5000$)), Selfish(AdBandits($\alpha=0.5$, $T=5000$)), Selfish(AdBandits($\alpha=0.5$, $T=5000$))]], 'collisionModel': <function onlyUniqUserGetsReward at 0x7f669bedf620>, 'verbosity': 6, 'environment': [{'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]}], 'n_jobs': -1, 'finalRanksOnAverage': True, 'delta_t_save': 1}
+configuration = {'delta_t_save': 1, 'environment': [{'params': [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85], 'arm_type': <class 'Arms.Bernoulli.Bernoulli'>}], 'n_jobs': -1, 'successive_players': [[Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$)), Selfish(UCB($\alpha=1$))], [Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$)), Selfish(UCB($\alpha=0.25$))], [Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern)), Selfish(KL-UCB(Bern))], [Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern)), Selfish(KL-UCB+(Bern))], [Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson), Selfish(Thompson)], [Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing)), Selfish(Softmax(decreasing))], [Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB), Selfish(BayesUCB)]], 'verbosity': 6, 'players': [CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB), CentralizedMultiplePlay(UCB)], 'repetitions': 4, 'finalRanksOnAverage': True, 'collisionModel': <function onlyUniqUserGetsReward at 0x7ff1e5f006a8>, 'horizon': 5000, 'averageOn': 0.001}
 plots/ is already a directory here...
 Number of players in the multi-players game: 6
 Time horizon: 5000
@@ -22,7 +22,7 @@ Using collision model: onlyUniqUserGetsReward
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     
 Creating a new MAB problem ...
-  Reading arms of this MAB problem from a dictionnary 'configuration' = {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]} ...
+  Reading arms of this MAB problem from a dictionnary 'configuration' = {'params': [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85], 'arm_type': <class 'Arms.Bernoulli.Bernoulli'>} ...
  - with 'arm_type' = <class 'Arms.Bernoulli.Bernoulli'>
  - with 'params' = [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
  - with 'arms' = [B(0.005), B(0.01), B(0.015), B(0.02), B(0.3), B(0.35), B(0.4), B(0.45), B(0.5), B(0.55), B(0.6), B(0.78), B(0.8), B(0.82), B(0.83), B(0.84), B(0.85)]
@@ -35,7 +35,7 @@ This MAB problem has:
  - a Optimal Arm Identification factor H_OI(mu) = 62.76% ...
 Number of environments to try: 1
 
-Evaluating environment: <MAB{'maxArm': 0.84999999999999998, 'nbArms': 17, 'arms': [B(0.005), B(0.01), B(0.015), B(0.02), B(0.3), B(0.35), B(0.4), B(0.45), B(0.5), B(0.55), B(0.6), B(0.78), B(0.8), B(0.82), B(0.83), B(0.84), B(0.85)], 'minArm': 0.0050000000000000001}>
+Evaluating environment: <MAB{'arms': [B(0.005), B(0.01), B(0.015), B(0.02), B(0.3), B(0.35), B(0.4), B(0.45), B(0.5), B(0.55), B(0.6), B(0.78), B(0.8), B(0.82), B(0.83), B(0.84), B(0.85)], 'minArm': 0.0050000000000000001, 'maxArm': 0.84999999999999998, 'nbArms': 17}>
 - Adding player #1 = #1<CentralizedMultiplePlay(UCB)> ...
   Using this already created player 'player' = #1<CentralizedMultiplePlay(UCB)> ...
 - Adding player #2 = #2<CentralizedMultiplePlay(UCB)> ...
@@ -51,27 +51,28 @@ Evaluating environment: <MAB{'maxArm': 0.84999999999999998, 'nbArms': 17, 'arms'
 Giving the final ranks ...
 
 Final ranking for this environment #0 :
-- Player #4, '#4<CentralizedMultiplePlay(UCB)>'	was ranked	1 / 6 for this simulation (last rewards = 4119).
-- Player #5, '#5<CentralizedMultiplePlay(UCB)>'	was ranked	2 / 6 for this simulation (last rewards = 4094.25).
-- Player #1, '#1<CentralizedMultiplePlay(UCB)>'	was ranked	3 / 6 for this simulation (last rewards = 4058.25).
-- Player #2, '#2<CentralizedMultiplePlay(UCB)>'	was ranked	4 / 6 for this simulation (last rewards = 4037.5).
-- Player #3, '#3<CentralizedMultiplePlay(UCB)>'	was ranked	5 / 6 for this simulation (last rewards = 4012.25).
-- Player #6, '#6<CentralizedMultiplePlay(UCB)>'	was ranked	6 / 6 for this simulation (last rewards = 3822).
+- Player #6, '#6<CentralizedMultiplePlay(UCB)>'	was ranked	1 / 6 for this simulation (last rewards = 4047).
+- Player #2, '#2<CentralizedMultiplePlay(UCB)>'	was ranked	2 / 6 for this simulation (last rewards = 4039).
+- Player #5, '#5<CentralizedMultiplePlay(UCB)>'	was ranked	3 / 6 for this simulation (last rewards = 4035.75).
+- Player #3, '#3<CentralizedMultiplePlay(UCB)>'	was ranked	4 / 6 for this simulation (last rewards = 4033.25).
+- Player #4, '#4<CentralizedMultiplePlay(UCB)>'	was ranked	5 / 6 for this simulation (last rewards = 4000.25).
+- Player #1, '#1<CentralizedMultiplePlay(UCB)>'	was ranked	6 / 6 for this simulation (last rewards = 3977.75).
 
 
 - Plotting the decentralized rewards
 
 
-- Plotting the centralized fairness (RajJain)
-  - Default fairness index is = [ 0.67702343  0.48208536  0.34466531 ...,  0.03991297  0.03990728
-  0.0399635 ] ...
-  - Amplitude fairness index is = [ 1.          0.8         0.5        ...,  0.0720267   0.07201359
-  0.07211743] ...
-  - STD fairness index is = [ 0.74535599  0.49888765  0.44790321 ...,  0.04701781  0.047014    0.04707691] ...
-  - Mean fairness index is = [ 0.67702343  0.48208536  0.34466531 ...,  0.03991297  0.03990728
-  0.0399635 ] ...
-  - RajJain fairness index is = [ 0.28571429  0.14736842  0.08609272 ...,  0.0006944   0.00069426
-  0.00069616] ...
+- Plotting the centralized fairness (STD)
+  - Amplitude fairness index is = [ 0.66666667  0.5         0.375      ...,  0.01710404  0.01709982
+  0.0170956 ] ...
+  - RajJain fairness index is = [  1.75757576e-01   9.18032787e-02   3.44827586e-02 ...,   4.52830814e-05
+   4.49263512e-05   4.48940969e-05] ...
+  - Mean fairness index is = [ 0.48025863  0.33584766  0.22966375 ...,  0.00978662  0.00976887
+  0.00976587] ...
+  - STD fairness index is = [ 0.59835165  0.41573971  0.2795085  ...,  0.01221053  0.01216185
+  0.01215713] ...
+  - Default fairness index is = [ 0.48025863  0.33584766  0.22966375 ...,  0.00978662  0.00976887
+  0.00976587] ...
 
 
 - Plotting the centralized regret
@@ -125,5 +126,5 @@ This MAB problem has:
 
 
 ==> To see the figures, do :
-eog plots/MP__M6_T5000_N4/main*5441428995493763510.png
+eog plots/MP__M6_T5000_N4/main*2846821711544434426.png
 Done for simulations main_multiplayers.py ...

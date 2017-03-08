@@ -102,25 +102,13 @@ class EvaluatorMultiPlayers(object):
         print("\nEvaluating environment:", repr(env))  # DEBUG
         self.players = []
         self.__initPlayers__(env)
-        if self.useJoblib:
-            seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
-            results = Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId)
-                for repeatId in range(self.repetitions)
-            )
-        else:
-            results = []
-            for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId)
-                results.append(r)
         # Get the position of the best arms
         env = self.envs[envId]
         means = np.array([arm.mean() for arm in env.arms])
         bestarm = np.max(means)
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
-        # Get and merge the results from all the 'repetitions'
-        # FIXME having this list of results consumes too much RAM !
-        for r in tqdm(results, desc="Storing"):
+
+        def store(r):
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
@@ -132,6 +120,19 @@ class EvaluatorMultiPlayers(object):
                 self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
                 # FIXME there is probably a bug in this computation
                 self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.duration)])
+
+        # Start now
+        if self.useJoblib:
+            seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
+            for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId)
+                for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
+            ):
+                store(r)
+        else:
+            for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId)
+                store(r)
 
     # --- Getter methods
 
