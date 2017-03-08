@@ -21,25 +21,24 @@ doc:	clean-doc
 
 # Runners
 main2:
-	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt  # DEBUG
-	# time nice -n 19 ipython2 ./main.py | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt
 
 main:	main3
 main3:
-	# time nice -n 19 python3 ./main.py | tee ./logs/main_py3_log.txt  # DEBUG
 	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
 
 multiplayers2:
-	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
-	# time nice -n 19 ipython2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
 multiplayers:	multiplayers3
 multiplayers3:
-	# time nice -n 19 python3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt  # DEBUG
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 
+moremultiplayers: moremultiplayers3
 moremultiplayers3:
 	time nice -n 19 ipython3 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
+moremultiplayers2:
+	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
 # Time profilers
 profile:
@@ -68,6 +67,7 @@ callgraph:
 	# -convert logs/pycallgraph.svg logs/pycallgraph.png
 
 # Installers
+# FIXME make a virtualenv
 install:
 	sudo -H pip  install -U -r requirements.txt
 install2:
