@@ -12,6 +12,13 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 
 
+class SelfishChildPointer(ChildPointer):
+    """ Selfish version of the ChildPointer class."""
+
+    def __str__(self):
+        return "#{}<{}({})>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother._players[self.playerId])
+
+
 # Customize here the value given to a user after a collision
 # PENALTY = -1
 # PENALTY = 0
@@ -47,7 +54,7 @@ class Selfish(BaseMPPolicy):
         self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
-            self.children[playerId] = ChildPointer(self, playerId)
+            self.children[playerId] = SelfishChildPointer(self, playerId)
         self.nbArms = nbArms
 
     def __str__(self):

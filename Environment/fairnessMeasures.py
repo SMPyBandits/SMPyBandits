@@ -47,6 +47,7 @@ def amplitude_fairness(X, axis=0):
     >>> list(amplitude_fairness(Y, axis=0))  # Less spreadout # doctest: +ELLIPSIS
     [0.0, 0.5, ..., 0.0328...]
     """
+    X = np.asarray(X)
     return 1 - (np.min(X, axis=axis) / np.max(X, axis=axis))
 
 
@@ -72,6 +73,7 @@ def std_fairness(X, axis=0):
     >>> std_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.463...
     """
+    X = np.asarray(X)
     return 2 * np.std(X, axis=axis) / np.max(X, axis=axis)
 
 
@@ -98,6 +100,7 @@ def rajjain_fairness(X, axis=0):
     >>> rajjain_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.107...
     """
+    X = np.asarray(X)
     n = X.shape[axis]
     if n <= 1:
         return 0
@@ -126,6 +129,7 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
     >>> mean_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.509...
     """
+    X = np.asarray(X)
     fairnesses = []
     for method in methods:
         fairnesses.append(method(X, axis=axis))
@@ -137,11 +141,21 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
 fairnessMeasure = mean_fairness
 
 fairness_mapping = {
-    "amplitude": amplitude_fairness,
-    "std": std_fairness,
-    "rajjain": rajjain_fairness,
-    "mean": mean_fairness,
-    "default": fairnessMeasure
+    # "amplitude_fairness": amplitude_fairness,
+    # "std_fairness": std_fairness,
+    # "rajjain_fairness": rajjain_fairness,
+    # "mean_fairness": mean_fairness,
+    # "fairnessMeasure": fairnessMeasure,
+    # "amplitude": amplitude_fairness,
+    # "std": std_fairness,
+    # "rajjain": rajjain_fairness,
+    # "mean": mean_fairness,
+    # "default": fairnessMeasure,
+    "Amplitude": amplitude_fairness,
+    "STD": std_fairness,
+    "RajJain": rajjain_fairness,
+    "Mean": mean_fairness,
+    "Default": fairnessMeasure,
 }
 
 

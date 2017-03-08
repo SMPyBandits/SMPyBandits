@@ -27,8 +27,8 @@ def weightedDistance(choices, weights, n=None):
     >>> weightedDistance(choices, weights)  # worst choice!  # doctest: +ELLIPSIS
     0.3333...
     """
-    choices = np.array(choices)
-    weights = np.array(weights)
+    choices = np.asarray(choices)
+    weights = np.asarray(weights)
     if n is None:
         n = len(choices)
     bestWeights = np.sum(np.sort(weights)[-n:])

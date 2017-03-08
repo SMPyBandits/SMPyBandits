@@ -15,14 +15,12 @@ from .ChildPointer import ChildPointer
 
 class CentralizedChildPointer(ChildPointer):
     """ Centralized version of the ChildPointer class."""
-    def __init__(self, mother, playerId):
-        super(CentralizedChildPointer, self).__init__(mother, playerId)
 
-    def __str__(self):   # Better to recompute it automatically
-        return "#{}<CentralizedMultiplePlay: {}>".format(self.playerId + 1, self.mother.player)
+    def __str__(self):
+        return "#{}<{}({})>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother.player)
 
-    def __repr__(self):  # Better to recompute it automatically
-        return "CentralizedMultiplePlay: {}".format(self.mother.player)
+    def __repr__(self):
+        return "{}({})".format(self.mother.__class__.__name__, self.mother.player)
 
 
 # --- Class for the mother
@@ -62,7 +60,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         self.affectation_order = np.random.permutation(nbPlayers)
 
     def __str__(self):
-        return "CentralizedMultiplePlay({} x {})".format(self.nbPlayers, str(self.player))
+        return "CentralizedMultiplePlay({} x {}{})".format(self.nbPlayers, str(self.player), ", shuffle" if self.uniformAllocation else "")
 
     # --- Proxy methods
 
@@ -70,12 +68,13 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         if playerId == 0:  # For the first player, run the method
             self.player.startGame()
         # For the other players, nothing to do? Yes
+        self.affectation_order = np.random.permutation(self.nbPlayers)
 
     def _getReward_one(self, playerId, arm, reward):
         self.player.getReward(arm, reward)
-        if playerId != 0:  # We have to be sure that the internal player.t is not messed up
-            if hasattr(self.player, 't'):
-                self.player.t -= 1
+        # if playerId != 0:  # We have to be sure that the internal player.t is not messed up
+        #     if hasattr(self.player, 't'):
+        #         self.player.t -= 1
 
     def _choice_one(self, playerId):
         if playerId == 0:  # For the first player, run the method
@@ -83,7 +82,8 @@ class CentralizedMultiplePlay(BaseMPPolicy):
             if self.uniformAllocation:
                 self.choices = self.player.choiceMultiple(self.nbPlayers)
             else:
-                self.choices = np.sort(self.player.choiceMultiple(self.nbPlayers))[self.affectation_order]
+                self.choices = np.sort(self.player.choiceMultiple(self.nbPlayers))[self.affectation_order]  # XXX Increasing order...
+                # self.choices = np.sort(self.player.choiceMultiple(self.nbPlayers))[self.affectation_order][::-1]  # XXX Decreasing order...
             # print("At time t = {} the {} centralized policy chosed arms = {} ...".format(self.player.t, self, self.choices))  # DEBUG
         # For the all players, use the pre-computed result
         return self.choices[playerId]

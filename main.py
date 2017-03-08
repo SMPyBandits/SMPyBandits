@@ -6,9 +6,10 @@ Script to load the config, run the simulations, and plot them.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Generic imports
+import sys
 from os import mkdir
 import os.path
 
@@ -22,8 +23,10 @@ import matplotlib.pyplot as plt
 from Environment import Evaluator, notify
 
 # Import a configuration file
-from configuration import configuration
-# from configuration_comparing_KLUCB_aggregation import configuration
+if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
+    from configuration_comparing_KLUCB_aggregation import configuration
+else:
+    from configuration import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw

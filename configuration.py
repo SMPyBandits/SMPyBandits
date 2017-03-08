@@ -93,6 +93,7 @@ TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr pol
 TEST_AGGR = True
 
 # Cache rewards
+CACHE_REWARDS = False  # XXX to disable manually this feature
 CACHE_REWARDS = TEST_AGGR
 
 UPDATE_ALL_CHILDREN = True

@@ -189,8 +189,10 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children
+    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
 
     # --- DONE Using multi-player Selfish policy
     # "players": Selfish(NB_PLAYERS, Uniform, nbArms).children
@@ -276,7 +278,7 @@ configuration["successive_players"] = [
 ]
 
 # configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1, uniformAllocation=False).children,
 #     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
 #     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
 #     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,

@@ -91,9 +91,9 @@ if __name__ == '__main__':
             evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
 
         # Plotting the centralized fairness
-        for fairness in ['default', 'amplitude', 'std', 'rajjain']:
-            savefig = mainfig.replace('main', 'main_Fairness%s' % (fairness.title()))
-            print("\n\n- Plotting the centralized fairness (%s)" % fairness.title())
+        for fairness in ['RajJain'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+            savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
+            print("\n\n- Plotting the centralized fairness (%s)" % fairness)
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
                 evaluation.plotFairness(envId, savefig=savefig, semilogx=False, fairness=fairness)

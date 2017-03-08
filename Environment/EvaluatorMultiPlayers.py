@@ -264,8 +264,8 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(len(evaluators))
         plot_method = plt.semilogx if semilogx else plt.plot
         # Decide which fairness function to use
-        fairnessFunction = fairness_mapping[fairness]
-        fairnessName = fairness.title()
+        fairnessFunction = fairness_mapping[fairness] if isinstance(fairness, str) else fairness
+        fairnessName = fairness.title() if isinstance(fairness, str) else fairness.__name__
         for evaId, eva in enumerate(evaluators):
             label = eva.strPlayers(short=True)
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
@@ -379,7 +379,7 @@ class EvaluatorMultiPlayers(object):
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}number of switches for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
+        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umber of switches for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated n" if cumulated else "N", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         maximizeWindow()
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
