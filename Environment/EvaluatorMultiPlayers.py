@@ -167,7 +167,7 @@ class EvaluatorMultiPlayers(object):
         return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
     def getCentralizedRegret(self, envId=0):
-        meansArms = np.sort(self.envs[envId].mean)
+        meansArms = np.sort(self.envs[envId].means)
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
         # FIXED how to count it when there is more players than arms ?
