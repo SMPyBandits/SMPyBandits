@@ -52,9 +52,9 @@ class MAB(object):
         print(" - with 'arms' =", self.arms)  # DEBUG
         self.nbArms = len(self.arms)
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
-        self.maxArm = np.max(self.means())
+        self.maxArm = np.max(self.means)
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
-        self.minArm = np.min(self.means())
+        self.minArm = np.min(self.means)
         print(" - with 'minArm' =", self.minArm)  # DEBUG
         # Print lower bound and HOI factor
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
@@ -62,6 +62,8 @@ class MAB(object):
     def __repr__(self):
         return "<{}{}>".format(self.__class__.__name__, repr(self.__dict__))
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
     def means(self):
         """Return list of means."""
         return np.array([arm.mean for arm in self.arms])
@@ -79,7 +81,7 @@ class MAB(object):
             text = repr(self.arms)
         else:
             assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
-            means = self.means()
+            means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             text = '[{}]'.format(', '.join(
                 openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
@@ -103,7 +105,7 @@ class MAB(object):
 
     def lowerbound_multiplayers(self, nbPlayers=1):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
-        sortedMeans = sorted(self.means())
+        sortedMeans = sorted(self.means)
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
         # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms
         bestMeans = sortedMeans[-nbPlayers:]

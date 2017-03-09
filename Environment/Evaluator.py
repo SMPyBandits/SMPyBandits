@@ -246,7 +246,7 @@ class Evaluator(object):
                 # XXX experiment to print also an upper bound
                 lower_amplitudes = np.asarray([arm.lower_amplitude for arm in self.envs[envId].arms])
                 lower, amplitude = np.min(lower_amplitudes[:, 0]), np.max(lower_amplitudes[:, 1])
-                maxVariance = max([p * (1 - p) for p in self.envs[envId].means()])
+                maxVariance = max([p * (1 - p) for p in self.envs[envId].means])
                 K = self.envs[envId].nbArms
                 upperbound = 76 * np.sqrt(maxVariance * K * X) + amplitude * K
                 plt.plot(X, upperbound, 'r-', label=r"Minimax upper-bound for kl-UCB++", lw=3)
@@ -360,7 +360,7 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     if repeatId == 0 and hasattr(policy, 'estimatedOrder'):
         order = policy.estimatedOrder()
         print("\nEstimated order by the policy {} after {} steps: {} ...".format(policy, horizon, order))
-        print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=1)))
+        print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=1)))
         print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
         print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
         print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))

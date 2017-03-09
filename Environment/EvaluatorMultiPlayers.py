@@ -661,7 +661,7 @@ def delayed_play(env, players, horizon, collisionModel,
             if hasattr(player, 'estimatedOrder'):
                 order = player.estimatedOrder()
                 print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
-                print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means(), n=nbPlayers)))
+                print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=nbPlayers)))
                 print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
                 print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
                 print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))

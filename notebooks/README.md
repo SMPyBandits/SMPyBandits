@@ -9,7 +9,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 ----
 
 ## 1. List of experiments presented with notebooks
-- NOT YET : FIXME do at least one!
+- [Easily creating various Multi-Armed Bandit problems](Easily_creating_MAB_problems.ipynb), explains the interface of the [`Environment.MAB`](../Environment/MAB.py) module.
 
 ----
 
