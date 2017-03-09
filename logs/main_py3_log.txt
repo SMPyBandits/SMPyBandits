@@ -10,7 +10,7 @@ Time horizon: 5000
 Number of repetitions: 4
 Sampling rate DELTA_T_SAVE: 1
 Creating a new MAB problem ...
-  Reading arms of this MAB problem from a dictionnary 'configuration' = {'params': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9], 'arm_type': <class 'Arms.Bernoulli.Bernoulli'>} ...
+  Reading arms of this MAB problem from a dictionnary 'configuration' = {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]} ...
  - with 'arm_type' = <class 'Arms.Bernoulli.Bernoulli'>
  - with 'params' = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
  - with 'arms' = [B(0.1), B(0.2), B(0.3), B(0.4), B(0.5), B(0.6), B(0.7), B(0.8), B(0.9)]
@@ -23,7 +23,7 @@ This MAB problem has:
  - a Optimal Arm Identification factor H_OI(mu) = 48.89% ...
 Number of environments to try: 1
 
-Evaluating environment: <MAB{'maxArm': 0.90000000000000002, 'minArm': 0.10000000000000001, 'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(0.5), B(0.6), B(0.7), B(0.8), B(0.9)], 'nbArms': 9}>
+Evaluating environment: <MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(0.5), B(0.6), B(0.7), B(0.8), B(0.9)], 'maxArm': 0.90000000000000002, 'nbArms': 9, 'minArm': 0.10000000000000001}>
 - Adding policy #1 = {'params': {'alpha': 1}, 'archtype': <class 'Policies.UCBalpha.UCBalpha'>} ...
   Creating this policy from a dictionnary 'self.cfg['policies'][0]' = {'params': {'alpha': 1}, 'archtype': <class 'Policies.UCBalpha.UCBalpha'>} ...
 - Adding policy #2 = {'params': {'alpha': 0.5}, 'archtype': <class 'Policies.UCBalpha.UCBalpha'>} ...
@@ -44,8 +44,339 @@ Evaluating environment: <MAB{'maxArm': 0.90000000000000002, 'minArm': 0.10000000
   Creating this policy from a dictionnary 'self.cfg['policies'][8]' = {'params': {'klucb': <built-in function klucbBern>, 'horizon': 5000}, 'archtype': <class 'Policies.klUCBPlusPlus.klUCBPlusPlus'>} ...
 - Adding policy #10 = {'params': {}, 'archtype': <class 'Policies.BayesUCB.BayesUCB'>} ...
   Creating this policy from a dictionnary 'self.cfg['policies'][9]' = {'params': {}, 'archtype': <class 'Policies.BayesUCB.BayesUCB'>} ...
+
+- Evaluating policy #1/10: UCB($\alpha=1$) ...
+
+Estimated order by the policy UCB($\alpha=1$) after 5000 steps: [2 4 3 5 0 1 7 6 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 55.56% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 90.47% (relative success)...
+  ==> Spearman    distance from optimal ordering: 88.84% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 44.44% (relative success)...
+  ==> Mean distance from optimal ordering: 69.83% (relative success)...
+
+- Evaluating policy #2/10: UCB($\alpha=0.5$) ...
+
+Estimated order by the policy UCB($\alpha=0.5$) after 5000 steps: [1 0 3 4 5 2 6 7 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 80.25% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 99.65% (relative success)...
+  ==> Spearman    distance from optimal ordering: 99.84% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 77.78% (relative success)...
+  ==> Mean distance from optimal ordering: 89.38% (relative success)...
+
+- Evaluating policy #3/10: UCB($\alpha=0.1$) ...
+
+Estimated order by the policy UCB($\alpha=0.1$) after 5000 steps: [0 1 3 5 7 6 2 4 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 65.43% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 96.29% (relative success)...
+  ==> Spearman    distance from optimal ordering: 95.01% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 66.67% (relative success)...
+  ==> Mean distance from optimal ordering: 80.85% (relative success)...
+
+- Evaluating policy #4/10: MOSS ...
+
+Estimated order by the policy MOSS after 5000 steps: [1 3 4 5 2 6 0 7 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 60.49% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 93.94% (relative success)...
+  ==> Spearman    distance from optimal ordering: 87.50% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 77.78% (relative success)...
+  ==> Mean distance from optimal ordering: 79.93% (relative success)...
+
+- Evaluating policy #5/10: Thompson ...
+
+Estimated order by the policy Thompson after 5000 steps: [0 1 3 4 2 5 6 7 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 90.12% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 99.92% (relative success)...
+  ==> Spearman    distance from optimal ordering: 99.99% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 88.89% (relative success)...
+  ==> Mean distance from optimal ordering: 94.73% (relative success)...
+
+- Evaluating policy #6/10: KL-UCB(Bern) ...
+
+Estimated order by the policy KL-UCB(Bern) after 5000 steps: [1 0 4 5 2 3 6 7 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 75.31% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 99.33% (relative success)...
+  ==> Spearman    distance from optimal ordering: 99.63% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 66.67% (relative success)...
+  ==> Mean distance from optimal ordering: 85.23% (relative success)...
+
+- Evaluating policy #7/10: KL-UCB+(Bern) ...
+
+Estimated order by the policy KL-UCB+(Bern) after 5000 steps: [0 5 1 4 7 6 2 3 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 55.56% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 85.56% (relative success)...
+  ==> Spearman    distance from optimal ordering: 82.95% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 55.56% (relative success)...
+  ==> Mean distance from optimal ordering: 69.91% (relative success)...
+
+- Evaluating policy #8/10: KL-UCB-H+(Bern) ...
+
+Estimated order by the policy KL-UCB-H+(Bern) after 5000 steps: [0 2 5 3 4 1 6 7 8] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Manhattan   distance from optimal ordering: 80.25% (relative success)...
+  ==> Kendell Tau distance from optimal ordering: 98.77% (relative success)...
+  ==> Spearman    distance from optimal ordering: 98.75% (relative success)...
+  ==> Gestalt     distance from optimal ordering: 77.78% (relative success)...
+  ==> Mean distance from optimal ordering: 88.88% (relative success)...
+
+- Evaluating policy #9/10: KL-UCB++(Bern) ...
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mTypeError[0m                                 Traceback (most recent call last)
+[0;31mRemoteTraceback[0m                           Traceback (most recent call last)
+[0;31mRemoteTraceback[0m: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.5/dist-packages/joblib/_parallel_backends.py", line 344, in __call__
+    return self.func(*args, **kwargs)
+  File "/usr/local/lib/python3.5/dist-packages/joblib/parallel.py", line 131, in __call__
+    return [func(*args, **kwargs) for func, args, kwargs in self.items]
+  File "/usr/local/lib/python3.5/dist-packages/joblib/parallel.py", line 131, in <listcomp>
+    return [func(*args, **kwargs) for func, args, kwargs in self.items]
+  File "/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py", line 333, in delayed_play
+    choice = policy.choice()
+  File "/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/IndexPolicy.py", line 44, in choice
+    self.index[arm] = self.computeIndex(arm)
+  File "/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py", line 52, in computeIndex
+    return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
+  File "/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py", line 25, in g
+    return max(0, log(y * (1 + max(log(0, y)) ** 2)))
+ValueError: math domain error
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/multiprocessing/pool.py", line 119, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/local/lib/python3.5/dist-packages/joblib/_parallel_backends.py", line 353, in __call__
+    raise TransportableException(text, e_type)
+joblib.my_exceptions.TransportableException: TransportableException
+___________________________________________________________________________
+ValueError                                         Thu Mar  9 19:27:49 2017
+PID: 11970                                  Python 3.5.2+: /usr/bin/python3
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in __call__(self=<joblib.parallel.BatchedCalls object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        self.items = [(<function delayed_play>, (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000), {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52})]
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in <listcomp>(.0=<list_iterator object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        func = <function delayed_play>
+        args = (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000)
+        kwargs = {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52}
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py in delayed_play(env=<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, policy=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, horizon=5000, delta_t_save=1, random_shuffle=False, random_invert=False, nb_random_events=5, seed=52, allrewards=None, repeatId=0)
+    328     if nb_random_events is None or nb_random_events <= 0:
+    329         random_shuffle = False
+    330         random_invert = False
+    331 
+    332     for t in range(horizon):
+--> 333         choice = policy.choice()
+        choice = 5
+        policy.choice = <bound method IndexPolicy.choice of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+    334 
+    335         # FIXME do this quicker!
+    336         if allrewards is None:
+    337             reward = env.arms[choice].draw(t)
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/IndexPolicy.py in choice(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>)
+     39     # --- Basic choice() method
+     40 
+     41     def choice(self):
+     42         """ In an index policy, choose an arm with maximal index (uniformly at random)."""
+     43         for arm in range(self.nbArms):
+---> 44             self.index[arm] = self.computeIndex(arm)
+        self.index = array([ inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf])
+        arm = 5
+        self.computeIndex = <bound method klUCBPlusPlus.computeIndex of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+     45         # Uniform choice among the best arms
+     46         return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
+     47 
+     48     # --- Others choice...() methods
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in computeIndex(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, arm=5)
+     47     def computeIndex(self, arm):
+     48         if self.pulls[arm] < 1:
+     49             return float('+inf')
+     50         else:
+     51             # XXX We could adapt tolerance to the value of self.t
+---> 52             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
+        self.klucb = <built-in function klucbBern>
+        self.rewards = array([ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+        arm = 5
+        self.pulls = array([0, 0, 0, 0, 0, 1, 0, 0, 0])
+        self.c = 1.0
+        self.horizon = 5000
+        self.nbArms = 9
+        self.tolerance = 0.0001
+     53 
+     54 
+     55 
+     56 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in g(n=1, T=5000, K=9)
+     20 
+     21 
+     22 def g(n, T, K):
+     23     """The exploration function g(n), as defined in page 3 of the reference paper."""
+     24     y = T / float(K * n)
+---> 25     return max(0, log(y * (1 + max(log(0, y)) ** 2)))
+        y = 555.5555555555555
+     26 
+     27 
+     28 
+     29 class klUCBPlusPlus(klUCB):
+
+ValueError: math domain error
+___________________________________________________________________________
+"""
+
+The above exception was the direct cause of the following exception:
+
+[0;31mTransportableException[0m                    Traceback (most recent call last)
+[0;32m/usr/local/lib/python3.5/dist-packages/joblib/parallel.py[0m in [0;36mretrieve[0;34m(self)[0m
+[1;32m    681[0m                 [0;32mif[0m [0;34m'timeout'[0m [0;32min[0m [0mgetfullargspec[0m[0;34m([0m[0mjob[0m[0;34m.[0m[0mget[0m[0;34m)[0m[0;34m.[0m[0margs[0m[0;34m:[0m[0;34m[0m[0m
+[0;32m--> 682[0;31m                     [0mself[0m[0;34m.[0m[0m_output[0m[0;34m.[0m[0mextend[0m[0;34m([0m[0mjob[0m[0;34m.[0m[0mget[0m[0;34m([0m[0mtimeout[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mtimeout[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0m
+[0m[1;32m    683[0m                 [0;32melse[0m[0;34m:[0m[0;34m[0m[0m
+
+[0;32m/usr/lib/python3.5/multiprocessing/pool.py[0m in [0;36mget[0;34m(self, timeout)[0m
+[1;32m    607[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0m
+[0;32m--> 608[0;31m             [0;32mraise[0m [0mself[0m[0;34m.[0m[0m_value[0m[0;34m[0m[0m
+[0m[1;32m    609[0m [0;34m[0m[0m
+
+[0;31mTransportableException[0m: TransportableException
+___________________________________________________________________________
+ValueError                                         Thu Mar  9 19:27:49 2017
+PID: 11970                                  Python 3.5.2+: /usr/bin/python3
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in __call__(self=<joblib.parallel.BatchedCalls object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        self.items = [(<function delayed_play>, (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000), {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52})]
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in <listcomp>(.0=<list_iterator object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        func = <function delayed_play>
+        args = (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000)
+        kwargs = {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52}
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py in delayed_play(env=<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, policy=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, horizon=5000, delta_t_save=1, random_shuffle=False, random_invert=False, nb_random_events=5, seed=52, allrewards=None, repeatId=0)
+    328     if nb_random_events is None or nb_random_events <= 0:
+    329         random_shuffle = False
+    330         random_invert = False
+    331 
+    332     for t in range(horizon):
+--> 333         choice = policy.choice()
+        choice = 5
+        policy.choice = <bound method IndexPolicy.choice of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+    334 
+    335         # FIXME do this quicker!
+    336         if allrewards is None:
+    337             reward = env.arms[choice].draw(t)
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/IndexPolicy.py in choice(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>)
+     39     # --- Basic choice() method
+     40 
+     41     def choice(self):
+     42         """ In an index policy, choose an arm with maximal index (uniformly at random)."""
+     43         for arm in range(self.nbArms):
+---> 44             self.index[arm] = self.computeIndex(arm)
+        self.index = array([ inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf])
+        arm = 5
+        self.computeIndex = <bound method klUCBPlusPlus.computeIndex of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+     45         # Uniform choice among the best arms
+     46         return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
+     47 
+     48     # --- Others choice...() methods
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in computeIndex(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, arm=5)
+     47     def computeIndex(self, arm):
+     48         if self.pulls[arm] < 1:
+     49             return float('+inf')
+     50         else:
+     51             # XXX We could adapt tolerance to the value of self.t
+---> 52             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
+        self.klucb = <built-in function klucbBern>
+        self.rewards = array([ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+        arm = 5
+        self.pulls = array([0, 0, 0, 0, 0, 1, 0, 0, 0])
+        self.c = 1.0
+        self.horizon = 5000
+        self.nbArms = 9
+        self.tolerance = 0.0001
+     53 
+     54 
+     55 
+     56 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in g(n=1, T=5000, K=9)
+     20 
+     21 
+     22 def g(n, T, K):
+     23     """The exploration function g(n), as defined in page 3 of the reference paper."""
+     24     y = T / float(K * n)
+---> 25     return max(0, log(y * (1 + max(log(0, y)) ** 2)))
+        y = 555.5555555555555
+     26 
+     27 
+     28 
+     29 class klUCBPlusPlus(klUCB):
+
+ValueError: math domain error
+___________________________________________________________________________
+
+During handling of the above exception, another exception occurred:
+
+[0;31mJoblibValueError[0m                          Traceback (most recent call last)
 [0;32m/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/main.py[0m in [0;36m<module>[0;34m()[0m
 [1;32m     89[0m [0;34m[0m[0m
 [1;32m     90[0m         [0;31m# Evaluate just that env[0m[0;34m[0m[0;34m[0m[0m
@@ -54,17 +385,334 @@ Evaluating environment: <MAB{'maxArm': 0.90000000000000002, 'minArm': 0.10000000
 [1;32m     93[0m         [0;32mif[0m [0msaveallfigs[0m[0;34m:[0m[0;34m[0m[0m
 
 [0;32m/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py[0m in [0;36mstartOneEnv[0;34m(self, envId, env)[0m
-[1;32m    120[0m         [0mmeans[0m [0;34m=[0m [0menv[0m[0;34m.[0m[0mmeans[0m[0;34m[0m[0m
-[1;32m    121[0m         [0mbestarm[0m [0;34m=[0m [0menv[0m[0;34m.[0m[0mmaxArm[0m[0;34m[0m[0m
-[0;32m--> 122[0;31m         [0mindex_bestarm[0m [0;34m=[0m [0mnp[0m[0;34m.[0m[0mnonzero[0m[0;34m([0m[0mnp[0m[0;34m.[0m[0misclose[0m[0;34m([0m[0mmeans[0m[0;34m,[0m [0mbestarm[0m[0;34m)[0m[0;34m)[0m[0;34m[[0m[0;36m0[0m[0;34m][0m[0;34m[0m[0m
-[0m[1;32m    123[0m [0;34m[0m[0m
-[1;32m    124[0m         [0;32mdef[0m [0mstore[0m[0;34m([0m[0mr[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0m
+[1;32m    137[0m                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+[1;32m    138[0m                     [0mdelayed[0m[0;34m([0m[0mdelayed_play[0m[0;34m)[0m[0;34m([0m[0menv[0m[0;34m,[0m [0mpolicy[0m[0;34m,[0m [0mself[0m[0;34m.[0m[0mhorizon[0m[0;34m,[0m [0mrandom_shuffle[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mrandom_shuffle[0m[0;34m,[0m [0mrandom_invert[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mrandom_invert[0m[0;34m,[0m [0mnb_random_events[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mnb_random_events[0m[0;34m,[0m [0mdelta_t_save[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mdelta_t_save[0m[0;34m,[0m [0mallrewards[0m[0;34m=[0m[0mallrewards[0m[0;34m,[0m [0mseed[0m[0;34m=[0m[0mseeds[0m[0;34m[[0m[0mrepeatId[0m[0;34m][0m[0;34m,[0m [0mrepeatId[0m[0;34m=[0m[0mrepeatId[0m[0;34m)[0m[0;34m[0m[0m
+[0;32m--> 139[0;31m                     [0;32mfor[0m [0mrepeatId[0m [0;32min[0m [0mtqdm[0m[0;34m([0m[0mrange[0m[0;34m([0m[0mself[0m[0;34m.[0m[0mrepetitions[0m[0;34m)[0m[0;34m,[0m [0mdesc[0m[0;34m=[0m[0;34m"Repetitions"[0m[0;34m)[0m[0;34m[0m[0m
+[0m[1;32m    140[0m                 ):
+[1;32m    141[0m                     [0mstore[0m[0;34m([0m[0mr[0m[0;34m)[0m[0;34m[0m[0m
 
-[0;32m/usr/local/lib/python3.5/dist-packages/numpy/core/numeric.py[0m in [0;36misclose[0;34m(a, b, rtol, atol, equal_nan)[0m
-[1;32m   2555[0m     [0my[0m [0;34m=[0m [0marray[0m[0;34m([0m[0my[0m[0;34m,[0m [0mdtype[0m[0;34m=[0m[0mdt[0m[0;34m,[0m [0mcopy[0m[0;34m=[0m[0;32mFalse[0m[0;34m,[0m [0msubok[0m[0;34m=[0m[0;32mTrue[0m[0;34m)[0m[0;34m[0m[0m
-[1;32m   2556[0m [0;34m[0m[0m
-[0;32m-> 2557[0;31m     [0mxfin[0m [0;34m=[0m [0misfinite[0m[0;34m([0m[0mx[0m[0;34m)[0m[0;34m[0m[0m
-[0m[1;32m   2558[0m     [0myfin[0m [0;34m=[0m [0misfinite[0m[0;34m([0m[0my[0m[0;34m)[0m[0;34m[0m[0m
-[1;32m   2559[0m     [0;32mif[0m [0mall[0m[0;34m([0m[0mxfin[0m[0;34m)[0m [0;32mand[0m [0mall[0m[0;34m([0m[0myfin[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0m
+[0;32m/usr/local/lib/python3.5/dist-packages/joblib/parallel.py[0m in [0;36m__call__[0;34m(self, iterable)[0m
+[1;32m    766[0m                 [0;31m# consumption.[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    767[0m                 [0mself[0m[0;34m.[0m[0m_iterating[0m [0;34m=[0m [0;32mFalse[0m[0;34m[0m[0m
+[0;32m--> 768[0;31m             [0mself[0m[0;34m.[0m[0mretrieve[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0m
+[0m[1;32m    769[0m             [0;31m# Make sure that we get a last message telling us we are done[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    770[0m             [0melapsed_time[0m [0;34m=[0m [0mtime[0m[0;34m.[0m[0mtime[0m[0;34m([0m[0;34m)[0m [0;34m-[0m [0mself[0m[0;34m.[0m[0m_start_time[0m[0;34m[0m[0m
 
-[0;31mTypeError[0m: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+[0;32m/usr/local/lib/python3.5/dist-packages/joblib/parallel.py[0m in [0;36mretrieve[0;34m(self)[0m
+[1;32m    717[0m                     [0mensure_ready[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_managed_backend[0m[0;34m[0m[0m
+[1;32m    718[0m                     [0mbackend[0m[0;34m.[0m[0mabort_everything[0m[0;34m([0m[0mensure_ready[0m[0;34m=[0m[0mensure_ready[0m[0;34m)[0m[0;34m[0m[0m
+[0;32m--> 719[0;31m                 [0;32mraise[0m [0mexception[0m[0;34m[0m[0m
+[0m[1;32m    720[0m [0;34m[0m[0m
+[1;32m    721[0m     [0;32mdef[0m [0m__call__[0m[0;34m([0m[0mself[0m[0;34m,[0m [0miterable[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0m
+
+[0;31mJoblibValueError[0m: JoblibValueError
+___________________________________________________________________________
+Multiprocessing exception:
+...........................................................................
+/usr/local/bin/ipython3 in <module>()
+      6 
+      7 from IPython import start_ipython
+      8 
+      9 if __name__ == '__main__':
+     10     sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])
+---> 11     sys.exit(start_ipython())
+     12 
+     13 
+     14 
+     15 
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/__init__.py in start_ipython(argv=None, **kwargs={})
+    114     kwargs : various, optional
+    115         Any other kwargs will be passed to the Application constructor,
+    116         such as `config`.
+    117     """
+    118     from IPython.terminal.ipapp import launch_new_instance
+--> 119     return launch_new_instance(argv=argv, **kwargs)
+        launch_new_instance = <bound method Application.launch_instance of <class 'IPython.terminal.ipapp.TerminalIPythonApp'>>
+        argv = None
+        kwargs = {}
+    120 
+    121 def start_kernel(argv=None, **kwargs):
+    122     """Launch a normal IPython kernel instance (as opposed to embedded)
+    123     
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/traitlets/config/application.py in launch_instance(cls=<class 'IPython.terminal.ipapp.TerminalIPythonApp'>, argv=None, **kwargs={})
+    652         """Launch a global instance of this Application
+    653 
+    654         If a global instance already exists, this reinitializes and starts it
+    655         """
+    656         app = cls.instance(**kwargs)
+--> 657         app.initialize(argv)
+        app.initialize = <bound method TerminalIPythonApp.initialize of <IPython.terminal.ipapp.TerminalIPythonApp object>>
+        argv = None
+    658         app.start()
+    659 
+    660 #-----------------------------------------------------------------------------
+    661 # utility functions, for convenience
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/<decorator-gen-109> in initialize(self=<IPython.terminal.ipapp.TerminalIPythonApp object>, argv=None)
+      1 
+----> 2 
+      3 
+      4 
+      5 
+      6 
+      7 
+      8 
+      9 
+     10 
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/traitlets/config/application.py in catch_config_error(method=<function TerminalIPythonApp.initialize>, app=<IPython.terminal.ipapp.TerminalIPythonApp object>, *args=(None,), **kwargs={})
+     82     message, and exit the app.
+     83 
+     84     For use on init methods, to prevent invoking excepthook on invalid input.
+     85     """
+     86     try:
+---> 87         return method(app, *args, **kwargs)
+        method = <function TerminalIPythonApp.initialize>
+        app = <IPython.terminal.ipapp.TerminalIPythonApp object>
+        args = (None,)
+        kwargs = {}
+     88     except (TraitError, ArgumentError) as e:
+     89         app.print_help()
+     90         app.log.fatal("Bad config encountered during initialization:")
+     91         app.log.fatal(str(e))
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/terminal/ipapp.py in initialize(self=<IPython.terminal.ipapp.TerminalIPythonApp object>, argv=None)
+    310         # and draw the banner
+    311         self.init_banner()
+    312         # Now a variety of things that happen after the banner is printed.
+    313         self.init_gui_pylab()
+    314         self.init_extensions()
+--> 315         self.init_code()
+        self.init_code = <bound method InteractiveShellApp.init_code of <IPython.terminal.ipapp.TerminalIPythonApp object>>
+    316 
+    317     def init_shell(self):
+    318         """initialize the InteractiveShell instance"""
+    319         # Create an InteractiveShell instance.
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/core/shellapp.py in init_code(self=<IPython.terminal.ipapp.TerminalIPythonApp object>)
+    268         if self.hide_initial_ns:
+    269             self.shell.user_ns_hidden.update(self.shell.user_ns)
+    270 
+    271         # command-line execution (ipython -i script.py, ipython -m module)
+    272         # should *not* be excluded from %whos
+--> 273         self._run_cmd_line_code()
+        self._run_cmd_line_code = <bound method InteractiveShellApp._run_cmd_line_...Python.terminal.ipapp.TerminalIPythonApp object>>
+    274         self._run_module()
+    275 
+    276         # flush output, so itwon't be attached to the first cell
+    277         sys.stdout.flush()
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/core/shellapp.py in _run_cmd_line_code(self=<IPython.terminal.ipapp.TerminalIPythonApp object>)
+    389         elif self.file_to_run:
+    390             fname = self.file_to_run
+    391             if os.path.isdir(fname):
+    392                 fname = os.path.join(fname, "__main__.py")
+    393             try:
+--> 394                 self._exec_file(fname, shell_futures=True)
+        self._exec_file = <bound method InteractiveShellApp._exec_file of <IPython.terminal.ipapp.TerminalIPythonApp object>>
+        fname = './main.py'
+    395             except:
+    396                 self.shell.showtraceback(tb_offset=4)
+    397                 if not self.interact:
+    398                     self.exit(1)
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/core/shellapp.py in _exec_file(self=<IPython.terminal.ipapp.TerminalIPythonApp object>, fname='./main.py', shell_futures=True)
+    323                     else:
+    324                         # default to python, even without extension
+    325                         self.shell.safe_execfile(full_filename,
+    326                                                  self.shell.user_ns,
+    327                                                  shell_futures=shell_futures,
+--> 328                                                  raise_exceptions=True)
+    329         finally:
+    330             sys.argv = save_argv
+    331 
+    332     def _run_startup_files(self):
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/core/interactiveshell.py in safe_execfile(self=<IPython.terminal.interactiveshell.TerminalInteractiveShell object>, fname='/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/main.py', *where=({'Evaluator': <class 'Environment.Evaluator.Evaluator'>, 'In': [''], 'N': 1, 'Out': {}, 'PLOT_DIR': 'plots', '_': '', '__': '', '___': '', '__author__': 'Lilian Besson', '__builtin__': <module 'builtins' (built-in)>, ...},), **kw={'exit_ignore': False, 'raise_exceptions': True, 'shell_futures': True})
+   2476         with prepended_to_syspath(dname), self.builtin_trap:
+   2477             try:
+   2478                 glob, loc = (where + (None, ))[:2]
+   2479                 py3compat.execfile(
+   2480                     fname, glob, loc,
+-> 2481                     self.compile if kw['shell_futures'] else None)
+        self.compile = <IPython.core.compilerop.CachingCompiler object>
+        kw = {'exit_ignore': False, 'raise_exceptions': True, 'shell_futures': True}
+   2482             except SystemExit as status:
+   2483                 # If the call was made with 0 or None exit status (sys.exit(0)
+   2484                 # or sys.exit() ), don't bother showing a traceback, as both of
+   2485                 # these are considered normal by the OS:
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/IPython/utils/py3compat.py in execfile(fname='/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/main.py', glob={'Evaluator': <class 'Environment.Evaluator.Evaluator'>, 'In': [''], 'N': 1, 'Out': {}, 'PLOT_DIR': 'plots', '_': '', '__': '', '___': '', '__author__': 'Lilian Besson', '__builtin__': <module 'builtins' (built-in)>, ...}, loc={'Evaluator': <class 'Environment.Evaluator.Evaluator'>, 'In': [''], 'N': 1, 'Out': {}, 'PLOT_DIR': 'plots', '_': '', '__': '', '___': '', '__author__': 'Lilian Besson', '__builtin__': <module 'builtins' (built-in)>, ...}, compiler=<IPython.core.compilerop.CachingCompiler object>)
+    181 
+    182     def execfile(fname, glob, loc=None, compiler=None):
+    183         loc = loc if (loc is not None) else glob
+    184         with open(fname, 'rb') as f:
+    185             compiler = compiler or compile
+--> 186             exec(compiler(f.read(), fname, 'exec'), glob, loc)
+        compiler = <IPython.core.compilerop.CachingCompiler object>
+        f.read = <built-in method read of _io.BufferedReader object>
+        fname = '/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/main.py'
+        glob = {'Evaluator': <class 'Environment.Evaluator.Evaluator'>, 'In': [''], 'N': 1, 'Out': {}, 'PLOT_DIR': 'plots', '_': '', '__': '', '___': '', '__author__': 'Lilian Besson', '__builtin__': <module 'builtins' (built-in)>, ...}
+        loc = {'Evaluator': <class 'Environment.Evaluator.Evaluator'>, 'In': [''], 'N': 1, 'Out': {}, 'PLOT_DIR': 'plots', '_': '', '__': '', '___': '', '__author__': 'Lilian Besson', '__builtin__': <module 'builtins' (built-in)>, ...}
+    187     
+    188     # Refactor print statements in doctests.
+    189     _print_statement_re = re.compile(r"\bprint (?P<expr>.*)$", re.MULTILINE)
+    190     def _print_statement_sub(match):
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/main.py in <module>()
+     86         # h5pyname = mainfig.replace('.png', '.hdf5')
+     87         # h5pyfile = h5py.File(h5pyname, 'w')
+     88         picklename = mainfig.replace('.png', '.pickle')
+     89 
+     90         # Evaluate just that env
+---> 91         evaluation.startOneEnv(envId, env)
+     92 
+     93         if saveallfigs:
+     94             # Create the sub folder
+     95             if os.path.isdir(plot_dir):
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py in startOneEnv(self=<Environment.Evaluator.Evaluator object>, envId=0, env=<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>)
+    134             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
+    135             if self.useJoblib:
+    136                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
+    137                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+    138                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
+--> 139                     for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
+        repeatId = undefined
+        self.repetitions = 4
+    140                 ):
+    141                     store(r)
+    142             else:
+    143                 for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in __call__(self=Parallel(n_jobs=-1), iterable=<generator object Evaluator.startOneEnv.<locals>.<genexpr>>)
+    763             if pre_dispatch == "all" or n_jobs == 1:
+    764                 # The iterable was consumed all at once by the above for loop.
+    765                 # No need to wait for async callbacks to trigger to
+    766                 # consumption.
+    767                 self._iterating = False
+--> 768             self.retrieve()
+        self.retrieve = <bound method Parallel.retrieve of Parallel(n_jobs=-1)>
+    769             # Make sure that we get a last message telling us we are done
+    770             elapsed_time = time.time() - self._start_time
+    771             self._print('Done %3i out of %3i | elapsed: %s finished',
+    772                         (len(self._output), len(self._output),
+
+---------------------------------------------------------------------------
+Sub-process traceback:
+---------------------------------------------------------------------------
+ValueError                                         Thu Mar  9 19:27:49 2017
+PID: 11970                                  Python 3.5.2+: /usr/bin/python3
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in __call__(self=<joblib.parallel.BatchedCalls object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        self.items = [(<function delayed_play>, (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000), {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52})]
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/usr/local/lib/python3.5/dist-packages/joblib/parallel.py in <listcomp>(.0=<list_iterator object>)
+    126     def __init__(self, iterator_slice):
+    127         self.items = list(iterator_slice)
+    128         self._size = len(self.items)
+    129 
+    130     def __call__(self):
+--> 131         return [func(*args, **kwargs) for func, args, kwargs in self.items]
+        func = <function delayed_play>
+        args = (<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, <Policies.klUCBPlusPlus.klUCBPlusPlus object>, 5000)
+        kwargs = {'allrewards': None, 'delta_t_save': 1, 'nb_random_events': 5, 'random_invert': False, 'random_shuffle': False, 'repeatId': 0, 'seed': 52}
+    132 
+    133     def __len__(self):
+    134         return self._size
+    135 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Environment/Evaluator.py in delayed_play(env=<MAB{'arms': [B(0.1), B(0.2), B(0.3), B(0.4), B(...002, 'nbArms': 9, 'minArm': 0.10000000000000001}>, policy=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, horizon=5000, delta_t_save=1, random_shuffle=False, random_invert=False, nb_random_events=5, seed=52, allrewards=None, repeatId=0)
+    328     if nb_random_events is None or nb_random_events <= 0:
+    329         random_shuffle = False
+    330         random_invert = False
+    331 
+    332     for t in range(horizon):
+--> 333         choice = policy.choice()
+        choice = 5
+        policy.choice = <bound method IndexPolicy.choice of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+    334 
+    335         # FIXME do this quicker!
+    336         if allrewards is None:
+    337             reward = env.arms[choice].draw(t)
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/IndexPolicy.py in choice(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>)
+     39     # --- Basic choice() method
+     40 
+     41     def choice(self):
+     42         """ In an index policy, choose an arm with maximal index (uniformly at random)."""
+     43         for arm in range(self.nbArms):
+---> 44             self.index[arm] = self.computeIndex(arm)
+        self.index = array([ inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf,  inf])
+        arm = 5
+        self.computeIndex = <bound method klUCBPlusPlus.computeIndex of <Policies.klUCBPlusPlus.klUCBPlusPlus object>>
+     45         # Uniform choice among the best arms
+     46         return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
+     47 
+     48     # --- Others choice...() methods
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in computeIndex(self=<Policies.klUCBPlusPlus.klUCBPlusPlus object>, arm=5)
+     47     def computeIndex(self, arm):
+     48         if self.pulls[arm] < 1:
+     49             return float('+inf')
+     50         else:
+     51             # XXX We could adapt tolerance to the value of self.t
+---> 52             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
+        self.klucb = <built-in function klucbBern>
+        self.rewards = array([ 0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.,  0.])
+        arm = 5
+        self.pulls = array([0, 0, 0, 0, 0, 1, 0, 0, 0])
+        self.c = 1.0
+        self.horizon = 5000
+        self.nbArms = 9
+        self.tolerance = 0.0001
+     53 
+     54 
+     55 
+     56 
+
+...........................................................................
+/home/lilian/ownCloud/cloud.openmailbox.org/Thèse_2016-17/src/AlgoBandits.git/Policies/klUCBPlusPlus.py in g(n=1, T=5000, K=9)
+     20 
+     21 
+     22 def g(n, T, K):
+     23     """The exploration function g(n), as defined in page 3 of the reference paper."""
+     24     y = T / float(K * n)
+---> 25     return max(0, log(y * (1 + max(log(0, y)) ** 2)))
+        y = 555.5555555555555
+     26 
+     27 
+     28 
+     29 class klUCBPlusPlus(klUCB):
+
+ValueError: math domain error
+___________________________________________________________________________
