@@ -8,7 +8,7 @@ from __future__ import print_function
 __author__ = "Flavio Truzzi et al."
 __version__ = "0.1"
 
-import random as rn
+from random import random, choice
 import numpy as np
 
 from .Beta import Beta
@@ -30,7 +30,6 @@ class AdBandits(BasePolicy):
             self.posterior[arm] = posterior()
 
     def __str__(self):
-        # return r"AdBandits($\alpha={:.3g}$)".format(self.alpha)
         # OK, they all have knowledge of T, but it's good to display it to, remember it
         return r"AdBandits($\alpha={:.3g}$, $T={:.5g}$)".format(self.alpha, self.horizon)
 
@@ -51,18 +50,18 @@ class AdBandits(BasePolicy):
 
     def choice(self):
         # Thompson Exploration
-        if rn.random() > self.epsilon:
+        if random() > self.epsilon:
             upperbounds = [self.posterior[i].sample() for i in range(self.nbArms)]
             maxIndex = max(upperbounds)
             bestArms = [arm for (arm, index) in enumerate(upperbounds) if index == maxIndex]
-            arm = rn.choice(bestArms)
+            arm = choice(bestArms)
         # UCB-Bayes
         else:
             expectations = (1.0 + self.rewards) / (2.0 + self.pulls)
             upperbounds = [self.posterior[arm].quantile(1. - 1. / self.t) for arm in range(self.nbArms)]
             regret = np.max(upperbounds) - expectations
             admissible = np.nonzero(regret == np.min(regret))[0]
-            arm = rn.choice(admissible)
+            arm = choice(admissible)
         return arm
 
     def choiceWithRank(self, rank=1):
@@ -71,7 +70,7 @@ class AdBandits(BasePolicy):
         else:
             assert rank >= 1, "Error: for AdBandits = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             # Thompson Exploration
-            if rn.random() > self.epsilon:
+            if random() > self.epsilon:
                 indexes = [self.posterior[i].sample() for i in range(self.nbArms)]
             # UCB-Bayes
             else:
@@ -82,4 +81,4 @@ class AdBandits(BasePolicy):
             sortedRewards = np.sort(indexes)  # XXX What happens here if two arms has the same index, being the max?
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms
-            return np.random.choice(np.nonzero(indexes == chosenIndex)[0])
+            return choice(np.nonzero(indexes == chosenIndex)[0])

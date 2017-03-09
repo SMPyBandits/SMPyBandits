@@ -8,6 +8,7 @@ from __future__ import print_function, division
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
+from random import random
 import numpy as np
 import numpy.random as rn
 
@@ -115,7 +116,7 @@ class oneALOHA(ChildPointer):
         # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
         # self.getReward(arm, self.mother.lower)  # FIXED should we give a 0 reward ? Not in this model!
         # 1. With proba 1 - p, give up
-        if rn.random() >= self.p:
+        if random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
             self.tnext[self.chosenArm] = self.t + 1 + delta_tnext_k

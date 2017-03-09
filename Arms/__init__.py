@@ -9,11 +9,13 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
-from .Uniform import Uniform
-from .Bernoulli import Bernoulli
-from .Poisson import Poisson
-from .Gaussian import Gaussian
-from .Exponential import Exponential, ExponentialFromMean
+
+if __name__ != "__main__":
+    from .Uniform import Uniform
+    from .Bernoulli import Bernoulli
+    from .Poisson import Poisson
+    from .Gaussian import Gaussian
+    from .Exponential import Exponential, ExponentialFromMean
 
 
 def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
@@ -25,12 +27,23 @@ def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     - and there is nbArms arms.
 
     >>> makeMeans(2, 0.1)
-    [0.1, 0.9]
+    array([ 0.1,  0.9])
     >>> makeMeans(3, 0.1)
-    [0.1, 0.5, 0.9]
+    array([ 0.1,  0.5,  0.9])
     >>> makeMeans(9, 1 / (1. + 9))
-    [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
     """
     assert nbArms >= 1, "Error: nbArms has to be >= 1."
     assert 0 < delta < 1, "Error: delta has to be in (0, 1)."
-    return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
+    # return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
+    return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

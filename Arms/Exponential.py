@@ -7,14 +7,15 @@ __version__ = "0.5"
 from math import isinf, exp, log
 from random import random
 import numpy as np
-import numpy.random as rn
+from numpy.random import random as nprandom
+from scipy.optimize import minimize
 
+# Local imports
 from .Arm import Arm
 from .kullback import klExp
 
 
 def p_of_expectation(expectation, trunc=1):
-    from scipy.optimize import minimize
     if isinf(trunc):
         def expp(p):
             return 1. / p
@@ -56,7 +57,7 @@ class Exponential(Arm):
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
-        return np.minimum((-1. / self.p) * np.log(rn.random(shape)), self.trunc)
+        return np.minimum((-1. / self.p) * np.log(nprandom(shape)), self.trunc)
 
     # --- Printing
 

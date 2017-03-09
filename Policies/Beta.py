@@ -9,12 +9,13 @@ __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson
 __version__ = "0.5"
 
 from random import random
-try:
-    from numpy.random import beta as betavariate  # Faster? Not sure!
-except ImportError:
-    from random import betavariate
+# try:
+from numpy.random import beta as betavariate  # Faster! Yes!
+# except ImportError:
+#     from random import betavariate
 from scipy.special import btdtri
 
+# Local imports
 from .Posterior import Posterior
 
 
@@ -33,6 +34,7 @@ class Beta(Posterior):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
     def __init__(self, a=1, b=1):
+        """Create a Beta posterior with no observation."""
         self.a = a
         self.b = b
         self.N = [a, b]
@@ -41,6 +43,7 @@ class Beta(Posterior):
         return "Beta({}, {})".format(self.N[1], self.N[0])
 
     def reset(self, a=0, b=0):
+        """Reset alpha and beta to 0."""
         if a == 0:
             a = self.a
         if b == 0:
@@ -48,21 +51,26 @@ class Beta(Posterior):
         self.N = [a, b]
 
     def sample(self):
+        """Get a random sample from the Beta posterior (using :func:`numpy.random.betavariate`)."""
         return betavariate(self.N[1], self.N[0])
 
     def quantile(self, p):
+        """Return the p quantile of the Beta posterior (using :func:`scipy.stats.btdtri`)."""
         return btdtri(self.N[1], self.N[0], p)
         # Bug: do not call btdtri with (0.5,0.5,0.5) in scipy version < 0.9 (old)
 
     def mean(self):
+        """Compute the mean of the Beta posterior (should be useless)."""
         return self.N[1] / float(sum(self.N))
 
     def forget(self, obs):
+        """Forget the last observation."""
         # print("Info: calling Beta.forget() with obs = {} ...".format(obs))  # DEBUG
         # FIXED update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
         self.N[bernoulliBinarization(obs)] -= 1
 
     def update(self, obs):
+        """Add an observation. If obs is 1, update alpha, if it is 0, update beta, otherwise, a trick with :func:`bernoulliBinarization` has to be used."""
         # print("Info: calling Beta.update() with obs = {} ...".format(obs))  # DEBUG
         # FIXED update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
         self.N[bernoulliBinarization(obs)] += 1

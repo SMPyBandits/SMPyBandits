@@ -4,7 +4,8 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from numpy.random import random
+from random import random
+from numpy.random import random as nprandom
 
 from .Arm import Arm
 from .kullback import klBern
@@ -42,7 +43,7 @@ class Uniform(Arm):
 
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
-        return self.lower + (random(shape) * self.amplitude)
+        return self.lower + (nprandom(shape) * self.amplitude)
 
     # --- Printing
 

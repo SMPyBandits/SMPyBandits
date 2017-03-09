@@ -3,7 +3,7 @@
 
 # --- Fully required
 numpy       # Required for numpy arrays and functions
-scipy>0.9   # Required for scipy.stats functions (Beta, Poisson, Exponentiels)
+scipy>0.9   # Required for scipy.stats functions (Beta, Poisson, Exponentiels) and scipy.optimize.minimize
 matplotlib  # Required for the plots in Environment/Evaluator*.py
 
 # --- Optionnal, improve performance

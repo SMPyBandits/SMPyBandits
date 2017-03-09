@@ -9,6 +9,7 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
+from random import random
 import numpy as np
 import numpy.random as rn
 from .BasePolicy import BasePolicy
@@ -79,7 +80,7 @@ class MEGA(BasePolicy):
                 # raise ValueError("FIXME MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET")
             else:  # There is some available arms
                 epsilon = self._epsilon_t()
-                if rn.random() < epsilon:  # With proba epsilon_t
+                if random() < epsilon:  # With proba epsilon_t
                     newArm = rn.choice(availableArms)  # Explore valid arms
                     if self.chosenArm != newArm:
                         self.p = self.p0  # Reinitialize proba p
@@ -111,10 +112,10 @@ class MEGA(BasePolicy):
         assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
-        # if rn.random() < self.p:
+        # if random() < self.p:
         #     self.chosenArm = self.chosenArm
         # 2. With proba 1 - p, give up
-        if rn.random() >= self.p:
+        if random() >= self.p:
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.t**self.beta))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k
