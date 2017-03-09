@@ -32,10 +32,12 @@ class Gaussian(Arm):
         self.min = mini
         self.max = maxi
 
-    # --- Random samples
-
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
     def mean(self):
         return self.expectation
+
+    # --- Random samples
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""
@@ -60,11 +62,13 @@ class Gaussian(Arm):
 
     # --- Lower bound
 
-    @staticmethod
-    def kl(x, y):
-        return klGauss(x, y, VARIANCE)
+    # @staticmethod
+    def kl(self, x, y):
+        # return klGauss(x, y, VARIANCE)
+        return klGauss(x, y, self.sigma)
 
-    @staticmethod
-    def oneLR(mumax, mu):
+    # @staticmethod
+    def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
-        return (mumax - mu) / klGauss(mu, mumax, VARIANCE)
+        # return (mumax - mu) / klGauss(mu, mumax, VARIANCE)
+        return (mumax - mu) / klGauss(mu, mumax, self.sigma)

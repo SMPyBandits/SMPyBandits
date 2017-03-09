@@ -117,8 +117,8 @@ class Evaluator(object):
             allrewards = None
 
         # Get the position of the best arms
-        means = np.array([arm.mean() for arm in env.arms])
-        bestarm = np.max(means)
+        means = env.means
+        bestarm = env.maxArm
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
         def store(r):

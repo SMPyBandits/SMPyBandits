@@ -27,6 +27,13 @@ class Arm(object):
         else:
             raise NotImplementedError("This method lower_amplitude() has to be implemented in the class inheriting from Arm.")
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def mean(self):
+        raise NotImplementedError("This property mean has to be implemented in the class inheriting from Arm.")
+
+    # --- Printing
+
     def __str__(self):
         return self.__class__.__name__
 
@@ -34,9 +41,6 @@ class Arm(object):
         return "{}({})".format(self.__class__.__name__, self.__dir__)
 
     # --- Random samples
-
-    def mean(self):
-        raise NotImplementedError("This method mean() has to be implemented in the class inheriting from Arm.")
 
     def draw(self, t=None):
         raise NotImplementedError("This method draw(t) has to be implemented in the class inheriting from Arm.")

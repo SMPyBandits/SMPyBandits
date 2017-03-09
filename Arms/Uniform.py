@@ -7,14 +7,32 @@ __version__ = "0.1"
 from numpy.random import random
 
 from .Arm import Arm
+from .kullback import klBern
 
 
 class Uniform(Arm):
-    """ Uniformly distributed arm in [0, 1], or [lower, lower + amplitude]."""
+    """ Uniformly distributed arm, default in [0, 1],
 
-    def __init__(self, lower=0., amplitude=1.):
-        self.lower = lower
-        self.amplitude = amplitude
+    - default to (mini, maxi),
+    - or [lower, lower + amplitude], if (lower=lower, amplitude=amplitude) is given.
+
+    >>> arm_0_1 = Uniform()
+    >>> arm_0_10 = Uniform(0, 10)  # maxi = 10
+    >>> arm_2_4 = Uniform(2, 4)
+    >>> arm_m10_10 = Uniform(-10, 10)  # also Uniform(lower=-10, amplitude=20)
+    """
+
+    def __init__(self, mini=0., maxi=1., lower=0., amplitude=1.):
+        self.min = min(mini, lower)
+        self.lower = mini
+        self.max = max(maxi, amplitude - lower)
+        self.amplitude = maxi - mini
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def mean(self):
+        # return self.min + (self.max - self.min) / 2.0
+        return self.lower + (self.amplitude / 2.0)
 
     # --- Random samples
 
@@ -26,15 +44,7 @@ class Uniform(Arm):
         """ The parameter t is ignored in this Arm."""
         return self.lower + (random(shape) * self.amplitude)
 
-    def mean(self):
-        return self.lower + (0.5 * self.amplitude)
-
     # --- Printing
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def lower_amplitude(self):
-        return (self.lower, self.amplitude)
 
     def __str__(self):
         return "Uniform"
@@ -46,10 +56,9 @@ class Uniform(Arm):
 
     @staticmethod
     def kl(x, y):
-        """ Always 0, as Uniform arms are ALL the same."""
-        return 0
+        return klBern(x, y)
 
     @staticmethod
     def oneLR(mumax, mu):
-        """ One term of the Lai & Robbins lower bound for Uniform arms: 0, as Uniform arms are ALL the same."""
-        return 0
+        """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
+        return (mumax - mu) / klBern(mu, mumax)

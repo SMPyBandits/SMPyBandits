@@ -43,10 +43,12 @@ class Exponential(Arm):
         else:
             self.expectation = (1. - exp(-p * trunc)) / p
 
-    # --- Random samples
-
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
     def mean(self):
         return self.expectation
+
+    # --- Random samples
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""

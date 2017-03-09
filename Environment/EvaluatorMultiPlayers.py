@@ -104,8 +104,8 @@ class EvaluatorMultiPlayers(object):
         self.__initPlayers__(env)
         # Get the position of the best arms
         env = self.envs[envId]
-        means = np.array([arm.mean() for arm in env.arms])
-        bestarm = np.max(means)
+        means = env.means
+        bestarm = env.maxArm
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
         def store(r):
@@ -167,7 +167,7 @@ class EvaluatorMultiPlayers(object):
         return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
     def getCentralizedRegret(self, envId=0):
-        meansArms = np.sort(np.array([arm.mean() for arm in self.envs[envId].arms]))
+        meansArms = np.sort(self.envs[envId].mean)
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
         # FIXED how to count it when there is more players than arms ?
@@ -185,14 +185,12 @@ class EvaluatorMultiPlayers(object):
 
     def getFirstRegretTerm(self, envId=0):
         """Extract and compute the first term in the centralized regret: losses due to pulling suboptimal arms."""
-        arms = self.envs[envId].arms
-        meansArms = np.array([arm.mean() for arm in arms])
-        sortingIndex = np.argsort(meansArms)
-        meansArms = np.sort(meansArms)
-        deltaMeansWorstArms = meansArms[-self.nbPlayers] - meansArms[:-self.nbPlayers]
-        allPulls = self.allPulls[envId] / float(self.repetitions)
+        means = self.envs[envId].means
+        sortingIndex = np.argsort(means)
+        means = np.sort(means)
+        deltaMeansWorstArms = means[-self.nbPlayers] - means[:-self.nbPlayers]
+        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
         worstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
-        # Shape: (nbPlayers, nbArms, duration)
         worstPulls = np.sum(worstPulls, axis=0)  # sum for all players
         losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
         firstRegretTerm = np.cumsum(losses)  # Accumulate losses
@@ -200,14 +198,12 @@ class EvaluatorMultiPlayers(object):
 
     def getSecondRegretTerm(self, envId=0):
         """Extract and compute the second term in the centralized regret: losses due to not pulling optimal arms."""
-        arms = self.envs[envId].arms
-        meansArms = np.array([arm.mean() for arm in arms])
-        sortingIndex = np.argsort(meansArms)
-        meansArms = np.sort(meansArms)
-        deltaMeansBestArms = meansArms[-self.nbPlayers:] - meansArms[-self.nbPlayers]
-        allPulls = self.allPulls[envId] / float(self.repetitions)
+        means = self.envs[envId].means
+        sortingIndex = np.argsort(means)
+        means = np.sort(means)
+        deltaMeansBestArms = means[-self.nbPlayers:] - means[-self.nbPlayers]
+        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
         bestMisses = allPulls[:, sortingIndex[-self.nbPlayers:], :]
-        # Shape: (nbPlayers, nbArms, duration)
         bestMisses = 1 - np.sum(bestMisses, axis=0)  # sum for all players
         losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mworst
         secondRegretTerm = np.cumsum(losses)  # Accumulate losses
@@ -215,12 +211,11 @@ class EvaluatorMultiPlayers(object):
 
     def getThirdRegretTerm(self, envId=0):
         """Extract and compute the third term in the centralized regret: losses due to collisions."""
-        arms = self.envs[envId].arms
-        meansArms = np.array([arm.mean() for arm in arms])
+        means = self.envs[envId].means
         # collisions = self.collisions[envId] / (float(self.repetitions) * self.nbPlayers)
         collisions = self.collisions[envId] / float(self.repetitions)
         # Shape: (nbArms, duration)
-        losses = np.dot(meansArms, collisions)  # Count and sum on k in 1...K
+        losses = np.dot(means, collisions)  # Count and sum on k in 1...K
         thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
         return thirdRegretTerm
 
@@ -498,7 +493,7 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
-    # Starting from the average occupation (by primary users), as given by [1 - arm.mean()], it should increase occupation[arm] when users chose it
+    # Starting from the average occupation (by primary users), as given by [1 - arm.mean], it should increase occupation[arm] when users chose it
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
     def plotNbCollisions(self, envId=0, savefig=None, cumulated=False, evaluators=()):

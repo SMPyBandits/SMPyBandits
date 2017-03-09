@@ -17,6 +17,11 @@ class Bernoulli(Arm):
         assert 0 <= probability <= 1, "Error, the parameter probability for Bernoulli class has to be in [0, 1]."
         self.probability = probability
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def mean(self):
+        return self.probability
+
     # --- Random samples
 
     def draw(self, t=None):
@@ -26,9 +31,6 @@ class Bernoulli(Arm):
     def draw_nparray(self, shape=(1,)):
         """ The parameter t is ignored in this Arm."""
         return 1.0 * (random(shape) <= self.probability)
-
-    def mean(self):
-        return self.probability
 
     # --- Printing
 

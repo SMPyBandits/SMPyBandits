@@ -3,30 +3,15 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from itertools import product
 import numpy as np
 import matplotlib.pyplot as plt
 
-try:
-    try:
-        from .usenumba import jit
-    except SystemError:
-        from usenumba import jit
-except ImportError:
-    def jit(f):
-        return f
-try:
-    try:
-        from .usetqdm import tqdm
-    except SystemError:
-        from usetqdm import tqdm
-except ImportError:
-    def tqdm(f):
-        return f
-
 # Local imports
+from .usenumba import jit
+from .usetqdm import tqdm
 from .plotsettings import maximizeWindow, legend
 
 # Local imports

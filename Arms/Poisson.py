@@ -35,10 +35,12 @@ class Poisson(Arm):
                 sq += q
             self.expectation += self.trunc * (1 - sq)
 
-    # --- Random samples
-
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
     def mean(self):
         return self.expectation
+
+    # --- Random samples
 
     def draw(self, t=None):
         """ The parameter t is ignored in this Arm."""

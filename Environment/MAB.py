@@ -64,7 +64,7 @@ class MAB(object):
 
     def means(self):
         """Return list of means."""
-        return np.array([arm.mean() for arm in self.arms])
+        return np.array([arm.mean for arm in self.arms])
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """ Return a str representation of the list of the arms (repr(self.arms))
@@ -95,17 +95,11 @@ class MAB(object):
 
     def lowerbound(self):
         """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
-        means = self.means()
-        bestMean = max(means)
-        oneLR = self.arms[0].oneLR
-        return sum(oneLR(bestMean, mean) for mean in means if mean != bestMean)
+        return sum(a.oneLR(self.maxArm, a.mean) for a in self.arms if a.mean != self.maxArm)
 
     def hoifactor(self):
         """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017)."""
-        means = self.means()
-        bestMean = max(means)
-        oneHOI = self.arms[0].oneHOI
-        return sum(oneHOI(bestMean, mean) for mean in means) / float(self.nbArms)
+        return sum(a.oneHOI(self.maxArm, a.mean) for a in self.arms if a.mean != self.maxArm) / float(self.nbArms)
 
     def lowerbound_multiplayers(self, nbPlayers=1):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
@@ -132,7 +126,6 @@ class MAB(object):
         return our_lowerbound, anandkumar_lowerbound
 
     # --- plot
-    # FIXME we should also print the actual term we lower bound, on an other graph, to check how far it is from the theoretical lower bound
     def plotComparison_our_anandkumar(self, savefig=None):
         """Plot a comparison of our lowerbound and their lowerbound."""
         nbPlayers = self.nbArms
@@ -167,7 +160,7 @@ class MAB(object):
         # Now plot
         plt.figure()
         for armId, arm in enumerate(arms):
-            _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm))
+            _ = plt.hist(rewards[armId,:], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm), alpha=0.7)
         legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")

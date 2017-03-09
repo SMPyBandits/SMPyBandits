@@ -20,3 +20,4 @@ docs/*.rst
 
 # Tests
 *slack-bot*.py
+notebooks/.ipynb_checkpoints/
