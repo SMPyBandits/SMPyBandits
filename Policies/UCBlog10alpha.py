@@ -30,5 +30,4 @@ class UCBlog10alpha(UCBlog10):
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
-            mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
-            return mean + sqrt((self.alpha * log10(self.t)) / (2 * self.pulls[arm]))
+            return self.rewards[arm] / self.pulls[arm] + sqrt((self.alpha * log10(self.t)) / (2 * self.pulls[arm]))

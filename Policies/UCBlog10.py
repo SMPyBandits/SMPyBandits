@@ -20,5 +20,4 @@ class UCBlog10(IndexPolicy):
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
-            mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
-            return mean + sqrt((2 * log10(self.t)) / self.pulls[arm])
+            return self.rewards[arm] / self.pulls[arm] + sqrt((2 * log10(self.t)) / self.pulls[arm])

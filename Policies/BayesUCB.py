@@ -15,4 +15,4 @@ class BayesUCB(BayesianIndexPolicy):
     """
 
     def computeIndex(self, arm):
-        return self.posterior[arm].quantile(1 - 1. / (1 + self.t))
+        return self.posterior[arm].quantile(1. - 1. / (1 + self.t))

@@ -6,6 +6,7 @@ Reference: [Lai & Robbins, 1985].
 __author__ = "Lilian Besson"
 __version__ = "0.2"
 
+from math import sqrt, log
 import numpy as np
 from .UCB import UCB
 
@@ -26,4 +27,5 @@ class UCBrandomInit(UCB):
         if self.t < self.nbArms:  # Force to first visit each arm in a certain random order
             return self._initial_exploration[self.t]  # Better: random permutation!
         else:
-            return super(UCBrandomInit, self).choice()
+            # return super(UCBrandomInit, self).choice()
+            return self.rewards[arm] / self.pulls[arm] + sqrt((2 * log(self.t)) / self.pulls[arm])

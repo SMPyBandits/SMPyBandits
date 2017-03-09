@@ -20,5 +20,4 @@ class MOSS(IndexPolicy):
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
-            mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
-            return mean + sqrt(max(0, log(self.t / (self.nbArms * self.pulls[arm]))) / self.pulls[arm])
+            return self.rewards[arm] / self.pulls[arm] + sqrt(max(0, log(self.t / (self.nbArms * self.pulls[arm]))) / self.pulls[arm])

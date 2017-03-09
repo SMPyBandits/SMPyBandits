@@ -28,6 +28,8 @@ from .OracleFair import OracleFair
 
 # CentralizedMultiplePlay where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players
 from .CentralizedMultiplePlay import CentralizedMultiplePlay
+# CentralizedIMP where ONE M multi-play bandit algorithm is ran, instead of decentralized one-play bandits ran by each of the M players, with a small optimization
+from .CentralizedIMP import CentralizedIMP
 
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoRandRand import rhoRandRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)

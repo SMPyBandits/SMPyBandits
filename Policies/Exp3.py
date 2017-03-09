@@ -7,6 +7,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
+import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
@@ -35,7 +36,7 @@ class Exp3(BasePolicy):
         self.weights = np.ones(nbArms) / nbArms
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # XXX do even more randomized, take a random permutation of the arm ?
-        self._initial_exploration = np.random.permutation(nbArms)
+        self._initial_exploration = rn.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
     def startGame(self):
@@ -74,25 +75,25 @@ class Exp3(BasePolicy):
             # DONE we could use a random permutation instead of deterministic order!
             return self._initial_exploration[self.t]
         else:
-            return np.random.choice(self.nbArms, p=self.trusts)
+            return rn.choice(self.nbArms, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
         if (self.t < self.nbArms) or (rank == 1):
             return self.choice()
         else:
-            return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
+            return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
 
     def choiceFromSubSet(self, availableArms='all'):
         if (self.t < self.nbArms) or (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
-            return np.random.choice(availableArms, p=self.trusts[availableArms])
+            return rn.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
         if (self.t < self.nbArms) or (nb == 1):
             return self.choice()
         else:
-            return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+            return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
 
 # --- Two special cases

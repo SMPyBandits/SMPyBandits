@@ -9,7 +9,7 @@ __version__ = "0.2"
 from warnings import warn
 from random import random
 import numpy as np
-import numpy.random as rd
+import numpy.random as rn
 
 from .BasePolicy import BasePolicy
 
@@ -36,22 +36,22 @@ class EpsilonGreedy(BasePolicy):
 
     def choice(self):
         if random() < self.epsilon:  # Proba epsilon : explore
-            return rd.randint(0, self.nbArms - 1)
+            return rn.randint(0, self.nbArms - 1)
         else:  # Proba 1 - epsilon : exploit
             # Uniform choice among the best arms
-            return rd.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
+            return rn.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
 
     def choiceWithRank(self, rank=1):
         if rank == 1:
             return self.choice()
         else:
             if random() < self.epsilon:  # Proba epsilon : explore
-                return rd.randint(0, self.nbArms - 1)
+                return rn.randint(0, self.nbArms - 1)
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)
                 chosenIndex = sortedRewards[-rank]
                 # Uniform choice among the rank-th best arms
-                return rd.choice(np.nonzero(self.rewards == chosenIndex)[0])
+                return rn.choice(np.nonzero(self.rewards == chosenIndex)[0])
 
     def choiceFromSubSet(self, availableArms='all'):
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
@@ -63,18 +63,18 @@ class EpsilonGreedy(BasePolicy):
             # return np.random.randint(self.nbArms)
         else:
             if random() < self.epsilon:  # Proba epsilon : explore
-                return rd.choice(availableArms)
+                return rn.choice(availableArms)
             else:  # Proba 1 - epsilon : exploit
                 # Uniform choice among the best arms
-                return rd.choice(np.nonzero(self.rewards[availableArms] == np.max(self.rewards[availableArms]))[0])
+                return rn.choice(np.nonzero(self.rewards[availableArms] == np.max(self.rewards[availableArms]))[0])
 
     def choiceMultiple(self, nb=1):
         if nb == 1:
             return self.choice()
         else:
             if random() < self.epsilon:  # Proba epsilon : explore
-                return rd.choice(self.nbArms, size=nb, replace=False)
+                return rn.choice(self.nbArms, size=nb, replace=False)
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)
                 # Uniform choice among the best arms
-                return rd.choice(np.nonzero(self.rewards >= sortedRewards[-nb])[0], size=nb, replace=False)
+                return rn.choice(np.nonzero(self.rewards >= sortedRewards[-nb])[0], size=nb, replace=False)

@@ -30,10 +30,10 @@ class Selfish(BaseMPPolicy):
     """ Selfish: a multi-player policy where every player is selfish, playing on their side.
 
     - without nowing how many players there is, and
-    - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receive a 0 reward for the chosen arm.
+    - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receives a 0 reward for the chosen arm (can be changed with penalty= argument).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, *args, **kwargs):
+    def __init__(self, nbPlayers, playerAlgo, nbArms, penalty=PENALTY, *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -50,6 +50,7 @@ class Selfish(BaseMPPolicy):
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
         self.nbPlayers = nbPlayers
+        self.penalty = penalty
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers
         for playerId in range(nbPlayers):
@@ -77,4 +78,4 @@ class Selfish(BaseMPPolicy):
             player.handleCollision(arm)
         else:
             # Else, call players[j].getReward() with a reward = 0 to change the internals memory of the player
-            player.getReward(arm, getattr(player, 'lower', 0) if PENALTY is None else PENALTY)
+            player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)

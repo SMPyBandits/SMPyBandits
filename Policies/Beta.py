@@ -34,7 +34,7 @@ class Beta(Posterior):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
     def __init__(self, a=1, b=1):
-        """Create a Beta posterior with no observation."""
+        """Create a Beta posterior with no observation, i.e. alpha = 1 and beta = 1."""
         self.a = a
         self.b = b
         self.N = [a, b]
@@ -42,11 +42,11 @@ class Beta(Posterior):
     def __str__(self):
         return "Beta({}, {})".format(self.N[1], self.N[0])
 
-    def reset(self, a=0, b=0):
-        """Reset alpha and beta to 0."""
-        if a == 0:
+    def reset(self, a=None, b=None):
+        """Reset alpha and beta, both to 1 as when creating a new default Beta."""
+        if a is None:
             a = self.a
-        if b == 0:
+        if b is None:
             b = self.b
         self.N = [a, b]
 

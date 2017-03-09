@@ -7,7 +7,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
-import numpy.random as rd
+import numpy.random as rn
 from .TakeFixedArm import TakeFixedArm
 
 
@@ -17,12 +17,12 @@ class TakeRandomFixedArm(TakeFixedArm):
     def __init__(self, nbArms, lower=0., amplitude=1.):
         self.nbArms = nbArms
         # Get the number of arms, randomly!
-        nbArmIndexes = rd.randint(low=1, high=1 + int(nbArms / 2.))
+        nbArmIndexes = rn.randint(low=1, high=1 + int(nbArms / 2.))
         # Fix the set of arms
-        self.armIndexes = list(rd.choice(np.arange(nbArms), size=nbArmIndexes, replace=False))
+        self.armIndexes = list(rn.choice(np.arange(nbArms), size=nbArmIndexes, replace=False))
 
     def __str__(self):
         return "TakeRandomFixedArm({})".format(self.armIndexes)
 
     def choice(self):
-        return rd.choice(self.armIndexes)
+        return rn.choice(self.armIndexes)

@@ -10,6 +10,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.5"
 
 import numpy as np
+import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 # self.unbiased is a flag to know if the rewards are used as biased estimator,
@@ -35,7 +36,7 @@ class Softmax(BasePolicy):
         self.unbiased = unbiased
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # Even more randomized, take a random permutation of the arm ?
-        self._initial_exploration = np.random.permutation(nbArms)
+        self._initial_exploration = rn.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
     def startGame(self):
@@ -67,13 +68,13 @@ class Softmax(BasePolicy):
             # return self.t  # random permutation instead of deterministic order!
             return self._initial_exploration[self.t]  # DONE
         else:
-            return np.random.choice(self.nbArms, p=self.trusts)
+            return rn.choice(self.nbArms, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
         if (self.t < self.nbArms) or (rank == 1):
             return self.choice()
         else:
-            return np.random.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[-1]
+            return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[-1]
 
     def choiceFromSubSet(self, availableArms='all'):
         if self.t < self.nbArms:
@@ -81,13 +82,13 @@ class Softmax(BasePolicy):
         elif (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
-            return np.random.choice(availableArms, p=self.trusts[availableArms])
+            return rn.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
         if nb == 1:
             return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
-            return np.random.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+            return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
 
 # --- Special cases

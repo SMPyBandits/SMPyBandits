@@ -20,5 +20,4 @@ class UCBopt(UCB):
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
-            mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
-            return mean + min(1, sqrt(log(self.t) / (2 * self.pulls[arm])))
+            return self.rewards[arm] / self.pulls[arm] + min(1., sqrt(log(self.t) / (2 * self.pulls[arm])))

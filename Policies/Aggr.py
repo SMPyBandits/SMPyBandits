@@ -209,3 +209,11 @@ class Aggr(BasePolicy):
             for i, child in enumerate(self.children):
                 self.choices[i] = child.choiceMultiple(nb)
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
+
+    def choiceIMP(self, nb=1):
+        if nb == 1:
+            return self.choice()
+        else:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choiceIMP(nb)
+            return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)

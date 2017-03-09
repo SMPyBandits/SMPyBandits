@@ -15,15 +15,14 @@ from .klUCB import klUCB, c
 # --- Numerical functions required for the function g(n) for kl-UCB++
 
 def logplus(x):
-    """logplus(x) = max(log(x), 0)"""
-    return max(log(x), 0)
+    """logplus(x) = max(0, log(x))."""
+    return max(0, log(x))
 
 
 def g(n, T, K):
     """The exploration function g(n), as defined in page 3 of the reference paper."""
     y = T / float(K * n)
-    return logplus(y * (1 + logplus(y) ** 2))
-
+    return max(0, log(y * (1 + max(0, log(y)) ** 2)))
 
 
 class klUCBPlusPlus(klUCB):
