@@ -11,7 +11,7 @@ import numpy as np
 from .Arm import Arm
 from .kullback import klGauss
 
-# oo = float('+inf')  # Nice way to write +infinity
+oo = float('+inf')  # Nice way to write +infinity
 
 VARIANCE = 0.05
 
@@ -52,7 +52,7 @@ class Gaussian(Arm):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def lower_amplitude(self):
-        return (self.min, self.max - self.min)
+        return self.min, self.max - self.min
 
     def __str__(self):
         return "Gaussian"
@@ -62,13 +62,9 @@ class Gaussian(Arm):
 
     # --- Lower bound
 
-    # @staticmethod
     def kl(self, x, y):
-        # return klGauss(x, y, VARIANCE)
         return klGauss(x, y, self.sigma)
 
-    # @staticmethod
     def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
-        # return (mumax - mu) / klGauss(mu, mumax, VARIANCE)
         return (mumax - mu) / klGauss(mu, mumax, self.sigma)

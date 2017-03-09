@@ -51,7 +51,6 @@ def amplitude_fairness(X, axis=0):
     return 1 - (np.min(X, axis=axis) / np.max(X, axis=axis))
 
 
-
 def std_fairness(X, axis=0):
     """ (Normalized) Standard-variation fairness, homemade formula: 2 * std(X, axis) / max(X, axis).
 

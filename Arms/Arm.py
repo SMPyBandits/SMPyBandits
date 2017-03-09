@@ -21,9 +21,9 @@ class Arm(object):
     @property
     def lower_amplitude(self):
         if hasattr(self, 'lower') and hasattr(self, 'amplitude'):
-            return (self.lower, self.amplitude)
+            return self.lower, self.amplitude
         elif hasattr(self, 'min') and hasattr(self, 'max'):
-            return (self.min, self.max - self.min)
+            return self.min, self.max - self.min
         else:
             raise NotImplementedError("This method lower_amplitude() has to be implemented in the class inheriting from Arm.")
 

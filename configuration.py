@@ -372,14 +372,14 @@ configuration.update({
         # {
         #     "archtype": klUCB,
         #     "params": {
-        #         "c": 0.434294  # = 1. / np.log(10) ==> like klUCBlog10
+        #         "c": 0.434294,  # = 1. / np.log(10) ==> like klUCBlog10
         #         "klucb": klucb
         #     }
         # },
         # {
         #     "archtype": klUCB,
         #     "params": {
-        #         "c": 3.
+        #         "c": 3.,
         #         "klucb": klucb
         #     }
         # },
@@ -392,7 +392,7 @@ configuration.update({
         # {
         #     "archtype": klUCBloglog,
         #     "params": {
-        #         "c": 3.
+        #         "c": 3.,
         #         "klucb": klucb
         #     }
         # },

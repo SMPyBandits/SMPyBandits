@@ -474,6 +474,7 @@ def reseqp(p, V, klMax):
 # https://www.docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.fixed_point
 from scipy.optimize import minimize
 
+
 def reseqp2(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using a blackbox minimizer, from scipy.optimize.
 

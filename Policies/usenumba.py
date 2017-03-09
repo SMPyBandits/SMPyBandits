@@ -23,6 +23,7 @@ except ImportError:
 
 if not USE_NUMBA:
     print("Warning: numba.jit seems to be disabled. Using a dummy decorator for numba.jit() ...")
+
     def jit(f):
         return f
 

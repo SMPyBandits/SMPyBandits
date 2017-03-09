@@ -39,7 +39,6 @@ def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
 
 
-
 # --- Debugging
 
 if __name__ == "__main__":

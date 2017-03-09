@@ -38,7 +38,7 @@ class Bernoulli(Arm):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def lower_amplitude(self):
-        return (0., 1.)
+        return 0., 1.
 
     def __str__(self):
         return "Bernoulli"

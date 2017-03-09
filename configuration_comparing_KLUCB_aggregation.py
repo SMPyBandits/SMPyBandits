@@ -150,13 +150,17 @@ configuration = {
 LOWER, AMPLITUDE = 0, 1
 try:
     for env in configuration['environment']:
-        nbArms = len(env['params'])
-        arm_type = env['arm_type']
-        for param in env['params']:
-            arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
-            l, a = arm.lower_amplitude
-            LOWER = min(LOWER, l)
-            AMPLITUDE = max(AMPLITUDE, a)
+        if isinstance(env, dict) and 'params' in env and 'arm_type' in env:
+            nbArms = len(env['params'])
+            arm_type = env['arm_type']
+            for param in env['params']:
+                arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
+                l, a = arm.lower_amplitude
+        else:  # the env must be a list of arm, already created
+            for arm in env:
+                l, a = arm.lower_amplitude
+                LOWER = min(LOWER, l)
+                AMPLITUDE = max(AMPLITUDE, a)
     mini, maxi = LOWER, LOWER + AMPLITUDE
     print("Apparently, the arms have rewards in [{}, {}] (lower = {}, amplitude = {})".format(LOWER, LOWER + AMPLITUDE, LOWER, AMPLITUDE))
 except Exception as e:

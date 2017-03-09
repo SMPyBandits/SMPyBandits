@@ -22,8 +22,10 @@ def p_of_expectation(expectation, trunc=1):
     else:
         def expp(p):
             return (1. - exp(-p * trunc)) / p
+
     def objective(p):
         return abs(expectation - expp(p))
+
     return minimize(objective, 1).x[0]
 
 
@@ -64,7 +66,7 @@ class Exponential(Arm):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def lower_amplitude(self):
-        return (0., self.trunc)
+        return 0., self.trunc
 
     def __str__(self):
         return "Exponential"
