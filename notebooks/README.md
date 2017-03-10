@@ -10,6 +10,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 
 ## 1. List of experiments presented with notebooks
 - [Easily creating various Multi-Armed Bandit problems](Easily_creating_MAB_problems.ipynb), explains the interface of the [`Environment.MAB`](../Environment/MAB.py) module.
+- [A simple example of Single-Player simulation](Example_of_a_small_Single-Player_Simulation.ipynb), comparing UCB1 (for two values of $\alpha$, 1 and 1/2), Thompson Sampling, BayesUCB and kl-UCB.
 
 ----
 
