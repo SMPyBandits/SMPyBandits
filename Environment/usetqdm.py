@@ -6,11 +6,30 @@ from __future__ import division, print_function
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+
+def in_notebook():
+    """Check if the code is running inside a Jupyter notebook or not. Cf. http://stackoverflow.com/a/39662359/."""
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == 'ZMQInteractiveShell':  # Jupyter notebook or qtconsole?
+            return True
+        elif shell == 'TerminalInteractiveShell':  # Terminal running IPython?
+            return False
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False      # Probably standard Python interpreter
+
 try:
-    from tqdm import tqdm
+    if in_notebook():
+        from tqdm import tqdm_notebook as tqdm
+        print("Info: Using the Jupyter notebook version of the tqdm() decorator, tqdm_notebook() ...")  # DEBUG
+    else:
+        from tqdm import tqdm
+        print("Info: Using the regular tqdm() decorator ...")  # DEBUG
     USE_TQDM = True
 except ImportError:
-    print("tqdm not found. Install it from pypi ('pip install tqdm') or conda.\n  Info: Not mandatory, but it's pretty!")
+    print("Warning: tqdm not found. Install it from pypi ('pip install tqdm') or conda.\n  Info: Not mandatory, but it's pretty!")
     USE_TQDM = False
 
     def tqdm(iterator, *args, **kwargs):
