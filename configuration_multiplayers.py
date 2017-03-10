@@ -75,7 +75,7 @@ DECREASE_RATE = None
 
 # NB_PLAYERS : number of player, for policies who need it ?
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -140,10 +140,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(19, 1 / (1. + 19))
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
@@ -151,6 +151,16 @@ configuration = {
         # {   # An easy problem (50 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(50, 1 / (1. + 50))
+        # }
+        {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+            "arm_type": Bernoulli,
+            "params": [0.3, 0.4, 0.5, 0.6, 0.7]
+            # nbPlayers = 2
+        }
+        # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
+        #     # nbPlayers = 3
         # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
@@ -189,10 +199,16 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
+
+    # --- FIXME Using a smart Centralized policy, based on choiceIMP()
+    "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    # "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
+    # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
+    # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
 
     # --- DONE Using multi-player Selfish policy
     # "players": Selfish(NB_PLAYERS, Uniform, nbArms).children
@@ -265,34 +281,42 @@ configuration.update({
 #     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
-configuration["successive_players"] = [
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
-    # Selfish(NB_PLAYERS, MOSS, nbArms).children,
-    Selfish(NB_PLAYERS, klUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
-]
+# configuration["successive_players"] = [
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+#     # Selfish(NB_PLAYERS, MOSS, nbArms).children,
+#     Selfish(NB_PLAYERS, klUCB, nbArms).children,
+#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     Selfish(NB_PLAYERS, Thompson, nbArms).children,
+#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+#     # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
+# ]
 
 # configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1, uniformAllocation=False).children,
-#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+#     CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+#     CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
 # ]
+
+configuration["successive_players"] = [
+    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+]
 
 
 # from itertools import product  # XXX If needed!
