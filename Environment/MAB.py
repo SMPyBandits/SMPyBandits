@@ -115,12 +115,12 @@ class MAB(object):
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
-        print("  - For {} player, our lower bound gave = {} ...".format(nbPlayers, our_lowerbound))  # DEBUG
+        print("  - For {} player, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
-        print("  - For {} player, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
+        print("  - For {} player, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
 
         # Check that our bound is better (ie bigger)
         if anandkumar_lowerbound > our_lowerbound:

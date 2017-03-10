@@ -270,10 +270,10 @@ class EvaluatorMultiPlayers(object):
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
             for playerId, player in enumerate(eva.players):
                 cumRewards[playerId, :] = eva.getRewards(playerId, envId)
-            # Print each fairness measure  # DEBUG
-            for fN, fF in fairness_mapping.items():
-                f = fF(cumRewards)
-                print("  - {} fairness index is = {} ...".format(fN, f))  # DEBUG
+            # # Print each fairness measure  # DEBUG
+            # for fN, fF in fairness_mapping.items():
+            #     f = fF(cumRewards)
+            #     print("  - {} fairness index is = {} ...".format(fN, f))  # DEBUG
             # Plot only one fairness term
             fairness = fairnessFunction(cumRewards)
             plot_method(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
@@ -342,7 +342,7 @@ class EvaluatorMultiPlayers(object):
         # We also plot our lower bound
         lowerbound, anandkumar_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-        print(" - Our lowerbound = {:.3g},\n - anandkumar_lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
+        print(" - Our lowerbound = {:.3g},\n - [Anandkumar et al] lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
         T = np.ones_like(X) if normalized else np.log(2 + X)
         plot_method(X, lowerbound * T, 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
         plot_method(X, anandkumar_lowerbound * T, 'k:', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)

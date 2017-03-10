@@ -294,10 +294,10 @@ configuration.update({
 # ]
 
 configuration["successive_players"] = [
-    CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
-    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-    CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+    CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
 ]
 
