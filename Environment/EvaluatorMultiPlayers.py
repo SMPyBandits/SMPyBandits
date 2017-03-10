@@ -22,6 +22,8 @@ from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
 
+REPETITIONS = 1
+DELTA_T_SAVE = 1
 
 # --- Class EvaluatorMultiPlayers
 
@@ -37,9 +39,9 @@ class EvaluatorMultiPlayers(object):
         print("Number of players in the multi-players game:", self.nbPlayers)  # DEBUG
         self.horizon = self.cfg['horizon']
         print("Time horizon:", self.horizon)  # DEBUG
-        self.repetitions = self.cfg['repetitions']
+        self.repetitions = self.cfg.get('repetitions', REPETITIONS)
         print("Number of repetitions:", self.repetitions)  # DEBUG
-        self.delta_t_save = self.cfg['delta_t_save']
+        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
         print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)  # DEBUG
         self.duration = int(self.horizon / self.delta_t_save)
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
@@ -49,6 +51,7 @@ class EvaluatorMultiPlayers(object):
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)
         self.averageOn = self.cfg.get('averageOn', 5e-3)
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
+        self.showplot = self.cfg.get('showplot', True)
         # Internal object memory
         self.envs = []
         self.players = []
@@ -248,7 +251,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotFairness(self, envId=0, savefig=None, semilogx=False, fairness="default", evaluators=()):
@@ -285,7 +288,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotRegretCentralized(self, envId=0, savefig=None, semilogx=False, normalized=False, evaluators=(), subTerms=False):
@@ -352,7 +355,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotNbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
@@ -382,7 +385,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
@@ -414,7 +417,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotBestArmPulls(self, envId=0, savefig=None):
@@ -437,7 +440,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotAllPulls(self, envId=0, savefig=None, cumulated=True, normalized=False):
@@ -466,7 +469,7 @@ class EvaluatorMultiPlayers(object):
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
                 print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-            plt.show() if self.cfg['showplot'] else plt.close()
+            plt.show() if self.showplot else plt.close()
         return figs
 
     def plotFreeTransmissions(self, envId=0, savefig=None, cumulated=False):
@@ -490,7 +493,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
@@ -524,7 +527,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True):
@@ -566,7 +569,7 @@ class EvaluatorMultiPlayers(object):
         if savefig is not None:
             print("Saving to", savefig, "...")  # DEBUG
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def printFinalRanking(self, envId=0):

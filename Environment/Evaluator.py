@@ -21,6 +21,8 @@ from .Result import Result
 from .MAB import MAB
 
 
+REPETITIONS = 1
+DELTA_T_SAVE = 1
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
@@ -37,12 +39,12 @@ class Evaluator(object):
         self.cfg = configuration
         # Attributes
         self.nbPolicies = len(self.cfg['policies'])
-        print("Number of policies in this comparaison:", self.nbPolicies)
+        print("Number of policies in this comparison:", self.nbPolicies)
         self.horizon = self.cfg['horizon']
         print("Time horizon:", self.horizon)
-        self.repetitions = self.cfg['repetitions']
+        self.repetitions = self.cfg.get('repetitions', REPETITIONS)
         print("Number of repetitions:", self.repetitions)
-        self.delta_t_save = self.cfg['delta_t_save']
+        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
         print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
         self.duration = int(self.horizon / self.delta_t_save)
         # Parameters for the random events
@@ -55,6 +57,7 @@ class Evaluator(object):
         self.useJoblibForPolicies = useJoblibForPolicies
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
         self.cache_rewards = self.cfg.get('cache_rewards', False)
+        self.showplot = self.cfg.get('showplot', True)
         # Internal object memory
         self.envs = []
         self.policies = []
@@ -262,7 +265,7 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -284,7 +287,7 @@ class Evaluator(object):
         if savefig is not None:
             print("Saving to", savefig, "...")
             plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.cfg['showplot'] else plt.close()
+        plt.show() if self.showplot else plt.close()
         return fig
 
     def printFinalRanking(self, envId=0):
