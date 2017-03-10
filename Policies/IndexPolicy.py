@@ -103,11 +103,11 @@ class IndexPolicy(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
-            # For first exploration steps, do pure exploration
-            if np.min(self.pulls) < 2:
-                return self.choiceMultiple(nb=nb)
+            # # For first exploration steps, do pure exploration
+            # if np.min(self.pulls) < 2:
+            #     return self.choiceMultiple(nb=nb)
             # First choose nb-1 arms, from rewards
-            sortedEmpiricalRewards = np.sort(self.rewards / self.pulls)
+            sortedEmpiricalRewards = np.sort(self.rewards / (1 + self.pulls))
             exploitations = np.random.choice(np.nonzero(self.rewards >= sortedEmpiricalRewards[-nb])[0], size=nb - 1, replace=False)
             # Then choose 1 arm, from index now
             availableArms = np.setdiff1d(np.arange(self.nbArms), exploitations)

@@ -186,26 +186,26 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- KL algorithms, here only klUCBPlusPlus with different klucb functions
+        # --- KL algorithms, here only klUCBPlus with different klucb functions
         {
-            "archtype": klUCBPlusPlus,
+            "archtype": klUCBPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbBern, "horizon": HORIZON,
+                "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
         {
-            "archtype": klUCBPlusPlus,
+            "archtype": klUCBPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbExp, "horizon": HORIZON,
+                "klucb": klucbExp,  # "horizon": HORIZON,
             }
         },
         {
-            "archtype": klUCBPlusPlus,
+            "archtype": klUCBPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss, "horizon": HORIZON,
+                "klucb": klucbGauss,  # "horizon": HORIZON,
             }
         },
         # --- BayesUCB algorithm

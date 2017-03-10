@@ -121,11 +121,11 @@ def maximizeWindow():
                     # plt.show()
 
 
-def add_percent_formatter(which="xaxis", amplitude=1.0):
+def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):
     """Small function to use a Percentage formatter for xaxis or yaxis, of a certain amplitude.
 
-    - which can be "xaxis" or "yaxis"
-    - amplitude is a float, default to 1
+    - which can be "xaxis" or "yaxis",
+    - amplitude is a float, default to 1.
 
     - More detail at http://stackoverflow.com/a/36320013/
     - Not that the use of matplotlib.ticker.PercentFormatter require matplotlib >= 2.0.1
@@ -139,7 +139,10 @@ def add_percent_formatter(which="xaxis", amplitude=1.0):
     else:
         raise ValueError("Unknown value '{}' for 'which' in function add_percent_formatter() : only xaxis,yaxis are accepted...".format(which))
     # Which formatter to use ?
-    my_frmt = mtick.StrMethodFormatter("{x:.0%}")
+    try:
+        my_frmt = mtick.StrMethodFormatter(formatter)  # Use new format string
+    except:
+        my_frmt = mtick.FormatStrFormatter(oldformatter)  # Use old format string, better looking but not correctly scaled
     if hasattr(mtick, 'PercentFormatter'):
         my_frmt = mtick.PercentFormatter(amplitude)
     # Use it!

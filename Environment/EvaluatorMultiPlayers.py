@@ -327,8 +327,9 @@ class EvaluatorMultiPlayers(object):
             # Now plot
             plot_method(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
             if len(evaluators) == 1:
-                # We plot a horizontal line ----- at the mean regret
-                plot_method(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret", color=colors[evaId])
+                if not semilogx:
+                    # We plot a horizontal line ----- at the mean regret
+                    plot_method(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret", color=colors[evaId])
                 # " = ${:.3g}$".format(meanY)
                 if subTerms:
                     Ys.append(Ys[0] + Ys[1] + Ys[2])
