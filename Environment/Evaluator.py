@@ -139,11 +139,11 @@ class Evaluator(object):
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
-                    for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
+                    for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
                     store(r)
             else:
-                for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+                for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
                     store(r)
 

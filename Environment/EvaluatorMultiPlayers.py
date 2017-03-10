@@ -129,11 +129,11 @@ class EvaluatorMultiPlayers(object):
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                 delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId)
-                for repeatId in tqdm(range(self.repetitions), desc="Repetitions")
+                for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
                 store(r)
         else:
-            for repeatId in tqdm(range(self.repetitions), desc="Repetitions"):
+            for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId)
                 store(r)
 
