@@ -103,7 +103,7 @@ class IndexPolicy(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
-            # For first exploration, do pure exploration
+            # For first exploration steps, do pure exploration
             if np.min(self.pulls) < 2:
                 return self.choiceMultiple(nb=nb)
             # First choose nb-1 arms, from rewards

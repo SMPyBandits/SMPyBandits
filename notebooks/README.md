@@ -2,7 +2,7 @@
 
 This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a nice format some numerical experiments for [my AlgoBandits project](https://naereen.github.io/AlgoBandits/).
 
-> [The wonderful Jupyter tools](http://jupyter.org/)  is awesome to write some interactive and nicely presented :snake: Python simulations!
+> [The wonderful Jupyter tools](http://jupyter.org/)  is awesome to write interactive and nicely presented :snake: Python simulations!
 >
 > [![made-with-jupyter](https://img.shields.io/badge/Made%20with-Jupyter-1f425f.svg)](http://jupyter.org/) [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
@@ -15,11 +15,11 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 
 ## 2. Question: *How to read these documents*?
 
-### 2.a. View the notebooks statically :memo:
+### 2.a. View the _notebooks_ statically :memo:
 - Either directly in GitHub: [see the list of notebooks](https://github.com/Naereen/AlgoBandits/search?l=jupyter-notebook);
 - Or on [nbviewer.jupiter.org](http://nbviewer.jupiter.org/): [list of notebooks](http://nbviewer.jupyter.org/github/Naereen/AlgoBandits/).
 
-### 2.b. Play with the notebooks dynamically :boom:
+### 2.b. FIXME not yet - Play with the _notebooks_ dynamically :boom:
 [![MyBinder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/Naereen/AlgoBandits)
 
 Anyone can use the [mybinder.org](http://mybinder.org/) website (by [clicking](http://mybinder.org/repo/Naereen/AlgoBandits) on the icon above) to run the notebook in her/his web-browser.
@@ -28,7 +28,7 @@ You can then play with it as long as you like, for instance by modifying the val
 ----
 
 ## 3. Question: *Requirements to run the notebooks locally*?
-All [the requirements](requirements.txt) can be installed with [``pip``](https://pip.readthedocs.io/) and by running a few ``python -m ...`` commands.
+All [the requirements](requirements.txt) can be installed with [``pip``](https://pip.readthedocs.io/).
 
 > Note: if you use [Python 3](https://docs.python.org/3/) instead of [Python 2](https://docs.python.org/2/), you *might* have to *replace* ``pip`` and ``python`` by ``pip3`` and ``python3`` in the next commands (if both `pip` and `pip3` are installed).
 
@@ -44,7 +44,7 @@ It will also install all the dependencies, afterward you should have a ``jupyter
 $ whereis jupyter-notebook
 jupyter-notebook: /usr/local/bin/jupyter-notebook
 $ jupyter-notebook --version  # version >= 4 is recommended
-4.2.1
+4.4.1
 ```
 
 ### 3.b. My numerical environment, [`AlgoBandits`](https://naereen.github.io/AlgoBandits/)
