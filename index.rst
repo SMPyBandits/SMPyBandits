@@ -26,6 +26,7 @@ See more on `the GitHub page for this project <https://naereen.github.io/AlgoBan
    plots/README.md
    logs/README.md
    uml_diagrams/README.md
+   notebooks/README.md
 
 
 Indices and tables
