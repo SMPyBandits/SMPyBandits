@@ -11,7 +11,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 ## 1. List of experiments presented with notebooks
 - [Easily creating various Multi-Armed Bandit problems](Easily_creating_MAB_problems.ipynb), explains the interface of the [`Environment.MAB`](../Environment/MAB.py) module.
 - [A simple example of Single-Player simulation](Example_of_a_small_Single-Player_Simulation.ipynb), comparing [`UCB1`](../Policies/UCBalpha.py) (for two values of $\alpha$, 1 and 1/2), [`Thompson Sampling`](../Policies/Thompson.py), [`BayesUCB`](../Policies/BayesUCB.py) and [`kl-UCB`](../Policies/klUCB.py).
-- [A simple example of Multi-Player simulation with 4 Centralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb), comparing `CentralizedMultiplePlay` and `CentralizedIMP` with [`UCB`](../Policies/UCB.py) and `Thompson Sampling`.
+- [A simple example of Multi-Player simulation with 4 Centralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb), comparing [`CentralizedMultiplePlay`](../PoliciesMultiPlayers/CentralizedMultiplePlay.py) and [`CentralizedIMP`](../PoliciesMultiPlayers/CentralizedIMP.py) with [`UCB`](../Policies/UCB.py) and [`Thompson Sampling`](../Policies/Thompson.py).
 - [*Do we even need UCB?*](Do_we_even_need_UCB.ipynb) demonstrates the need for an algorithm smarter than the naive [`EmpiricalMeans`](../Policies/EmpiricalMeans.py).
 
 ----
