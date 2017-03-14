@@ -123,7 +123,7 @@ def maximizeWindow():
                     # plt.show()
 
 
-def show_and_save(self, savefig, formats=('png', 'pdf', 'eps')):
+def show_and_save(self, savefig, formats=('png', 'pdf')):
     """Maximize the window, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
