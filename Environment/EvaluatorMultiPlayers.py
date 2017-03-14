@@ -17,7 +17,7 @@ from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save
 from .ResultMultiPlayers import ResultMultiPlayers
 from .MAB import MAB
 from .CollisionModels import defaultCollisionModel
@@ -247,11 +247,7 @@ class EvaluatorMultiPlayers(object):
         # plt.ylim(ymin, ymax)
         plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotFairness(self, envId=0, savefig=None, semilogx=False, fairness="default", evaluators=()):
@@ -284,11 +280,7 @@ class EvaluatorMultiPlayers(object):
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotRegretCentralized(self, envId=0, savefig=None, semilogx=False, normalized=False, evaluators=(), subTerms=False):
@@ -351,11 +343,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
         plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotNbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
@@ -381,11 +369,7 @@ class EvaluatorMultiPlayers(object):
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umber of switches for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated n" if cumulated else "N", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
@@ -413,11 +397,7 @@ class EvaluatorMultiPlayers(object):
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized {}number of switches, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotBestArmPulls(self, envId=0, savefig=None):
@@ -436,11 +416,7 @@ class EvaluatorMultiPlayers(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nBest arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotAllPulls(self, envId=0, savefig=None, cumulated=True, normalized=False):
@@ -489,11 +465,7 @@ class EvaluatorMultiPlayers(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else ""))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
@@ -523,11 +495,7 @@ class EvaluatorMultiPlayers(object):
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True):
@@ -565,11 +533,7 @@ class EvaluatorMultiPlayers(object):
             # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
         plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")  # DEBUG
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def printFinalRanking(self, envId=0):

@@ -69,7 +69,7 @@ if __name__ == '__main__':
         # Sub folder with a useful name
         subfolder = "MP__M{}_T{}_N{}".format(len(configuration['players']), configuration['horizon'], configuration['repetitions'])
         # Get the name of the output file
-        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         plot_dir = os.path.join(PLOT_DIR, subfolder)
         if saveallfigs:
             # Create the sub folder

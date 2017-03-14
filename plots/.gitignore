@@ -1,6 +1,17 @@
+# Figures in sub directories
+# In PNG
 main*.png
 all*.png
+# In EPS
+main*.eps
+all*.eps
+# In PDF
+main*.pdf
+all*.pdf
+# Log files
 *log
+# Memory of program stats
 *.pickle
+# List of files
 .dirs*html
 .files*html

@@ -84,7 +84,7 @@ if __name__ == '__main__':
             # Sub folder with a useful name
             subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], len(players))
             # Get the name of the output file
-            imagename = "main____env{}-{}_{}.png".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
+            imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             # Create the sub folder
             plot_dir = os.path.join(PLOT_DIR, subfolder)
             if saveallfigs:
@@ -250,7 +250,7 @@ if __name__ == '__main__':
         M = e0.nbPlayers
 
         # Get the name of the output file
-        imagename = "all____env{}-{}_{}.png".format(envId + 1, N, _hashvalue)
+        imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
 

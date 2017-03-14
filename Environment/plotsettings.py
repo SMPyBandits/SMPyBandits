@@ -9,6 +9,8 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 from textwrap import wrap
+from os.path import getsize, getatime
+from datetime import datetime
 
 import matplotlib as mpl
 # mpl.use('Agg')  # XXX is it a good idea? Nope, use "export MPLBACKEND='Agg'" in your bashrc ... Cf. http://stackoverflow.com/a/4935945/ and http://matplotlib.org/faq/usage_faq.html#what-is-a-backend
@@ -119,6 +121,21 @@ def maximizeWindow():
                 except Exception:
                     print("  Note: Unable to maximize window...")
                     # plt.show()
+
+
+def show_and_save(self, savefig, formats=('png', 'pdf', 'eps')):
+    """Maximize the window, save it if needed, and then show it or close it.
+
+    - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
+    """
+    maximizeWindow()
+    if savefig is not None:
+        for form in formats:
+            path = "{}.{}".format(savefig, form)
+            print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
+            plt.savefig(path, bbox_inches=BBOX_INCHES)
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
+    plt.show() if self.showplot else plt.close()
 
 
 def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):

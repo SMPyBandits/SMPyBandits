@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save
 from .Result import Result
 from .MAB import MAB
 
@@ -261,11 +261,7 @@ class Evaluator(object):
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -283,11 +279,7 @@ class Evaluator(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")
-            plt.savefig(savefig, bbox_inches=BBOX_INCHES)
-        plt.show() if self.showplot else plt.close()
+        show_and_save(self, savefig)
         return fig
 
     def printFinalRanking(self, envId=0):

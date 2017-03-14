@@ -78,14 +78,14 @@ if __name__ == '__main__':
         plot_dir = os.path.join(PLOT_DIR, subfolder)
 
         # Get the name of the output file
-        imagename = "main____env{}-{}_{}.png".format(envId + 1, N, hashvalue)
+        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
 
         # FIXME finish this to also save result in a HDF5 file!
-        # h5pyname = mainfig.replace('.png', '.hdf5')
+        # h5pyname = mainfig + '.hdf5'
         # h5pyfile = h5py.File(h5pyname, 'w')
-        picklename = mainfig.replace('.png', '.pickle')
+        picklename = mainfig + '.pickle'
 
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
