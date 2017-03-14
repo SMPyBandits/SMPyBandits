@@ -161,6 +161,11 @@ clean-doc:
 
 .PHONY: help
 
+send:	send_zamok
+send_zamok: send_doc
+send_doc:
+	CP "$(BUILDDIR)"/html/ ${Szam}phd/AlgoBandits/
+
 apidoc:
 	-mkdir -vp /tmp/AlgoBandits/docs/
 	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
