@@ -193,6 +193,10 @@ configuration.update({
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
         #     "params": {}
         # },
+        {
+            "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
+            "params": {}
+        },
         # {
         #     "archtype": TakeRandomFixedArm,   # The stupidest policy
         #     "params": {}

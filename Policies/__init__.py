@@ -38,6 +38,7 @@ from .EpsilonFirst import EpsilonFirst
 from .EpsilonDecreasing import EpsilonDecreasing
 from .EpsilonDecreasingMEGA import EpsilonDecreasingMEGA
 from .EpsilonExpDecreasing import EpsilonExpDecreasing
+from .EmpiricalMeans import EmpiricalMeans
 
 # --- Mine, Softmax and Exp3 policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
