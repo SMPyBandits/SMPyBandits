@@ -1,0 +1,18 @@
+{#
+    .templates/extrahead.html
+    ~~~~~~~~~~~~~~~~~~~~~~
+
+    Page principale. (default version)
+
+    :copyright: Copyright 2016-2017 Lilian Besson
+    :license: GPLv3, see LICENSE for details.
+#}
+{% extends "!layout.html" %}
+{% block extrahead %}
+{{ super() }}
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+        });
+    </script>
+{% endblock %}

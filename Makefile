@@ -179,6 +179,7 @@ html:
 	$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	\cp notebooks/*.html "$(BUILDDIR)"/html/notebooks/
+	-notebooks/symlinks.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
 	\cp logs/*.txt "$(BUILDDIR)"/html/logs/
 	@echo
