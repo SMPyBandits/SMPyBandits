@@ -72,7 +72,8 @@ class EpsilonGreedy(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
-            if random() < self.epsilon:  # Proba epsilon : explore
+            # FIXME the explore/exploit balancy should be for each choice, right?
+            if random() < self.epsilon:  # Proba epsilon : Explore
                 return rn.choice(self.nbArms, size=nb, replace=False)
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)

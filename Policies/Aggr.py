@@ -46,7 +46,7 @@ class Aggr(BasePolicy):
         self.amplitude = amplitude
         self.learningRate = learningRate
         self.decreaseRate = decreaseRate
-        self.unbiased = unbiased or update_like_exp4  # FIXME talk about this
+        self.unbiased = unbiased or update_like_exp4
         # XXX If we use the Exp4 update rule, it's better to be unbiased
         # XXX If we use my update rule, it seems to be better to be "biased"
         self.horizon = horizon

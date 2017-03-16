@@ -7,7 +7,7 @@
 
 - Probabilistic algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
-- Index based algorithms: UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBopt, UCBplus, UCBrandomInit, UCBV, UCBVtuned
+- Index based algorithms: UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned
 
 - Bayesian algorithms: Thompson, BayesUCB
 
@@ -50,7 +50,7 @@ from .UCBlog10 import UCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
 from .UCBlog10alpha import UCBlog10alpha  # Different indexes
-from .UCBopt import UCBopt      # Different indexes
+from .UCBmin import UCBmin      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
 from .UCBrandomInit import UCBrandomInit
 # --- UCB policies with variance terms

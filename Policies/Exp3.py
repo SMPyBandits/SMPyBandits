@@ -91,7 +91,7 @@ class Exp3(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         if (self.t < self.nbArms) or (nb == 1):
-            return self.choice()
+            return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
             return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 

@@ -293,7 +293,7 @@ configuration.update({
         #     "params": {}
         # },
         # {
-        #     "archtype": UCBopt,
+        #     "archtype": UCBmin,
         #     "params": {}
         # },
         # {

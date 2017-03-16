@@ -70,3 +70,9 @@ class BasePolicy(object):
             return self.choice()
         else:
             raise NotImplementedError("This method choiceMultiple(nb) has to be implemented in the child class inheriting from BasePolicy.")
+
+    def choiceIMP(self, nb=1):
+        if nb == 1:
+            return self.choice()
+        else:
+            return self.choiceMultiple(nb=nb)
