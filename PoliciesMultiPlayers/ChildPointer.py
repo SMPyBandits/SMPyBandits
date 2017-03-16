@@ -14,9 +14,23 @@ class ChildPointer(object):
         self.mother = mother  # Pointer to the mother class.
         self.playerId = playerId
 
-    def __getattr__(self, name):
-        """Generic method to pass an attribute reading call to the actual algorithm (from the mother class)."""
-        return getattr(self.mother._players[self.playerId], name)
+    # FIXME it was causing a bug, do it better!
+    # def __getattr__(self, name):
+    #     """Generic method to pass an attribute reading call to the actual algorithm (from the mother class)."""
+    #     return getattr(self.mother._players[self.playerId], name)
+
+    @property
+    def nbArms(self):
+        """Trying to read the number of arms."""
+        try:
+            if hasattr(self.mother, 'nbArms'):
+                return self.mother.nbArms
+            elif hasattr(self.mother._players[self.playerId], 'nbArms'):
+                return self.mother._players[self.playerId].nbArms
+            else:
+                return "UNKNOWN"
+        except AttributeError:
+                return "UNKNOWN"
 
     def __str__(self):
         return "#{}<{}>".format(self.playerId + 1, self.mother._players[self.playerId])
