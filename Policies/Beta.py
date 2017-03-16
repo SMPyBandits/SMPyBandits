@@ -9,10 +9,10 @@ __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson
 __version__ = "0.5"
 
 from random import random
-# try:
-from numpy.random import beta as betavariate  # Faster! Yes!
-# except ImportError:
-#     from random import betavariate
+try:
+    from numpy.random import beta as betavariate  # Faster! Yes!
+except ImportError:
+    from random import betavariate
 from scipy.special import btdtri
 
 # Local imports
@@ -35,7 +35,9 @@ class Beta(Posterior):
 
     def __init__(self, a=1, b=1):
         """Create a Beta posterior with no observation, i.e. alpha = 1 and beta = 1."""
+        assert a >= 0, "Error: parameter 'a' for Beta posterior has to be >= 0."
         self.a = a
+        assert b >= 0, "Error: parameter 'b' for Beta posterior has to be >= 0."
         self.b = b
         self.N = [a, b]
 
@@ -51,11 +53,17 @@ class Beta(Posterior):
         self.N = [a, b]
 
     def sample(self):
-        """Get a random sample from the Beta posterior (using :func:`numpy.random.betavariate`)."""
+        """Get a random sample from the Beta posterior (using :func:`numpy.random.betavariate`).
+
+        - Used only by Thompson Sampling so far.
+        """
         return betavariate(self.N[1], self.N[0])
 
     def quantile(self, p):
-        """Return the p quantile of the Beta posterior (using :func:`scipy.stats.btdtri`)."""
+        """Return the p quantile of the Beta posterior (using :func:`scipy.stats.btdtri`).
+
+        - Used only by BayesUCB so far.
+        """
         return btdtri(self.N[1], self.N[0], p)
         # Bug: do not call btdtri with (0.5,0.5,0.5) in scipy version < 0.9 (old)
 
