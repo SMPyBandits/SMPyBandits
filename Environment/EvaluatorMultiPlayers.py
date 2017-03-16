@@ -82,8 +82,13 @@ class EvaluatorMultiPlayers(object):
     # --- Init methods
 
     def __initEnvironments__(self):
+        nbArms = []
         for armType in self.cfg['environment']:
-            self.envs.append(MAB(armType))
+            MB = MAB(armType)
+            self.envs.append(MB)
+            nbArms.append(MB.nbArms)
+        if len(set(nbArms)) != 1:
+            raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios. FIXME correct this point!")
 
     def __initPlayers__(self, env):
         for playerId, player in enumerate(self.cfg['players']):
@@ -272,10 +277,10 @@ class EvaluatorMultiPlayers(object):
             #     print("  - {} fairness index is = {} ...".format(fN, f))  # DEBUG
             # Plot only one fairness term
             fairness = fairnessFunction(cumRewards)
-            plot_method(X[2:], fairness[2:], markers[evaId]+'-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
+            plot_method(X[2:], fairness[2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))

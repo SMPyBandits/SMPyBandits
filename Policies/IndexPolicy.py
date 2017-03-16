@@ -107,12 +107,13 @@ class IndexPolicy(BasePolicy):
         else:
             # For first exploration steps, do pure exploration
             if startWithChoiceMultiple:
-                if np.min(self.pulls) < 2:
+                if np.min(self.pulls) < 1:
                     return self.choiceMultiple(nb=nb)
                 else:
                     empiricalMeans = self.rewards / self.pulls
             else:
-                empiricalMeans = self.rewards / (1 + self.pulls)
+                empiricalMeans = self.rewards / self.pulls
+                empiricalMeans[self.pulls < 1] = float('inf')
             # First choose nb-1 arms, from rewards
             sortedEmpiricalMeans = np.sort(empiricalMeans)
             exploitations = np.random.choice(np.nonzero(empiricalMeans >= sortedEmpiricalMeans[-nb])[0], size=nb - 1, replace=False)

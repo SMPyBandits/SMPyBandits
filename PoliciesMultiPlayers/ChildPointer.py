@@ -14,6 +14,10 @@ class ChildPointer(object):
         self.mother = mother  # Pointer to the mother class.
         self.playerId = playerId
 
+    def __getattr__(self, name):
+        """Generic method to pass an attribute reading call to the actual algorithm (from the mother class)."""
+        return getattr(self.mother._players[self.playerId], name)
+
     def __str__(self):
         return "#{}<{}>".format(self.playerId + 1, self.mother._players[self.playerId])
 
