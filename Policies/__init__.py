@@ -92,11 +92,13 @@ from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.
 
 # --- KL-UCB index functions
 from .usenumba import jit
-from .kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson
+
+from .kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson, klucbGamma
 
 klucb_mapping = {
     "Bernoulli": klucbBern,
     "Exponential": klucbExp,
     "Gaussian": klucbGauss,
-    "Poisson": klucbPoisson
+    "Poisson": klucbPoisson,
+    "Gamma": klucbGamma,
 }

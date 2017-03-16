@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Kullback-Leibler utilities.
 Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
-Reference: [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf)
+Reference: [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf) and [Garivier & Cappé, 2011](https://arxiv.org/pdf/1102.2490.pdf)
 """
 from __future__ import division, print_function
 
@@ -27,7 +27,7 @@ eps = 1e-15  # Threshold value: everything in [0, 1] is truncated to [eps, 1 - e
 
 @jit
 def klBern(x, y):
-    """ Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution
+    """ Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
     >>> klBern(0.5, 0.5)
     0.0
@@ -52,7 +52,7 @@ def klBern(x, y):
 
 @jit
 def klPoisson(x, y):
-    """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution
+    """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution#Kullback.E2.80.93Leibler_divergence
 
     >>> klPoisson(3, 3)
     0.0
@@ -79,7 +79,7 @@ def klPoisson(x, y):
 
 @jit
 def klExp(x, y):
-    """ Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution
+    """ Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution#Kullback.E2.80.93Leibler_divergence
 
     >>> klExp(3, 3)
     0.0
@@ -113,7 +113,7 @@ def klExp(x, y):
 
 @jit
 def klGamma(x, y, a=1):
-    """ Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution
+    """ Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution#Kullback.E2.80.93Leibler_divergence
 
     >>> klGamma(3, 3)
     0.0
@@ -187,7 +187,7 @@ def klNegBin(x, y, r=1):
 
 @jit
 def klGauss(x, y, sig2=0.25):
-    """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution
+    """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution#Kullback.E2.80.93Leibler_divergence
 
     >>> klGauss(3, 3)
     0.0
@@ -401,6 +401,48 @@ def klucbExp(x, d, precision=1e-6):
     else:
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
     return klucb(x, d, klGamma, upperbound, lowerbound, precision)
+
+
+@jit
+def klucbGamma(x, d, precision=1e-6):
+    """ KL-UCB index computation for Gamma distributions, using :func:`klucb`.
+
+    - Influence of x:
+
+    >>> klucbGamma(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.202...
+    >>> klucbGamma(0.5, 0.2)  # doctest: +ELLIPSIS
+    1.013...
+    >>> klucbGamma(0.9, 0.2)  # doctest: +ELLIPSIS
+    1.824...
+
+    - Influence of d:
+
+    >>> klucbGamma(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.285...
+    >>> klucbGamma(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.559...
+
+    >>> klucbGamma(0.5, 0.4)  # doctest: +ELLIPSIS
+    1.428...
+    >>> klucbGamma(0.5, 0.9)  # doctest: +ELLIPSIS
+    2.795...
+
+    >>> klucbGamma(0.9, 0.4)  # doctest: +ELLIPSIS
+    2.572...
+    >>> klucbGamma(0.9, 0.9)  # doctest: +ELLIPSIS
+    5.031...
+    """
+    if d < 0.77:  # XXX where does this value come from?
+        upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
+        # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
+    else:
+        upperbound = x * exp(d + 1)
+    if d > 1.61:  # XXX where does this value come from?
+        lowerbound = x * exp(d)
+    else:
+        lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
+    return klucb(x, d, klGamma, max(upperbound, 1e2), min(-1e2, lowerbound), precision)
 
 
 # --- max EV functions

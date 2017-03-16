@@ -7,10 +7,13 @@ C version of some Kullback-Leibler utilities provided in file "kullback.py"
 
 #include <Python.h>
 #include <math.h>
+// #defining NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 
 #define eps 1e-15
 #define inf 1e300
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
 double _klBern(double p, double q){
 	p = p<1-eps? (p>eps ? p:eps) : 1-eps;
@@ -63,6 +66,12 @@ static PyObject* klExp(PyObject* self, PyObject* args)
     return Py_BuildValue("d", _klExp(x,y));
 }
 
+double _klGamma(double x, double y, double a){
+    x = x>eps ? x:eps;
+    y = y>eps ? y:eps;
+    return a * (x/y - 1 - log(x/y));
+}
+
 static PyObject* klGamma(PyObject* self, PyObject* args)
 {
     //const char *command;
@@ -71,7 +80,7 @@ static PyObject* klGamma(PyObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, "ddd", &x, &y, &a))
         return NULL;
 
-    return Py_BuildValue("d", a*_klExp(x,y));
+    return Py_BuildValue("d", _klGamma(x,y,a));
 }
 
 double _klGauss(double x, double y, double sig2){
@@ -175,6 +184,23 @@ static PyObject* klucbExp(PyObject* self, PyObject* args)
         return NULL;
 
     return Py_BuildValue("d", _klucbExp(x,d,precision));
+}
+
+double _klucbGamma(double x, double d, double precision){
+    double lowerbound =  d<1.61?x*exp(d):x/(1+d-sqrt(d*d+2*d));
+    double upperbound =  d<0.77?x/(1+2./3*d-sqrt(4./9*d*d+2*d)) : x*exp(d+1); // safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
+    return _klucb(x, d, _klGamma, min(lowerbound, -100), max(upperbound, 100), precision);
+}
+
+static PyObject* klucbGamma(PyObject* self, PyObject* args)
+{
+    //const char *command;
+    double x,d,precision;
+
+    if (!PyArg_ParseTuple(args, "ddd", &x, &d, &precision))
+        return NULL;
+
+    return Py_BuildValue("d", _klucbGamma(x,d,precision));
 }
 
 double _reseqp(int size, double* p, double* V, double klMax, double mV){
@@ -285,6 +311,7 @@ static PyMethodDef kullbackMethods[] = {
     {"klucbPoisson", klucbPoisson, METH_VARARGS, "klucbPoisson(x, d, precision=1e-6): UCB for Poisson observations."},
     {"klucbBern", klucbBern, METH_VARARGS, "klucbBern(x, d, precision=1e-6): UCB for Bernoulli observations."},
     {"klucbExp", klucbExp, METH_VARARGS, "klucbExp(x, d, precision=1e-6): UCB for Exponential observations."},
+    {"klucbGamma", klucbGamma, METH_VARARGS, "klucbGamma(x, d, precision=1e-6): UCB for Gamma observations."},
     {"maxEV", maxEV, METH_VARARGS, "maxEV(p, V, klMax): maximize linear function under KL constraint."},
   //{"klucb", klucb, METH_VARARGS, "Compute the kl-ucb at x with distance d and precision prec."},
     {NULL, NULL, 0, NULL}
