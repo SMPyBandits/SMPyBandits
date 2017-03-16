@@ -19,3 +19,7 @@ class EmpiricalMeans(IndexPolicy):
             return float('+inf')
         else:
             return self.rewards[arm] / self.pulls[arm]
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        return self.rewards / self.pulls

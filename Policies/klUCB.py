@@ -8,6 +8,8 @@ __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.5"
 
 from math import log
+import numpy as np
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
@@ -33,8 +35,14 @@ class klUCB(IndexPolicy):
         return r"KL-UCB({}{})".format("" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
             # XXX We could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        # FIXME klucb does not accept vectorial inputs, right?
+        return self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance)

@@ -7,6 +7,8 @@ __author__ = "Lilian Besson"
 __version__ = "0.5"
 
 from math import log
+import numpy as np
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .kullback import klucbBern
 from .klUCB import klUCB, c
@@ -16,13 +18,19 @@ from .klUCB import klUCB, c
 
 def logplus(x):
     """logplus(x) = max(0, log(x))."""
-    return max(0, log(x))
+    return max(0., log(x))
 
 
 def g(n, T, K):
     """The exploration function g(n), as defined in page 3 of the reference paper."""
     y = T / float(K * n)
-    return max(0, log(y * (1 + max(0, log(y)) ** 2)))
+    return max(0., log(y * (1. + max(0., log(y)) ** 2)))
+
+
+def np_g(n, T, K):
+    """The exploration function g(n), as defined in page 3 of the reference paper, for numpy inputs."""
+    y = T / float(K * n)
+    return np.max(0., np.log(y * (1. + np.max(0., np.log(y)) ** 2)))
 
 
 class klUCBPlusPlus(klUCB):
@@ -44,8 +52,14 @@ class klUCBPlusPlus(klUCB):
         return self.t if self._horizon is None else self._horizon
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
             # XXX We could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * g(self.pulls[arm], self.horizon, self.nbArms) / self.pulls[arm], self.tolerance)
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        # FIXME klucb does not accept vectorial inputs, right?
+        return self.klucb(self.rewards / self.pulls, self.c * np_g(self.pulls, self.horizon, self.nbArms) / self.pulls, self.tolerance)
