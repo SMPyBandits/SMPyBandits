@@ -403,6 +403,7 @@ def klucbExp(x, d, precision=1e-6):
     return klucb(x, d, klGamma, upperbound, lowerbound, precision)
 
 
+# FIXME this one is wrong!
 @jit
 def klucbGamma(x, d, precision=1e-6):
     """ KL-UCB index computation for Gamma distributions, using :func:`klucb`.
@@ -442,6 +443,7 @@ def klucbGamma(x, d, precision=1e-6):
         lowerbound = x * exp(d)
     else:
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
+    # FIXME specify the value for a !
     return klucb(x, d, klGamma, max(upperbound, 1e2), min(-1e2, lowerbound), precision)
 
 

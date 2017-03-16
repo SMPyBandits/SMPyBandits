@@ -186,12 +186,14 @@ static PyObject* klucbExp(PyObject* self, PyObject* args)
     return Py_BuildValue("d", _klucbExp(x,d,precision));
 }
 
+// FIXME this one is wrong!
 double _klucbGamma(double x, double d, double precision){
     double lowerbound =  d<1.61?x*exp(d):x/(1+d-sqrt(d*d+2*d));
     double upperbound =  d<0.77?x/(1+2./3*d-sqrt(4./9*d*d+2*d)) : x*exp(d+1); // safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
     return _klucb(x, d, _klGamma, min(lowerbound, -100), max(upperbound, 100), precision);
 }
 
+// FIXME this one is wrong!
 static PyObject* klucbGamma(PyObject* self, PyObject* args)
 {
     //const char *command;
