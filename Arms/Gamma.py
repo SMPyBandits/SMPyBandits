@@ -55,7 +55,7 @@ class Gamma(Arm):
         return "Gamma"
 
     def __repr__(self):
-        return "Gamma({:.3g}, {:.3g})".format(self.shape, self.scale)
+        return r"\Gamma({:.3g}, {:.3g})".format(self.shape, self.scale)
 
     # --- Lower bound
 
@@ -66,3 +66,15 @@ class Gamma(Arm):
     def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - shape) / KL(shape, mumax). """
         return (mumax - mu) / klGamma(mu, mumax, self.scale)
+
+    def oneHOI(self, mumax, mu):
+        return 1 - (mumax - mu) / self.max
+
+
+class GammaFromMean(Gamma):
+    """ Gamma distributed arm, possibly truncated, defined by its mean and not its scale parameter."""
+
+    def __init__(self, mean, scale=SCALE, mini=0, maxi=1):
+        """As mean = scale * shape, shape = mean / scale is used."""
+        shape = mean / scale
+        super(GammaFromMean, self).__init__(shape, scale=scale, mini=mini, maxi=maxi)

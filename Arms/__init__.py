@@ -16,6 +16,7 @@ if __name__ != "__main__":
     from .Poisson import Poisson
     from .Gaussian import Gaussian
     from .Exponential import Exponential, ExponentialFromMean
+    from .Gamma import Gamma, GammaFromMean
 
 
 def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):

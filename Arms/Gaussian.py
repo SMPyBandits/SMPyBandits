@@ -62,3 +62,6 @@ class Gaussian(Arm):
     def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Gaussian arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klGauss(mu, mumax, self.sigma)
+
+    def oneHOI(self, mumax, mu):
+        return 1 - (mumax - mu) / self.max

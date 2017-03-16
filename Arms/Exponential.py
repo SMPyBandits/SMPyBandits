@@ -80,6 +80,9 @@ class Exponential(Arm):
         """ One term of the Lai & Robbins lower bound for Exponential arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klExp(mu, mumax)
 
+    def oneHOI(self, mumax, mu):
+        return 1 - (mumax - mu) / self.trunc
+
 
 class ExponentialFromMean(Exponential):
     """ Exponentially distributed arm, possibly truncated, defined by its mean and not its parameter.
