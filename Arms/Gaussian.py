@@ -24,18 +24,12 @@ class Gaussian(Arm):
 
     # def __init__(self, mu, sigma=VARIANCE, mini=-oo, maxi=oo):
     def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
-        self.mu = mu
-        self.expectation = mu
-        assert sigma > 0, "Error, the parameter 'sigma' for Gaussian class has to be > 0."
+        self.mu = self.mean = mu
+        assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
         self.sigma = sigma
-        assert mini <= maxi, "Error, the parameter 'trunc' for Exponential class has to a tuple with mini < maxi."
+        assert mini <= maxi, "Error, the parameter 'trunc' for Gaussian arm has to a tuple with mini < maxi."
         self.min = mini
         self.max = maxi
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def mean(self):
-        return self.expectation
 
     # --- Random samples
 

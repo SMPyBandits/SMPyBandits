@@ -20,25 +20,20 @@ class Poisson(Arm):
 
     # def __init__(self, p, trunc=1):
     def __init__(self, p, trunc=float('+inf')):
-        assert p >= 0, "Error, the parameter 'p' for Poisson class has to be >= 0."
+        assert p >= 0, "Error, the parameter 'p' for Poisson arm has to be >= 0."
         self.p = p
         self.trunc = trunc
         if isinf(trunc):
-            self.expectation = p
+            self.mean = p
         else:  # Warning: this is very slow if self.trunc is large!
             q = exp(-p)
             sq = q
-            self.expectation = 0
+            self.mean = 0
             for k in range(1, self.trunc):
                 q *= p / k
-                self.expectation += k * q
+                self.mean += k * q
                 sq += q
-            self.expectation += self.trunc * (1 - sq)
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def mean(self):
-        return self.expectation
+            self.mean += self.trunc * (1 - sq)
 
     # --- Random samples
 

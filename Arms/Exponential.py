@@ -38,18 +38,13 @@ class Exponential(Arm):
     # def __init__(self, p, trunc=float('+inf')):
     def __init__(self, p, trunc=1):
         self.p = p
-        assert p > 0, "Error, the parameter 'p' for Exponential class has to be > 0."
+        assert p > 0, "Error, the parameter 'p' for Exponential arm has to be > 0."
         self.trunc = trunc
-        assert trunc > 0, "Error, the parameter 'trunc' for Exponential class has to be > 0."
+        assert trunc > 0, "Error, the parameter 'trunc' for Exponential arm has to be > 0."
         if isinf(trunc):
-            self.expectation = 1. / p
+            self.mean = 1. / p
         else:
-            self.expectation = (1. - exp(-p * trunc)) / p
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def mean(self):
-        return self.expectation
+            self.mean = (1. - exp(-p * trunc)) / p
 
     # --- Random samples
 

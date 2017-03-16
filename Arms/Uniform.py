@@ -28,12 +28,8 @@ class Uniform(Arm):
         self.lower = mini
         self.max = max(maxi, amplitude - lower)
         self.amplitude = maxi - mini
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def mean(self):
-        # return self.min + (self.max - self.min) / 2.0
-        return self.lower + (self.amplitude / 2.0)
+        # self.mean = self.min + (self.max - self.min) / 2.0
+        self.mean = self.lower + (self.amplitude / 2.0)
 
     # --- Random samples
 
