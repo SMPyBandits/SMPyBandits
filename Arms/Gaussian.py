@@ -22,12 +22,12 @@ class Gaussian(Arm):
     - Default is to truncate into [0, 1] (so Gaussian.draw() is in [0, 1]).
     """
 
-    # def __init__(self, mu, sigma=VARIANCE, mini=-oo, maxi=oo):
+    # def __init__(self, mu, sigma=VARIANCE, mini=-oo, maxi=oo):  # XXX Non truncated!
     def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
         self.mu = self.mean = mu
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
         self.sigma = sigma
-        assert mini <= maxi, "Error, the parameter 'trunc' for Gaussian arm has to a tuple with mini < maxi."
+        assert mini <= maxi, "Error, the parameter 'mini' for Gaussian arm has to < 'maxi'."
         self.min = mini
         self.max = maxi
 

@@ -23,14 +23,14 @@ class Gamma(Arm):
     - Cf. http://chercheurs.lille.inria.fr/ekaufman/NIPS13 Figure 1
     """
 
-    # def __init__(self, shape, scale=SCALE, mini=-oo, maxi=oo):
+    # def __init__(self, shape, scale=SCALE, mini=-oo, maxi=oo):  # XXX Non truncated!
     def __init__(self, shape, scale=SCALE, mini=0, maxi=1):
         assert shape > 0, "Error, the parameter 'shape' for Gamma arm has to be > 0."
         self.shape = shape
         assert scale > 0, "Error, the parameter 'scale' for Gamma arm has to be > 0."
         self.scale = scale
         self.mean = shape * scale
-        assert mini <= maxi, "Error, the parameter 'trunc' for Gamma arm has to a tuple with mini < maxi."
+        assert mini <= maxi, "Error, the parameter 'mini' for Gamma arm has to a tuple with > 'maxi'."
         self.min = mini
         self.max = maxi
 

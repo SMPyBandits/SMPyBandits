@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 # Import arms
-from Arms import makeMeans, Bernoulli, Exponential, ExponentialFromMean, Gaussian, Poisson
+from Arms import *
 
 # Import algorithms
 from Policies import *
@@ -58,8 +58,8 @@ RANDOM_SHUFFLE = False
 RANDOM_INVERT = False
 NB_RANDOM_EVENTS = 10
 
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 # Cache rewards
 CACHE_REWARDS = False  # XXX to disable manually this feature
@@ -83,7 +83,9 @@ TRUNC = 1  # Trunc parameter, ie amplitude, for Exponential arms
 VARIANCE = 0.05   # Variance of Gaussian arms
 # VARIANCE = 0.25   # Variance of Gaussian arms
 MINI = 0  # lower bound on rewards from Gaussian arms
-MAXI = 1  # upper bound on rewards from Gaussian arms, ie amplitude = 20
+MAXI = 1  # upper bound on rewards from Gaussian arms, ie amplitude = 1
+
+SCALE = 1   # Scale of Gamma arms
 
 
 # XXX This dictionary configures the experiments
@@ -138,6 +140,12 @@ configuration = {
             for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
         ],
     # ],
+    # "environment": [  # FIXME Gamma arms
+    #     {   # An example problem with 3 arms
+    #         "arm_type": GammaFromMean,
+    #         "params": [(shape, SCALE, 0, 10) for shape in [1, 2, 3, 4, 5]]
+    #     },
+    # ],
     ],
 }
 
@@ -156,6 +164,8 @@ try:
             for param in env['params']:
                 arm = arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param)
                 l, a = arm.lower_amplitude
+                LOWER = min(LOWER, l)
+                AMPLITUDE = max(AMPLITUDE, a)
         else:  # the env must be a list of arm, already created
             for arm in env:
                 l, a = arm.lower_amplitude
@@ -175,6 +185,14 @@ def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
     return _klucbGauss(x, d, 0.25)
     # return _klucbGauss(x, d, VARIANCE)
+
+
+_klucbGamma = klucbGamma
+
+
+def klucbGamma(x, d, precision=0.):
+    """klucbGamma(x, d, sig2) with the good scale (= 1)."""
+    return _klucbGamma(x, d, SCALE)
 
 
 configuration.update({
@@ -208,6 +226,13 @@ configuration.update({
                 "klucb": klucbGauss,  # "horizon": HORIZON,
             }
         },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbGamma,  # "horizon": HORIZON,
+        #     }
+        # },
         # --- BayesUCB algorithm
         {
             "archtype": BayesUCB,

@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 # Import arms
-from Arms import makeMeans, Bernoulli, Exponential, ExponentialFromMean, Gaussian, Poisson
+from Arms import *
 
 # Import algorithms
 from Policies import *
