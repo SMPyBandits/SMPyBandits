@@ -28,7 +28,7 @@ class UCBwrong(IndexPolicy):
 
     def computeIndex(self, arm):
         """ Compute the current index for this arm."""
-        if self.pulls[arm] < 2:
+        if self.pulls[arm] < 1:
             return float('+inf')
         else:
             # XXX Volontary typo, wrong mean estimate
@@ -36,4 +36,6 @@ class UCBwrong(IndexPolicy):
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        return (self.rewards / self.t) + np.sqrt((2 * np.log(self.t)) / self.pulls)
+        indexes = (self.rewards / self.t) + np.sqrt((2 * np.log(self.t)) / self.pulls)
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes

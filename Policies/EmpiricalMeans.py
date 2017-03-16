@@ -5,7 +5,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import numpy as np
-np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+np.seterr(divide='ignore', invalid='ignore')  # XXX dangerous in general, controlled here!
 
 from .IndexPolicy import IndexPolicy
 
@@ -15,11 +15,13 @@ class EmpiricalMeans(IndexPolicy):
 
     def computeIndex(self, arm):
         """ Compute the current index for this arm."""
-        if self.pulls[arm] < 2:
+        if self.pulls[arm] < 1:
             return float('+inf')
         else:
             return self.rewards[arm] / self.pulls[arm]
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        return self.rewards / self.pulls
+        indexes = self.rewards / self.pulls
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes

@@ -20,7 +20,7 @@ class UCBVtuned(UCBV):
 
     def computeIndex(self, arm):
         """ Compute the current index for this arm."""
-        if self.pulls[arm] < 2:
+        if self.pulls[arm] < 1:
             return float('+inf')
         else:
             mean = self.rewards[arm] / self.pulls[arm]   # Mean estimate
@@ -34,4 +34,6 @@ class UCBVtuned(UCBV):
         means = self.rewards / self.pulls   # Mean estimate
         variances = (self.rewardsSquared / self.pulls) - means ** 2  # Variance estimate
         variances += np.sqrt(2.0 * np.log(self.t) / self.pulls)
-        return means + np.sqrt(np.log(self.t) * variances / self.pulls)
+        indexes = means + np.sqrt(np.log(self.t) * variances / self.pulls)
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes

@@ -20,11 +20,13 @@ class MOSS(IndexPolicy):
 
     def computeIndex(self, arm):
         """ Compute the current index for this arm."""
-        if self.pulls[arm] < 2:
+        if self.pulls[arm] < 1:
             return float('+inf')
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt(max(0, log(self.t / (self.nbArms * self.pulls[arm]))) / self.pulls[arm])
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        return (self.rewards / self.pulls) + np.sqrt(np.max(0., np.log(self.t / (self.nbArms * self.pulls))) / self.pulls)
+        indexes = (self.rewards / self.pulls) + np.sqrt(np.maximum(0., np.log(self.t / (self.nbArms * self.pulls))) / self.pulls)
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes
