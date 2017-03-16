@@ -36,12 +36,16 @@ class IndexPolicy(BasePolicy):
         """ Compute the current index of arm 'arm'."""
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")
 
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms. Possibly vectorized, by default not."""
+        for arm in range(self.nbArms):
+            self.index[arm] = self.computeIndex(arm)
+
     # --- Basic choice() method
 
     def choice(self):
         """ In an index policy, choose an arm with maximal index (uniformly at random)."""
-        for arm in range(self.nbArms):
-            self.index[arm] = self.computeIndex(arm)
+        self.computeAllIndex()
         # Uniform choice among the best arms
         return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
 
@@ -59,8 +63,7 @@ class IndexPolicy(BasePolicy):
             return self.choice()
         else:
             assert rank >= 1, "Error: for IndexPolicy = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
-            for arm in range(self.nbArms):
-                self.index[arm] = self.computeIndex(arm)
+            self.computeAllIndex()
             sortedRewards = np.sort(self.index)
             # Question: What happens here if two arms has the same index, being the max?
             # Then it is fair to chose a random arm with best index, instead of aiming at an arm with index being ranked rank
@@ -91,8 +94,7 @@ class IndexPolicy(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
-            for arm in range(self.nbArms):
-                self.index[arm] = self.computeIndex(arm)
+            self.computeAllIndex()
             sortedIndexes = np.sort(self.index)
             # Uniform choice of nb different arms among the best arms
             # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
@@ -123,6 +125,5 @@ class IndexPolicy(BasePolicy):
 
     def estimatedOrder(self):
         """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
-        for arm in range(self.nbArms):
-            self.index[arm] = self.computeIndex(arm)
+        self.computeAllIndex()
         return np.argsort(self.index)

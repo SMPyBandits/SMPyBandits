@@ -15,4 +15,5 @@ class Thompson(BayesianIndexPolicy):
     """
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         return self.posterior[arm].sample()

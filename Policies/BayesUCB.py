@@ -15,4 +15,5 @@ class BayesUCB(BayesianIndexPolicy):
     """
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         return self.posterior[arm].quantile(1. - 1. / (1 + self.t))
