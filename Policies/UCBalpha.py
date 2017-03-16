@@ -7,6 +7,8 @@ __author__ = "Lilian Besson"
 __version__ = "0.2"
 
 from math import sqrt, log
+import numpy as np
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCB import UCB
 
@@ -25,7 +27,12 @@ class UCBalpha(UCB):
         return r"UCB($\alpha={:.3g}$)".format(self.alpha)
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt((self.alpha * log(self.t)) / (2 * self.pulls[arm]))
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        return (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(self.t)) / (2 * self.pulls))

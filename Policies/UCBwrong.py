@@ -11,6 +11,8 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 from math import sqrt, log
+import numpy as np
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .IndexPolicy import IndexPolicy
 
@@ -25,8 +27,13 @@ class UCBwrong(IndexPolicy):
     """
 
     def computeIndex(self, arm):
+        """ Compute the current index for this arm."""
         if self.pulls[arm] < 2:
             return float('+inf')
         else:
-            mean = self.rewards[arm] / self.t   # XXX Volontary typo, wrong mean estimate
-            return mean + sqrt((2 * log(self.t)) / self.pulls[arm])
+            # XXX Volontary typo, wrong mean estimate
+            return (self.rewards[arm] / self.t) + sqrt((2 * log(self.t)) / self.pulls[arm])
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        return (self.rewards / self.t) + np.sqrt((2 * np.log(self.t)) / self.pulls)
