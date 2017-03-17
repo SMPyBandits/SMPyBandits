@@ -54,7 +54,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -76,8 +76,8 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 3    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -257,6 +257,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
+    # "players": rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
@@ -266,11 +267,12 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
+    # "players": rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children
     # "players": rhoEst(NB_PLAYERS, UCB, nbArms, HORIZON).children
     # "players": rhoEst(NB_PLAYERS, MOSS, nbArms, HORIZON).children
     # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children
-    "players": rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children
-    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children
+    "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
     # "players": rhoEst(NB_PLAYERS, SoftmaxDecreasing, nbArms, HORIZON).children
 
     # --- DONE Using single-player stupid rhoRandRand policy
@@ -292,18 +294,18 @@ configuration.update({
 # ]
 
 
-configuration["successive_players"] = [
-    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=0.25).children,
-    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,
-    rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    rhoEst(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
-    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-]
+# configuration["successive_players"] = [
+#     rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=0.25).children,
+#     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,
+#     rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
+#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+#     rhoEst(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
+#     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+#     rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+# ]
 
 # configuration["successive_players"] = [
 #     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
@@ -331,18 +333,21 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
     # # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
-    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
-    rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
-    rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,  # This one is not efficient!
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
-    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,  # This one is not efficient!
+    Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,  # This one is efficient!
+    rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,  # This one is not efficient!
+    rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,  # This one is not efficient!
+    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
+    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,  # This one is not efficient!
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
+    # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,  # This one is not efficient!
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+    # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,  # This one is not efficient!
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,  # This one is not efficient!
 ]
 
 

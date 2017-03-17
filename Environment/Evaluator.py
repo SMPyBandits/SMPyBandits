@@ -65,6 +65,7 @@ class Evaluator(object):
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
         # self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+        # self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))
         self.BestArmPulls = dict()
         self.pulls = dict()
         for env in range(len(self.envs)):
@@ -124,10 +125,10 @@ class Evaluator(object):
         bestarm = env.maxArm
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
-        def store(r):
+        def store(r, repeatId):
             self.rewards[policyId, envId, :] += r.rewards
-            # # self.rewardsSquared[policyId, envId, :] += r.rewardsSquared  # No need for this!
             # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
+            # self.allRewards[policyId, envId, :, repeatId] = r.rewards
             self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
             # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
             self.pulls[envId][policyId, :] += r.pulls
@@ -137,15 +138,17 @@ class Evaluator(object):
             print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
+                repeatIdout = 0
                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
-                    store(r)
+                    store(r, repeatIdout)
+                    repeatIdout += 1
             else:
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
-                    store(r)
+                    store(r, repeatId)
 
     # --- Getter methods
 
@@ -170,28 +173,30 @@ class Evaluator(object):
         return np.cumsum(self.getRewards(policyId, envId)) / self.times
 
     def getRewardsSquared(self, policyId, envId=0):
-        # FIXME this won't work right away: you have to uncomment the lines with rewardsSquared
         return self.rewardsSquared[policyId, envId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, envId=0, meanRegret=False):
-        X = self.times
-        YMAX = self.getMaxRewards(envId=envId)
-        Y = self.getRewards(policyId, envId)
-        Y2 = self.getRewardsSquared(policyId, envId)
-        if meanRegret:  # Cumulated expectation on time
-            Ycum2 = (np.cumsum(Y) / X)**2
-            Y2cum = np.cumsum(Y2) / X
-            assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
-            stdY = np.sqrt(Y2cum - Ycum2)
-            YMAX *= 20  # XXX make it look smaller, for the plots
-        else:  # Expectation on nb of repetitions
-            # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
-            # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
-            stdY = np.cumsum(np.sqrt(Y2 - Y**2))
-            YMAX *= np.log(2 + self.duration)  # Normalize the std variation
-            YMAX *= 50  # XXX make it look larger, for the plots
-        # Renormalize this standard deviation
-        stdY /= YMAX
+        # X = self.times
+        # YMAX = self.getMaxRewards(envId=envId)
+        # Y = self.getRewards(policyId, envId)
+        # Y2 = self.getRewardsSquared(policyId, envId)
+        # if meanRegret:  # Cumulated expectation on time
+        #     Ycum2 = (np.cumsum(Y) / X)**2
+        #     Y2cum = np.cumsum(Y2) / X
+        #     assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
+        #     stdY = np.sqrt(Y2cum - Ycum2)
+        #     YMAX *= 20  # XXX make it look smaller, for the plots
+        # else:  # Expectation on nb of repetitions
+        #     # https://en.wikipedia.org/wiki/Algebraic_formula_for_the_variance#In_terms_of_raw_moments
+        #     # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
+        #     # stdY = np.cumsum(np.sqrt(Y2 - Y**2))
+        #     stdY = np.sqrt(Y2 - Y**2)
+        #     YMAX *= np.log(2 + self.duration)  # Normalize the std variation
+        #     YMAX *= 50  # XXX make it look larger, for the plots
+        # # Renormalize this standard deviation
+        # # stdY /= YMAX
+        allRewards = self.allRewards[policyId, envId, :, :]
+        stdY = np.std(np.cumsum(allRewards, axis=0), axis=1)
         return stdY
 
     # --- Plotting methods
@@ -261,7 +266,7 @@ class Evaluator(object):
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
-        show_and_save(self, savefig)
+        show_and_save(self.showplot, savefig)
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -279,7 +284,7 @@ class Evaluator(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
-        show_and_save(self, savefig)
+        show_and_save(self.showplot, savefig)
         return fig
 
     def printFinalRanking(self, envId=0):

@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, legend
+from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, legend, show_and_save
 
 
 class MAB(object):
@@ -49,6 +49,8 @@ class MAB(object):
             self.arms = []
             for arm in configuration:
                 self.arms.append(arm)
+        # Compute the means
+        self.means = np.array([arm.mean for arm in self.arms])
         print(" - with 'arms' =", self.arms)  # DEBUG
         self.nbArms = len(self.arms)
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
@@ -60,13 +62,13 @@ class MAB(object):
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
 
     def __repr__(self):
-        return "<{}{}>".format(self.__class__.__name__, repr(self.__dict__))
+        return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def means(self):
-        """Return list of means."""
-        return np.array([arm.mean for arm in self.arms])
+    # # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # @property
+    # def means(self):
+    #     """Return list of means."""
+    #     return np.array([arm.mean for arm in self.arms])
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """ Return a str representation of the list of the arms (repr(self.arms))
@@ -127,7 +129,8 @@ class MAB(object):
             print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
         return our_lowerbound, anandkumar_lowerbound
 
-    # --- plot
+    # --- Plot methods
+
     def plotComparison_our_anandkumar(self, savefig=None):
         """Plot a comparison of our lowerbound and their lowerbound."""
         nbPlayers = self.nbArms
@@ -142,11 +145,7 @@ class MAB(object):
         plt.xlabel("Number of players in the multi-players game.{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
         plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}$".format(self.nbArms, self.reprarms()))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
-        plt.show()
+        show_and_save(showplot=True, savefig=savefig)
 
     def plotHistogram(self, horizon=10000, savefig=None):
         """Plot a horizon=10000 draws of each arms."""
@@ -167,8 +166,4 @@ class MAB(object):
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: ${}$".format(horizon, self.nbArms, self.reprarms()))
-        maximizeWindow()
-        if savefig is not None:
-            print("Saving to", savefig, "...")
-            plt.savefig(savefig, dpi=DPI, bbox_inches='tight')
-        plt.show()
+        show_and_save(showplot=True, savefig=savefig)

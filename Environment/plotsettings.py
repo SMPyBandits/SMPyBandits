@@ -123,7 +123,7 @@ def maximizeWindow():
                     # plt.show()
 
 
-def show_and_save(self, savefig, formats=('png', 'pdf')):
+def show_and_save(showplot=True, savefig=None, formats=('png', 'pdf')):
     """Maximize the window, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
@@ -135,7 +135,7 @@ def show_and_save(self, savefig, formats=('png', 'pdf')):
             print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
             plt.savefig(path, bbox_inches=BBOX_INCHES)
             print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
-    plt.show() if self.showplot else plt.close()
+    plt.show() if showplot else plt.close()
 
 
 def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):

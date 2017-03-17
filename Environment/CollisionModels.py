@@ -58,7 +58,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     # nbCollisions = [np.sum(choices == arm) - 1 for arm in range(len(arms))]  # XXX it is slow!
-    nbCollisions = np.bincount(choices)  # XXX this is faster!
+    nbCollisions = np.bincount(choices, minlength=len(arms)) - 1  # XXX this is faster!
     # print("onlyUniqUserGetsReward() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
