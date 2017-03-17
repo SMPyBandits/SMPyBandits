@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """ Manipulate a Gamma posterior. No need for tricks to handle non-binary rewards.
+
+- See https://en.wikipedia.org/wiki/Gamma_distribution#Conjugate_prior
+- And https://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions
 """
 
 __author__ = "Emilie Kaufmann, Lilian Besson"
 __version__ = "0.5"
 
-from random import random
 try:
     from numpy.random import gamma as gammavariate  # Faster! Yes!
 except ImportError:
@@ -43,14 +45,14 @@ class Gamma(Posterior):
 
         - Used only by Thompson Sampling so far.
         """
-        return gammavariate(self.k, 1./self.lmbda)
+        return gammavariate(self.k, 1. / self.lmbda)
 
     def quantile(self, p):
         """Return the p quantile of the Gamma posterior (using :func:`scipy.stats.gdtrix`).
 
         - Used only by BayesUCB so far.
         """
-        return gdtrix(self.k, 1./self.lmbda, p)
+        return gdtrix(self.k, 1. / self.lmbda, p)
 
     def mean(self):
         """Compute the mean of the Gamma posterior (should be useless)."""
