@@ -17,7 +17,6 @@ import os.path
 # import pickle
 # import h5py
 
-import matplotlib.pyplot as plt
 
 # Local imports
 from Environment import Evaluator, notify
@@ -34,12 +33,16 @@ PLOT_DIR = "plots"
 semilogx = False
 meanRegret = True
 normalizedRegret = False
+
+# FIXME finish to debug this!
+plotSTD = True
 plotSTD = False
 
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this when experimenting
 
 # if not saveallfigs:
+#    import matplotlib.pyplot as plt
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Parameters for the Evaluator object
@@ -120,13 +123,13 @@ if __name__ == '__main__':
 
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
-            evaluation.plotRegrets(envId, savefig=savefig, semilogx=False)  # XXX To save the figure
+            evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogx')
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
         else:
-            evaluation.plotRegrets(envId, semilogx=False, plotSTD=False)
+            evaluation.plotRegrets(envId, plotSTD=False)
             evaluation.plotRegrets(envId, semilogx=True, plotSTD=False)
-            # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
+            if configuration['repetitions'] > 1 and plotSTD: evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
 
         if meanRegret:
             if saveallfigs:
@@ -135,7 +138,7 @@ if __name__ == '__main__':
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, meanRegret=True)  # XXX To save the figure
             else:
                 evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=False)
-                # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=True)
+                if configuration['repetitions'] > 1 and plotSTD: evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True, plotSTD=True)
 
         if normalizedRegret:
             if saveallfigs:
@@ -144,7 +147,7 @@ if __name__ == '__main__':
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
             else:
                 evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=False)
-                # if configuration['repetitions'] > 1: evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
+                if configuration['repetitions'] > 1 and plotSTD: evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
 
         # --- Also plotting the probability of picking the best arm
         if evaluation.random_shuffle or evaluation.random_invert:

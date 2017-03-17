@@ -11,7 +11,6 @@ __version__ = "0.5"
 # Generic imports
 from os import mkdir
 import os.path
-import matplotlib.pyplot as plt
 
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify
@@ -30,6 +29,7 @@ saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
 
 # if not saveallfigs:
+#     import matplotlib.pyplot as plt
 #     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Whether to do the plots or not
@@ -86,9 +86,9 @@ if __name__ == '__main__':
         print("\n\n- Plotting the decentralized rewards")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotRewards(envId, savefig=savefig, semilogx=False)
+            evaluation.plotRewards(envId, savefig=savefig)
         else:
-            evaluation.plotRewards(envId, semilogx=False)  # XXX To plot without saving
+            evaluation.plotRewards(envId)  # XXX To plot without saving
 
         # Plotting the centralized fairness
         for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
@@ -96,18 +96,18 @@ if __name__ == '__main__':
             print("\n\n- Plotting the centralized fairness (%s)" % fairness)
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotFairness(envId, savefig=savefig, semilogx=False, fairness=fairness)
+                evaluation.plotFairness(envId, savefig=savefig, fairness=fairness)
             else:
-                evaluation.plotFairness(envId, semilogx=False, fairness=fairness)  # XXX To plot without saving
+                evaluation.plotFairness(envId, fairness=fairness)  # XXX To plot without saving
 
         # Plotting the centralized regret
         savefig = mainfig.replace('main', 'main_RegretCentralized')
         print("\n\n- Plotting the centralized regret")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=False, subTerms=subTerms)
+            evaluation.plotRegretCentralized(envId, savefig=savefig, normalized=False, subTerms=subTerms)
         else:
-            evaluation.plotRegretCentralized(envId, semilogx=False, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            evaluation.plotRegretCentralized(envId, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
         # Plotting the centralized regret in semilogx
         savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
@@ -123,27 +123,27 @@ if __name__ == '__main__':
         # print("\n\n- Plotting the normalized centralized regret")
         # if saveallfigs:
         #     print("  and saving the plot to {} ...".format(savefig))
-        #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=False, normalized=True)
+        #     evaluation.plotRegretCentralized(envId, savefig=savefig, normalized=True)
         # else:
-        #     evaluation.plotRegretCentralized(envId, semilogx=False, normalized=True)  # XXX To plot without saving
+        #     evaluation.plotRegretCentralized(envId, normalized=True)  # XXX To plot without saving
 
         # Plotting the number of switches
         savefig = mainfig.replace('main', 'main_NbSwitchs')
         print("\n\n- Plotting the number of switches")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotNbSwitchs(envId, savefig=savefig, semilogx=False, cumulated=False)
+            evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=False)
         else:
-            evaluation.plotNbSwitchs(envId, semilogx=False, cumulated=False)  # XXX To plot without saving
+            evaluation.plotNbSwitchs(envId, cumulated=False)  # XXX To plot without saving
 
         # Plotting the cumulative number of switches
         savefig = mainfig.replace('main', 'main_CumNbSwitchs')
         print("\n\n- Plotting the cumulative number of switches")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotNbSwitchs(envId, savefig=savefig, semilogx=False, cumulated=True)
+            evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=True)
         else:
-            evaluation.plotNbSwitchs(envId, semilogx=False, cumulated=True)  # XXX To plot without saving
+            evaluation.plotNbSwitchs(envId, cumulated=True)  # XXX To plot without saving
 
         # Also plotting the probability of picking the best arm
         savefig = mainfig.replace('main', 'main_BestArmPulls')

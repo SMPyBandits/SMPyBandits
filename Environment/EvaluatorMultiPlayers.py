@@ -87,7 +87,7 @@ class EvaluatorMultiPlayers(object):
             MB = MAB(armType)
             self.envs.append(MB)
             nbArms.append(MB.nbArms)
-        if len(set(nbArms)) != 1:
+        if len(set(nbArms)) != 1:  # FIXME
             raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios. FIXME correct this point!")
 
     def __initPlayers__(self, env):
@@ -250,7 +250,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # ymax = max(plt.ylim()[1], 1.03)  # Don't force to view on [0%, 100%]
         # plt.ylim(ymin, ymax)
-        plt.ylabel("Cumulative personal reward $r_t$ (not centralized)")
+        plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$ (not centralized)" % self.repetitions)
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self, savefig)
         return fig
@@ -288,7 +288,9 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self, savefig)
         return fig
 
-    def plotRegretCentralized(self, envId=0, savefig=None, semilogx=False, normalized=False, evaluators=(), subTerms=False):
+    def plotRegretCentralized(self, envId=0, savefig=None,
+                              semilogx=False, semilogy=False, loglog=False,
+                              normalized=False, evaluators=(), subTerms=False):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments).
 
         - The lower bounds are also plotted (Besson & Kaufmann, and Anandkumar et al).
@@ -299,7 +301,9 @@ class EvaluatorMultiPlayers(object):
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         markers = makemarkers(5 if len(evaluators) == 1 and subTerms else len(evaluators))
-        plot_method = plt.semilogx if semilogx else plt.plot
+        plot_method = plt.loglog if loglog else plt.plot
+        plot_method = plt.semilogy if semilogy else plot_method
+        plot_method = plt.semilogx if semilogx else plot_method
         # Loop
         for evaId, eva in enumerate(evaluators):
             if subTerms:
@@ -313,7 +317,7 @@ class EvaluatorMultiPlayers(object):
                 labels[2] = "3rd term: Weighted collisions"
             Y = eva.getCentralizedRegret(envId)
             label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
-            if semilogx:  # FIXED for semilogx plots, truncate to only show t >= 100
+            if semilogx or loglog:  # FIXED for semilogx plots, truncate to only show t >= 100
                 X, Y = X0[X0 >= 100], Y[X0 >= 100]
                 if subTerms:
                     for i in range(len(Ys)):
@@ -327,7 +331,7 @@ class EvaluatorMultiPlayers(object):
             # Now plot
             plot_method(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
             if len(evaluators) == 1:
-                if not semilogx:
+                if not semilogx and not loglog and not semilogy:
                     # We plot a horizontal line ----- at the mean regret
                     plot_method(X, meanY * np.ones_like(X), '--', label="Mean cumulated centralized regret", color=colors[evaId])
                 # " = ${:.3g}$".format(meanY)
@@ -345,8 +349,8 @@ class EvaluatorMultiPlayers(object):
         plot_method(X, anandkumar_lowerbound * T, 'k:', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)
         # Labels and legends
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
-        plt.ylabel("{}umulative centralized regret $R_t$".format("Normalized c" if normalized else "C"))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.ylabel("{}umulative centralized regret {} (not centralized)".format(r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions, "Normalized c" if normalized else "C"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self, savefig)
         return fig
@@ -395,12 +399,12 @@ class EvaluatorMultiPlayers(object):
             plot_method(X, Y, label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n"+self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
         # ymax = max(plt.ylim()[1], 1)
         # plt.ylim(ymin, ymax)  # Don't force to view on [0%, 100%]
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
-        plt.ylabel("{} of switches by player".format("Cumulated Number" if cumulated else "Frequency"))
+        plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized {}number of switches, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self, savefig)
         return fig
@@ -468,7 +472,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
-        plt.ylabel("{}Transmission on a free channel".format("Cumulated " if cumulated else ""))
+        plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self, savefig)
         return fig
