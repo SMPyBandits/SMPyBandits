@@ -350,7 +350,7 @@ class EvaluatorMultiPlayers(object):
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
-        plt.ylabel("{}umulative centralized regret {} (not centralized)".format(r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions, "Normalized c" if normalized else "C"))
+        plt.ylabel("{}umulative centralized regret {} (not centralized)".format("Normalized c" if normalized else "C", r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self, savefig)
         return fig
