@@ -56,14 +56,14 @@ class rhoRand(BaseMPPolicy):
     """ rhoRand: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
+    def __init__(self, nbPlayers, playerAlgo, nbArms, lower=0., amplitude=1., *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
-        Examples:
+        Example:
 
         >>> s = rhoRand(nbPlayers, Thompson, nbArms)
 

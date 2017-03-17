@@ -204,8 +204,8 @@ configuration.update({
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
 
-    # --- FIXME Using a smart Centralized policy, based on choiceIMP()
-    "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    # --- DONE Using a smart Centralized policy, based on choiceIMP() -- It's not better, in fact
+    # "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
     # "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
     # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
     # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
@@ -263,6 +263,14 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
+    # --- DONE Using single-player rhoEst policy
+    "players": rhoEst(NB_PLAYERS, UCB, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, MOSS, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, SoftmaxDecreasing, nbArms, horizon).children
+
     # --- DONE Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
 })
@@ -281,6 +289,20 @@ configuration.update({
 #     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
+
+configuration["successive_players"] = [
+    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,
+    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoEst(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+    # rhoEst(NB_PLAYERS, klUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoEst(NB_PLAYERS, BayesUCB, nbArms).children,
+]
+
 # configuration["successive_players"] = [
 #     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
 #     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
@@ -293,13 +315,13 @@ configuration.update({
 #     # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
 # ]
 
-configuration["successive_players"] = [
-    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-    CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
-    CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
-]
+# configuration["successive_players"] = [
+#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+#     CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
+# ]
 
 # configuration["successive_players"] = [
 #     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,

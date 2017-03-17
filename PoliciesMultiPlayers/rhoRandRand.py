@@ -5,6 +5,7 @@
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the k-th best arm, for k again uniformly drawn from [1, ..., rank_i],
 - At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, ..., M] where M is the number of player.
 
+- Note: this algorithm is *intended* to be stupid! It does not work at all!!
 - Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
 """
 from __future__ import print_function
@@ -65,7 +66,7 @@ class rhoRandRand(BaseMPPolicy):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
-        Examples:
+        Example:
 
         >>> s = rhoRandRand(nbPlayers, Thompson, nbArms)
 
