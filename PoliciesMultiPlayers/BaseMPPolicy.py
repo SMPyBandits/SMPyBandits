@@ -39,6 +39,14 @@ class BaseMPPolicy(object):
         """Forward the call to self._players[playerId]."""
         return self._players[playerId].choiceFromSubSet(availableArms)
 
+    def _choiceMultiple_one(self, playerId, nb=1):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].choiceMultiple(nb)
+
+    def _choiceIMP_one(self, playerId, nb=1):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].choiceIMP(nb)
+
     def _estimatedOrder_one(self, playerId):
         """Forward the call to self._players[playerId]."""
         return self._players[playerId].estimatedOrder()

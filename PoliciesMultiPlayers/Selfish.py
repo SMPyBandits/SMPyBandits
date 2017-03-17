@@ -59,7 +59,7 @@ class Selfish(BaseMPPolicy):
             self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)  # Create ot here!
             self.children[playerId] = SelfishChildPointer(self, playerId)
             if hasattr(self._players[playerId], 'handleCollision'):  # XXX they should not have such method!
-                warn("Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId))
+                warn("Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId), RuntimeWarning)
                 raise ValueError("Invalid child policy {} for Selfish algorithm! It should not have a collision avoidance protocol!".format(self._players[playerId]))
         self.nbArms = nbArms
 
@@ -69,5 +69,6 @@ class Selfish(BaseMPPolicy):
     # --- Proxy methods
 
     def _handleCollision_one(self, playerId, arm):
+        """Give a reward of 0, or player.lower, or self.penalty, in case of collision."""
         player = self._players[playerId]
         player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)

@@ -26,7 +26,7 @@ class ChildPointer(object):
             elif hasattr(self.mother._players[self.playerId], 'nbArms'):
                 nbArms = self.mother._players[self.playerId].nbArms
         if nbArms == "UNKNOWN":
-            warn("ChildPointer: {} seems unable to get the number of arms from his mother class {} ...".format(self, self.Mother))
+            warn("ChildPointer: {} seems unable to get the number of arms from his mother class {} ...".format(self, self.Mother), RuntimeWarning)
         return nbArms
 
     def __str__(self):
