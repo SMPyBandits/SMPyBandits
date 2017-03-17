@@ -635,7 +635,7 @@ def delayed_play(env, players, horizon, collisionModel,
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0:
         for playerId, player in enumerate(players):
-            if hasattr(player, 'estimatedOrder'):
+            try:
                 order = player.estimatedOrder()
                 print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
                 print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=nbPlayers)))
@@ -644,6 +644,8 @@ def delayed_play(env, players, horizon, collisionModel,
                 print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
                 print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
                 print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
+            except AttributeError:
+                print("Unable to print the estimated ordering, no method estimatedOrder was found!")
 
     return result
 

@@ -60,7 +60,7 @@ class Selfish(BaseMPPolicy):
             self.children[playerId] = SelfishChildPointer(self, playerId)
             if hasattr(self._players[playerId], 'handleCollision'):  # XXX they should not have such method!
                 warn("Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId), RuntimeWarning)
-                raise ValueError("Invalid child policy {} for Selfish algorithm! It should not have a collision avoidance protocol!".format(self._players[playerId]))
+                # raise ValueError("Invalid child policy {} for Selfish algorithm! It should not have a collision avoidance protocol!".format(self._players[playerId]))
         self.nbArms = nbArms
 
     def __str__(self):

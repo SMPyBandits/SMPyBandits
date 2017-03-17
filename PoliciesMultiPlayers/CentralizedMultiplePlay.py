@@ -90,3 +90,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
 
     def _handleCollision_one(self, playerId, arm):
         raise ValueError("Error: a {} policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(self.__class__.__name__, playerId, arm))
+
+    def _estimatedOrder_one(self, playerId):
+        """Use the algorithm to centralized rank the arm."""
+        return self.player.estimatedOrder()

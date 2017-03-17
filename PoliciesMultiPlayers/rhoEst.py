@@ -51,10 +51,10 @@ def threshold_on_t(t, nbPlayersEstimate):
         return 1
     else:
         # return log(t)
-        return float(t) ** 0.7
+        # return float(t) ** 0.7
         # return float(t) ** 0.5
         # return float(t) ** 0.1
-        # return t
+        return t
 
 
 # --- Class oneRhoEst, for children
