@@ -92,3 +92,6 @@ class rhoRand(BaseMPPolicy):
 
     def _choiceWithRank_one(self, playerId, rank):
         return self._players[playerId].choiceWithRank(rank)
+
+    def _estimatedOrder_one(self, playerId):
+        return self._players[playerId].estimatedOrder()

@@ -12,7 +12,6 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
-from math import sqrt
 import numpy.random as rn
 
 from .rhoRand import oneRhoRand, rhoRand
@@ -25,15 +24,16 @@ def default_threshold(horizon, nbPlayersEstimate):
 
     - 0 if nbPlayersEstimate is 0,
     - 1 if nbPlayersEstimate is 1,
-    - any function such that: Xsi(n, k) = omega(log n) for all k > 1. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose n ** 0.1.
+    - any function such that: Xsi(n, k) = omega(log n) for all k > 1. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose n, as sqrt(n) and n**0.1 were too small (the nbPlayersEstimate was always growing too fast).
     """
     if nbPlayersEstimate == 0:
         return 0
     elif nbPlayersEstimate == 1:
         return 1
     else:
-        return horizon ** 0.1
-        # return sqrt(horizon)
+        # return horizon ** 0.5
+        # return horizon ** 0.1
+        return horizon
 
 
 # --- Class oneRhoEst, for children
@@ -79,7 +79,7 @@ class oneRhoEst(oneRhoRand):
         threshold = self.threshold(self.horizon, self.nbPlayersEstimate)
         if self.collisionCount > threshold:
             self.nbPlayersEstimate += 1
-            print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
+            # print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
 
 
@@ -123,8 +123,3 @@ class rhoEst(rhoRand):
 
     def __str__(self):
         return "rhoEst({} x {})".format(self.nbPlayers, str(self._players[0]))
-
-    # --- Proxy methods
-
-    def _estimatedOrder_one(self, playerId):
-        return self._players[playerId].estimatedOrder()

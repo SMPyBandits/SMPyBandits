@@ -73,7 +73,8 @@ LEARNING_RATES = [LEARNING_RATE]
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = None
 
-# NB_PLAYERS : number of player, for policies who need it ?
+# NB_PLAYERS : number of player
+NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
@@ -216,7 +217,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children
     # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children
     # "players": Selfish(NB_PLAYERS, UCB, nbArms).children
-    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children  # This one is efficient!
+    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).children
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).children
     # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).children
@@ -264,12 +265,12 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
-    "players": rhoEst(NB_PLAYERS, UCB, nbArms, horizon).children
-    # "players": rhoEst(NB_PLAYERS, MOSS, nbArms, horizon).children
-    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms, horizon).children
-    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms, horizon).children
-    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, horizon).children
-    # "players": rhoEst(NB_PLAYERS, SoftmaxDecreasing, nbArms, horizon).children
+    # "players": rhoEst(NB_PLAYERS, UCB, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, MOSS, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children
+    "players": rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, SoftmaxDecreasing, nbArms, HORIZON).children
 
     # --- DONE Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
@@ -279,7 +280,7 @@ configuration.update({
 
 # configuration["successive_players"] = [
 #     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,  # This one is efficient!
 #     rhoRand(NB_PLAYERS, MOSS, nbArms).children,
 #     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
 #     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
@@ -291,21 +292,21 @@ configuration.update({
 
 
 configuration["successive_players"] = [
+    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,
-    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoEst(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, klUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=0.25).children,
+    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,
+    rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    rhoEst(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
+    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
 ]
 
 # configuration["successive_players"] = [
 #     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,  # This one is efficient!
 #     # Selfish(NB_PLAYERS, MOSS, nbArms).children,
 #     Selfish(NB_PLAYERS, klUCB, nbArms).children,
 #     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
@@ -330,7 +331,7 @@ configuration["successive_players"] = [
 #     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
 #     Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
 #     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1./4.).children,  # This one is efficient!
+#     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25.).children,  # This one is efficient!
 #     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
 #     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
 #     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
