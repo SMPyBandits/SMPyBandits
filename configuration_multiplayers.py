@@ -54,7 +54,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -77,7 +77,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -130,10 +130,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(9, 1 / (1. + 9))
-        # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": makeMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
@@ -159,11 +159,11 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-            "arm_type": Bernoulli,
-            "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
-            # nbPlayers = 3
-        }
+        # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
+        #     # nbPlayers = 3
+        # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms

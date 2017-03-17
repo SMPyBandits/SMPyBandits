@@ -76,7 +76,8 @@ if __name__ == '__main__':
         for envId, env in enumerate(evaluation.envs):
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
-            evaluators[envId][playersId] = evaluation
+            if do_all_plot:
+                evaluators[envId][playersId] = evaluation
             # Display the final rankings for that env
             print("Giving the final ranks ...")
             evaluation.printFinalRanking(envId)
