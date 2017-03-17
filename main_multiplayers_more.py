@@ -138,6 +138,15 @@ if __name__ == '__main__':
             else:
                 evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
+            # # Plotting the centralized regret in semilogy
+            # savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
+            # print("\n\n- Plotting the centralized regret")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
+            # else:
+            #     evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+
             # Plotting the centralized regret in loglog
             savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
             print("\n\n- Plotting the centralized regret")
@@ -282,14 +291,14 @@ if __name__ == '__main__':
         else:
             e0.plotRegretCentralized(envId, semilogx=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
-        # Plotting the centralized regret in semilogy
-        savefig = mainfig.replace('all', 'all_RegretCentralized_semilogy')
-        print("\n\n- Plotting the centralized regret for all 'players' values, in semilogy scale")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            e0.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, evaluators=eothers)
-        else:
-            e0.plotRegretCentralized(envId, semilogy=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
+        # # Plotting the centralized regret in semilogy
+        # savefig = mainfig.replace('all', 'all_RegretCentralized_semilogy')
+        # print("\n\n- Plotting the centralized regret for all 'players' values, in semilogy scale")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     e0.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, evaluators=eothers)
+        # else:
+        #     e0.plotRegretCentralized(envId, semilogy=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
         # Plotting the centralized regret in loglog
         savefig = mainfig.replace('all', 'all_RegretCentralized_loglog')
