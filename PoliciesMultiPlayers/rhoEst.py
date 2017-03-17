@@ -108,9 +108,8 @@ class oneRhoEst(oneRhoRand):
 
         if self.collisionCount > threshold:
             self.nbPlayersEstimate += 1
-            print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
+            # print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
-        pass
 
     def choice(self):
         self.t += 1

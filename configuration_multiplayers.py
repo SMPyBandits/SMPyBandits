@@ -54,7 +54,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -76,7 +76,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
@@ -328,25 +328,25 @@ configuration.update({
 # ]
 
 configuration["successive_players"] = [
-    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-    Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
     Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,  # This one is not efficient!
     rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,  # This one is not efficient!
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is not efficient!
     rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,  # This one is not efficient!
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,  # This one is not efficient!
     rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,  # This one is not efficient!
     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,  # This one is not efficient!
     rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,  # This one is not efficient!
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is not efficient!
     rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,  # This one is not efficient!
 ]
 
