@@ -100,13 +100,3 @@ class OracleNotFair(BaseMPPolicy):
                 nbAffected = np.count_nonzero(self._affectations == armId)
                 if nbAffected > 1:
                     print(" - For arm number {}, there is {} different child player affected on this arm ...".format(armId + 1, nbAffected))
-
-    def _startGame_one(self, playerId):
-        # FIXME It should re-generate the affectations every time a game is started!
-        self._players[playerId].startGame()
-
-    def _getReward_one(self, playerId, arm, reward):
-        self._players[playerId].getReward(arm, reward)
-
-    def _choice_one(self, playerId):
-        return self._players[playerId].choice()

@@ -7,7 +7,7 @@ __version__ = "0.2"
 
 import numpy as np
 
-from .CentralizedMultiplePlay import CentralizedMultiplePlay, CentralizedChildPointer
+from .CentralizedMultiplePlay import CentralizedMultiplePlay
 
 
 # --- Class for the mother

@@ -68,15 +68,6 @@ class Selfish(BaseMPPolicy):
 
     # --- Proxy methods
 
-    def _startGame_one(self, playerId):
-        self._players[playerId].startGame()
-
-    def _getReward_one(self, playerId, arm, reward):
-        self._players[playerId].getReward(arm, reward)
-
-    def _choice_one(self, playerId):
-        return self._players[playerId].choice()
-
     def _handleCollision_one(self, playerId, arm):
         player = self._players[playerId]
         player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)

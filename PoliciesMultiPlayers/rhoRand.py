@@ -81,17 +81,3 @@ class rhoRand(BaseMPPolicy):
 
     def __str__(self):
         return "rhoRand({} x {})".format(self.nbPlayers, str(self._players[0]))
-
-    # --- Proxy methods
-
-    def _startGame_one(self, playerId):
-        self._players[playerId].startGame()
-
-    def _getReward_one(self, playerId, arm, reward):
-        self._players[playerId].getReward(arm, reward)
-
-    def _choiceWithRank_one(self, playerId, rank):
-        return self._players[playerId].choiceWithRank(rank)
-
-    def _estimatedOrder_one(self, playerId):
-        return self._players[playerId].estimatedOrder()

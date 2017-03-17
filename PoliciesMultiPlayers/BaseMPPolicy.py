@@ -16,3 +16,29 @@ class BaseMPPolicy(object):
 
     def __str__(self):
         return self.__class__.__name__
+
+    # --- Proxy methods
+
+    def _startGame_one(self, playerId):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].startGame()
+
+    def _getReward_one(self, playerId, arm, reward):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].getReward(arm, reward)
+
+    def _choice_one(self, playerId):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].choice()
+
+    def _choiceWithRank_one(self, playerId, rank=1):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].choiceWithRank(rank)
+
+    def _choiceFromSubSet_one(self, playerId, availableArms='all'):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].choiceFromSubSet(availableArms)
+
+    def _estimatedOrder_one(self, playerId):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].estimatedOrder()
