@@ -90,6 +90,10 @@ if __name__ == '__main__':
         # h5pyfile = h5py.File(h5pyname, 'w')
         picklename = mainfig + '.pickle'
 
+        # Plot histogram for rewards for that env
+        if do_plot and interactive:
+            env.plotHistogram(evaluation.horizon * evaluation.repetitions)
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 

@@ -583,13 +583,13 @@ def delayed_play(env, players, horizon, collisionModel,
     try:
         np.random.seed(seed)
         random.seed(seed)
-    except SystemError:
+    except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
+    # XXX this uses a LOT of RAM memory!!!
     env = deepcopy(env)
-    nbArms = env.nbArms
     players = deepcopy(players)
-    horizon = deepcopy(horizon)
+    nbArms = env.nbArms
     nbPlayers = len(players)
     # random_arm_orders = [np.random.permutation(nbArms) for i in range(nbPlayers)]
     # Start game

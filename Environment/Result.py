@@ -12,18 +12,20 @@ class Result(object):
 
     def __init__(self, nbArms, horizon, delta_t_save=1):
         """Create ResultMultiPlayers."""
-        duration = int(horizon / delta_t_save)
         self.delta_t_save = delta_t_save
-        self.choices = np.zeros(duration, dtype=int)
-        self.rewards = np.zeros(duration)         # To compute the mean
-        # self.rewardsSquared = np.zeros(duration)  # To compute the variance  # XXX uncomment if needed
+        self.choices = np.zeros(horizon, dtype=int)
+        self.rewards = np.zeros(horizon)         # To compute the mean
         self.pulls = np.zeros(nbArms, dtype=int)
 
     def store(self, time, choice, reward):
         """Store results."""
-        time = int(time / self.delta_t_save)
         self.choices[time] = choice
         self.rewards[time] = reward
-        # self.rewardsSquared[time] = reward ** 2  # XXX uncomment if needed
         self.pulls[choice] += 1
-        # FIXME find a way to store the result while learning?
+
+    def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
+        """Save the content of the result files into a HDF5 file on the disk."""
+        # FIXME write it !
+        if delta_t_save is None:
+            delta_t_save = self.delta_t_save
+        pass

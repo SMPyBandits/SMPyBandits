@@ -315,9 +315,10 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     try:
         random.seed(seed)
         np.random.seed(seed)
-    except SystemError:
+    except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
+    # XXX this uses a LOT of RAM memory!!!
     env = deepcopy(env)
     policy = deepcopy(policy)
     # Start game

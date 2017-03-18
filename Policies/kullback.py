@@ -13,7 +13,7 @@ import numpy as np
 
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except SystemError:
+except (ValueError, SystemError):
     from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
 
