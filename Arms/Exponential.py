@@ -93,3 +93,10 @@ class ExponentialFromMean(Exponential):
     def __init__(self, mean, trunc=1):
         p = p_of_expectation(mean)
         super(ExponentialFromMean, self).__init__(p, trunc=trunc)
+
+
+class UnboundedExponential(Exponential):
+    """ Exponential distributed arm, not truncated, ie. trunc =  oo."""
+
+    def __init__(self, mu):
+        super(UnboundedExponential, self).__init__(mu, trunc=float('+inf'))

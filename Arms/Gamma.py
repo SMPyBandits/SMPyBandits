@@ -78,3 +78,10 @@ class GammaFromMean(Gamma):
         """As mean = scale * shape, shape = mean / scale is used."""
         shape = mean / scale
         super(GammaFromMean, self).__init__(shape, scale=scale, mini=mini, maxi=maxi)
+
+
+class UnboundedGamma(Gamma):
+    """ Gamma distributed arm, not truncated, ie. supported in (-oo,  oo)."""
+
+    def __init__(self, shape, scale=SCALE):
+        super(UnboundedGamma, self).__init__(shape, scale=scale, mini=-oo, maxi=oo)

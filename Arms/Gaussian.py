@@ -22,8 +22,8 @@ class Gaussian(Arm):
     - Default is to truncate into [0, 1] (so Gaussian.draw() is in [0, 1]).
     """
 
-    # def __init__(self, mu, sigma=VARIANCE, mini=-oo, maxi=oo):  # XXX Non truncated!
     def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
+        # FIXME truncated Gaussian does NOT have this mean! Cf. histograms!
         self.mu = self.mean = mu
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
         self.sigma = sigma
@@ -65,3 +65,10 @@ class Gaussian(Arm):
 
     def oneHOI(self, mumax, mu):
         return 1 - (mumax - mu) / self.max
+
+
+class UnboundedGaussian(Gaussian):
+    """ Gaussian distributed arm, not truncated, ie. supported in (-oo,  oo)."""
+
+    def __init__(self, mu, sigma=VARIANCE):
+        super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)

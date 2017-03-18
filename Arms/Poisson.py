@@ -18,8 +18,7 @@ class Poisson(Arm):
     - Warning: the draw() method is QUITE inefficient! (15 seconds for 200000 draws, 62 µs for 1).
     """
 
-    # def __init__(self, p, trunc=1):
-    def __init__(self, p, trunc=float('+inf')):
+    def __init__(self, p, trunc=1):
         assert p >= 0, "Error, the parameter 'p' for Poisson arm has to be >= 0."
         self.p = p
         self.trunc = trunc
@@ -66,3 +65,10 @@ class Poisson(Arm):
     def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Poisson arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klPoisson(mu, mumax)
+
+
+class UnboundedPoisson(Poisson):
+    """ Poisson distributed arm, not truncated, ie. trunc =  oo."""
+
+    def __init__(self, p):
+        super(UnboundedPoisson, self).__init__(p, trunc=float('+inf'))

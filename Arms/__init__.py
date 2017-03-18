@@ -13,10 +13,11 @@ import numpy as np
 if __name__ != "__main__":
     from .Uniform import Uniform
     from .Bernoulli import Bernoulli
-    from .Poisson import Poisson
-    from .Gaussian import Gaussian
-    from .Exponential import Exponential, ExponentialFromMean
-    from .Gamma import Gamma, GammaFromMean
+    from .Binomial import Binomial
+    from .Poisson import Poisson, UnboundedPoisson
+    from .Gaussian import Gaussian, UnboundedGaussian
+    from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
+    from .Gamma import Gamma, GammaFromMean, UnboundedGamma
 
 
 def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
