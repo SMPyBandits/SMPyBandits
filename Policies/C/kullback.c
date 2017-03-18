@@ -16,9 +16,9 @@ C version of some Kullback-Leibler utilities provided in file "kullback.py"
 #define MAX(X, Y) (((X) < (Y)) ? (Y) : (X))
 
 double _klBern(double p, double q){
-	p = p<1-eps? (p>eps ? p:eps) : 1-eps;
-	q = q<1-eps? (q>eps ? q:eps) : 1-eps;
-	return p*log(p/q) + (1-p)*log((1-p)/(1-q));
+    p = p<1-eps? (p>eps ? p:eps) : 1-eps;
+    q = q<1-eps? (q>eps ? q:eps) : 1-eps;
+    return p*log(p/q) + (1-p)*log((1-p)/(1-q));
 }
 
 static PyObject* klBern(PyObject* self, PyObject* args)
@@ -30,6 +30,24 @@ static PyObject* klBern(PyObject* self, PyObject* args)
         return NULL;
 
     return Py_BuildValue("d", _klBern(x,y));
+}
+
+double _klBin(double p, double q, int n){
+	p = p<1-eps? (p>eps ? p:eps) : 1-eps;
+	q = q<1-eps? (q>eps ? q:eps) : 1-eps;
+	return n * (p*log(p/q) + (1-p)*log((1-p)/(1-q)) );
+}
+
+static PyObject* klBin(PyObject* self, PyObject* args)
+{
+    //const char *command;
+    double x,y;
+    int n;
+
+    if (!PyArg_ParseTuple(args, "ddi", &x, &y, &n))
+        return NULL;
+
+    return Py_BuildValue("d", _klBin(x,y,n));
 }
 
 double _klPoisson(double x, double y){
@@ -305,6 +323,7 @@ static PyObject* maxEV(PyObject* self, PyObject* args)
 
 static PyMethodDef kullbackMethods[] = {
     {"klBern", klBern, METH_VARARGS, "klBern(x, y): Calculate the binary Kullback-Leibler divergence."},
+    {"klBin", klBin, METH_VARARGS, "klBin(x, y, n): Calculate the Kullback-Leibler divergence for Binomial distributions of same n."},
     {"klPoisson", klPoisson, METH_VARARGS, "klPoisson(x, y): Calculate the Kullback-Leibler divergence for Poisson distributions."},
     {"klExp", klExp, METH_VARARGS, "klExp(x, y): Calculate the Kullback-Leibler for Exponential distributions."},
     {"klGamma", klGamma, METH_VARARGS, "klGamma(x, y, a=1): Calculate the Kullback-Leibler for Gamma distributions."},

@@ -51,6 +51,33 @@ def klBern(x, y):
 
 
 @jit
+def klBin(x, y, n):
+    """ Kullback-Leibler divergence for Binomial distributions. https://math.stackexchange.com/questions/320399/kullback-leibner-divergence-of-binomial-distributions
+
+    Warning, the two distributions must have the same parameter n, and x, y are p, q in (0, 1).
+
+    >>> klBin(0.5, 0.5, 10)
+    0.0
+    >>> klBin(0.1, 0.9, 10)  # doctest: +ELLIPSIS
+    17.57779...
+    >>> klBin(0.9, 0.1, 10)  # And this KL is symetric  # doctest: +ELLIPSIS
+    17.57779...
+    >>> klBin(0.4, 0.5, 10)  # doctest: +ELLIPSIS
+    0.20135...
+    >>> klBin(0.01, 0.99, 10)  # doctest: +ELLIPSIS
+    45.03217...
+
+    - Special values:
+
+    >>> klBin(0, 1, 10)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+    345.39575...
+    """
+    x = min(max(x, eps), 1 - eps)
+    y = min(max(y, eps), 1 - eps)
+    return n * (x * log(x / y) + (1 - x) * log((1 - x) / (1 - y)))
+
+
+@jit
 def klPoisson(x, y):
     """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution#Kullback.E2.80.93Leibler_divergence
 

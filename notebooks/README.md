@@ -61,7 +61,8 @@ $ jupyter-notebook --version  # version >= 4 is recommended
 - First, install its dependencies (`pip install -r requirements`).
 - Then, either install it (*not yet*), or be sure to work in the main folder.
 
-> *Note:* it's probably better to use *virtualenv*, if you like it.
+> *Note:* it's probably better to use [*virtualenv*](https://virtualenv.pypa.io/), if you like it.
+> I never really understood how and why virtualenv are useful, but if you know why, you should know how to use it.
 
 ----
 
