@@ -50,9 +50,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 200
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -334,10 +334,10 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
-    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
-    rhoLearned(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # To check == rhoRand
-    rhoLearned(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # To try !
+    # rhoLearned(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    rhoLearned(NB_PLAYERS, UCBalpha, nbArms, EmpiricalMeans, alpha=1).children,  # To try !
+    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     # # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,

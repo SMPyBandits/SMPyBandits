@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" rhoLearned: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
+""" rhoLearn: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
@@ -39,9 +39,9 @@ import numpy as np
 from .rhoRand import oneRhoRand, rhoRand
 
 
-# --- Class oneRhoLearned, for children
+# --- Class oneRhoLearn, for children
 
-class oneRhoLearned(oneRhoRand):
+class oneRhoLearn(oneRhoRand):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
     - Except for the handleCollision method: a new rank is sampled after observing a collision, from the rankSelection algorithm.
@@ -50,7 +50,7 @@ class oneRhoLearned(oneRhoRand):
     """
 
     def __init__(self, nbPlayers, rankSelectionAlgo, *args, **kwargs):
-        super(oneRhoLearned, self).__init__(nbPlayers, *args, **kwargs)
+        super(oneRhoLearn, self).__init__(nbPlayers, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(nbPlayers)  # FIXME I should give it more arguments?
         self.nbPlayers = nbPlayers
         self.rank = None
@@ -58,11 +58,11 @@ class oneRhoLearned(oneRhoRand):
         self.timesUntilCollision = np.zeros(nbPlayers, dtype=int)
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}, {}{}, ranks ~ {}>".format(self.playerId + 1, r"$\rho^{\mathrm{Learned}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "", self.rankSelection)
+        return r"#{}<{}, {}, rank: {} ~ {}>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else self.rank, self.rankSelection)
 
     def startGame(self):
         self.rankSelection.startGame()
-        super(oneRhoLearned, self).startGame()
+        super(oneRhoLearn, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
         self.timesUntilCollision.fill(0)
 
@@ -71,22 +71,27 @@ class oneRhoLearned(oneRhoRand):
         # So, first, we count one more step for this rank
         self.timesUntilCollision[self.rank - 1] += 1
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
-        self.rankSelection.getReward(arm, 1)
+        # self.rankSelection.getReward(self.rank - 1, 1)
+        # FIXME this is NOTHING BUT a heuristic!!!!
+        self.rankSelection.getReward(self.rank - 1, 1. / (1 + self.timesUntilCollision[self.rank - 1]))
         # Then use the reward for the arm learning algorithm
-        return super(oneRhoLearned, self).getReward(arm, reward)
+        return super(oneRhoLearn, self).getReward(arm, reward)
 
     def handleCollision(self, arm):
         # First, reset the time until collisions for that rank
         self.timesUntilCollision[self.rank - 1] = 0
+        # And give a 0 reward to this rank
+        self.rankSelection.getReward(self.rank - 1, 0)
         # Then, use the rankSelection algorithm to select a new rank
         self.rank = 1 + self.rankSelection.choice()
-        print(" - A oneRhoLearned player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
+        print(" - A oneRhoLearn player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
+        pass
 
 
 # --- Class rhoRand
 
-class rhoLearned(rhoRand):
-    """ rhoLearned: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
+class rhoLearn(rhoRand):
+    """ rhoLearn: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Uniform,
@@ -100,8 +105,8 @@ class rhoLearned(rhoRand):
 
         Example:
 
-        >>> s = rhoLearned(nbPlayers, Thompson, nbArms, Uniform)  # Exactly rhoRand!
-        >>> s = rhoLearned(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
+        >>> s = rhoLearn(nbPlayers, Thompson, nbArms, Uniform)  # Exactly rhoRand!
+        >>> s = rhoLearn(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
 
         - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use ONLY!
@@ -114,9 +119,9 @@ class rhoLearned(rhoRand):
         self.nbArms = nbArms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoLearned(nbPlayers, rankSelectionAlgo, self, playerId)
+            self.children[playerId] = oneRhoLearn(nbPlayers, rankSelectionAlgo, self, playerId)
         # Fake rankSelection
         self._rankSelection = rankSelectionAlgo(nbPlayers)
 
     def __str__(self):
-        return "rhoLearned({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)
+        return "rhoLearn({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)
