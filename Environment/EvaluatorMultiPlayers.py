@@ -329,7 +329,11 @@ class EvaluatorMultiPlayers(object):
                         Ys[i] /= np.log(2 + X)  # XXX prevent /0
             meanY = np.mean(Y)
             # Now plot
-            plot_method(X, Y, (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
+            if semilogy:
+                markevery = (evaId / 50., 0.5)
+            else:
+                markevery = (evaId / 50., 0.1)
+            plot_method(X, Y, (markers[evaId] + '-'), markevery=markevery, label=label, color=colors[evaId])
             if len(evaluators) == 1:
                 if not semilogx and not loglog and not semilogy:
                     # We plot a horizontal line ----- at the mean regret

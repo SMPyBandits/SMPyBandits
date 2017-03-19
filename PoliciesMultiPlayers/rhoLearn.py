@@ -58,7 +58,7 @@ class oneRhoLearn(oneRhoRand):
         self.timesUntilCollision = np.zeros(nbPlayers, dtype=int)
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}, {}, rank: {} ~ {}>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else self.rank, self.rankSelection)
+        return r"#{}<{}, {}, rank{} ~ {}>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
 
     def startGame(self):
         self.rankSelection.startGame()
@@ -71,9 +71,9 @@ class oneRhoLearn(oneRhoRand):
         # So, first, we count one more step for this rank
         self.timesUntilCollision[self.rank - 1] += 1
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
-        # self.rankSelection.getReward(self.rank - 1, 1)
+        self.rankSelection.getReward(self.rank - 1, 1)
         # FIXME this is NOTHING BUT a heuristic!!!!
-        self.rankSelection.getReward(self.rank - 1, 1. / (1 + self.timesUntilCollision[self.rank - 1]))
+        # self.rankSelection.getReward(self.rank - 1, 1. / (1 + self.timesUntilCollision[self.rank - 1]))
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearn, self).getReward(arm, reward)
 
@@ -84,8 +84,7 @@ class oneRhoLearn(oneRhoRand):
         self.rankSelection.getReward(self.rank - 1, 0)
         # Then, use the rankSelection algorithm to select a new rank
         self.rank = 1 + self.rankSelection.choice()
-        print(" - A oneRhoLearn player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
-        pass
+        # print(" - A oneRhoLearn player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
 
 
 # --- Class rhoRand
