@@ -15,19 +15,21 @@ class ChildPointer(object):
     def __init__(self, mother, playerId):
         self.mother = mother  # Pointer to the mother class.
         self.playerId = playerId
+        self.nbArms = mother.nbArms
 
-    @property
-    def nbArms(self):
-        """Trying to read the number of arms from mother class."""
-        nbArms = "UNKNOWN"
-        if hasattr(self, 'mother'):
-            if hasattr(self.mother, 'nbArms'):
-                nbArms = self.mother.nbArms
-            elif hasattr(self.mother._players[self.playerId], 'nbArms'):
-                nbArms = self.mother._players[self.playerId].nbArms
-        if nbArms == "UNKNOWN":
-            warn("ChildPointer: {} seems unable to get the number of arms from his mother class {} ...".format(self, self.Mother), RuntimeWarning)
-        return nbArms
+    # # I don't know why this does not work as an attribute... ?
+    # @property
+    # def nbArms(self):
+    #     """Trying to read the number of arms from mother class."""
+    #     nbArms = "UNKNOWN"
+    #     if hasattr(self, 'mother'):
+    #         if hasattr(self.mother, 'nbArms'):
+    #             nbArms = self.mother.nbArms
+    #         elif hasattr(self.mother._players[self.playerId], 'nbArms'):
+    #             nbArms = self.mother._players[self.playerId].nbArms
+    #     if nbArms == "UNKNOWN":
+    #         warn("ChildPointer: {} seems unable to get the number of arms from his mother class {} ...".format(self, self.mother), RuntimeWarning)
+    #     return nbArms
 
     def __str__(self):
         return "#{}<{}>".format(self.playerId + 1, self.mother._players[self.playerId])

@@ -49,10 +49,10 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         self.nbPlayers = nbPlayers
         self.player = playerAlgo(nbArms, *args, **kwargs)  # Only one policy
         self.children = [None] * nbPlayers  # But nbPlayers children
+        self.nbArms = nbArms
         for playerId in range(nbPlayers):
             self.children[playerId] = CentralizedChildPointer(self, playerId)
             print(" - One new child, of index {}, and class {} ...".format(playerId, self.children[playerId]))  # DEBUG
-        self.nbArms = nbArms
         # Option: in case of multiplay plays, should the affectations of users always be uniform, or fixed when UCB indexes have converged? First choice is more fair, but linear nb of switches, second choice is not fair, but cst nb of switches
         self.uniformAllocation = uniformAllocation
         # Internal memory
