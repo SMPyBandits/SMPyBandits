@@ -34,6 +34,7 @@ from .CentralizedIMP import CentralizedIMP
 from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoRandRand import rhoRandRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoEst import rhoEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
+from .rhoLearned import rhoLearned  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log
 

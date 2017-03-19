@@ -71,7 +71,7 @@ class oneRhoEst(oneRhoRand):
     def __init__(self, horizon, threshold, *args, **kwargs):
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
-        del self.nbPlayers
+        del self.nbPlayers  # <-- make SURE that nbPlayers is NOT used by the policy!
         self.horizon = horizon
         self.threshold = threshold
         # Internal variables
@@ -144,11 +144,11 @@ class rhoEst(rhoRand):
         self.nbPlayers = nbPlayers
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers
+        self.nbArms = nbArms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             fakeNbArms = None
             self.children[playerId] = oneRhoEst(horizon, threshold, fakeNbArms, self, playerId)
-        self.nbArms = nbArms
 
     def __str__(self):
         return "rhoEst({} x {})".format(self.nbPlayers, str(self._players[0]))
