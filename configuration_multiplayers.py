@@ -50,11 +50,11 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 100
+REPETITIONS = 50
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -334,20 +334,24 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
-    # rhoLearned(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
-    rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    rhoLearned(NB_PLAYERS, UCBalpha, nbArms, EmpiricalMeans, alpha=1).children,  # To try !
-    rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
-    Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
+    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
+    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     # # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, SoftmaxDecreasing).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCBalpha).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Thompson).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, klUCBPlus).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, BayesUCB).children,  # XXX does it work?
 ]
 
 
