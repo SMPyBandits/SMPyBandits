@@ -54,7 +54,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -226,7 +226,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
     # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
-    "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using multi-player Oracle policy
@@ -258,7 +258,7 @@ configuration.update({
 
     # --- DONE Using single-player rhoRand policy
     # "players": rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children
-    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
+    "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, MOSS, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
@@ -347,11 +347,11 @@ configuration["successive_players"] = [
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, SoftmaxDecreasing).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCBalpha).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Thompson).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, klUCBPlus).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, UCBalpha, nbArms, BayesUCB).children,  # XXX does it work?
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,  # XXX does it work?
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,  # XXX does it work?
 ]
 
 
