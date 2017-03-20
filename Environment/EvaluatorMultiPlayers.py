@@ -310,7 +310,7 @@ class EvaluatorMultiPlayers(object):
                 Ys = [None] * 3
                 labels = [""] * 3
                 Ys[0] = eva.getFirstRegretTerm(envId)
-                labels[0] = "1st term: Pulls of suboptimal arms"
+                labels[0] = "1st term: Pulls of suboptimal arms (lower-bounded)"
                 Ys[1] = eva.getSecondRegretTerm(envId)
                 labels[1] = "2nd term: Non-pulls of optimal arms"
                 Ys[2] = eva.getThirdRegretTerm(envId)
@@ -485,13 +485,18 @@ class EvaluatorMultiPlayers(object):
     # Starting from the average occupation (by primary users), as given by [1 - arm.mean], it should increase occupation[arm] when users chose it
     # The reason/idea is that good arms (low occupation ration) are pulled a lot, thus becoming not as available as they seemed
 
-    def plotNbCollisions(self, envId=0, savefig=None, cumulated=False, evaluators=()):
+    def plotNbCollisions(self, envId=0, savefig=None,
+                         semilogx=False, semilogy=False, loglog=False,
+                         cumulated=False, evaluators=()):
         """Plot the frequency or cum number of collisions, support more than one environments (use evaluators to give a list of other environments)."""
         X = self.times - 1
         fig = plt.figure()
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
+        plot_method = plt.loglog if loglog else plt.plot
+        plot_method = plt.semilogy if semilogy else plot_method
+        plot_method = plt.semilogx if semilogx else plot_method
         for evaId, eva in enumerate(evaluators):
             Y = np.zeros(eva.duration)
             for armId in range(eva.envs[envId].nbArms):
@@ -499,10 +504,17 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             Y /= eva.nbPlayers  # To normalized the count?
-            plt.plot(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha=1. if cumulated else 0.7)
+            plot_method(X, Y, (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha=1. if cumulated else 0.7)
         if not cumulated:
             # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
             add_percent_formatter("yaxis", 1.0)
+        # We also plot our lower bound
+        if cumulated:
+            upperbound = self.envs[envId].upperbound_collisions(self.nbPlayers, X)
+            print("Anandkumar et al. upper bound for the non-cumulated number of collisions is {:.3g} * log(t) here ...".format(upperbound))  # DEBUG
+            plot_method(X, upperbound, 'k-', label="Anandkumar et al. upper bound = ${:.3g}$".format(upperbound), lw=3)
+        else:
+            print("No upper bound for the non-cumulated number of collisions...")  # DEBUG
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))

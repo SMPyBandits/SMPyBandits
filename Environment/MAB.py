@@ -117,17 +117,62 @@ class MAB(object):
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
         our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
-        print("  - For {} player, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
+        print("  - For {} players, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
-        print("  - For {} player, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
+        print("  - For {} players, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
 
         # Check that our bound is better (ie bigger)
         if anandkumar_lowerbound > our_lowerbound:
             print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
         return our_lowerbound, anandkumar_lowerbound
+
+    def upperbound_collisions(self, nbPlayers, times):
+        """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        sortedMeans = sorted(self.means)
+        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
+        bestMeans = sortedMeans[-nbPlayers:]
+
+        def worstMeans_of_a(a):
+            return sortedMeans[:-a]
+
+        # First, the bound in Lemma 2 from [Anandkumar et al., 2010] uses this Upsilon(U, U)
+        Upsilon = binomialCoefficient(nbPlayers, 2 * nbPlayers - 1)
+        print("  - For {} players, Upsilon(M,M) = (2M-1 choose M) = {} ...".format(nbPlayers, Upsilon))
+
+        # Then, Lemma 3 from [Anandkumar et al., 2010] bounds the excepted number of steps before all players have learned a correct ranking of the arms, for UCB1 only
+
+        # First, the constant term
+        from math import pi
+        boundOnExpectedTprime_cstTerm = nbPlayers * sum(
+            sum(
+                (1 + pi**2 / 3.)
+                for (b, mu_star_b) in enumerate(worstMeans_of_a(a))
+            )
+            for (a, mu_star_a) in enumerate(bestMeans)
+        )
+        print("  - For {} players, the bound with (1 + pi^2 / 3) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_cstTerm))
+
+        # And the term to multiply with log(t)
+        boundOnExpectedTprime_logT = nbPlayers * sum(
+            sum(
+                8. / (mu_star_b - mu_star_a)**2
+                for (b, mu_star_b) in enumerate(worstMeans_of_a(a))
+            )
+            for (a, mu_star_a) in enumerate(bestMeans)
+        )
+        print("  - For {} players, the bound with (8 / (mu_b^* - mu_a^*)^2) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_logT))
+
+        # Add them up
+        boundOnExpectedTprime = boundOnExpectedTprime_cstTerm + boundOnExpectedTprime_logT * np.log(2 + times)
+
+        # The upper bound in Theorem 3 from [Anandkumar et al., 2010]
+        upperbound = nbPlayers * (Upsilon + 1) * boundOnExpectedTprime
+        print("  - For {} players, Anandkumar et al. upper bound for the non-cumulated number of collisions is {:.3g} * log(t) here ...".format(nbPlayers, upperbound))  # DEBUG
+
+        return upperbound
 
     # --- Plot methods
 
@@ -161,9 +206,30 @@ class MAB(object):
         # Now plot
         plt.figure()
         for armId, arm in enumerate(arms):
-            _ = plt.hist(rewards[armId, :], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm), alpha=0.7)
+            plt.hist(rewards[armId, :], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm), alpha=0.7)
         legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: ${}$".format(horizon, self.nbArms, self.reprarms()))
         show_and_save(showplot=True, savefig=savefig)
+
+
+# --- Utility functions
+
+def binomialCoefficient(k, n):
+    r""" Compute n factorial by a direct multiplicative method:  (:math:`C^n_k = {k \choose n}`).
+
+    - Exact, using integers, not like https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.binom.html#scipy.special.binom which uses float numbers.
+    - Complexity: O(1) in memory, O(n) in time.
+    - From https://en.wikipedia.org/wiki/Binomial_coefficient#Binomial_coefficient_in_programming_languages
+    - From: http://userpages.umbc.edu/~rcampbel/Computers/Python/probstat.html#ProbStat-Combin-Combinations
+    """
+    if k < 0 or k > n:
+        return 0
+    if k == 0 or k == n:
+        return 1
+    k = min(k, n - k)  # take advantage of symmetry
+    c = 1
+    for i in range(k):
+        c *= (n - i) // (i + 1)
+    return c
