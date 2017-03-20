@@ -242,9 +242,9 @@ if __name__ == '__main__':
             print(" - Plotting the cumulated total nb of collision as a function of time")
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=True)
+                evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=True, upperbound=False)
             else:
-                evaluation.plotNbCollisions(envId, cumulated=True)  # XXX To plot without saving
+                evaluation.plotNbCollisions(envId, cumulated=True, upperbound=False)  # XXX To plot without saving
 
             # Also plotting the frequency of collision in each arm
             savefig = mainfig.replace('main', 'main_FrequencyCollisions')
@@ -310,7 +310,7 @@ if __name__ == '__main__':
             e0.plotRegretCentralized(envId, loglog=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
         # Plotting the fairness
-        for fairness in ['RajJain'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+        for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
             savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
             print("\n\n- Plotting the centralized fairness (%s)" % fairness)
             if saveallfigs:

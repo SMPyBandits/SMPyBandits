@@ -118,6 +118,24 @@ if __name__ == '__main__':
         else:
             evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
+        # # Plotting the centralized regret in semilogy
+        # savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
+        # print("\n\n- Plotting the centralized regret")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
+        # else:
+        #     evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+
+        # Plotting the centralized regret in loglog
+        savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
+        print("\n\n- Plotting the centralized regret")
+        if saveallfigs:
+            print("  and saving the plot to {} ...".format(savefig))
+            evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
+        else:
+            evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+
         # # Plotting the normalized centralized rewards
         # savefig = mainfig.replace('main', 'main_NormalizedRegretCentralized')
         # print("\n\n- Plotting the normalized centralized regret")
@@ -204,9 +222,9 @@ if __name__ == '__main__':
         print(" - Plotting the cumulated total nb of collision as a function of time")
         if saveallfigs:
             print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=True)
+            evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=True, upperbound=False)
         else:
-            evaluation.plotNbCollisions(envId, cumulated=True)  # XXX To plot without saving
+            evaluation.plotNbCollisions(envId, cumulated=True, upperbound=False)  # XXX To plot without saving
 
         # Also plotting the frequency of collision in each arm
         savefig = mainfig.replace('main', 'main_FrequencyCollisions')

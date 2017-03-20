@@ -32,6 +32,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
+# HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -42,7 +43,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -110,6 +111,7 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 
 # Parameters for the arms
 VARIANCE = 0.05   # Variance of Gaussian arms
+VARIANCE = 10   # Variance of Gaussian arms
 
 
 # XXX This dictionary configures the experiments
@@ -165,15 +167,21 @@ configuration = {
         # },
     ],
     # "environment": [  # XXX Exponential arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Exponential,
-    #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+    #     {   # An example problem with 9 arms
+    #         "arm_type": ExponentialFromMean,
+    #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     #     },
     # ],
     # "environment": [  # XXX Gaussian arms
-    #     {   # An example problem with  arms
+    #     {   # An example problem with 9 arms
     #         "arm_type": Gaussian,
     #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #     },
+    # ],
+    # "environment": [  # XXX Unbounded Gaussian arms
+    #     {   # An example problem with 9 arms
+    #         "arm_type": UnboundedGaussian,
+    #         "params": [(-40, VARIANCE), (-30, VARIANCE), (-20, VARIANCE), (-VARIANCE, VARIANCE), (0, VARIANCE), (VARIANCE, VARIANCE), (20, VARIANCE), (30, VARIANCE), (40, VARIANCE)]
     #     },
     # ],
 }
@@ -193,10 +201,10 @@ configuration.update({
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
         #     "params": {}
         # },
-        {
-            "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
-            "params": {}
-        },
+        # {
+        #     "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
+        #     "params": {}
+        # },
         # {
         #     "archtype": TakeRandomFixedArm,   # The stupidest policy
         #     "params": {}
@@ -357,10 +365,10 @@ configuration.update({
         #     }
         # },
         # --- MOSS algorithm, like UCB
-        {
-            "archtype": MOSS,
-            "params": {}
-        },
+        # {
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -418,20 +426,20 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        {
-            "archtype": klUCBHPlus,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb
-            }
-        },
-        {
-            "archtype": klUCBPlusPlus,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb
-            }
-        },
+        # {
+        #     "archtype": klUCBHPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlusPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb
+        #     }
+        # },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -471,6 +479,37 @@ configuration.update({
 # configuration.update({
 #     "policies": [  # --- Full or partial knowledge algorithms
 #         TakeFixedArm(nbArms, k) for k in range(nbArms)
+#     ]
+# })
+
+
+# # Custom klucb function
+# _klucbGauss = klucbGauss
+
+
+# def klucbGauss(x, d, precision=0.):
+#     """klucbGauss(x, d, sig2) with the good variance."""
+#     # return _klucbGauss(x, d, 0.25)
+#     return _klucbGauss(x, d, VARIANCE)
+
+
+# # XXX to test just a few algorithms
+# configuration.update({
+#     "policies": [
+#         # --- UCBalpha algorithms
+#         {
+#             "archtype": UCBalpha,
+#             "params": {
+#                 "alpha": 1
+#             }
+#         },
+#         # --- KL UCB algorithms
+#         {
+#             "archtype": klUCBPlus,
+#             "params": {
+#                 "klucb": klucbGauss,
+#             }
+#         },
 #     ]
 # })
 

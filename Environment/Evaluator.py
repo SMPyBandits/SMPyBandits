@@ -23,6 +23,8 @@ from .MAB import MAB
 
 REPETITIONS = 1
 DELTA_T_SAVE = 1
+DELTA_T_PLOT = 50
+
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
@@ -45,7 +47,9 @@ class Evaluator(object):
         self.repetitions = self.cfg.get('repetitions', REPETITIONS)
         print("Number of repetitions:", self.repetitions)
         self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
-        print("Sampling rate DELTA_T_SAVE:", self.delta_t_save)
+        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
+        self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
+        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)  # DEBUG
         self.duration = int(self.horizon / self.delta_t_save)
         # Parameters for the random events
         self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)
@@ -220,16 +224,16 @@ class Evaluator(object):
             lw = 4 if str(policy)[:4] == 'Aggr' else 2
             if semilogx:
                 # FIXED for semilogx plots, truncate to only show t >= 100
-                plt.semilogx(X[X >= 100], Y[X >= 100], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
-                plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
                 # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
-                plt.fill_between(X, Y - stdY, Y + stdY, facecolor=colors[i], alpha=0.4)
+                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY, Y[::self.delta_t_plot] + stdY, facecolor=colors[i], alpha=0.4)
                 # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), alpha=0.9)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         lowerbound = self.envs[envId].lowerbound()
@@ -238,31 +242,31 @@ class Evaluator(object):
         plt.ylim(ymin, ymax)
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(X, self.envs[envId].maxArm * np.ones_like(X), 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
+            plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
-            plt.plot(X, lowerbound * np.ones_like(X), 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
+            plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             legend()
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         else:
             if drawUpperBound and not semilogx:
-                # XXX experiment to print also an upper bound
+                # Experiment to print also an upper bound: it is CRAZILY huge!!
                 lower_amplitudes = np.asarray([arm.lower_amplitude for arm in self.envs[envId].arms])
-                lower, amplitude = np.min(lower_amplitudes[:, 0]), np.max(lower_amplitudes[:, 1])
+                amplitude = np.max(lower_amplitudes[:, 1])
                 maxVariance = max([p * (1 - p) for p in self.envs[envId].means])
                 K = self.envs[envId].nbArms
                 upperbound = 76 * np.sqrt(maxVariance * K * X) + amplitude * K
-                plt.plot(X, upperbound, 'r-', label=r"Minimax upper-bound for kl-UCB++", lw=3)
+                plt.plot(X[::self.delta_t_plot], upperbound[::self.delta_t_plot], 'r-', label=r"Minimax upper-bound for kl-UCB++", lw=3)
             # FIXED for semilogx plots, truncate to only show t >= 100
             if semilogx:
                 X = X[X >= 100]
             # We also plot the Lai & Robbins lower bound
-            plt.plot(X, lowerbound * np.log(1 + X), 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
+            plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
@@ -277,7 +281,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
             lw = 5 if str(policy)[:4] == 'Aggr' else 3
-            plt.plot(X, Y, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
@@ -330,7 +334,8 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         random_shuffle = False
         random_invert = False
 
-    for t in range(horizon):
+    prettyRange = tqdm(range(horizon), desc="Time t") if repeatId == 0 else range(horizon)
+    for t in prettyRange:
         choice = policy.choice()
 
         # FIXME do this quicker!
