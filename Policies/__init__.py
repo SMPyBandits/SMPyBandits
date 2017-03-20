@@ -5,25 +5,25 @@
 
 - Greedy algorithms: EpsilonGreedy, EpsilonFirst, EpsilonDecreasing
 
-- Probabilistic algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
+- Probabilistic weighting algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
-- Index based algorithms: UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned
+- Index based algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, MOSS, MOSSH
 
 - Bayesian algorithms: Thompson, BayesUCB
 
-- Based on Kullback-Leibler divergence: klUCB, klUCBPlus, klUCBHPlus
+- Based on Kullback-Leibler divergence: klUCB, klUCBlog10, klUCBloglog, klUCBloglog10, klUCBPlus, klUCBHPlus, klUCBPlusPlus
 
-- Empirical KL UCB algorithm: KLempUCB
+- Empirical KL-UCB algorithm: KLempUCB
 
 - Hybrids algorithms: AdBandit
 
-- Aggregated algorithms: Aggr
+- Aggregation algorithms: Aggr
 
-- Designed for multi-player games: MusicalChair, MEGA
+- Designed for (fully decentralized) multi-player games: MusicalChair, MEGA
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
@@ -53,11 +53,14 @@ from .UCBlog10alpha import UCBlog10alpha  # Different indexes
 from .UCBmin import UCBmin      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
 from .UCBrandomInit import UCBrandomInit
+
 # --- UCB policies with variance terms
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
+
 # --- MOSS index policy
 from .MOSS import MOSS
+from .MOSSH import MOSSH  # Knowing the horizon
 
 # --- Thompson sampling index policy
 from .Thompson import Thompson
