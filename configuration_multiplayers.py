@@ -53,7 +53,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -347,11 +347,11 @@ configuration["successive_players"] = [
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 ]
 
