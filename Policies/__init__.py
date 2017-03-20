@@ -7,11 +7,11 @@
 
 - Probabilistic weighting algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
-- Index based algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, MOSS, MOSSH
+- Index based algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, UCBH, MOSS, MOSSH
 
 - Bayesian algorithms: Thompson, BayesUCB
 
-- Based on Kullback-Leibler divergence: klUCB, klUCBlog10, klUCBloglog, klUCBloglog10, klUCBPlus, klUCBHPlus, klUCBPlusPlus
+- Based on Kullback-Leibler divergence: klUCB, klUCBlog10, klUCBloglog, klUCBloglog10, klUCBPlus, klUCBH, klUCBHPlus, klUCBPlusPlus
 
 - Empirical KL-UCB algorithm: KLempUCB
 
@@ -75,6 +75,7 @@ from .klUCBlog10 import klUCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .klUCBloglog import klUCBloglog  # With log(t) + c log(log(t)) and c = 1 (variable)
 from .klUCBloglog10 import klUCBloglog10  # With log10(t) + c log10(log10(t)) and c = 1 (variable)
 from .klUCBPlus import klUCBPlus    # Different indexes
+from .klUCBH import klUCBH          # Knowing the horizon
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
 from .KLempUCB import KLempUCB  # Empirical KL UCB
