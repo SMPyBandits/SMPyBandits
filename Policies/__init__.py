@@ -46,6 +46,7 @@ from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
 
 # --- Simple UCB policies
 from .UCB import UCB
+from .UCBH import UCBH          # With log(T) instead of log(t)
 from .UCBlog10 import UCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
