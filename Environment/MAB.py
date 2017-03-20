@@ -133,16 +133,21 @@ class MAB(object):
         """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means)
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
-        bestMeans = sortedMeans[-nbPlayers:]
+        bestMeans = sortedMeans[-nbPlayers:][::-1]
 
         def worstMeans_of_a(a):
-            return sortedMeans[:-a]
+            return sortedMeans[:-(a + 1)]
 
         # First, the bound in Lemma 2 from [Anandkumar et al., 2010] uses this Upsilon(U, U)
         Upsilon = binomialCoefficient(nbPlayers, 2 * nbPlayers - 1)
         print("  - For {} players, Upsilon(M,M) = (2M-1 choose M) = {} ...".format(nbPlayers, Upsilon))
 
         # Then, Lemma 3 from [Anandkumar et al., 2010] bounds the excepted number of steps before all players have learned a correct ranking of the arms, for UCB1 only
+        # for (a, mu_star_a) in enumerate(bestMeans):
+        #     print("For a = {}, mu_a^* = {:.3g} ...".format(a, mu_star_a))  # DEBUG
+        #     for (b, mu_star_b) in enumerate(worstMeans_of_a(a)):
+        #         print("    For b = {}, mu_b^* = {:.3g} ...".format(b, mu_star_b))  # DEBUG
+        #         print("      And 8. / (mu_star_b - mu_star_a)**2 = ", 8. / (mu_star_b - mu_star_a)**2)  # DEBUG
 
         # First, the constant term
         from math import pi
@@ -170,7 +175,7 @@ class MAB(object):
 
         # The upper bound in Theorem 3 from [Anandkumar et al., 2010]
         upperbound = nbPlayers * (Upsilon + 1) * boundOnExpectedTprime
-        print("  - For {} players, Anandkumar et al. upper bound for the non-cumulated number of collisions is {:.3g} * log(t) here ...".format(nbPlayers, upperbound))  # DEBUG
+        print("  - For {} players, Anandkumar et al. upper bound for the total cumulated number of collisions is {:.3g} here ...".format(nbPlayers, upperbound[-1]))  # DEBUG
 
         return upperbound
 

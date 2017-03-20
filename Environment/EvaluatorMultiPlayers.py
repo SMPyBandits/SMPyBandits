@@ -511,8 +511,8 @@ class EvaluatorMultiPlayers(object):
         # We also plot our lower bound
         if cumulated:
             upperbound = self.envs[envId].upperbound_collisions(self.nbPlayers, X)
-            print("Anandkumar et al. upper bound for the non-cumulated number of collisions is {:.3g} * log(t) here ...".format(upperbound))  # DEBUG
-            plot_method(X, upperbound, 'k-', label="Anandkumar et al. upper bound = ${:.3g}$".format(upperbound), lw=3)
+            print("Anandkumar et al. upper bound for the non-cumulated number of collisions is {:.3g} * log(t) here ...".format(upperbound[-1]))  # DEBUG
+            plot_method(X, upperbound, 'k-', label="Anandkumar et al. upper bound", lw=3)
         else:
             print("No upper bound for the non-cumulated number of collisions...")  # DEBUG
         # Start the figure

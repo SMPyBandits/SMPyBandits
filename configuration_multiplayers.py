@@ -42,6 +42,7 @@ HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
+# HORIZON = 100000
 
 # DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
@@ -50,10 +51,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# # REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -347,11 +348,11 @@ configuration["successive_players"] = [
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,  # XXX does it work?
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,  # XXX does it work?
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 ]
 
 
