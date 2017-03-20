@@ -44,7 +44,7 @@ class Exp3(BasePolicy):
         self.weights.fill(1. / self.nbArms)
 
     def __str__(self):
-        return "Exp3(gamma: {})".format(self.gamma)
+        return "Exp3(gamma: {:.3g})".format(self.gamma)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
