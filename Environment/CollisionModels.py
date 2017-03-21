@@ -64,13 +64,14 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
         if nbCollisions[choices[i]] < 1:  # No collision
-            rewards[i] = arms[choices[i]].draw(t)
+            rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
             player.getReward(choices[i], rewards[i])
             pulls[i, choices[i]] += 1
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            handleCollision_or_getZeroReward(player, choices[i])
+            player.handleCollision(choices[i])  # FIXME ?
+            # handleCollision_or_getZeroReward(player, choices[i])
 
 
 # Default collision model to use
