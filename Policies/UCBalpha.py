@@ -12,13 +12,17 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCB import UCB
 
+# Default parameter for alpha
+ALPHA = 4
+ALPHA = 1
+
 
 class UCBalpha(UCB):
     """ The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
     Reference: [Auer et al. 02].
     """
 
-    def __init__(self, nbArms, alpha=4, lower=0., amplitude=1.):
+    def __init__(self, nbArms, alpha=ALPHA, lower=0., amplitude=1.):
         super(UCBalpha, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert alpha >= 0, "Error: the alpha parameter for UCBalpha class has to be >= 0."
         self.alpha = alpha

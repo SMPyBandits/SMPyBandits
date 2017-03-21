@@ -10,7 +10,7 @@ from numpy import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBalpha import UCBalpha
+from .UCBalpha import UCBalpha, ALPHA
 
 
 class UCBH(UCBalpha):
@@ -18,7 +18,7 @@ class UCBH(UCBalpha):
     Reference: [Audibert et al. 09].
     """
 
-    def __init__(self, nbArms, horizon=None, alpha=4, lower=0., amplitude=1.):
+    def __init__(self, nbArms, horizon=None, alpha=ALPHA, lower=0., amplitude=1.):
         super(UCBH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self._horizon = horizon
         self.alpha = alpha
