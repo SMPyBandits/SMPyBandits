@@ -11,6 +11,7 @@ __version__ = "0.5"
 # Generic imports
 from os import mkdir
 import os.path
+from os import getenv
 
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify
@@ -39,6 +40,9 @@ do_plot = True
 # Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
+
+if getenv('DEBUG', False):
+    saveallfigs, interactive = False, True
 
 # Update configuration
 configuration['showplot'] = interactive

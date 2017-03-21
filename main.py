@@ -12,6 +12,7 @@ __version__ = "0.6"
 import sys
 from os import mkdir
 import os.path
+from os import getenv
 
 # Backup evaluation object
 # import pickle
@@ -56,6 +57,9 @@ do_plot = True
 # Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
+
+if getenv('DEBUG', False):
+    saveallfigs, interactive = False, True
 
 # Update configuration
 configuration['showplot'] = interactive
