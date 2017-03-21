@@ -74,6 +74,10 @@ if __name__ == '__main__':
         M = evaluation.nbPlayers
         N = len(evaluation.envs)
         for envId, env in enumerate(evaluation.envs):
+            # Plot histogram for rewards for that env
+            if do_simple_plot and interactive:
+                env.plotHistogram(evaluation.horizon * evaluation.repetitions)
+
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
             if do_all_plot:
