@@ -51,10 +51,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# # REPETITIONS = 200
-# # REPETITIONS = 100
-# # REPETITIONS = 50
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -78,8 +78,8 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 3    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -148,14 +148,14 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-        # }
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
             "arm_type": Bernoulli,
-            "params": makeMeans(9, 1 / (1. + 9))
+            "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(9, 1 / (1. + 9))
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
@@ -223,7 +223,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
@@ -282,7 +282,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
-    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
