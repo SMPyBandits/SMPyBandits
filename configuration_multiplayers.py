@@ -55,14 +55,15 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
 N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
-    N_JOBS = min(CPU_COUNT, int(getenv('N_JOBS', max(int(CPU_COUNT / 3), CPU_COUNT - 8))))
+    N_JOBS = min(CPU_COUNT, max(int(CPU_COUNT / 3), CPU_COUNT - 8))
+N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Parameters for the epsilon-greedy and epsilon-... policies
 EPSILON = 0.1
@@ -78,7 +79,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -101,6 +102,26 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 # Parameters for the arms
 VARIANCE = 0.05   # Variance of Gaussian arms
+
+
+# Should I test the Aggr algorithm here also ?
+TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+
+# Cache rewards
+CACHE_REWARDS = False  # XXX to disable manually this feature
+CACHE_REWARDS = TEST_AGGR
+
+UPDATE_ALL_CHILDREN = True
+UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
+
+# UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
+UNBIASED = True
+UNBIASED = False
+
+# Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
+UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
+UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 
 # XXX This dictionary configures the experiments
@@ -327,38 +348,48 @@ configuration.update({
 # ]
 
 configuration["successive_players"] = [
+    # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+    # --- 2) EmpiricalMeans
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
+    # --- 3) UCBalpha
     # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
     # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
-    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
-    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
-    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
-    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
-    # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    # --- 4) klUCBPlus
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
+    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
+    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
+    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    # --- 5) Thompson
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # --- 6) BayesUCB
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # --- 7) Aggr
+    Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 ]
 
 

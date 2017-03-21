@@ -38,18 +38,19 @@ class EvaluatorMultiPlayers(object):
         self.cfg = configuration
         # Attributes
         self.nbPlayers = len(self.cfg['players'])
-        print("Number of players in the multi-players game:", self.nbPlayers)  # DEBUG
+        print("Number of players in the multi-players game:", self.nbPlayers)
         self.horizon = self.cfg['horizon']
-        print("Time horizon:", self.horizon)  # DEBUG
+        print("Time horizon:", self.horizon)
         self.repetitions = self.cfg.get('repetitions', REPETITIONS)
-        print("Number of repetitions:", self.repetitions)  # DEBUG
+        print("Number of repetitions:", self.repetitions)
         self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
-        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)  # DEBUG
+        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
         self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
-        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)  # DEBUG
+        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)
         self.duration = int(self.horizon / self.delta_t_save)
+        print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
-        print("Using collision model:", self.collisionModel.__name__)  # DEBUG
+        print("Using collision model:", self.collisionModel.__name__)
         print("  Detail:", self.collisionModel.__doc__)  # DEBUG
         # Flags
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)

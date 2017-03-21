@@ -49,8 +49,9 @@ class Evaluator(object):
         self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
         print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
         self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
-        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)  # DEBUG
+        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)
         self.duration = int(self.horizon / self.delta_t_save)
+        print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         # Parameters for the random events
         self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)
         self.random_invert = self.cfg.get('random_invert', random_invert)
