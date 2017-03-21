@@ -35,7 +35,7 @@ class Selfish(BaseMPPolicy):
     - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receives a 0 reward for the chosen arm (can be changed with penalty= argument).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, penalty=PENALTY, *args, **kwargs):
+    def __init__(self, nbPlayers, playerAlgo, nbArms, penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -57,7 +57,7 @@ class Selfish(BaseMPPolicy):
         self.children = [None] * nbPlayers
         self.nbArms = nbArms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)  # Create ot here!
+            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)  # Create it here!
             self.children[playerId] = SelfishChildPointer(self, playerId)
             if hasattr(self._players[playerId], 'handleCollision'):  # XXX they should not have such method!
                 warn("Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId), RuntimeWarning)
