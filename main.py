@@ -169,7 +169,8 @@ if __name__ == '__main__':
             else:
                 evaluation.plotBestArmPulls(envId)
 
-        print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
+        if saveallfigs:
+            print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
     # Done
     print("Done for simulations main.py ...")
     notify("Done for simulations main.py ...")

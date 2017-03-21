@@ -243,7 +243,8 @@ if __name__ == '__main__':
         else:
             evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
-        print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
+        if saveallfigs:
+            print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
     # Done
     print("Done for simulations main_multiplayers.py ...")
     notify("Done for simulations main_multiplayers.py ...")

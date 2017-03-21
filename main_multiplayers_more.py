@@ -263,7 +263,8 @@ if __name__ == '__main__':
             else:
                 evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
-            print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
+            if saveallfigs:
+                print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
 
     #
     # Compare different MP strategies on the same figures
@@ -354,7 +355,8 @@ if __name__ == '__main__':
         else:
             e0.plotNbSwitchsCentralized(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
 
-        print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "all*{}.png".format(_hashvalue)))  # DEBUG
+        if saveallfigs:
+            print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "all*{}.png".format(_hashvalue)))  # DEBUG
 
     # Done
     print("Done for simulations main_multiplayers.py ...")

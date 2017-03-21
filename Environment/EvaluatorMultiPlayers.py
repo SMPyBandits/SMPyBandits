@@ -204,8 +204,8 @@ class EvaluatorMultiPlayers(object):
         means = np.sort(means)
         deltaMeansWorstArms = means[-self.nbPlayers] - means[:-self.nbPlayers]
         allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        worstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
-        worstPulls = np.sum(worstPulls, axis=0)  # sum for all players
+        allWorstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
+        worstPulls = np.sum(allWorstPulls, axis=0)  # sum for all players
         losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
         firstRegretTerm = np.cumsum(losses)  # Accumulate losses
         return firstRegretTerm
@@ -217,19 +217,17 @@ class EvaluatorMultiPlayers(object):
         means = np.sort(means)
         deltaMeansBestArms = means[-self.nbPlayers:] - means[-self.nbPlayers]
         allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        bestMisses = allPulls[:, sortingIndex[-self.nbPlayers:], :]
-        bestMisses = 1 - np.sum(bestMisses, axis=0)  # sum for all players
-        losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mworst
+        allBestPulls = allPulls[:, sortingIndex[-self.nbPlayers:], :]
+        bestMisses = 1 - np.sum(allBestPulls, axis=0)  # sum for all players
+        losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mbest
         secondRegretTerm = np.cumsum(losses)  # Accumulate losses
         return secondRegretTerm
 
     def getThirdRegretTerm(self, envId=0):
         """Extract and compute the third term in the centralized regret: losses due to collisions."""
         means = self.envs[envId].means
-        # collisions = self.collisions[envId] / (float(self.repetitions) * self.nbPlayers)
-        collisions = self.collisions[envId] / float(self.repetitions)
-        # Shape: (nbArms, duration)
-        losses = np.dot(means, collisions)  # Count and sum on k in 1...K
+        averageCollisions = self.collisions[envId] / float(self.repetitions)  # Shape: (nbArms, duration)
+        losses = np.dot(means, averageCollisions)  # Count and sum on k in 1...K
         thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
         return thirdRegretTerm
 
@@ -256,7 +254,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         # ymax = max(plt.ylim()[1], 1.03)  # Don't force to view on [0%, 100%]
         # plt.ylim(ymin, ymax)
-        plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$ (not centralized)" % self.repetitions)
+        plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$" % self.repetitions)
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self.showplot, savefig)
         return fig
@@ -344,8 +342,11 @@ class EvaluatorMultiPlayers(object):
                 if subTerms:
                     Ys.append(Ys[0] + Ys[1] + Ys[2])
                     labels.append("Sum of 3 terms")
+                    print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
+                        if semilogx or loglog: plt.xscale('log')
+                        if semilogy or loglog: plt.yscale('log')
         # We also plot our lower bound
         lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG

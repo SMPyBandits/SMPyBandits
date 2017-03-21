@@ -35,10 +35,10 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 # HORIZON : number of time steps of the experiments
 # XXX Should be >= 10000 to be interesting "asymptotically"
 HORIZON = 500
-HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
+# HORIZON = 2000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -52,10 +52,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
+# REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -78,7 +78,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
@@ -148,10 +148,10 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-        }
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
+        # }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(9, 1 / (1. + 9))
@@ -168,6 +168,15 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # }
+        # {   # XXX to test with 1 suboptimal arm only
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
+        # }
+        {   # XXX to test with half very bad arms, half perfect arms
+            "arm_type": Bernoulli,
+            "params": [0, 0, 0, 1, 1, 1, 0, 0, 0]
+            # "params": ([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+        }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
@@ -223,7 +232,7 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
     # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
@@ -282,7 +291,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
-    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
+    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy

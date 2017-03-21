@@ -35,4 +35,4 @@ class ResultMultiPlayers(object):
         # FIXME write it !
         if delta_t_save is None:
             delta_t_save = self.delta_t_save
-        pass
+        raise ValueError("FIXME finish to write this function saveondisk() for ResultMultiPlayers!")
