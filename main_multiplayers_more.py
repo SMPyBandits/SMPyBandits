@@ -25,8 +25,8 @@ normalized = True
 fairnessAmplitude = False
 subTerms = True
 
-saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
+saveallfigs = False
 
 # if not saveallfigs:
 #     import matplotlib.pyplot as plt
@@ -40,8 +40,8 @@ do_all_plot = False
 do_all_plot = True
 
 # Whether to show plots, one by one, or not at all and just save them
-interactive = True  # XXX dont keep it like this
 interactive = False
+interactive = True  # XXX dont keep it like this
 
 # Update configuration
 configuration['showplot'] = interactive
@@ -313,42 +313,42 @@ if __name__ == '__main__':
         else:
             e0.plotRegretCentralized(envId, loglog=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
-        # Plotting the fairness
-        for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
-            savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
-            print("\n\n- Plotting the centralized fairness (%s)" % fairness)
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                e0.plotFairness(envId, savefig=savefig, fairness=fairness, evaluators=eothers)
-            else:
-                e0.plotFairness(envId, fairness=fairness, evaluators=eothers)  # XXX To plot without saving
+        # # Plotting the fairness
+        # for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+        #     savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
+        #     print("\n\n- Plotting the centralized fairness (%s)" % fairness)
+        #     if saveallfigs:
+        #         print("  and saving the plot to {} ...".format(savefig))
+        #         e0.plotFairness(envId, savefig=savefig, fairness=fairness, evaluators=eothers)
+        #     else:
+        #         e0.plotFairness(envId, fairness=fairness, evaluators=eothers)  # XXX To plot without saving
 
-        # Also plotting the total nb of collision as a function of time
-        savefig = mainfig.replace('all', 'all_NbCollisions')
-        print(" - Plotting the total nb of collision as a function of time for all 'players' values")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            e0.plotNbCollisions(envId, savefig=savefig, cumulated=False, evaluators=eothers)
-        else:
-            e0.plotNbCollisions(envId, cumulated=False, evaluators=eothers)  # XXX To plot without saving
+        # # Also plotting the total nb of collision as a function of time
+        # savefig = mainfig.replace('all', 'all_NbCollisions')
+        # print(" - Plotting the total nb of collision as a function of time for all 'players' values")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     e0.plotNbCollisions(envId, savefig=savefig, cumulated=False, evaluators=eothers)
+        # else:
+        #     e0.plotNbCollisions(envId, cumulated=False, evaluators=eothers)  # XXX To plot without saving
 
-        # Also plotting the total nb of collision as a function of time
-        savefig = mainfig.replace('all', 'all_CumNbCollisions')
-        print(" - Plotting the cumulated total nb of collision as a function of time for all 'players' values")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            e0.plotNbCollisions(envId, savefig=savefig, cumulated=True, evaluators=eothers)
-        else:
-            e0.plotNbCollisions(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
+        # # Also plotting the total nb of collision as a function of time
+        # savefig = mainfig.replace('all', 'all_CumNbCollisions')
+        # print(" - Plotting the cumulated total nb of collision as a function of time for all 'players' values")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     e0.plotNbCollisions(envId, savefig=savefig, cumulated=True, evaluators=eothers)
+        # else:
+        #     e0.plotNbCollisions(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
 
-        # Plotting the number of switches as a function of time
-        savefig = mainfig.replace('all', 'all_CumNbSwitchs')
-        print("\n\n- Plotting the number of switches as a function of time for all 'players' values")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            e0.plotNbSwitchsCentralized(envId, savefig=savefig, cumulated=True, evaluators=eothers)
-        else:
-            e0.plotNbSwitchsCentralized(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
+        # # Plotting the number of switches as a function of time
+        # savefig = mainfig.replace('all', 'all_CumNbSwitchs')
+        # print("\n\n- Plotting the number of switches as a function of time for all 'players' values")
+        # if saveallfigs:
+        #     print("  and saving the plot to {} ...".format(savefig))
+        #     e0.plotNbSwitchsCentralized(envId, savefig=savefig, cumulated=True, evaluators=eothers)
+        # else:
+        #     e0.plotNbSwitchsCentralized(envId, cumulated=True, evaluators=eothers)  # XXX To plot without saving
 
         print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "all*{}.png".format(_hashvalue)))  # DEBUG
 

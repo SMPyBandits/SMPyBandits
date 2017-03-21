@@ -39,8 +39,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -51,10 +51,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # REPETITIONS : number of repetitions of the experiments
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# # REPETITIONS = 200
+# # REPETITIONS = 100
+# # REPETITIONS = 50
 # REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -380,16 +380,16 @@ configuration["successive_players"] = [
     # --- 6) BayesUCB
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
     # --- 7) Aggr
-    Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
-    rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 ]
 
 
