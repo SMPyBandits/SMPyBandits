@@ -84,6 +84,7 @@ class Aggr(BasePolicy):
 
     # Print, different output according to the parameters
     def __str__(self):
+        """Nicely print the name of the algorithms with its relevant parameters."""
         exp4 = ", Exp4" if self.update_like_exp4 else ""
         all_children = ", updateAll" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
@@ -120,6 +121,7 @@ class Aggr(BasePolicy):
     # --- Start and get a reward
 
     def startGame(self):
+        """Start the game for each child."""
         self.t = 0
         # Start all children
         for i in range(self.nbChildren):
@@ -127,6 +129,7 @@ class Aggr(BasePolicy):
         self.choices.fill(-1)
 
     def getReward(self, arm, reward):
+        """Give reward for each child, and then update the trust probabilities."""
         self.t += 1
         # First, give reward to all child children
         for child in self.children:
@@ -181,12 +184,14 @@ class Aggr(BasePolicy):
     # --- Choice of arm methods
 
     def choice(self):
-        # 1. make vote every child children
+        """Make each child vote, then sample the decision by importance sampling on their votes with the trust probabilities."""
+        # 1. make vote every child
         self._makeChildrenChose()
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
+        """Make each child vote, with rank, then sample the decision by importance sampling on their votes with the trust probabilities."""
         if rank == 1:
             return self.choice()
         else:
@@ -195,6 +200,7 @@ class Aggr(BasePolicy):
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceFromSubSet(self, availableArms='all'):
+        """Make each child vote, on subsets of arms, then sample the decision by importance sampling on their votes with the trust probabilities."""
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
@@ -203,6 +209,7 @@ class Aggr(BasePolicy):
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceMultiple(self, nb=1):
+        """Make each child vote, multiple times, then sample the decision by importance sampling on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()
         else:
@@ -211,6 +218,7 @@ class Aggr(BasePolicy):
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
 
     def choiceIMP(self, nb=1):
+        """Make each child vote, multiple times (with IMP scheme), then sample the decision by importance sampling on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()
         else:

@@ -52,10 +52,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 200
+# REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -335,24 +335,30 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
+    # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
+    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
+    # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
+    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
+    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
+    rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
     # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 ]
 
 
@@ -362,14 +368,15 @@ configuration["successive_players"] = [
 # p0 = 0.75
 
 # configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, Thompson, nbArms).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
 # ] + [
-#     ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
-#     # ALOHA(NB_PLAYERS, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
+#     ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
+#     # ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
 #     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
 #     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
 # ]
 
 
+# DONE
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration =", configuration)  # DEBUG
