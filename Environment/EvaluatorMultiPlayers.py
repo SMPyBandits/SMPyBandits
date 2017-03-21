@@ -180,6 +180,7 @@ class EvaluatorMultiPlayers(object):
         return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
     def getCentralizedRegret(self, envId=0):
+        """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players."""
         meansArms = np.sort(self.envs[envId].means)
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
@@ -346,12 +347,13 @@ class EvaluatorMultiPlayers(object):
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
         # We also plot our lower bound
-        lowerbound, anandkumar_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
+        lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-        print(" - Our lowerbound = {:.3g},\n - [Anandkumar et al] lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
+        print(" - [Anandtharam et al] centralized lowerbound = {:.3g},\n - Our decentralized lowerbound = {:.3g},\n - [Anandkumar et al] decentralized lowerbound = {:.3g}".format(lowerbound, anandkumar_lowerbound))  # DEBUG
         T = np.ones_like(X) if normalized else np.log(2 + X)
         plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
-        plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k:', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=3)
+        plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k:', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=2)
+        plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k--', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=2)
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))

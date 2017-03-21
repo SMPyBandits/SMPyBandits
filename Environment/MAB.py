@@ -116,7 +116,10 @@ class MAB(object):
 
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
-        our_lowerbound = nbPlayers * sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
+        centralized_lowerbound = sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
+        print("  - For {} players, Anandtharam et al. centralized lower-bound gave = {:.3g} ...".format(nbPlayers, centralized_lowerbound))  # DEBUG
+
+        our_lowerbound = nbPlayers * centralized_lowerbound
         print("  - For {} players, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
@@ -127,7 +130,7 @@ class MAB(object):
         # Check that our bound is better (ie bigger)
         if anandkumar_lowerbound > our_lowerbound:
             print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
-        return our_lowerbound, anandkumar_lowerbound
+        return our_lowerbound, anandkumar_lowerbound, centralized_lowerbound
 
     def upperbound_collisions(self, nbPlayers, times):
         """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
