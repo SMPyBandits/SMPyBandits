@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .plotsettings import DPI, signature, maximizeWindow, wraptext, wraplatex, palette, legend, show_and_save
+from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
 
 
 class MAB(object):
@@ -38,9 +38,6 @@ class MAB(object):
             params = configuration["params"]
             print(" - with 'params' =", params)  # DEBUG
             # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian) or a dictionnary
-            # XXX Maybe that's not a good idea...
-            # if isinstance(params, list):   # Sort the means
-            #     params = sorted(params)
             self.arms = []
             for param in params:
                 self.arms.append(arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param))
@@ -63,12 +60,6 @@ class MAB(object):
 
     def __repr__(self):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
-
-    # # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    # @property
-    # def means(self):
-    #     """Return list of means."""
-    #     return np.array([arm.mean for arm in self.arms])
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """ Return a str representation of the list of the arms (repr(self.arms))
@@ -133,7 +124,7 @@ class MAB(object):
         return our_lowerbound, anandkumar_lowerbound, centralized_lowerbound
 
     def upperbound_collisions(self, nbPlayers, times):
-        """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), for UCB only. Warning: it is HIGHLY asymptotic! """
         sortedMeans = sorted(self.means)
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
         bestMeans = sortedMeans[-nbPlayers:][::-1]
@@ -144,13 +135,6 @@ class MAB(object):
         # First, the bound in Lemma 2 from [Anandkumar et al., 2010] uses this Upsilon(U, U)
         Upsilon = binomialCoefficient(nbPlayers, 2 * nbPlayers - 1)
         print("  - For {} players, Upsilon(M,M) = (2M-1 choose M) = {} ...".format(nbPlayers, Upsilon))
-
-        # Then, Lemma 3 from [Anandkumar et al., 2010] bounds the excepted number of steps before all players have learned a correct ranking of the arms, for UCB1 only
-        # for (a, mu_star_a) in enumerate(bestMeans):
-        #     print("For a = {}, mu_a^* = {:.3g} ...".format(a, mu_star_a))  # DEBUG
-        #     for (b, mu_star_b) in enumerate(worstMeans_of_a(a)):
-        #         print("    For b = {}, mu_b^* = {:.3g} ...".format(b, mu_star_b))  # DEBUG
-        #         print("      And 8. / (mu_star_b - mu_star_a)**2 = ", 8. / (mu_star_b - mu_star_a)**2)  # DEBUG
 
         # First, the constant term
         from math import pi
@@ -218,7 +202,7 @@ class MAB(object):
         legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
-        plt.title("{} draws of rewards from these arms.\n{} arms: ${}$".format(horizon, self.nbArms, self.reprarms()))
+        plt.title("{} draws of rewards from these arms.\n{} arms: ${}${}".format(horizon, self.nbArms, self.reprarms(), signature))
         show_and_save(showplot=True, savefig=savefig)
 
 

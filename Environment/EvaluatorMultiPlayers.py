@@ -190,8 +190,7 @@ class EvaluatorMultiPlayers(object):
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
-        averageBestRewards = self.times * sumBestMeans  # DEBUG
-        # averageBestRewards = (self.times - 1) * sumBestMeans
+        averageBestRewards = self.times * sumBestMeans
         # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
         actualRewards = sum(self.getRewards(playerId, envId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
@@ -317,7 +316,7 @@ class EvaluatorMultiPlayers(object):
                 Ys = [None] * 3
                 labels = [""] * 3
                 Ys[0] = eva.getFirstRegretTerm(envId)
-                labels[0] = " 1st term: Pulls of {} suboptimal arms (lower-bounded)".format(self.nbArms - self.nbPlayers)
+                labels[0] = " 1st term: Pulls of {} suboptimal arms (lower-bounded)".format(self.envs[envId].nbArms - self.nbPlayers)
                 Ys[1] = eva.getSecondRegretTerm(envId)
                 labels[1] = " 2nd term: Non-pulls of {} optimal arms".format(self.nbPlayers)
                 Ys[2] = eva.getThirdRegretTerm(envId)
