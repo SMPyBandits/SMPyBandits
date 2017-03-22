@@ -49,16 +49,16 @@ class oneRhoLearn(oneRhoRand):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, nbPlayers, rankSelectionAlgo, *args, **kwargs):
-        super(oneRhoLearn, self).__init__(nbPlayers, *args, **kwargs)
-        self.rankSelection = rankSelectionAlgo(nbPlayers)  # FIXME I should give it more arguments?
-        self.nbPlayers = nbPlayers
+    def __init__(self, maxRank, rankSelectionAlgo, *args, **kwargs):
+        super(oneRhoLearn, self).__init__(maxRank, *args, **kwargs)
+        self.rankSelection = rankSelectionAlgo(maxRank)  # FIXME I should give it more arguments?
+        self.maxRank = maxRank
         self.rank = None
         # Keep in memory how many times a rank could be used while giving no collision
-        self.timesUntilCollision = np.zeros(nbPlayers, dtype=int)
+        self.timesUntilCollision = np.zeros(maxRank, dtype=int)
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}, {}, rank{} ~ {}>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
+        return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
 
     def startGame(self):
         self.rankSelection.startGame()
@@ -94,12 +94,13 @@ class rhoLearn(rhoRand):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Uniform,
-                 lower=0., amplitude=1., *args, **kwargs):
+                 lower=0., amplitude=1., maxRank=None, *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
         - rankSelectionAlgo: algorithm to use for selecting the ranks.
+        - maxRank: maximum rank allowed by the rhoRand child (default to nbPlayers, but for instance if there is 2 × rhoRand[UCB] + 2 × rhoRand[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -111,6 +112,9 @@ class rhoLearn(rhoRand):
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
+        if maxRank is None:
+            maxRank = nbPlayers
+        self.maxRank = maxRank
         self.nbPlayers = nbPlayers
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers
@@ -118,9 +122,9 @@ class rhoLearn(rhoRand):
         self.nbArms = nbArms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoLearn(nbPlayers, rankSelectionAlgo, self, playerId)
+            self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, self, playerId)
         # Fake rankSelection
-        self._rankSelection = rankSelectionAlgo(nbPlayers)
+        self._rankSelection = rankSelectionAlgo(maxRank)
 
     def __str__(self):
         return "rhoLearn({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)

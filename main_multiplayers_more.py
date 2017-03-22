@@ -47,7 +47,7 @@ interactive = False
 if getenv('DEBUG', False) and __name__ == '__main__':
     saveallfigs, interactive = False, True
 
-if interactive and not saveallfigs:
+if getenv('XKCD', False) and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 

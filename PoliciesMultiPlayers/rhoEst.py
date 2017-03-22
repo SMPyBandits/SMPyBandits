@@ -71,7 +71,7 @@ class oneRhoEst(oneRhoRand):
     def __init__(self, horizon, threshold, *args, **kwargs):
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
-        del self.nbPlayers  # <-- make SURE that nbPlayers is NOT used by the policy!
+        del self.maxRank  # <-- make SURE that maxRank is NOT used by the policy!
         self.horizon = horizon
         self.threshold = threshold
         # Internal variables
@@ -81,7 +81,7 @@ class oneRhoEst(oneRhoRand):
         self.t = 0
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}, {}{}>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
+        return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
         super(oneRhoEst, self).startGame()
@@ -147,8 +147,8 @@ class rhoEst(rhoRand):
         self.nbArms = nbArms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            fakeNbArms = None
-            self.children[playerId] = oneRhoEst(horizon, threshold, fakeNbArms, self, playerId)
+            fakemaxRank = None
+            self.children[playerId] = oneRhoEst(horizon, threshold, fakemaxRank, self, playerId)
 
     def __str__(self):
         return "rhoEst({} x {})".format(self.nbPlayers, str(self._players[0]))

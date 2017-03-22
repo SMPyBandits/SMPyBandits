@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -56,10 +56,10 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
-REPETITIONS = 100
-REPETITIONS = 50
-# REPETITIONS = 20
+# REPETITIONS = 200
+# REPETITIONS = 100
+# REPETITIONS = 50
+REPETITIONS = 20
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -82,8 +82,8 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -156,66 +156,66 @@ configuration = {
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Arms
-    # "environment": [
-    #     # {   # A damn simple problem: 2 arms, one bad, one good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.9]  # makeMeans(2, 0.1)
-    #     #     # "params": [0.9, 0.9]
-    #     #     # "params": [0.85, 0.9]
-    #     # }
-    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-    #     # }
-    #     {   # A very easy problem (9 arms), but it is used in a lot of articles
-    #         "arm_type": Bernoulli,
-    #         "params": makeMeans(9, 1 / (1. + 9))
-    #     }
-    #     # {   # An easy problem (14 arms)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": makeMeans(14, 1 / (1. + 14))
-    #     # }
-    #     # {   # An easy problem (19 arms)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": makeMeans(19, 1 / (1. + 19))
-    #     # }
-    #     # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-    #     # }
-    #     # {   # XXX to test with 1 suboptimal arm only
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
-    #     # }
-    #     # {   # XXX to test with half very bad arms, half perfect arms
-    #     #     "arm_type": Bernoulli,
-    #     #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
-    #     #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
-    #     # }
-    #     # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [1] * NB_PLAYERS
-    #     # }
-    #     # {   # An easy problem (50 arms)
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": makeMeans(50, 1 / (1. + 50))
-    #     # }
-    #     # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
-    #     #     # nbPlayers = 2
-    #     # }
-    #     # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
-    #     #     # nbPlayers = 2
-    #     # }
-    #     # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-    #     #     "arm_type": Bernoulli,
-    #     #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
-    #     #     # nbPlayers = 3
-    #     # }
-    # ],
+    "environment": [
+        # {   # A damn simple problem: 2 arms, one bad, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.9]  # makeMeans(2, 0.1)
+        #     # "params": [0.9, 0.9]
+        #     # "params": [0.85, 0.9]
+        # }
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
+        # }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(9, 1 / (1. + 9))
+        # }
+        # {   # An easy problem (14 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(14, 1 / (1. + 14))
+        # }
+        # {   # An easy problem (19 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(19, 1 / (1. + 19))
+        # }
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        }
+        # {   # XXX to test with 1 suboptimal arm only
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
+        # }
+        # {   # XXX to test with half very bad arms, half perfect arms
+        #     "arm_type": Bernoulli,
+        #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
+        #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+        # }
+        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        #     "arm_type": Bernoulli,
+        #     "params": [1] * NB_PLAYERS
+        # }
+        # {   # An easy problem (50 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": makeMeans(50, 1 / (1. + 50))
+        # }
+        # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
+        #     # nbPlayers = 2
+        # }
+        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
+        #     # nbPlayers = 2
+        # }
+        # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
+        #     # nbPlayers = 3
+        # }
+    ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
@@ -223,14 +223,14 @@ configuration = {
     #         "params": [2, 3, 4, 5, 6, 7, 8, 9, 10]
     #     }
     # ],
-    # DONE I tried with other arms distribution: Gaussian, it works similarly
-    "environment": [  # Gaussian arms
-        {   # An example problem with  arms
-            "arm_type": Gaussian,
-            "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-            # "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-        }
-    ],
+    # # DONE I tried with other arms distribution: Gaussian, it works similarly
+    # "environment": [  # Gaussian arms
+    #     {   # An example problem with  arms
+    #         "arm_type": Gaussian,
+    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #         # "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #     }
+    # ],
 }
 
 
@@ -277,8 +277,11 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
-    # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
     # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
+    # XXX this Selfish[AdBandits] and Selfish[BayesUCB] work crazily well... why?
+    # "players": Selfish(int(NB_PLAYERS/3), BayesUCB, nbArms).children \
+    #          + Selfish(int(NB_PLAYERS/3), Thompson, nbArms).children \
+    #          + Selfish(int(NB_PLAYERS/3), klUCBPlus, nbArms).children
     # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using multi-player Oracle policy
@@ -312,7 +315,9 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
-    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
+    "players": rhoRand(int(NB_PLAYERS/3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
+             + rhoRand(int(NB_PLAYERS/3), Thompson, nbArms, maxRank=NB_PLAYERS).children \
+             + rhoRand(int(NB_PLAYERS/3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
