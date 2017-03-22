@@ -24,3 +24,5 @@ files = Makefile
 bears = PycodestyleBear, PythonPackageInitBear, PyUnusedCodeBear, PyDocStyleBear, PyCommentedCodeBear, BanditBear
 files = **.py
 max_line_length = 129
+
+# End of .coafile
