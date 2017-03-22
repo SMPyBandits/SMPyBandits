@@ -6,6 +6,10 @@
 # Using bash and not sh, cf. http://stackoverflow.com/a/589300/
 SHELL := /bin/bash -o pipefail
 
+# Put it first so that "make" without argument is like "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
 single:
 	make clean ; clear ; make singleplayer3
 multi:
@@ -15,7 +19,7 @@ moremulti:
 
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc
-	make html clean
+	make html clean send
 
 # Runners
 singleplayer:	singleplayer3
@@ -149,10 +153,6 @@ SPHINXPROJ    = AlgoBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-# Put it first so that "make" without argument is like "make help".
-help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
 clean-doc:
 	mkdir --parents $(BUILDDIR)/html
 	-rm -rfv /tmp/$(BUILDDIR)/
@@ -161,10 +161,14 @@ clean-doc:
 
 .PHONY: help
 
-send:	send_zamok
-send_zamok: send_doc
-send_doc:
+send:	send_zamok send_gforge
+send_zamok:
+	cd notebooks ; make send_zamok ; cd ..
 	CP "$(BUILDDIR)"/html/ ${Szam}phd/AlgoBandits/
+	-ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/AlgoBandits/_modules/ /tmp/besson/"
+send_gforge:
+	CP "$(BUILDDIR)"/html/ lbesson@scm.gforge.inria.fr:/home/groups/banditslilian/htdocs/
+	-ssh lbesson@scm.gforge.inria.fr "rm -rfv /tmp/banditslilian/_modules/ ; mv -vf /home/groups/banditslilian/htdocs/_modules/ /tmp/banditslilian/"
 
 apidoc:
 	-mkdir -vp /tmp/AlgoBandits/docs/

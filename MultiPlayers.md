@@ -97,7 +97,7 @@ It is important to highlight that it has to be verified on each run of the MP po
 
 ----
 
-## How to run the experiments ?
+## [How to run the experiments ?](How_to_run_the_code.md)
 *First*, install the requirements:
 ```bash
 pip install -r requirements.txt
@@ -109,6 +109,27 @@ This will run the simulation, average them (by `repetitions`) and plot the resul
 python main_multiplayers.py
 ```
 
+### In a [`virtualenv`](https://virtualenv.pypa.io/en/stable/) ?
+If you prefer to not install the requirements globally on your system-wide Python setup, you can (and should) use [`virtualenv`](https://virtualenv.pypa.io/en/stable/).
+
+```bash
+$ virtualenv .
+Using base prefix '/usr'
+New python executable in /your/path/to/AlgoBandits/bin/python3
+Also creating executable in /your/path/to/AlgoBandits/bin/python
+Installing setuptools, pip, wheel...done.
+$ source bin/activate  # in bash, use activate.csh or activate.fish if needed
+$ type pip  # just to check
+pip is /tmp/test/AlgoBandits/bin/pip
+$ pip install -r requirements.txt
+Collecting numpy (from -r requirements.txt (line 5))
+...
+Installing collected packages: numpy, scipy, cycler, pytz, python-dateutil, matplotlib, joblib, pandas, seaborn, tqdm, sphinx-rtd-theme, commonmark, docutils, recommonmark
+Successfully installed commonmark-0.5.4 cycler-0.10.0 docutils-0.13.1 joblib-0.11 matplotlib-2.0.0 numpy-1.12.1 pandas-0.19.2 python-dateutil-2.6.0 pytz-2016.10 recommonmark-0.4.0 scipy-0.19.0 seaborn-0.7.1 sphinx-rtd-theme-0.2.4 tqdm-4.11.2
+```
+
+And then be sure to the virtualenv binary, `bin/python`, to launch the experiments (the Makefile should use it by default, if `source bin/activate` was executed).
+
 ### Or with a [`Makefile`](Makefile) ?
 You can also use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
@@ -116,10 +137,8 @@ make install       # install the requirements
 make multiplayers  # run and log the main.py script
 ```
 
-It can be used to check [the quality of the code](logs/main_pylint_log.txt) with [pylint](https://www.pylint.org/):
-```bash
-make lint lint3  # check the code with pylint
-```
+### Or within a [Jupyter notebook](https://jupyter.org/) ?
+> I am writing some [Jupyter notebooks](https://jupyter.org/), in [this folder (`notebooks/`)](notebooks/), so if you want to do the same for your small experiments, you can be inspired by the few notebooks already written.
 
 ----
 

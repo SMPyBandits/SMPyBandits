@@ -13,7 +13,6 @@ joblib      # Required for parallel computing. Note: it only speeds up by an alm
 
 # --- Better plots
 seaborn     # Required for bar plots, and better colors
-#palettable  # Better color palettes
 tqdm        # Nice progress bars
 
 # --- For the documentation:

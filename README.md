@@ -1,4 +1,4 @@
-# Bandit algorithms and the aggregated bandit
+# Bandit algorithms, Lilian Besson's AlgoBandits project
 This repository contains the code of [my](http://perso.crans.org/besson/) numerical environment, written in [Python](https://www.python.org/), in order to perform numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
@@ -6,7 +6,7 @@ This repository contains the code of [my](http://perso.crans.org/besson/) numeri
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 
-[I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research.
+[I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research since December 2016.
 
 ----
 
@@ -16,17 +16,20 @@ I designed and added the [`Aggr`](Policies/Aggr.py) policy, in order to test its
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
 
-**For more details**, refer to this file: [`Aggr.md`](Aggr.md).
+> **For more details**, refer to this file: [`Aggr.md`](Aggr.md).
 
 ----
 
 ## 2nd contribution: [**Multi-players simulation environment**](MultiPlayers.md)
-> I have started the multi-player part, it will take time to be finished.
-
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
-**For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md).
+> **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md).
+
+----
+
+## [How to run the experiments ?](How_to_run_the_code.md)
+> See this document: [`How_to_run_the_code.md`](How_to_run_the_code.md) for more details (or [this documentation page](How_to_run_the_code.html)).
 
 ----
 
@@ -38,7 +41,7 @@ The basic difference is about **collisions** : at each time `t`, if two or more 
 
 ### Warning
 - This work is still in **its early stage of development**! It's [active research](https://github.com/Naereen/AlgoBandits/graphs/contributors).
-- This aggregated bandit algorithm has NO THEORETICAL warranties what so ever - *yet*.
+- This aggregated bandit algorithm has no theoretical warranties what so ever - *yet*.
 
 ### UML diagrams
 For more details, see [these UML diagrams](uml_diagrams/):
@@ -51,11 +54,11 @@ For more details, see [these UML diagrams](uml_diagrams/):
 ----
 
 ## :boom: [TODO](TODO.md)
-> See this file [`TODO.md`](TODO.md), and [the issues](https://github.com/Naereen/AlgoBandits/issues).
+> See this file [`TODO.md`](TODO.md), and [the issues on GitHub](https://github.com/Naereen/AlgoBandits/issues).
 
 ----
 
-## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
+## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/badges.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
 © 2012 [Olivier Cappé](http://perso.telecom-paristech.fr/%7Ecappe/), [Aurélien Garivier](https://www.math.univ-toulouse.fr/%7Eagarivie/), [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/) and for the initial [pymaBandits v1.0](http://mloss.org/software/view/415/) project, and © 2016-2017 [Lilian Besson](https://GitHub.com/Naereen) for the rest.
