@@ -63,10 +63,11 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
+        # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        pulls[i, choices[i]] += 1
         if nbCollisions[choices[i]] < 1:  # No collision
             rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
             player.getReward(choices[i], rewards[i])
-            pulls[i, choices[i]] += 1
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
