@@ -79,16 +79,16 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 9    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
 
 # Collision model
-collisionModel = rewardIsSharedUniformly
 collisionModel = noCollision
+collisionModel = rewardIsSharedUniformly
 collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 # distances = np.random.random_sample(NB_PLAYERS)
@@ -394,18 +394,18 @@ configuration["successive_players"] = [
     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
     # --- 7) BayesUCB
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
     # --- 8) Aggr
-    Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 ]
 
 
