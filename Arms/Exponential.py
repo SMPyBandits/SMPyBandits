@@ -100,3 +100,7 @@ class UnboundedExponential(Exponential):
 
     def __init__(self, mu):
         super(UnboundedExponential, self).__init__(mu, trunc=float('+inf'))
+
+
+# Only export and expose the class defined here
+__all__ = ["Exponential", "ExponentialFromMean", "UnboundedExponential"]

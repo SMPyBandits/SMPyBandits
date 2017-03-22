@@ -16,6 +16,10 @@ except ImportError:
 
 from os import getenv
 
+if __name__ == '__main__':
+    print("Warning: this script 'configuration.py' is NOT executable. Use 'main.py' or 'make single' ...")  # DEBUG
+    exit(0)
+
 # Import arms
 from Arms import *
 

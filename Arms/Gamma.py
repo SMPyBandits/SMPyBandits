@@ -85,3 +85,7 @@ class UnboundedGamma(Gamma):
 
     def __init__(self, shape, scale=SCALE):
         super(UnboundedGamma, self).__init__(shape, scale=scale, mini=-oo, maxi=oo)
+
+
+# Only export and expose the class defined here
+__all__ = ["Gamma", "GammaFromMean", "UnboundedGamma"]

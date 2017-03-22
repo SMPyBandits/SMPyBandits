@@ -17,6 +17,10 @@ except ImportError:
 from os import getenv
 import numpy as np
 
+if __name__ == '__main__':
+    print("Warning: this script 'configuration_multiplayers.py' is NOT executable. Use 'main_multiplayers.py' or 'make multiplayers' or 'make moremultiplayers' ...")  # DEBUG
+    exit(0)
+
 # Import arms
 from Arms import *
 
@@ -39,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -78,7 +82,7 @@ DECREASE_RATE = None
 # NB_PLAYERS : number of player
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 3    # Less that the number of arms
+# NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
@@ -86,25 +90,26 @@ NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
 
-# Collision models
-collisionModel = noCollision  # Like single player
-collisionModel = rewardIsSharedUniformly  # Weird
 
-# Based on a distance of each user with the base station: the closer one wins if collision
-distances = 'uniform'  # Uniformly spaced objects
-distances = 'random'  # Let it compute the random distances, ONCE by thread, and then cache it? XXX
-distances = np.random.random_sample(NB_PLAYERS)  # Distance between 0 and 1, randomly affected!
-print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")  # DEBUG
-for i in range(NB_PLAYERS):
-    print("  - Player nb #{}\tis at distance {:.3g} to the Base Station ...".format(i + 1, distances[i]))  # DEBUG
+# # XXX Different Collision models
+# collisionModel = noCollision  # Like single player
+# collisionModel = rewardIsSharedUniformly  # Weird
 
-
-def onlyCloserUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances):
-    return closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances)
+# # Based on a distance of each user with the base station: the closer one wins if collision
+# distances = 'uniform'  # Uniformly spaced objects
+# distances = 'random'  # Let it compute the random distances, ONCE by thread, and then cache it? XXX
+# distances = np.random.random_sample(NB_PLAYERS)  # Distance between 0 and 1, randomly affected!
+# print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")  # DEBUG
+# for i in range(NB_PLAYERS):
+#     print("  - Player nb #{}\tis at distance {:.3g} to the Base Station ...".format(i + 1, distances[i]))  # DEBUG
 
 
-collisionModel = onlyCloserUserGetsReward
-collisionModel.__doc__ = closerUserGetsReward.__doc__
+# def onlyCloserUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances):
+#     return closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances)
+
+
+# collisionModel = onlyCloserUserGetsReward
+# collisionModel.__doc__ = closerUserGetsReward.__doc__
 
 # The best collision model: none of the colliding users get any reward
 collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
@@ -151,66 +156,66 @@ configuration = {
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Arms
-    "environment": [
-        # {   # A damn simple problem: 2 arms, one bad, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]  # makeMeans(2, 0.1)
-        #     # "params": [0.9, 0.9]
-        #     # "params": [0.85, 0.9]
-        # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
-        # }
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": makeMeans(9, 1 / (1. + 9))
-        }
-        # {   # An easy problem (14 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(14, 1 / (1. + 14))
-        # }
-        # {   # An easy problem (19 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(19, 1 / (1. + 19))
-        # }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # }
-        # {   # XXX to test with 1 suboptimal arm only
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
-        # }
-        # {   # XXX to test with half very bad arms, half perfect arms
-        #     "arm_type": Bernoulli,
-        #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
-        #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
-        # }
-        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-        #     "arm_type": Bernoulli,
-        #     "params": [1] * NB_PLAYERS
-        # }
-        # {   # An easy problem (50 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(50, 1 / (1. + 50))
-        # }
-        # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
-        #     # nbPlayers = 2
-        # }
-        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
-        #     # nbPlayers = 2
-        # }
-        # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
-        #     # nbPlayers = 3
-        # }
-    ],
+    # "environment": [
+    #     # {   # A damn simple problem: 2 arms, one bad, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.9]  # makeMeans(2, 0.1)
+    #     #     # "params": [0.9, 0.9]
+    #     #     # "params": [0.85, 0.9]
+    #     # }
+    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
+    #     # }
+    #     {   # A very easy problem (9 arms), but it is used in a lot of articles
+    #         "arm_type": Bernoulli,
+    #         "params": makeMeans(9, 1 / (1. + 9))
+    #     }
+    #     # {   # An easy problem (14 arms)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": makeMeans(14, 1 / (1. + 14))
+    #     # }
+    #     # {   # An easy problem (19 arms)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": makeMeans(19, 1 / (1. + 19))
+    #     # }
+    #     # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+    #     # }
+    #     # {   # XXX to test with 1 suboptimal arm only
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
+    #     # }
+    #     # {   # XXX to test with half very bad arms, half perfect arms
+    #     #     "arm_type": Bernoulli,
+    #     #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
+    #     #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+    #     # }
+    #     # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [1] * NB_PLAYERS
+    #     # }
+    #     # {   # An easy problem (50 arms)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": makeMeans(50, 1 / (1. + 50))
+    #     # }
+    #     # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
+    #     #     # nbPlayers = 2
+    #     # }
+    #     # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
+    #     #     # nbPlayers = 2
+    #     # }
+    #     # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
+    #     #     # nbPlayers = 3
+    #     # }
+    # ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
     #     {   # An example problem with  arms
@@ -219,12 +224,13 @@ configuration = {
     #     }
     # ],
     # DONE I tried with other arms distribution: Gaussian, it works similarly
-    # "environment": [  # Exponential arms
-    #     {   # An example problem with  arms
-    #         "arm_type": Gaussian,
-    #         "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-    #     }
-    # ],
+    "environment": [  # Gaussian arms
+        {   # An example problem with  arms
+            "arm_type": Gaussian,
+            "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+            # "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+        }
+    ],
 }
 
 
@@ -232,7 +238,7 @@ nbArms = len(configuration['environment'][0]['params'])
 if len(configuration['environment']) > 1:
     print("WARNING do not use this hack if you try to use more than one environment.")
 # XXX compute optimal values for d (MEGA's parameter)
-D = max(0.01, np.min(np.diff(np.sort(configuration['environment'][0]['params']))) / 2)
+# D = max(0.01, np.min(np.diff(np.sort(configuration['environment'][0]['params']))) / 2)
 
 
 configuration.update({
@@ -327,6 +333,7 @@ configuration.update({
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 
+# XXX Comparing different rhoRand approaches
 # configuration["successive_players"] = [
 #     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
 #     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,  # This one is efficient!
@@ -340,90 +347,10 @@ configuration.update({
 # ]
 
 
-# configuration["successive_players"] = [
-#     rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-#     rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-#     rhoEst(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
-#     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-#     rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-# ]
-
-# configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,  # This one is efficient!
-#     # Selfish(NB_PLAYERS, MOSS, nbArms).children,
-#     Selfish(NB_PLAYERS, klUCB, nbArms).children,
-#     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-#     Selfish(NB_PLAYERS, Thompson, nbArms).children,
-#     Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-#     # Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
-# ]
-
-# configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-#     CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-#     CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
-# ]
-
-configuration["successive_players"] = [
-    # --- 1) CentralizedMultiplePlay
-    # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-    # --- 2) Musical Chair
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
-    # --- 3) EmpiricalMeans
-    # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
-    # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
-    # --- 4) UCBalpha
-    # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
-    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
-    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
-    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # --- 5) klUCBPlus
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
-    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
-    # --- 6) Thompson
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    # --- 7) BayesUCB
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    # --- 8) Aggr
-    # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
-]
-
-
+# XXX Comparing different ALOHA approaches
 # from itertools import product  # XXX If needed!
-
 # p0 = 1. / NB_PLAYERS
 # p0 = 0.75
-
 # configuration["successive_players"] = [
 #     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
 # ] + [
@@ -431,6 +358,62 @@ configuration["successive_players"] = [
 #     # ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
 #     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
 #     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
+# ]
+
+# XXX Comparing different centralized approaches
+configuration["successive_players"] = [
+    CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms).children,
+    CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms).children,
+    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+    CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
+    CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
+]
+
+# configuration["successive_players"] = [
+#     # --- 1) CentralizedMultiplePlay
+#     # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+#     # --- 2) Musical Chair
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
+#     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
+#     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+#     # --- 3) EmpiricalMeans
+#     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+#     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
+#     # --- 4) UCBalpha
+#     # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
+#     # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
+#     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
+#     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+#     # --- 5) klUCBPlus
+#     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+#     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
+#     # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
+#     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
+#     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
+#     # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+#     # --- 6) Thompson
+#     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+#     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+#     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
+#     # --- 7) BayesUCB
+#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+#     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+#     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+#     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+#     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+#     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+#     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+#     # --- 8) Aggr
+#     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+#     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+#     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 # ]
 
 

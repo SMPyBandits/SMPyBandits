@@ -13,6 +13,10 @@ from os import mkdir
 import os.path
 from os import getenv
 
+# if __name__ != '__main__':
+#     print("Warning: this script 'main.py' does not expose any documentation ...")  # DEBUG
+#     exit(0)
+
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify
 from configuration_multiplayers import configuration
@@ -40,21 +44,21 @@ do_all_plot = True
 interactive = True  # XXX dont keep it like this
 interactive = False
 
-if getenv('DEBUG', False):
+if getenv('DEBUG', False) and __name__ == '__main__':
     saveallfigs, interactive = False, True
 
 if interactive and not saveallfigs:
     import matplotlib.pyplot as plt
     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
-# Update configuration
-configuration['showplot'] = interactive
-del configuration['players']
-
-_hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
-
 
 if __name__ == '__main__':
+    # Update configuration
+    configuration['showplot'] = interactive
+    del configuration['players']
+
+    _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
+
     if os.path.isdir(PLOT_DIR):
         print("{}/ is already a directory here...".format(PLOT_DIR))
     elif os.path.isfile(PLOT_DIR):

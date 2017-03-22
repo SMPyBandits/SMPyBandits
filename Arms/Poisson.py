@@ -72,3 +72,7 @@ class UnboundedPoisson(Poisson):
 
     def __init__(self, p):
         super(UnboundedPoisson, self).__init__(p, trunc=float('+inf'))
+
+
+# Only export and expose the class defined here
+__all__ = ["Poisson", "UnboundedPoisson"]

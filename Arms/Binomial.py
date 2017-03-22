@@ -57,3 +57,7 @@ class Binomial(Arm):
     def oneLR(self, mumax, mu):
         """ One term of the Lai & Robbins lower bound for Binomial arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klBin(mu, mumax, self.draws)
+
+
+# Only export and expose the class defined here
+__all__ = ["Binomial"]

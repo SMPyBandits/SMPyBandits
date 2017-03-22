@@ -52,6 +52,7 @@ a part of my **on going** research since December 2016.
    plots/README.md
    uml_diagrams/README.md
    logs/README.md
+   Policies/C/README.md
 
 
 Indices and tables

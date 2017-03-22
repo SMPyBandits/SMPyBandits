@@ -51,3 +51,7 @@ class Bernoulli(Arm):
     def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klBern(mu, mumax)
+
+
+# Only export and expose the class defined here
+__all__ = ["Bernoulli"]

@@ -72,3 +72,7 @@ class UnboundedGaussian(Gaussian):
 
     def __init__(self, mu, sigma=VARIANCE):
         super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)
+
+
+# Only export and expose the class defined here
+__all__ = ["Gaussian", "UnboundedGaussian"]

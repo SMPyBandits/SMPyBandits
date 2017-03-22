@@ -29,4 +29,4 @@ if not USE_NUMBA:
 
 
 # Only export and expose the useful functions defined here
-__all__ = [USE_NUMBA, jit]
+__all__ = ["USE_NUMBA", "jit"]
