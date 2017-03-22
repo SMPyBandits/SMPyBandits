@@ -483,7 +483,7 @@
 <text text-anchor="start" x="1609" y="-1882.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1609" y="-1867.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1609" y="-1852.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1609" y="-1837.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="1609" y="-1837.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="1609" y="-1822.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1609" y="-1807.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1609" y="-1792.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -1892,7 +1892,7 @@
 <text text-anchor="middle" x="7749.5" y="-1061.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.oneRhoRandRand</text>
 <polyline fill="none" stroke="black" points="7594,-1053.5 7905,-1053.5 "/>
 <text text-anchor="start" x="7602" y="-1038.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="7602" y="-1023.3" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="7602" y="-1023.3" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="7594,-1015.5 7905,-1015.5 "/>
 <text text-anchor="start" x="7602" y="-1000.3" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="7602" y="-985.3" font-family="Times,serif" font-size="14.00">__str__()</text>

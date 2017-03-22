@@ -152,10 +152,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(9, 1 / (1. + 9))
-        # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": makeMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
@@ -190,11 +190,11 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.7, 0.8, 0.9]
-            # nbPlayers = 2
-        }
+        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
+        #     # nbPlayers = 2
+        # }
         # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
@@ -364,7 +364,7 @@ configuration.update({
 configuration["successive_players"] = [
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     # --- 2) Musical Chair
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
@@ -394,18 +394,18 @@ configuration["successive_players"] = [
     # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
     # --- 7) BayesUCB
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
     # --- 8) Aggr
-    # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 ]
 
 
