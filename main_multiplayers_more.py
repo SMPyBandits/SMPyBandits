@@ -6,7 +6,7 @@ Script to load the config, run the simulations, and plot them, for the multi-pla
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Generic imports
 from os import mkdir
@@ -29,13 +29,9 @@ subTerms = True
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this
 
-# if not saveallfigs:
-#     import matplotlib.pyplot as plt
-#     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
-
 # Whether to do the plots or not
-do_simple_plot = True
 do_simple_plot = False
+do_simple_plot = True
 
 do_all_plot = False
 do_all_plot = True
@@ -46,6 +42,10 @@ interactive = False
 
 if getenv('DEBUG', False):
     saveallfigs, interactive = False, True
+
+if interactive and not saveallfigs:
+    import matplotlib.pyplot as plt
+    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Update configuration
 configuration['showplot'] = interactive
@@ -146,14 +146,14 @@ if __name__ == '__main__':
             else:
                 evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-            # # Plotting the centralized regret in semilogy
-            # savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
-            # print("\n\n- Plotting the centralized regret")
-            # if saveallfigs:
-            #     print("  and saving the plot to {} ...".format(savefig))
-            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
-            # else:
-            #     evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            # Plotting the centralized regret in semilogy
+            savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
+            print("\n\n- Plotting the centralized regret")
+            if saveallfigs:
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
+            else:
+                evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
             # Plotting the centralized regret in loglog
             savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
@@ -173,14 +173,14 @@ if __name__ == '__main__':
             # else:
             #     evaluation.plotRegretCentralized(envId, normalized=True, subTerms=subTerms)  # XXX To plot without saving
 
-            # Plotting the number of switches
-            savefig = mainfig.replace('main', 'main_NbSwitchs')
-            print("\n\n- Plotting the number of switches")
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=False)
-            else:
-                evaluation.plotNbSwitchs(envId, cumulated=False)  # XXX To plot without saving
+            # # Plotting the number of switches
+            # savefig = mainfig.replace('main', 'main_NbSwitchs')
+            # print("\n\n- Plotting the number of switches")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=False)
+            # else:
+            #     evaluation.plotNbSwitchs(envId, cumulated=False)  # XXX To plot without saving
 
             # Plotting the cumulative number of switches
             savefig = mainfig.replace('main', 'main_CumNbSwitchs')
@@ -236,14 +236,14 @@ if __name__ == '__main__':
             # else:
             #     evaluation.plotAllPulls(envId, cumulated=True, normalized=True)  # XXX To plot without saving
 
-            # Also plotting the total nb of collision as a function of time
-            savefig = mainfig.replace('main', 'main_NbCollisions')
-            print(" - Plotting the total nb of collision as a function of time")
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=False)
-            else:
-                evaluation.plotNbCollisions(envId, cumulated=False)  # XXX To plot without saving
+            # # Also plotting the total nb of collision as a function of time
+            # savefig = mainfig.replace('main', 'main_NbCollisions')
+            # print(" - Plotting the total nb of collision as a function of time")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotNbCollisions(envId, savefig=savefig, cumulated=False)
+            # else:
+            #     evaluation.plotNbCollisions(envId, cumulated=False)  # XXX To plot without saving
 
             # Also plotting the total nb of collision as a function of time
             savefig = mainfig.replace('main', 'main_CumNbCollisions')

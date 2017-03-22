@@ -18,7 +18,6 @@ from os import getenv
 # import pickle
 # import h5py
 
-
 # Local imports
 from Environment import Evaluator, notify
 
@@ -42,10 +41,6 @@ plotSTD = False
 saveallfigs = False
 saveallfigs = True  # XXX dont keep it like this when experimenting
 
-# if not saveallfigs:
-#    import matplotlib.pyplot as plt
-#     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
-
 # Parameters for the Evaluator object
 finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
 averageOn = 1e-2               # Average the final rank on the 1% last time steps
@@ -60,6 +55,10 @@ interactive = False
 
 if getenv('DEBUG', False):
     saveallfigs, interactive = False, True
+
+if interactive and not saveallfigs:
+    import matplotlib.pyplot as plt
+    plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
 # Update configuration
 configuration['showplot'] = interactive

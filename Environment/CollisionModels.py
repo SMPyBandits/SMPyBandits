@@ -71,7 +71,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            player.handleCollision(choices[i])  # FIXME ?
+            player.handleCollision(choices[i])  # FIXED
             # handleCollision_or_getZeroReward(player, choices[i])
 
 

@@ -6,8 +6,10 @@ Also contain makeMeans, a small function to generate uniformly spacen means of a
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.6"
 
+from random import shuffle
+from copy import copy
 import numpy as np
 
 if __name__ != "__main__":
@@ -39,6 +41,25 @@ def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     assert 0 < delta < 1, "Error: delta has to be in (0, 1)."
     # return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
     return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+
+
+def shuffled(mylist):
+    """Returns a shuffled version of the input 1D list. sorted() exists instead of list.sort(), but shuffled() does not exist instead of random.shuffle()...
+
+    >>> from random import seed; seed(1234)  # Reproducible examples
+    >>> mylist = [ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9]
+    >>> shuffled(mylist)
+    [0.2, 0.7, 0.8, 0.3, 0.5, 0.6, 0.1, 0.4, 0.9]
+    >>> shuffled(mylist)
+    [0.4, 0.9, 0.6, 0.3, 0.8, 0.5, 0.1, 0.2, 0.7]
+    >>> shuffled(mylist)
+    [0.6, 0.4, 0.9, 0.7, 0.5, 0.3, 0.8, 0.1, 0.2]
+    >>> shuffled(mylist)
+    [0.4, 0.8, 0.9, 0.7, 0.3, 0.2, 0.5, 0.1, 0.6]
+    """
+    copiedlist = copy(mylist)
+    shuffle(copiedlist)
+    return copiedlist
 
 
 # --- Debugging
