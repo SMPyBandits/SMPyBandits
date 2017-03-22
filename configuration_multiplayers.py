@@ -39,8 +39,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -86,18 +86,28 @@ NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
 
-# Collision model
-collisionModel = noCollision
-collisionModel = rewardIsSharedUniformly
-collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
+# Collision models
+collisionModel = noCollision  # Like single player
+collisionModel = rewardIsSharedUniformly  # Weird
 
-# distances = np.random.random_sample(NB_PLAYERS)
-# print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")
-# for i in range(NB_PLAYERS):
-#     print("  - Player nb {}\tis at distance {} ...".format(i + 1, distances[i]))
-# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances=distances)
-# def closerOneGetsReward(*args): return closerUserGetsReward(*args, distances='random')  # Let it compute the random distances, ONCE by thread, and then cache it
-# collisionModel = closerOneGetsReward
+# Based on a distance of each user with the base station: the closer one wins if collision
+distances = 'uniform'  # Uniformly spaced objects
+distances = 'random'  # Let it compute the random distances, ONCE by thread, and then cache it? XXX
+distances = np.random.random_sample(NB_PLAYERS)  # Distance between 0 and 1, randomly affected!
+print("Each player is at the base station with a certain distance (the lower, the more chance it has to be selected)")  # DEBUG
+for i in range(NB_PLAYERS):
+    print("  - Player nb #{}\tis at distance {:.3g} to the Base Station ...".format(i + 1, distances[i]))  # DEBUG
+
+
+def onlyCloserUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances):
+    return closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=distances)
+
+
+collisionModel = onlyCloserUserGetsReward
+collisionModel.__doc__ = closerUserGetsReward.__doc__
+
+# The best collision model: none of the colliding users get any reward
+collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 
 # Parameters for the arms
@@ -152,10 +162,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
         # }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": makeMeans(9, 1 / (1. + 9))
-        # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": makeMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(14, 1 / (1. + 14))
@@ -164,10 +174,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(19, 1 / (1. + 19))
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))

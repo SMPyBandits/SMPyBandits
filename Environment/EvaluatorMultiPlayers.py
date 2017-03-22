@@ -12,15 +12,17 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-# Local imports
+# Local imports, libraries
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
+# Local imports, tools and config
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save
-from .ResultMultiPlayers import ResultMultiPlayers
+# Local imports, objects and functions
+from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
 from .MAB import MAB
-from .CollisionModels import defaultCollisionModel
+from .ResultMultiPlayers import ResultMultiPlayers
 
 REPETITIONS = 1
 DELTA_T_SAVE = 1
@@ -50,8 +52,8 @@ class EvaluatorMultiPlayers(object):
         self.duration = int(self.horizon / self.delta_t_save)
         print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
-        print("Using collision model:", self.collisionModel.__name__)
-        print("  Detail:", self.collisionModel.__doc__)  # DEBUG
+        self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)
+        print("Using collision model {} (function {}).\nMore details:\n{}".format(self.collisionModel.__name__, self.collisionModel, self.collisionModel.__doc__))
         # Flags
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)
         self.averageOn = self.cfg.get('averageOn', 5e-3)
@@ -226,8 +228,11 @@ class EvaluatorMultiPlayers(object):
     def getThirdRegretTerm(self, envId=0):
         """Extract and compute the third term in the centralized regret: losses due to collisions."""
         means = self.envs[envId].means
-        averageCollisions = self.collisions[envId] / float(self.repetitions)  # Shape: (nbArms, duration)
-        losses = np.dot(means, averageCollisions)  # Count and sum on k in 1...K
+        countCollisions = self.collisions[envId]   # Shape: (nbArms, duration)
+        if not self.full_lost_if_collision:
+            print("Warning: the collision model ({}) does *not* yield a loss in communication when colliding (one user can communicate, or in average one user can communicate), so countCollisions -= 1 for the 3rd regret term ...".format(self.collisionModel.__name__))  # DEBUG
+            countCollisions = np.maximum(0, countCollisions - 1)
+        losses = np.dot(means, countCollisions / float(self.repetitions))  # Count and sum on k in 1...K
         thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
         return thirdRegretTerm
 
@@ -252,8 +257,6 @@ class EvaluatorMultiPlayers(object):
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        # ymax = max(plt.ylim()[1], 1.03)  # Don't force to view on [0%, 100%]
-        # plt.ylim(ymin, ymax)
         plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$" % self.repetitions)
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self.showplot, savefig)
@@ -345,8 +348,10 @@ class EvaluatorMultiPlayers(object):
                     print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
-                        if semilogx or loglog: plt.xscale('log')
-                        if semilogy or loglog: plt.yscale('log')
+                        if semilogx or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                            plt.xscale('log')
+                        if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                            plt.yscale('log')
         # We also plot our lower bound
         lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
@@ -408,8 +413,6 @@ class EvaluatorMultiPlayers(object):
         if len(evaluators) > 1:
             legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
-        # ymax = max(plt.ylim()[1], 1)
-        # plt.ylim(ymin, ymax)  # Don't force to view on [0%, 100%]
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
@@ -429,7 +432,6 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nBest arm pulls frequency for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
@@ -478,7 +480,6 @@ class EvaluatorMultiPlayers(object):
             # should only plot with markers
         plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
-        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
@@ -510,7 +511,6 @@ class EvaluatorMultiPlayers(object):
             Y /= eva.nbPlayers  # To normalized the count?
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha=1. if cumulated else 0.7)
         if not cumulated:
-            # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
             add_percent_formatter("yaxis", 1.0)
         # We also plot our lower bound
         if upperbound and cumulated:
@@ -546,7 +546,7 @@ class EvaluatorMultiPlayers(object):
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
             print("==> No collisions to plot ... Stopping now  ...")  # DEBUG
-            # return  # XXX
+            return
         # Special arm: no collision
         Y[-1] = 1 - np.sum(Y) if np.sum(Y) < 1 else 0
         labels[-1] = "No collision (${:.1%}$$\%$)".format(Y[-1]) if Y[-1] > 1e-4 else ''
@@ -643,16 +643,6 @@ def delayed_play(env, players, horizon, collisionModel,
         #     if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
-
-    # # XXX Prints the ranks
-    # ranks = [player.rank if hasattr(player, 'rank') else None for player in players]
-    # if len(set(ranks)) != nbPlayers:
-    #     for (player, rank) in zip(players, ranks):
-    #         if rank:
-    #             print(" - End of one game, rhoRand player {} had rank {} ...".format(player, rank))
-    # else:
-    #     if set(ranks) != {None}:
-    #         print(" - End of one game, rhoRand found orthogonal ranks: ranks = {} ...".format(ranks))
 
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0:

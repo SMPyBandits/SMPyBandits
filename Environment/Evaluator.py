@@ -11,14 +11,15 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Local imports
+# Local imports, libraries
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
-from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+# Local imports, tools and config
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save
-from .Result import Result
+from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+# Local imports, objects and functions
 from .MAB import MAB
+from .Result import Result
 
 
 REPETITIONS = 1

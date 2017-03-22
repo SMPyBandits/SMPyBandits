@@ -21,7 +21,7 @@ As far as now, there is 3 different collision models implemented:
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.6"
 
 try:
     from functools import lru_cache  # Only for Python 3.2+
@@ -128,16 +128,16 @@ def random_distances(nbPlayers):
     return distances
 
 
-def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances=None):
+def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, distances='uniform'):
     """ Simple collision model where:
 
     - The players alone on one arm sample it and receive the reward.
     - In case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a distance of each player to the base station (numbers in [0, 1]).
     - If distances is not given, it is either generated randomly (random numbers in [0, 1]) or is a linspace of nbPlayers values in (0, 1), equally spacen (default).
     """
-    if distances is None or distances == 'uniform':  # Uniformly spacen distances, in (0, 1)
+    if distances is None or (isinstance(distances, str) and distances == 'uniform'):  # Uniformly spacen distances, in (0, 1)
         distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]
-    elif distances == 'random':  # Or fully uniform
+    elif (isinstance(distances, str) and distances == 'random'):  # Or fully uniform
         distances = random_distances(len(players))
     # For each arm, explore who chose it
     for armId, arm in enumerate(arms):
@@ -167,7 +167,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
                     handleCollision_or_getZeroReward(players[j], armId)
 
 
-# List of possible collision models
+#: List of possible collision models
 collision_models = [
     onlyUniqUserGetsReward,
     noCollision,
@@ -176,11 +176,27 @@ collision_models = [
 ]
 
 
-# Only export and expose the useful functions defined here
+#: Mapping of collision model names to True or False,
+#: to know if a collision implies a lost communication or not in this model
+full_lost_if_collision = {
+    # Fake collision model
+    "noCollision": False,
+    # No lost communication in case of collision
+    "closerUserGetsReward": False,
+    # In average, no lost communication in case of collision
+    "rewardIsSharedUniformly": False,
+    # Lost communication in case of collision
+    "onlyUniqUserGetsReward": True,
+}
+
+
+#: Only export and expose the useful functions and constants defined here
 __all__ = [
     "onlyUniqUserGetsReward",
     "noCollision",
-    "rewardIsSharedUniformly",
     "closerUserGetsReward",
+    "rewardIsSharedUniformly",
     "defaultCollisionModel",
+    "collision_models",
+    "full_lost_if_collision"
 ]
