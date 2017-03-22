@@ -1,3 +1,6 @@
+# .coala configuration file for using https://coala.io/
+# Warning: the integrated tool in PyCharm IDE is MUCH BETTER!
+# See https://www.jetbrains.com/pycharm/download/ and https://www.jetbrains.com/pycharm/features/
 [default]
 bears = LineCountBear, InvalidLinkBear, FilenameBear, SpaceConsistencyBear
 files = **.md, **.py
