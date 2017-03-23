@@ -78,6 +78,7 @@ class oneRhoEst(oneRhoRand):
         self.nbPlayersEstimate = 1  # Optimistic: start by assuming it is alone!
         self.rank = None
         self.collisionCount = 0
+        self.timeSinceLastCollision = 0
         self.t = 0
 
     def __str__(self):   # Better to recompute it automatically
@@ -85,6 +86,9 @@ class oneRhoEst(oneRhoRand):
 
     def startGame(self):
         super(oneRhoEst, self).startGame()
+        self.nbPlayersEstimate = 1  # Osptimistic: start by assuming it is alone!
+        self.collisionCount = 0
+        self.timeSinceLastCollision = 0
         self.t = 0
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
@@ -97,19 +101,27 @@ class oneRhoEst(oneRhoRand):
         order = self.estimatedOrder()
 
         # And try to see if the arm on which we are encountering a collision is one of the Uhat best
-        if order[arm] >= self.nbPlayersEstimate:
-            # if arm is one of the best nbPlayersEstimate arms:
+        if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
             self.collisionCount += 1
             # print("This arm {} was estimated as one of the Uhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
 
         # And finally, compare the collision count with the current threshold
         # threshold = self.threshold(self.horizon, self.nbPlayersEstimate)
-        threshold = self.threshold(self.t, self.nbPlayersEstimate)
+        threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate)
 
         if self.collisionCount > threshold:
             self.nbPlayersEstimate += 1
             # print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
+        # Finally, reinitiliaze timeSinceLastCollision
+        self.timeSinceLastCollision = 0
+
+    def getReward(self, arm, reward):
+        # Obtaining a reward, even 0, means no collision on that arm for this time
+        # So, first, we count one more step without collision
+        self.timeSinceLastCollision += 1
+        # Then use the reward for the arm learning algorithm
+        return super(oneRhoEst, self).getReward(arm, reward)
 
     def choice(self):
         self.t += 1
