@@ -11,7 +11,7 @@ Collision models are generic functions, taking:
  - the numpy array to store their pulls: 'pulls'
  - the numpy array to store their collisions: 'collisions'
 
-As far as now, there is 3 different collision models implemented:
+As far as now, there is 4 different collision models implemented:
 
  - noCollision: simple collision model where all players sample it and receive the reward.
  - onlyUniqUserGetsReward: simple collision model, where only the players alone on one arm sample it and receive the reward (default).

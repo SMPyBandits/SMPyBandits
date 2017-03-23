@@ -120,7 +120,7 @@ Also creating executable in /your/path/to/AlgoBandits/bin/python
 Installing setuptools, pip, wheel...done.
 $ source bin/activate  # in bash, use activate.csh or activate.fish if needed
 $ type pip  # just to check
-pip is /tmp/test/AlgoBandits/bin/pip
+pip is /your/path/to/AlgoBandits/bin/pip
 $ pip install -r requirements.txt
 Collecting numpy (from -r requirements.txt (line 5))
 ...
@@ -128,7 +128,7 @@ Installing collected packages: numpy, scipy, cycler, pytz, python-dateutil, matp
 Successfully installed commonmark-0.5.4 cycler-0.10.0 docutils-0.13.1 joblib-0.11 matplotlib-2.0.0 numpy-1.12.1 pandas-0.19.2 python-dateutil-2.6.0 pytz-2016.10 recommonmark-0.4.0 scipy-0.19.0 seaborn-0.7.1 sphinx-rtd-theme-0.2.4 tqdm-4.11.2
 ```
 
-And then be sure to the virtualenv binary, `bin/python`, to launch the experiments (the Makefile should use it by default, if `source bin/activate` was executed).
+And then be sure to use the virtualenv binary for Python, `bin/python`, instead of the system-wide one, to launch the experiments (the Makefile should use it by default, if `source bin/activate` was executed).
 
 ### Or with a [`Makefile`](Makefile) ?
 You can also use the provided [`Makefile`](Makefile) file to do this simply:
