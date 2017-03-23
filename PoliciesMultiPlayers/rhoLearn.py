@@ -36,9 +36,14 @@ except ImportError:
         def choice(self):
             return randint(0, self.nbArms - 1)
 
-import numpy as np
-
 from .rhoRand import oneRhoRand, rhoRand
+
+
+#: Should oneRhoLearn players select a new rank *at each step* ?
+#: The algorithm P2 from https://dx.doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
+#: But I found it works better **without** this trick.
+CHANGE_RANK_EACH_STEP = True
+CHANGE_RANK_EACH_STEP = False
 
 
 # --- Class oneRhoLearn, for children
@@ -51,11 +56,12 @@ class oneRhoLearn(oneRhoRand):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, rankSelectionAlgo, *args, **kwargs):
+    def __init__(self, maxRank, rankSelectionAlgo, change_rank_each_step, *args, **kwargs):
         super(oneRhoLearn, self).__init__(maxRank, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(maxRank)  # FIXME I should give it more arguments?
         self.maxRank = maxRank
         self.rank = None
+        self.change_rank_each_step = change_rank_each_step
         # Keep in memory how many times a rank could be used while giving no collision
         # self.timesUntilCollision = np.zeros(maxRank, dtype=int)  # XXX not used anymore!
 
@@ -63,28 +69,37 @@ class oneRhoLearn(oneRhoRand):
         return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
 
     def startGame(self):
+        """Initialize both rank and arm selection algorithms."""
         self.rankSelection.startGame()
         super(oneRhoLearn, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
         # self.timesUntilCollision.fill(0)  # XXX not used anymore!
 
     def getReward(self, arm, reward):
+        """Give a 1 reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a new rank."""
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step for this rank
         # self.timesUntilCollision[self.rank - 1] += 1  # XXX not used anymore!
+
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
         self.rankSelection.getReward(self.rank - 1, 1)
         # Note: this is NOTHING BUT a heuristic! See equation (13) in https://dx.doi.org/10.4108/eai.5-9-2016.151647
+
         # Then, use the rankSelection algorithm to select a new rank
-        self.rank = 1 + self.rankSelection.choice()  # FIXME That's new! rhoLearn (can) change its rank at ALL steps!
+        if self.change_rank_each_step:  # That's new! rhoLearn (can) change its rank at ALL steps!
+            self.rank = 1 + self.rankSelection.choice()
+
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearn, self).getReward(arm, reward)
 
     def handleCollision(self, arm):
+        """Give a 0 reward to the rank selection algorithm, and select a new rank."""
         # First, reset the time until collisions for that rank
         # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!
+
         # And give a 0 reward to this rank
         self.rankSelection.getReward(self.rank - 1, 0)
+
         # Then, use the rankSelection algorithm to select a new rank
         self.rank = 1 + self.rankSelection.choice()
         # print(" - A oneRhoLearn player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
@@ -97,7 +112,8 @@ class rhoLearn(rhoRand):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Uniform,
-                 lower=0., amplitude=1., maxRank=None, *args, **kwargs):
+                 lower=0., amplitude=1., maxRank=None, change_rank_each_step=CHANGE_RANK_EACH_STEP,
+                 *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -123,9 +139,10 @@ class rhoLearn(rhoRand):
         self.children = [None] * nbPlayers
         self.rankSelectionAlgo = rankSelectionAlgo
         self.nbArms = nbArms
+        self.change_rank_each_step = change_rank_each_step
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, self, playerId)
+            self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
         # Fake rankSelection
         self._rankSelection = rankSelectionAlgo(maxRank)
 
