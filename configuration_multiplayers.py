@@ -44,7 +44,7 @@ HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -59,8 +59,8 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = 100
 REPETITIONS = 50
-REPETITIONS = 20
-REPETITIONS = 10
+# REPETITIONS = 20
+# REPETITIONS = 10
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -84,6 +84,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
@@ -190,11 +191,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
         # }
-        {   # XXX to test with half very bad arms, half perfect arms
-            "arm_type": Bernoulli,
-            # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
-            "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
-        }
+        # {   # XXX to test with half very bad arms, half perfect arms
+        #     "arm_type": Bernoulli,
+        #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
+        #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+        # }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
@@ -203,11 +204,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(50, 1 / (1. + 50))
         # }
-        # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
-        #     # nbPlayers = 2
-        # }
+        {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+            "arm_type": Bernoulli,
+            "params": [0.3, 0.4, 0.5, 0.6, 0.7]
+            # nbPlayers = 2
+        }
         # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
@@ -408,13 +409,8 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
     # --- 6) Thompson
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children \
-    + rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
-    + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
     # --- 7) BayesUCB
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -428,6 +424,15 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # --- 9) Mixing rhoRand or Selfish with different learning algorithms
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(int(NB_PLAYERS / 2), BayesUCB, nbArms).children \
+    # + Selfish(int(NB_PLAYERS / 2), klUCBPlus, nbArms).children,
+    rhoRand(int(NB_PLAYERS / 2), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
+    + rhoRand(int(NB_PLAYERS / 2), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children,
 ]
 
 
