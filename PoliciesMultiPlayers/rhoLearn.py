@@ -5,6 +5,7 @@
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
 - At first, every player has rank_i = 1, but when a collision occurs, rank_i is given by a second learning algorithm, playing on arms = ranks from [1, .., M], where M is the number of player.
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy, it *might* be better! Warning: no theoretical guarantees exist!
+- Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 
 - Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
 """
@@ -21,6 +22,7 @@ except ImportError:
     print("Warning: ../Policies/Uniform.py was not imported correctly...")  # DEBUG
     # ... Just reimplement it here manually, if not found in ../Policies/Uniform.py
     from random import randint
+
     class Uniform():
         def __init__(self, nbArms, lower=0., amplitude=1.):
             self.nbArms = nbArms
@@ -55,7 +57,7 @@ class oneRhoLearn(oneRhoRand):
         self.maxRank = maxRank
         self.rank = None
         # Keep in memory how many times a rank could be used while giving no collision
-        self.timesUntilCollision = np.zeros(maxRank, dtype=int)
+        # self.timesUntilCollision = np.zeros(maxRank, dtype=int)  # XXX not used anymore!
 
     def __str__(self):   # Better to recompute it automatically
         return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
@@ -64,22 +66,23 @@ class oneRhoLearn(oneRhoRand):
         self.rankSelection.startGame()
         super(oneRhoLearn, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
-        self.timesUntilCollision.fill(0)
+        # self.timesUntilCollision.fill(0)  # XXX not used anymore!
 
     def getReward(self, arm, reward):
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step for this rank
-        self.timesUntilCollision[self.rank - 1] += 1
+        # self.timesUntilCollision[self.rank - 1] += 1  # XXX not used anymore!
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
         self.rankSelection.getReward(self.rank - 1, 1)
-        # FIXME this is NOTHING BUT a heuristic!!!!
-        # self.rankSelection.getReward(self.rank - 1, 1. / (1 + self.timesUntilCollision[self.rank - 1]))
+        # Note: this is NOTHING BUT a heuristic! See equation (13) in https://dx.doi.org/10.4108/eai.5-9-2016.151647
+        # Then, use the rankSelection algorithm to select a new rank
+        self.rank = 1 + self.rankSelection.choice()  # FIXME That's new! rhoLearn (can) change its rank at ALL steps!
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearn, self).getReward(arm, reward)
 
     def handleCollision(self, arm):
         # First, reset the time until collisions for that rank
-        self.timesUntilCollision[self.rank - 1] = 0
+        # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!
         # And give a 0 reward to this rank
         self.rankSelection.getReward(self.rank - 1, 0)
         # Then, use the rankSelection algorithm to select a new rank
