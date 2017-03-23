@@ -52,7 +52,7 @@ def handleCollision_or_getZeroReward(player, arm, lower=0):
 
 
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions):
-    """ Simple collision model where only the players alone on one arm sample it and receive the reward.
+    """ Simple collision model where only the players alone on one arm samples it and receives the reward.
 
     - This is the default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
@@ -71,12 +71,38 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
+            # collisions[choices[i]] = 1   # Binary counts of collisions  # FIXME?
             player.handleCollision(choices[i])  # FIXED
             # handleCollision_or_getZeroReward(player, choices[i])
 
 
 # Default collision model to use
 defaultCollisionModel = onlyUniqUserGetsReward
+
+
+def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, collisions):
+    """ A variant of the first simple collision model where all players sample their arm, receive their rewards, and are informed of the collisions.
+
+    - FIXME it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
+    - This is the NOT default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
+    - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
+    """
+    nbCollisions = np.bincount(choices, minlength=len(arms)) - 1  # XXX this is faster!
+    # print("allGetRewardsAndUseCollision() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
+    # if np.max(nbCollisions) >= 1:  # DEBUG
+    #     print("- allGetRewardsAndUseCollision: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
+    for i, player in enumerate(players):  # Loop is needed because player is needed
+        # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        pulls[i, choices[i]] += 1
+
+        rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
+        player.getReward(choices[i], rewards[i])
+
+        if nbCollisions[choices[i]] >= 1:  # If collision
+            # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
+            collisions[choices[i]] += 1  # Should be counted here, allGetRewardsAndUseCollision
+            # collisions[choices[i]] = 1   # Binary counts of collisions  # FIXME?
+            player.handleCollision(choices[i])  # FIXED
 
 
 def noCollision(t, arms, players, choices, rewards, pulls, collisions):
@@ -110,6 +136,7 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
         #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, len(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
             collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision)
+            # collisions[armId] += 1   # Binary counts of collisions  # FIXME?
             i = np.random.choice(players_who_chose_it)
             rewards[i] = arm.draw(t)
             players[i].getReward(armId, rewards[i])
@@ -148,6 +175,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
         #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, np.size(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
             collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision as the closest gets it)
+            # collisions[armId] += 1   # Binary counts of collisions  # FIXME?
             distancesChosen = distances[players_who_chose_it]
             smaller_distance = np.min(distancesChosen)
             # print("Using distances to chose the user who can pull arm {} : only users at the minimal distance = {} can transmit ...".format(armId, smaller_distance))  # DEBUG
@@ -170,6 +198,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
 #: List of possible collision models
 collision_models = [
     onlyUniqUserGetsReward,
+    allGetRewardsAndUseCollision,
     noCollision,
     rewardIsSharedUniformly,
     closerUserGetsReward,
@@ -187,12 +216,14 @@ full_lost_if_collision = {
     "rewardIsSharedUniformly": False,
     # Lost communication in case of collision
     "onlyUniqUserGetsReward": True,
+    "allGetRewardsAndUseCollision": True,
 }
 
 
 #: Only export and expose the useful functions and constants defined here
 __all__ = [
     "onlyUniqUserGetsReward",
+    "allGetRewardsAndUseCollision",
     "noCollision",
     "closerUserGetsReward",
     "rewardIsSharedUniformly",
