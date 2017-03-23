@@ -44,7 +44,8 @@ do_all_plot = True
 interactive = True  # XXX dont keep it like this
 interactive = False
 
-if getenv('DEBUG', False) and __name__ == '__main__':
+if str(getenv('DEBUG', False)) == 'True' and __name__ == '__main__':
+    print("====> TURNING DEBUG MODE ON <=====")
     saveallfigs, interactive = False, True
 
 if getenv('XKCD', False) and interactive and not saveallfigs:

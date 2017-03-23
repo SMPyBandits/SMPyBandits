@@ -43,7 +43,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
@@ -56,10 +56,11 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 # XXX Should be >= 10 to be statistically trustworthy
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 200
+REPETITIONS = 100
+REPETITIONS = 50
 REPETITIONS = 20
+REPETITIONS = 10
 
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
 DO_PARALLEL = True
@@ -83,7 +84,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -181,19 +182,19 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(19, 1 / (1. + 19))
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
         # }
-        # {   # XXX to test with half very bad arms, half perfect arms
-        #     "arm_type": Bernoulli,
-        #     # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
-        #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
-        # }
+        {   # XXX to test with half very bad arms, half perfect arms
+            "arm_type": Bernoulli,
+            # "params": shuffled([0, 0, 0, 1, 1, 1, 0, 0, 0])
+            "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+        }
         # {   # XXX To only test the orthogonalization (collision avoidance) protocol
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
@@ -332,7 +333,8 @@ configuration.update({
     # "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
     # "players": rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children
     # "players": rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children
-    # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children
+    # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=True).children
+    # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=False).children  # FIXME I am working on this line right now!
 
     # --- DONE Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
@@ -406,17 +408,22 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
     # --- 6) Thompson
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
-    # --- 7) BayesUCB
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children \
+    + rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
+    + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children,
+    # --- 7) BayesUCB
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
     # --- 8) Aggr
     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,

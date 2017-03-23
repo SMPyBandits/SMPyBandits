@@ -2,33 +2,33 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   605	Lilian Besson
+   614	Lilian Besson
      2	Lilian Besson (Naereen)
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 253
-  - Number of lines added: 404946
-  - Number of lines deleted: 366678
+  - Number of files changed: 254
+  - Number of lines added: 407370
+  - Number of lines deleted: 368970
   - Number of merges: 0
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 253
-  - Number of lines added: 404946
-  - Number of lines deleted: 366678
+  - Number of files changed: 254
+  - Number of lines added: 407370
+  - Number of lines deleted: 368970
   - Number of merges: 0
     Mar   Apr       May     Jun     Jul       Aug     Sep     Oct       Nov     Dec       Jan     Feb     Mar 
                                                                             o o   . o         . O o           o 
     M                                                                       O 0   O .       .   . . . O .   o O 
                                                                             . o . O O         o . o .   . O o 0 
     W                                                                       0 o . O 0   . .   o   O O . . 0   O 
-                                                                          o 0 0 . . o   .   0 . . O o 0 o o 0   
+                                                                          o 0 0 . . o   .   0 . . O o 0 o o 0 o 
     F                                                                       o   0 O       . 0 . .   O .   O O   
                                                                           o .     O .           o           .   
 
                                                                                           Less   . o O 0  More
- 605: Total commits
+ 614: Total commits
   16: Days ( Dec  6 2016 - Dec 22 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
-   7: Days ( Mar 16 2017 - Mar 22 2017 ) - Current streak                          
+   8: Days ( Mar 16 2017 - Mar 23 2017 ) - Current streak                          
