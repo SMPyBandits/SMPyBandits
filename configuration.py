@@ -10,7 +10,7 @@ __version__ = "0.5"
 # Tries to know number of CPU
 try:
     from multiprocessing import cpu_count
-    CPU_COUNT = cpu_count()
+    CPU_COUNT = cpu_count()  #: Number of CPU on the local machine
 except ImportError:
     CPU_COUNT = 1
 
@@ -26,8 +26,8 @@ from Arms import *
 # Import algorithms
 from Policies import *
 
-# HORIZON : number of time steps of the experiments
-# XXX Should be >= 10000 to be interesting "asymptotically"
+#: HORIZON : number of time steps of the experiments.
+#: Warning Should be >= 10000 to be interesting "asymptotically".
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
@@ -38,12 +38,13 @@ HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
-# DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
+#: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
+#: Warning: not perfectly finished right now.
 DELTA_T_SAVE = 1 * (HORIZON < 10000) + 50 * (10000 <= HORIZON < 100000) + 100 * (HORIZON >= 100000)
 DELTA_T_SAVE = 1  # XXX to disable this optimization
 
-# REPETITIONS : number of repetitions of the experiments
-# XXX Should be >= 10 to be stastically trustworthy
+#: REPETITIONS : number of repetitions of the experiments.
+#: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
@@ -51,23 +52,25 @@ REPETITIONS = 200
 # REPETITIONS = 50
 # REPETITIONS = 20
 
-DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
+#: To profile the code, turn down parallel computing
+DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
 DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
+
+#: Number of jobs to use for the parallel computations. -1 means all the CPU cores, 1 means no parallelization.
 N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = min(CPU_COUNT, max(int(CPU_COUNT / 3), CPU_COUNT - 8))
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
-RANDOM_SHUFFLE = False
-RANDOM_INVERT = False
-NB_RANDOM_EVENTS = 5
+RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
+RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
+NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
 
-# Parameters for the epsilon-greedy and epsilon-... policies
+#: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
-
-# Temperature for the softmax
+#: Temperature for the Softmax policies.
 TEMPERATURE = 0.01  # When -> 0, more greedy
 TEMPERATURE = 0.1
 TEMPERATURE = 0.5
@@ -77,7 +80,7 @@ TEMPERATURE = 100   # When -> oo, more uniformly at random
 # TEMPERATURE = 10.0 / HORIZON  # Not sure ??!
 TEMPERATURE = 0.05
 
-# XXX try different values for the learning rate for my aggregated bandit
+#: Learning rate for my aggregated bandit (it can be autotuned)
 LEARNING_RATE = 0.05
 LEARNING_RATE = 0.1
 LEARNING_RATE = 0.2
@@ -89,37 +92,39 @@ LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
 LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
 LEARNING_RATES = [LEARNING_RATE]
 
-# XXX try different values for time tau for the decreasing rate for my aggregated bandit
+#: Constant time tau for the decreasing rate for my aggregated bandit.
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
+#: To know if my Aggr policy is tried.
 TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
-# Cache rewards
+#: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
 CACHE_REWARDS = TEST_AGGR
 
+#: Should the Aggr policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
-# UNBIASED is a flag to know if the rewards are used as biased estimator, ie just r_t, or unbiased estimators, r_t / p_t
+#: Should the rewards for Aggr policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
 UNBIASED = True
 UNBIASED = False
 
-# Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
+#: Should we update the trusts proba like in Exp4 or like in my initial Aggr proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 
 # Parameters for the arms
-VARIANCE = 0.05   # Variance of Gaussian arms
-VARIANCE = 10   # Variance of Gaussian arms
+VARIANCE = 0.05   #: Variance of Gaussian arms
+VARIANCE = 10   #: Variance of Gaussian arms
 
 
-# XXX This dictionary configures the experiments
+#: This dictionary configures the experiments
 configuration = {
     # --- Duration of the experiment
     "horizon": HORIZON,
@@ -194,8 +199,11 @@ configuration = {
 if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
+
+#: Number of arms *in the first environment*
 nbArms = len(configuration['environment'][0]['params'])
-# XXX if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
+
+#: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
 
 

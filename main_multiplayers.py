@@ -23,21 +23,21 @@ from configuration_multiplayers import configuration
 
 
 # Parameters for the plots (where to save them) and what to draw
-PLOT_DIR = "plots"
-piechart = True
-averageRegret = True
-normalized = True
-fairnessAmplitude = False
-subTerms = True
+PLOT_DIR = "plots"  #: Directory for the plots
+piechart = True  #: Plot a piechart for collision counts?
+averageRegret = True  #: Use average regret ?
+normalized = True  #: Plot normalized regret?
+fairnessAmplitude = False  #: Use amplitude measure for the fairness or std?
+subTerms = True  #: Plot the 3 sub terms for the regret
 
-saveallfigs = False
+saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
-# Whether to do the plots or not
+#: Whether to do the plots or not
 do_plot = False
 do_plot = True
 
-# Whether to show plots, one by one, or not at all and just save them
+#: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
 

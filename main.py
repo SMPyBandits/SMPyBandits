@@ -33,27 +33,27 @@ else:
 
 
 # Parameters for the plots (where to save them) and what to draw
-PLOT_DIR = "plots"
-semilogx = False
-meanRegret = True
-normalizedRegret = False
+PLOT_DIR = "plots"  #: Directory for the plots
+semilogx = False  #: Plot in semilogx by default?
+meanRegret = True  #: Plot mean regret ?
+normalizedRegret = False  #: Plot instantaneous regret?
 
 # FIXME finish to debug this!
-plotSTD = True
+plotSTD = True  #: Plot regret with a STD?
 plotSTD = False
 
-saveallfigs = False
+saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this when experimenting
 
 # Parameters for the Evaluator object
-finalRanksOnAverage = True     # Use an average instead of the last value for the final ranking of the tested policies
-averageOn = 1e-2               # Average the final rank on the 1% last time steps
+finalRanksOnAverage = True     #: Use an average instead of the last value for the final ranking of the tested policies
+averageOn = 1e-2               #: Average the final rank on the 1% last time steps
 
-# Whether to do the plots or not
+#: Whether to do the plots or not
 do_plot = False
 do_plot = True
 
-# Whether to show plots, one by one, or not at all and just save them
+#: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
 
