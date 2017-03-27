@@ -63,8 +63,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     # But a quick benchmark showed it was quicker than
     # draws = [a.draw(t) for i,a in enumerate(arms) if nbCollisions[i]>=0]
 
-    # nbCollisions = [np.sum(choices == arm) - 1 for arm in range(len(arms))]  # XXX it is slow!
-    nbCollisions = np.bincount(choices, minlength=len(arms)) - 1  # XXX this is faster!
+    nbCollisions = np.bincount(choices, minlength=len(arms)) - 1
     # print("onlyUniqUserGetsReward() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
@@ -78,7 +77,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            player.handleCollision(choices[i], rewards[i])  # FIXME revert to previous API
+            player.handleCollision(choices[i], rewards[i])
             # handleCollision_or_getZeroReward(player, choices[i])
 
 
@@ -89,7 +88,7 @@ defaultCollisionModel = onlyUniqUserGetsReward
 def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, collisions):
     """ A variant of the first simple collision model where all players sample their arm, receive their rewards, and are informed of the collisions.
 
-    - FIXME it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
+    - Note: it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
     - This is the NOT default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
