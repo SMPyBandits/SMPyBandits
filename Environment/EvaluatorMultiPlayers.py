@@ -587,7 +587,7 @@ class EvaluatorMultiPlayers(object):
         """Get a string of the players for this environment."""
         listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
-            text = '{} x {}'.format(self.nbPlayers, listStrPlayers[0])
+            text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
             text = ', '.join(listStrPlayers)
         text = wraptext(text)

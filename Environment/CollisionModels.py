@@ -58,27 +58,29 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     # First, sense in all the arms
-    draws = [a.draw(t) for a in arms]
+    sensing = [a.draw(t) for a in arms]
     # XXX Yes, I know, it's suboptimal to sample each arm even if no player chose it
     # But a quick benchmark showed it was quicker than
-    # draws = [a.draw(t) for i,a in enumerate(arms) if nbCollisions[i]>=0]
+    # sensing = [a.draw(t) for i,a in enumerate(arms) if nbCollisions[i]>=0]
 
     nbCollisions = np.bincount(choices, minlength=len(arms)) - 1
     # print("onlyUniqUserGetsReward() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
+
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
         # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
         pulls[i, choices[i]] += 1
-        # rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
-        rewards[i] = draws[choices[i]]
         if nbCollisions[choices[i]] < 1:  # No collision
-            player.getReward(choices[i], rewards[i])
+            player.getReward(choices[i], sensing[choices[i]])  # Observing *sensing*
+            rewards[i] = sensing[choices[i]]  # Storing actual rewards
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            player.handleCollision(choices[i], rewards[i])
-            # handleCollision_or_getZeroReward(player, choices[i])
+            # handleCollision_or_getZeroReward(player, choices[i])  # NOPE
+            player.handleCollision(choices[i], sensing[choices[i]])  # Observing *sensing* but collision
+            # If learning is done on sensing, handleCollision uses this reward
+            # But if learning is done on ACK, handleCollision does not use this reward
 
 
 # Default collision model to use

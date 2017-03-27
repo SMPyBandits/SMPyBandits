@@ -438,12 +438,12 @@ configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     Selfish(NB_PLAYERS, Thompson, nbArms).children,
     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
-    + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
-    + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
-    Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
-    + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children \
-    + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children,
+    # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
+    # + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
+    # + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
+    # Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
+    # + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children \
+    # + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children,
 ]
 
 
