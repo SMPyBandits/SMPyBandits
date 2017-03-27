@@ -68,7 +68,10 @@ class Selfish(BaseMPPolicy):
 
     # --- Proxy methods
 
-    def _handleCollision_one(self, playerId, arm):
+    def _handleCollision_one(self, playerId, arm, reward=None):
         """Give a reward of 0, or player.lower, or self.penalty, in case of collision."""
+        # Selfish UCB indexes learn on the SUCCESSFUL TRANSMISSIONS (ie. ACK), not on the sensing!
+        if reward is not None:
+            print("Warning: Selfish internal indexes does NOT get updated by reward, but by 0, in case of collision, learning is done on SUCCESSFUL TRANSMISSIONS (ie. ACK), not sensing!")  # DEBUG
         player = self._players[playerId]
         player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)

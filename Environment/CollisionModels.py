@@ -57,6 +57,12 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     - This is the default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
+    # First, sense in all the arms
+    draws = [a.draw(t) for a in arms]
+    # XXX Yes, I know, it's suboptimal to sample each arm even if no player chose it
+    # But a quick benchmark showed it was quicker than
+    # draws = [a.draw(t) for i,a in enumerate(arms) if nbCollisions[i]>=0]
+
     # nbCollisions = [np.sum(choices == arm) - 1 for arm in range(len(arms))]  # XXX it is slow!
     nbCollisions = np.bincount(choices, minlength=len(arms)) - 1  # XXX this is faster!
     # print("onlyUniqUserGetsReward() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
@@ -65,14 +71,14 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     for i, player in enumerate(players):  # Loop is needed because player is needed
         # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
         pulls[i, choices[i]] += 1
+        # rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
+        rewards[i] = draws[choices[i]]
         if nbCollisions[choices[i]] < 1:  # No collision
-            rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
             player.getReward(choices[i], rewards[i])
         else:
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsReward
-            # collisions[choices[i]] = 1   # Binary counts of collisions  # FIXME?
-            player.handleCollision(choices[i])  # FIXED
+            player.handleCollision(choices[i], rewards[i])  # FIXME revert to previous API
             # handleCollision_or_getZeroReward(player, choices[i])
 
 
@@ -95,13 +101,12 @@ def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, coll
         # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
         pulls[i, choices[i]] += 1
 
-        rewards[i] = arms[choices[i]].draw(t)  # FIXED This reward is drawn ONLY ONCE, OK!
+        rewards[i] = arms[choices[i]].draw(t)
         player.getReward(choices[i], rewards[i])
 
         if nbCollisions[choices[i]] >= 1:  # If collision
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, allGetRewardsAndUseCollision
-            # collisions[choices[i]] = 1   # Binary counts of collisions  # FIXME?
             player.handleCollision(choices[i])  # FIXED
 
 
@@ -136,7 +141,6 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
         #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, len(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
             collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision)
-            # collisions[armId] += 1   # Binary counts of collisions  # FIXME?
             i = np.random.choice(players_who_chose_it)
             rewards[i] = arm.draw(t)
             players[i].getReward(armId, rewards[i])
@@ -175,7 +179,6 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
         #     print("- rewardIsSharedUniformly: for arm {}, {} users won't have a reward at time t = {} ...".format(armId, np.size(players_who_chose_it) - 1, t))  # DEBUG
         if np.size(players_who_chose_it) > 0:
             collisions[armId] += np.size(players_who_chose_it) - 1   # Increase nb of collisions for nb of player who chose it, minus 1 (eg, if 1 then no collision, if 2 then one collision as the closest gets it)
-            # collisions[armId] += 1   # Binary counts of collisions  # FIXME?
             distancesChosen = distances[players_who_chose_it]
             smaller_distance = np.min(distancesChosen)
             # print("Using distances to chose the user who can pull arm {} : only users at the minimal distance = {} can transmit ...".format(armId, smaller_distance))  # DEBUG

@@ -88,7 +88,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         # For the all players, use the pre-computed result
         return self.choices[playerId]
 
-    def _handleCollision_one(self, playerId, arm):
+    def _handleCollision_one(self, playerId, arm, reward=None):
         raise ValueError("Error: a {} policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(self.__class__.__name__, playerId, arm))
 
     def _estimatedOrder_one(self, playerId):

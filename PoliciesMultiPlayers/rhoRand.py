@@ -39,7 +39,11 @@ class oneRhoRand(ChildPointer):
         super(oneRhoRand, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
-    def handleCollision(self, arm):
+    def handleCollision(self, arm, reward=None):
+        # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
+        if reward is not None:
+            # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
+            super(oneRhoRand, self).getReward(arm, reward)
         self.rank = 1 + rn.randint(self.maxRank)  # New random rank
         # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 

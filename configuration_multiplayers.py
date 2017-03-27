@@ -5,7 +5,7 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Tries to know number of CPU
 try:
@@ -58,7 +58,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
 
@@ -204,16 +204,16 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": makeMeans(50, 1 / (1. + 50))
         # }
-        {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-            "arm_type": Bernoulli,
-            "params": [0.3, 0.4, 0.5, 0.6, 0.7]
-            # nbPlayers = 2
-        }
-        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.7, 0.8, 0.9]
+        #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
+        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
+            # nbPlayers = 4
+        }
         # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
@@ -399,9 +399,9 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # --- 5) klUCBPlus
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
     # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
@@ -412,9 +412,9 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
     # --- 7) BayesUCB
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
@@ -426,13 +426,13 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
     # --- 9) Mixing rhoRand or Selfish with different learning algorithms
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(int(NB_PLAYERS / 2), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
+    # + rhoRand(int(NB_PLAYERS / 2), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children,
     # Selfish(int(NB_PLAYERS / 2), BayesUCB, nbArms).children \
     # + Selfish(int(NB_PLAYERS / 2), klUCBPlus, nbArms).children,
-    rhoRand(int(NB_PLAYERS / 2), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
-    + rhoRand(int(NB_PLAYERS / 2), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children,
 ]
 
 

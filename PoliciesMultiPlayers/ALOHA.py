@@ -107,7 +107,7 @@ class oneALOHA(ChildPointer):
         self.mother._getReward_one(self.playerId, arm, reward)
         self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
 
-    def handleCollision(self, arm):
+    def handleCollision(self, arm, reward=None):
         """ Handle a collision, on arm of index 'arm'.
 
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.

@@ -92,7 +92,13 @@ class oneRhoEst(oneRhoRand):
         self.t = 0
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
-    def handleCollision(self, arm):
+    def handleCollision(self, arm, reward=None):
+        """Select a new rank, and maybe update nbPlayersEstimate."""
+        # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
+        if reward is not None:
+            # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
+            super(oneRhoRand, self).getReward(arm, reward)
+
         # First, pick a new random rank for this
         self.rank = 1 + rn.randint(self.nbPlayersEstimate)  # New random rank
         # print("\n - A oneRhoEst player {} saw a collision on {}, new random rank : {} ...".format(self, arm, self.rank))  # DEBUG

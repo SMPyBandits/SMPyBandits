@@ -176,7 +176,7 @@ class MusicalChair(BasePolicy):
         # Finally, sort their index by empirical means, decreasing order
         self.A = np.argsort(-empiricalMeans)[:self.nbPlayers]  # FIXED among the best M arms!
 
-    def handleCollision(self, arm):
+    def handleCollision(self, arm, reward=None):
         """ Handle a collision, on arm of index 'arm'.
 
         - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.

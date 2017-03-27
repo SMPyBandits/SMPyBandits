@@ -47,8 +47,8 @@ class ChildPointer(object):
         """ Pass the call to self.mother._getReward_one(playerId, arm, reward) with the player's ID number. """
         return self.mother._getReward_one(self.playerId, arm, reward)
 
-    def handleCollision(self, arm):
-        """ Pass the call to self.mother._handleCollision_one(playerId, arm) with the player's ID number. """
+    def handleCollision(self, arm, reward=None):
+        """ Pass the call to self.mother._handleCollision_one(playerId, arm, reward) with the player's ID number. """
         return self.mother._handleCollision_one(self.playerId, arm)
 
     def choice(self):

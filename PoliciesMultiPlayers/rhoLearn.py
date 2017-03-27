@@ -92,8 +92,13 @@ class oneRhoLearn(oneRhoRand):
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearn, self).getReward(arm, reward)
 
-    def handleCollision(self, arm):
+    def handleCollision(self, arm, reward=None):
         """Give a 0 reward to the rank selection algorithm, and select a new rank."""
+        # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
+        if reward is not None:
+            # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
+            super(oneRhoRand, self).getReward(arm, reward)
+
         # First, reset the time until collisions for that rank
         # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!
 
