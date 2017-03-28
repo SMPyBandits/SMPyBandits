@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Defines one useful function notify() to (try to) send a desktop notification.
+Defines one useful function :func:`notify()` to (try to) send a desktop notification.
 
 - Only tested on Ubuntu and Debian desktops.
-- Should work on any FreeDesktop compatible desktop.
+- Should work on any FreeDesktop compatible desktop, see https://wiki.ubuntu.com/NotifyOSD.
 """
 from __future__ import print_function, division
 
@@ -17,8 +17,10 @@ from subprocess import Popen
 
 
 # Constants for the program
-PROGRAM_NAME = "AlgoBandits"
-ICON_PATH = join("..", "logo.png")
+PROGRAM_NAME = "AlgoBandits"  #: Program name
+
+# ICON_PATH = join("..", "logo.png")  #: Icon to use
+ICON_PATH = "logo.png"  #: Icon to use
 
 
 # Define the icon loaded function
@@ -44,6 +46,7 @@ except ImportError:
     print("(For more details, cf. 'http://www.devdungeon.com/content/desktop-notifications-python-libnotify')")
 
     def load_icon():
+        """ Load and open the icon. """
         return None
 
 
@@ -66,8 +69,7 @@ except ImportError:
 def notify_gi(body, summary=PROGRAM_NAME, icon="terminal",
               timeout=5  # In seconds
               ):
-    """
-    Send a notification, with gi.repository.Notify.
+    """ Send a notification, with gi.repository.Notify.
 
     - icon can be "dialog-information", "dialog-warn", "dialog-error".
     """
@@ -106,9 +108,7 @@ def notify_gi(body, summary=PROGRAM_NAME, icon="terminal",
 def notify_cli(body, summary=PROGRAM_NAME, icon="terminal",
                timeout=5  # In seconds
                ):
-    """
-    Send a notification, with a subprocess call to 'notify-send'.
-    """
+    """ Send a notification, with a subprocess call to 'notify-send'."""
     try:
         print("notify.notify(): Trying to use the command line program 'notify-send' ...")
         icon = join(getcwd(), icon)
@@ -125,7 +125,7 @@ def notify_cli(body, summary=PROGRAM_NAME, icon="terminal",
 def notify(body, summary=PROGRAM_NAME, icon="terminal",
            timeout=5  # In seconds
            ):
-    """Send a notification, using one of the previously defined method, until it works. Usually it works."""
+    """ Send a notification, using one of the previously defined method, until it works. Usually it works."""
     # print("Notification: '{}', from '{}' with icon '{}'.".format(body, summary, icon))  # DEBUG
     if not has_Notify:
         print("notify.notify(): Warning, desktop notification from Python seems to not be available ...")

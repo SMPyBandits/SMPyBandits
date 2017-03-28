@@ -22,14 +22,14 @@ from .MAB import MAB, DynamicMAB
 from .Result import Result
 
 
-REPETITIONS = 1
-DELTA_T_SAVE = 1
-DELTA_T_PLOT = 50
+REPETITIONS = 1  #: Default nb of repetitions
+DELTA_T_SAVE = 1  #: Default sampling rate for saving
+DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
-nb_random_events = 5
+nb_random_events = 5  #: Default nb of random events
 
 
 class Evaluator(object):
@@ -38,42 +38,41 @@ class Evaluator(object):
     def __init__(self, configuration,
                  finalRanksOnAverage=True, averageOn=5e-3,
                  useJoblibForPolicies=False):
-        # Configuration
-        self.cfg = configuration
+        self.cfg = configuration  #: Configuration dictionnary
         # Attributes
-        self.nbPolicies = len(self.cfg['policies'])
+        self.nbPolicies = len(self.cfg['policies'])  #: Number of policies
         print("Number of policies in this comparison:", self.nbPolicies)
-        self.horizon = self.cfg['horizon']
+        self.horizon = self.cfg['horizon']  #: Horizon (number of time steps)
         print("Time horizon:", self.horizon)
-        self.repetitions = self.cfg.get('repetitions', REPETITIONS)
+        self.repetitions = self.cfg.get('repetitions', REPETITIONS)  #: Number of repetitions
         print("Number of repetitions:", self.repetitions)
-        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
+        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)  #: Sampling rate for saving
         print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
-        self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
+        self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)  #: Sampling rate for plotting
         print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)
         self.duration = int(self.horizon / self.delta_t_save)
         print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         # Parameters for the random events
-        self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)
-        self.random_invert = self.cfg.get('random_invert', random_invert)
-        self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)
+        self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)  #: Random shuffling of arms?
+        self.random_invert = self.cfg.get('random_invert', random_invert)  #: Random inversion of arms?
+        self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)  #: How many random events?
         # Flags
-        self.finalRanksOnAverage = finalRanksOnAverage
-        self.averageOn = averageOn
-        self.useJoblibForPolicies = useJoblibForPolicies
-        self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
-        self.cache_rewards = self.cfg.get('cache_rewards', False)
-        self.showplot = self.cfg.get('showplot', True)
+        self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
+        self.averageOn = averageOn  #: How many last steps for final rank average rewards
+        self.useJoblibForPolicies = useJoblibForPolicies  #: Use joblib to parallelize for loop on policies (useless)
+        self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
+        self.cache_rewards = self.cfg.get('cache_rewards', False)  #: Should we cache and precompute rewards
+        self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         # Internal object memory
-        self.envs = []
-        self.policies = []
+        self.envs = []  #: List of environments
+        self.policies = []  #: List of policies
         self.__initEnvironments__()
         # Internal vectorial memory
-        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
-        # self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
-        # self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))
-        self.BestArmPulls = dict()
-        self.pulls = dict()
+        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards
+        # self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards squared
+        # self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
+        self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
+        self.pulls = dict()  #: For each env, keep the history of best arm pulls
         for env in range(len(self.envs)):
             self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
@@ -84,8 +83,8 @@ class Evaluator(object):
     # --- Init methods
 
     def __initEnvironments__(self):
+        """ Create environments."""
         for configuration_arms in self.cfg['environment']:
-            # FIXME new!
             if isinstance(configuration_arms, dict) \
                and "arm_type" in configuration_arms and "params" in configuration_arms \
                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
@@ -94,6 +93,7 @@ class Evaluator(object):
                 self.envs.append(MAB(configuration_arms))
 
     def __initPolicies__(self, env):
+        """ Create or initialize policies."""
         for policyId, policy in enumerate(self.cfg['policies']):
             print("- Adding policy #{} = {} ...".format(policyId + 1, policy))  # DEBUG
             if isinstance(policy, dict):
@@ -119,10 +119,12 @@ class Evaluator(object):
         return rewards
 
     def startAllEnv(self):
+        """Simulate all envs."""
         for envId, env in enumerate(self.envs):
             self.startOneEnv(envId, env)
 
     def startOneEnv(self, envId, env):
+        """Simulate that env."""
         print("\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
@@ -165,29 +167,37 @@ class Evaluator(object):
     # --- Getter methods
 
     def getPulls(self, policyId, envId=0):
+        """Extract mean pulls."""
         return self.pulls[envId][policyId, :] / float(self.repetitions)
 
     def getBestArmPulls(self, policyId, envId=0):
+        """Extract mean best arm pulls."""
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.BestArmPulls[envId][policyId, :] / (float(self.repetitions) * self.times)
 
     def getRewards(self, policyId, envId=0):
+        """Extract mean rewards."""
         return self.rewards[policyId, envId, :] / float(self.repetitions)
 
     def getMaxRewards(self, envId=0):
+        """Extract max mean rewards."""
         return np.max(self.rewards[:, envId, :] / float(self.repetitions))
 
     def getCumulatedRegret(self, policyId, envId=0):
+        """Compute cumulative regret."""
         # return self.times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
         return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
 
     def getAverageRewards(self, policyId, envId=0):
+        """Extract mean rewards (not `rewards` but `cumsum(rewards)/cumsum(1)`."""
         return np.cumsum(self.getRewards(policyId, envId)) / self.times
 
     def getRewardsSquared(self, policyId, envId=0):
+        """Extract rewards squared."""
         return self.rewardsSquared[policyId, envId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, envId=0, meanRegret=False):
+        """Extract standard deviation of rewards."""
         # X = self.times
         # YMAX = self.getMaxRewards(envId=envId)
         # Y = self.getRewards(policyId, envId)
@@ -216,6 +226,7 @@ class Evaluator(object):
     def plotRegrets(self, envId,
                     savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False, drawUpperBound=False,
                     ):
+        """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
@@ -283,6 +294,10 @@ class Evaluator(object):
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
+        """Plot the frequency of pulls of the best channel.
+
+        - Warning: does not adapt to dynamic settings!
+        """
         fig = plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
@@ -301,6 +316,7 @@ class Evaluator(object):
         return fig
 
     def printFinalRanking(self, envId=0):
+        """Print the final ranking of the different policies."""
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
         print("\nFinal ranking for this environment #{} :".format(envId))
         nbPolicies = self.nbPolicies
@@ -324,6 +340,7 @@ class Evaluator(object):
 def delayed_play(env, policy, horizon, delta_t_save=1,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None, allrewards=None, repeatId=0):
+    """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
     try:
         if seed is not None:

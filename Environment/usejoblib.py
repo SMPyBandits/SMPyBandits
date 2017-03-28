@@ -15,11 +15,13 @@ except ImportError:
 
     # In case the code uses Parallel and delayed, even if USE_JOBLIB is False
     def Parallel(*args, **kwargs):
+        """Fake joblib.Parallel implementation."""
         def fakeParallelWrapper(iterator):
             return list(iterator)
         return fakeParallelWrapper
 
     def delayed(f, *args, **kwargs):
+        """Fake joblib.delayed implementation."""
         return f
 
 

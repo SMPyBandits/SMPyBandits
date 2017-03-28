@@ -8,7 +8,11 @@ __version__ = "0.6"
 
 
 def in_notebook():
-    """Check if the code is running inside a Jupyter notebook or not. Cf. http://stackoverflow.com/a/39662359/."""
+    """Check if the code is running inside a Jupyter notebook or not. Cf. http://stackoverflow.com/a/39662359/.
+
+    >>> in_notebook()
+    False
+    """
     try:
         shell = get_ipython().__class__.__name__
         if shell == 'ZMQInteractiveShell':  # Jupyter notebook or qtconsole?
@@ -19,6 +23,7 @@ def in_notebook():
             return False  # Other type (?)
     except NameError:
         return False      # Probably standard Python interpreter
+
 
 try:
     if in_notebook():

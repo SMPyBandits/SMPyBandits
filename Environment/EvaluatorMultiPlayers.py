@@ -24,9 +24,9 @@ from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGets
 from .MAB import MAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
 
-REPETITIONS = 1
-DELTA_T_SAVE = 1
-DELTA_T_PLOT = 50
+REPETITIONS = 1  #: Default nb of repetitions
+DELTA_T_SAVE = 1  #: Default sampling rate for saving
+DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 
 # --- Class EvaluatorMultiPlayers
@@ -37,41 +37,41 @@ class EvaluatorMultiPlayers(object):
 
     def __init__(self, configuration):
         # Configuration
-        self.cfg = configuration
+        self.cfg = configuration  #: Configuration dictionnary
         # Attributes
-        self.nbPlayers = len(self.cfg['players'])
+        self.nbPlayers = len(self.cfg['players'])  #: Number of policies
         print("Number of players in the multi-players game:", self.nbPlayers)
-        self.horizon = self.cfg['horizon']
+        self.horizon = self.cfg['horizon']  #: Horizon (number of time steps)
         print("Time horizon:", self.horizon)
-        self.repetitions = self.cfg.get('repetitions', REPETITIONS)
+        self.repetitions = self.cfg.get('repetitions', REPETITIONS)  #: Number of repetitions
         print("Number of repetitions:", self.repetitions)
         self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
-        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
+        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)  #: Sampling rate for saving
         self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
-        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)
+        print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)  #: Sampling rate for plotting
         self.duration = int(self.horizon / self.delta_t_save)
         print("Number of jobs for parallelization:", self.cfg['n_jobs'])
-        self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)
-        self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)
+        self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)  #: Which collision model should be used
+        self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)  #: Is there a full loss of rewards if collision ? To compute the correct decomposition of regret
         print("Using collision model {} (function {}).\nMore details:\n{}".format(self.collisionModel.__name__, self.collisionModel, self.collisionModel.__doc__))
         # Flags
-        self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)
-        self.averageOn = self.cfg.get('averageOn', 5e-3)
-        self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1
-        self.showplot = self.cfg.get('showplot', True)
+        self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)  #: Final display of ranks are done on average rewards?
+        self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
+        self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
+        self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         # Internal object memory
-        self.envs = []
-        self.players = []
+        self.envs = []  #: List of environments
+        self.players = []  #: List of policies
         self.__initEnvironments__()
         # Internal vectorial memory
-        self.rewards = dict()
+        self.rewards = dict()  #: For each env, history of rewards
         # self.rewardsSquared = dict()
-        self.pulls = dict()
-        self.allPulls = dict()
-        self.collisions = dict()
-        self.NbSwitchs = dict()
-        self.BestArmPulls = dict()
-        self.FreeTransmissions = dict()
+        self.pulls = dict()  #: For each env, keep the history of best arm pulls
+        self.allPulls = dict()  #: For each env, keep the full history of best arm pulls
+        self.collisions = dict()  #: For each env, keep the history of collisions on all arms
+        self.NbSwitchs = dict()  #: For each env, keep the history of switches (change of configuration of players)
+        self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
+        self.FreeTransmissions = dict()  #: For each env, keep the history of succesful transmission (1 - collisions, basically)
         print("Number of environments to try:", len(self.envs))  # DEBUG
         for envId in range(len(self.envs)):  # Zeros everywhere
             self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
@@ -84,14 +84,13 @@ class EvaluatorMultiPlayers(object):
             self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
         # To speed up plotting
         self.times = np.arange(1, 1 + self.horizon, self.delta_t_save)
-        # self.subtimes = np.arange(1, 1 + self.duration)
 
     # --- Init methods
 
     def __initEnvironments__(self):
+        """ Create environments."""
         nbArms = []
         for configuration_arms in self.cfg['environment']:
-            # FIXME new!
             if isinstance(configuration_arms, dict) \
                and "arm_type" in configuration_arms and "params" in configuration_arms \
                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
@@ -104,6 +103,7 @@ class EvaluatorMultiPlayers(object):
             raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios. FIXME correct this point!")
 
     def __initPlayers__(self, env):
+        """ Create or initialize policies."""
         for playerId, player in enumerate(self.cfg['players']):
             print("- Adding player #{} = {} ...".format(playerId + 1, player))  # DEBUG
             if isinstance(player, dict):  # Either the 'player' is a config dict
@@ -116,10 +116,12 @@ class EvaluatorMultiPlayers(object):
     # --- Start computation
 
     def startAllEnv(self):
+        """Simulate all envs."""
         for envId, env in enumerate(self.envs):
             self.startOneEnv(envId, env)
 
     def startOneEnv(self, envId, env):
+        """Simulate that env."""
         print("\nEvaluating environment:", repr(env))  # DEBUG
         self.players = []
         self.__initPlayers__(env)
@@ -158,32 +160,42 @@ class EvaluatorMultiPlayers(object):
     # --- Getter methods
 
     def getPulls(self, playerId, envId=0):
+        """Extract mean pulls."""
         return self.pulls[envId][playerId, :] / float(self.repetitions)
 
     def getAllPulls(self, playerId, armId, envId=0):
+        """Extract mean of all pulls."""
         return self.allPulls[envId][playerId, armId, :] / float(self.repetitions)
 
     def getNbSwitchs(self, playerId, envId=0):
+        """Extract mean nb of switches."""
         return self.NbSwitchs[envId][playerId, :] / float(self.repetitions)
 
     def getCentralizedNbSwitchs(self, envId=0):
+        """Extract average of mean nb of switches."""
         return np.sum(self.NbSwitchs[envId], axis=0) / (float(self.repetitions) * self.nbPlayers)
 
     def getBestArmPulls(self, playerId, envId=0):
+        """Extract mean of best arms pulls."""
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.BestArmPulls[envId][playerId, :] / (float(self.repetitions) * self.times)
 
     def getFreeTransmissions(self, playerId, envId=0):
+        """Extract mean of succesful transmission."""
         return self.FreeTransmissions[envId][playerId, :] / float(self.repetitions)
 
     def getCollisions(self, armId, envId=0):
+        """Extract mean of number of collisions."""
         return self.collisions[envId][armId, :] / float(self.repetitions)
 
     def getRewards(self, playerId, envId=0):
+        """Extract mean of rewards."""
         return self.rewards[envId][playerId, :] / float(self.repetitions)
 
     def getRegretMean(self, playerId, envId=0):
-        """ Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
+        """Extract mean of regret
+
+        - Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
         """
         return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
@@ -427,7 +439,10 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def plotBestArmPulls(self, envId=0, savefig=None):
-        """Plot the frequency of pulls of the best channel. Warning: does not adapt to dynamic settings!"""
+        """Plot the frequency of pulls of the best channel.
+
+        - Warning: does not adapt to dynamic settings!
+        """
         X = self.times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)

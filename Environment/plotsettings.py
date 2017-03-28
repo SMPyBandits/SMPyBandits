@@ -23,19 +23,19 @@ import seaborn as sns
 from datetime import datetime
 import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
 locale.setlocale(locale.LC_TIME, 'C')
-monthyear = '{:%b.%Y}'.format(datetime.today()).title()
-signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)
+monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
+signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
 # signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
-DPI = 110
-FIGSIZE = (19.80, 10.80)  # in inches!
+DPI = 110  #: DPI to use for the figures
+FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
 
 # Customize the colormap
-HLS = True
-VIRIDIS = False
+HLS = True  #: Use the HLS mapping, or HUSL mapping
+VIRIDIS = False  #: Use the Viridis colormap
 
-# Bbox in inches. Only the given portion of the figure is saved. If ‘tight’, try to figure out the tight bbox of the figure.
-BBOX_INCHES = 'tight'
+# Bbox in inches. Only the given portion of the figure is saved. If 'tight', try to figure out the tight bbox of the figure.
+BBOX_INCHES = 'tight'  #: Use this parameter for bbox
 BBOX_INCHES = None
 
 if __name__ != '__main__':
@@ -70,6 +70,42 @@ def palette(nb, hls=HLS, viridis=VIRIDIS):
 
     - Ref: http://seaborn.pydata.org/generated/seaborn.hls_palette.html#seaborn.hls_palette
 
+    >>> palette(10, hls=True)  # doctest: +ELLIPSIS
+    [(0.86..., 0.37..., 0.33...),
+     (0.86..., 0.65..., 0.33...),
+     (0.78..., 0.86..., 0.33...),
+     (0.49..., 0.86..., 0.33...),
+     (0.33..., 0.86..., 0.46...),
+     (0.33..., 0.86..., 0.74...),
+     (0.33..., 0.68..., 0.86...),
+     (0.33..., 0.40..., 0.86...),
+     (0.56..., 0.33..., 0.86...),
+     (0.84..., 0.33..., 0.86...)]
+    >>> palette(10, hls=False)  # doctest: +ELLIPSIS
+    [[0.967..., 0.441..., 0.535...],
+     [0.883..., 0.524..., 0.195...],
+     [0.710..., 0.604..., 0.194...],
+     [0.543..., 0.654..., 0.193...],
+     [0.195..., 0.698..., 0.345...],
+     [0.206..., 0.682..., 0.582...],
+     [0.214..., 0.671..., 0.698...],
+     [0.225..., 0.653..., 0.841...],
+     [0.559..., 0.576..., 0.958...],
+     [0.857..., 0.440..., 0.957...]]
+    >>> palette(10, viridis=True)  # doctest: +ELLIPSIS
+    [(0.283..., 0.130..., 0.449...),
+     (0.262..., 0.242..., 0.520...),
+     (0.220..., 0.343..., 0.549...),
+     (0.177..., 0.437..., 0.557...),
+     (0.143..., 0.522..., 0.556...),
+     (0.119..., 0.607..., 0.540...),
+     (0.166..., 0.690..., 0.496...),
+     (0.319..., 0.770..., 0.411...),
+     (0.525..., 0.833..., 0.288...),
+     (0.762..., 0.876..., 0.137...)]
+
+    - To visualize:
+
     >>> sns.palplot(palette(10, hls=True))
     >>> sns.palplot(palette(10, hls=False))  # use HUSL by default
     >>> sns.palplot(palette(10, viridis=True))
@@ -81,7 +117,13 @@ def palette(nb, hls=HLS, viridis=VIRIDIS):
 
 
 def makemarkers(nb):
-    """ Give a list of cycling markers. See http://matplotlib.org/api/markers_api.html """
+    """ Give a list of cycling markers. See http://matplotlib.org/api/markers_api.html
+
+    >>> makemarkers(7)
+    ['o', 'v', '^', '<', '>', 'D', '*']
+    >>> makemarkers(12)
+    ['o', 'v', '^', '<', '>', 'D', '*', 'o', 'v', '^', '<', '>']
+    """
     allmarkers = ['o', 'v', '^', '<', '>', 'D', '*']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     return longlist[:nb]  # Truncate
@@ -124,7 +166,7 @@ def maximizeWindow():
 
 
 def show_and_save(showplot=True, savefig=None, formats=('png', 'pdf')):
-    """Maximize the window, save it if needed, and then show it or close it.
+    """ Maximize the window, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
     """
@@ -139,7 +181,7 @@ def show_and_save(showplot=True, savefig=None, formats=('png', 'pdf')):
 
 
 def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):
-    """Small function to use a Percentage formatter for xaxis or yaxis, of a certain amplitude.
+    """ Small function to use a Percentage formatter for xaxis or yaxis, of a certain amplitude.
 
     - which can be "xaxis" or "yaxis",
     - amplitude is a float, default to 1.
@@ -158,7 +200,7 @@ def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', f
     # Which formatter to use ?
     try:
         my_frmt = mtick.StrMethodFormatter(formatter)  # Use new format string
-    except:
+    except Exception:
         my_frmt = mtick.FormatStrFormatter(oldformatter)  # Use old format string, better looking but not correctly scaled
     if hasattr(mtick, 'PercentFormatter'):
         my_frmt = mtick.PercentFormatter(amplitude)
@@ -167,10 +209,19 @@ def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', f
 
 
 def wraptext(text, width=110):
-    """Wrap the text, using textwrap module, and width."""
+    """ Wrap the text, using textwrap module, and width."""
     return '\n'.join(wrap(text, width=width))
 
 
 def wraplatex(text, width=110):
-    """Wrap the text, for LaTeX, using textwrap module, and width."""
+    """ Wrap the text, for LaTeX, using textwrap module, and width."""
     return '$\n$'.join(wrap(text, width=width))
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
