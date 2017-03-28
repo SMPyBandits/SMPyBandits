@@ -12,6 +12,7 @@ class BaseMPPolicy(object):
     """ Base class for any multi-players policy."""
 
     def __init__(self):
+        """New policy"""
         pass
 
     def __str__(self):

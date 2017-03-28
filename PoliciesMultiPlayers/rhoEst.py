@@ -85,6 +85,7 @@ class oneRhoEst(oneRhoRand):
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
+        """Start game."""
         super(oneRhoEst, self).startGame()
         self.nbPlayersEstimate = 1  # Osptimistic: start by assuming it is alone!
         self.collisionCount = 0
@@ -123,6 +124,7 @@ class oneRhoEst(oneRhoRand):
         self.timeSinceLastCollision = 0
 
     def getReward(self, arm, reward):
+        """One transmission without collision"""
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step without collision
         self.timeSinceLastCollision += 1
@@ -130,6 +132,7 @@ class oneRhoEst(oneRhoRand):
         return super(oneRhoEst, self).getReward(arm, reward)
 
     def choice(self):
+        """Chose with the actual rank."""
         self.t += 1
         # Note: here we could do another randomization step, but it would just weaken the algorithm, cf. rhoRandRand
         chosenArm = super(oneRhoEst, self).choiceWithRank(self.rank)

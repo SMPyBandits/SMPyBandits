@@ -9,6 +9,7 @@ class BaseCentralizedPolicy(object):
     """ Base class for any centralized policy, for the multi-players setting."""
 
     def __init__(self, nbArms):
+        """New policy"""
         self.nbArms = nbArms
 
     def __str__(self):

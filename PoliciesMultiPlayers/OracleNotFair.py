@@ -25,6 +25,7 @@ class Fixed(BaseCentralizedPolicy):
     """
 
     def __init__(self, nbArms, armIndex):
+        """Fixed on this arm."""
         self.nbArms = nbArms
         self.armIndex = armIndex
 
@@ -32,12 +33,15 @@ class Fixed(BaseCentralizedPolicy):
         return "Fixed({})".format(self.armIndex)
 
     def startGame(self):
+        """Nothing to do."""
         pass
 
     def getReward(self, arm, reward):
+        """Nothing to do."""
         pass
 
     def choice(self):
+        """Chose fixed arm."""
         return self.armIndex
 
 

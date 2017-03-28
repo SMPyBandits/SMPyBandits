@@ -86,6 +86,7 @@ class oneALOHA(ChildPointer):
         return r"#{}<ALOHA({}, $p_0={:.3g}$, $\alpha={:.3g}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
 
     def startGame(self):
+        """Start game."""
         self.mother._startGame_one(self.playerId)
         self.t = 0
         self.p = self.p0
@@ -93,6 +94,7 @@ class oneALOHA(ChildPointer):
         self.chosenArm = None
 
     def ftnext(self, t):
+        """Time until the arm is removed from list of unavailable arms."""
         if self.beta is not None:
             return t ** self.beta
         else:

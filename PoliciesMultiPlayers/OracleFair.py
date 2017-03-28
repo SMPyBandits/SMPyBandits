@@ -24,6 +24,7 @@ class CyclingBest(BaseCentralizedPolicy):
     """
 
     def __init__(self, nbArms, offset, bestArms=None):
+        """Cycling with an offset."""
         self.nbArms = nbArms
         self.offset = offset
         if bestArms is None:
@@ -36,12 +37,15 @@ class CyclingBest(BaseCentralizedPolicy):
         return "CyclingBest({}, {})".format(self.offset, self.bestArms)
 
     def startGame(self):
+        """Nothing to do."""
         pass
 
     def getReward(self, arm, reward):
+        """Nothing to do."""
         pass
 
     def choice(self):
+        """Chose cycling arm."""
         self.t += 1
         return self.bestArms[(self.offset + self.t) % self.nb_bestArms]
 

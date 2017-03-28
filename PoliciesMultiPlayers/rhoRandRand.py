@@ -37,14 +37,17 @@ class oneRhoRandRand(ChildPointer):
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Rand}\mathrm{Rand}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
+        """Start game."""
         super(oneRhoRandRand, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def handleCollision(self, arm, reward=None):
+        """Get a new rank."""
         self.rank = 1 + rn.randint(self.maxRank)  # New random rank
         # print(" - A oneRhoRandRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
     def choice(self):
+        """Chose with a RANDOM rank."""
         # We added another randomization step, but it would just weaken the algorithm!
         # I could select again a random rank to aim, uniformly from [1, ..., rank]
         result = super(oneRhoRandRand, self).choiceWithRank(1 + rn.randint(self.rank))  # That's rhoRandRand

@@ -23,6 +23,7 @@ class Fixed(BaseCentralizedPolicy):
     """
 
     def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
+        """Fixed on this arm."""
         self.nbArms = nbArms
         self.armIndex = armIndex
 
@@ -30,12 +31,15 @@ class Fixed(BaseCentralizedPolicy):
         return "Fixed({})".format(self.armIndex)
 
     def startGame(self):
+        """Nothing to do."""
         pass
 
     def getReward(self, arm, reward):
+        """Nothing to do."""
         pass
 
     def choice(self):
+        """Chose fixed arm."""
         return self.armIndex
 
 
@@ -101,11 +105,14 @@ class CentralizedFixed(BaseMPPolicy):
                     print(" - For arm number {}, there is {} different child players affected on this arm ...".format(armId, nbAffected))
 
     def _startGame_one(self, playerId):
+        """Pass the call to the player algorithm."""
         # FIXME It should re-generate the affectations every time a game is started!
         self._players[playerId].startGame()
 
     def _getReward_one(self, playerId, arm, reward):
+        """Pass the call to the player algorithm."""
         self._players[playerId].getReward(arm, reward)
 
     def _choice_one(self, playerId):
+        """Pass the call to the player algorithm."""
         return self._players[playerId].choice()

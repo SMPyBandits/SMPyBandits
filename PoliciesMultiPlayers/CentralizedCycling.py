@@ -22,6 +22,7 @@ class Cycling(BaseCentralizedPolicy):
     """
 
     def __init__(self, nbArms, offset):
+        """Cycling with an offset."""
         self.nbArms = nbArms
         self.offset = offset
         self.t = -1
@@ -30,12 +31,15 @@ class Cycling(BaseCentralizedPolicy):
         return "Cycling({})".format(self.offset)
 
     def startGame(self):
+        """Nothing to do."""
         pass
 
     def getReward(self, arm, reward):
+        """Nothing to do."""
         pass
 
     def choice(self):
+        """Chose cycling arm."""
         self.t += 1
         return (self.offset + self.t) % self.nbArms
 

@@ -65,18 +65,21 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     # --- Proxy methods
 
     def _startGame_one(self, playerId):
+        """Pass the call to the player algorithm."""
         if playerId == 0:  # For the first player, run the method
             self.player.startGame()
         # For the other players, nothing to do? Yes
         self.affectation_order = np.random.permutation(self.nbPlayers)
 
     def _getReward_one(self, playerId, arm, reward):
+        """Pass the call to the player algorithm."""
         self.player.getReward(arm, reward)
         # if playerId != 0:  # FIXME? We have to be sure that the internal player.t is not messed up
         #     if hasattr(self.player, 't'):
         #         self.player.t -= 1
 
     def _choice_one(self, playerId):
+        """Use the player algorithm for the 1st decision, for each players, then use it."""
         if playerId == 0:  # For the first player, run the method
             # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
             if self.uniformAllocation:
@@ -89,8 +92,9 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         return self.choices[playerId]
 
     def _handleCollision_one(self, playerId, arm, reward=None):
+        """Cannot be called!"""
         raise ValueError("Error: a {} policy should always aim at orthogonal arms, so no collision should be observed, but player {} saw a collision on arm {} ...".format(self.__class__.__name__, playerId, arm))
 
     def _estimatedOrder_one(self, playerId):
-        """Use the algorithm to centralized rank the arm."""
+        """Use the centralized algorithm to estimate ranking of the arms."""
         return self.player.estimatedOrder()

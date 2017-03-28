@@ -36,10 +36,12 @@ class oneRhoRand(ChildPointer):
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Rand}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
+        """Start game."""
         super(oneRhoRand, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def handleCollision(self, arm, reward=None):
+        """Get a new fully random rank, and give reward to the algorithm if not None."""
         # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
@@ -48,6 +50,7 @@ class oneRhoRand(ChildPointer):
         # print(" - A oneRhoRand player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
     def choice(self):
+        """Chose with the actual rank."""
         # Note: here we could do another randomization step, but it would just weaken the algorithm, cf. rhoRandRand
         result = super(oneRhoRand, self).choiceWithRank(self.rank)
         # print(" - A oneRhoRand player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG

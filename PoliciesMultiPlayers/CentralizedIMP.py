@@ -17,6 +17,7 @@ class CentralizedIMP(CentralizedMultiplePlay):
     """
 
     def _choice_one(self, playerId):
+        """Use `choiceIMP` for each player."""
         if playerId == 0:  # For the first player, run the method
             # FIXED sort it then apply affectation_order, to fix its order ==> will have a fixed nb of switches for CentralizedMultiplePlay
             if self.uniformAllocation:
