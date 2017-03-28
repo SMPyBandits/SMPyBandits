@@ -19,6 +19,7 @@ class Poisson(Arm):
     """
 
     def __init__(self, p, trunc=1):
+        """New arm."""
         assert p >= 0, "Error, the parameter 'p' for Poisson arm has to be >= 0."
         self.p = p  #: Parameter p for Poisson arm
         self.trunc = trunc  #: Max value of rewards

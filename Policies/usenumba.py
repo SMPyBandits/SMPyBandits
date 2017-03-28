@@ -6,7 +6,7 @@ from __future__ import division, print_function
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-# Configure the use of numba
+#: Configure the use of numba
 USE_NUMBA = False
 USE_NUMBA = True   # XXX Experimental
 

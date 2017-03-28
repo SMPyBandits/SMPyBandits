@@ -25,6 +25,7 @@ class Gamma(Arm):
 
     # def __init__(self, shape, scale=SCALE, mini=-oo, maxi=oo):  # XXX Non truncated!
     def __init__(self, shape, scale=SCALE, mini=0, maxi=1):
+        """New arm."""
         assert shape > 0, "Error, the parameter 'shape' for Gamma arm has to be > 0."
         self.shape = shape  #: Shape parameter for this Gamma arm
         assert scale > 0, "Error, the parameter 'scale' for Gamma arm has to be > 0."
@@ -87,6 +88,7 @@ class UnboundedGamma(Gamma):
     """ Gamma distributed arm, not truncated, ie. supported in (-oo,  oo)."""
 
     def __init__(self, shape, scale=SCALE):
+        """New arm."""
         super(UnboundedGamma, self).__init__(shape, scale=scale, mini=-oo, maxi=oo)
 
 

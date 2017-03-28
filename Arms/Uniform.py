@@ -24,6 +24,7 @@ class Uniform(Arm):
     """
 
     def __init__(self, mini=0., maxi=1., lower=0., amplitude=1.):
+        """New arm."""
         self.min = min(mini, lower)  #: Lower value of rewards
         self.lower = mini  #: Lower value of rewards
         self.max = max(maxi, amplitude - lower)  #: Higher value of rewards

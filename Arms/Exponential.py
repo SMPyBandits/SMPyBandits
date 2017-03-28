@@ -38,6 +38,7 @@ class Exponential(Arm):
 
     # def __init__(self, p, trunc=float('+inf')):
     def __init__(self, p, trunc=1):
+        """New arm."""
         self.p = p  #: Parameter p for Exponential arm
         assert p > 0, "Error, the parameter 'p' for Exponential arm has to be > 0."
         self.trunc = trunc  #: Max value of reward
@@ -95,6 +96,7 @@ class ExponentialFromMean(Exponential):
     """
 
     def __init__(self, mean, trunc=1):
+        """New arm."""
         p = p_of_expectation(mean)
         super(ExponentialFromMean, self).__init__(p, trunc=trunc)
 
@@ -103,6 +105,7 @@ class UnboundedExponential(Exponential):
     """ Exponential distributed arm, not truncated, ie. trunc =  oo."""
 
     def __init__(self, mu):
+        """New arm."""
         super(UnboundedExponential, self).__init__(mu, trunc=float('+inf'))
 
 

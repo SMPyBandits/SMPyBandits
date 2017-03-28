@@ -20,6 +20,7 @@ class Binomial(Arm):
     """ Binomial distributed arm."""
 
     def __init__(self, probability, draws=1):
+        """New arm."""
         assert 0 <= probability <= 1, "Error, the parameter probability for Binomial class has to be in [0, 1]."
         assert isinstance(draws, int) and 1 <= draws, "Error, the parameter draws for Binomial class has to be an integer >= 1."
         self.probability = probability  #: Parameter p for this Binomial arm

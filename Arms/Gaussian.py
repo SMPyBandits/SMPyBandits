@@ -23,6 +23,7 @@ class Gaussian(Arm):
     """
 
     def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
+        """New arm."""
         # FIXME truncated Gaussian does NOT have this mean! Cf. histograms!
         self.mu = self.mean = mu  #: Mean of Gaussian arm
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
@@ -74,6 +75,7 @@ class UnboundedGaussian(Gaussian):
     """ Gaussian distributed arm, not truncated, ie. supported in (-oo,  oo)."""
 
     def __init__(self, mu, sigma=VARIANCE):
+        """New arm."""
         super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)
 
 
