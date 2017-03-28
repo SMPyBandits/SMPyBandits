@@ -253,7 +253,8 @@ class Evaluator(object):
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
-            plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
+            if not self.envs[envId].isDynamic:
+                plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
