@@ -209,7 +209,7 @@ class MAB(object):
 # --- Utility functions
 
 def binomialCoefficient(k, n):
-    r""" Compute n factorial by a direct multiplicative method:  (:math:`C^n_k = {k \choose n}`).
+    r""" Compute a binomial coefficient :math:`C^n_k` by a direct multiplicative method: :math:`C^n_k = {k \choose n}`.
 
     - Exact, using integers, not like https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.binom.html#scipy.special.binom which uses float numbers.
     - Complexity: O(1) in memory, O(n) in time.
