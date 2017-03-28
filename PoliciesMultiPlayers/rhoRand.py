@@ -84,7 +84,7 @@ class rhoRand(BaseMPPolicy):
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.nbPlayers = nbPlayers  #: Number of players
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):

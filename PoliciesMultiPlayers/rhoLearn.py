@@ -141,7 +141,7 @@ class rhoLearn(rhoRand):
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.nbPlayers = nbPlayers  #: Number of players
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.rankSelectionAlgo = rankSelectionAlgo  #: Policy to use to chose the ranks
         self.nbArms = nbArms  #: Number of arms
@@ -149,7 +149,7 @@ class rhoLearn(rhoRand):
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
-        #: Fake rankSelection algorirhtm, for pretty print
+        # Fake rankSelection algorirhtm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)
 
     def __str__(self):

@@ -22,7 +22,7 @@ class EpsilonFirst(EpsilonGreedy):
         assert horizon > 0, "Error: the 'horizon' parameter for EpsilonFirst class has to be > 0."
         self.horizon = horizon
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."
-        self._epsilon = epsilon  #: Constant :math:`\epsilon_0`
+        self._epsilon = epsilon
 
     def __str__(self):
         return "EpsilonFirst(e:{}, h:{})".format(self._epsilon, self.horizon)

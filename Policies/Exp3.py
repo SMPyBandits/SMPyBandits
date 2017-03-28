@@ -30,7 +30,7 @@ class Exp3(BasePolicy):
         if gamma is None:  # Use a default value for the gamma parameter
             gamma = np.sqrt(np.log(nbArms) / nbArms)
         assert 0 < gamma <= 1, "Error: the 'gamma' parameter for Exp3 class has to be in (0, 1]."
-        self._gamma = gamma  #: Constant gamma
+        self._gamma = gamma
         self.unbiased = unbiased  #: Unbiased estimators ?
         # Internal memory
         self.weights = np.ones(nbArms) / nbArms  #: Weights on the arms

@@ -62,7 +62,7 @@ class oneALOHA(ChildPointer):
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # Parameters for the ftnext function
         self.beta = beta  #: Parameter beta
-        self._ftnext = ftnext  #: Function to know how long arms are tagged as unavailable. Can be a callable or None
+        self._ftnext = ftnext  # Function to know how long arms are tagged as unavailable. Can be a callable or None
         # Find the name of the function
         if ftnext is None:
             if beta > 1:
@@ -180,7 +180,7 @@ class ALOHA(BaseMPPolicy):
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players
         # Internal memory
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)

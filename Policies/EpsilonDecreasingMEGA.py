@@ -33,7 +33,7 @@ class EpsilonDecreasingMEGA(EpsilonGreedy):
 
     def __init__(self, nbArms, c=C, d=D, lower=0., amplitude=1.):
         super(EpsilonDecreasingMEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._epsilon = epsilon0(c, d, nbArms)  #: Constant :math:`\epsilon_0`
+        self._epsilon = epsilon0(c, d, nbArms)
 
     def __str__(self):
         return r"EpsilonDecreasingMEGA($\varepsilon=%.3g$)" % self._epsilon

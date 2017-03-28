@@ -24,7 +24,7 @@ class EpsilonDecreasing(EpsilonGreedy):
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonDecreasing class has to be in [0, 1]."
-        self._epsilon = epsilon  #: Constant :math:`\epsilon_0`
+        self._epsilon = epsilon
 
     def __str__(self):
         return "EpsilonDecreasing(e:{})".format(self._epsilon)

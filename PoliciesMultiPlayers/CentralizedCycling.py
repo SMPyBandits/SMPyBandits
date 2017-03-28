@@ -68,7 +68,7 @@ class CentralizedCycling(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
         if nbPlayers <= nbArms:
-            self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)  #: Random offsets
+            self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)  # Random offsets
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
             self._offsets[:nbArms] = np.random.permutation(nbArms)
@@ -82,7 +82,7 @@ class CentralizedCycling(BaseMPPolicy):
         print("CentralizedCycling: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG

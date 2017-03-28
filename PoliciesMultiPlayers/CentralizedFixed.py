@@ -67,7 +67,7 @@ class CentralizedFixed(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
         if nbPlayers <= nbArms:
-            self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)  #: Affectations of choices to players
+            self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)  # Affectations of choices to players
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
             self._affectations[:nbArms] = np.random.permutation(nbArms)
@@ -83,7 +83,7 @@ class CentralizedFixed(BaseMPPolicy):
         print("CentralizedFixed: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG

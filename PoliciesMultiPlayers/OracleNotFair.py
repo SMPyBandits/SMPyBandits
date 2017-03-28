@@ -71,7 +71,7 @@ class OracleNotFair(BaseMPPolicy):
         # Internal vectorial memory
         means = np.array([arm.mean() for arm in armsMAB.arms])
         if nbPlayers <= nbArms:
-            self._affectations = np.argsort(means)[-nbPlayers:]  #: Decide the affectations of the centralized players
+            self._affectations = np.argsort(means)[-nbPlayers:]  # Decide the affectations of the centralized players
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
             self._affectations[:nbArms] = np.random.permutation(nbArms)
@@ -84,7 +84,7 @@ class OracleNotFair(BaseMPPolicy):
         print("OracleNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG

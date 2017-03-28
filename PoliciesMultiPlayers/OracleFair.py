@@ -78,7 +78,7 @@ class OracleFair(BaseMPPolicy):
         bestArms = np.argsort(means)[-min(nbPlayers, nbArms):]
         print("bestArms =", bestArms)  # DEBUG
         if nbPlayers <= nbArms:
-            self._offsets = np.argsort(means)[-nbPlayers:]  #: Decide the offsets of the centralized players
+            self._offsets = np.argsort(means)[-nbPlayers:]  # Decide the offsets of the centralized players
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
             self._offsets[:nbArms] = np.random.permutation(nbArms)
@@ -94,7 +94,7 @@ class OracleFair(BaseMPPolicy):
         print("OracleFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
