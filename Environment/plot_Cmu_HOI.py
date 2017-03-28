@@ -23,23 +23,27 @@ oneHOI = Bernoulli.oneHOI
 
 @jit
 def cmu(mu):
+    """One LR term for Bernoulli problems."""
     best = max(mu)
     return sum(oneLR(best, m) for m in mu if m != best)
 
 
 @jit
 def oi(mu):
+    """One HOI term for Bernoulli problems."""
     best = max(mu)
     return sum(oneHOI(best, m) for m in mu if m != best) / float(len(mu))
 
 
 def addit(c, o, mu):
+    """Add cmu(mu) to c and o(mu) to c if mu are not all equal."""
     if len(set(mu)) > 1:
         c.append(cmu(mu))
         o.append(oi(mu))
 
 
 def main(K, N=50000, T=10):
+    """Plot."""
     print("Starting for K =", K)
 
     c1, o1 = [], []

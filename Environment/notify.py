@@ -50,7 +50,7 @@ except ImportError:
         return None
 
 
-# Trying to import gi.repository.Notify
+#: Trying to import gi.repository.Notify
 has_Notify = False
 try:
     from gi import require_version

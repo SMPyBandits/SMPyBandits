@@ -34,6 +34,7 @@ class MAB(object):
     """
 
     def __init__(self, configuration):
+        """New MAB."""
         print("Creating a new MAB problem ...")  # DEBUG
         self.isDynamic = False  #: Flag to know if the problem is static or not.
         self.arms = []  #: List of arms
@@ -223,6 +224,7 @@ class DynamicMAB(MAB):
     """
 
     def __init__(self, configuration):
+        """New dynamic MAB."""
         self.isDynamic = True  #: Flag to know if the problem is static or not.
 
         assert isinstance(configuration, dict) \
