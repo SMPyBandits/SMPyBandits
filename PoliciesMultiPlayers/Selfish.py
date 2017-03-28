@@ -21,10 +21,10 @@ class SelfishChildPointer(ChildPointer):
         return "#{}<{}[{}]>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother._players[self.playerId])
 
 
-# Customize here the value given to a user after a collision
 # PENALTY = -1
 # PENALTY = 0
-# XXX If it is None, then player.lower (default to 0) is used instead
+#: Customize here the value given to a user after a collision
+#: XXX If it is None, then player.lower (default to 0) is used instead
 PENALTY = None
 
 

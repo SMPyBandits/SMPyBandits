@@ -13,6 +13,7 @@ import numpy.random as rn
 
 from .BasePolicy import BasePolicy
 
+#: Default value for epsilon
 EPSILON = 0.1
 
 

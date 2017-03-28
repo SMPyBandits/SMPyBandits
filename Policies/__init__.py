@@ -100,6 +100,7 @@ from .usenumba import jit
 
 from .kullback import klucbBern, klucbExp, klucbGauss, klucbPoisson, klucbGamma
 
+#: Maps name of arms to kl functions
 klucb_mapping = {
     "Bernoulli": klucbBern,
     "Exponential": klucbExp,

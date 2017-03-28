@@ -10,6 +10,7 @@ __version__ = "0.2"
 
 from .EpsilonGreedy import EpsilonGreedy
 
+#: Default value for epsilon
 EPSILON = 0.1
 
 

@@ -24,6 +24,7 @@ except ImportError:
     from random import randint
 
     class Uniform():
+        """Quick reimplementation of Policies.Uniform"""
         def __init__(self, nbArms, lower=0., amplitude=1.):
             self.nbArms = nbArms
 

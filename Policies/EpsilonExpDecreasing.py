@@ -12,14 +12,17 @@ import numpy as np
 
 from .EpsilonGreedy import EpsilonGreedy
 
+#: Default value for epsilon
 EPSILON = 0.1
+
+#: Default value for the constant for the decreasing rate
 DECREASINGRATE = 1e-6
 
 
 class EpsilonExpDecreasing(EpsilonGreedy):
     """ The epsilon exp-decreasing random policy.
 
-    - epsilon(t) = epsilon0 * exp(-t * decreasingRate)
+    - `epsilon(t) = epsilon0 * exp(-t * decreasingRate)`
     - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 

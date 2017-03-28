@@ -19,7 +19,7 @@ except (ValueError, SystemError):
 
 # Warning: np.dot is miserably slow!
 
-eps = 1e-15  # Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 
 # --- Simple Kullback-Leibler divergence for known distributions

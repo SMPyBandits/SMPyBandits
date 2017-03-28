@@ -13,7 +13,7 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCBlog10 import UCBlog10
 
-# Default parameter for alpha
+#: Default parameter for alpha
 ALPHA = 4
 ALPHA = 1
 

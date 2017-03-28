@@ -12,7 +12,7 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCB import UCB
 
-# Default parameter for alpha
+#: Default parameter for alpha
 ALPHA = 4
 ALPHA = 1
 

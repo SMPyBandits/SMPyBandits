@@ -10,12 +10,12 @@ import numpy as np
 import numpy.random as rn
 from .BasePolicy import BasePolicy
 
-# self.unbiased is a flag to know if the rewards are used as biased estimator,
-# ie just r_t, or unbiased estimators, r_t / trusts_t
+#: self.unbiased is a flag to know if the rewards are used as biased estimator,
+#: ie just r_t, or unbiased estimators, r_t / trusts_t
 UNBIASED = True
 UNBIASED = False
 
-# Default gamma parameter
+#: Default gamma parameter
 GAMMA = 0.01
 
 
