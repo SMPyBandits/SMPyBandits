@@ -319,17 +319,20 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
                  seed=None, allrewards=None, repeatId=0):
     # Give a unique seed to random & numpy.random for each call of this function
     try:
-        random.seed(seed)
-        np.random.seed(seed)
+        if seed is not None:
+            random.seed(seed)
+            np.random.seed(seed)
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
-    # XXX this uses a LOT of RAM memory!!!
-    env = deepcopy(env)
-    policy = deepcopy(policy)
+    if random_shuffle or random_invert:
+        env = deepcopy(env)    # XXX this uses a LOT of RAM memory!!!
+    policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
+
     # Start game
     policy.startGame()
     result = Result(env.nbArms, horizon, delta_t_save=delta_t_save)  # One Result object, for every policy
+
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
     if nb_random_events is None or nb_random_events <= 0:
@@ -354,13 +357,11 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         result.store(t, choice, reward)
 
         # XXX Experimental : shuffle the arms at the middle of the simulation
-        if random_shuffle:
-            if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
+        if random_shuffle and t in t_events:
                 random.shuffle(env.arms)
                 # print("Shuffling the arms ...")  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
-        if random_invert:
-            if t in t_events:  # XXX improve this: it is slow to test 'in <a list>', faster to compute a 't % ...'
+        if random_invert and t in t_events:
                 env.arms = env.arms[::-1]
                 # print("Inverting the order of the arms ...")  # DEBUG
 

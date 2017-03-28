@@ -2,7 +2,10 @@
 """ Arms : contains different types of bandit arms:
 Uniform, Bernoulli, Poisson, Gaussian, Exponential.
 
-Also contain makeMeans, a small function to generate uniformly spacen means of arms.
+Also contain:
+
+- uniformMeans, a small function to generate uniformly spacen means of arms.
+- randomMeans, generate randomly spacen means of arms.
 """
 
 __author__ = "Lilian Besson"
@@ -22,7 +25,7 @@ if __name__ != "__main__":
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
 
 
-def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
+def uniformMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     """Return a list of means of arms, well spacen:
 
     - in [lower, lower + amplitude],
@@ -30,11 +33,11 @@ def makeMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     - starting from lower + amplitude * delta, up to lower + amplitude * (1 - delta),
     - and there is nbArms arms.
 
-    >>> makeMeans(2, 0.1)
+    >>> uniformMeans(2, 0.1)
     array([ 0.1,  0.9])
-    >>> makeMeans(3, 0.1)
+    >>> uniformMeans(3, 0.1)
     array([ 0.1,  0.5,  0.9])
-    >>> makeMeans(9, 1 / (1. + 9))
+    >>> uniformMeans(9, 1 / (1. + 9))
     array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
     """
     assert nbArms >= 1, "Error: nbArms has to be >= 1."

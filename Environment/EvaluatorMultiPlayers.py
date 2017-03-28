@@ -601,8 +601,9 @@ def delayed_play(env, players, horizon, collisionModel,
     """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
     try:
-        np.random.seed(seed)
-        random.seed(seed)
+        if seed is not None:
+            np.random.seed(seed)
+            random.seed(seed)
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized

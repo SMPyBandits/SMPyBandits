@@ -169,25 +169,25 @@ configuration = {
     "environment": [
         # {   # A damn simple problem: 2 arms, one bad, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]  # makeMeans(2, 0.1)
+        #     "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # makeMeans(3, 0.1)
+        #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
         # }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(9, 1 / (1. + 9))
+        #     "params": uniformMeans(9, 1 / (1. + 9))
         # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(14, 1 / (1. + 14))
+        #     "params": uniformMeans(14, 1 / (1. + 14))
         # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(19, 1 / (1. + 19))
+        #     "params": uniformMeans(19, 1 / (1. + 19))
         # }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
@@ -195,7 +195,7 @@ configuration = {
         # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
+        #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
         # }
         # {   # XXX to test with half very bad arms, half perfect arms
         #     "arm_type": Bernoulli,
@@ -207,7 +207,7 @@ configuration = {
         # }
         # {   # An easy problem, but with a LOT of arms! (50 arms)
         #     "arm_type": Bernoulli,
-        #     "params": makeMeans(50, 1 / (1. + 50))
+        #     "params": uniformMeans(50, 1 / (1. + 50))
         # }
         # {   # Scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,

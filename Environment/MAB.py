@@ -15,18 +15,22 @@ from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_
 class MAB(object):
     """ Multi-armed Bandit environment.
 
-    - configuration has to be a dict with 'arm_type' and 'params' keys.
-    - 'arm_type' is a class from the Arms module
-    - 'params' is a dict, used as a list/tuple/iterable of named parameters given to 'arm_type'.
-
-    Example::
+    - configuration can be a dict with 'arm_type' and 'params' keys. 'arm_type' is a class from the Arms module, and 'params' is a dict, used as a list/tuple/iterable of named parameters given to 'arm_type'. Example::
 
         configuration = {
             'arm_type': Bernoulli,
             'params':   [0.1, 0.5, 0.9]
         }
 
-    It will create three Bernoulli arms, of parameters (means) 0.1, 0.5 and 0.9.
+    - But it can also accept a list of already created arms::
+
+        configuration = [
+            Bernoulli(0.1),
+            Bernoulli(0.5),
+            Bernoulli(0.9),
+        ]
+
+    - Both will create three Bernoulli arms, of parameters (means) 0.1, 0.5 and 0.9.
     """
 
     def __init__(self, configuration):
