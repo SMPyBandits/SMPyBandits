@@ -548,7 +548,7 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig)
         return fig
 
-    def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True, semilogy=True):
+    def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True, semilogy=False):
         """Plot the frequency of collision, in a pie chart (histogram not supported yet)."""
         nbArms = self.envs[envId].nbArms
         Y = np.zeros(1 + nbArms)  # One extra arm for "no collision"
@@ -587,7 +587,8 @@ class EvaluatorMultiPlayers(object):
                 plt.axvspan(i - 0.25, i + 0.25, 0, Y[i], label=labels[i], color=colors[i])
             plt.xticks(np.arange(len(Y)), ['Collision \non arm #$%i$' % i for i in range(nbArms)] + ['No collision'])
             plt.ylabel("Frequency of collision, in logarithmic scale" if semilogy else "Frequency of collision")
-            add_percent_formatter("yaxis", 1.0)
+            if not semilogy:
+                add_percent_formatter("yaxis", 1.0)
         legend()
         plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self.showplot, savefig)
