@@ -259,7 +259,7 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        return r"\mathrm{%s}(K=%i$ %s on $[%g, %g], \delta=%g)" % (self.__class__.__name__, self.nbArms, self.arm_type.__class__.__name__, self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
+        return r"\mathrm{%s}(K=%i$, %s on $[%g, %g], \delta_{\min}=%g)" % (self.__class__.__name__, self.nbArms, self.arm_type.__class__, self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
 
     #
     # --- Dynamic arms and means

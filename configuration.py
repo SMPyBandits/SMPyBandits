@@ -175,7 +175,7 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        {   # A random problem: every repetition will use a different means vectors! FIXME finish developping this
+        {   # A random problem: every repetition use a different mean vectors!
             "arm_type": Bernoulli,
             "params": {
                 "function": randomMeans,
