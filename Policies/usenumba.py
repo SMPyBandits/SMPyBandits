@@ -25,6 +25,7 @@ if not USE_NUMBA:
     print("Warning: numba.jit seems to be disabled. Using a dummy decorator for numba.jit() ...")
 
     def jit(f):
+        """Fake numba.jit decorator."""
         return f
 
 

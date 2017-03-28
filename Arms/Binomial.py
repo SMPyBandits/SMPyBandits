@@ -22,18 +22,18 @@ class Binomial(Arm):
     def __init__(self, probability, draws=1):
         assert 0 <= probability <= 1, "Error, the parameter probability for Binomial class has to be in [0, 1]."
         assert isinstance(draws, int) and 1 <= draws, "Error, the parameter draws for Binomial class has to be an integer >= 1."
-        self.probability = probability
-        self.draws = draws
-        self.mean = probability * draws
+        self.probability = probability  #: Parameter p for this Binomial arm
+        self.draws = draws  #: Parameter n for this Binomial arm
+        self.mean = probability * draws  #: Mean for this Binomial arm
 
     # --- Random samples
 
     def draw(self, t=None):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
         return binomial(self.draws, self.probability)
 
     def draw_nparray(self, shape=(1,)):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw a numpy array of random samples, of a certain shape."""
         return npbinomial(self.draws, self.probability, shape)
 
     # --- Printing
@@ -41,6 +41,7 @@ class Binomial(Arm):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def lower_amplitude(self):
+        """(lower, amplitude)"""
         return 0., self.draws
 
     def __str__(self):
@@ -52,6 +53,7 @@ class Binomial(Arm):
     # --- Lower bound
 
     def kl(self, x, y):
+        """ The kl(x, y) to use for this arm."""
         return klBin(x, y, self.draws)
 
     def oneLR(self, mumax, mu):

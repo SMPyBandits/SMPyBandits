@@ -2,7 +2,7 @@
 """ Uniformly distributed arm in [0, 1], or [lower, lower + amplitude]."""
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.6"
 
 from random import random
 from numpy.random import random as nprandom
@@ -24,21 +24,21 @@ class Uniform(Arm):
     """
 
     def __init__(self, mini=0., maxi=1., lower=0., amplitude=1.):
-        self.min = min(mini, lower)
-        self.lower = mini
-        self.max = max(maxi, amplitude - lower)
-        self.amplitude = maxi - mini
-        # self.mean = self.min + (self.max - self.min) / 2.0
-        self.mean = self.lower + (self.amplitude / 2.0)
+        self.min = min(mini, lower)  #: Lower value of rewards
+        self.lower = mini  #: Lower value of rewards
+        self.max = max(maxi, amplitude - lower)  #: Higher value of rewards
+        self.amplitude = maxi - mini  #: Amplitude of rewards
+        # self.mean = self.min + (self.max - self.min) / 2.0  # Other formula
+        self.mean = self.lower + (self.amplitude / 2.0)  #: Mean for this Uniform arm
 
     # --- Random samples
 
     def draw(self, t=None):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
         return self.lower + (random() * self.amplitude)
 
     def draw_nparray(self, shape=(1,)):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw a numpy array of random samples, of a certain shape."""
         return self.lower + (nprandom(shape) * self.amplitude)
 
     # --- Printing
@@ -53,6 +53,7 @@ class Uniform(Arm):
 
     @staticmethod
     def kl(x, y):
+        """ The kl(x, y) to use for this arm."""
         return klBern(x, y)
 
     @staticmethod

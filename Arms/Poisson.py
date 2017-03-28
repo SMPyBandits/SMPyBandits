@@ -2,7 +2,7 @@
 """ Poisson distributed arm, possibly truncated."""
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from math import isinf, exp
 from scipy.stats import poisson
@@ -20,10 +20,10 @@ class Poisson(Arm):
 
     def __init__(self, p, trunc=1):
         assert p >= 0, "Error, the parameter 'p' for Poisson arm has to be >= 0."
-        self.p = p
-        self.trunc = trunc
+        self.p = p  #: Parameter p for Poisson arm
+        self.trunc = trunc  #: Max value of rewards
         if isinf(trunc):
-            self.mean = p
+            self.mean = p  #: Mean for this Poisson arm
         else:  # Warning: this is very slow if self.trunc is large!
             q = exp(-p)
             sq = q
@@ -37,11 +37,11 @@ class Poisson(Arm):
     # --- Random samples
 
     def draw(self, t=None):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
         return min(poisson.rvs(self.p), self.trunc)
 
     def draw_nparray(self, shape=(1,)):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw a numpy array of random samples, of a certain shape."""
         return min(poisson.rvs(self.p, size=shape), self.trunc)
 
     # --- Printing
@@ -59,6 +59,7 @@ class Poisson(Arm):
 
     @staticmethod
     def kl(x, y):
+        """ The kl(x, y) to use for this arm."""
         return klPoisson(x, y)
 
     @staticmethod

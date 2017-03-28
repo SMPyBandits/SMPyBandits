@@ -16,6 +16,7 @@ from .kullback import klExp
 
 
 def p_of_expectation(expectation, trunc=1):
+    """Use a numerical solver (:func:`scipy.optimize.minimize`) to find the value p giving an arm Exp(p) of a given expectation."""
     if isinf(trunc):
         def expp(p):
             return 1. / p
@@ -37,23 +38,23 @@ class Exponential(Arm):
 
     # def __init__(self, p, trunc=float('+inf')):
     def __init__(self, p, trunc=1):
-        self.p = p
+        self.p = p  #: Parameter p for Exponential arm
         assert p > 0, "Error, the parameter 'p' for Exponential arm has to be > 0."
-        self.trunc = trunc
+        self.trunc = trunc  #: Max value of reward
         assert trunc > 0, "Error, the parameter 'trunc' for Exponential arm has to be > 0."
         if isinf(trunc):
-            self.mean = 1. / p
+            self.mean = 1. / p  #: Mean of Exponential arm
         else:
             self.mean = (1. - exp(-p * trunc)) / p
 
     # --- Random samples
 
     def draw(self, t=None):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
         return min((-1. / self.p) * log(random()), self.trunc)
 
     def draw_nparray(self, shape=(1,)):
-        """ The parameter t is ignored in this Arm."""
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
         return np.minimum((-1. / self.p) * np.log(nprandom(shape)), self.trunc)
 
     # --- Printing
@@ -61,6 +62,7 @@ class Exponential(Arm):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def lower_amplitude(self):
+        """(lower, amplitude)"""
         return 0., self.trunc
 
     def __str__(self):
@@ -73,6 +75,7 @@ class Exponential(Arm):
 
     @staticmethod
     def kl(x, y):
+        """ The kl(x, y) to use for this arm."""
         return klExp(x, y)
 
     @staticmethod
@@ -81,6 +84,7 @@ class Exponential(Arm):
         return (mumax - mu) / klExp(mu, mumax)
 
     def oneHOI(self, mumax, mu):
+        """ One term for the HOI factor for this arm."""
         return 1 - (mumax - mu) / self.trunc
 
 
