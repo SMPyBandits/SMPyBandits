@@ -14,29 +14,33 @@ class BasePolicy(object):
     """ Base class for any policy."""
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
+        """New policy."""
         # Parameters
         assert nbArms > 0, "Error: the 'nbArms' parameter of a {} object cannot be <= 0.".format(self)
-        self.nbArms = nbArms
-        self.lower = lower
+        self.nbArms = nbArms  #: Number of arms
+        self.lower = lower  #: Lower values for rewards
         assert amplitude > 0, "Error: the 'amplitude' parameter of a {} object cannot be <= 0.".format(self)
-        self.amplitude = amplitude
+        self.amplitude = amplitude  #: Larger values for rewards
         # Internal memory
-        self.t = -1  # special value
-        self.pulls = np.zeros(nbArms, dtype=int)
-        self.rewards = np.zeros(nbArms)
+        self.t = -1  #: Internal time
+        self.pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
+        self.rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
 
     def __str__(self):
+        """-> str"""
         return self.__class__.__name__
 
     # --- Start game, and receive rewards
 
     def startGame(self):
+        """Start the game (fill pulls and rewards with 0)."""
         self.t = 0
         self.pulls.fill(0)
         self.rewards.fill(0)
 
     # def getReward(self, arm, reward, checkBounds=False):  # XXX useless checkBounds feature
     def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1])."""
         self.t += 1
         self.pulls[arm] += 1
         # # XXX we could check here if the reward is outside the bounds
@@ -49,29 +53,34 @@ class BasePolicy(object):
     # --- Basic choice() method
 
     def choice(self):
+        """Not defined."""
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BasePolicy.")
 
     # --- Others choice...() methods, partly implemented
 
     def choiceWithRank(self, rank=1):
+        """Not defined."""
         if rank == 1:
             return self.choice()
         else:
             raise NotImplementedError("This method choiceWithRank(rank) has to be implemented in the child class inheriting from BasePolicy.")
 
     def choiceFromSubSet(self, availableArms='all'):
+        """Not defined."""
         if availableArms == 'all':
             return self.choice()
         else:
             raise NotImplementedError("This method choiceFromSubSet(availableArms) has to be implemented in the child class inheriting from BasePolicy.")
 
     def choiceMultiple(self, nb=1):
+        """Not defined."""
         if nb == 1:
             return self.choice()
         else:
             raise NotImplementedError("This method choiceMultiple(nb) has to be implemented in the child class inheriting from BasePolicy.")
 
     def choiceIMP(self, nb=1):
+        """Not defined."""
         if nb == 1:
             return self.choice()
         else:

@@ -22,7 +22,7 @@ class EpsilonFirst(EpsilonGreedy):
         assert horizon > 0, "Error: the 'horizon' parameter for EpsilonFirst class has to be > 0."
         self.horizon = horizon
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."
-        self._epsilon = epsilon
+        self._epsilon = epsilon  #: Constant :math:`\epsilon_0`
 
     def __str__(self):
         return "EpsilonFirst(e:{}, h:{})".format(self._epsilon, self.horizon)
@@ -30,6 +30,7 @@ class EpsilonFirst(EpsilonGreedy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
+        r"""1 while :math:`t \leq \varepsilon_0 T`, 0 after."""
         if self.t <= self._epsilon * self.horizon:
             # First phase: randomly explore!
             return 1

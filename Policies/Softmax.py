@@ -32,10 +32,10 @@ class Softmax(BasePolicy):
         if temperature is None:  # Use a default value for the temperature
             temperature = np.sqrt(np.log(nbArms) / nbArms)
         assert temperature > 0, "Error: the temperature parameter for Softmax class has to be > 0."
-        self._temperature = temperature
-        self.unbiased = unbiased
-        # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
-        # Even more randomized, take a random permutation of the arm ?
+        self._temperature = temperature  #: Constant temperature
+        self.unbiased = unbiased  #: Flag
+        #: Trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
+        #: Even more randomized, take a random permutation of the arm ?
         self._initial_exploration = rn.permutation(nbArms)
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 

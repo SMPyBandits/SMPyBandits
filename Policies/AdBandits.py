@@ -23,9 +23,9 @@ class AdBandits(BasePolicy):
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta, lower=0., amplitude=1.):
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.alpha = alpha
-        self.horizon = horizon
-        self.posterior = [None] * self.nbArms  # List instead of dict, quicker access
+        self.alpha = alpha  #: Parameter alpha
+        self.horizon = horizon  #: Horizon
+        self.posterior = [None] * self.nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
 

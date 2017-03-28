@@ -27,9 +27,9 @@ class klUCB(IndexPolicy):
 
     def __init__(self, nbArms, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.c = c
-        self.klucb = klucb
-        self.tolerance = tolerance
+        self.c = c  #: Parameter c
+        self.klucb = klucb  #: kl function to use
+        self.tolerance = tolerance  #: Numerical tolerance
 
     def __str__(self):
         return r"KL-UCB({}{})".format("" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])

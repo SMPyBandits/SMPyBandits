@@ -23,7 +23,7 @@ class IndexPolicy(BasePolicy):
         - lower, amplitude: lower value and known amplitude of the rewards.
         """
         super(IndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.index = np.zeros(nbArms)
+        self.index = np.zeros(nbArms)  #: Numerical index for each arms
 
     # --- Start game, and receive rewards
 

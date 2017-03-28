@@ -40,20 +40,20 @@ class MEGA(BasePolicy):
         """
         # Store parameters
         super(MEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.c = c
+        self.c = c  #: Parameter c
         # FIXME we should not require two parameters, as they are just used in the formula for epsilon_t
-        self.d = d
+        self.d = d  #: Parameter d
         assert 0 <= p0 <= 1, "Error: parameter 'p0' for a MEGA player should be in [0, 1]."
-        self.p0 = p0  # Should not be modified
-        self.p = p0   # Can be modified
+        self.p0 = p0  #: Parameter p0, should not be modified
+        self.p = p0  #: Parameter p, can be modified
         assert 0 < alpha <= 1, "Error: parameter 'alpha' for a MEGA player should be in (0, 1]."
-        self.alpha = alpha
+        self.alpha = alpha  #: Parameter alpha
         assert 0 < beta <= 1, "Error: parameter 'beta' for a MEGA player should be in (0, 1]."
-        self.beta = beta
+        self.beta = beta  #: Parameter beta
         # Internal memory
-        self.chosenArm = None
-        self.tnext = np.ones(nbArms, dtype=int)  # Only store the delta time
-        self.meanRewards = np.zeros(nbArms)
+        self.chosenArm = None  #: Last chosen arm
+        self.tnext = np.ones(nbArms, dtype=int)  #: Only store the delta time
+        self.meanRewards = np.zeros(nbArms)  #: Mean rewards
 
     def __str__(self):
         return r"MEGA($c={}$, $d={}$, $p_0={}$, $\alpha={}$, $\beta={}$)".format(self.c, self.d, self.p0, self.alpha, self.beta)

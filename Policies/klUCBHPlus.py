@@ -21,7 +21,7 @@ class klUCBHPlus(klUCB):
 
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCBHPlus, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude)
-        self._horizon = horizon
+        self._horizon = horizon  #: Horizon T
 
     def __str__(self):
         return r"KL-UCB-H+({}{})".format("" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])

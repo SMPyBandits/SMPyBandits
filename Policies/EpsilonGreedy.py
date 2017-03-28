@@ -25,7 +25,7 @@ class EpsilonGreedy(BasePolicy):
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonGreedy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."
-        self._epsilon = epsilon
+        self._epsilon = epsilon  #: Constant :math:`\epsilon_0`
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -36,6 +36,7 @@ class EpsilonGreedy(BasePolicy):
         return "EpsilonGreedy({})".format(self.epsilon)
 
     def choice(self):
+        """With a probability of epsilon, explore (uniform choice), otherwhise exploit based on just accumulated *rewards* (not empirical mean rewards)."""
         if random() < self.epsilon:  # Proba epsilon : explore
             return rn.randint(0, self.nbArms - 1)
         else:  # Proba 1 - epsilon : exploit
@@ -43,6 +44,7 @@ class EpsilonGreedy(BasePolicy):
             return rn.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
 
     def choiceWithRank(self, rank=1):
+        """With a probability of epsilon, explore (uniform choice), otherwhise exploit with the rank, based on just accumulated *rewards* (not empirical mean rewards)."""
         if rank == 1:
             return self.choice()
         else:

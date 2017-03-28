@@ -85,22 +85,22 @@ class MusicalChair(BasePolicy):
         super(MusicalChair, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         nbPlayers = N
         assert nbPlayers is None or nbPlayers > 0, "Error, the parameter 'nbPlayers' for MusicalChair class has to be None or > 0."
-        self.state = State.NotStarted
+        self.state = State.NotStarted  #: Current state
         if 0 < Time0 < 1:  # Time0 is a fraction of the horizon Time1
             Time0 = int(Time0 * Time1)  # Lower bound
         elif Time0 >= 1:
             Time0 = int(Time0)
         # Store parameters
-        self.Time0 = Time0
-        self.nbPlayers = nbPlayers
+        self.Time0 = Time0  #: Parameter T0
+        self.nbPlayers = nbPlayers  #: Number of players
         # Internal memory
-        self.chair = None  # Not sited yet
-        self.cumulatedRewards = np.zeros(nbArms)  # That's the s_i(t) of the paper
-        self.nbObservations = np.zeros(nbArms, dtype=int)  # That's the o_i of the paper
-        self.A = np.random.permutation(nbArms)  # XXX it will then be of size nbPlayers!
-        self.nbCollision = 0  # That's the C_Time0 of the paper
+        self.chair = None  #: Current chair. Not sited yet.
+        self.cumulatedRewards = np.zeros(nbArms)  #: That's the s_i(t) of the paper
+        self.nbObservations = np.zeros(nbArms, dtype=int)  #: That's the o_i of the paper
+        self.A = np.random.permutation(nbArms)  #: A random permutation of arms, it will then be of size nbPlayers!
+        self.nbCollision = 0  #: Number of collisions, that's the C_Time0 of the paper
         # Implementation details
-        self.t = -1
+        self.t = -1  #: Internal times
 
     def __str__(self):
         # return r"MusicalChair($N^*={}$, $T_0={}$)".format(self.nbPlayers, self.Time0)  # Use current estimate

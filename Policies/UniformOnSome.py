@@ -15,13 +15,14 @@ class UniformOnSome(Uniform):
     """
 
     def __init__(self, nbArms, armIndexes=None, lower=0., amplitude=1.):
-        self.nbArms = nbArms
+        self.nbArms = nbArms  #: Number of arms
         if armIndexes is None:
             armIndexes = list(range(nbArms))
-        self.armIndexes = armIndexes
+        self.armIndexes = armIndexes  #: Arms from where to uniformly sample
 
     def __str__(self):
         return "UniformOnSome({})".format(self.armIndexes)
 
     def choice(self):
+        """Uniform choice from armIndexes."""
         return choice(self.armIndexes)

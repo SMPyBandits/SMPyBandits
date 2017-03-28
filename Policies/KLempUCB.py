@@ -19,9 +19,11 @@ class KLempUCB(IndexPolicy):
 
     def __init__(self, nbArms, maxReward=1., lower=0., amplitude=1.):
         super(KLempUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.c = 1
-        self.maxReward = maxReward
-        self.pulls = np.zeros(self.nbArms, dtype=int)
+        self.c = 1  #: Parameter c
+        self.maxReward = maxReward  #: Known upper bound on the rewards
+        self.pulls = np.zeros(self.nbArms, dtype=int)  #: Keep track of pulls of each arm
+        #: UNBOUNDED dictionnary for each arm: keep track of how many observation of each rewards were seen.
+        #: Warning: KLempUCB works better for *discrete* distributions!
         self.obs = [dict()] * self.nbArms
 
     def startGame(self):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-""" The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
+r""" The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
 
-- ``epsilon(t) = epsilon0 / t``
-- ``epsilon0 = (c * nbArms**2) / (d**2 * (nbArms - 1))``
+- :math:`\varepsilon(t) = \min(1, \varepsilon_0 / \max(1, t))`
+- :math:`\varepsilon_0 = \frac{c K^2}{d^2 (K - 1)}`
 - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
 
@@ -18,22 +18,22 @@ D = 0.5  #: Constant C in the MEGA formula
 def epsilon0(c, d, nbArms):
     r"""MEGA heuristic:
 
-    .. math:: \varepsilon = \frac{c K^2}{d^2 (K - 1)}.
+    .. math:: \varepsilon_0 = \frac{c K^2}{d^2 (K - 1)}.
     """
     return (c * nbArms**2) / (d**2 * (nbArms - 1))
 
 
 class EpsilonDecreasingMEGA(EpsilonGreedy):
-    """ The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
+    r""" The epsilon-decreasing random policy, using MEGA's heuristic for a good choice of epsilon0 value.
 
-    - ``epsilon(t) = epsilon0 / t``
-    - ``epsilon0 = (c * nbArms**2) / (d**2 * (nbArms - 1))``
+    - :math:`\varepsilon(t) = \min(1, \varepsilon_0 / \max(1, t))`
+    - :math:`\varepsilon_0 = \frac{c K^2}{d^2 (K - 1)}`
     - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
     def __init__(self, nbArms, c=C, d=D, lower=0., amplitude=1.):
         super(EpsilonDecreasingMEGA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._epsilon = epsilon0(c, d, nbArms)
+        self._epsilon = epsilon0(c, d, nbArms)  #: Constant :math:`\epsilon_0`
 
     def __str__(self):
         return r"EpsilonDecreasingMEGA($\varepsilon=%.3g$)" % self._epsilon
@@ -41,4 +41,5 @@ class EpsilonDecreasingMEGA(EpsilonGreedy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
+        r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 / \max(1, t))`."""
         return min(1, self._epsilon / max(1, self.t))

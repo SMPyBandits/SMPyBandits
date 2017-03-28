@@ -20,7 +20,7 @@ class UCBV(UCB):
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
         super(UCBV, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.rewardsSquared = np.zeros(self.nbArms)
+        self.rewardsSquared = np.zeros(self.nbArms)  #: Keep track of squared of rewards, to compute an empirical variance
 
     def startGame(self):
         super(UCBV, self).startGame()

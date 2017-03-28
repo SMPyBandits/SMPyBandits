@@ -20,8 +20,8 @@ class UCBH(UCBalpha):
 
     def __init__(self, nbArms, horizon=None, alpha=ALPHA, lower=0., amplitude=1.):
         super(UCBH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._horizon = horizon
-        self.alpha = alpha
+        self._horizon = horizon  #: Horizon T
+        self.alpha = alpha  #: Parameter alpha
 
     def __str__(self):
         return r"UCB-H($\alpha={:.3g}$)".format(self.alpha)

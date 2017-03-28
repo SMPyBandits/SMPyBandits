@@ -30,10 +30,10 @@ class Exp3(BasePolicy):
         if gamma is None:  # Use a default value for the gamma parameter
             gamma = np.sqrt(np.log(nbArms) / nbArms)
         assert 0 < gamma <= 1, "Error: the 'gamma' parameter for Exp3 class has to be in (0, 1]."
-        self._gamma = gamma
-        self.unbiased = unbiased
+        self._gamma = gamma  #: Constant gamma
+        self.unbiased = unbiased  #: Unbiased estimators ?
         # Internal memory
-        self.weights = np.ones(nbArms) / nbArms
+        self.weights = np.ones(nbArms) / nbArms  #: Weights on the arms
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # XXX do even more randomized, take a random permutation of the arm ?
         self._initial_exploration = rn.permutation(nbArms)

@@ -20,7 +20,7 @@ class MOSSH(MOSS):
 
     def __init__(self, nbArms, horizon=None, lower=0., amplitude=1.):
         super(MOSSH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._horizon = horizon
+        self._horizon = horizon  #: Horizon T
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

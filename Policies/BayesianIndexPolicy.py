@@ -13,7 +13,7 @@ class BayesianIndexPolicy(IndexPolicy):
 
     def __init__(self, nbArms, posterior=Beta, lower=0., amplitude=1.):
         super(BayesianIndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.posterior = [None] * nbArms  # List instead of dict, quicker access
+        self.posterior = [None] * nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
 

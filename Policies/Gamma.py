@@ -26,9 +26,9 @@ class Gamma(Posterior):
     def __init__(self, k=1, lmbda=1):
         """Create a Gamma posterior."""
         assert k > 0, "Error: parameter 'k' for Beta posterior has to be > 0."
-        self.k0 = self.k = k
+        self.k0 = self.k = k  #: Parameter k
         assert lmbda > 0, "Error: parameter 'lmbda' for Beta posterior has to be > 0."
-        self.lmbda0 = self.lmbda = lmbda
+        self.lmbda0 = self.lmbda = lmbda  #: Parameter lambda
 
     def __str__(self):
         return "Gamma({}, {})".format(self.k, self.lmbda)

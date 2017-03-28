@@ -15,7 +15,7 @@ class Uniform(BasePolicy):
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
         """Nothing to do."""
-        self.nbArms = nbArms
+        self.nbArms = nbArms  #: Number of arms
 
     def __str__(self):
         return "U(1..{})".format(self.nbArms)
