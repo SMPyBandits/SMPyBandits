@@ -30,11 +30,11 @@ from Policies import *
 #: Warning Should be >= 10000 to be interesting "asymptotically".
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -47,7 +47,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
+# REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -155,10 +155,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -175,6 +175,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
+        {   # A random problem: every repetition will use a different means vectors! FIXME finish developping this
+            "arm_type": Bernoulli,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": 10,
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    "mingap": 0.05,
+                }
+            }
+        },
     ],
     # "environment": [  # XXX Exponential arms
     #     {   # An example problem with 9 arms

@@ -18,7 +18,7 @@ from .usetqdm import USE_TQDM, tqdm
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 # Local imports, objects and functions
-from .MAB import MAB
+from .MAB import MAB, DynamicMAB
 from .Result import Result
 
 
@@ -85,7 +85,12 @@ class Evaluator(object):
 
     def __initEnvironments__(self):
         for configuration_arms in self.cfg['environment']:
-            self.envs.append(MAB(configuration_arms))
+            if isinstance(configuration_arms, dict) \
+               and "arm_type" in configuration_arms and "params" in configuration_arms \
+               and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
+                self.envs.append(DynamicMAB(configuration_arms))
+            else:
+                self.envs.append(MAB(configuration_arms))
 
     def __initPolicies__(self, env):
         for policyId, policy in enumerate(self.cfg['policies']):
@@ -327,6 +332,8 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     # We have to deepcopy because this function is Parallel-ized
     if random_shuffle or random_invert:
         env = deepcopy(env)    # XXX this uses a LOT of RAM memory!!!
+    if not env.static:  # FIXME
+        env.newRandomArms()
     policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
 
     # Start game

@@ -35,6 +35,8 @@ class MAB(object):
 
     def __init__(self, configuration):
         print("Creating a new MAB problem ...")  # DEBUG
+        self.static = True  #: Flag to know if the problem is static or not.
+        # Previous thing
         if isinstance(configuration, dict):
             print("  Reading arms of this MAB problem from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
             arm_type = configuration["arm_type"]
@@ -50,17 +52,20 @@ class MAB(object):
             self.arms = []
             for arm in configuration:
                 self.arms.append(arm)
-        # Compute the means
-        self.means = np.array([arm.mean for arm in self.arms])
-        print(" - with 'arms' =", self.arms)  # DEBUG
-        self.nbArms = len(self.arms)
-        print(" - with 'nbArms' =", self.nbArms)  # DEBUG
-        self.maxArm = np.max(self.means)
-        print(" - with 'maxArm' =", self.maxArm)  # DEBUG
-        self.minArm = np.min(self.means)
-        print(" - with 'minArm' =", self.minArm)  # DEBUG
-        # Print lower bound and HOI factor
-        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
+
+        # Compute the means and stats
+        if self.static:
+            print(" - with 'arms' =", self.arms)  # DEBUG
+            self.means = np.array([arm.mean for arm in self.arms])
+            print(" - with 'means' =", self.means)  # DEBUG
+            self.nbArms = len(self.arms)
+            print(" - with 'nbArms' =", self.nbArms)  # DEBUG
+            self.maxArm = np.max(self.means)
+            print(" - with 'maxArm' =", self.maxArm)  # DEBUG
+            self.minArm = np.min(self.means)
+            print(" - with 'minArm' =", self.minArm)  # DEBUG
+            # Print lower bound and HOI factor
+            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
 
     def __repr__(self):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
@@ -208,6 +213,84 @@ class MAB(object):
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: ${}${}".format(horizon, self.nbArms, self.reprarms(), signature))
         show_and_save(showplot=True, savefig=savefig)
+
+
+# FIXME experimental
+class DynamicMAB(MAB):
+    """Like a static MAB problem, but the arms are (randomly) regenerated everytime they are accessed.
+
+    - Warning: this is still HIGHLY experimental!
+    - It can be weird: M.arms is always different everytime it is accessed, but not nbArm, means, minArm, maxArm...
+    """
+
+    def __init__(self, configuration):
+        self.static = False
+
+        assert isinstance(configuration, dict) \
+            and "arm_type" in configuration and "params" in configuration \
+            and "function" in configuration["params"] and "args" in configuration["params"], \
+            "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"
+
+        print("  Special MAB problem, changing at every repetitions, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
+        self.static = False
+        self.arm_type = arm_type = configuration["arm_type"]
+        print(" - with 'arm_type' =", arm_type)  # DEBUG
+        params = configuration["params"]
+        print(" - with 'params' =", params)  # DEBUG
+        self.function = params["function"]
+        print(" - with 'function' =", self.function)  # DEBUG
+        self.args = params["args"]
+        print(" - with 'args' =", self.args)  # DEBUG
+        print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
+        self.newRandomArms()
+        print("   - drawing a random set of arms")
+        self.nbArms = len(self.arms)
+        print("   - with 'nbArms' =", self.nbArms)  # DEBUG
+        print("   - with 'arms' =", self.arms)  # DEBUG
+        print(" - Example of initial draw of 'means' =", self.means)  # DEBUG
+        print("   - with 'maxArm' =", self.maxArm)  # DEBUG
+        print("   - with 'minArm' =", self.minArm)  # DEBUG
+
+    def __repr__(self):
+        if self._arms is not None:
+            return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self._arms, self.minArm, self.maxArm)
+        else:
+            return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
+
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
+        """Cannot represent the dynamic arms, so print the DynamicMAB object"""
+        return repr(self)
+
+    #
+    # --- Dynamic arms and means
+
+    def newRandomArms(self, verbose=True):
+        """Generate a new list of arms, from arm_type(params['function](*params['args']))."""
+        self._arms = [self.arm_type(mean) for mean in self.function(**self.args)]
+        self.nbArms = len(self._arms)
+        if verbose:
+            print("\n  - Creating a new dynamic set of means for arms: DynamicMAB = {} ...".format(repr(self)))  # DEBUG
+        return self._arms
+
+    @property
+    def arms(self):
+        """Return the list of arms."""
+        return self._arms
+
+    @property
+    def means(self):
+        """Return the list of means."""
+        return np.array([arm.mean for arm in self._arms])
+
+    @property
+    def minArm(self):
+        """Return the smallest mean of the arms, for a dynamic MAB."""
+        return np.min(self.means)
+
+    @property
+    def maxArm(self):
+        """Return the largest mean of the arms, for a dynamic MAB."""
+        return np.max(self.means)
 
 
 # --- Utility functions

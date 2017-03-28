@@ -10,7 +10,7 @@
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from .MAB import MAB
+from .MAB import MAB, DynamicMAB
 
 from .Result import Result
 from .Evaluator import Evaluator
