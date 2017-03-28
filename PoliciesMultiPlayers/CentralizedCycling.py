@@ -23,9 +23,9 @@ class Cycling(BaseCentralizedPolicy):
 
     def __init__(self, nbArms, offset):
         """Cycling with an offset."""
-        self.nbArms = nbArms
-        self.offset = offset
-        self.t = -1
+        self.nbArms = nbArms  #: Number of arms
+        self.offset = offset  #: Offset
+        self.t = -1  #: Internal time
 
     def __str__(self):
         return "Cycling({})".format(self.offset)
@@ -64,11 +64,11 @@ class CentralizedCycling(BaseMPPolicy):
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
-        self.nbPlayers = nbPlayers
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
         if nbPlayers <= nbArms:
-            self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)
+            self._offsets = np.random.choice(nbArms, size=nbPlayers, replace=False)  #: Random offsets
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
             self._offsets[:nbArms] = np.random.permutation(nbArms)
@@ -82,8 +82,8 @@ class CentralizedCycling(BaseMPPolicy):
         print("CentralizedCycling: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
             self._players[playerId] = Cycling(nbArms, self._offsets[playerId])

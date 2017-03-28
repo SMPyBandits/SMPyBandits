@@ -60,9 +60,9 @@ class oneRhoLearn(oneRhoRand):
     def __init__(self, maxRank, rankSelectionAlgo, change_rank_each_step, *args, **kwargs):
         super(oneRhoLearn, self).__init__(maxRank, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(maxRank)  # FIXME I should give it more arguments?
-        self.maxRank = maxRank
-        self.rank = None
-        self.change_rank_each_step = change_rank_each_step
+        self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
+        self.rank = None  #: Current rank, starting to 1
+        self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
         # Keep in memory how many times a rank could be used while giving no collision
         # self.timesUntilCollision = np.zeros(maxRank, dtype=int)  # XXX not used anymore!
 
@@ -139,17 +139,17 @@ class rhoLearn(rhoRand):
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         if maxRank is None:
             maxRank = nbPlayers
-        self.maxRank = maxRank
-        self.nbPlayers = nbPlayers
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
-        self.rankSelectionAlgo = rankSelectionAlgo
-        self.nbArms = nbArms
-        self.change_rank_each_step = change_rank_each_step
+        self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
+        self.nbPlayers = nbPlayers  #: Number of players
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
+        self.rankSelectionAlgo = rankSelectionAlgo  #: Policy to use to chose the ranks
+        self.nbArms = nbArms  #: Number of arms
+        self.change_rank_each_step = change_rank_each_step  #: Change rank at every steps?
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
-        # Fake rankSelection
+        #: Fake rankSelection algorirhtm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)
 
     def __str__(self):

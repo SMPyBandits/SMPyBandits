@@ -13,9 +13,9 @@ class ChildPointer(object):
     """
 
     def __init__(self, mother, playerId):
-        self.mother = mother  # Pointer to the mother class.
-        self.playerId = playerId
-        self.nbArms = mother.nbArms
+        self.mother = mother  #: Pointer to the mother class.
+        self.playerId = playerId  #: ID of player in the mother class list of players
+        self.nbArms = mother.nbArms  #: Number of arms (pretty print)
 
     def __str__(self):
         return "#{}<{}>".format(self.playerId + 1, self.mother._players[self.playerId])

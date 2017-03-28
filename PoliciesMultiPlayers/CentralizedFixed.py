@@ -24,8 +24,8 @@ class Fixed(BaseCentralizedPolicy):
 
     def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
         """Fixed on this arm."""
-        self.nbArms = nbArms
-        self.armIndex = armIndex
+        self.nbArms = nbArms  #: Number of arms
+        self.armIndex = armIndex  #: Index of the fixed arm
 
     def __str__(self):
         return "Fixed({})".format(self.armIndex)
@@ -63,11 +63,11 @@ class CentralizedFixed(BaseMPPolicy):
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
-        self.nbPlayers = nbPlayers
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
         if nbPlayers <= nbArms:
-            self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)
+            self._affectations = np.random.choice(nbArms, size=nbPlayers, replace=False)  #: Affectations of choices to players
         else:
             self._affectations = np.zeros(nbPlayers, dtype=int)
             self._affectations[:nbArms] = np.random.permutation(nbArms)
@@ -83,8 +83,8 @@ class CentralizedFixed(BaseMPPolicy):
         print("CentralizedFixed: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
             self._players[playerId] = Fixed(nbArms, self._affectations[playerId])

@@ -53,16 +53,16 @@ class oneALOHA(ChildPointer):
     def __init__(self, nbPlayers, mother, playerId, nbArms,
                  p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None):
         super(oneALOHA, self).__init__(mother, playerId)
-        self.nbPlayers = nbPlayers
+        self.nbPlayers = nbPlayers  #: Number of players
         # Parameters for the ALOHA protocol
         assert 0 <= p0 <= 1, "Error: parameter 'p0' for a ALOHA player should be in [0, 1]."
-        self.p0 = p0  # Should not be modified
-        self.p = p0   # Can be modified
+        self.p0 = p0  #: Initial probability, should not be modified
+        self.p = p0   #: Current probability, can be modified
         assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
-        self.alpha_p0 = alpha_p0
+        self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # Parameters for the ftnext function
-        self.beta = beta
-        self._ftnext = ftnext  # Can be a callable or None
+        self.beta = beta  #: Parameter beta
+        self._ftnext = ftnext  #: Function to know how long arms are tagged as unavailable. Can be a callable or None
         # Find the name of the function
         if ftnext is None:
             if beta > 1:
@@ -78,9 +78,9 @@ class oneALOHA(ChildPointer):
         else:
             self._ftnext_name = self._ftnext.__name__.replace("tnext_", "")
         # Internal memory
-        self.tnext = np.zeros(nbArms, dtype=int)  # Only store the delta time
-        self.t = -1
-        self.chosenArm = None
+        self.tnext = np.zeros(nbArms, dtype=int)  #: Only store the delta time
+        self.t = -1  #: Internal time
+        self.chosenArm = None  #: Last chosen arm
 
     def __str__(self):
         return r"#{}<ALOHA({}, $p_0={:.3g}$, $\alpha={:.3g}$, $f(t)={}$)>".format(self.playerId + 1, self.mother._players[self.playerId], self.p0, self.alpha_p0, self._ftnext_name)
@@ -178,16 +178,16 @@ class ALOHA(BaseMPPolicy):
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
-        self.nbPlayers = nbPlayers
-        # Interal
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
+        self.nbPlayers = nbPlayers  #: Number of players
+        # Internal memory
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             # Initialize proxy child
             self.children[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta)
-        self.nbArms = nbArms
+        self.nbArms = nbArms  #: Number of arms
 
     def __str__(self):
         return "ALOHA({} x {})".format(self.nbPlayers, str(self._players[0]))

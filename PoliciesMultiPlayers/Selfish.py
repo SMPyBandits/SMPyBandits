@@ -51,11 +51,11 @@ class Selfish(BaseMPPolicy):
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
-        self.nbPlayers = nbPlayers
-        self.penalty = penalty
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self.penalty = penalty  #: Penalty = reward given in case of collision
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
+        self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)  # Create it here!
             self.children[playerId] = SelfishChildPointer(self, playerId)

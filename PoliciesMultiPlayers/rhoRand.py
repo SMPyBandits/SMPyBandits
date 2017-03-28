@@ -29,8 +29,8 @@ class oneRhoRand(ChildPointer):
 
     def __init__(self, maxRank, *args, **kwargs):
         super(oneRhoRand, self).__init__(*args, **kwargs)
-        self.maxRank = maxRank
-        self.rank = None
+        self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
+        self.rank = None  #: Current rank, starting to 1
 
     def __str__(self):   # Better to recompute it automatically
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Rand}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
@@ -82,11 +82,11 @@ class rhoRand(BaseMPPolicy):
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         if maxRank is None:
             maxRank = nbPlayers
-        self.maxRank = maxRank
-        self.nbPlayers = nbPlayers
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
-        self.nbArms = nbArms
+        self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
+        self.nbPlayers = nbPlayers  #: Number of players
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
+        self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.children[playerId] = oneRhoRand(maxRank, self, playerId)

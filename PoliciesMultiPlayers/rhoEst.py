@@ -72,14 +72,14 @@ class oneRhoEst(oneRhoRand):
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
         del self.maxRank  # <-- make SURE that maxRank is NOT used by the policy!
-        self.horizon = horizon
-        self.threshold = threshold
+        self.horizon = horizon  #: Horizon of the experiment. FIXME Not used anymore.
+        self.threshold = threshold  #: Threshold function
         # Internal variables
-        self.nbPlayersEstimate = 1  # Optimistic: start by assuming it is alone!
-        self.rank = None
-        self.collisionCount = 0
-        self.timeSinceLastCollision = 0
-        self.t = 0
+        self.nbPlayersEstimate = 1  #: Number of players. Optimistic: start by assuming it is alone!
+        self.rank = None  #: Current rank, starting to 1
+        self.collisionCount = 0  #: Count collision since last increase of nbPlayersEstimate
+        self.timeSinceLastCollision = 0  #: Time since last collision
+        self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
@@ -162,10 +162,10 @@ class rhoEst(rhoRand):
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
-        self.nbPlayers = nbPlayers
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
+        self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             fakemaxRank = None

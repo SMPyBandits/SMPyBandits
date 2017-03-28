@@ -25,13 +25,13 @@ class CyclingBest(BaseCentralizedPolicy):
 
     def __init__(self, nbArms, offset, bestArms=None):
         """Cycling with an offset."""
-        self.nbArms = nbArms
-        self.offset = offset
+        self.nbArms = nbArms  #: Number of arms
+        self.offset = offset  #: Offset
         if bestArms is None:
             bestArms = list(range(nbArms))
-        self.bestArms = bestArms
-        self.nb_bestArms = len(bestArms)
-        self.t = -1
+        self.bestArms = bestArms  #: List of index of the best arms to play
+        self.nb_bestArms = len(bestArms)  #: Number of best arms
+        self.t = -1  #: Internal time
 
     def __str__(self):
         return "CyclingBest({}, {})".format(self.offset, self.bestArms)
@@ -71,14 +71,14 @@ class OracleFair(BaseMPPolicy):
         if nbPlayers > nbArms:
             print("Warning, there is more users than arms ... (nbPlayers > nbArms)")  # XXX
         # Attributes
-        self.nbPlayers = nbPlayers
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
         means = np.array([arm.mean() for arm in armsMAB.arms])
         bestArms = np.argsort(means)[-min(nbPlayers, nbArms):]
         print("bestArms =", bestArms)  # DEBUG
         if nbPlayers <= nbArms:
-            self._offsets = np.argsort(means)[-nbPlayers:]
+            self._offsets = np.argsort(means)[-nbPlayers:]  #: Decide the offsets of the centralized players
         else:
             self._offsets = np.zeros(nbPlayers, dtype=int)
             self._offsets[:nbArms] = np.random.permutation(nbArms)
@@ -94,8 +94,8 @@ class OracleFair(BaseMPPolicy):
         print("OracleFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
         print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
-        self._players = [None] * nbPlayers
-        self.children = [None] * nbPlayers
+        self._players = [None] * nbPlayers  #: List of internal algorithms
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
             self._players[playerId] = CyclingBest(nbArms, self._offsets[playerId], bestArms)

@@ -46,18 +46,18 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         - Warning: s._players is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedMultiplePlay class has to be > 0."
-        self.nbPlayers = nbPlayers
-        self.player = playerAlgo(nbArms, *args, **kwargs)  # Only one policy
-        self.children = [None] * nbPlayers  # But nbPlayers children
-        self.nbArms = nbArms
+        self.nbPlayers = nbPlayers  #: Number of players
+        self.player = playerAlgo(nbArms, *args, **kwargs)  #: Only one policy
+        self.children = [None] * nbPlayers  #: But nbPlayers children, fake algorithms
+        self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self.children[playerId] = CentralizedChildPointer(self, playerId)
             print(" - One new child, of index {}, and class {} ...".format(playerId, self.children[playerId]))  # DEBUG
-        # Option: in case of multiplay plays, should the affectations of users always be uniform, or fixed when UCB indexes have converged? First choice is more fair, but linear nb of switches, second choice is not fair, but cst nb of switches
+        #: Option: in case of multiplay plays, should the affectations of users always be uniform, or fixed when UCB indexes have converged? First choice is more fair, but linear nb of switches, second choice is not fair, but cst nb of switches
         self.uniformAllocation = uniformAllocation
         # Internal memory
-        self.choices = (-10000) * np.ones(nbArms, dtype=int)
-        self.affectation_order = np.random.permutation(nbPlayers)
+        self.choices = (-10000) * np.ones(nbArms, dtype=int)  #: Choices, given by first call to internal algorithm
+        self.affectation_order = np.random.permutation(nbPlayers)  #: Affectation of choices to players
 
     def __str__(self):
         return "{}({} x {}{})".format(self.__class__.__name__, self.nbPlayers, str(self.player), ", shuffle" if self.uniformAllocation else "")
