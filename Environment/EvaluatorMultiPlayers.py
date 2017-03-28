@@ -21,7 +21,7 @@ from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, 
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
 # Local imports, objects and functions
 from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-from .MAB import MAB
+from .MAB import MAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
 
 REPETITIONS = 1
@@ -90,8 +90,14 @@ class EvaluatorMultiPlayers(object):
 
     def __initEnvironments__(self):
         nbArms = []
-        for armType in self.cfg['environment']:
-            MB = MAB(armType)
+        for configuration_arms in self.cfg['environment']:
+            # FIXME new!
+            if isinstance(configuration_arms, dict) \
+               and "arm_type" in configuration_arms and "params" in configuration_arms \
+               and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
+                MB = DynamicMAB(configuration_arms)
+            else:
+                MB = MAB(configuration_arms)
             self.envs.append(MB)
             nbArms.append(MB.nbArms)
         if len(set(nbArms)) != 1:  # FIXME
@@ -608,7 +614,9 @@ def delayed_play(env, players, horizon, collisionModel,
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     # We have to deepcopy because this function is Parallel-ized
     # XXX this uses a LOT of RAM memory!!!
-    env = deepcopy(env)
+    # env = deepcopy(env)
+    if env.isDynamic:  # FIXME
+        env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms
     nbPlayers = len(players)

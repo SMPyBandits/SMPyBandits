@@ -85,6 +85,7 @@ class Evaluator(object):
 
     def __initEnvironments__(self):
         for configuration_arms in self.cfg['environment']:
+            # FIXME new!
             if isinstance(configuration_arms, dict) \
                and "arm_type" in configuration_arms and "params" in configuration_arms \
                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
@@ -332,7 +333,7 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     # We have to deepcopy because this function is Parallel-ized
     if random_shuffle or random_invert:
         env = deepcopy(env)    # XXX this uses a LOT of RAM memory!!!
-    if not env.static:  # FIXME
+    if env.isDynamic:  # FIXME
         env.newRandomArms()
     policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
 

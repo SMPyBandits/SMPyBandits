@@ -30,9 +30,9 @@ from Policies import *
 #: Warning Should be >= 10000 to be interesting "asymptotically".
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000

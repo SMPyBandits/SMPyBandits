@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -35,8 +35,8 @@ class MAB(object):
 
     def __init__(self, configuration):
         print("Creating a new MAB problem ...")  # DEBUG
-        self.static = True  #: Flag to know if the problem is static or not.
-        # Previous thing
+        self.isDynamic = False  #: Flag to know if the problem is static or not.
+
         if isinstance(configuration, dict):
             print("  Reading arms of this MAB problem from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
             arm_type = configuration["arm_type"]
@@ -54,7 +54,7 @@ class MAB(object):
                 self.arms.append(arm)
 
         # Compute the means and stats
-        if self.static:
+        if self.isDynamic:
             print(" - with 'arms' =", self.arms)  # DEBUG
             self.means = np.array([arm.mean for arm in self.arms])
             print(" - with 'means' =", self.means)  # DEBUG
@@ -215,7 +215,7 @@ class MAB(object):
         show_and_save(showplot=True, savefig=savefig)
 
 
-# FIXME experimental
+# FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!
 class DynamicMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated everytime they are accessed.
 
@@ -224,7 +224,7 @@ class DynamicMAB(MAB):
     """
 
     def __init__(self, configuration):
-        self.static = False
+        self.isDynamic = True
 
         assert isinstance(configuration, dict) \
             and "arm_type" in configuration and "params" in configuration \
@@ -232,7 +232,7 @@ class DynamicMAB(MAB):
             "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"
 
         print("  Special MAB problem, changing at every repetitions, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
-        self.static = False
+
         self.arm_type = arm_type = configuration["arm_type"]
         print(" - with 'arm_type' =", arm_type)  # DEBUG
         params = configuration["params"]
@@ -259,7 +259,7 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        return repr(self)
+        return r"\mathrm{%s}(K=%i$ %s on $[%g, %g], \delta=%g)" % (self.__class__.__name__, self.nbArms, self.arm_type.__class__.__name__, self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
 
     #
     # --- Dynamic arms and means
