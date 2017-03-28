@@ -58,7 +58,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
@@ -214,25 +214,25 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
-        #     # nbPlayers = 4
-        # }
-        {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
             "arm_type": Bernoulli,
-            "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
-            # nbPlayers = 3
+            "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
+            # nbPlayers = 4
         }
+        # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
+        #     # nbPlayers = 3
+        # }
         # {   # A random problem: every repetition use a different mean vectors!
         #     "arm_type": Bernoulli,
         #     "params": {
         #         "function": randomMeans,
         #         "args": {
-        #             "nbArms": 10,
+        #             "nbArms": NB_PLAYERS,
         #             "lower": 0.,
         #             "amplitude": 1.,
-        #             "mingap": 0.05,
+        #             "mingap": 1. / (NB_PLAYERS * 2 + 1),
         #         }
         #     }
         # },
@@ -255,8 +255,12 @@ configuration = {
 }
 
 
-#: Number of arms *in the first environment*
-nbArms = len(configuration['environment'][0]['params'])
+try:
+    #: Number of arms *in the first environment*
+    nbArms = int(configuration['environment'][0]['params']['args']['nbArms'])
+except (TypeError, KeyError):
+    nbArms = len(configuration['environment'][0]['params'])
+
 if len(configuration['environment']) > 1:
     print("WARNING do not use this hack if you try to use more than one environment.")
 # XXX compute optimal values for d (MEGA's parameter)

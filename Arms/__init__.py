@@ -66,7 +66,7 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., sorted=True):
     """
     mus = np.sort(np.random.rand(nbArms))
     if mingap is not None and mingap > 0:
-        while np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
+        while len(set(mus)) == nbArms and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nbArms))
     if not sorted:
         np.random.shuffle(mus)

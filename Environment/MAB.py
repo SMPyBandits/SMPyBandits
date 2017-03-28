@@ -54,18 +54,17 @@ class MAB(object):
                 self.arms.append(arm)
 
         # Compute the means and stats
-        if self.isDynamic:
-            print(" - with 'arms' =", self.arms)  # DEBUG
-            self.means = np.array([arm.mean for arm in self.arms])  #: Means of arms
-            print(" - with 'means' =", self.means)  # DEBUG
-            self.nbArms = len(self.arms)  #: Number of arms
-            print(" - with 'nbArms' =", self.nbArms)  # DEBUG
-            self.maxArm = np.max(self.means)  #: Max mean of arms
-            print(" - with 'maxArm' =", self.maxArm)  # DEBUG
-            self.minArm = np.min(self.means)  #: Min mean of arms
-            print(" - with 'minArm' =", self.minArm)  # DEBUG
-            # Print lower bound and HOI factor
-            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
+        print(" - with 'arms' =", self.arms)  # DEBUG
+        self.means = np.array([arm.mean for arm in self.arms])  #: Means of arms
+        print(" - with 'means' =", self.means)  # DEBUG
+        self.nbArms = len(self.arms)  #: Number of arms
+        print(" - with 'nbArms' =", self.nbArms)  # DEBUG
+        self.maxArm = np.max(self.means)  #: Max mean of arms
+        print(" - with 'maxArm' =", self.maxArm)  # DEBUG
+        self.minArm = np.min(self.means)  #: Min mean of arms
+        print(" - with 'minArm' =", self.minArm)  # DEBUG
+        # Print lower bound and HOI factor
+        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
 
     def __repr__(self):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
@@ -260,7 +259,7 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        return r"\mathrm{%s}(K=%i$, %s on $[%g, %g], \delta_{\min}=%g)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
+        return r"\mathrm{%s}(K=%i$, %s on $[%.3g, %.3g], \delta_{\min}=%.3g)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
 
     #
     # --- Dynamic arms and means

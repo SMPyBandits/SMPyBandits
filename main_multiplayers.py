@@ -25,6 +25,7 @@ from configuration_multiplayers import configuration
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
 piechart = True  #: Plot a piechart for collision counts?
+piechart = False  #: Plot a piechart for collision counts?  # FIXME?
 averageRegret = True  #: Use average regret ?
 normalized = True  #: Plot normalized regret?
 fairnessAmplitude = False  #: Use amplitude measure for the fairness or std?
@@ -240,13 +241,14 @@ if __name__ == '__main__':
             evaluation.plotNbCollisions(envId, cumulated=True, upperbound=False)  # XXX To plot without saving
 
         # Also plotting the frequency of collision in each arm
-        savefig = mainfig.replace('main', 'main_FrequencyCollisions')
-        print(" - Plotting the frequency of collision in each arm")
-        if saveallfigs:
-            print("  and saving the plot to {} ...".format(savefig))
-            evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
-        else:
-            evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
+        for piechart in [True, False]:
+            savefig = mainfig.replace('main', 'main_FrequencyCollisions%s' % ('' if piechart else 'Hist'))
+            print(" - Plotting the frequency of collision in each arm")
+            if saveallfigs:
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+            else:
+                evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
         if saveallfigs:
             print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG

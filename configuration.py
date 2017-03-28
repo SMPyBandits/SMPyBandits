@@ -212,8 +212,11 @@ if len(configuration['environment']) > 1:
     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
 
-#: Number of arms *in the first environment*
-nbArms = len(configuration['environment'][0]['params'])
+try:
+    #: Number of arms *in the first environment*
+    nbArms = int(configuration['environment'][0]['params']['args']['nbArms'])
+except (TypeError, KeyError):
+    nbArms = len(configuration['environment'][0]['params'])
 
 #: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)

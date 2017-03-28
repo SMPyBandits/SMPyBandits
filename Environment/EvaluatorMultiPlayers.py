@@ -475,7 +475,7 @@ class EvaluatorMultiPlayers(object):
                 if normalized:
                     Y /= 1 + X
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1))
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+            legend()
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
@@ -499,7 +499,7 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], linewidth=1, markersize=1)
             # should only plot with markers
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
@@ -543,12 +543,12 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
-        plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        legend()
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self.showplot, savefig)
         return fig
 
-    def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True):
+    def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True, semilogy=True):
         """Plot the frequency of collision, in a pie chart (histogram not supported yet)."""
         nbArms = self.envs[envId].nbArms
         Y = np.zeros(1 + nbArms)  # One extra arm for "no collision"
@@ -574,14 +574,21 @@ class EvaluatorMultiPlayers(object):
         colors[-1] = 'lightgrey'
         # Start the figure
         fig = plt.figure()
+        plt.xlabel("{}{}".format(self.strPlayers(), signature))
         if piechart:
-            plt.xlabel("{}{}".format(self.strPlayers(), signature))
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
-        else:  # TODO do an histogram instead of this piechart?
-            plt.hist(Y, bins=len(Y), colors=colors)
-            # XXX if this is not enough, do the histogram/bar plot manually, and add labels as texts
-        plt.legend(loc='best', fancybox=True, framealpha=0.8)  # http://matplotlib.org/users/recipes.html#transparent-fancy-legends
+        else:
+            if semilogy:  # FIXME is it perfectly working?
+                Y = np.log10(Y)  # use semilogy scale!
+                Y -= np.min(Y)   # project back to [0, oo)
+                Y /= np.sum(Y)   # project back to [0, 1)
+            for i in range(len(Y)):
+                plt.axvspan(i - 0.25, i + 0.25, 0, Y[i], label=labels[i], color=colors[i])
+            plt.xticks(np.arange(len(Y)), ['Collision \non arm #$%i$' % i for i in range(nbArms)] + ['No collision'])
+            plt.ylabel("Frequency of collision, in logarithmic scale" if semilogy else "Frequency of collision")
+            add_percent_formatter("yaxis", 1.0)
+        legend()
         plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arms: ${}$".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].reprarms(self.nbPlayers)))
         show_and_save(self.showplot, savefig)
         return fig
