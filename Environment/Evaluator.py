@@ -277,7 +277,7 @@ class Evaluator(object):
                 stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
-                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY, Y[::self.delta_t_plot] + stdY, facecolor=colors[i], alpha=0.3)
+                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY[::self.delta_t_plot], Y[::self.delta_t_plot] + stdY[::self.delta_t_plot], facecolor=colors[i], alpha=0.3)
             # Print amplitude of regret
             if plotMaxMin and self.repetitions > 1:
                 MaxMinY = self.getMaxMinReward(i, envId) / 2.
