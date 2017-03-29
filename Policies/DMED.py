@@ -43,7 +43,33 @@ class DMED(BasePolicy):
         np.random.shuffle(self.nextActions)  # In a random order,
 
     def choice(self):
-        """ If there is still a next action to play, pop it and play it, otherwise make new list and play first action."""
+        r""" If there is still a next action to play, pop it and play it, otherwise make new list and play first action.
+
+        The list of action is obtained as all the indexes :math:`k` satisfying the following equation.
+
+        - For the naive version (``genuine = False``), DMED:
+
+        .. math::
+
+           N_k(t) \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \log(t).
+
+
+        - For the original version (``genuine = True``), DMED+:
+
+        .. math::
+
+           N_k(t) \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \log(\frac{t}{N_k(t)}).
+
+
+        Where :math:`X_k(t)` is the sum of rewards from arm k, :math:`\hat{\mu}_k(t)` is the empirical mean,
+        and :math:`\hat{\mu}^*(t)` is the best empirical mean.
+
+        .. math::
+
+           X_k(t) &= \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma) \\
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           \hat{\mu}^*(t) &= \max_{k=1}^{K} \hat{\mu}_k(t)
+        """
         if len(self.nextActions) == 0:
             empiricalMeans = self.rewards / self.pulls
             bestEmpiricalMean = np.max(empiricalMeans)
