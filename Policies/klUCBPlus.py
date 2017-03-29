@@ -39,9 +39,8 @@ class klUCBPlus(klUCB):
             # XXX We could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t / self.pulls[arm]) / self.pulls[arm], self.tolerance)
 
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     # FIXME klucb does not accept vectorial inputs, right?
-    #     indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t / self.pulls) / self.pulls, self.tolerance)
-    #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index = indexes
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t / self.pulls) / self.pulls, self.tolerance)
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes

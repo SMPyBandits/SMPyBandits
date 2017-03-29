@@ -28,7 +28,7 @@ class klUCB(IndexPolicy):
     def __init__(self, nbArms, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = c  #: Parameter c
-        self.klucb = klucb  #: kl function to use
+        self.klucb = np.vectorize(klucb)  #: kl function to use
         self.tolerance = tolerance  #: Numerical tolerance
 
     def __str__(self):
@@ -52,9 +52,8 @@ class klUCB(IndexPolicy):
             # XXX We could adapt tolerance to the value of self.t
             return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)
 
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     # FIXME klucb does not accept vectorial inputs, right?
-    #     indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance)
-    #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index = indexes
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance)
+        indexes[self.pulls < 1] = float('+inf')
+        self.index = indexes

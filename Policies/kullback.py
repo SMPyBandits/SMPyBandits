@@ -1,14 +1,36 @@
 # -*- coding: utf-8 -*-
-""" Kullback-Leibler utilities.
-Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
-Reference: [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf) and [Garivier & Cappé, 2011](https://arxiv.org/pdf/1102.2490.pdf)
+""" Kullback-Leibler divergence functions and klUCB utilities.
+
+- Faster implementation can be found in a C file, in ``Policies/C``, and should be compiled to speedup computations.
+- However, the version here have examples, doctests, and are jit compiled on the file (with numba, cf. http://numba.pydata.org/).
+- Cf. https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+- Reference: [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf) and [Garivier & Cappé, 2011](https://arxiv.org/pdf/1102.2490.pdf)
+
+
+.. warning::
+
+   All function are *not* vectorized, and assume only one value for each argument.
+   If you want vectorized function, use the wrapper :func:`numpy.vectorize`:
+
+   >>> import numpy as np
+   >>> klBern_vect = np.vectorize(klBern)
+   >>> klBern_vect([0.1, 0.5, 0.9], 0.2)  # doctest: +ELLIPSIS
+   array([ 0.036...,  0.223...,  1.145...])
+   >>> klBern_vect(0.4, [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+   array([ 0.104...,  0.022...,  0...])
+   >>> klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+   array([ 0.036...,  0.087...,  0.550...])
 """
 from __future__ import division, print_function
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from math import log, sqrt, exp
+# from numpy import log, sqrt, exp
+# from numpy import minimum as min
+# from numpy import maximum as max
+
 import numpy as np
 
 try:
@@ -489,24 +511,24 @@ def maxEV(p, V, klMax):
     if any(K):
         # Do we need to put some mass on a point where p is zero?
         # If yes, this has to be on one which maximizes V.
-        eta = max(V[K])
+        eta = np.max(V[K])
         J = K & (V == eta)
-        if eta > max(V[Kb]):
+        if eta > np.max(V[Kb]):
             y = np.dot(p[Kb], np.log(eta - V[Kb])) + log(np.dot(p[Kb], (1. / (eta - V[Kb]))))
             # print("eta = ", eta, ", y = ", y)
             if y < klMax:
                 rb = exp(y - klMax)
                 Uqtemp = p[Kb] / (eta - V[Kb])
-                Uq[Kb] = rb * Uqtemp / sum(Uqtemp)
-                Uq[J] = (1. - rb) / sum(J)
+                Uq[Kb] = rb * Uqtemp / np.sum(Uqtemp)
+                Uq[J] = (1. - rb) / np.sum(J)
                 # or j = min([j for j in range(k) if J[j]])
                 # Uq[j] = r
                 return Uq
     # Here, only points where p is strictly positive (in Kb) will receive non-zero mass.
-    if any(abs(V[Kb] - V[Kb][0]) > 1e-8):
+    if any(np.abs(V[Kb] - V[Kb][0]) > 1e-8):
         eta = reseqp(p[Kb], V[Kb], klMax)  # (eta = nu in the article)
         Uq = p / (eta - V)
-        Uq = Uq / sum(Uq)
+        Uq = Uq / np.sum(Uq)
     else:
         # Case where all values in V(Kb) are almost identical.
         Uq[Kb] = 1.0 / len(Kb)
@@ -521,8 +543,8 @@ def reseqp(p, V, klMax):
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
     - Warning: `np.dot` is very slow!
     """
-    MV = max(V)
-    mV = min(V)
+    MV = np.max(V)
+    mV = np.min(V)
     value = MV + 0.1
     tol = 1e-4
     if MV < mV + tol:
@@ -530,7 +552,7 @@ def reseqp(p, V, klMax):
     u = np.dot(p, (1 / (value - V)))
     y = np.dot(p, np.log(value - V)) + log(u) - klMax
     print("value =", value, ", y = ", y)  # DEBUG
-    while abs(y) > tol:
+    while np.abs(y) > tol:
         yp = u - np.dot(p, (1 / (value - V)**2)) / u  # derivative
         value -= y / yp
         print("value = ", value)  # DEBUG  # newton iteration
@@ -554,8 +576,8 @@ def reseqp2(p, V, klMax):
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
     - Warning: `np.dot` is very slow!
     """
-    MV = max(V)
-    mV = min(V)
+    MV = np.max(V)
+    mV = np.min(V)
     tol = 1e-4
     value0 = mV + 0.1
 
@@ -566,7 +588,7 @@ def reseqp2(p, V, klMax):
         else:
             u = np.dot(p, (1 / (value - V)))
             y = np.dot(p, np.log(value - V)) + log(u)
-        return abs(y - klMax)
+        return np.abs(y - klMax)
 
     res = minimize(f, value0)
     print("scipy.optimize.minimize returned", res)
