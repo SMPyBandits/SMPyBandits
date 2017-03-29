@@ -38,8 +38,8 @@ semilogx = False  #: Plot in semilogx by default?
 meanRegret = True  #: Plot mean regret ?
 normalizedRegret = False  #: Plot instantaneous regret?
 
-plotSTD = False  #: Plot regret with a STD?
 plotSTD = True   #: Plot regret with a STD?
+plotSTD = False  #: Plot regret with a STD?
 
 plotMaxMin = False  #: Plot +- max - min (amplitude) for regret.
 plotMaxMin = True   #: Plot +- max - min (amplitude) for regret.

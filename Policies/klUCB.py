@@ -29,6 +29,7 @@ class klUCB(IndexPolicy):
         super(klUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = c  #: Parameter c
         self.klucb = np.vectorize(klucb)  #: kl function to use
+        self.klucb.__name__ = klucb.__name__
         self.tolerance = tolerance  #: Numerical tolerance
 
     def __str__(self):

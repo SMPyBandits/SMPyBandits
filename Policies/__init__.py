@@ -15,6 +15,8 @@
 
 - Empirical KL-UCB algorithm: KLempUCB
 
+- Other algorithms: DMED
+
 - Hybrids algorithms: AdBandit
 
 - Aggregation algorithms: Aggr
@@ -80,6 +82,9 @@ from .klUCBH import klUCBH          # Knowing the horizon
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
 from .KLempUCB import KLempUCB  # Empirical KL UCB
+
+# From [Honda & Takemura, COLT 2010]
+from .DMED import DMED
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
