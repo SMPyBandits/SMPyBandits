@@ -36,7 +36,7 @@ class ThompsonRobust(Thompson):
 
         .. math::
 
-           I_k(t) &= \frac{1}{\mathrm{averageOn}} \sum_{i=1}{\mathrm{averageOn}} I_k^{(i)}(t),
+           I_k(t) &= \frac{1}{\mathrm{averageOn}} \sum_{i=1}^{\mathrm{averageOn}} I_k^{(i)}(t), \\
            I_k^{(i)}(t) &\sim \beta(1 + S_k(t), 1 + N_k(t) - S_k(t)).
         """
         return np.mean([self.posterior[arm].sample() for _ in range(self.averageOn)])
