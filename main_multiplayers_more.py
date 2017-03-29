@@ -262,7 +262,7 @@ if __name__ == '__main__':
                 evaluation.plotNbCollisions(envId, cumulated=True, upperbound=False)  # XXX To plot without saving
 
             # Also plotting the frequency of collision in each arm
-            for piechart in [True, False]:
+            for piechart in [False, True]:
                 savefig = mainfig.replace('main', 'main_FrequencyCollisions%s' % ('' if piechart else 'Hist'))
                 print(" - Plotting the frequency of collision in each arm")
                 if saveallfigs:

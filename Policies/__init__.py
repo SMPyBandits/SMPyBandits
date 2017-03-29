@@ -65,6 +65,7 @@ from .MOSSH import MOSSH  # Knowing the horizon
 
 # --- Thompson sampling index policy
 from .Thompson import Thompson
+from .ThompsonRobust import ThompsonRobust
 
 # --- Bayesian index policy
 from .BayesUCB import BayesUCB
