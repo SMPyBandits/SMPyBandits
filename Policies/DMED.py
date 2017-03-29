@@ -51,14 +51,14 @@ class DMED(BasePolicy):
 
         .. math::
 
-           N_k(t) \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \log(t).
+           \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \frac{\log(t)}{N_k(t)}.
 
 
         - For the original version (``genuine = True``), DMED+:
 
         .. math::
 
-           N_k(t) \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \log(\frac{t}{N_k(t)}).
+           \mathrm{kl}(\hat{\mu}_k(t), \hat{\mu}^*(t)) < \frac{\log(\frac{t}{N_k(t)})}{N_k(t)}.
 
 
         Where :math:`X_k(t)` is the sum of rewards from arm k, :math:`\hat{\mu}_k(t)` is the empirical mean,
