@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-""" The epsilon-greedy random policy.
-Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
+r""" The epsilon-greedy random policy.
+
+- At every time step, a fully uniform random exploration has probability :math:`\varepsilon(t)` to happen, otherwise an exploitation is done on accumulated rewards (not means).
+- Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
 
 __author__ = "Lilian Besson"
@@ -18,8 +20,10 @@ EPSILON = 0.1
 
 
 class EpsilonGreedy(BasePolicy):
-    """ The epsilon-greedy random policy.
-    Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
+    r""" The epsilon-greedy random policy.
+
+    - At every time step, a fully uniform random exploration has probability :math:`\varepsilon(t)` to happen, otherwise an exploitation is done on accumulated rewards (not means).
+    - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):

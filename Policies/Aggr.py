@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
-Reference: https://github.com/Naereen/AlgoBandits
+
+The algorithm is a master A, managing several "slave" algorithms, A1, .., AN.
+
+- At every step, the prediction of every slave is gathered, and a vote is done to decide A's decision.
+- The vote is simply a majority vote, weighted by a trust probability. If Ai decides arm Ii, then the probability of selecting k is the sum of trust probabilities, Pi, of every Ai for which Ii = k.
+- The trust probabilities are first uniform, Pi = 1/N, and then at every step, after receiving the feedback for *one* arm k (the reward), the trust in each slave Ai is updated: Pi increases if Ai advised k (Ii = k), or decreases if Ai advised another arm.
+
+- The detail about how to increase or decrease the probabilities are specified below.
 """
 from __future__ import print_function
 
@@ -12,27 +19,34 @@ import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 
-#: Default values for the parameters
-update_all_children = False
+# Default values for the parameters
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: ie just r_t, or unbiased estimators, r_t / p_t
+#: ie just r_t, or unbiased estimators, r_t / p_t, if p_t is the probability of selecting that arm at time t.
+#: It seemed to work better with unbiased estimators (of course).
 unbiased = False
 unbiased = True    # Better
 
 #: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
-update_like_exp4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
-update_like_exp4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)  # Better
+#:
+#: - First choice: like Exp4, trusts are fully recomputed, trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t),
+#: - Second choice: my proposal, trusts are just updated multiplicatively, trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t).
+#:
+#: Both choices seem fine, and anyway the trusts are renormalized to be a probability distribution, so it doesn't matter much.
+update_like_exp4 = True
+update_like_exp4 = False  # Better
 
-#: Non parametric flag to know if the Exp4-like update uses losses or rewards
+#: Non parametric flag to know if the Exp4-like update uses losses or rewards.
+#: Losses are 1 - reward, in which case the rate_t is negative.
 USE_LOSSES = True
 USE_LOSSES = False
 
+#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision Aggr[A1..AN] followed.
+update_all_children = False
+
 
 class Aggr(BasePolicy):
-    """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
-    Reference: https://github.com/Naereen/AlgoBandits
-    """
+    """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent."""
 
     def __init__(self, nbArms, children,
                  learningRate=None, decreaseRate=None, horizon=None,
@@ -41,19 +55,19 @@ class Aggr(BasePolicy):
                  lower=0., amplitude=1.,
                  ):
         # Attributes
-        self.nbArms = nbArms
-        self.lower = lower
-        self.amplitude = amplitude
-        self.learningRate = learningRate
-        self.decreaseRate = decreaseRate
-        self.unbiased = unbiased or update_like_exp4
+        self.nbArms = nbArms  #: Number of arms
+        self.lower = lower  #: Lower values for rewards
+        self.amplitude = amplitude  #: Larger values for rewards
+        self.learningRate = learningRate  #: Value of the learning rate (can be decreasing in time)
+        self.decreaseRate = decreaseRate  #: Value of the constant used in the decreasing of the learning rate
+        self.unbiased = unbiased or update_like_exp4  #: Flag, see above.
         # XXX If we use the Exp4 update rule, it's better to be unbiased
         # XXX If we use my update rule, it seems to be better to be "biased"
-        self.horizon = horizon
-        self.update_all_children = update_all_children
-        self.nbChildren = len(children)
-        self.t = -1
-        self.update_like_exp4 = update_like_exp4
+        self.horizon = horizon  #: Horizon T, if given and not None, can be used to compute a "good" constant learning rate, sqrt(2 log(N) / (T K)) for N slaves, K arms (heuristic).
+        self.update_all_children = update_all_children  #: Flag, see above.
+        self.nbChildren = len(children)  #: Number N of slave algorithms.
+        self.t = -1  #: Internal time
+        self.update_like_exp4 = update_like_exp4  #: Flag, see above.
         # If possible, pre compute the learning rate
         if horizon is not None and decreaseRate == 'auto':
             self.learningRate = np.sqrt(2 * np.log(self.nbChildren) / (self.horizon * self.nbArms))
@@ -61,7 +75,7 @@ class Aggr(BasePolicy):
         elif learningRate is None:
             self.decreaseRate = 'auto'
         # Internal object memory
-        self.children = []
+        self.children = []  #: List of slave algorithms.
         for i, child in enumerate(children):
             if isinstance(child, dict):
                 print("  Creating this child player from a dictionnary 'children[{}]' = {} ...".format(i, child))  # DEBUG
@@ -77,13 +91,13 @@ class Aggr(BasePolicy):
         # Initialize the arrays
         if prior is not None and prior != 'uniform':
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr.Aggr has to be an array of the good size ({}).".format(self.nbChildren)
-            self.trusts = prior
+            self.trusts = prior  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren
         # Internal vectorial memory
-        self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)
+        self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
         if self.update_like_exp4:
-            self.children_cumulated_losses = np.zeros(self.nbChildren)
+            self.children_cumulated_losses = np.zeros(self.nbChildren)  #: Keep track of the cumulated loss (empirical mean)
 
     # Print, different output according to the parameters
     def __str__(self):
@@ -177,7 +191,7 @@ class Aggr(BasePolicy):
     # --- Internal method
 
     def _makeChildrenChose(self):
-        """ Convenience method to make every children chose their best arm."""
+        """ Convenience method to make every children chose their best arm, and store their decision in ``self.choices``."""
         for i, child in enumerate(self.children):
             self.choices[i] = child.choice()
             # Could we be faster here? Idea: first sample according to self.trusts, then make it decide

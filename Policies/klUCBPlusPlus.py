@@ -65,7 +65,7 @@ class klUCBPlusPlus(klUCB):
 
         .. math::
 
-           g(n, T, K) := \max\left(0, log(\frac{T}{K n} (1 + \max\left(0, \log(\frac{T}{K n})\right)^2)) \right).
+           g(n, T, K) := \max\left(0, \log(\frac{T}{K n} (1 + \max\left(0, \log(\frac{T}{K n})\right)^2)) \right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')

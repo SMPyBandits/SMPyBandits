@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-""" The generic kl-UCB policy for one-parameter exponential distributions.
+r""" The generic kl-UCB policy for one-parameter exponential distributions.
 By default, it assumes Bernoulli arms.
-Note: using log10(t) + c log10(log10(t)) for the KL-UCB index of just log(t)
+Note: using :math:`\log10(t)` and not :math:`\log(t)` for the KL-UCB index.
 Reference: [Garivier & Cappé - COLT, 2011].
 """
 
@@ -16,9 +16,9 @@ from .klUCB import klUCB
 
 
 class klUCBloglog10(klUCB):
-    """ The generic kl-UCB policy for one-parameter exponential distributions.
+    r""" The generic kl-UCB policy for one-parameter exponential distributions.
     By default, it assumes Bernoulli arms.
-    Note: using log10(t) + c log10(log10(t)) for the KL-UCB index of just log(t)
+    Note: using :math:`\log10(t)` and not :math:`\log(t)` for the KL-UCB index.
     Reference: [Garivier & Cappé - COLT, 2011].
     """
 
