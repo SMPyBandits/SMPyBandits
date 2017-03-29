@@ -59,7 +59,7 @@ class Exp3(BasePolicy):
 
         .. math::
 
-           \mathrm{trusts}'_k(t+1) &= (1 - \gamma_t) w_k(t) + \gamma_t \frac{1}{K},
+           \mathrm{trusts}'_k(t+1) &= (1 - \gamma_t) w_k(t) + \gamma_t \frac{1}{K}, \\
            \mathrm{trusts}(t+1) &= \mathrm{trusts}'(t+1) / \sum_{k=1}^{K} \mathrm{trusts}'_k(t+1).
 
         If :math:`w_k(t)` is the current weight from arm k.

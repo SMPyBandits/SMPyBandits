@@ -33,8 +33,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -48,8 +48,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
-REPETITIONS = 100
-# REPETITIONS = 50
+# REPETITIONS = 100
+REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -155,18 +155,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
+        {   # Lots of bad arms, significative difference between the best and the others
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        },
         # {   # One optimal arm, much better than the others, but *lots* of bad arms
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
@@ -362,12 +362,12 @@ configuration.update({
         #         "alpha": 2
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 1
+        #     }
+        # },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
@@ -380,12 +380,12 @@ configuration.update({
         #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1          # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {

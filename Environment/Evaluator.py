@@ -3,7 +3,7 @@
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Generic imports
 from copy import deepcopy
@@ -22,14 +22,20 @@ from .MAB import MAB, DynamicMAB
 from .Result import Result
 
 
-REPETITIONS = 1  #: Default nb of repetitions
-DELTA_T_SAVE = 1  #: Default sampling rate for saving
+REPETITIONS = 1    #: Default nb of repetitions
+DELTA_T_SAVE = 1   #: Default sampling rate for saving
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
 nb_random_events = 5  #: Default nb of random events
+
+# Flag for experimental aspects
+STORE_ALL_REWARDS = False      #: Store all rewards?
+STORE_ALL_REWARDS = True       #: Store all rewards?
+STORE_REWARDS_SQUARED = True   #: Store rewards squared?
+STORE_REWARDS_SQUARED = False  #: Store rewards squared?
 
 
 class Evaluator(object):
@@ -63,14 +69,22 @@ class Evaluator(object):
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.cache_rewards = self.cfg.get('cache_rewards', False)  #: Should we cache and precompute rewards
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
+
         # Internal object memory
         self.envs = []  #: List of environments
         self.policies = []  #: List of policies
         self.__initEnvironments__()
+
         # Internal vectorial memory
-        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards
-        # self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards squared
-        # self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
+        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards, ie accumulated rewards
+        self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
+        self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
+
+        if STORE_REWARDS_SQUARED:
+            self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards squared
+        if STORE_ALL_REWARDS:
+            self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
+
         self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.pulls = dict()  #: For each env, keep the history of best arm pulls
         for env in range(len(self.envs)):
@@ -141,8 +155,14 @@ class Evaluator(object):
 
         def store(r, repeatId):
             self.rewards[policyId, envId, :] += r.rewards
-            # self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
-            # self.allRewards[policyId, envId, :, repeatId] = r.rewards
+            if hasattr(self, 'rewardsSquared'):
+                self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
+            if hasattr(self, 'allRewards'):
+                self.allRewards[policyId, envId, :, repeatId] = r.rewards
+            if hasattr(self, 'minCumRewards'):
+                self.minCumRewards[policyId, envId, :] = np.minimum(self.minCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
+            if hasattr(self, 'maxCumRewards'):
+                self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
             # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
             self.pulls[envId][policyId, :] += r.pulls
@@ -197,7 +217,7 @@ class Evaluator(object):
         return self.rewardsSquared[policyId, envId, :] / float(self.repetitions)
 
     def getSTDRegret(self, policyId, envId=0, meanRegret=False):
-        """Extract standard deviation of rewards."""
+        """Extract standard deviation of rewards. FIXME experimental! """
         # X = self.times
         # YMAX = self.getMaxRewards(envId=envId)
         # Y = self.getRewards(policyId, envId)
@@ -218,13 +238,19 @@ class Evaluator(object):
         # # Renormalize this standard deviation
         # # stdY /= YMAX
         allRewards = self.allRewards[policyId, envId, :, :]
-        stdY = np.std(np.cumsum(allRewards, axis=0), axis=1)
-        return stdY
+        return np.std(np.cumsum(allRewards, axis=0), axis=1)
+
+    def getMaxMinReward(self, policyId, envId=0):
+        """Extract amplitude of rewards as maxCumRewards - minCumRewards."""
+        return (self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]) / float(self.repetitions)
 
     # --- Plotting methods
 
     def plotRegrets(self, envId,
-                    savefig=None, meanRegret=False, plotSTD=False, semilogx=False, normalizedRegret=False, drawUpperBound=False,
+                    savefig=None, meanRegret=False,
+                    plotSTD=False, plotMaxMin=False,
+                    semilogx=False, normalizedRegret=False,
+                    drawUpperBound=False,
                     ):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
         fig = plt.figure()
@@ -240,30 +266,35 @@ class Evaluator(object):
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
-            lw = 4 if str(policy)[:4] == 'Aggr' else 2
+            lw = 3 if str(policy)[:4] == 'Aggr' else 2
             if semilogx:
                 # FIXED for semilogx plots, truncate to only show t >= 100
                 plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
-            # XXX plt.fill_between http://matplotlib.org/users/recipes.html#fill-between-and-alpha instead of plt.errorbar
+            # Print standard deviation of regret
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
-                # stdY = 0.01 * np.max(np.abs(Y))  # DEBUG: 1% std to see it
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
-                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY, Y[::self.delta_t_plot] + stdY, facecolor=colors[i], alpha=0.4)
-                # plt.errorbar(X, Y, yerr=stdY, label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), alpha=0.9)
+                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY, Y[::self.delta_t_plot] + stdY, facecolor=colors[i], alpha=0.3)
+            # Print amplitude of regret
+            if plotMaxMin and self.repetitions > 1:
+                MaxMinY = self.getMaxMinReward(i, envId) / 2.
+                if normalizedRegret:
+                    MaxMinY /= np.log(2 + X)
+                plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.3)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
         lowerbound = self.envs[envId].lowerbound()
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-        ymax = plt.ylim()[1]
-        plt.ylim(ymin, ymax)
+        plt.ylim(ymin, plt.ylim()[1])
+        # Get a small string to add to ylabel
+        ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
         if meanRegret:
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
-            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
             if not self.envs[envId].isDynamic:
                 plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
@@ -271,7 +302,7 @@ class Evaluator(object):
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             legend()
-            plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         else:
             if drawUpperBound and not semilogx:
@@ -288,7 +319,7 @@ class Evaluator(object):
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             legend()
-            plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$" % (self.repetitions,))
+            plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: ${}$".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1)))
         show_and_save(self.showplot, savefig)
         return fig
@@ -304,7 +335,7 @@ class Evaluator(object):
         X = self.times[2:]
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
-            lw = 5 if str(policy)[:4] == 'Aggr' else 3
+            lw = 3 if str(policy)[:4] == 'Aggr' else 2
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
