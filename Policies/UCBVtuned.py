@@ -19,7 +19,19 @@ class UCBVtuned(UCBV):
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math::
+
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           V_k(t) &= \frac{Z_k(t)}{N_k(t)} - \hat{\mu}_k(t)^2, \\
+           V'_k(t) &= V_k(t) + \sqrt{\frac{2 \log(t)}{N_k(t)}}, \\
+           I_k(t) &= \hat{\mu}_k(t) + \sqrt{\frac{\log(t) V'_k(t)}{N_k(t)}}.
+
+        Where :math:`V'_k(t)` is an other estimator of the variance of rewards,
+        obtained from :math:`X_k(t) = \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma)` is the sum of rewards from arm k,
+        and :math:`Z_k(t) = \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma)^2` is the sum of rewards *squared*.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

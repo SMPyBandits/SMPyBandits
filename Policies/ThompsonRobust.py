@@ -30,5 +30,13 @@ class ThompsonRobust(Thompson):
         return "%s(averageOn = %i)" % (self.__class__.__name__, self.averageOn)
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm, by sampling averageOn times the posterior and returning the average index. """
+        r""" Compute the current index for this arm, by sampling averageOn times the posterior and returning the average index.
+
+        At time t and after :math:`N_k(t)` pulls of arm k, giving :math:`S_k(t)` rewards of 1, by sampling from the Beta posterior and averaging:
+
+        .. math::
+
+           I_k(t) &= \frac{1}{\mathrm{averageOn}} \sum_{i=1}{\mathrm{averageOn}} I_k^{(i)}(t),
+           I_k^{(i)}(t) &\sim \beta(1 + S_k(t), 1 + N_k(t) - S_k(t)).
+        """
         return np.mean([self.posterior[arm].sample() for _ in range(self.averageOn)])

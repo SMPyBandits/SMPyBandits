@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB policy for bounded bandits, using log10(t) and not ln(t) for UCB index.
+r""" The UCB policy for bounded bandits, using :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
 Reference: [Lai & Robbins, 1985].
 """
 
@@ -14,12 +14,15 @@ from .IndexPolicy import IndexPolicy
 
 
 class UCBlog10(IndexPolicy):
-    """ The UCB policy for bounded bandits, using log10(t) and not ln(t) for UCB index.
+    r""" The UCB policy for bounded bandits, using :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
     Reference: [Lai & Robbins, 1985].
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \log_{10}(t)}{N_k(t)}}.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

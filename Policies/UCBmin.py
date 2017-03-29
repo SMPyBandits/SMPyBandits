@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB-min policy for bounded bandits, with a min(1, sqrt(...)) term.
+r""" The UCB-min policy for bounded bandits, with a :math:`\min\left(1, \sqrt{\frac{\log(t)}{2 N_k(t)}}\right)` term.
 Reference: [Anandkumar et al., 2010].
 """
 
@@ -14,12 +14,15 @@ from .UCB import UCB
 
 
 class UCBmin(UCB):
-    """ The UCB-min policy for bounded bandits, with a min(1, sqrt(...)) term.
+    r""" The UCB-min policy for bounded bandits, with a :math:`\min\left(1, \sqrt{\frac{\log(t)}{2 N_k(t)}}\right)` term.
     Reference: [Anandkumar et al., 2010].
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \min\left(1, \sqrt{\frac{\log(t)}{2 N_k(t)}}\right).
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

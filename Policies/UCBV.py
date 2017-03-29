@@ -27,11 +27,23 @@ class UCBV(UCB):
         self.rewardsSquared.fill(0)
 
     def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards and of rewards squared for that arm (normalized in [0, 1])."""
         super(UCBV, self).getReward(arm, reward)
         self.rewardsSquared[arm] += ((reward - self.lower) / self.amplitude) ** 2
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math::
+
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           V_k(t) &= \frac{Z_k(t)}{N_k(t)} - \hat{\mu}_k(t)^2, \\
+           I_k(t) &= \hat{\mu}_k(t) + \sqrt{\frac{2 \log(t) V_k(t)}{N_k(t)}} + 3 (b - a) \frac{\log(t)}{N_k(t)}.
+
+        Where rewards are in :math:`[a, b]`, and :math:`V_k(t)` is an estimator of the variance of rewards,
+        obtained from :math:`X_k(t) = \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma)` is the sum of rewards from arm k,
+        and :math:`Z_k(t) = \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma)^2` is the sum of rewards *squared*.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

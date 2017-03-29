@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-""" The UCBwrong policy for bounded bandits, like UCB but with a typo on the estimator of means.
+r""" The UCBwrong policy for bounded bandits, like UCB but with a typo on the estimator of means:
+:math:`\frac{X_k(t)}{t}` is used instead of :math:`\frac{X_k(t)}{N_k(t)}`.
 
 One paper of W.Jouini, C.Moy and J.Palicot from 2009 contained this typo, I reimplemented it just to check that:
 
-- its performance is worse than simple UCB
+- its performance is worse than simple UCB,
 - but not that bad...
 """
 
@@ -27,7 +28,10 @@ class UCBwrong(IndexPolicy):
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{t} + \sqrt{\frac{2 \log(t)}{N_k(t)}}.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

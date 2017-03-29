@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The UCB-+ policy for bounded bandits, with a small trick on the index.
+""" The UCB+ policy for bounded bandits, with a small trick on the index.
 Reference: [Auer et al. 02].
 """
 
@@ -14,12 +14,15 @@ from .UCB import UCB
 
 
 class UCBplus(UCB):
-    """ The UCB-+ policy for bounded bandits, with a small trick on the index.
+    """ The UCB+ policy for bounded bandits, with a small trick on the index.
     Reference: [Auer et al. 02].
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log(t / N_k(t))}{2 N_k(t)}\right)}.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

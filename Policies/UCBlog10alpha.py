@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-""" The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
-Note: using log10(t) and not ln(t) for UCB index.
+r""" The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
+Note: :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
 Reference: [Auer et al. 02].
 """
 
@@ -19,8 +19,8 @@ ALPHA = 1
 
 
 class UCBlog10alpha(UCBlog10):
-    """ The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
-    Note: using log10(t) and not ln(t) for UCB index.
+    r""" The UCB1 (UCB-alpha) index policy, modified to take a random permutation order for the initial exploration of each arm (reduce collisions in the multi-players setting).
+    Note: :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
     Reference: [Auer et al. 02].
     """
 
@@ -33,7 +33,10 @@ class UCBlog10alpha(UCBlog10):
         return r"UCB($\alpha={:.3g}$, {})".format(self.alpha, r"$\log_{10}$")
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha \log_{10}(t)}{2 N_k(t)}}.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

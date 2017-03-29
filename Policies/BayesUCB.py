@@ -15,5 +15,8 @@ class BayesUCB(BayesianIndexPolicy):
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k, giving :math:`S_k(t)` rewards of 1, by taking the :math:`1 - \frac{1}{t}` quantile from the Beta posterior:
+
+        .. math:: I_k(t) = \mathrm{Quantile}\left(\beta(1 + S_k(t), 1 + N_k(t) - S_k(t)), 1 - \frac{1}{t}\right).
+        """
         return self.posterior[arm].quantile(1. - 1. / (1 + self.t))

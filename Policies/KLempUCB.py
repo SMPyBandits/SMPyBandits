@@ -3,8 +3,8 @@
 Reference: [Maillard, Munos & Stoltz - COLT, 2011], [Cappé, Garivier,  Maillard, Munos & Stoltz, 2012].
 """
 
-__author__ = "Olivier Cappé, Aurélien Garivier"
-__version__ = "$Revision: 1.8 $"
+__author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
+__version__ = "0.1"
 
 import numpy as np
 
@@ -27,18 +27,21 @@ class KLempUCB(IndexPolicy):
         self.obs = [dict()] * self.nbArms
 
     def startGame(self):
+        """ Initialize the policy for a new game."""
         self.t = 0
         self.pulls.fill(0)
         for arm in range(self.nbArms):
             self.obs[arm] = {self.maxReward: 0}
 
     def computeIndex(self, arm):
-        if self.pulls[arm] > 0:
-            return self._KLucb(self.obs[arm], self.c * np.log(self.t) / self.pulls[arm])
-        else:
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k."""
+        if self.pulls[arm] < 1:
             return float('+infinity')
+        else:
+            return self._KLucb(self.obs[arm], self.c * np.log(self.t) / self.pulls[arm])
 
     def getReward(self, arm, reward):
+        """ Give a reward: increase t, pulls, and update count of observations for that arm."""
         self.t += 1
         self.pulls[arm] += 1
         self.obs[arm][reward] = 1 + self.obs[arm].get(reward, 0)

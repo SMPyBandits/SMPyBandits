@@ -22,7 +22,17 @@ class klUCBPlus(klUCB):
         return r"KL-UCB+({}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math::
+
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t / N_k(t))}{N_k(t)} \right\},\\
+           I_k(t) &= \hat{\mu}_k(t) + U_k(t).
+
+        If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
+        and c is the parameter (default to 1).
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:

@@ -5,7 +5,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.6"
 
 from warnings import warn
 import numpy as np

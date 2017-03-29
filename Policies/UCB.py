@@ -19,7 +19,10 @@ class UCB(IndexPolicy):
     """
 
     def computeIndex(self, arm):
-        """ Compute the current index for this arm."""
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \log(t)}{N_k(t)}}.
+        """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
