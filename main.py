@@ -142,15 +142,21 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogx')
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
+            if configuration['repetitions'] > 1:
+                if plotSTD:
+                    savefig = savefig.replace('main', 'main_STD')
+                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotSTD=True)  # XXX To save the figure
+                elif plotMaxMin:
+                    savefig = savefig.replace('main', 'main_MaxMin')
+                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotMaxMin=True)  # XXX To save the figure
         else:
             evaluation.plotRegrets(envId)
             evaluation.plotRegrets(envId, semilogx=True)
-            if configuration['repetitions'] > 1 and plotSTD:
-                print("FIXME plotting STD ...")  # DEBUG
-                evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
-            if configuration['repetitions'] > 1 and plotMaxMin:
-                print("FIXME plotting MaxMin ...")  # DEBUG
-                evaluation.plotRegrets(envId, semilogx=semilogx, plotMaxMin=True)
+            if configuration['repetitions'] > 1:
+                if plotSTD:
+                    evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
+                elif plotMaxMin:
+                    evaluation.plotRegrets(envId, semilogx=semilogx, plotMaxMin=True)
 
         if meanRegret:
             if saveallfigs:
@@ -165,14 +171,20 @@ if __name__ == '__main__':
                 savefig = mainfig.replace('main', 'main_Normalized')
                 print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
+                if configuration['repetitions'] > 1:
+                    if plotSTD:
+                        savefig = savefig.replace('main', 'main_STD')
+                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotSTD=True)  # XXX To save the figure
+                    elif plotMaxMin:
+                        savefig = savefig.replace('main', 'main_MaxMin')
+                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)  # XXX To save the figure
             else:
                 evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True)
-                if configuration['repetitions'] > 1 and plotSTD:
-                    print("FIXME plotting STD ...")  # DEBUG
-                    evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
-                if configuration['repetitions'] > 1 and plotMaxMin:
-                    print("FIXME plotting MaxMin ...")  # DEBUG
-                    evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)
+                if configuration['repetitions'] > 1:
+                    if plotSTD:
+                        evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
+                    elif plotMaxMin:
+                        evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)
 
         # --- Also plotting the probability of picking the best arm
         if evaluation.random_shuffle or evaluation.random_invert:
