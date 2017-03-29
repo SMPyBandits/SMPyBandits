@@ -38,11 +38,9 @@ semilogx = False  #: Plot in semilogx by default?
 meanRegret = True  #: Plot mean regret ?
 normalizedRegret = False  #: Plot instantaneous regret?
 
-# FIXME finish to debug this!
 plotSTD = False  #: Plot regret with a STD?
 plotSTD = True   #: Plot regret with a STD?
 
-# FIXME finish to debug this!
 plotMaxMin = False  #: Plot +- max - min (amplitude) for regret.
 plotMaxMin = True   #: Plot +- max - min (amplitude) for regret.
 
@@ -146,7 +144,7 @@ if __name__ == '__main__':
                 if plotSTD:
                     savefig = savefig.replace('main', 'main_STD')
                     evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotSTD=True)  # XXX To save the figure
-                elif plotMaxMin:
+                if plotMaxMin:
                     savefig = savefig.replace('main', 'main_MaxMin')
                     evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotMaxMin=True)  # XXX To save the figure
         else:
@@ -155,7 +153,7 @@ if __name__ == '__main__':
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
-                elif plotMaxMin:
+                if plotMaxMin:
                     evaluation.plotRegrets(envId, semilogx=semilogx, plotMaxMin=True)
 
         if meanRegret:
@@ -175,7 +173,7 @@ if __name__ == '__main__':
                     if plotSTD:
                         savefig = savefig.replace('main', 'main_STD')
                         evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotSTD=True)  # XXX To save the figure
-                    elif plotMaxMin:
+                    if plotMaxMin:
                         savefig = savefig.replace('main', 'main_MaxMin')
                         evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)  # XXX To save the figure
             else:
@@ -183,7 +181,7 @@ if __name__ == '__main__':
                 if configuration['repetitions'] > 1:
                     if plotSTD:
                         evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
-                    elif plotMaxMin:
+                    if plotMaxMin:
                         evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)
 
         # --- Also plotting the probability of picking the best arm
