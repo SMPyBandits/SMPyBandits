@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 r""" The epsilon exp-decreasing random policy.
 
-- :math:`\varepsilon(t) = \varepsilon_0 \exp(-t \mathrm{decreasingRate}`
+- :math:`\varepsilon(t) = \varepsilon_0 \exp(-t \mathrm{decreasingRate})`.
 - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
 
@@ -22,7 +22,7 @@ DECREASINGRATE = 1e-6
 class EpsilonExpDecreasing(EpsilonGreedy):
     r""" The epsilon exp-decreasing random policy.
 
-    - :math:`\varepsilon(t) = \varepsilon_0 \exp(-t \mathrm{decreasingRate}`
+    - :math:`\varepsilon(t) = \varepsilon_0 \exp(-t \mathrm{decreasingRate})`.
     - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
     """
 

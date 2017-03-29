@@ -40,6 +40,7 @@ class Softmax(BasePolicy):
         # The proba that another player has the same is nbPlayers / factorial(nbArms) : should be SMALL !
 
     def startGame(self):
+        """Nothing special to do."""
         super(Softmax, self).startGame()
 
     def __str__(self):
@@ -57,8 +58,8 @@ class Softmax(BasePolicy):
 
         .. math::
 
-           \mathrm{trusts}'_k &= \exp\left( \frac{X_k(t)}{\eta_t N_k(t)} \right) \\
-           \mathrm{trusts} = \mathrm{trusts}' / \sum_{k=1}^{K} \mathrm{trusts}'_k.
+           \mathrm{trusts}'_k(t+1) &= \exp\left( \frac{X_k(t)}{\eta_t N_k(t)} \right) \\
+           \mathrm{trusts}(t+1) &= \mathrm{trusts}'(t+1) / \sum_{k=1}^{K} \mathrm{trusts}'_k(t+1).
 
         If :math:`X_k(t) = \sum_{\sigma=1}^{t} 1(A(\sigma) = k) r_k(\sigma)` is the sum of rewards from arm k.
         """
@@ -105,7 +106,7 @@ class Softmax(BasePolicy):
             return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
 
-# --- Special cases
+# --- Three special cases
 
 class SoftmaxWithHorizon(Softmax):
     r""" Softmax with fixed temperature :math:`\eta_t = \eta_0` chosen with a knowledge of the horizon."""
