@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -61,7 +61,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 100
 REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 10
+REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -447,26 +447,27 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
     # --- 9) Mixing rhoRand or Selfish with different learning algorithms
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
-    rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
-    Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
-    rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
-    Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
-    rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
-    Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
-    rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
     # Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
     # + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children \
     # + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children,
+    # --- 10) Comparing different "robust" ThompsonSampling algorithms
+    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
+    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
+    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
+    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
+    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
+    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
+    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
+    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
 ]
 
 

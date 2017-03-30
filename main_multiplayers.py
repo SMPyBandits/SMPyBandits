@@ -13,19 +13,20 @@ from os import mkdir
 import os.path
 from os import getenv
 
-# if __name__ != '__main__':
-#     print("Warning: this script 'main.py' does not expose any documentation ...")  # DEBUG
-#     exit(0)
+# Backup evaluation object
+import pickle
+# import h5py
 
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify
 from configuration_multiplayers import configuration
 
+USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
-piechart = True  #: Plot a piechart for collision counts?
-piechart = False  #: Plot a piechart for collision counts?  # FIXME?
+piechart = True  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
+piechart = False  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
 averageRegret = True  #: Use average regret ?
 normalized = True  #: Plot normalized regret?
 fairnessAmplitude = False  #: Use amplitude measure for the fairness or std?
@@ -35,8 +36,7 @@ saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots or not
-do_plot = False
-do_plot = True
+do_plots = True
 
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
@@ -61,30 +61,40 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(PLOT_DIR))
     else:
         mkdir(PLOT_DIR)
+
     # (almost) unique hash from the configuration
     hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
     evaluation = EvaluatorMultiPlayers(configuration)
     # Start the evaluation and then print final ranking and plot, for each environment
     M = evaluation.nbPlayers
     N = len(evaluation.envs)
+
     for envId, env in enumerate(evaluation.envs):
         # # Plot histogram for rewards for that env
-        # if do_plot and interactive:
+        # if do_plots and interactive:
         #     env.plotHistogram(evaluation.horizon * evaluation.repetitions)
 
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
+
         # Display the final rankings for that env
         print("Giving the final ranks ...")
         evaluation.printFinalRanking(envId)
-        if not do_plot:
-            break
 
         # Sub folder with a useful name
         subfolder = "MP__M{}_T{}_N{}".format(len(configuration['players']), configuration['horizon'], configuration['repetitions'])
         # Get the name of the output file
         imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         plot_dir = os.path.join(PLOT_DIR, subfolder)
+
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+        picklename = mainfig + '.pickle'
+
+        # FIXME finish this to also save result in a HDF5 file!
+        # h5pyname = mainfig + '.hdf5'
+        # h5pyfile = h5py.File(h5pyname, 'w')
+
         if saveallfigs:
             # Create the sub folder
             if os.path.isdir(plot_dir):
@@ -94,8 +104,16 @@ if __name__ == '__main__':
             else:
                 mkdir(plot_dir)
 
-        mainfig = os.path.join(plot_dir, imagename)
-        savefig = mainfig
+            # Save it to a pickle file
+            # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+            if USE_PICKLE:
+                with open(picklename, 'wb') as picklefile:
+                    print("Saving the EvaluatorMultiPlayers 'evaluation' objet to", picklename, "...")
+                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+
+        if not do_plots:
+            break
+
         # Plotting the decentralized rewards
         print("\n\n- Plotting the decentralized rewards")
         if saveallfigs:

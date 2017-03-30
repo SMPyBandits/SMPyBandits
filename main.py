@@ -15,12 +15,8 @@ import os.path
 from os import getenv
 
 # Backup evaluation object
-# import pickle
+import pickle
 # import h5py
-
-# if __name__ != '__main__':
-#     print("Warning: this script 'main.py' does not expose any documentation ...")  # DEBUG
-#     exit(0)
 
 # Local imports
 from Environment import Evaluator, notify
@@ -31,6 +27,7 @@ if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
 else:
     from configuration import configuration
 
+USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
@@ -52,8 +49,7 @@ finalRanksOnAverage = True     #: Use an average instead of the last value for t
 averageOn = 1e-2               #: Average the final rank on the 1% last time steps
 
 #: Whether to do the plots or not
-do_plot = False
-do_plot = True
+do_plots = True
 
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
@@ -78,13 +74,25 @@ if __name__ == '__main__':
         raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(PLOT_DIR))
     else:
         mkdir(PLOT_DIR)
+
     evaluation = Evaluator(configuration, finalRanksOnAverage=finalRanksOnAverage, averageOn=averageOn)
     # Start the evaluation and then print final ranking and plot, for each environment
     N = len(evaluation.envs)
 
     for envId, env in enumerate(evaluation.envs):
+        # # Plot histogram for rewards for that env
+        # if do_plots and interactive:
+        #     env.plotHistogram(evaluation.horizon * evaluation.repetitions)
+
         # (almost) unique hash from the configuration
         hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
+
+        # Evaluate just that env
+        evaluation.startOneEnv(envId, env)
+
+        # Display the final rankings for that env
+        print("Giving the final ranks ...")
+        evaluation.printFinalRanking(envId)
 
         # Sub folder with a useful name
         subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
@@ -94,18 +102,11 @@ if __name__ == '__main__':
         imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
+        picklename = mainfig + '.pickle'
 
         # FIXME finish this to also save result in a HDF5 file!
         # h5pyname = mainfig + '.hdf5'
         # h5pyfile = h5py.File(h5pyname, 'w')
-        picklename = mainfig + '.pickle'
-
-        # # Plot histogram for rewards for that env
-        # if do_plot and interactive:
-        #     env.plotHistogram(evaluation.horizon * evaluation.repetitions)
-
-        # Evaluate just that env
-        evaluation.startOneEnv(envId, env)
 
         if saveallfigs:
             # Create the sub folder
@@ -116,23 +117,21 @@ if __name__ == '__main__':
             else:
                 mkdir(plot_dir)
 
-            # # Save it to a pickle file
-            # # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
-            # with open(picklename, 'wb') as picklefile:
-            #     print("Saving the 'evaluation' objet to", picklefile, "...")
-            #     pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+            # Save it to a pickle file
+            # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+            if USE_PICKLE:
+                with open(picklename, 'wb') as picklefile:
+                    print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
+                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
 
-        # h5pydb = h5pyfile.create_dataset("results", (XXX, XXX))
-        # Save the internal vectorial memory of the evaluator object
-        # rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
-        # rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
-        # BestArmPulls = np.zeros((self.nbPolicies, self.duration))
-        # pulls = np.zeros((self.nbPolicies, env.nbArms))
+            # h5pydb = h5pyfile.create_dataset("results", (XXX, XXX))
+            # Save the internal vectorial memory of the evaluator object
+            # rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+            # rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))
+            # BestArmPulls = np.zeros((self.nbPolicies, self.duration))
+            # pulls = np.zeros((self.nbPolicies, env.nbArms))
 
-        # Display the final rankings for that env
-        print("Giving the final ranks ...")
-        evaluation.printFinalRanking(envId)
-        if not do_plot:
+        if not do_plots:
             break
 
         if saveallfigs:

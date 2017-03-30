@@ -13,19 +13,20 @@ from os import mkdir
 import os.path
 from os import getenv
 
-# if __name__ != '__main__':
-#     print("Warning: this script 'main.py' does not expose any documentation ...")  # DEBUG
-#     exit(0)
+# Backup evaluation object
+import pickle
+# import h5py
 
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify
 from configuration_multiplayers import configuration
 
+USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
-piechart = True  #: Plot a piechart for collision counts?
-piechart = False  #: Plot a piechart for collision counts?  # FIXME?
+piechart = True  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
+piechart = False  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
 averageRegret = True  #: Use average regret ?
 normalized = True  #: Plot normalized regret?
 fairnessAmplitude = False  #: Use amplitude measure for the fairness or std?
@@ -35,12 +36,12 @@ saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots for single experiments or not
-do_simple_plot = False
-do_simple_plot = True
+do_simple_plots = False
+do_simple_plots = True
 
-#: Whether to do the common plots or not
-do_all_plot = False
-do_all_plot = True
+#: Whether to do the plots for comparison experiments or not
+do_comparison_plots = False
+do_comparison_plots = True
 
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
@@ -58,7 +59,7 @@ if getenv('XKCD', False) and interactive and not saveallfigs:
 if __name__ == '__main__':
     # Update configuration
     configuration['showplot'] = interactive
-    del configuration['players']
+    del configuration['players']  # Be sure to only use "successive_players" value
 
     _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
 
@@ -81,18 +82,21 @@ if __name__ == '__main__':
         # (almost) unique hash from the configuration
         hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
         evaluation = EvaluatorMultiPlayers(configuration)
+
         # Start the evaluation and then print final ranking and plot, for each environment
         M = evaluation.nbPlayers
         N = len(evaluation.envs)
+
         for envId, env in enumerate(evaluation.envs):
             # # Plot histogram for rewards for that env
-            # if do_simple_plot and interactive:
+            # if do_simple_plots and interactive:
             #     env.plotHistogram(evaluation.horizon * evaluation.repetitions)
 
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
-            if do_all_plot:
+            if do_comparison_plots:
                 evaluators[envId][playersId] = evaluation
+
             # Display the final rankings for that env
             print("Giving the final ranks ...")
             evaluation.printFinalRanking(envId)
@@ -103,6 +107,14 @@ if __name__ == '__main__':
             imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             # Create the sub folder
             plot_dir = os.path.join(PLOT_DIR, subfolder)
+
+            mainfig = os.path.join(plot_dir, imagename)
+            savefig = mainfig
+            picklename = mainfig + '.pickle'
+            # FIXME finish this to also save result in a HDF5 file!
+            # h5pyname = mainfig + '.hdf5'
+            # h5pyfile = h5py.File(h5pyname, 'w')
+
             if saveallfigs:
                 if os.path.isdir(plot_dir):
                     print("{} is already a directory here...".format(plot_dir))
@@ -111,11 +123,15 @@ if __name__ == '__main__':
                 else:
                     mkdir(plot_dir)
 
-            if not do_simple_plot:
-                break
+                # Save it to a pickle file
+                # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
+                if USE_PICKLE:
+                    with open(picklename, 'wb') as picklefile:
+                        print("Saving the EvaluatorMultiPlayers 'evaluation' objet to", picklename, "...")
+                        pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
 
-            mainfig = os.path.join(plot_dir, imagename)
-            savefig = mainfig
+            if not do_simple_plots:
+                break
 
             # Plotting the decentralized rewards
             print("\n\n- Plotting the decentralized rewards")
@@ -279,7 +295,7 @@ if __name__ == '__main__':
     #
     N = len(configuration["environment"])
     for envId, env in enumerate(configuration["environment"]):
-        if not do_all_plot:
+        if not do_comparison_plots:
             break
 
         e0, eothers = evaluators[envId][0], evaluators[envId][1:]

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-""" Evaluator class to wrap and run the simulations, for the multi-players case. """
+""" EvaluatorMultiPlayers class to wrap and run the simulations, for the multi-players case.
+Lots of plotting methods, to have various visualizations.
+"""
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
