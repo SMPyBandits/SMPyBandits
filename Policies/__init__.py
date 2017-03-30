@@ -61,6 +61,9 @@ from .UCBrandomInit import UCBrandomInit
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
 
+# --- Copper-Pearson UCB
+from .CPUCB import CPUCB        # Different indexes
+
 # --- MOSS index policy
 from .MOSS import MOSS
 from .MOSSH import MOSSH  # Knowing the horizon
