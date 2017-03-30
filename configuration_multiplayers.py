@@ -340,7 +340,7 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
-    "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
     # "players": rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
     #          + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children \
     #          + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children
@@ -353,7 +353,7 @@ configuration.update({
     # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
 
     # --- DONE Using single-player rhoLearn policy, with same MAB learning algorithm for selecting the ranks
-    # "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
+    "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
     # "players": rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children
     # "players": rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children
     # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=True).children
@@ -361,6 +361,12 @@ configuration.update({
 
     # --- DONE Using single-player stupid rhoRandRand policy
     # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
+
+    # --- DONE Using single-player rhoRandSticky policy
+    # "players": rhoRandSticky(NB_PLAYERS, UCB, nbArms, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, klUCBPlus, nbArms, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, Thompson, nbArms, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
@@ -449,8 +455,8 @@ configuration["successive_players"] = [
     # --- 9) Mixing rhoRand or Selfish with different learning algorithms
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
@@ -468,6 +474,15 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
     # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
+    # --- 11) Comparing different rhoRandSticky algorithms
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=1).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=50).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,
 ]
 
 
