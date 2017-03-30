@@ -45,17 +45,17 @@ class oneRhoRandSticky(oneRhoRand):
         """Start game."""
         super(oneRhoRandSticky, self).startGame()
         self.rank = 1  # Start with a rank = 1: assume she is alone.
-        self.sitted = False
-        self.stepsWithoutCollisions = 0
+        self.sitted = False  # Start not sitted, of course!
+        self.stepsWithoutCollisions = 0  # No previous steps without collision, of course
 
     def handleCollision(self, arm, reward=None):
-        """Get a new fully random rank, and give reward to the algorithm if not None."""
+        """ Get a new fully random rank, and give reward to the algorithm if not None."""
         # rhoRandSticky UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRandSticky UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneRhoRandSticky, self).getReward(arm, reward)
-        self.stepsWithoutCollisions = 0
         if not self.sitted:
+            self.stepsWithoutCollisions = 0
             self.rank = 1 + rn.randint(self.maxRank)  # New random rank
             # print(" - A oneRhoRandSticky player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
 
@@ -64,11 +64,11 @@ class oneRhoRandSticky(oneRhoRand):
 
         - Additionally, if the current rank was good enough to not bring any collision during the last stickyTime time steps, the player "sits" on that rank.
         """
+        super(oneRhoRandSticky, self).getReward(arm, reward)
         self.stepsWithoutCollisions += 1
         if not self.sitted and self.stepsWithoutCollisions >= self.stickyTime:
             # print(" - A oneRhoRandSticky player {} had rank = {}, without any collision from the last {} steps, so he is now sitted on this rank, and will not change ...".format(self, self.rank, self.stepsWithoutCollisions))  # DEBUG
             self.sitted = True
-        return super(oneRhoRandSticky, self).getReward(arm, reward)
 
 
 # --- Class rhoRandSticky
