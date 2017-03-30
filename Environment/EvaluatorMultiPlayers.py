@@ -12,6 +12,7 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+# import h5py
 # Local imports, libraries
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
@@ -648,7 +649,8 @@ def delayed_play(env, players, horizon, collisionModel,
     for player in players:
         player.startGame()
     # Store results
-    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers, delta_t_save=delta_t_save)
+    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
+    # , delta_t_save=delta_t_save
     rewards = np.zeros(nbPlayers)
     choices = np.zeros(nbPlayers, dtype=int)
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)

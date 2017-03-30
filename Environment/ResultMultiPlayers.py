@@ -10,9 +10,10 @@ import numpy as np
 class ResultMultiPlayers(object):
     """ ResultMultiPlayers accumulators, for the multi-players case. """
 
-    def __init__(self, nbArms, horizon, nbPlayers, delta_t_save=1):
+    # , delta_t_save=1
+    def __init__(self, nbArms, horizon, nbPlayers):
         """ Create ResultMultiPlayers."""
-        self.delta_t_save = delta_t_save  #: Sample rate for saving
+        # self.delta_t_save = delta_t_save  #: Sample rate for saving
         self.choices = np.zeros((nbPlayers, horizon), dtype=int)  #: Store all the choices of all the players
         self.rewards = np.zeros((nbPlayers, horizon))  #: Store all the rewards of all the players, to compute the mean
         # self.rewardsSquared = np.zeros((nbPlayers, horizon))  #: Store all the rewards**2 of all the players, to compute the variance  # XXX uncomment if needed
@@ -29,9 +30,9 @@ class ResultMultiPlayers(object):
         self.allPulls[:, :, time] = pulls
         self.collisions[:, time] = collisions
 
-    def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
-        """ Save the content of the result files into a HDF5 file on the disk."""
-        # FIXME write it !
-        if delta_t_save is None:
-            delta_t_save = self.delta_t_save
-        raise ValueError("FIXME finish to write this function saveondisk() for ResultMultiPlayers!")
+    # def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
+    #     """ Save the content of the result files into a HDF5 file on the disk."""
+    #     # FIXME write it !
+    #     if delta_t_save is None:
+    #         delta_t_save = self.delta_t_save
+    #     raise ValueError("FIXME finish to write this function saveondisk() for ResultMultiPlayers!")

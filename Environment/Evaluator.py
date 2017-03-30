@@ -11,6 +11,7 @@ import random
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+# import h5py
 # Local imports, libraries
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
@@ -184,7 +185,63 @@ class Evaluator(object):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
                     store(r, repeatId)
 
-    # --- Getter methods
+    # --- Save to disk methods
+
+    def saveondisk(self, filepath='/tmp/saveondiskEvaluator.hdf5'):
+        """ Save the content of the internal date to into a HDF5 file on the disk."""
+        # 1) create the shape of what will be store
+        # FIXME write it !
+        # 2) store it
+        with open(filepath, 'r') as hdf:
+            hdf.configuration = self.configuration
+            hdf.rewards = self.rewards
+            try:
+                hdf.minCumRewards = self.minCumRewards
+            except (TypeError, AttributeError, KeyError):
+                pass
+            try:
+                hdf.maxCumRewards = self.maxCumRewards
+            except (TypeError, AttributeError, KeyError):
+                pass
+            try:
+                hdf.rewardsSquared = self.rewardsSquared
+            except (TypeError, AttributeError, KeyError):
+                pass
+            try:
+                hdf.allRewards = self.allRewards
+            except (TypeError, AttributeError, KeyError):
+                pass
+            hdf.BestArmPulls = self.BestArmPulls
+            hdf.pulls = self.pulls
+        raise ValueError("FIXME finish to write this function saveondisk() for Evaluator!")
+
+    def loadfromdisk(self, hdf, delta_t_save=None, useConfig=False):
+        """ Update internal memory of the Evaluator object by loading data the opened HDF5 file."""
+        # FIXME I just have to fill all the internal matrices from the HDF5 file ?
+        # 1) load configuration
+        if useConfig:
+            self.__init__(hdf.configuration)
+        # 2) load internal matrix memory
+        self.rewards = hdf.rewards
+        try:
+            self.minCumRewards = hdf.minCumRewards
+        except (TypeError, AttributeError, KeyError):
+            pass
+        try:
+            self.maxCumRewards = hdf.maxCumRewards
+        except (TypeError, AttributeError, KeyError):
+            pass
+        try:
+            self.rewardsSquared = hdf.rewardsSquared
+        except (TypeError, AttributeError, KeyError):
+            pass
+        try:
+            self.allRewards = hdf.allRewards
+        except (TypeError, AttributeError, KeyError):
+            pass
+        self.BestArmPulls = hdf.BestArmPulls
+        self.pulls = hdf.pulls
+        raise ValueError("FIXME finish to write this function loadfromdisk() for Evaluator!")
 
     def getPulls(self, policyId, envId=0):
         """Extract mean pulls."""
@@ -388,7 +445,8 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
     # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon, delta_t_save=delta_t_save)  # One Result object, for every policy
+    result = Result(env.nbArms, horizon)  # One Result object, for every policy
+    # , delta_t_save=delta_t_save
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
@@ -433,3 +491,14 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
         print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
     return result
+
+
+# --- Helper for loading a previous Evaluator object
+
+def EvaluatorFromDisk(filepath='/tmp/saveondiskEvaluator.hdf5'):
+    """ Create a new Evaluator object from the HDF5 file given in argument."""
+    with open(filepath, 'r') as hdf:
+        configuration = hdf.configuration
+        evaluator = Evaluator(configuration)
+        evaluator.loadfromdisk(hdf)
+    return evaluator
