@@ -475,14 +475,14 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
     # --- 11) Comparing different rhoRandSticky algorithms
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=1).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=1).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children,
     rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=50).children,
     rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
     rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,
+    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
 ]
 
 

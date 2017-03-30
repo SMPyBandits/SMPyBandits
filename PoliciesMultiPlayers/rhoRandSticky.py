@@ -54,6 +54,7 @@ class oneRhoRandSticky(oneRhoRand):
         if reward is not None:
             # print("Info: rhoRandSticky UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneRhoRandSticky, self).getReward(arm, reward)
+        self.stepsWithoutCollisions = 0
         if not self.sitted:
             self.rank = 1 + rn.randint(self.maxRank)  # New random rank
             # print(" - A oneRhoRandSticky player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
@@ -65,7 +66,7 @@ class oneRhoRandSticky(oneRhoRand):
         """
         self.stepsWithoutCollisions += 1
         if not self.sitted and self.stepsWithoutCollisions >= self.stickyTime:
-            print(" - A oneRhoRandSticky player {} had rank = {}, without any collision from the last {} steps, so he is now sitted on this rank, and will not change ...".format(self, self.rank, self.stepsWithoutCollisions))  # DEBUG
+            # print(" - A oneRhoRandSticky player {} had rank = {}, without any collision from the last {} steps, so he is now sitted on this rank, and will not change ...".format(self, self.rank, self.stepsWithoutCollisions))  # DEBUG
             self.sitted = True
         return super(oneRhoRandSticky, self).getReward(arm, reward)
 
