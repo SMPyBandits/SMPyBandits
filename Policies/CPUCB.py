@@ -69,6 +69,7 @@ def binofit_scalar(x, n, alpha=0.05):
         assert 0 <= x <= n, "Error: binofit_scalar(x, n) invalid value for x, not in [0, n], invalid outcome of binomial trials."  # DEBUG
         # Empirical mean, for one parameter
         phat = float(x) / float(n)
+        # See https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval#Clopper-Pearson_interval for the computation
         # Lowerbound
         nu1 = 2 * x
         nu2 = 2 * (n - x + 1)
@@ -76,12 +77,14 @@ def binofit_scalar(x, n, alpha=0.05):
         lowerbound = (nu1 * F) / (nu2 + nu1 * F)
         if x == 0:  # extreme left case, truncate lowerbound to 0
             lowerbound = 0
+            # upperbound = 1 - (alpha / 2.)**(1. / float(n))  # closed-form is available!
         # Upperbound
         nu1 = 2 * (x + 1)
         nu2 = 2 * (n - x)
         F = scipy.stats.f.ppf(1 - (alpha / 2.), nu1, nu2)
         upperbound = (nu1 * F) / (nu2 + nu1 * F)
         if x == n:  # extreme right case, truncate upperbound to 1
+            # lowerbound = (alpha / 2.)**(1. / float(n))  # closed-form is available!
             upperbound = 1
         pci = (lowerbound, upperbound)
     return (phat, pci)
