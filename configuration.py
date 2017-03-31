@@ -397,6 +397,11 @@ configuration.update({
         #     "archtype": MOSS,
         #     "params": {}
         # },
+        # --- CPUCB algorithm, other variant of UCB
+        # {
+        #     "archtype": CPUCB,
+        #     "params": {}
+        # },
         # --- DMED algorithm, similar to klUCB
         {
             "archtype": DMED,

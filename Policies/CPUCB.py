@@ -12,9 +12,6 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCB import UCB
 
-#: Default value for the parameter c for CP-UCB
-C = 1.01
-
 
 def binofit_scalar(x, n, alpha=0.05):
     r""" Parameter estimates and confidence intervals for binomial data.
@@ -150,6 +147,10 @@ def ClopperPearsonUCB(x, N, alpha=0.05):
 # clopperPearsonUCB.__doc__ = ClopperPearsonUCB.__doc__
 
 
+#: Default value for the parameter c for CP-UCB
+C = 1.01
+
+
 class CPUCB(UCB):
     """ The Clopper-Pearson UCB policy for bounded bandits.
     Reference: [Garivier & Cappé, COLT 2011].
@@ -174,11 +175,11 @@ class CPUCB(UCB):
         else:
             return ClopperPearsonUCB(self.rewards[arm], self.pulls[arm], 1. / (self.t ** self.c))
 
-    def computeAllIndex(self):
-        """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = ClopperPearsonUCB(self.rewards, self.pulls, 1. / (self.t ** self.c))
-        indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+    # def computeAllIndex(self):
+    #     """ Compute the current indexes for all arms, in a vectorized manner."""
+    #     indexes = ClopperPearsonUCB(self.rewards, self.pulls, 1. / (self.t ** self.c))
+    #     indexes[self.pulls < 1] = float('+inf')
+    #     self.index = indexes
 
 
 # --- Debugging
