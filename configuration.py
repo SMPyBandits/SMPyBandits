@@ -311,6 +311,25 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
+        # --- Probability pursuit algorithm
+        {
+            "archtype": ProbabilityPursuit,
+            "params": {
+                "beta": 0.5
+            }
+        },
+        {
+            "archtype": ProbabilityPursuit,
+            "params": {
+                "beta": 0.1
+            }
+        },
+        {
+            "archtype": ProbabilityPursuit,
+            "params": {
+                "beta": 0.05
+            }
+        },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
