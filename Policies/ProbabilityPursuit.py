@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-r""" The basic Probability pursuit algorithm.
+r""" The basic Probability Pursuit algorithm.
 
-- We use the simple version of the pursuit algorithm, as described in the seminal book by Sutton and Barto (1998).
-- Initially, a uniform probability is set on each arm, :math:`p_k(0) = \frac{1}{k}`.
+- We use the simple version of the pursuit algorithm, as described in the seminal book by Sutton and Barto (1998), https://webdocs.cs.ualberta.ca/~sutton/book/the-book.html.
+- Initially, a uniform probability is set on each arm, :math:`p_k(0) = 1/k`.
 - At each time step :math:`t`, the probabilities are *all* recomputed, following this equation:
 
   .. math::
 
      p_k(t+1) = \begin{cases}
-     (1 - \beta) p_k(t) + \beta \times 1 \& \text{if~} k = \arg\max_j \hat{\mu}_j(t) \\
-     (1 - \beta) p_k(t) + \beta \times 0 \& \text{otherwise}.
+     (1 - \beta) p_k(t) + \beta \times 1 & \text{if}\; \hat{\mu}_k(t) = \max_j \hat{\mu}_j(t) \\
+     (1 - \beta) p_k(t) + \beta \times 0 & \text{otherwise}.
      \end{cases}
 
 - :math:`\beta \in (0, 1)` is a *learning rate*, default is `BETA = 0.5`.
@@ -61,6 +61,7 @@ class ProbabilityPursuit(BasePolicy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def beta(self):  # Allow child classes to use time-dependent beta coef
+        r"""Constant parameter :math:`\beta(t) = \beta(0)`."""
         return self._beta
 
     def __str__(self):
@@ -78,25 +79,25 @@ class ProbabilityPursuit(BasePolicy):
     # --- Choice methods
 
     def choice(self):
-        """One random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`."""
+        r"""One random selection, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`."""
         return rn.choice(self.nbArms, p=self.probabilities)
 
     def choiceWithRank(self, rank=1):
-        """Multiple (rank >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`, and select the last one (less probable)."""
+        r"""Multiple (rank >= 1) random selection, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`, and select the last one (less probable)."""
         if (self.t < self.nbArms) or (rank == 1):
             return self.choice()
         else:
             return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
 
     def choiceFromSubSet(self, availableArms='all'):
-        """One random selection, from availableArms, with probabilities = trusts, thank to :func:`numpy.random.choice`."""
+        r"""One random selection, from availableArms, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`."""
         if (self.t < self.nbArms) or (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
             return rn.choice(availableArms, p=self.trusts[availableArms])
 
     def choiceMultiple(self, nb=1):
-        """Multiple (nb >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`."""
+        r"""Multiple (nb >= 1) random selection, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`."""
         if (self.t < self.nbArms) or (nb == 1):
             return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
