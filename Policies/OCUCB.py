@@ -56,7 +56,7 @@ class OCUCB(UCB):
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
-        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \eta \log(B_k(t)}{N_k(t)}}.
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \eta \log(B_k(t))}{N_k(t)}}.
 
         - Where :math:`\eta` is a parameter of the algorithm,
         - And :math:`B_k(t)` is the additional term defined above.
