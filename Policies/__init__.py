@@ -96,6 +96,9 @@ from .AdBandits import AdBandits
 # --- Mine, aggregated ones, like Exp4  FIXME give it a better name!
 from .Aggr import Aggr
 
+# --- Gittins index policy
+from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-Horizon Gittins index
+
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 

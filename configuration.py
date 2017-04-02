@@ -49,8 +49,8 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
-REPETITIONS = 20
+REPETITIONS = 50
+# REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False
@@ -311,25 +311,25 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
-        # --- Probability pursuit algorithm
-        {
-            "archtype": ProbabilityPursuit,
-            "params": {
-                "beta": 0.5
-            }
-        },
-        {
-            "archtype": ProbabilityPursuit,
-            "params": {
-                "beta": 0.1
-            }
-        },
-        {
-            "archtype": ProbabilityPursuit,
-            "params": {
-                "beta": 0.05
-            }
-        },
+        # # --- Probability pursuit algorithm
+        # {
+        #     "archtype": ProbabilityPursuit,
+        #     "params": {
+        #         "beta": 0.5
+        #     }
+        # },
+        # {
+        #     "archtype": ProbabilityPursuit,
+        #     "params": {
+        #         "beta": 0.1
+        #     }
+        # },
+        # {
+        #     "archtype": ProbabilityPursuit,
+        #     "params": {
+        #         "beta": 0.05
+        #     }
+        # },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -428,12 +428,12 @@ configuration.update({
                 "genuine": True,
             }
         },
-        {
-            "archtype": DMED,
-            "params": {
-                "genuine": False,
-            }
-        },
+        # {
+        #     "archtype": DMED,
+        #     "params": {
+        #         "genuine": False,
+        #     }
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -537,6 +537,35 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
+        # --- Finite-Horizon Gittins index
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": HORIZON,
+                "alpha": 4,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": HORIZON,
+                "alpha": 2,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": HORIZON,
+                "alpha": 1,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": HORIZON,
+                "alpha": 0.5,
+            }
+        },
     ]
 })
 
