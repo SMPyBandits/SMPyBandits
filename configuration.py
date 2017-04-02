@@ -541,28 +541,28 @@ configuration.update({
         {
             "archtype": ApproximatedFHGittins,
             "params": {
-                "horizon": HORIZON,
+                "horizon": 1.1 * HORIZON,
                 "alpha": 4,
             }
         },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
-                "horizon": HORIZON,
+                "horizon": 1.1 * HORIZON,
                 "alpha": 2,
             }
         },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
-                "horizon": HORIZON,
+                "horizon": 1.1 * HORIZON,
                 "alpha": 1,
             }
         },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
-                "horizon": HORIZON,
+                "horizon": 1.1 * HORIZON,
                 "alpha": 0.5,
             }
         },

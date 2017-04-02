@@ -88,3 +88,13 @@ class DMED(BasePolicy):
         # while len(set(choices)) < nb:  # Not enough different actions? Try again.
         #     choices = [self.choice() for _ in range(nb)]
         return choices
+
+
+class DMEDPlus(DMED):
+    """ The DMED+ policy of [Honda & Takemura, COLT 2010] in the special case of Bernoulli rewards (can be used on any [0,1]-valued rewards, but warning: in the non-binary case, this is not the algorithm of [Honda & Takemura, COLT 2010]).
+
+    - Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
+    """
+
+    def __init__(self, nbArms, tolerance=1e-4, kl=klBern, lower=0., amplitude=1.):
+        super(DMEDPlus, self).__init__(nbArms, genuine=True, tolerance=tolerance, kl=kl, lower=lower, amplitude=amplitude)

@@ -302,6 +302,7 @@ class Evaluator(object):
     def getMaxMinReward(self, policyId, envId=0):
         """Extract amplitude of rewards as maxCumRewards - minCumRewards."""
         return (self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]) / float(self.repetitions)
+        # return self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]
 
     # --- Plotting methods
 

@@ -1,27 +1,29 @@
 # -*- coding: utf-8 -*-
-""" Policies : contains various bandits algorithms:
+""" Policies module : contains various bandits algorithms:
 
 - "Stupid" algorithms: Uniform, UniformOnSome, TakeFixedArm, TakeRandomFixedArm
 
 - Greedy algorithms: EpsilonGreedy, EpsilonFirst, EpsilonDecreasing
 
-- Probabilistic weighting algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
+- Probabilistic weighting algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, ProbabilityPursuit
 
-- Index based algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, UCBH, MOSS, MOSSH
+- Index based and UCB algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, UCBH, MOSS, MOSSH, CPUCB
 
-- Bayesian algorithms: Thompson, BayesUCB
+- Bayesian algorithms: Thompson, ThompsonRobust, BayesUCB
 
 - Based on Kullback-Leibler divergence: klUCB, klUCBlog10, klUCBloglog, klUCBloglog10, klUCBPlus, klUCBH, klUCBHPlus, klUCBPlusPlus
 
 - Empirical KL-UCB algorithm: KLempUCB
 
-- Other algorithms: DMED
+- Other index algorithms: DMED, DMEDPlus
 
-- Hybrids algorithms: AdBandit
+- Hybrids algorithms, mixing Bayesian and UCB indexes: AdBandit
 
 - Aggregation algorithms: Aggr
 
-- Designed for (fully decentralized) multi-player games: MusicalChair, MEGA
+- Finite-Horizon Gittins index, approximated version: ApproximatedFHGittins
+
+- Some are designed only for (fully decentralized) multi-player games: MusicalChair, MEGA
 """
 
 __author__ = "Lilian Besson"
@@ -88,7 +90,7 @@ from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
 from .KLempUCB import KLempUCB  # Empirical KL UCB
 
 # From [Honda & Takemura, COLT 2010]
-from .DMED import DMED
+from .DMED import DMED, DMEDPlus
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
