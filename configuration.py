@@ -224,6 +224,42 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
+        # --- Optimally Confident UCB algorithm
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 1
+            }
+        },
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 0.9
+            }
+        },
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 0.8
+            }
+        },
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 0.7
+            }
+        },
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 0.6
+            }
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -538,27 +574,27 @@ configuration.update({
         #     }
         # },
         # --- Finite-Horizon Gittins index
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 4,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 2,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 1,
-            }
-        },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 4,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 2,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 1,
+        #     }
+        # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {

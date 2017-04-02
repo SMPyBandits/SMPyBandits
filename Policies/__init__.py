@@ -15,7 +15,7 @@
 
 - Empirical KL-UCB algorithm: KLempUCB
 
-- Other index algorithms: DMED, DMEDPlus
+- Other index algorithms: DMED, DMEDPlus, OCUCB
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: AdBandit
 
@@ -91,6 +91,9 @@ from .KLempUCB import KLempUCB  # Empirical KL UCB
 
 # From [Honda & Takemura, COLT 2010]
 from .DMED import DMED, DMEDPlus
+
+# From [Lattimore, 2016]
+from .OCUCB import OCUCB
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
