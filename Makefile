@@ -83,7 +83,7 @@ install3:
 
 # Senders:
 send_ws3:	clean
-	CP ../AlgoBandits.git lilian_besson@ws3:~/These/src/
+	CP ~/AlgoBandits.git/ lilian_besson@ws3:~/These/src/AlgoBandits.git/
 
 receive_plots_ws3:
 	CP lilian_besson@ws3:~/These/src/AlgoBandits.git/plots ./

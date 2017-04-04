@@ -59,9 +59,9 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 REPETITIONS = 100
-REPETITIONS = 50
-# REPETITIONS = 20
-REPETITIONS = 10
+# REPETITIONS = 50
+# # REPETITIONS = 20
+# REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -89,8 +89,8 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 4    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 4    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -189,10 +189,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(19, 1 / (1. + 19))
         # }
-        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # }
+        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
+            "arm_type": Bernoulli,
+            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
@@ -214,11 +214,11 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
-            # nbPlayers = 4
-        }
+        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
+        #     # nbPlayers = 4
+        # }
         # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
@@ -455,10 +455,10 @@ configuration["successive_players"] = [
     # --- 9) Mixing rhoRand or Selfish with different learning algorithms
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
@@ -479,10 +479,10 @@ configuration["successive_players"] = [
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=50).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
-    rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=50).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
+    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
 ]
 
 

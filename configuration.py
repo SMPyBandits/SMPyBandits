@@ -47,9 +47,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 200
+REPETITIONS = 200
 # REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -99,8 +99,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
 #: To know if my Aggr policy is tried.
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+TEST_AGGR = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
@@ -159,18 +159,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
-        # {   # One optimal arm, much better than the others, but *lots* of bad arms
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        # },
+        {   # One optimal arm, much better than the others, but *lots* of bad arms
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        },
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -224,42 +224,6 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # --- Optimally Confident UCB algorithm
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 1
-            }
-        },
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 0.9
-            }
-        },
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 0.8
-            }
-        },
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 0.7
-            }
-        },
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 0.6
-            }
-        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -451,6 +415,42 @@ configuration.update({
         # {
         #     "archtype": MOSS,
         #     "params": {}
+        # },
+        # # --- Optimally Confident UCB algorithm
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 1
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.9
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.8
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.7
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.6
+        #     }
         # },
         # --- CPUCB algorithm, other variant of UCB
         # {
