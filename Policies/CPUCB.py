@@ -87,7 +87,7 @@ def binofit_scalar(x, n, alpha=0.05):
             # lowerbound = (alpha / 2.)**(1. / float(n))  # closed-form is available!
             upperbound = 1
         pci = (lowerbound, upperbound)
-    return (phat, pci)
+    return phat, pci
 
 
 def binofit(xArray, nArray, alpha=0.05):
@@ -134,7 +134,7 @@ def binofit(xArray, nArray, alpha=0.05):
             alpha = alpha * np.ones_like(xArray)
         for inde in range(xArray.size):
             Psuccess[inde], ConfIntervals[inde, :] = binofit_scalar(xArray.flat[inde], nArray.flat[inde], alpha.flat[inde])
-        return(Psuccess.reshape(origShape), ConfIntervals.reshape(origShape + (2, )))
+        return Psuccess.reshape(origShape), ConfIntervals.reshape(origShape + (2, ))
     else:
         return binofit_scalar(xArray, nArray, alpha)
 

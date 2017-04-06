@@ -38,7 +38,7 @@ class MyArm(Arm):
         # TODO Finish this method that initialize the arm MyArm
 
     def __str__(self):
-        return "MyArm(...)".format(...)  # TODO
+        return "MyArm(...)".format('...')  # TODO
 
     def draw(self, t=None):
         # TODO Simulates a pull of this arm. t might be used, but not necessarily
@@ -69,7 +69,7 @@ class MyPolicy(object):
         # TODO Finish this method that initialize the arm MyArm
 
     def __str__(self):
-        return "MyArm(...)".format(...)  # TODO
+        return "MyArm(...)".format('...')  # TODO
 
     def startGame(self):
         pass  # Can be non-trivial, TODO if needed

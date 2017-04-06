@@ -91,7 +91,7 @@ NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
 NB_PLAYERS = 4    # Less that the number of arms
 NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 9    # Less that the number of arms
+NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
@@ -185,14 +185,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
         # }
-        # {   # An easy problem (19 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(19, 1 / (1. + 19))
-        # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
+        {   # An easy problem (19 arms)
             "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+            "params": uniformMeans(19, 1 / (1. + 19))
         }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
@@ -489,15 +489,15 @@ configuration["successive_players"] = [
 
 # DONE Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
 configuration["successive_players"] = [
+    CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+    CentralizedIMP(NB_PLAYERS, BayesUCB, nbArms).children,
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=3).children,
     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
-    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=3).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,

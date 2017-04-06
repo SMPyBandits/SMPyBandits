@@ -41,15 +41,15 @@ def uniformMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
     """
     assert nbArms >= 1, "Error: nbArms has to be >= 1."
-    assert 0 < delta < 1, "Error: delta has to be in (0, 1)."
-    # return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
-    return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+    assert 0. < delta < 1., "Error: delta has to be in (0, 1)."
+    # return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+    return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
 
 
-def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., sorted=True):
+def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
     """Return a list of means of arms, randomly sampled uniformly in [lower, lower + amplitude], with a min gap >= mingap.
 
-    - All means will be different, except if mingap = None, with a min gap > 0.
+    - All means will be different, except if ``mingap=None``, with a min gap > 0.
 
     >>> import numpy as np; np.random.seed(1234)  # reproducible results
     >>> randomMeans(nbArms=3, mingap=0.05)  # doctest: +ELLIPSIS
@@ -57,20 +57,21 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., sorted=True):
     >>> randomMeans(nbArms=3, mingap=0.1)  # doctest: +ELLIPSIS
     array([ 0.276...,  0.801...,  0.958...])
 
-    - Means are sorted, except if sorted=False.
+    - Means are sorted, except if ``isSorted=False``.
 
-    >>> randomMeans(nbArms=5, mingap=0.1, sorted=True)  # doctest: +ELLIPSIS
+    >>> randomMeans(nbArms=5, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
     array([ 0.006...,  0.229...,  0.416...,  0.535...,  0.899...])
-    >>> randomMeans(nbArms=5, mingap=0.1, sorted=False)  # doctest: +ELLIPSIS
+    >>> randomMeans(nbArms=5, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
     array([ 0.419...,  0.932...,  0.072...,  0.755...,  0.650...])
     """
     mus = np.sort(np.random.rand(nbArms))
     if mingap is not None and mingap > 0:
         while len(set(mus)) == nbArms and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nbArms))
-    if not sorted:
+    if not isSorted:
         np.random.shuffle(mus)
-    return lower + (amplitude * mus)
+    # return lower + (amplitude * mus)
+    return list(lower + (amplitude * mus))
 
 
 def shuffled(mylist):

@@ -47,6 +47,7 @@ class KLempUCB(IndexPolicy):
         self.obs[arm][reward] = 1 + self.obs[arm].get(reward, 0)
 
     # FIXME this does not work apparently...
+    @staticmethod
     def _KLucb(self, obs, klMax, debug=False):
         p = np.array(list(obs.values()), dtype=float)
         p /= np.sum(p)
