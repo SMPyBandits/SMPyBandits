@@ -35,8 +35,8 @@ random_invert = False
 nb_random_events = 5  #: Default nb of random events
 
 # Flag for experimental aspects
-STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_ALL_REWARDS = True       #: Store all rewards?
+STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
 
@@ -301,7 +301,7 @@ class Evaluator(object):
 
     def getMaxMinReward(self, policyId, envId=0):
         """Extract amplitude of rewards as maxCumRewards - minCumRewards."""
-        return (self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]) / float(self.repetitions)
+        return (self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]) / (float(self.repetitions) ** 0.5)
         # return self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]
 
     # --- Plotting methods

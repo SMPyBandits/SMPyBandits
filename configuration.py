@@ -47,8 +47,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 1000
+# REPETITIONS = 200
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 

@@ -407,6 +407,7 @@ configuration.update({
 #     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
 # ]
 
+
 configuration["successive_players"] = [
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
@@ -483,6 +484,25 @@ configuration["successive_players"] = [
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
+]
+
+
+# DONE Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
+configuration["successive_players"] = [
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=3).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
+    Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=3).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
+    rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
 ]
 
 
