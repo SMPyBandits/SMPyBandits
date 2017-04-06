@@ -514,7 +514,7 @@
 <text text-anchor="start" x="1721" y="-1897.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="1721" y="-1882.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="1721" y="-1867.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="1721" y="-1852.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="1721" y="-1852.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="1721" y="-1837.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="1721" y="-1822.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="1721" y="-1807.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -999,12 +999,12 @@
 <text text-anchor="middle" x="4336.5" y="-1852.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="4229,-1845 4444,-1845 "/>
 <text text-anchor="start" x="4237" y="-1829.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="4237" y="-1814.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
+<text text-anchor="start" x="4237" y="-1814.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
 <text text-anchor="start" x="4237" y="-1799.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="4237" y="-1784.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="4237" y="-1769.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
 <text text-anchor="start" x="4237" y="-1754.8" font-family="Times,serif" font-size="14.00">nbObservations</text>
-<text text-anchor="start" x="4237" y="-1739.8" font-family="Times,serif" font-size="14.00">nbPlayers : int, NoneType</text>
+<text text-anchor="start" x="4237" y="-1739.8" font-family="Times,serif" font-size="14.00">nbPlayers : NoneType, int</text>
 <text text-anchor="start" x="4237" y="-1724.8" font-family="Times,serif" font-size="14.00">state</text>
 <text text-anchor="start" x="4237" y="-1709.8" font-family="Times,serif" font-size="14.00">t : int</text>
 <polyline fill="none" stroke="black" points="4229,-1702 4444,-1702 "/>
@@ -1061,8 +1061,8 @@
 </g>
 <!-- 49&#45;&gt;23 -->
 <g id="edge42" class="edge"><title>49&#45;&gt;23</title>
-<path fill="none" stroke="black" d="M4543.17,-1838.03C4520.22,-1877.97 4489.77,-1920.78 4452.5,-1951 4402.36,-1991.66 4375.03,-1974.77 4316.5,-2002 4272.51,-2022.46 4225.6,-2048.03 4185.42,-2071.17"/>
-<polygon fill="none" stroke="black" points="4183.59,-2068.18 4176.68,-2076.22 4187.09,-2074.24 4183.59,-2068.18"/>
+<path fill="none" stroke="black" d="M4543.21,-1838.08C4520.27,-1878.02 4489.8,-1920.83 4452.5,-1951 4401.99,-1991.86 4374.42,-1974.62 4315.5,-2002 4271.75,-2022.34 4225.14,-2047.82 4185.19,-2070.93"/>
+<polygon fill="none" stroke="black" points="4183.4,-2067.92 4176.51,-2075.97 4186.92,-2073.97 4183.4,-2067.92"/>
 </g>
 <!-- 50 -->
 <g id="node51" class="node"><title>50</title>
@@ -1075,32 +1075,32 @@
 </g>
 <!-- 51 -->
 <g id="node52" class="node"><title>51</title>
-<polygon fill="none" stroke="black" points="5575.5,-1619 5575.5,-1838 5735.5,-1838 5735.5,-1619 5575.5,-1619"/>
-<text text-anchor="middle" x="5655.5" y="-1822.8" font-family="Times,serif" font-size="14.00">Policies.Softmax.Softmax</text>
-<polyline fill="none" stroke="black" points="5575.5,-1815 5735.5,-1815 "/>
-<text text-anchor="start" x="5583.5" y="-1799.8" font-family="Times,serif" font-size="14.00">_initial_exploration</text>
-<text text-anchor="start" x="5583.5" y="-1784.8" font-family="Times,serif" font-size="14.00">_temperature : NoneType</text>
-<text text-anchor="start" x="5583.5" y="-1769.8" font-family="Times,serif" font-size="14.00">temperature</text>
-<text text-anchor="start" x="5583.5" y="-1754.8" font-family="Times,serif" font-size="14.00">trusts</text>
-<text text-anchor="start" x="5583.5" y="-1739.8" font-family="Times,serif" font-size="14.00">unbiased : bool</text>
-<polyline fill="none" stroke="black" points="5575.5,-1732 5735.5,-1732 "/>
-<text text-anchor="start" x="5583.5" y="-1716.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5583.5" y="-1701.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="5583.5" y="-1686.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="5583.5" y="-1671.8" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
-<text text-anchor="start" x="5583.5" y="-1656.8" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
-<text text-anchor="start" x="5583.5" y="-1641.8" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
-<text text-anchor="start" x="5583.5" y="-1626.8" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="5557.5,-1619 5557.5,-1838 5717.5,-1838 5717.5,-1619 5557.5,-1619"/>
+<text text-anchor="middle" x="5637.5" y="-1822.8" font-family="Times,serif" font-size="14.00">Policies.Softmax.Softmax</text>
+<polyline fill="none" stroke="black" points="5557.5,-1815 5717.5,-1815 "/>
+<text text-anchor="start" x="5565.5" y="-1799.8" font-family="Times,serif" font-size="14.00">_initial_exploration</text>
+<text text-anchor="start" x="5565.5" y="-1784.8" font-family="Times,serif" font-size="14.00">_temperature : NoneType</text>
+<text text-anchor="start" x="5565.5" y="-1769.8" font-family="Times,serif" font-size="14.00">temperature</text>
+<text text-anchor="start" x="5565.5" y="-1754.8" font-family="Times,serif" font-size="14.00">trusts</text>
+<text text-anchor="start" x="5565.5" y="-1739.8" font-family="Times,serif" font-size="14.00">unbiased : bool</text>
+<polyline fill="none" stroke="black" points="5557.5,-1732 5717.5,-1732 "/>
+<text text-anchor="start" x="5565.5" y="-1716.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5565.5" y="-1701.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="5565.5" y="-1686.8" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="5565.5" y="-1671.8" font-family="Times,serif" font-size="14.00">choiceFromSubSet()</text>
+<text text-anchor="start" x="5565.5" y="-1656.8" font-family="Times,serif" font-size="14.00">choiceMultiple()</text>
+<text text-anchor="start" x="5565.5" y="-1641.8" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="5565.5" y="-1626.8" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 50&#45;&gt;51 -->
 <g id="edge43" class="edge"><title>50&#45;&gt;51</title>
-<path fill="none" stroke="black" d="M5560.46,-1371.09C5574.4,-1423.38 5601.97,-1526.75 5623.84,-1608.76"/>
-<polygon fill="none" stroke="black" points="5620.51,-1609.89 5626.47,-1618.65 5627.28,-1608.09 5620.51,-1609.89"/>
+<path fill="none" stroke="black" d="M5558.91,-1371.09C5570.44,-1423.38 5593.23,-1526.75 5611.32,-1608.76"/>
+<polygon fill="none" stroke="black" points="5607.93,-1609.64 5613.5,-1618.65 5614.76,-1608.13 5607.93,-1609.64"/>
 </g>
 <!-- 51&#45;&gt;23 -->
 <g id="edge44" class="edge"><title>51&#45;&gt;23</title>
-<path fill="none" stroke="black" d="M5575.37,-1752.02C5416.16,-1796.04 5048.19,-1894.15 4733.5,-1951 4687.57,-1959.3 4360.86,-1987.46 4316.5,-2002 4271.32,-2016.81 4224.98,-2040.71 4185.59,-2064.09"/>
-<polygon fill="none" stroke="black" points="4183.54,-2061.24 4176.77,-2069.39 4187.14,-2067.24 4183.54,-2061.24"/>
+<path fill="none" stroke="black" d="M5557.46,-1752.52C5400.62,-1796.87 5041.27,-1894.73 4733.5,-1951 4687.47,-1959.42 4359.95,-1987.39 4315.5,-2002 4270.58,-2016.77 4224.54,-2040.58 4185.38,-2063.92"/>
+<polygon fill="none" stroke="black" points="4183.37,-2061.04 4176.61,-2069.2 4186.98,-2067.04 4183.37,-2061.04"/>
 </g>
 <!-- 52 -->
 <g id="node53" class="node"><title>52</title>
@@ -1113,8 +1113,8 @@
 </g>
 <!-- 52&#45;&gt;51 -->
 <g id="edge45" class="edge"><title>52&#45;&gt;51</title>
-<path fill="none" stroke="black" d="M5750.54,-1371.09C5736.6,-1423.38 5709.03,-1526.75 5687.16,-1608.76"/>
-<polygon fill="none" stroke="black" points="5683.72,-1608.09 5684.53,-1618.65 5690.49,-1609.89 5683.72,-1608.09"/>
+<path fill="none" stroke="black" d="M5748.99,-1371.09C5732.64,-1423.38 5700.3,-1526.75 5674.64,-1608.76"/>
+<polygon fill="none" stroke="black" points="5671.2,-1608.06 5671.55,-1618.65 5677.88,-1610.15 5671.2,-1608.06"/>
 </g>
 <!-- 53 -->
 <g id="node54" class="node"><title>53</title>
@@ -1129,28 +1129,28 @@
 </g>
 <!-- 53&#45;&gt;51 -->
 <g id="edge46" class="edge"><title>53&#45;&gt;51</title>
-<path fill="none" stroke="black" d="M5961,-1386.11C5906.59,-1446.91 5812.14,-1552.46 5742.62,-1630.15"/>
-<polygon fill="none" stroke="black" points="5739.61,-1628.26 5735.55,-1638.05 5744.82,-1632.93 5739.61,-1628.26"/>
+<path fill="none" stroke="black" d="M5958.76,-1386.11C5900.4,-1448.12 5798.24,-1556.68 5724.78,-1634.75"/>
+<polygon fill="none" stroke="black" points="5722.06,-1632.53 5717.76,-1642.21 5727.16,-1637.33 5722.06,-1632.53"/>
 </g>
 <!-- 54 -->
 <g id="node55" class="node"><title>54</title>
-<polygon fill="none" stroke="black" points="6107,-1649 6107,-1808 6340,-1808 6340,-1649 6107,-1649"/>
-<text text-anchor="middle" x="6223.5" y="-1792.8" font-family="Times,serif" font-size="14.00">Policies.TakeFixedArm.TakeFixedArm</text>
-<polyline fill="none" stroke="black" points="6107,-1785 6340,-1785 "/>
-<text text-anchor="start" x="6115" y="-1769.8" font-family="Times,serif" font-size="14.00">armIndex</text>
-<text text-anchor="start" x="6115" y="-1754.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<polyline fill="none" stroke="black" points="6107,-1747 6340,-1747 "/>
-<text text-anchor="start" x="6115" y="-1731.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="6115" y="-1716.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="6115" y="-1701.8" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="6115" y="-1686.8" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
-<text text-anchor="start" x="6115" y="-1671.8" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="6115" y="-1656.8" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="6109,-1649 6109,-1808 6342,-1808 6342,-1649 6109,-1649"/>
+<text text-anchor="middle" x="6225.5" y="-1792.8" font-family="Times,serif" font-size="14.00">Policies.TakeFixedArm.TakeFixedArm</text>
+<polyline fill="none" stroke="black" points="6109,-1785 6342,-1785 "/>
+<text text-anchor="start" x="6117" y="-1769.8" font-family="Times,serif" font-size="14.00">armIndex</text>
+<text text-anchor="start" x="6117" y="-1754.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<polyline fill="none" stroke="black" points="6109,-1747 6342,-1747 "/>
+<text text-anchor="start" x="6117" y="-1731.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="6117" y="-1716.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="6117" y="-1701.8" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="6117" y="-1686.8" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="6117" y="-1671.8" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="6117" y="-1656.8" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 54&#45;&gt;23 -->
 <g id="edge47" class="edge"><title>54&#45;&gt;23</title>
-<path fill="none" stroke="black" d="M6106.74,-1799.56C6012.58,-1852.02 5874.83,-1919.88 5744.5,-1951 5667.29,-1969.44 4392.93,-1980.53 4316.5,-2002 4270.93,-2014.8 4224.69,-2038.14 4185.48,-2061.65"/>
-<polygon fill="none" stroke="black" points="4183.43,-2058.79 4176.71,-2066.98 4187.07,-2064.78 4183.43,-2058.79"/>
+<path fill="none" stroke="black" d="M6108.97,-1796.59C6010.57,-1849.4 5864.11,-1919.22 5726.5,-1951 5650.07,-1968.65 4390.99,-1980.7 4315.5,-2002 4270.2,-2014.78 4224.25,-2038.05 4185.27,-2061.5"/>
+<polygon fill="none" stroke="black" points="4183.26,-2058.62 4176.55,-2066.82 4186.91,-2064.6 4183.26,-2058.62"/>
 </g>
 <!-- 55 -->
 <g id="node56" class="node"><title>55</title>
@@ -1166,8 +1166,8 @@
 </g>
 <!-- 55&#45;&gt;54 -->
 <g id="edge48" class="edge"><title>55&#45;&gt;54</title>
-<path fill="none" stroke="black" d="M6290.24,-1393.79C6277.4,-1457.99 6256.25,-1563.77 6241.2,-1639.02"/>
-<polygon fill="none" stroke="black" points="6237.74,-1638.48 6239.21,-1648.97 6244.6,-1639.85 6237.74,-1638.48"/>
+<path fill="none" stroke="black" d="M6290.53,-1393.79C6278.02,-1457.99 6257.41,-1563.77 6242.74,-1639.02"/>
+<polygon fill="none" stroke="black" points="6239.28,-1638.48 6240.8,-1648.97 6246.15,-1639.82 6239.28,-1638.48"/>
 </g>
 <!-- 56 -->
 <g id="node57" class="node"><title>56</title>
@@ -1370,58 +1370,58 @@
 </g>
 <!-- 69 -->
 <g id="node70" class="node"><title>69</title>
-<polygon fill="none" stroke="black" points="6423,-1656.5 6423,-1800.5 6584,-1800.5 6584,-1656.5 6423,-1656.5"/>
-<text text-anchor="middle" x="6503.5" y="-1785.3" font-family="Times,serif" font-size="14.00">Policies.Uniform.Uniform</text>
-<polyline fill="none" stroke="black" points="6423,-1777.5 6584,-1777.5 "/>
-<text text-anchor="start" x="6431" y="-1762.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<polyline fill="none" stroke="black" points="6423,-1754.5 6584,-1754.5 "/>
-<text text-anchor="start" x="6431" y="-1739.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="6431" y="-1724.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="6431" y="-1709.3" font-family="Times,serif" font-size="14.00">choice()</text>
-<text text-anchor="start" x="6431" y="-1694.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
-<text text-anchor="start" x="6431" y="-1679.3" font-family="Times,serif" font-size="14.00">getReward()</text>
-<text text-anchor="start" x="6431" y="-1664.3" font-family="Times,serif" font-size="14.00">startGame()</text>
+<polygon fill="none" stroke="black" points="6403,-1656.5 6403,-1800.5 6564,-1800.5 6564,-1656.5 6403,-1656.5"/>
+<text text-anchor="middle" x="6483.5" y="-1785.3" font-family="Times,serif" font-size="14.00">Policies.Uniform.Uniform</text>
+<polyline fill="none" stroke="black" points="6403,-1777.5 6564,-1777.5 "/>
+<text text-anchor="start" x="6411" y="-1762.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<polyline fill="none" stroke="black" points="6403,-1754.5 6564,-1754.5 "/>
+<text text-anchor="start" x="6411" y="-1739.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="6411" y="-1724.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="6411" y="-1709.3" font-family="Times,serif" font-size="14.00">choice()</text>
+<text text-anchor="start" x="6411" y="-1694.3" font-family="Times,serif" font-size="14.00">choiceWithRank()</text>
+<text text-anchor="start" x="6411" y="-1679.3" font-family="Times,serif" font-size="14.00">getReward()</text>
+<text text-anchor="start" x="6411" y="-1664.3" font-family="Times,serif" font-size="14.00">startGame()</text>
 </g>
 <!-- 69&#45;&gt;23 -->
 <g id="edge62" class="edge"><title>69&#45;&gt;23</title>
-<path fill="none" stroke="black" d="M6474.91,-1800.7C6449.94,-1852.49 6408.26,-1918.92 6348.5,-1951 6249,-2004.41 4425.38,-1972.04 4316.5,-2002 4270.87,-2014.56 4224.61,-2037.85 4185.4,-2061.38"/>
-<polygon fill="none" stroke="black" points="4183.36,-2058.53 4176.63,-2066.72 4187,-2064.51 4183.36,-2058.53"/>
+<path fill="none" stroke="black" d="M6461.55,-1800.65C6441.54,-1852.24 6406.41,-1918.43 6350.5,-1951 6155.07,-2064.86 4533.52,-1941.79 4315.5,-2002 4270.23,-2014.5 4224.38,-2037.64 4185.46,-2061.06"/>
+<polygon fill="none" stroke="black" points="4183.47,-2058.18 4176.75,-2066.38 4187.11,-2064.15 4183.47,-2058.18"/>
 </g>
 <!-- 102 -->
 <g id="node103" class="node"><title>102</title>
-<polygon fill="none" stroke="black" points="6366.5,-2040 6366.5,-2229 6602.5,-2229 6602.5,-2040 6366.5,-2040"/>
-<text text-anchor="middle" x="6484.5" y="-2213.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoLearn.rhoLearn</text>
-<polyline fill="none" stroke="black" points="6366.5,-2206 6602.5,-2206 "/>
-<text text-anchor="start" x="6374.5" y="-2190.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="6374.5" y="-2175.8" font-family="Times,serif" font-size="14.00">_rankSelection : Uniform</text>
-<text text-anchor="start" x="6374.5" y="-2160.8" font-family="Times,serif" font-size="14.00">change_rank_each_step : bool</text>
-<text text-anchor="start" x="6374.5" y="-2145.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="6374.5" y="-2130.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
-<text text-anchor="start" x="6374.5" y="-2115.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="6374.5" y="-2100.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="6374.5" y="-2085.8" font-family="Times,serif" font-size="14.00">rankSelectionAlgo : Uniform</text>
-<polyline fill="none" stroke="black" points="6366.5,-2078 6602.5,-2078 "/>
-<text text-anchor="start" x="6374.5" y="-2062.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="6374.5" y="-2047.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="6365.5,-2040 6365.5,-2229 6601.5,-2229 6601.5,-2040 6365.5,-2040"/>
+<text text-anchor="middle" x="6483.5" y="-2213.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoLearn.rhoLearn</text>
+<polyline fill="none" stroke="black" points="6365.5,-2206 6601.5,-2206 "/>
+<text text-anchor="start" x="6373.5" y="-2190.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="6373.5" y="-2175.8" font-family="Times,serif" font-size="14.00">_rankSelection : Uniform</text>
+<text text-anchor="start" x="6373.5" y="-2160.8" font-family="Times,serif" font-size="14.00">change_rank_each_step : bool</text>
+<text text-anchor="start" x="6373.5" y="-2145.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="6373.5" y="-2130.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
+<text text-anchor="start" x="6373.5" y="-2115.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="6373.5" y="-2100.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="6373.5" y="-2085.8" font-family="Times,serif" font-size="14.00">rankSelectionAlgo : Uniform</text>
+<polyline fill="none" stroke="black" points="6365.5,-2078 6601.5,-2078 "/>
+<text text-anchor="start" x="6373.5" y="-2062.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="6373.5" y="-2047.8" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 69&#45;&gt;102 -->
 <g id="edge99" class="edge"><title>69&#45;&gt;102</title>
-<path fill="none" stroke="black" d="M6466.03,-1800.72C6443.8,-1851.25 6421.86,-1921.02 6432.5,-1984 6434.96,-1998.54 6438.67,-2013.55 6443,-2028.2"/>
-<polygon fill="black" stroke="black" points="6443.06,-2028.38 6448.65,-2032.94 6446.59,-2039.85 6441,-2035.3 6443.06,-2028.38"/>
-<text text-anchor="middle" x="6473.5" y="-1972.8" font-family="Times,serif" font-size="14.00" fill="green">_rankSelection</text>
+<path fill="none" stroke="black" d="M6449.08,-1800.72C6428.7,-1851.55 6409.09,-1921.67 6421.5,-1984 6424.42,-1998.68 6428.81,-2013.72 6433.93,-2028.34"/>
+<polygon fill="black" stroke="black" points="6434.06,-2028.69 6439.88,-2032.95 6438.18,-2039.96 6432.37,-2035.69 6434.06,-2028.69"/>
+<text text-anchor="middle" x="6472.5" y="-1972.8" font-family="Times,serif" font-size="14.00" fill="green">rankSelectionAlgo</text>
 </g>
 <!-- 69&#45;&gt;102 -->
 <g id="edge100" class="edge"><title>69&#45;&gt;102</title>
-<path fill="none" stroke="black" d="M6511.97,-1800.68C6516.74,-1851.8 6520.63,-1922.28 6514.5,-1984 6513.09,-1998.2 6510.94,-2013.05 6508.43,-2027.64"/>
-<polygon fill="black" stroke="black" points="6508.37,-2028.01 6511.24,-2034.62 6506.25,-2039.82 6503.37,-2033.21 6508.37,-2028.01"/>
-<text text-anchor="middle" x="6567.5" y="-1972.8" font-family="Times,serif" font-size="14.00" fill="green">rankSelectionAlgo</text>
+<path fill="none" stroke="black" d="M6505.72,-1800.67C6518.93,-1851.62 6531.66,-1921.92 6523.5,-1984 6521.61,-1998.4 6518.73,-2013.38 6515.37,-2028.06"/>
+<polygon fill="black" stroke="black" points="6515.37,-2028.08 6517.86,-2034.84 6512.58,-2039.75 6510.08,-2032.98 6515.37,-2028.08"/>
+<text text-anchor="middle" x="6566.5" y="-1972.8" font-family="Times,serif" font-size="14.00" fill="green">_rankSelection</text>
 </g>
 <!-- 70 -->
 <g id="node71" class="node"><title>70</title>
 <polygon fill="none" stroke="black" points="6483,-1279.5 6483,-1393.5 6740,-1393.5 6740,-1279.5 6483,-1279.5"/>
 <text text-anchor="middle" x="6611.5" y="-1378.3" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="6483,-1370.5 6740,-1370.5 "/>
-<text text-anchor="start" x="6491" y="-1355.3" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="6491" y="-1355.3" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="6491" y="-1340.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="6483,-1332.5 6740,-1332.5 "/>
 <text text-anchor="start" x="6491" y="-1317.3" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -1430,8 +1430,8 @@
 </g>
 <!-- 70&#45;&gt;69 -->
 <g id="edge63" class="edge"><title>70&#45;&gt;69</title>
-<path fill="none" stroke="black" d="M6595.91,-1393.79C6577.55,-1460.11 6546.89,-1570.81 6525.97,-1646.38"/>
-<polygon fill="none" stroke="black" points="6522.5,-1645.76 6523.21,-1656.33 6529.25,-1647.63 6522.5,-1645.76"/>
+<path fill="none" stroke="black" d="M6593.02,-1393.79C6571.26,-1460.11 6534.93,-1570.81 6510.13,-1646.38"/>
+<polygon fill="none" stroke="black" points="6506.65,-1645.74 6506.86,-1656.33 6513.3,-1647.92 6506.65,-1645.74"/>
 </g>
 <!-- 71 -->
 <g id="node72" class="node"><title>71</title>
@@ -1576,38 +1576,38 @@
 </g>
 <!-- 79 -->
 <g id="node80" class="node"><title>79</title>
-<polygon fill="none" stroke="black" points="3322.5,-2364.5 3322.5,-2493.5 3554.5,-2493.5 3554.5,-2364.5 3322.5,-2364.5"/>
-<text text-anchor="middle" x="3438.5" y="-2478.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ALOHA.ALOHA</text>
-<polyline fill="none" stroke="black" points="3322.5,-2470.5 3554.5,-2470.5 "/>
-<text text-anchor="start" x="3330.5" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="3330.5" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="3330.5" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="3330.5" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="3322.5,-2402.5 3554.5,-2402.5 "/>
-<text text-anchor="start" x="3330.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="3330.5" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="3321.5,-2364.5 3321.5,-2493.5 3553.5,-2493.5 3553.5,-2364.5 3321.5,-2364.5"/>
+<text text-anchor="middle" x="3437.5" y="-2478.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.ALOHA.ALOHA</text>
+<polyline fill="none" stroke="black" points="3321.5,-2470.5 3553.5,-2470.5 "/>
+<text text-anchor="start" x="3329.5" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="3329.5" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="3329.5" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="3329.5" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="3321.5,-2402.5 3553.5,-2402.5 "/>
+<text text-anchor="start" x="3329.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="3329.5" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 82 -->
 <g id="node83" class="node"><title>82</title>
-<polygon fill="none" stroke="black" points="4824,-2591.5 4824,-2796.5 5123,-2796.5 5123,-2591.5 4824,-2591.5"/>
-<text text-anchor="middle" x="4973.5" y="-2781.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.BaseMPPolicy.BaseMPPolicy</text>
-<polyline fill="none" stroke="black" points="4824,-2773.5 5123,-2773.5 "/>
-<polyline fill="none" stroke="black" points="4824,-2749.5 5123,-2749.5 "/>
-<text text-anchor="start" x="4832" y="-2734.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="4832" y="-2719.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="4832" y="-2704.3" font-family="Times,serif" font-size="14.00">_choiceFromSubSet_one()</text>
-<text text-anchor="start" x="4832" y="-2689.3" font-family="Times,serif" font-size="14.00">_choiceIMP_one()</text>
-<text text-anchor="start" x="4832" y="-2674.3" font-family="Times,serif" font-size="14.00">_choiceMultiple_one()</text>
-<text text-anchor="start" x="4832" y="-2659.3" font-family="Times,serif" font-size="14.00">_choiceWithRank_one()</text>
-<text text-anchor="start" x="4832" y="-2644.3" font-family="Times,serif" font-size="14.00">_choice_one()</text>
-<text text-anchor="start" x="4832" y="-2629.3" font-family="Times,serif" font-size="14.00">_estimatedOrder_one()</text>
-<text text-anchor="start" x="4832" y="-2614.3" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
-<text text-anchor="start" x="4832" y="-2599.3" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
+<polygon fill="none" stroke="black" points="4823,-2591.5 4823,-2796.5 5122,-2796.5 5122,-2591.5 4823,-2591.5"/>
+<text text-anchor="middle" x="4972.5" y="-2781.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.BaseMPPolicy.BaseMPPolicy</text>
+<polyline fill="none" stroke="black" points="4823,-2773.5 5122,-2773.5 "/>
+<polyline fill="none" stroke="black" points="4823,-2749.5 5122,-2749.5 "/>
+<text text-anchor="start" x="4831" y="-2734.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="4831" y="-2719.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="4831" y="-2704.3" font-family="Times,serif" font-size="14.00">_choiceFromSubSet_one()</text>
+<text text-anchor="start" x="4831" y="-2689.3" font-family="Times,serif" font-size="14.00">_choiceIMP_one()</text>
+<text text-anchor="start" x="4831" y="-2674.3" font-family="Times,serif" font-size="14.00">_choiceMultiple_one()</text>
+<text text-anchor="start" x="4831" y="-2659.3" font-family="Times,serif" font-size="14.00">_choiceWithRank_one()</text>
+<text text-anchor="start" x="4831" y="-2644.3" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<text text-anchor="start" x="4831" y="-2629.3" font-family="Times,serif" font-size="14.00">_estimatedOrder_one()</text>
+<text text-anchor="start" x="4831" y="-2614.3" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
+<text text-anchor="start" x="4831" y="-2599.3" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
 </g>
 <!-- 79&#45;&gt;82 -->
 <g id="edge72" class="edge"><title>79&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M3486.76,-2493.62C3507.71,-2516.57 3534.18,-2540.2 3563.5,-2554 3781.68,-2656.67 4492.68,-2683.61 4813.68,-2690.59"/>
-<polygon fill="none" stroke="black" points="4813.92,-2694.1 4824,-2690.81 4814.07,-2687.1 4813.92,-2694.1"/>
+<path fill="none" stroke="black" d="M3485.76,-2493.62C3506.71,-2516.57 3533.18,-2540.2 3562.5,-2554 3780.68,-2656.67 4491.68,-2683.61 4812.68,-2690.59"/>
+<polygon fill="none" stroke="black" points="4812.92,-2694.1 4823,-2690.81 4813.07,-2687.1 4812.92,-2694.1"/>
 </g>
 <!-- 80 -->
 <g id="node81" class="node"><title>80</title>
@@ -1675,23 +1675,23 @@
 </g>
 <!-- 83 -->
 <g id="node84" class="node"><title>83</title>
-<polygon fill="none" stroke="black" points="3573,-2349.5 3573,-2508.5 3920,-2508.5 3920,-2349.5 3573,-2349.5"/>
-<text text-anchor="middle" x="3746.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedCycling.CentralizedCycling</text>
-<polyline fill="none" stroke="black" points="3573,-2485.5 3920,-2485.5 "/>
-<text text-anchor="start" x="3581" y="-2470.3" font-family="Times,serif" font-size="14.00">_offsets</text>
-<text text-anchor="start" x="3581" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="3581" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="3581" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="3581" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="3573,-2402.5 3920,-2402.5 "/>
-<text text-anchor="start" x="3581" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="3581" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="3581" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
+<polygon fill="none" stroke="black" points="3572,-2349.5 3572,-2508.5 3919,-2508.5 3919,-2349.5 3572,-2349.5"/>
+<text text-anchor="middle" x="3745.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedCycling.CentralizedCycling</text>
+<polyline fill="none" stroke="black" points="3572,-2485.5 3919,-2485.5 "/>
+<text text-anchor="start" x="3580" y="-2470.3" font-family="Times,serif" font-size="14.00">_offsets</text>
+<text text-anchor="start" x="3580" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="3580" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="3580" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="3580" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="3572,-2402.5 3919,-2402.5 "/>
+<text text-anchor="start" x="3580" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="3580" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="3580" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
 </g>
 <!-- 83&#45;&gt;82 -->
 <g id="edge74" class="edge"><title>83&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M3844.34,-2508.79C3870.37,-2526.26 3899.39,-2542.87 3928.5,-2554 4086.58,-2614.43 4561.62,-2660.09 4813.18,-2680.78"/>
-<polygon fill="none" stroke="black" points="4813.25,-2684.3 4823.51,-2681.63 4813.82,-2677.33 4813.25,-2684.3"/>
+<path fill="none" stroke="black" d="M3843.34,-2508.79C3869.37,-2526.26 3898.39,-2542.87 3927.5,-2554 4085.58,-2614.43 4560.62,-2660.09 4812.18,-2680.78"/>
+<polygon fill="none" stroke="black" points="4812.25,-2684.3 4822.51,-2681.63 4812.82,-2677.33 4812.25,-2684.3"/>
 </g>
 <!-- 84 -->
 <g id="node85" class="node"><title>84</title>
@@ -1715,26 +1715,26 @@
 </g>
 <!-- 85 -->
 <g id="node86" class="node"><title>85</title>
-<polygon fill="none" stroke="black" points="3938,-2327 3938,-2531 4261,-2531 4261,-2327 3938,-2327"/>
-<text text-anchor="middle" x="4099.5" y="-2515.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedFixed.CentralizedFixed</text>
-<polyline fill="none" stroke="black" points="3938,-2508 4261,-2508 "/>
-<text text-anchor="start" x="3946" y="-2492.8" font-family="Times,serif" font-size="14.00">_affectations</text>
-<text text-anchor="start" x="3946" y="-2477.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="3946" y="-2462.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="3946" y="-2447.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="3946" y="-2432.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="3938,-2425 4261,-2425 "/>
-<text text-anchor="start" x="3946" y="-2409.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="3946" y="-2394.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="3946" y="-2379.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
-<text text-anchor="start" x="3946" y="-2364.8" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
-<text text-anchor="start" x="3946" y="-2349.8" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
-<text text-anchor="start" x="3946" y="-2334.8" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
+<polygon fill="none" stroke="black" points="3937,-2327 3937,-2531 4260,-2531 4260,-2327 3937,-2327"/>
+<text text-anchor="middle" x="4098.5" y="-2515.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedFixed.CentralizedFixed</text>
+<polyline fill="none" stroke="black" points="3937,-2508 4260,-2508 "/>
+<text text-anchor="start" x="3945" y="-2492.8" font-family="Times,serif" font-size="14.00">_affectations</text>
+<text text-anchor="start" x="3945" y="-2477.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="3945" y="-2462.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="3945" y="-2447.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="3945" y="-2432.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="3937,-2425 4260,-2425 "/>
+<text text-anchor="start" x="3945" y="-2409.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="3945" y="-2394.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="3945" y="-2379.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<text text-anchor="start" x="3945" y="-2364.8" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
+<text text-anchor="start" x="3945" y="-2349.8" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
+<text text-anchor="start" x="3945" y="-2334.8" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
 </g>
 <!-- 85&#45;&gt;82 -->
 <g id="edge76" class="edge"><title>85&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M4227.14,-2531.29C4241.29,-2539.83 4255.88,-2547.62 4270.5,-2554 4447.19,-2631.07 4667.51,-2665.76 4813.94,-2681.15"/>
-<polygon fill="none" stroke="black" points="4813.6,-2684.63 4823.91,-2682.18 4814.32,-2677.67 4813.6,-2684.63"/>
+<path fill="none" stroke="black" d="M4226.14,-2531.29C4240.29,-2539.83 4254.88,-2547.62 4269.5,-2554 4446.19,-2631.07 4666.51,-2665.76 4812.94,-2681.15"/>
+<polygon fill="none" stroke="black" points="4812.6,-2684.63 4822.91,-2682.18 4813.32,-2677.67 4812.6,-2684.63"/>
 </g>
 <!-- 86 -->
 <g id="node87" class="node"><title>86</title>
@@ -1757,38 +1757,38 @@
 </g>
 <!-- 87 -->
 <g id="node88" class="node"><title>87</title>
-<polygon fill="none" stroke="black" points="4326,-2100 4326,-2169 4637,-2169 4637,-2100 4326,-2100"/>
-<text text-anchor="middle" x="4481.5" y="-2153.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedIMP.CentralizedIMP</text>
-<polyline fill="none" stroke="black" points="4326,-2146 4637,-2146 "/>
-<text text-anchor="start" x="4334" y="-2130.8" font-family="Times,serif" font-size="14.00">choices</text>
-<polyline fill="none" stroke="black" points="4326,-2123 4637,-2123 "/>
-<text text-anchor="start" x="4334" y="-2107.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<polygon fill="none" stroke="black" points="4325,-2100 4325,-2169 4636,-2169 4636,-2100 4325,-2100"/>
+<text text-anchor="middle" x="4480.5" y="-2153.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedIMP.CentralizedIMP</text>
+<polyline fill="none" stroke="black" points="4325,-2146 4636,-2146 "/>
+<text text-anchor="start" x="4333" y="-2130.8" font-family="Times,serif" font-size="14.00">choices</text>
+<polyline fill="none" stroke="black" points="4325,-2123 4636,-2123 "/>
+<text text-anchor="start" x="4333" y="-2107.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
 </g>
 <!-- 89 -->
 <g id="node90" class="node"><title>89</title>
-<polygon fill="none" stroke="black" points="4279.5,-2304.5 4279.5,-2553.5 4683.5,-2553.5 4683.5,-2304.5 4279.5,-2304.5"/>
-<text text-anchor="middle" x="4481.5" y="-2538.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedMultiplePlay.CentralizedMultiplePlay</text>
-<polyline fill="none" stroke="black" points="4279.5,-2530.5 4683.5,-2530.5 "/>
-<text text-anchor="start" x="4287.5" y="-2515.3" font-family="Times,serif" font-size="14.00">affectation_order</text>
-<text text-anchor="start" x="4287.5" y="-2500.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="4287.5" y="-2485.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="4287.5" y="-2470.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="4287.5" y="-2455.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="4287.5" y="-2440.3" font-family="Times,serif" font-size="14.00">player</text>
-<text text-anchor="start" x="4287.5" y="-2425.3" font-family="Times,serif" font-size="14.00">uniformAllocation : bool</text>
-<polyline fill="none" stroke="black" points="4279.5,-2417.5 4683.5,-2417.5 "/>
-<text text-anchor="start" x="4287.5" y="-2402.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="4287.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="4287.5" y="-2372.3" font-family="Times,serif" font-size="14.00">_choice_one()</text>
-<text text-anchor="start" x="4287.5" y="-2357.3" font-family="Times,serif" font-size="14.00">_estimatedOrder_one()</text>
-<text text-anchor="start" x="4287.5" y="-2342.3" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
-<text text-anchor="start" x="4287.5" y="-2327.3" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
-<text text-anchor="start" x="4287.5" y="-2312.3" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
+<polygon fill="none" stroke="black" points="4278.5,-2304.5 4278.5,-2553.5 4682.5,-2553.5 4682.5,-2304.5 4278.5,-2304.5"/>
+<text text-anchor="middle" x="4480.5" y="-2538.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.CentralizedMultiplePlay.CentralizedMultiplePlay</text>
+<polyline fill="none" stroke="black" points="4278.5,-2530.5 4682.5,-2530.5 "/>
+<text text-anchor="start" x="4286.5" y="-2515.3" font-family="Times,serif" font-size="14.00">affectation_order</text>
+<text text-anchor="start" x="4286.5" y="-2500.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="4286.5" y="-2485.3" font-family="Times,serif" font-size="14.00">choices</text>
+<text text-anchor="start" x="4286.5" y="-2470.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="4286.5" y="-2455.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="4286.5" y="-2440.3" font-family="Times,serif" font-size="14.00">player</text>
+<text text-anchor="start" x="4286.5" y="-2425.3" font-family="Times,serif" font-size="14.00">uniformAllocation : bool</text>
+<polyline fill="none" stroke="black" points="4278.5,-2417.5 4682.5,-2417.5 "/>
+<text text-anchor="start" x="4286.5" y="-2402.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="4286.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="4286.5" y="-2372.3" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<text text-anchor="start" x="4286.5" y="-2357.3" font-family="Times,serif" font-size="14.00">_estimatedOrder_one()</text>
+<text text-anchor="start" x="4286.5" y="-2342.3" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
+<text text-anchor="start" x="4286.5" y="-2327.3" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
+<text text-anchor="start" x="4286.5" y="-2312.3" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
 </g>
 <!-- 87&#45;&gt;89 -->
 <g id="edge78" class="edge"><title>87&#45;&gt;89</title>
-<path fill="none" stroke="black" d="M4481.5,-2169.05C4481.5,-2199.95 4481.5,-2247.87 4481.5,-2294.13"/>
-<polygon fill="none" stroke="black" points="4478,-2294.28 4481.5,-2304.28 4485,-2294.28 4478,-2294.28"/>
+<path fill="none" stroke="black" d="M4480.5,-2169.05C4480.5,-2199.95 4480.5,-2247.87 4480.5,-2294.13"/>
+<polygon fill="none" stroke="black" points="4477,-2294.28 4480.5,-2304.28 4484,-2294.28 4477,-2294.28"/>
 </g>
 <!-- 88 -->
 <g id="node89" class="node"><title>88</title>
@@ -1806,15 +1806,15 @@
 </g>
 <!-- 89&#45;&gt;82 -->
 <g id="edge80" class="edge"><title>89&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M4683.76,-2549.25C4686.69,-2550.85 4689.6,-2552.43 4692.5,-2554 4731.68,-2575.17 4774.51,-2597 4814.67,-2616.91"/>
-<polygon fill="none" stroke="black" points="4813.21,-2620.1 4823.73,-2621.4 4816.32,-2613.82 4813.21,-2620.1"/>
+<path fill="none" stroke="black" d="M4682.76,-2549.25C4685.69,-2550.85 4688.6,-2552.43 4691.5,-2554 4730.68,-2575.17 4773.51,-2597 4813.67,-2616.91"/>
+<polygon fill="none" stroke="black" points="4812.21,-2620.1 4822.73,-2621.4 4815.32,-2613.82 4812.21,-2620.1"/>
 </g>
 <!-- 91 -->
 <g id="node92" class="node"><title>91</title>
 <polygon fill="none" stroke="black" points="9334.5,-323 9334.5,-512 9596.5,-512 9596.5,-323 9334.5,-323"/>
 <text text-anchor="middle" x="9465.5" y="-496.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="9334.5,-489 9596.5,-489 "/>
-<text text-anchor="start" x="9342.5" y="-473.8" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
+<text text-anchor="start" x="9342.5" y="-473.8" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
 <text text-anchor="start" x="9342.5" y="-458.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="9342.5" y="-443.8" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="9342.5" y="-428.8" font-family="Times,serif" font-size="14.00">offset</text>
@@ -1833,23 +1833,23 @@
 </g>
 <!-- 92 -->
 <g id="node93" class="node"><title>92</title>
-<polygon fill="none" stroke="black" points="4702,-2349.5 4702,-2508.5 4955,-2508.5 4955,-2349.5 4702,-2349.5"/>
-<text text-anchor="middle" x="4828.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.OracleFair</text>
-<polyline fill="none" stroke="black" points="4702,-2485.5 4955,-2485.5 "/>
-<text text-anchor="start" x="4710" y="-2470.3" font-family="Times,serif" font-size="14.00">_offsets</text>
-<text text-anchor="start" x="4710" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="4710" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="4710" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="4710" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="4702,-2402.5 4955,-2402.5 "/>
-<text text-anchor="start" x="4710" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="4710" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="4710" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
+<polygon fill="none" stroke="black" points="4701,-2349.5 4701,-2508.5 4954,-2508.5 4954,-2349.5 4701,-2349.5"/>
+<text text-anchor="middle" x="4827.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.OracleFair</text>
+<polyline fill="none" stroke="black" points="4701,-2485.5 4954,-2485.5 "/>
+<text text-anchor="start" x="4709" y="-2470.3" font-family="Times,serif" font-size="14.00">_offsets</text>
+<text text-anchor="start" x="4709" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="4709" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="4709" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="4709" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="4701,-2402.5 4954,-2402.5 "/>
+<text text-anchor="start" x="4709" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="4709" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="4709" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
 </g>
 <!-- 92&#45;&gt;82 -->
 <g id="edge82" class="edge"><title>92&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M4871.81,-2508.55C4884.65,-2531.84 4898.95,-2557.79 4912.69,-2582.7"/>
-<polygon fill="none" stroke="black" points="4909.62,-2584.39 4917.52,-2591.46 4915.75,-2581.01 4909.62,-2584.39"/>
+<path fill="none" stroke="black" d="M4870.81,-2508.55C4883.65,-2531.84 4897.95,-2557.79 4911.69,-2582.7"/>
+<polygon fill="none" stroke="black" points="4908.62,-2584.39 4916.52,-2591.46 4914.75,-2581.01 4908.62,-2584.39"/>
 </g>
 <!-- 93 -->
 <g id="node94" class="node"><title>93</title>
@@ -1872,23 +1872,23 @@
 </g>
 <!-- 94 -->
 <g id="node95" class="node"><title>94</title>
-<polygon fill="none" stroke="black" points="4973,-2349.5 4973,-2508.5 5266,-2508.5 5266,-2349.5 4973,-2349.5"/>
-<text text-anchor="middle" x="5119.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleNotFair.OracleNotFair</text>
-<polyline fill="none" stroke="black" points="4973,-2485.5 5266,-2485.5 "/>
-<text text-anchor="start" x="4981" y="-2470.3" font-family="Times,serif" font-size="14.00">_affectations</text>
-<text text-anchor="start" x="4981" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="4981" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="4981" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="4981" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="4973,-2402.5 5266,-2402.5 "/>
-<text text-anchor="start" x="4981" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="4981" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="4981" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
+<polygon fill="none" stroke="black" points="4972,-2349.5 4972,-2508.5 5265,-2508.5 5265,-2349.5 4972,-2349.5"/>
+<text text-anchor="middle" x="5118.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleNotFair.OracleNotFair</text>
+<polyline fill="none" stroke="black" points="4972,-2485.5 5265,-2485.5 "/>
+<text text-anchor="start" x="4980" y="-2470.3" font-family="Times,serif" font-size="14.00">_affectations</text>
+<text text-anchor="start" x="4980" y="-2455.3" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="4980" y="-2440.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="4980" y="-2425.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="4980" y="-2410.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="4972,-2402.5 5265,-2402.5 "/>
+<text text-anchor="start" x="4980" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="4980" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="4980" y="-2357.3" font-family="Times,serif" font-size="14.00">_printNbCollisions()</text>
 </g>
 <!-- 94&#45;&gt;82 -->
 <g id="edge84" class="edge"><title>94&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M5075.89,-2508.55C5062.96,-2531.84 5048.56,-2557.79 5034.73,-2582.7"/>
-<polygon fill="none" stroke="black" points="5031.66,-2581.01 5029.87,-2591.46 5037.78,-2584.41 5031.66,-2581.01"/>
+<path fill="none" stroke="black" d="M5074.89,-2508.55C5061.96,-2531.84 5047.56,-2557.79 5033.73,-2582.7"/>
+<polygon fill="none" stroke="black" points="5030.66,-2581.01 5028.87,-2591.46 5036.78,-2584.41 5030.66,-2581.01"/>
 </g>
 <!-- 95 -->
 <g id="node96" class="node"><title>95</title>
@@ -1907,44 +1907,44 @@
 </g>
 <!-- 96 -->
 <g id="node97" class="node"><title>96</title>
-<polygon fill="none" stroke="black" points="5284,-2342 5284,-2516 5529,-2516 5529,-2342 5284,-2342"/>
-<text text-anchor="middle" x="5406.5" y="-2500.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Scenario1.Scenario1</text>
-<polyline fill="none" stroke="black" points="5284,-2493 5529,-2493 "/>
-<text text-anchor="start" x="5292" y="-2477.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="5292" y="-2462.8" font-family="Times,serif" font-size="14.00">chosenOne : NoneType</text>
-<text text-anchor="start" x="5292" y="-2447.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="5292" y="-2432.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="5284,-2425 5529,-2425 "/>
-<text text-anchor="start" x="5292" y="-2409.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5292" y="-2394.8" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="5292" y="-2379.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
-<text text-anchor="start" x="5292" y="-2364.8" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
-<text text-anchor="start" x="5292" y="-2349.8" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
+<polygon fill="none" stroke="black" points="5283,-2342 5283,-2516 5528,-2516 5528,-2342 5283,-2342"/>
+<text text-anchor="middle" x="5405.5" y="-2500.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Scenario1.Scenario1</text>
+<polyline fill="none" stroke="black" points="5283,-2493 5528,-2493 "/>
+<text text-anchor="start" x="5291" y="-2477.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="5291" y="-2462.8" font-family="Times,serif" font-size="14.00">chosenOne : NoneType</text>
+<text text-anchor="start" x="5291" y="-2447.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="5291" y="-2432.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="5283,-2425 5528,-2425 "/>
+<text text-anchor="start" x="5291" y="-2409.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5291" y="-2394.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="5291" y="-2379.8" font-family="Times,serif" font-size="14.00">_choice_one()</text>
+<text text-anchor="start" x="5291" y="-2364.8" font-family="Times,serif" font-size="14.00">_getReward_one()</text>
+<text text-anchor="start" x="5291" y="-2349.8" font-family="Times,serif" font-size="14.00">_startGame_one()</text>
 </g>
 <!-- 96&#45;&gt;82 -->
 <g id="edge86" class="edge"><title>96&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M5322.55,-2516.28C5307.26,-2529.79 5290.92,-2542.92 5274.5,-2554 5230.88,-2583.42 5180.04,-2609.55 5132.69,-2630.99"/>
-<polygon fill="none" stroke="black" points="5130.96,-2627.93 5123.27,-2635.22 5133.82,-2634.32 5130.96,-2627.93"/>
+<path fill="none" stroke="black" d="M5321.55,-2516.28C5306.26,-2529.79 5289.92,-2542.92 5273.5,-2554 5229.88,-2583.42 5179.04,-2609.55 5131.69,-2630.99"/>
+<polygon fill="none" stroke="black" points="5129.96,-2627.93 5122.27,-2635.22 5132.82,-2634.32 5129.96,-2627.93"/>
 </g>
 <!-- 97 -->
 <g id="node98" class="node"><title>97</title>
-<polygon fill="none" stroke="black" points="5547.5,-2349.5 5547.5,-2508.5 5759.5,-2508.5 5759.5,-2349.5 5547.5,-2349.5"/>
-<text text-anchor="middle" x="5653.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Selfish.Selfish</text>
-<polyline fill="none" stroke="black" points="5547.5,-2485.5 5759.5,-2485.5 "/>
-<text text-anchor="start" x="5555.5" y="-2470.3" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5555.5" y="-2455.3" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="5555.5" y="-2440.3" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="5555.5" y="-2425.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="5555.5" y="-2410.3" font-family="Times,serif" font-size="14.00">penalty : NoneType</text>
-<polyline fill="none" stroke="black" points="5547.5,-2402.5 5759.5,-2402.5 "/>
-<text text-anchor="start" x="5555.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5555.5" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
-<text text-anchor="start" x="5555.5" y="-2357.3" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
+<polygon fill="none" stroke="black" points="5546.5,-2349.5 5546.5,-2508.5 5758.5,-2508.5 5758.5,-2349.5 5546.5,-2349.5"/>
+<text text-anchor="middle" x="5652.5" y="-2493.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.Selfish.Selfish</text>
+<polyline fill="none" stroke="black" points="5546.5,-2485.5 5758.5,-2485.5 "/>
+<text text-anchor="start" x="5554.5" y="-2470.3" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="5554.5" y="-2455.3" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="5554.5" y="-2440.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="5554.5" y="-2425.3" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="5554.5" y="-2410.3" font-family="Times,serif" font-size="14.00">penalty : NoneType</text>
+<polyline fill="none" stroke="black" points="5546.5,-2402.5 5758.5,-2402.5 "/>
+<text text-anchor="start" x="5554.5" y="-2387.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5554.5" y="-2372.3" font-family="Times,serif" font-size="14.00">__str__()</text>
+<text text-anchor="start" x="5554.5" y="-2357.3" font-family="Times,serif" font-size="14.00">_handleCollision_one()</text>
 </g>
 <!-- 97&#45;&gt;82 -->
 <g id="edge87" class="edge"><title>97&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M5592.95,-2508.65C5576.57,-2525.7 5557.72,-2542.15 5537.5,-2554 5413.02,-2626.97 5251.5,-2661.79 5133.24,-2678.31"/>
-<polygon fill="none" stroke="black" points="5132.44,-2674.89 5123.01,-2679.71 5133.39,-2681.83 5132.44,-2674.89"/>
+<path fill="none" stroke="black" d="M5591.95,-2508.65C5575.57,-2525.7 5556.72,-2542.15 5536.5,-2554 5412.02,-2626.97 5250.5,-2661.79 5132.24,-2678.31"/>
+<polygon fill="none" stroke="black" points="5131.44,-2674.89 5122.01,-2679.71 5132.39,-2681.83 5131.44,-2674.89"/>
 </g>
 <!-- 98 -->
 <g id="node99" class="node"><title>98</title>
@@ -1985,7 +1985,7 @@
 <text text-anchor="middle" x="8262.5" y="-1076.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="8135.5,-1068.5 8389.5,-1068.5 "/>
 <text text-anchor="start" x="8143.5" y="-1053.3" font-family="Times,serif" font-size="14.00">maxRank</text>
-<text text-anchor="start" x="8143.5" y="-1038.3" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="8143.5" y="-1038.3" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="8135.5,-1030.5 8389.5,-1030.5 "/>
 <text text-anchor="start" x="8143.5" y="-1015.3" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="8143.5" y="-1000.3" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -2000,35 +2000,35 @@
 </g>
 <!-- 100 -->
 <g id="node101" class="node"><title>100</title>
-<polygon fill="none" stroke="black" points="5822.5,-2070 5822.5,-2199 6030.5,-2199 6030.5,-2070 5822.5,-2070"/>
-<text text-anchor="middle" x="5926.5" y="-2183.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoEst.rhoEst</text>
-<polyline fill="none" stroke="black" points="5822.5,-2176 6030.5,-2176 "/>
-<text text-anchor="start" x="5830.5" y="-2160.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5830.5" y="-2145.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="5830.5" y="-2130.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="5830.5" y="-2115.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="5822.5,-2108 6030.5,-2108 "/>
-<text text-anchor="start" x="5830.5" y="-2092.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5830.5" y="-2077.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="5821.5,-2070 5821.5,-2199 6029.5,-2199 6029.5,-2070 5821.5,-2070"/>
+<text text-anchor="middle" x="5925.5" y="-2183.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoEst.rhoEst</text>
+<polyline fill="none" stroke="black" points="5821.5,-2176 6029.5,-2176 "/>
+<text text-anchor="start" x="5829.5" y="-2160.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="5829.5" y="-2145.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="5829.5" y="-2130.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="5829.5" y="-2115.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="5821.5,-2108 6029.5,-2108 "/>
+<text text-anchor="start" x="5829.5" y="-2092.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5829.5" y="-2077.8" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 104 -->
 <g id="node105" class="node"><title>104</title>
-<polygon fill="none" stroke="black" points="6083.5,-2357 6083.5,-2501 6313.5,-2501 6313.5,-2357 6083.5,-2357"/>
-<text text-anchor="middle" x="6198.5" y="-2485.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.rhoRand</text>
-<polyline fill="none" stroke="black" points="6083.5,-2478 6313.5,-2478 "/>
-<text text-anchor="start" x="6091.5" y="-2462.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="6091.5" y="-2447.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="6091.5" y="-2432.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
-<text text-anchor="start" x="6091.5" y="-2417.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="6091.5" y="-2402.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="6083.5,-2395 6313.5,-2395 "/>
-<text text-anchor="start" x="6091.5" y="-2379.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="6091.5" y="-2364.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="6082.5,-2357 6082.5,-2501 6312.5,-2501 6312.5,-2357 6082.5,-2357"/>
+<text text-anchor="middle" x="6197.5" y="-2485.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.rhoRand</text>
+<polyline fill="none" stroke="black" points="6082.5,-2478 6312.5,-2478 "/>
+<text text-anchor="start" x="6090.5" y="-2462.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="6090.5" y="-2447.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="6090.5" y="-2432.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
+<text text-anchor="start" x="6090.5" y="-2417.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="6090.5" y="-2402.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="6082.5,-2395 6312.5,-2395 "/>
+<text text-anchor="start" x="6090.5" y="-2379.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="6090.5" y="-2364.8" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 100&#45;&gt;104 -->
 <g id="edge90" class="edge"><title>100&#45;&gt;104</title>
-<path fill="none" stroke="black" d="M5979.66,-2199.15C5998.27,-2220.95 6019.51,-2245.31 6039.5,-2267 6064.81,-2294.46 6093.24,-2323.73 6118.99,-2349.68"/>
-<polygon fill="none" stroke="black" points="6116.65,-2352.28 6126.18,-2356.9 6121.61,-2347.34 6116.65,-2352.28"/>
+<path fill="none" stroke="black" d="M5978.66,-2199.15C5997.27,-2220.95 6018.51,-2245.31 6038.5,-2267 6063.81,-2294.46 6092.24,-2323.73 6117.99,-2349.68"/>
+<polygon fill="none" stroke="black" points="6115.65,-2352.28 6125.18,-2356.9 6120.61,-2347.34 6115.65,-2352.28"/>
 </g>
 <!-- 101 -->
 <g id="node102" class="node"><title>101</title>
@@ -2053,8 +2053,8 @@
 </g>
 <!-- 102&#45;&gt;104 -->
 <g id="edge92" class="edge"><title>102&#45;&gt;104</title>
-<path fill="none" stroke="black" d="M6393.3,-2229.29C6380.94,-2241.97 6368.41,-2254.81 6356.5,-2267 6330.23,-2293.88 6301.45,-2323.24 6275.73,-2349.43"/>
-<polygon fill="none" stroke="black" points="6273.07,-2347.14 6268.56,-2356.73 6278.07,-2352.05 6273.07,-2347.14"/>
+<path fill="none" stroke="black" d="M6392.3,-2229.29C6379.94,-2241.97 6367.41,-2254.81 6355.5,-2267 6329.23,-2293.88 6300.45,-2323.24 6274.73,-2349.43"/>
+<polygon fill="none" stroke="black" points="6272.07,-2347.14 6267.56,-2356.73 6277.07,-2352.05 6272.07,-2347.14"/>
 </g>
 <!-- 103&#45;&gt;90 -->
 <g id="edge93" class="edge"><title>103&#45;&gt;90</title>
@@ -2063,8 +2063,8 @@
 </g>
 <!-- 104&#45;&gt;82 -->
 <g id="edge94" class="edge"><title>104&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M6142.4,-2501.32C6122.79,-2521.56 6099.19,-2541.48 6073.5,-2554 5911.37,-2633.03 5397.14,-2670.84 5133.19,-2685.43"/>
-<polygon fill="none" stroke="black" points="5132.93,-2681.94 5123.14,-2685.98 5133.31,-2688.93 5132.93,-2681.94"/>
+<path fill="none" stroke="black" d="M6141.4,-2501.32C6121.79,-2521.56 6098.19,-2541.48 6072.5,-2554 5910.37,-2633.03 5396.14,-2670.84 5132.19,-2685.43"/>
+<polygon fill="none" stroke="black" points="5131.93,-2681.94 5122.14,-2685.98 5132.31,-2688.93 5131.93,-2681.94"/>
 </g>
 <!-- 105 -->
 <g id="node106" class="node"><title>105</title>
@@ -2087,22 +2087,22 @@
 </g>
 <!-- 106 -->
 <g id="node107" class="node"><title>106</title>
-<polygon fill="none" stroke="black" points="5778,-2357 5778,-2501 6065,-2501 6065,-2357 5778,-2357"/>
-<text text-anchor="middle" x="5921.5" y="-2485.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.rhoRandRand</text>
-<polyline fill="none" stroke="black" points="5778,-2478 6065,-2478 "/>
-<text text-anchor="start" x="5786" y="-2462.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="5786" y="-2447.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="5786" y="-2432.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
-<text text-anchor="start" x="5786" y="-2417.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="5786" y="-2402.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<polyline fill="none" stroke="black" points="5778,-2395 6065,-2395 "/>
-<text text-anchor="start" x="5786" y="-2379.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="5786" y="-2364.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="5777,-2357 5777,-2501 6064,-2501 6064,-2357 5777,-2357"/>
+<text text-anchor="middle" x="5920.5" y="-2485.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandRand.rhoRandRand</text>
+<polyline fill="none" stroke="black" points="5777,-2478 6064,-2478 "/>
+<text text-anchor="start" x="5785" y="-2462.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="5785" y="-2447.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="5785" y="-2432.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
+<text text-anchor="start" x="5785" y="-2417.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="5785" y="-2402.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<polyline fill="none" stroke="black" points="5777,-2395 6064,-2395 "/>
+<text text-anchor="start" x="5785" y="-2379.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="5785" y="-2364.8" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 106&#45;&gt;82 -->
 <g id="edge96" class="edge"><title>106&#45;&gt;82</title>
-<path fill="none" stroke="black" d="M5849.22,-2501.1C5825.24,-2521.08 5797.29,-2540.9 5768.5,-2554 5562.24,-2647.87 5299.27,-2678.61 5133.58,-2688.52"/>
-<polygon fill="none" stroke="black" points="5133.09,-2685.05 5123.31,-2689.12 5133.49,-2692.03 5133.09,-2685.05"/>
+<path fill="none" stroke="black" d="M5848.22,-2501.1C5824.24,-2521.08 5796.29,-2540.9 5767.5,-2554 5561.24,-2647.87 5298.27,-2678.61 5132.58,-2688.52"/>
+<polygon fill="none" stroke="black" points="5132.09,-2685.05 5122.31,-2689.12 5132.49,-2692.03 5132.09,-2685.05"/>
 </g>
 <!-- 107 -->
 <g id="node108" class="node"><title>107</title>
@@ -2110,7 +2110,7 @@
 <text text-anchor="middle" x="8572.5" y="-496.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandSticky.oneRhoRandSticky</text>
 <polyline fill="none" stroke="black" points="8411,-489 8734,-489 "/>
 <text text-anchor="start" x="8419" y="-473.8" font-family="Times,serif" font-size="14.00">maxRank</text>
-<text text-anchor="start" x="8419" y="-458.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
+<text text-anchor="start" x="8419" y="-458.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
 <text text-anchor="start" x="8419" y="-443.8" font-family="Times,serif" font-size="14.00">sitted : bool</text>
 <text text-anchor="start" x="8419" y="-428.8" font-family="Times,serif" font-size="14.00">stepsWithoutCollisions : int</text>
 <text text-anchor="start" x="8419" y="-413.8" font-family="Times,serif" font-size="14.00">stickyTime</text>
@@ -2128,23 +2128,23 @@
 </g>
 <!-- 108 -->
 <g id="node109" class="node"><title>108</title>
-<polygon fill="none" stroke="black" points="6049,-2055 6049,-2214 6348,-2214 6348,-2055 6049,-2055"/>
-<text text-anchor="middle" x="6198.5" y="-2198.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandSticky.rhoRandSticky</text>
-<polyline fill="none" stroke="black" points="6049,-2191 6348,-2191 "/>
-<text text-anchor="start" x="6057" y="-2175.8" font-family="Times,serif" font-size="14.00">_players</text>
-<text text-anchor="start" x="6057" y="-2160.8" font-family="Times,serif" font-size="14.00">children</text>
-<text text-anchor="start" x="6057" y="-2145.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
-<text text-anchor="start" x="6057" y="-2130.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="6057" y="-2115.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
-<text text-anchor="start" x="6057" y="-2100.8" font-family="Times,serif" font-size="14.00">stickyTime : int</text>
-<polyline fill="none" stroke="black" points="6049,-2093 6348,-2093 "/>
-<text text-anchor="start" x="6057" y="-2077.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="6057" y="-2062.8" font-family="Times,serif" font-size="14.00">__str__()</text>
+<polygon fill="none" stroke="black" points="6048,-2055 6048,-2214 6347,-2214 6347,-2055 6048,-2055"/>
+<text text-anchor="middle" x="6197.5" y="-2198.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRandSticky.rhoRandSticky</text>
+<polyline fill="none" stroke="black" points="6048,-2191 6347,-2191 "/>
+<text text-anchor="start" x="6056" y="-2175.8" font-family="Times,serif" font-size="14.00">_players</text>
+<text text-anchor="start" x="6056" y="-2160.8" font-family="Times,serif" font-size="14.00">children</text>
+<text text-anchor="start" x="6056" y="-2145.8" font-family="Times,serif" font-size="14.00">maxRank : NoneType</text>
+<text text-anchor="start" x="6056" y="-2130.8" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="6056" y="-2115.8" font-family="Times,serif" font-size="14.00">nbPlayers</text>
+<text text-anchor="start" x="6056" y="-2100.8" font-family="Times,serif" font-size="14.00">stickyTime : int</text>
+<polyline fill="none" stroke="black" points="6048,-2093 6347,-2093 "/>
+<text text-anchor="start" x="6056" y="-2077.8" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="6056" y="-2062.8" font-family="Times,serif" font-size="14.00">__str__()</text>
 </g>
 <!-- 108&#45;&gt;104 -->
 <g id="edge98" class="edge"><title>108&#45;&gt;104</title>
-<path fill="none" stroke="black" d="M6198.5,-2214.27C6198.5,-2255.22 6198.5,-2305.22 6198.5,-2346.56"/>
-<polygon fill="none" stroke="black" points="6195,-2346.6 6198.5,-2356.6 6202,-2346.6 6195,-2346.6"/>
+<path fill="none" stroke="black" d="M6197.5,-2214.27C6197.5,-2255.22 6197.5,-2305.22 6197.5,-2346.56"/>
+<polygon fill="none" stroke="black" points="6194,-2346.6 6197.5,-2356.6 6201,-2346.6 6194,-2346.6"/>
 </g>
 </g>
 </svg>
