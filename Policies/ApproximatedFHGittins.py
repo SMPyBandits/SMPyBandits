@@ -14,7 +14,7 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .IndexPolicy import IndexPolicy
 
-#: Default value for the parameter :math:`alpha > 0` for ApproximatedFHGittins.
+#: Default value for the parameter :math:`\alpha > 0` for ApproximatedFHGittins.
 ALPHA = 4
 
 
