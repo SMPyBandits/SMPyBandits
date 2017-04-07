@@ -36,6 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -46,8 +47,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
-# REPETITIONS = 200
+# REPETITIONS = 1000
+REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -150,6 +151,12 @@ configuration = {
             for mean in [0.1, 0.5, 0.9]
             for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
         ],
+    # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
+        [
+            arm_type(mean)
+            for mean in [0.01, 0.02, 0.09]
+            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+        ],
     # ],
     # "environment": [  # FIXME Gamma arms
     #     {   # An example problem with 3 arms
@@ -249,6 +256,14 @@ configuration.update({
             "archtype": BayesUCB,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- Finite-Horizon Gittins index
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 0.5,
             }
         },
     ]

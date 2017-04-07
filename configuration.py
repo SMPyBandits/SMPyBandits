@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -164,18 +164,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
+        {   # Lots of bad arms, significative difference between the best and the others
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        },
         # {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         # },
-        {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        },
+        # {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # },
         # {   # A random problem: every repetition use a different mean vectors!
         #     "arm_type": Bernoulli,
         #     "params": {
@@ -275,10 +275,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        # {
-        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-        #     "params": {}
-        # },
+        {
+            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+            "params": {}
+        },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
@@ -382,12 +382,12 @@ configuration.update({
         #         "alpha": 2
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1
+            }
+        },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
@@ -535,13 +535,13 @@ configuration.update({
         #         "klucb": klucb
         #     }
         # },
-        # {
-        #     "archtype": klUCBPlusPlus,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb
-        #     }
-        # },
+        {
+            "archtype": klUCBPlusPlus,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb
+            }
+        },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -552,28 +552,28 @@ configuration.update({
             "archtype": BayesUCB,
             "params": {}
         },
-        # # --- AdBandits with different alpha paramters
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.125,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.01,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        # --- AdBandits with different alpha paramters
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.125,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.01,
+                "horizon": HORIZON
+            }
+        },
         # --- Finite-Horizon Gittins index
         # {
         #     "archtype": ApproximatedFHGittins,
@@ -589,13 +589,13 @@ configuration.update({
         #         "alpha": 2,
         #     }
         # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 1,
-        #     }
-        # },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 1,
+            }
+        },
         {
             "archtype": ApproximatedFHGittins,
             "params": {

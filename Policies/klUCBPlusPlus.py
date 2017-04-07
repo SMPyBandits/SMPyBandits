@@ -23,13 +23,13 @@ def logplus(x):
 
 def g(n, T, K):
     """The exploration function g(n), as defined in page 3 of the reference paper."""
-    y = T / float(K * n)
+    y = T / (float(K) * n)
     return max(0., log(y * (1. + max(0., log(y)) ** 2)))
 
 
 def np_g(n, T, K):
     """The exploration function g(n), as defined in page 3 of the reference paper, for numpy inputs."""
-    y = T / float(K * n)
+    y = T / (float(K) * n)
     return np.maximum(0., np.log(y * (1. + np.maximum(0., np.log(y)) ** 2)))
 
 
