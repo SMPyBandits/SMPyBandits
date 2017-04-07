@@ -17,6 +17,6 @@ class Thompson(BayesianIndexPolicy):
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k, giving :math:`S_k(t)` rewards of 1, by sampling from the Beta posterior:
 
-        .. math:: I_k(t) \sim \beta(1 + S_k(t), 1 + N_k(t) - S_k(t)).
+        .. math:: I_k(t) \sim \mathrm{Beta}(1 + S_k(t), 1 + N_k(t) - S_k(t)).
         """
         return self.posterior[arm].sample()
