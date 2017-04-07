@@ -8,13 +8,13 @@
 # Usage: ./.fixes_html_in_doc.sh
 #
 
-EMOJIZE=emojize.png
+EMOJIZE=emojize.py
 # EMOJIZE=emojize_pngorsvg.py
 # EMOJIZE="emojize_pngorsvg.py --svg"
 
 BUILDDIR=_build/html
 
-for i in "$BUILDDIR"/*.html; do
+for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html; do
     # 1. fix links from .md to .html
     # 2. OPTIONAL remove :emojis: in HTML output (from GFM Markdown), see https://stackoverflow.com/questions/42087466/sphinx-extension-to-use-github-markdown-emoji-in-sphinx#comment73617151_42256239
     #    uncomment the two s/':[a-z0-9_-]+: '/''/g and s/' :[a-z0-9_-]+:'/''/g lines below
