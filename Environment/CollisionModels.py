@@ -26,7 +26,6 @@ __version__ = "0.6"
 try:
     from functools import lru_cache  # Only for Python 3.2+
 except ImportError:
-    # from functools import wraps  # XXX could it help?
     print("ImportError: functools.lru_cache is not available, using a fake implementation.")
 
     def lru_cache(maxsize=128, typed=False):

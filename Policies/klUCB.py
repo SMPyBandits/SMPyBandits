@@ -5,11 +5,12 @@ Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf)
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from math import log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+
 
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
