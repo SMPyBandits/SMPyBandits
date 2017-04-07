@@ -27,6 +27,15 @@ if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
 else:
     from configuration import configuration
 
+# Solving https://github.com/Naereen/AlgoBandits/issues/15#issuecomment-292484493
+# For instance, call SLEEP=12h to delay the simulation for 12hours
+if getenv('SLEEP', False):
+    from subprocess import call
+    SLEEP = str(getenv('SLEEP'))
+    print("\nSleeping for", SLEEP, "before starting the simulation...")  # DEBUG
+    call(["sleep", SLEEP])  # more general
+    print("Done sleeping for", SLEEP, "... Now I can start the simulation...")
+
 USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
