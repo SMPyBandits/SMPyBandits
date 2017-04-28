@@ -47,9 +47,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
+# REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -279,10 +279,10 @@ configuration.update({
         #         "temperature": TEMPERATURE
         #     }
         # },
-        {
-            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-            "params": {}
-        },
+        # {
+        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+        #     "params": {}
+        # },
         # {
         #     "archtype": SoftMix,   # Another parameter-free Softmax
         #     "params": {}
@@ -539,13 +539,13 @@ configuration.update({
         #         "klucb": klucb
         #     }
         # },
-        {
-            "archtype": klUCBPlusPlus,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb
-            }
-        },
+        # {
+        #     "archtype": klUCBPlusPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb
+        #     }
+        # },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -557,27 +557,27 @@ configuration.update({
             "params": {}
         },
         # --- AdBandits with different alpha paramters
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.125,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.01,
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.125,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": AdBandits,
+        #     "params": {
+        #         "alpha": 0.01,
+        #         "horizon": HORIZON
+        #     }
+        # },
         # --- Finite-Horizon Gittins index
         # {
         #     "archtype": ApproximatedFHGittins,

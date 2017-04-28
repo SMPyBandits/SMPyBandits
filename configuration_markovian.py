@@ -173,6 +173,13 @@ configuration.update({
                 "alpha": 1,
             }
         },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 0.5,
+            }
+        },
     ]
 })
 
