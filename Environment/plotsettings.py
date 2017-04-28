@@ -214,7 +214,7 @@ def wraptext(text, width=110):
 
 def wraplatex(text, width=110):
     """ Wrap the text, for LaTeX, using textwrap module, and width."""
-    return '$\n$'.join(wrap(text, width=width))
+    return '$' + '$\n$'.join(wrap(text, width=width)) + '$'
 
 
 # --- Debugging

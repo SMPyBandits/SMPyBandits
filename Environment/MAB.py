@@ -71,6 +71,7 @@ class MAB(object):
         print(" - with 'minArm' =", self.minArm)  # DEBUG
         # Print lower bound and HOI factor
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
+        print(" - with 'arms' represented as:", self.reprarms(1, latex=True))  # DEBUG
 
     def __repr__(self):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
@@ -128,15 +129,15 @@ class MAB(object):
         # Our lower bound is this:
         oneLR = self.arms[0].oneLR
         centralized_lowerbound = sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
-        print("  - For {} players, Anandtharam et al. centralized lower-bound gave = {:.3g} ...".format(nbPlayers, centralized_lowerbound))  # DEBUG
+        print(" -  For {} players, Anandtharam et al. centralized lower-bound gave = {:.3g} ...".format(nbPlayers, centralized_lowerbound))  # DEBUG
 
         our_lowerbound = nbPlayers * centralized_lowerbound
-        print("  - For {} players, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
+        print(" -  For {} players, our lower bound gave = {:.3g} ...".format(nbPlayers, our_lowerbound))  # DEBUG
 
         # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
         kl = self.arms[0].kl
         anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
-        print("  - For {} players, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
+        print(" -  For {} players, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, anandkumar_lowerbound))  # DEBUG
 
         # Check that our bound is better (ie bigger)
         if anandkumar_lowerbound > our_lowerbound:
@@ -154,7 +155,7 @@ class MAB(object):
 
         # First, the bound in Lemma 2 from [Anandkumar et al., 2010] uses this Upsilon(U, U)
         Upsilon = binomialCoefficient(nbPlayers, 2 * nbPlayers - 1)
-        print("  - For {} players, Upsilon(M,M) = (2M-1 choose M) = {} ...".format(nbPlayers, Upsilon))
+        print(" -  For {} players, Upsilon(M,M) = (2M-1 choose M) = {} ...".format(nbPlayers, Upsilon))
 
         # First, the constant term
         from math import pi
@@ -165,7 +166,7 @@ class MAB(object):
             )
             for (a, mu_star_a) in enumerate(bestMeans)
         )
-        print("  - For {} players, the bound with (1 + pi^2 / 3) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_cstTerm))
+        print(" -  For {} players, the bound with (1 + pi^2 / 3) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_cstTerm))
 
         # And the term to multiply with log(t)
         boundOnExpectedTprime_logT = nbPlayers * sum(
@@ -175,14 +176,14 @@ class MAB(object):
             )
             for (a, mu_star_a) in enumerate(bestMeans)
         )
-        print("  - For {} players, the bound with (8 / (mu_b^* - mu_a^*)^2) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_logT))
+        print(" -  For {} players, the bound with (8 / (mu_b^* - mu_a^*)^2) = {:.3g} ...".format(nbPlayers, boundOnExpectedTprime_logT))
 
         # Add them up
         boundOnExpectedTprime = boundOnExpectedTprime_cstTerm + boundOnExpectedTprime_logT * np.log(2 + times)
 
         # The upper bound in Theorem 3 from [Anandkumar et al., 2010]
         upperbound = nbPlayers * (Upsilon + 1) * boundOnExpectedTprime
-        print("  - For {} players, Anandkumar et al. upper bound for the total cumulated number of collisions is {:.3g} here ...".format(nbPlayers, upperbound[-1]))  # DEBUG
+        print(" -  For {} players, Anandkumar et al. upper bound for the total cumulated number of collisions is {:.3g} here ...".format(nbPlayers, upperbound[-1]))  # DEBUG
 
         return upperbound
 
@@ -232,9 +233,9 @@ RESTED = True  #: Default is rested Markovian.
 def dict_of_transition_matrix(mat):
     """Convert a transition matrix (list of list or numpy array) to a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`)."""
     if isinstance(mat, list):
-        return {(i, j) : mat[i][j] for i in range(len(mat)) for j in range(len(mat[i])) }
+        return {(i, j): mat[i][j] for i in range(len(mat)) for j in range(len(mat[i]))}
     else:
-        return {(i, j) : mat[i,j] for i in range(len(mat)) for j in range(len(mat[i])) }
+        return {(i, j): mat[i, j] for i in range(len(mat)) for j in range(len(mat[i]))}
 
 
 def transition_matrix_of_dict(dic):
@@ -283,30 +284,30 @@ class MarkovianMAB(MAB):
                 matrix_transitions.append(np.asarray(t))
 
         self.matrix_transitions = matrix_transitions
-        print("  - Using these transition matrices:", matrix_transitions)  # DEBUG
+        print(" - Using these transition matrices:", matrix_transitions)  # DEBUG
         self.dict_transitions = dict_transitions
-        print("  - Using these transition dictionaries:", dict_transitions)  # DEBUG
+        print(" - Using these transition dictionaries:", dict_transitions)  # DEBUG
 
         self.chains = [Chain(d) for d in dict_transitions]
-        print("  - For these Markov chains:", self.chains)  # DEBUG
+        print(" - For these Markov chains:", self.chains)  # DEBUG
 
         self.rested = configuration["params"].get("rested", RESTED)  #: Rested or not Markovian model?
-        print("  - Rested :", self.rested)  # DEBUG
+        print(" - Rested:", self.rested)  # DEBUG
 
         self.nbArms = len(self.matrix_transitions)  #: Number of arms
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
 
         # Means of arms = steady distribution
         states = [np.array(list(c.states())) for c in self.chains]
-        print("  - and states :", states)  # DEBUG
+        print(" - and states:", states)  # DEBUG
         steadys = [np.array(list(c.steady().values())) for c in self.chains]
-        print("  - and steady state distributions :", steadys)  # DEBUG
+        print(" - and steady state distributions:", steadys)  # DEBUG
         self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)])  #: Means of each arms, from their steady distributions.
-        print("  - so it gives arms of means :", self.means)  # DEBUG
+        print(" - so it gives arms of means:", self.means)  # DEBUG
 
         self.arms = [configuration["params"]["steadyArm"](mean) for mean in self.means]
-        print("  - so arms asymptotically equivalent to :", self.arms)  # DEBUG
-        print("  - represented as:", self.reprarms(1, latex=True))  # DEBUG
+        print(" - so arms asymptotically equivalent to:", self.arms)  # DEBUG
+        print(" - represented as:", self.reprarms(1, latex=True))  # DEBUG
 
         self.maxArm = np.max(self.means)  #: Max mean of arms
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
