@@ -255,8 +255,22 @@ class MarkovianMAB(MAB):
     Example::
 
         configuration = {
-            'arm_type': Bernoulli,
-            'params':   [0.1, 0.5, 0.9]
+            "arm_type": "Markovian",
+            "params": {
+                "rested": True,  # or False
+                # Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
+                "transitions": [
+                    # 1st arm, Either a dictionary
+                    {   # Mean = 0.375
+                        (0, 0): 0.7, (0, 1): 0.3,
+                        (1, 0): 0.5, (1, 1): 0.5,
+                    },
+                    # 2nd arm, Or a right transition matrix
+                    [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
+                ],
+                # FIXME make this by default! include it in MAB.py and not in the configuration!
+                "steadyArm": Bernoulli
+            }
         }
     """
 
