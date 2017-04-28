@@ -24,7 +24,7 @@ from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, 
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
 # Local imports, objects and functions
 from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-from .MAB import MAB, DynamicMAB
+from .MAB import MAB, MarkovianMAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
 
 REPETITIONS = 1  #: Default nb of repetitions
@@ -98,6 +98,11 @@ class EvaluatorMultiPlayers(object):
                and "arm_type" in configuration_arms and "params" in configuration_arms \
                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
                 MB = DynamicMAB(configuration_arms)
+            elif isinstance(configuration_arms, dict) \
+               and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
+               and "params" in configuration_arms \
+               and "transitions" in configuration_arms["params"]:
+                self.envs.append(MarkovianMAB(configuration_arms))
             else:
                 MB = MAB(configuration_arms)
             self.envs.append(MB)
@@ -129,7 +134,6 @@ class EvaluatorMultiPlayers(object):
         self.players = []
         self.__initPlayers__(env)
         # Get the position of the best arms
-        env = self.envs[envId]
         means = env.means
         bestarm = env.maxArm
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]

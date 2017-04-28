@@ -8,6 +8,11 @@ __version__ = "0.6"
 import numpy as np
 import matplotlib.pyplot as plt
 
+try:
+    from .pykov import Chain
+except ImportError:
+    print("Warning: 'pykov' module seems to not be available. Have you installed it from https://github.com/riccardoscalco/Pykov ?")
+
 # Local imports
 from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
 
@@ -36,7 +41,8 @@ class MAB(object):
     def __init__(self, configuration):
         """New MAB."""
         print("Creating a new MAB problem ...")  # DEBUG
-        self.isDynamic = False  #: Flag to know if the problem is static or not.
+        self.isDynamic   = False  #: Flag to know if the problem is static or not.
+        self.isMarkovian = False  #: Flag to know if the problem is Markovian or not.
         self.arms = []  #: List of arms
 
         if isinstance(configuration, dict):
@@ -70,7 +76,7 @@ class MAB(object):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
-        """ Return a str representation of the list of the arms (repr(self.arms))
+        """ Return a str representation of the list of the arms (like `repr(self.arms)` but better)
 
         - If nbPlayers > 0, it surrounds the representation of the best arms by openTag, endTag (for plot titles, in a multi-player setting).
 
@@ -92,6 +98,12 @@ class MAB(object):
             return wraplatex(text)
         else:
             return wraptext(text)
+
+    # --- Draw samples
+
+    def draw(self, armId, t):
+        """ Return a random sample from the armId-th arm, at time t. Usually t is not used."""
+        return self.arms[armId].draw(t)
 
     #
     # --- Compute lower bounds
@@ -212,6 +224,146 @@ class MAB(object):
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: ${}${}".format(horizon, self.nbArms, self.reprarms(), signature))
         show_and_save(showplot=True, savefig=savefig)
+
+
+RESTED = True  #: Default is rested Markovian.
+
+
+def dict_of_transition_matrix(mat):
+    """Convert a transition matrix (list of list or numpy array) to a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`)."""
+    if isinstance(mat, list):
+        return {(i, j) : mat[i][j] for i in range(len(mat)) for j in range(len(mat[i])) }
+    else:
+        return {(i, j) : mat[i,j] for i in range(len(mat)) for j in range(len(mat[i])) }
+
+
+def transition_matrix_of_dict(dic):
+    """Convert a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`) to a transition matrix (numpy array)."""
+    n = 1 + max(max(dic.keys()))
+    return np.array([[dic[(i, j)] for j in range(n)] for i in range(n)])
+
+
+# FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!
+class MarkovianMAB(MAB):
+    """ Classic MAB problem but the rewards are drawn from a rested/restless Markov chain.
+
+    - configuration is a dict with 'rested' and 'transitions' keys.
+    - 'rested' is a Boolean,
+    - 'transitions' is list of K transition matrix, one for each arm.
+
+    Example::
+
+        configuration = {
+            'arm_type': Bernoulli,
+            'params':   [0.1, 0.5, 0.9]
+        }
+    """
+
+    def __init__(self, configuration):
+        """New MarkovianMAB."""
+        print("Creating a new MarkovianMAB problem ...")  # DEBUG
+        self.isDynamic   = False  #: Flag to know if the problem is static or not.
+        self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
+
+        assert isinstance(configuration, dict), "Error: 'configuration' for a MarkovianMAB must be a dictionary."
+        assert "params" in configuration and \
+               isinstance(configuration["params"], dict) and \
+               "transitions" in configuration["params"], \
+            "Error: 'configuration.params' for a MarkovianMAB must be a dictionary with keys 'transition' and 'rested'."
+        # Use input configuration
+        transitions = configuration["params"]["transitions"]
+        dict_transitions = []
+        matrix_transitions = []
+        for t in transitions:
+            if isinstance(t, dict):
+                dict_transitions.append(t)
+                matrix_transitions.append(transition_matrix_of_dict(t))
+            else:
+                dict_transitions.append(dict_of_transition_matrix(t))
+                matrix_transitions.append(np.asarray(t))
+
+        self.matrix_transitions = matrix_transitions
+        print("  - Using these transition matrices:", matrix_transitions)  # DEBUG
+        self.dict_transitions = dict_transitions
+        print("  - Using these transition dictionaries:", dict_transitions)  # DEBUG
+
+        self.chains = [Chain(d) for d in dict_transitions]
+        print("  - For these Markov chains:", self.chains)  # DEBUG
+
+        self.rested = configuration["params"].get("rested", RESTED)  #: Rested or not Markovian model?
+        print("  - Rested :", self.rested)  # DEBUG
+
+        self.nbArms = len(self.matrix_transitions)  #: Number of arms
+        print(" - with 'nbArms' =", self.nbArms)  # DEBUG
+
+        # Means of arms = steady distribution
+        states = [np.array(list(c.states())) for c in self.chains]
+        print("  - and states :", states)  # DEBUG
+        steadys = [np.array(list(c.steady().values())) for c in self.chains]
+        print("  - and steady state distributions :", steadys)  # DEBUG
+        self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)]) #: Means of each arms, from their steady distributions.
+        print("  - so it gives arms of means :", self.means)
+
+        self.arms = [configuration["params"]["steadyArm"](mean) for mean in self.means]
+        print("  - so arms asymptotically equivalent to :", self.arms)
+
+        self.maxArm = np.max(self.means)  #: Max mean of arms
+        print(" - with 'maxArm' =", self.maxArm)  # DEBUG
+        self.minArm = np.min(self.means)  #: Min mean of arms
+        print(" - with 'minArm' =", self.minArm)  # DEBUG
+
+        #: States of each arm, initially they are all busy
+        self.states = np.zeros(self.nbArms)
+        print("DONE for creating this MarkovianMAB problem...")  # DEBUG
+
+    def __repr__(self):
+        return "{}(nbArms: {}, chains: {}, arms: {})".format(self.__class__.__name__, self.nbArms, self.matrix_transitions, self.arms)
+
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*'):
+        """ Return a str representation of the list of the arms (like `repr(self.arms)` but better).
+
+        - If nbPlayers > 0, it surrounds the representation of the best arms by openTag, endTag (for plot titles, in a multi-player setting).
+
+        - Example: openTag = '', endTag = '^*' for LaTeX tags to put a star exponent.
+        - Example: openTag = '<red>', endTag = '</red>' for HTML-like tags.
+        - Example: openTag = r'\textcolor{red}{', endTag = '}' for LaTeX tags.
+        """
+        if nbPlayers is None:
+            text = repr(self.matrix_transitions)
+        else:
+            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
+            means = self.means
+            bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
+            text = 'Markovian rewards, [${}$]'.format(', '.join(
+                "{}{} : {}{}".format(openTag, mat, repr(arm), endTag) if armId in bestArms \
+        else "{} : {}".format(mat, repr(arm)) \
+                for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions)))
+            )
+        return wraplatext(text)
+
+    def draw(self, armId, t):
+        """Move on the Markov chain and return its state as a reward (0 or 1, or else)."""
+        # 1. Get current state for that arm, and its Markov chain
+        state = self.states[armId]
+        chain = self.chains[armId]
+        # 2. Sample from that Markov chain
+        nextState = chain.move(state)
+        # 3. Update the state
+        self.states[armId] = nextState
+        # print("- For the arm #{}, previously in the state {}, the Markov chain moved to state {} ...".format(armId, state, nextState))  # DEBUG
+
+        if not self.rested:
+            # print("- Non-rested Markovian model, every other arm is also moving...")  # DEBUG
+            for armId2 in range(self.nbArms):
+                # For each other arm, they evolve
+                if armId2 != armId:
+                    state, chain = self.states[armId2], self.chains[armId2]
+                    nextState = chain.move(state)
+                    # print("    - For the arm #{}, previously in the state {}, the Markov chain moved to state {} ...".format(armId, state, nextState))  # DEBUG
+                    self.states[armId2] = nextState
+
+        return float(nextState)
+
 
 
 # FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!

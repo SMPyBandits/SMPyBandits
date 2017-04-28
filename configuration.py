@@ -33,10 +33,10 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-# HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 20000
+# HORIZON = 30000
+# # HORIZON = 40000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -100,8 +100,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
 
 #: To know if my Aggr policy is tried.
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_AGGR
@@ -148,6 +148,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0, 1]
         # },
+        {   # A very very easy problem: 2 arms, one better than the other
+            "arm_type": Bernoulli,
+            "params": [0.375, 0.571]
+        },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
@@ -164,10 +168,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        {   # Lots of bad arms, significative difference between the best and the others
-            "arm_type": Bernoulli,
-            "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        },
+        # {   # Lots of bad arms, significative difference between the best and the others
+        #     "arm_type": Bernoulli,
+        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        # },
         # {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]

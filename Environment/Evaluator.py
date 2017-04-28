@@ -21,7 +21,7 @@ from .usetqdm import USE_TQDM, tqdm
 from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 # Local imports, objects and functions
-from .MAB import MAB, DynamicMAB
+from .MAB import MAB, MarkovianMAB, DynamicMAB
 from .Result import Result
 
 
@@ -106,6 +106,11 @@ class Evaluator(object):
                and "arm_type" in configuration_arms and "params" in configuration_arms \
                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
                 self.envs.append(DynamicMAB(configuration_arms))
+            elif isinstance(configuration_arms, dict) \
+               and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
+               and "params" in configuration_arms \
+               and "transitions" in configuration_arms["params"]:
+                self.envs.append(MarkovianMAB(configuration_arms))
             else:
                 self.envs.append(MAB(configuration_arms))
 
@@ -463,7 +468,7 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
         # FIXME do this quicker!
         if allrewards is None:
-            reward = env.arms[choice].draw(t)
+            reward = env.draw(choice, t)
         else:
             reward = allrewards[choice, repeatId, t]
 

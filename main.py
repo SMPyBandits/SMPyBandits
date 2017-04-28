@@ -24,6 +24,8 @@ from Environment import Evaluator, notify
 # Import a configuration file
 if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
     from configuration_comparing_KLUCB_aggregation import configuration
+elif 'configuration_markovian' in sys.argv:
+    from configuration_markovian import configuration
 else:
     from configuration import configuration
 
@@ -47,8 +49,8 @@ normalizedRegret = False  #: Plot instantaneous regret?
 plotSTD = True   #: Plot regret with a STD?
 plotSTD = False  #: Plot regret with a STD?
 
-plotMaxMin = False  #: Plot +- max - min (amplitude) for regret.
 plotMaxMin = True   #: Plot +- max - min (amplitude) for regret.
+plotMaxMin = False  #: Plot +- max - min (amplitude) for regret.
 
 saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this when experimenting

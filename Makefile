@@ -34,6 +34,12 @@ comparing_KLUCB_aggregation3:
 comparing_KLUCB_aggregation2:
 	time nice -n 19 python2 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py2_log.txt
 
+markovian:	markovian3
+markovian3:
+	time nice -n 19 ipython3 ./main.py configuration_markovian | tee ./logs/main_py3_log.txt
+markovian2:
+	time nice -n 19 python2 ./main.py configuration_markovian | tee ./logs/main_py2_log.txt
+
 multiplayers:	multiplayers3
 multiplayers3:
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
