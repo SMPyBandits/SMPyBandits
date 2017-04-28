@@ -302,10 +302,11 @@ class MarkovianMAB(MAB):
         steadys = [np.array(list(c.steady().values())) for c in self.chains]
         print("  - and steady state distributions :", steadys)  # DEBUG
         self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)])  #: Means of each arms, from their steady distributions.
-        print("  - so it gives arms of means :", self.means)
+        print("  - so it gives arms of means :", self.means)  # DEBUG
 
         self.arms = [configuration["params"]["steadyArm"](mean) for mean in self.means]
-        print("  - so arms asymptotically equivalent to :", self.arms)
+        print("  - so arms asymptotically equivalent to :", self.arms)  # DEBUG
+        print("  - represented as:", self.reprarms(1, latex=True))  # DEBUG
 
         self.maxArm = np.max(self.means)  #: Max mean of arms
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
@@ -335,15 +336,14 @@ class MarkovianMAB(MAB):
             assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
-            text = 'Markovian rewards, [${}$]'.format(', '.join(
-                "{}{} : {}{}".format(openTag, list(mat), repr(arm), endTag) if armId in bestArms
-                else "{} : {}".format(list(mat), repr(arm))
-                for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions)))
+            dollar = '$' if latex else ''
+            text = 'Markovian rewards, {}[{}]{}'.format(dollar, ', '.join(
+                "{}{} : {}{}".format(openTag, np.asarray(mat).tolist(), repr(arm), endTag) if armId in bestArms
+                else "{} : {}".format(np.asarray(mat).tolist(), repr(arm))
+                for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))),
+                dollar
             )
-        if latex:
-            return wraptext(text)
-        else:
-            return wraptext(text.replace('$', ''))
+        return wraptext(text)
 
     def draw(self, armId, t):
         """Move on the Markov chain and return its state as a reward (0 or 1, or else)."""

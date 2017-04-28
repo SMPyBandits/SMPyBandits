@@ -43,7 +43,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 100
+REPETITIONS = 1000
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -129,57 +130,57 @@ configuration.update({
                 "alpha": 1
             }
         },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        # --- DMED algorithm, similar to klUCB
-        {
-            "archtype": DMED,
-            "params": {
-                "genuine": True,
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
+        #     }
+        # },
+        # # --- DMED algorithm, similar to klUCB
+        # {
+        #     "archtype": DMED,
+        #     "params": {
+        #         "genuine": True,
+        #     }
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
             "params": {}
         },
-        # --- KL algorithms
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucb
-            }
-        },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "klucb": klucb
-            }
-        },
+        # # --- KL algorithms
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         "klucb": klucb
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "klucb": klucb
+        #     }
+        # },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,
             "params": {}
         },
-        # --- Finite-Horizon Gittins index
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 1,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 0.5,
-            }
-        },
+        # # --- Finite-Horizon Gittins index
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 1,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 0.5,
+        #     }
+        # },
     ]
 })
 
