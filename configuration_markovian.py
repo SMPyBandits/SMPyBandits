@@ -88,8 +88,8 @@ configuration = {
         {
             "arm_type": "Markovian",
             "params": {
-                # "rested": True,
-                "rested": False,  # FIXME
+                "rested": True,
+                # "rested": False,  # FIXME
                 # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
                     # 1st arm, Either a dictionary

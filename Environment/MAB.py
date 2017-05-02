@@ -352,11 +352,13 @@ class MarkovianMAB(MAB):
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             dollar = '$' if latex else ''
-            text = 'Markovian rewards, {}[{}]{}'.format(dollar, ', '.join(
-                "{}{} : {}{}".format(openTag, np.asarray(mat).tolist(), repr(arm), endTag) if armId in bestArms
-                else "{} : {}".format(np.asarray(mat).tolist(), repr(arm))
-                for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))),
-                dollar
+            text = '{} Markovian rewards, {}[{}]{}'.format(
+                "Rested" if self.rested else "Restless",
+                dollar, ', '.join(
+                    "{}{} : {}{}".format(openTag, np.asarray(mat).tolist(), repr(arm), endTag) if armId in bestArms
+                    else "{} : {}".format(np.asarray(mat).tolist(), repr(arm))
+                    for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))
+                ), dollar
             )
         return wraptext(text)
 
