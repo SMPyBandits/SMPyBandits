@@ -240,8 +240,10 @@ def dict_of_transition_matrix(mat):
 
 def transition_matrix_of_dict(dic):
     """Convert a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`) to a transition matrix (numpy array)."""
-    n = 1 + max(max(dic.keys()))
-    return np.array([[dic[(i, j)] for j in range(n)] for i in range(n)])
+    keys = list(dic.keys())
+    xkeys = sorted(list({i for i, _ in keys}))
+    ykeys = sorted(list({j for _, j in keys}))
+    return np.array([[dic[(i, j)] for i in xkeys] for j in ykeys])
 
 
 # FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!
@@ -311,10 +313,18 @@ class MarkovianMAB(MAB):
         self.nbArms = len(self.matrix_transitions)  #: Number of arms
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
 
+        # # Make every transition matrix a right stochastic transition matrix
+        # for c in self.chains:
+        #     c.stochastic()
         # Means of arms = steady distribution
         states = [np.array(list(c.states())) for c in self.chains]
         print(" - and states:", states)  # DEBUG
-        steadys = [np.array(list(c.steady().values())) for c in self.chains]
+        try:
+            steadys = [np.array(list(c.steady().values())) for c in self.chains]
+        except ValueError:
+            if len(c.steady()) == 0:
+                print("[ERROR] the steady state of the Markov chain {} was not-found because it is non-ergodic...".format(c))
+                raise ValueError("The Markov chain {} is non-ergodic, and so does not have a steady state distribution... Please choose another transition matrix that as to be irreducible, aperiodic, and reversible.".format(c))
         print(" - and steady state distributions:", steadys)  # DEBUG
         self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)])  #: Means of each arms, from their steady distributions.
         print(" - so it gives arms of means:", self.means)  # DEBUG

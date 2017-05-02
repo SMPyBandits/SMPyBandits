@@ -81,7 +81,10 @@ def kendalltau(permutation, comp=None):
     """
     if comp is None:
         comp = sorted(permutation)
-    return 1 - scipy.stats.kendalltau(permutation, comp).pvalue
+    res = 1 - scipy.stats.kendalltau(permutation, comp).pvalue
+    if np.isnan(res):
+        res = 0
+    return res
 
 
 def spearmanr(permutation, comp=None):
@@ -105,7 +108,10 @@ def spearmanr(permutation, comp=None):
     """
     if comp is None:
         comp = sorted(permutation)
-    return 1 - scipy.stats.spearmanr(permutation, comp).pvalue
+    res = 1 - scipy.stats.spearmanr(permutation, comp).pvalue
+    if np.isnan(res):
+        res = 0
+    return res
 
 
 def gestalt(permutation, comp=None):
