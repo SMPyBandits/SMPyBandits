@@ -33,6 +33,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -60,10 +61,14 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 
-
 # Parameters for the arms
 VARIANCE = 0.05   #: Variance of Gaussian arms
 VARIANCE = 10   #: Variance of Gaussian arms
+
+
+#: To know if my Aggr policy is tried.
+TEST_AGGR = True
+TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
 
 
 #: This dictionary configures the experiments
@@ -79,54 +84,54 @@ configuration = {
     "verbosity": 6,      # Max joblib verbosity
     # --- Arms
     "environment": [
-        # DONE Bernoulli arms
+        # # DONE Bernoulli arms
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        # # DONE Markovian arms with {0, 1} rewards
-        # {
-        #     "arm_type": "Markovian",
-        #     "params": {
-        #         "rested": True,
-        #         # "rested": False,  # FIXME
-        #         # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
-        #         "transitions": [
-        #             # 1st arm, either a dictionary, to customize the states
-        #             {   # Mean = 0.375
-        #                 (0, 0): 0.7, (0, 1): 0.3,
-        #                 (1, 0): 0.5, (1, 1): 0.5,
-        #             },
-        #             # 2nd arm, or a right transition matrix, with states [| 0, n-1 |]
-        #             [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
-        #         ],
-        #         # FIXME make this by default! include it in MAB.py and not in the configuration!
-        #         "steadyArm": Bernoulli
-        #     }
-        # },
-        # TODO Markovian arms with non-binary rewards
+        # DONE Markovian arms with {0, 1} rewards
         {
             "arm_type": "Markovian",
             "params": {
                 "rested": True,
                 # "rested": False,  # FIXME
+                # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
-                    # 1st arm, rewars are in {0, 0.5, 1} with 3 states
-                    {   # Mean = 0.5
-                        (0, 0): 0.75, (0, 0.5): 0.125, (0, 1): 0.125,
-                        (0.5, 0): 0.125, (0.5, 0.5): 0.75, (0.5, 1): 0.125,
-                        (1, 0): 0.125, (1, 0.5): 0.125, (1, 1): 0.75,
+                    # 1st arm, either a dictionary, to customize the states
+                    {   # Mean = 0.375
+                        (0, 0): 0.7, (0, 1): 0.3,
+                        (1, 0): 0.5, (1, 1): 0.5,
                     },
-                    # 2nd arm, rewars are in {0, 1} with 2 states
-                    {   # Mean = 0.357...
-                        (0, 0): 0.5, (0, 1): 0.5,
-                        (1, 0): 0.9, (1, 1): 0.1,
-                    },
+                    # 2nd arm, or a right transition matrix, with states [| 0, n-1 |]
+                    [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
                 ],
                 # FIXME make this by default! include it in MAB.py and not in the configuration!
                 "steadyArm": Bernoulli
             }
         },
+        # # DONE Markovian arms with non-binary rewards
+        # {
+        #     "arm_type": "Markovian",
+        #     "params": {
+        #         "rested": True,
+        #         # "rested": False,  # FIXME
+        #         "transitions": [
+        #             # 1st arm, rewars are in {0, 0.5, 1} with 3 states
+        #             {   # Mean = 0.5
+        #                 (0, 0): 0.75, (0, 0.5): 0.125, (0, 1): 0.125,
+        #                 (0.5, 0): 0.125, (0.5, 0.5): 0.75, (0.5, 1): 0.125,
+        #                 (1, 0): 0.125, (1, 0.5): 0.125, (1, 1): 0.75,
+        #             },
+        #             # 2nd arm, rewars are in {0, 1} with 2 states
+        #             {   # Mean = 0.357...
+        #                 (0, 0): 0.5, (0, 1): 0.5,
+        #                 (1, 0): 0.9, (1, 1): 0.1,
+        #             },
+        #         ],
+        #         # FIXME make this by default! include it in MAB.py and not in the configuration!
+        #         "steadyArm": Bernoulli
+        #     }
+        # },
     ],
 }
 
@@ -153,59 +158,78 @@ configuration.update({
                 "alpha": 1
             }
         },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.5          # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # # --- DMED algorithm, similar to klUCB
-        # {
-        #     "archtype": DMED,
-        #     "params": {
-        #         "genuine": True,
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+            }
+        },
+        # --- DMED algorithm, similar to klUCB
+        {
+            "archtype": DMED,
+            "params": {
+                "genuine": True,
+            }
+        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
             "params": {}
         },
-        # # --- KL algorithms
-        # {
-        #     "archtype": klUCB,
-        #     "params": {
-        #         "klucb": klucb
-        #     }
-        # },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
-        #         "klucb": klucb
-        #     }
-        # },
+        # --- KL algorithms
+        {
+            "archtype": klUCB,
+            "params": {
+                "klucb": klucb
+            }
+        },
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "klucb": klucb
+            }
+        },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,
             "params": {}
         },
-        # # --- Finite-Horizon Gittins index
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 1,
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 0.5,
-        #     }
-        # },
+        # --- Finite-Horizon Gittins index
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 1,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 0.5,
+            }
+        },
     ]
 })
+
+# Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
+if TEST_AGGR:
+    NON_AGGR_POLICIES = configuration["policies"]
+    for UPDATE_LIKE_EXP4 in [False, True]:
+        CURRENT_POLICIES = configuration["policies"]
+        # Add one Aggr policy
+        configuration["policies"] = [{
+            "archtype": Aggr,
+            "params": {
+                "unbiased": False,
+                "update_all_children": False,
+                "decreaseRate": 'auto',
+                "learningRate": 1,
+                "children": NON_AGGR_POLICIES,
+                "update_like_exp4": UPDATE_LIKE_EXP4,
+                # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+            },
+        }] + CURRENT_POLICIES
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

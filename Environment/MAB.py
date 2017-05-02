@@ -96,7 +96,7 @@ class MAB(object):
                 for armId, arm in enumerate(self.arms))
             )
         if latex:
-            return wraplatex(text)
+            return wraplatex('$' + text + '$')
         else:
             return wraptext(text)
 
@@ -246,7 +246,6 @@ def transition_matrix_of_dict(dic):
     return np.array([[dic[(i, j)] for i in xkeys] for j in ykeys])
 
 
-# FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!
 class MarkovianMAB(MAB):
     """ Classic MAB problem but the rewards are drawn from a rested/restless Markov chain.
 
@@ -316,6 +315,7 @@ class MarkovianMAB(MAB):
         # # Make every transition matrix a right stochastic transition matrix
         # for c in self.chains:
         #     c.stochastic()
+
         # Means of arms = steady distribution
         states = [np.array(list(c.states())) for c in self.chains]
         print(" - and states:", states)  # DEBUG
@@ -370,7 +370,10 @@ class MarkovianMAB(MAB):
                     for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))
                 ), dollar
             )
-        return wraptext(text)
+        if latex:
+            return wraplatex('$' + text + '$')
+        else:
+            return wraptext(text)
 
     def draw(self, armId, t):
         """Move on the Markov chain and return its state as a reward (0 or 1, or else)."""
