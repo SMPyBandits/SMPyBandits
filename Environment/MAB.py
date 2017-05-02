@@ -371,7 +371,7 @@ class MarkovianMAB(MAB):
                 ), dollar
             )
         if latex:
-            return wraplatex('$' + text + '$')
+            return wraplatex(text)
         else:
             return wraptext(text)
 
