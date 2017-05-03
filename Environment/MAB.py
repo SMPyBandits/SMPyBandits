@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-""" MAB and DynamicMAB class to wrap the arms."""
+""" MAB, MarkovianMAB and DynamicMAB classes to wrap the arms of some Multi-Armed Bandit problems.
+
+Such class has to have *at least* these methods:
+
+- `draw(armId, t)` to draw *one* sample from that `armId` at time `t`,
+- and `reprarms()` to pretty print the arms (for titles of a plot),
+- and more, see below.
+"""
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
@@ -18,7 +25,7 @@ from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_
 
 
 class MAB(object):
-    """ Multi-armed Bandit environment.
+    """ Basic Multi-Armed Bandit problem, for stochastic and i.i.d. arms.
 
     - configuration can be a dict with 'arm_type' and 'params' keys. 'arm_type' is a class from the Arms module, and 'params' is a dict, used as a list/tuple/iterable of named parameters given to 'arm_type'. Example::
 
@@ -95,10 +102,7 @@ class MAB(object):
                 openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
-        if latex:
-            return wraplatex('$' + text + '$')
-        else:
-            return wraptext(text)
+        return wraplatex('$' + text + '$') if latex else wraptext(text)
 
     # --- Draw samples
 
@@ -231,7 +235,7 @@ RESTED = True  #: Default is rested Markovian.
 
 
 def dict_of_transition_matrix(mat):
-    """Convert a transition matrix (list of list or numpy array) to a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`)."""
+    """ Convert a transition matrix (list of list or numpy array) to a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`)."""
     if isinstance(mat, list):
         return {(i, j): mat[i][j] for i in range(len(mat)) for j in range(len(mat[i]))}
     else:
@@ -239,7 +243,7 @@ def dict_of_transition_matrix(mat):
 
 
 def transition_matrix_of_dict(dic):
-    """Convert a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`) to a transition matrix (numpy array)."""
+    """ Convert a dictionary mapping (state, state) to probabilities (as used by :class:`pykov.Chain`) to a transition matrix (numpy array)."""
     keys = list(dic.keys())
     xkeys = sorted(list({i for i, _ in keys}))
     ykeys = sorted(list({j for _, j in keys}))
@@ -250,8 +254,8 @@ class MarkovianMAB(MAB):
     """ Classic MAB problem but the rewards are drawn from a rested/restless Markov chain.
 
     - configuration is a dict with 'rested' and 'transitions' keys.
-    - 'rested' is a Boolean,
-    - 'transitions' is list of K transition matrix, one for each arm.
+    - 'rested' is a Boolean. See [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) page 2 for a description.
+    - 'transitions' is list of K transition matrices *or* dictionary (to specify non-integer states), one for each arm.
 
     Example::
 
@@ -273,10 +277,12 @@ class MarkovianMAB(MAB):
                 "steadyArm": Bernoulli
             }
         }
+
+    - This class requires the [pykov](https://github.com/riccardoscalco/Pykov) module to represent and use Markov chain.
     """
 
     def __init__(self, configuration):
-        """New MarkovianMAB."""
+        """ New MarkovianMAB."""
         print("Creating a new MarkovianMAB problem ...")  # DEBUG
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
@@ -325,6 +331,7 @@ class MarkovianMAB(MAB):
             if len(c.steady()) == 0:
                 print("[ERROR] the steady state of the Markov chain {} was not-found because it is non-ergodic...".format(c))
                 raise ValueError("The Markov chain {} is non-ergodic, and so does not have a steady state distribution... Please choose another transition matrix that as to be irreducible, aperiodic, and reversible.".format(c))
+        # If the steady state exist, go on
         print(" - and steady state distributions:", steadys)  # DEBUG
         self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)])  #: Means of each arms, from their steady distributions.
         print(" - so it gives arms of means:", self.means)  # DEBUG
@@ -370,16 +377,16 @@ class MarkovianMAB(MAB):
                     for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))
                 ), dollar
             )
-        if latex:
-            return wraplatex(text)
-        else:
-            return wraptext(text)
+        return wraplatex(text) if latex else wraptext(text)
 
     def draw(self, armId, t):
-        """Move on the Markov chain and return its state as a reward (0 or 1, or else)."""
+        """ Move on the Markov chain and return its state as a reward (0 or 1, or else).
+
+        - If *rested* Markovian, only the state of the Markov chain of arm `armId` changes. It is the simpler model, and the default model.
+        - But if *restless* (non rested) Markovian, the states of all the Markov chain of all arms change (not only `armId`).
+        """
         # 1. Get current state for that arm, and its Markov chain
-        state = self.states[armId]
-        chain = self.chains[armId]
+        state, chain = self.states[armId], self.chains[armId]
         # 2. Sample from that Markov chain
         nextState = chain.move(state)
         # 3. Update the state
@@ -399,8 +406,7 @@ class MarkovianMAB(MAB):
         return float(nextState)
 
 
-
-# FIXME experimental, it works, but the regret plots in Evaluator* object has no meaning!
+# XXX experimental, it works, but the regret plots in Evaluator* object has no meaning!
 class DynamicMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated everytime they are accessed.
 
@@ -458,24 +464,26 @@ class DynamicMAB(MAB):
             print("\n  - Creating a new dynamic set of means for arms: DynamicMAB = {} ...".format(repr(self)))  # DEBUG
         return self._arms
 
+    # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
+
     @property
     def arms(self):
-        """Return the list of arms."""
+        """Return the *current* list of arms."""
         return self._arms
 
     @property
     def means(self):
-        """Return the list of means."""
+        """Return the *current* list of means."""
         return np.array([arm.mean for arm in self._arms])
 
     @property
     def minArm(self):
-        """Return the smallest mean of the arms, for a dynamic MAB."""
+        """Return the *current* smallest mean of the arms, for a dynamic MAB."""
         return np.min(self.means)
 
     @property
     def maxArm(self):
-        """Return the largest mean of the arms, for a dynamic MAB."""
+        """Return the *current* largest mean of the arms, for a dynamic MAB."""
         return np.max(self.means)
 
 
@@ -488,6 +496,21 @@ def binomialCoefficient(k, n):
     - Complexity: O(1) in memory, O(n) in time.
     - From https://en.wikipedia.org/wiki/Binomial_coefficient#Binomial_coefficient_in_programming_languages
     - From: http://userpages.umbc.edu/~rcampbel/Computers/Python/probstat.html#ProbStat-Combin-Combinations
+
+    - Examples:
+
+    >>> binomialCoefficient(-3, 10)
+    0
+    >>> binomialCoefficient(1, -10)
+    0
+    >>> binomialCoefficient(1, 10)
+    10
+    >>> binomialCoefficient(5, 10)
+    80
+    >>> binomialCoefficient(5, 20)
+    12960
+    >>> binomialCoefficient(10, 30)
+    10886400
     """
     if k < 0 or k > n:
         return 0
@@ -498,3 +521,12 @@ def binomialCoefficient(k, n):
     for i in range(k):
         c *= (n - i) // (i + 1)
     return c
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
