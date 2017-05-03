@@ -323,17 +323,17 @@ class MarkovianMAB(MAB):
         #     c.stochastic()
 
         # Means of arms = steady distribution
-        states = [np.array(list(c.states())) for c in self.chains]
-        print(" - and states:", states)  # DEBUG
+        self.states = [np.array(list(c.states())) for c in self.chains]
+        print(" - and states:", self.states)  # DEBUG
         try:
-            steadys = [np.array(list(c.steady().values())) for c in self.chains]
+            self.steadys = [np.array(list(c.steady().values())) for c in self.chains]
         except ValueError:
             if len(c.steady()) == 0:
                 print("[ERROR] the steady state of the Markov chain {} was not-found because it is non-ergodic...".format(c))
                 raise ValueError("The Markov chain {} is non-ergodic, and so does not have a steady state distribution... Please choose another transition matrix that as to be irreducible, aperiodic, and reversible.".format(c))
         # If the steady state exist, go on
-        print(" - and steady state distributions:", steadys)  # DEBUG
-        self.means = np.array([np.dot(s, p) for s, p in zip(states, steadys)])  #: Means of each arms, from their steady distributions.
+        print(" - and steady state distributions:", self.steadys)  # DEBUG
+        self.means = np.array([np.dot(s, p) for s, p in zip(self.states, self.steadys)])  #: Means of each arms, from their steady distributions.
         print(" - so it gives arms of means:", self.means)  # DEBUG
 
         self.arms = [configuration["params"]["steadyArm"](mean) for mean in self.means]
@@ -372,9 +372,9 @@ class MarkovianMAB(MAB):
             text = '{} Markovian rewards, {}[{}]{}'.format(
                 "Rested" if self.rested else "Restless",
                 dollar, ', '.join(
-                    "{}{} : {}{}".format(openTag, np.asarray(mat).tolist(), repr(arm), endTag) if armId in bestArms
+                    "{}P: {}, pi: {} ∼ {}{}".format(openTag, np.asarray(mat).tolist(), st, repr(arm), endTag) if armId in bestArms
                     else "{} : {}".format(np.asarray(mat).tolist(), repr(arm))
-                    for armId, (arm, mat) in enumerate(zip(self.arms, self.matrix_transitions))
+                    for armId, (arm, mat, st) in enumerate(zip(self.arms, self.matrix_transitions, self.steadys))
                 ), dollar
             )
         return wraplatex(text) if latex else wraptext(text)

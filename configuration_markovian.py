@@ -67,8 +67,8 @@ VARIANCE = 10   #: Variance of Gaussian arms
 
 
 #: To know if my Aggr policy is tried.
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+TEST_AGGR = True
 
 
 #: This dictionary configures the experiments
@@ -89,49 +89,49 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        # # DONE Markovian arms with {0, 1} rewards
-        # {
-        #     "arm_type": "Markovian",
-        #     "params": {
-        #         "rested": True,
-        #         # "rested": False,  # FIXME
-        #         # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
-        #         "transitions": [
-        #             # 1st arm, either a dictionary, to customize the states
-        #             {   # Mean = 0.375
-        #                 (0, 0): 0.7, (0, 1): 0.3,
-        #                 (1, 0): 0.5, (1, 1): 0.5,
-        #             },
-        #             # 2nd arm, or a right transition matrix, with states [| 0, n-1 |]
-        #             [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
-        #         ],
-        #         # FIXME make this by default! include it in MAB.py and not in the configuration!
-        #         "steadyArm": Bernoulli
-        #     }
-        # },
-        # DONE Markovian arms with non-binary rewards
+        # DONE Markovian arms with {0, 1} rewards
         {
             "arm_type": "Markovian",
             "params": {
                 "rested": True,
                 # "rested": False,  # FIXME
+                # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
-                    # 1st arm, rewars are in {0, 0.5, 1} with 3 states
-                    {   # Mean = 0.5
-                        (0, 0): 0.75, (0, 0.5): 0.125, (0, 1): 0.125,
-                        (0.5, 0): 0.125, (0.5, 0.5): 0.75, (0.5, 1): 0.125,
-                        (1, 0): 0.125, (1, 0.5): 0.125, (1, 1): 0.75,
+                    # 1st arm, either a dictionary, to customize the states
+                    {   # Mean = 0.375
+                        (0, 0): 0.7, (0, 1): 0.3,
+                        (1, 0): 0.5, (1, 1): 0.5,
                     },
-                    # 2nd arm, rewars are in {0, 1} with 2 states
-                    {   # Mean = 0.357...
-                        (0, 0): 0.5, (0, 1): 0.5,
-                        (1, 0): 0.9, (1, 1): 0.1,
-                    },
+                    # 2nd arm, or a right transition matrix, with states [| 0, n-1 |]
+                    [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
                 ],
                 # FIXME make this by default! include it in MAB.py and not in the configuration!
                 "steadyArm": Bernoulli
             }
         },
+        # # DONE Markovian arms with non-binary rewards
+        # {
+        #     "arm_type": "Markovian",
+        #     "params": {
+        #         "rested": True,
+        #         # "rested": False,  # FIXME
+        #         "transitions": [
+        #             # 1st arm, rewars are in {0, 0.5, 1} with 3 states
+        #             {   # Mean = 0.5
+        #                 (0, 0): 0.75, (0, 0.5): 0.125, (0, 1): 0.125,
+        #                 (0.5, 0): 0.125, (0.5, 0.5): 0.75, (0.5, 1): 0.125,
+        #                 (1, 0): 0.125, (1, 0.5): 0.125, (1, 1): 0.75,
+        #             },
+        #             # 2nd arm, rewars are in {0, 1} with 2 states
+        #             {   # Mean = 0.357...
+        #                 (0, 0): 0.5, (0, 1): 0.5,
+        #                 (1, 0): 0.9, (1, 1): 0.1,
+        #             },
+        #         ],
+        #         # FIXME make this by default! include it in MAB.py and not in the configuration!
+        #         "steadyArm": Bernoulli
+        #     }
+        # },
     ],
 }
 

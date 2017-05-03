@@ -439,31 +439,32 @@
 </g>
 <!-- 18 -->
 <g id="node19" class="node"><title>18</title>
-<polygon fill="none" stroke="black" points="2240.5,-278 2240.5,-557 2458.5,-557 2458.5,-278 2240.5,-278"/>
-<text text-anchor="middle" x="2349.5" y="-541.8" font-family="Times,serif" font-size="14.00">Environment.MAB.MarkovianMAB</text>
-<polyline fill="none" stroke="black" points="2240.5,-534 2458.5,-534 "/>
-<text text-anchor="start" x="2248.5" y="-518.8" font-family="Times,serif" font-size="14.00">arms</text>
-<text text-anchor="start" x="2248.5" y="-503.8" font-family="Times,serif" font-size="14.00">chains</text>
-<text text-anchor="start" x="2248.5" y="-488.8" font-family="Times,serif" font-size="14.00">dict_transitions : list</text>
-<text text-anchor="start" x="2248.5" y="-473.8" font-family="Times,serif" font-size="14.00">isDynamic : bool</text>
-<text text-anchor="start" x="2248.5" y="-458.8" font-family="Times,serif" font-size="14.00">isMarkovian : bool</text>
-<text text-anchor="start" x="2248.5" y="-443.8" font-family="Times,serif" font-size="14.00">matrix_transitions : list</text>
-<text text-anchor="start" x="2248.5" y="-428.8" font-family="Times,serif" font-size="14.00">maxArm</text>
-<text text-anchor="start" x="2248.5" y="-413.8" font-family="Times,serif" font-size="14.00">means : recarray</text>
-<text text-anchor="start" x="2248.5" y="-398.8" font-family="Times,serif" font-size="14.00">minArm</text>
-<text text-anchor="start" x="2248.5" y="-383.8" font-family="Times,serif" font-size="14.00">nbArms</text>
-<text text-anchor="start" x="2248.5" y="-368.8" font-family="Times,serif" font-size="14.00">rested</text>
-<text text-anchor="start" x="2248.5" y="-353.8" font-family="Times,serif" font-size="14.00">states</text>
-<polyline fill="none" stroke="black" points="2240.5,-346 2458.5,-346 "/>
-<text text-anchor="start" x="2248.5" y="-330.8" font-family="Times,serif" font-size="14.00">__init__()</text>
-<text text-anchor="start" x="2248.5" y="-315.8" font-family="Times,serif" font-size="14.00">__repr__()</text>
-<text text-anchor="start" x="2248.5" y="-300.8" font-family="Times,serif" font-size="14.00">draw()</text>
-<text text-anchor="start" x="2248.5" y="-285.8" font-family="Times,serif" font-size="14.00">reprarms()</text>
+<polygon fill="none" stroke="black" points="2240.5,-270.5 2240.5,-564.5 2458.5,-564.5 2458.5,-270.5 2240.5,-270.5"/>
+<text text-anchor="middle" x="2349.5" y="-549.3" font-family="Times,serif" font-size="14.00">Environment.MAB.MarkovianMAB</text>
+<polyline fill="none" stroke="black" points="2240.5,-541.5 2458.5,-541.5 "/>
+<text text-anchor="start" x="2248.5" y="-526.3" font-family="Times,serif" font-size="14.00">arms</text>
+<text text-anchor="start" x="2248.5" y="-511.3" font-family="Times,serif" font-size="14.00">chains</text>
+<text text-anchor="start" x="2248.5" y="-496.3" font-family="Times,serif" font-size="14.00">dict_transitions : list</text>
+<text text-anchor="start" x="2248.5" y="-481.3" font-family="Times,serif" font-size="14.00">isDynamic : bool</text>
+<text text-anchor="start" x="2248.5" y="-466.3" font-family="Times,serif" font-size="14.00">isMarkovian : bool</text>
+<text text-anchor="start" x="2248.5" y="-451.3" font-family="Times,serif" font-size="14.00">matrix_transitions : list</text>
+<text text-anchor="start" x="2248.5" y="-436.3" font-family="Times,serif" font-size="14.00">maxArm</text>
+<text text-anchor="start" x="2248.5" y="-421.3" font-family="Times,serif" font-size="14.00">means : recarray</text>
+<text text-anchor="start" x="2248.5" y="-406.3" font-family="Times,serif" font-size="14.00">minArm</text>
+<text text-anchor="start" x="2248.5" y="-391.3" font-family="Times,serif" font-size="14.00">nbArms</text>
+<text text-anchor="start" x="2248.5" y="-376.3" font-family="Times,serif" font-size="14.00">rested</text>
+<text text-anchor="start" x="2248.5" y="-361.3" font-family="Times,serif" font-size="14.00">states</text>
+<text text-anchor="start" x="2248.5" y="-346.3" font-family="Times,serif" font-size="14.00">steadys</text>
+<polyline fill="none" stroke="black" points="2240.5,-338.5 2458.5,-338.5 "/>
+<text text-anchor="start" x="2248.5" y="-323.3" font-family="Times,serif" font-size="14.00">__init__()</text>
+<text text-anchor="start" x="2248.5" y="-308.3" font-family="Times,serif" font-size="14.00">__repr__()</text>
+<text text-anchor="start" x="2248.5" y="-293.3" font-family="Times,serif" font-size="14.00">draw()</text>
+<text text-anchor="start" x="2248.5" y="-278.3" font-family="Times,serif" font-size="14.00">reprarms()</text>
 </g>
 <!-- 18&#45;&gt;17 -->
 <g id="edge15" class="edge"><title>18&#45;&gt;17</title>
-<path fill="none" stroke="black" d="M2324.26,-557.003C2305.91,-657.707 2281.04,-794.138 2261.98,-898.736"/>
-<polygon fill="none" stroke="black" points="2258.5,-898.291 2260.15,-908.757 2265.39,-899.547 2258.5,-898.291"/>
+<path fill="none" stroke="black" d="M2322.89,-564.526C2304.68,-664.425 2280.57,-796.723 2261.98,-898.74"/>
+<polygon fill="none" stroke="black" points="2258.49,-898.363 2260.14,-908.828 2265.38,-899.618 2258.49,-898.363"/>
 </g>
 <!-- 19 -->
 <g id="node20" class="node"><title>19</title>
@@ -1562,15 +1563,15 @@
 </g>
 <!-- 74&#45;&gt;107 -->
 <g id="edge104" class="edge"><title>74&#45;&gt;107</title>
-<path fill="none" stroke="black" d="M8791.67,-2173.56C8774.52,-2224.47 8757.98,-2294.75 8768.5,-2357 8770.96,-2371.54 8774.67,-2386.55 8779,-2401.2"/>
-<polygon fill="black" stroke="black" points="8779.06,-2401.38 8784.65,-2405.94 8782.59,-2412.85 8777,-2408.3 8779.06,-2401.38"/>
-<text text-anchor="middle" x="8809.5" y="-2345.8" font-family="Times,serif" font-size="14.00" fill="green">_rankSelection</text>
+<path fill="none" stroke="black" d="M8786.08,-2173.72C8765.7,-2224.55 8746.09,-2294.67 8758.5,-2357 8761.42,-2371.68 8765.81,-2386.72 8770.93,-2401.34"/>
+<polygon fill="black" stroke="black" points="8771.06,-2401.69 8776.88,-2405.95 8775.18,-2412.96 8769.37,-2408.69 8771.06,-2401.69"/>
+<text text-anchor="middle" x="8809.5" y="-2345.8" font-family="Times,serif" font-size="14.00" fill="green">rankSelectionAlgo</text>
 </g>
 <!-- 74&#45;&gt;107 -->
 <g id="edge105" class="edge"><title>74&#45;&gt;107</title>
-<path fill="none" stroke="black" d="M8837.19,-2173.73C8847.11,-2224.72 8856.66,-2295.02 8850.5,-2357 8849.09,-2371.2 8846.94,-2386.05 8844.43,-2400.64"/>
-<polygon fill="black" stroke="black" points="8844.37,-2401.01 8847.24,-2407.62 8842.25,-2412.82 8839.37,-2406.21 8844.37,-2401.01"/>
-<text text-anchor="middle" x="8903.5" y="-2345.8" font-family="Times,serif" font-size="14.00" fill="green">rankSelectionAlgo</text>
+<path fill="none" stroke="black" d="M8842.72,-2173.67C8855.93,-2224.62 8868.66,-2294.92 8860.5,-2357 8858.61,-2371.4 8855.73,-2386.38 8852.37,-2401.06"/>
+<polygon fill="black" stroke="black" points="8852.37,-2401.08 8854.86,-2407.84 8849.58,-2412.75 8847.08,-2405.98 8852.37,-2401.08"/>
+<text text-anchor="middle" x="8903.5" y="-2345.8" font-family="Times,serif" font-size="14.00" fill="green">_rankSelection</text>
 </g>
 <!-- 75 -->
 <g id="node76" class="node"><title>75</title>
@@ -1970,7 +1971,7 @@
 <polygon fill="none" stroke="black" points="11590.5,-323 11590.5,-512 11852.5,-512 11852.5,-323 11590.5,-323"/>
 <text text-anchor="middle" x="11721.5" y="-496.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="black" points="11590.5,-489 11852.5,-489 "/>
-<text text-anchor="start" x="11598.5" y="-473.8" font-family="Times,serif" font-size="14.00">bestArms : NoneType, list</text>
+<text text-anchor="start" x="11598.5" y="-473.8" font-family="Times,serif" font-size="14.00">bestArms : list, NoneType</text>
 <text text-anchor="start" x="11598.5" y="-458.8" font-family="Times,serif" font-size="14.00">nbArms</text>
 <text text-anchor="start" x="11598.5" y="-443.8" font-family="Times,serif" font-size="14.00">nb_bestArms</text>
 <text text-anchor="start" x="11598.5" y="-428.8" font-family="Times,serif" font-size="14.00">offset</text>
@@ -2123,7 +2124,7 @@
 <text text-anchor="start" x="10146.5" y="-496.3" font-family="Times,serif" font-size="14.00">collisionCount : int</text>
 <text text-anchor="start" x="10146.5" y="-481.3" font-family="Times,serif" font-size="14.00">horizon</text>
 <text text-anchor="start" x="10146.5" y="-466.3" font-family="Times,serif" font-size="14.00">nbPlayersEstimate : int</text>
-<text text-anchor="start" x="10146.5" y="-451.3" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="10146.5" y="-451.3" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <text text-anchor="start" x="10146.5" y="-436.3" font-family="Times,serif" font-size="14.00">t : int</text>
 <text text-anchor="start" x="10146.5" y="-421.3" font-family="Times,serif" font-size="14.00">threshold</text>
 <text text-anchor="start" x="10146.5" y="-406.3" font-family="Times,serif" font-size="14.00">timeSinceLastCollision : int</text>
@@ -2141,7 +2142,7 @@
 <text text-anchor="middle" x="10518.5" y="-1112.8" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="10391.5,-1105 10645.5,-1105 "/>
 <text text-anchor="start" x="10399.5" y="-1089.8" font-family="Times,serif" font-size="14.00">maxRank</text>
-<text text-anchor="start" x="10399.5" y="-1074.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
+<text text-anchor="start" x="10399.5" y="-1074.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
 <polyline fill="none" stroke="black" points="10391.5,-1067 10645.5,-1067 "/>
 <text text-anchor="start" x="10399.5" y="-1051.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="10399.5" y="-1036.8" font-family="Times,serif" font-size="14.00">__str__()</text>
