@@ -227,7 +227,7 @@ class MAB(object):
         legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
-        plt.title("{} draws of rewards from these arms.\n{} arms: ${}${}".format(horizon, self.nbArms, self.reprarms(), signature))
+        plt.title("{} draws of rewards from these arms.\n{} arms: {}{}".format(horizon, self.nbArms, self.reprarms(latex=True), signature))
         show_and_save(showplot=True, savefig=savefig)
 
 

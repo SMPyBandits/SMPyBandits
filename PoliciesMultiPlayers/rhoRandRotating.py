@@ -57,7 +57,6 @@ class oneRhoRandRotating(oneRhoRand):
         # Note: here we could do another randomization step, but it would just weaken the algorithm, cf. rhoRandRand
         result = super(oneRhoRandRotating, self).choiceWithRank(self.rank)
         # print(" - A oneRhoRand player {} had to choose an arm among the best from rank {}, her choice was : {} ...".format(self, self.rank, result))  # DEBUG
-        # XXX new!
         self.rank += 1
         if self.rank > self.maxRank:
             self.rank = 1
