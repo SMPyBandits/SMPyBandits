@@ -12,75 +12,75 @@ W: 24, 0: Wildcard import Arms (wildcard-import)
 C: 24, 0: Import "from Arms import *" should be placed at the top of the module (wrong-import-position)
 W: 27, 0: Wildcard import Policies (wildcard-import)
 C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
-W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+R: 66, 0: Redefinition of VARIANCE type from float to int (redefined-variable-type)
 W: 24, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import copy from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import np from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbExp from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbExp from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
-R: 66, 0: Redefinition of VARIANCE type from float to int (redefined-variable-type)
+W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
 ************* Module configuration
 W: 44, 0: XXX to disable this optimization (fixme)
 W: 48, 0: XXX To profile the code, turn down parallel computing (fixme)
@@ -112,81 +112,81 @@ C: 24, 0: Import "from Arms import *" should be placed at the top of the module 
 W: 27, 0: Wildcard import Policies (wildcard-import)
 C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
 E:221, 0: Sequence index is not an int, slice, or instance with __index__ (invalid-sequence-index)
-W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import copy from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import np from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import DMED from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ApproximatedFHGittins from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbExp from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
-R:124, 0: Redefinition of VARIANCE type from float to int (redefined-variable-type)
 R: 99, 0: Redefinition of DECREASE_RATE type from float to str (redefined-variable-type)
 R: 77, 0: Redefinition of TEMPERATURE type from float to int (redefined-variable-type)
+R:124, 0: Redefinition of VARIANCE type from float to int (redefined-variable-type)
+W: 24, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import np from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import copy from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ApproximatedFHGittins from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbExp from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import DMED from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
 ************* Module configuration_comparing_KLUCB_aggregation
 W: 44, 0: XXX to disable this optimization (fixme)
 W: 48, 0: XXX To profile the code, turn down parallel computing (fixme)
@@ -225,76 +225,76 @@ W:202,21: Unused argument 'precision' (unused-argument)
 E:211, 0: function already defined line 27 (function-redefined)
 W:211,21: Unused argument 'precision' (unused-argument)
 C:273, 0: Import "from itertools import product" should be placed at the top of the module (wrong-import-position)
-W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import copy from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import np from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import copy from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
-W: 24, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
 W: 24, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucb_mapping from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import DMED from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
+W: 24, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
-W: 27, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucb_mapping from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import DMED from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import UCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
 W: 27, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import jit from wildcard import (unused-wildcard-import)
+W: 27, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
 C:273, 0: standard import "from itertools import product" comes before "from Arms import *" (wrong-import-order)
 ************* Module conf
-W: 71, 0: Redefining built-in 'copyright' (redefined-builtin)
 C:  1, 0: Missing module docstring (missing-docstring)
+W: 71, 0: Redefining built-in 'copyright' (redefined-builtin)
 ************* Module configuration_multiplayers
 W: 36, 0: XXX do better for these imports (fixme)
 W: 54, 0: XXX to disable this optimization (fixme)
@@ -346,101 +346,106 @@ C: 34, 0: Import "from Policies import *" should be placed at the top of the mod
 W: 35, 0: Wildcard import PoliciesMultiPlayers (wildcard-import)
 C: 35, 0: Import "from PoliciesMultiPlayers import *" should be placed at the top of the module (wrong-import-position)
 C: 36, 0: Import "from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log" should be placed at the top of the module (wrong-import-position)
+E:261, 0: Sequence index is not an int, slice, or instance with __index__ (invalid-sequence-index)
 W: 18, 0: Unused numpy imported as np (unused-import)
-W: 25, 0: Unused import copy from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import np from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
 W: 25, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
 W: 25, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 25, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import np from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
 W: 25, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import copy from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 25, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
 W: 28, 0: Unused MAB imported from Environment (unused-import)
-W: 31, 0: Unused import rewardIsSharedUniformly from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import handleCollision_or_getZeroReward from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import lru_cache from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import defaultCollisionModel from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import noCollision from wildcard import (unused-wildcard-import)
 W: 31, 0: Unused import closerUserGetsReward from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import collision_models from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import full_lost_if_collision from wildcard import (unused-wildcard-import)
-W: 31, 0: Unused import allGetRewardsAndUseCollision from wildcard import (unused-wildcard-import)
 W: 31, 0: Unused import random_distances from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import DMED from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Aggr from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import handleCollision_or_getZeroReward from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import noCollision from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import full_lost_if_collision from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import defaultCollisionModel from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import allGetRewardsAndUseCollision from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import rewardIsSharedUniformly from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import collision_models from wildcard import (unused-wildcard-import)
+W: 31, 0: Unused import lru_cache from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klucb_mapping from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import jit from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBH from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import klucbBern from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import ApproximatedFHGittins from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBwrong from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBmin from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import klucbExp from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
 W: 34, 0: Unused import klUCB from wildcard import (unused-wildcard-import)
-W: 34, 0: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import Scenario1 from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import AdBandits from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBPlusPlus from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klucbGamma from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import jit from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Softmax from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBH from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Aggr from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klucb_mapping from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import DMED from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBalpha from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import KLempUCB from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klucbGauss from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import MOSSH from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import OCUCB from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 34, 0: Unused import CPUCB from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import CentralizedMultiplePlay from wildcard import (unused-wildcard-import)
 W: 35, 0: Unused import rhoRandRand from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import rhoRandSticky from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import OracleNotFair from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import CentralizedCycling from wildcard import (unused-wildcard-import)
 W: 35, 0: Unused import tnext_beta from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import rhoEst from wildcard import (unused-wildcard-import)
-W: 35, 0: Unused import OracleFair from wildcard import (unused-wildcard-import)
 W: 35, 0: Unused import CentralizedFixed from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import OracleFair from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import Scenario1 from wildcard import (unused-wildcard-import)
 W: 35, 0: Unused import ALOHA from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import CentralizedCycling from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import rhoRandSticky from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import rhoEst from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import CentralizedIMP from wildcard import (unused-wildcard-import)
 W: 35, 0: Unused import tnext_log from wildcard import (unused-wildcard-import)
+W: 35, 0: Unused import OracleNotFair from wildcard import (unused-wildcard-import)
 ************* Module my-small-slack-bot
 C: 32, 0: Import "from numpy.random import poisson" should be placed at the top of the module (wrong-import-position)
 E: 33, 0: Unable to import 'slackclient' (import-error)
@@ -491,8 +496,6 @@ W:250, 0: XXX To plot without saving (fixme)
 W:259, 0: XXX To plot without saving (fixme)
 W:268, 0: XXX To plot without saving (fixme)
 W:278, 0: XXX To plot without saving (fixme)
-************* Module Arms.Bernoulli
-W: 17, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
 ************* Module main
 W: 56, 0: XXX dont keep it like this when experimenting (fixme)
 W: 66, 0: XXX dont keep it like this (fixme)
@@ -508,6 +511,8 @@ W:181, 0: XXX To save the figure (fixme)
 W:185, 0: XXX To save the figure (fixme)
 W:188, 0: XXX To save the figure (fixme)
 W:205, 0: XXX To save the figure (fixme)
+************* Module Arms.Bernoulli
+W: 17, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
 ************* Module main_multiplayers_more
 W: 45, 0: XXX dont keep it like this (fixme)
 W: 56, 0: XXX dont keep it like this (fixme)
@@ -540,18 +545,13 @@ W:362, 0: XXX To plot without saving (fixme)
 W:371, 0: XXX To plot without saving (fixme)
 W:380, 0: XXX To plot without saving (fixme)
 W:389, 0: XXX To plot without saving (fixme)
-************* Module Arms.Exponential
-C: 21, 8: Missing function docstring (missing-docstring)
-C: 24, 8: Missing function docstring (missing-docstring)
-C: 27, 4: Missing function docstring (missing-docstring)
-W: 40, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
-************* Module Arms.Binomial
-W: 22, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
-C: 25,42: Comparison should be draws >= 1 (misplaced-comparison-constant)
 ************* Module Arms.Gamma
 W: 26, 0: XXX Non truncated! (fixme)
 W: 66, 0: FIXME if x, y are means (ie self.shape), shouldn't we divide them by self.scale ? (fixme)
 W: 27, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+************* Module Arms.Binomial
+W: 22, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
+C: 25,42: Comparison should be draws >= 1 (misplaced-comparison-constant)
 ************* Module Arms.Gaussian
 W: 27, 0: FIXME truncated Gaussian does NOT have this mean! Cf. histograms! (fixme)
 W: 25, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
@@ -585,16 +585,16 @@ W:414,13: Redefining name 'x' from outer scope (line 639) (redefined-outer-name)
 W:414,16: Redefining name 'd' from outer scope (line 641) (redefined-outer-name)
 W:457,15: Redefining name 'x' from outer scope (line 639) (redefined-outer-name)
 W:457,18: Redefining name 'd' from outer scope (line 641) (redefined-outer-name)
-W:502,10: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
 W:502,16: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:502,13: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
+W:502,10: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
+W:539,17: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:539,14: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
 W:539,11: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
-W:539,17: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 C:568, 0: Import "from scipy.optimize import minimize" should be placed at the top of the module (wrong-import-position)
+W:571,18: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:571,15: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
 W:571,12: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
-W:571,18: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 C:585, 4: Missing function docstring (missing-docstring)
 ************* Module Arms.usenumba
 W: 11, 0: XXX Experimental (fixme)
@@ -611,16 +611,21 @@ C:171, 0: Unnecessary parens after 'elif' keyword (superfluous-parens)
 W: 31,18: Unused argument 'maxsize' (unused-argument)
 W: 31,31: Unused argument 'typed' (unused-argument)
 W:113,59: Unused argument 'collisions' (unused-argument)
+************* Module Arms.Exponential
+C: 21, 8: Missing function docstring (missing-docstring)
+C: 24, 8: Missing function docstring (missing-docstring)
+C: 27, 4: Missing function docstring (missing-docstring)
+W: 40, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
 ************* Module Environment.fairnessMeasures
 W: 14, 0: Unused numpy.random imported as rn (unused-import)
+************* Module Arms.Poisson
+W: 21, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
 ************* Module Environment
 W: 26, 0: Wildcard import CollisionModels (wildcard-import)
 W: 34, 0: Wildcard import usejoblib (wildcard-import)
 W: 35, 0: Wildcard import usetqdm (wildcard-import)
 W: 37, 0: Wildcard import sortedDistance (wildcard-import)
 W: 38, 0: Wildcard import fairnessMeasures (wildcard-import)
-************* Module Arms.Poisson
-W: 21, 4: __init__ method from base class 'Arm' is not called (super-init-not-called)
 ************* Module Environment.notify
 W: 80, 0: XXX maybe the PROGRAM_NAME should be random? (fixme)
 W: 87, 0: XXX Should not indicate it here (fixme)
@@ -640,7 +645,7 @@ W:138,15: Catching too general exception Exception (broad-except)
 W:128, 0: FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms (fixme)
 W:218, 0: XXX Use this method to speed up computation (fixme)
 W:276, 0: FIXME make this by default! include it in MAB.py and not in the configuration! (fixme)
-W:409, 0: XXX experimental, it works, but the regret plots in Evaluator* object has no meaning! (fixme)
+W:412, 0: XXX experimental, it works, but the regret plots in Evaluator* object has no meaning! (fixme)
 C: 51, 0: Exactly one space required before assignment
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
                          ^ (bad-whitespace)
@@ -656,7 +661,7 @@ W:284, 4: __init__ method from base class 'MAB' is not called (super-init-not-ca
 E:331,19: Undefined variable 'c' (undefined-variable)
 E:332,122: Undefined variable 'c' (undefined-variable)
 E:333,224: Undefined variable 'c' (undefined-variable)
-W:417, 4: __init__ method from base class 'MAB' is not called (super-init-not-called)
+W:420, 4: __init__ method from base class 'MAB' is not called (super-init-not-called)
 ************* Module Environment.plotsettings
 W: 15, 0: XXX is it a good idea? Nope, use "export MPLBACKEND='Agg'" in your bashrc ... Cf. http://stackoverflow.com/a/4935945/ and http://matplotlib.org/faq/usage_faq.html#what-is-a-backend (fixme)
 W: 27, 0: FIXME revert to ↑ after having generating the figures for the paper (fixme)
@@ -673,24 +678,24 @@ C: 23, 0: standard import "import locale" comes before "import matplotlib as mpl
 ************* Module Environment.plot_Cmu_HOI
 W: 18, 0: Wildcard import Arms (wildcard-import)
 W: 45, 9: Redefining name 'K' from outer scope (line 84) (redefined-outer-name)
-W: 18, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import copy from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
 W: 18, 0: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 18, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import Gaussian from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import uniformMeans from wildcard import (unused-wildcard-import)
 W: 18, 0: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import randomMeans from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import Uniform from wildcard import (unused-wildcard-import)
 W: 18, 0: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import copy from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import shuffle from wildcard import (unused-wildcard-import)
+W: 18, 0: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
 C: 18, 0: external import "from Arms import *" comes before "from .usenumba import jit" (wrong-import-order)
 ************* Module Environment.ResultMultiPlayers
 W: 19, 0: XXX uncomment if needed (fixme)
@@ -700,6 +705,88 @@ R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
 ************* Module Environment.Result
 W: 29, 0: FIXME write it ! (fixme)
 R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
+************* Module Environment.EvaluatorMultiPlayers
+W:151, 0: FIXME there is probably a bug in this computation (fixme)
+W:215, 0: FIXME it depends on the collision model ! (fixme)
+W:278, 0: XXX Should be smarter (fixme)
+W:358, 0: XXX prevent /0 (fixme)
+W:361, 0: XXX prevent /0 (fixme)
+W:409, 0: XXX Should be smarter (fixme)
+W:436, 0: XXX Should be smarter (fixme)
+W:517, 0: TODO I should plot the evolution of the occupation ratio of each channel, as a function of time (fixme)
+W:566, 0: XXX no, we should not count just the fact that there were collisions, but instead count all collisions (fixme)
+W:589, 0: FIXME is it perfectly working? (fixme)
+W:646, 0: XXX this uses a LOT of RAM memory!!! (fixme)
+W:673, 0: FIXME here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance) (fixme)
+W:679, 0: XXX It is here that the player may receive a reward, if there is no collisions (fixme)
+W:682, 0: XXX inefficient and does not work yet (fixme)
+W:571, 0: Anomalous backslash in string: '\%'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+W:580, 0: Anomalous backslash in string: '\%'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
+R: 37, 0: Too many instance attributes (23/7) (too-many-instance-attributes)
+R:107,16: Redefinition of MB type from Environment.MAB.DynamicMAB to Environment.MAB.MAB (redefined-variable-type)
+C:141, 8: Missing function docstring (missing-docstring)
+R:290, 4: Too many local variables (19/15) (too-many-locals)
+E:300,66: Instance of 'str' has no '__name__' member (no-member)
+W:304,26: Unused variable 'player' (unused-variable)
+R:323, 4: Too many local variables (27/15) (too-many-locals)
+C:355,20: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+C:360,20: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+R:323, 4: Too many branches (14/12) (too-many-branches)
+R:323, 4: Too many statements (53/50) (too-many-statements)
+R:396, 4: Too many local variables (16/15) (too-many-locals)
+R:422, 4: Too many local variables (16/15) (too-many-locals)
+W:495,12: Expression "plt.show() if self.showplot else plt.close()" is assigned to nothing (expression-not-assigned)
+R:521, 4: Too many local variables (19/15) (too-many-locals)
+C:593,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+R: 37, 0: Too many public methods (27/20) (too-many-public-methods)
+R:635, 0: Too many local variables (19/15) (too-many-locals)
+W:636,17: Unused argument 'delta_t_save' (unused-argument)
+W: 20, 0: Unused USE_TQDM imported from usetqdm (unused-import)
+W: 22, 0: Unused wraplatex imported from plotsettings (unused-import)
+W: 23, 0: Unused sortedDistance imported from sortedDistance (unused-import)
+W: 24, 0: Unused std_fairness imported from fairnessMeasures (unused-import)
+W: 24, 0: Unused amplitude_fairness imported from fairnessMeasures (unused-import)
+W: 24, 0: Unused fairnessMeasure imported from fairnessMeasures (unused-import)
+W: 24, 0: Unused rajjain_fairness imported from fairnessMeasures (unused-import)
+W: 24, 0: Unused mean_fairness imported from fairnessMeasures (unused-import)
+W: 26, 0: Unused rewardIsSharedUniformly imported from CollisionModels (unused-import)
+W: 26, 0: Unused noCollision imported from CollisionModels (unused-import)
+W: 26, 0: Unused closerUserGetsReward imported from CollisionModels (unused-import)
+W: 26, 0: Unused onlyUniqUserGetsReward imported from CollisionModels (unused-import)
+************* Module Environment.usejoblib
+C: 19, 8: Missing function docstring (missing-docstring)
+W: 17, 0: Unused argument 'kwargs' (unused-argument)
+W: 17, 0: Unused argument 'args' (unused-argument)
+W: 23, 0: Unused argument 'kwargs' (unused-argument)
+W: 23, 0: Unused argument 'args' (unused-argument)
+************* Module Environment.usenumba
+W: 11, 0: XXX Experimental (fixme)
+E: 27, 4: function already defined line 15 (function-redefined)
+************* Module Environment.usetqdm
+W: 40, 0: Unused argument 'kwargs' (unused-argument)
+W: 40, 0: Unused argument 'args' (unused-argument)
+************* Module Policies.AdBandits
+W: 81, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
+C: 48, 4: Missing method docstring (missing-docstring)
+************* Module Policies.Aggr
+W: 64, 0: XXX If we use the Exp4 update rule, it's better to be unbiased (fixme)
+W: 65, 0: XXX If we use my update rule, it seems to be better to be "biased" (fixme)
+W:184, 0: FIXME experiment dynamic resetting of proba, put this as a parameter (fixme)
+W:198, 0: XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities! (fixme)
+C: 56, 0: Wrong continued indentation (remove 1 space).
+                 ):
+                |^ (bad-continuation)
+R: 48, 0: Too many instance attributes (15/7) (too-many-instance-attributes)
+W: 53,58: Redefining name 'update_like_exp4' from outer scope (line 36) (redefined-outer-name)
+W: 54,17: Redefining name 'unbiased' from outer scope (line 27) (redefined-outer-name)
+W: 53,17: Redefining name 'update_all_children' from outer scope (line 45) (redefined-outer-name)
+W: 51, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
+************* Module Policies.ApproximatedFHGittins
+W: 13, 0: XXX dangerous in general, controlled here! (fixme)
+C: 15, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.BasePolicy
+W: 41, 0: XXX useless checkBounds feature (fixme)
+W: 46, 0: XXX we could check here if the reward is outside the bounds (fixme)
 ************* Module Environment.Evaluator
 W:135, 0: XXX Use this method to speed up computation (fixme)
 W:175, 0: FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations (fixme)
@@ -744,51 +831,17 @@ W: 19, 0: Unused USE_TQDM imported from usetqdm (unused-import)
 W: 21, 0: Unused maximizeWindow imported from plotsettings (unused-import)
 W: 21, 0: Unused BBOX_INCHES imported from plotsettings (unused-import)
 W: 22, 0: Unused sortedDistance imported from sortedDistance (unused-import)
-************* Module Environment.usejoblib
-C: 19, 8: Missing function docstring (missing-docstring)
-W: 17, 0: Unused argument 'args' (unused-argument)
-W: 17, 0: Unused argument 'kwargs' (unused-argument)
-W: 23, 0: Unused argument 'args' (unused-argument)
-W: 23, 0: Unused argument 'kwargs' (unused-argument)
-************* Module Environment.usenumba
-W: 11, 0: XXX Experimental (fixme)
-E: 27, 4: function already defined line 15 (function-redefined)
-************* Module Environment.usetqdm
-W: 40, 0: Unused argument 'args' (unused-argument)
-W: 40, 0: Unused argument 'kwargs' (unused-argument)
-************* Module Policies.AdBandits
-W: 81, 0: XXX What happens here if two arms has the same index, being the max? (fixme)
-C: 48, 4: Missing method docstring (missing-docstring)
-************* Module Policies.ApproximatedFHGittins
-W: 13, 0: XXX dangerous in general, controlled here! (fixme)
-C: 15, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.Aggr
-W: 64, 0: XXX If we use the Exp4 update rule, it's better to be unbiased (fixme)
-W: 65, 0: XXX If we use my update rule, it seems to be better to be "biased" (fixme)
-W:184, 0: FIXME experiment dynamic resetting of proba, put this as a parameter (fixme)
-W:198, 0: XXX No: in fact, we need to vector self.choices to update the self.trusts probabilities! (fixme)
-C: 56, 0: Wrong continued indentation (remove 1 space).
-                 ):
-                |^ (bad-continuation)
-R: 48, 0: Too many instance attributes (15/7) (too-many-instance-attributes)
-W: 53,58: Redefining name 'update_like_exp4' from outer scope (line 36) (redefined-outer-name)
-W: 54,17: Redefining name 'unbiased' from outer scope (line 27) (redefined-outer-name)
-W: 53,17: Redefining name 'update_all_children' from outer scope (line 45) (redefined-outer-name)
-W: 51, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
-************* Module Policies.BasePolicy
-W: 41, 0: XXX useless checkBounds feature (fixme)
-W: 46, 0: XXX we could check here if the reward is outside the bounds (fixme)
-************* Module Policies.CPUCB
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
-E:136,106: Instance of 'float' has no 'flat' member (no-member)
-W:144,11: Unused variable 'lowerbound' (unused-variable)
-W:144, 4: Unused variable 'phat' (unused-variable)
 ************* Module Policies.DMED
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 E: 14, 0: No name 'klBern' in module 'Policies.kullback' (no-name-in-module)
 C: 14, 0: Import "from .kullback import klBern" should be placed at the top of the module (wrong-import-position)
 C: 15, 0: Import "from .BasePolicy import BasePolicy" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.EmpiricalMeans
+W:  8, 0: XXX dangerous in general, controlled here! (fixme)
+C: 10, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.Beta
+W: 39, 4: __init__ method from base class 'Posterior' is not called (super-init-not-called)
+W: 50, 4: Arguments number differs from overridden 'reset' method (arguments-differ)
 ************* Module Environment.pykov
 C: 65, 0: Unnecessary parens after 'del' keyword (superfluous-parens)
 C: 69, 0: Unnecessary parens after 'del' keyword (superfluous-parens)
@@ -865,8 +918,8 @@ W:139, 4: Arguments number differs from overridden '__setitem__' method (argumen
 W:171,23: Access to a protected member _el2pos_ of a client class (protected-access)
 W:173,16: Access to a protected member _dok_ of a client class (protected-access)
 W:176,12: Access to a protected member _fromarray of a client class (protected-access)
-W:171,17: Unused variable 'p2e' (unused-variable)
 R:179,12: Redefinition of result type from Environment.pykov.Vector to int (redefined-variable-type)
+W:171,17: Unused variable 'p2e' (unused-variable)
 W:314,15: Using possibly undefined loop variable 'state' (undefined-loop-variable)
 C:400, 0: Empty class docstring (empty-docstring)
 W:431, 4: Arguments number differs from overridden '__setitem__' method (arguments-differ)
@@ -885,17 +938,17 @@ W:788,12: Access to a protected member _from_dok_ of a client class (protected-a
 R:787,16: Redefinition of res type from Environment.pykov.Chain to Environment.pykov.Matrix (redefined-variable-type)
 W:904,13: Access to a protected member _toarray of a client class (protected-access)
 W:907, 8: Access to a protected member _fromarray of a client class (protected-access)
-W:899,13: Unused variable 'p2e' (unused-variable)
 R:903,12: Redefinition of A type from scipy.sparse.csc.csc_matrix to scipy.sparse.csr.csr_matrix (redefined-variable-type)
+W:899,13: Unused variable 'p2e' (unused-variable)
 W:666,12: Attribute '_pred' defined outside __init__ (attribute-defined-outside-init)
-W:691,12: Attribute '_succ' defined outside __init__ (attribute-defined-outside-init)
 W:731,12: Attribute '_states' defined outside __init__ (attribute-defined-outside-init)
+W:691,12: Attribute '_succ' defined outside __init__ (attribute-defined-outside-init)
 C:911, 0: Empty class docstring (empty-docstring)
 W:932, 4: Arguments number differs from overridden 'pow' method (arguments-differ)
 E:983,16: Instance of 'NotImplemented' has no 'transpose' member (no-member)
 W:989,12: Access to a protected member _fromarray of a client class (protected-access)
-W:977,17: Unused variable 'p2e' (unused-variable)
 R:987,12: Redefinition of x type from scipy.sparse.csc.csc_matrix to NotImplementedType (redefined-variable-type)
+W:977,17: Unused variable 'p2e' (unused-variable)
 W:1057,15: Access to a protected member _UMPFPACKSolve of a client class (protected-access)
 W:1097,16: Unused variable 'i' (unused-variable)
 W:1206,14: Access to a protected member _UMPFPACKSolve of a client class (protected-access)
@@ -908,15 +961,12 @@ W:1305, 8: Access to a protected member _from_numpy_mat of a client class (prote
 R:1322, 4: Too many local variables (17/15) (too-many-locals)
 W:1334,18: Access to a protected member _numpy_mat of a client class (protected-access)
 W:1274,12: Attribute '_fundamental_matrix' defined outside __init__ (attribute-defined-outside-init)
-W:990,12: Attribute '_steady' defined outside __init__ (attribute-defined-outside-init)
 W:1514, 4: Attribute '_guess' defined outside __init__ (attribute-defined-outside-init)
+W:990,12: Attribute '_steady' defined outside __init__ (attribute-defined-outside-init)
 C:1504,15: Consider iterating the dictionary directly instead of calling .keys() (consider-iterating-dictionary)
 W:1514, 4: Access to a protected member _guess of a client class (protected-access)
 C: 35, 0: standard import "import sys" comes before "import six" (wrong-import-order)
 C: 37, 0: standard import "from collections import OrderedDict" comes before "import six" (wrong-import-order)
-************* Module Policies.EmpiricalMeans
-W:  8, 0: XXX dangerous in general, controlled here! (fixme)
-C: 10, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.EpsilonGreedy
 W: 68, 0: FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all' (fixme)
 W: 82, 0: FIXME the explore/exploit balancy should be for each choice, right? (fixme)
@@ -929,69 +979,6 @@ W:127, 0: Anomalous backslash in string: '\g'. String constant might be missing 
 ************* Module Policies.Gamma
 W: 26, 4: __init__ method from base class 'Posterior' is not called (super-init-not-called)
 W: 36, 4: Arguments number differs from overridden 'reset' method (arguments-differ)
-************* Module Environment.EvaluatorMultiPlayers
-W:151, 0: FIXME there is probably a bug in this computation (fixme)
-W:215, 0: FIXME it depends on the collision model ! (fixme)
-W:278, 0: XXX Should be smarter (fixme)
-W:358, 0: XXX prevent /0 (fixme)
-W:361, 0: XXX prevent /0 (fixme)
-W:409, 0: XXX Should be smarter (fixme)
-W:436, 0: XXX Should be smarter (fixme)
-W:517, 0: TODO I should plot the evolution of the occupation ratio of each channel, as a function of time (fixme)
-W:566, 0: XXX no, we should not count just the fact that there were collisions, but instead count all collisions (fixme)
-W:589, 0: FIXME is it perfectly working? (fixme)
-W:646, 0: XXX this uses a LOT of RAM memory!!! (fixme)
-W:673, 0: FIXME here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance) (fixme)
-W:679, 0: XXX It is here that the player may receive a reward, if there is no collisions (fixme)
-W:682, 0: XXX inefficient and does not work yet (fixme)
-W:571, 0: Anomalous backslash in string: '\%'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
-W:580, 0: Anomalous backslash in string: '\%'. String constant might be missing an r prefix. (anomalous-backslash-in-string)
-R: 37, 0: Too many instance attributes (23/7) (too-many-instance-attributes)
-R:107,16: Redefinition of MB type from Environment.MAB.DynamicMAB to Environment.MAB.MAB (redefined-variable-type)
-C:141, 8: Missing function docstring (missing-docstring)
-R:290, 4: Too many local variables (19/15) (too-many-locals)
-E:300,66: Instance of 'str' has no '__name__' member (no-member)
-W:304,26: Unused variable 'player' (unused-variable)
-R:323, 4: Too many local variables (27/15) (too-many-locals)
-C:355,20: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-C:360,20: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-R:323, 4: Too many branches (14/12) (too-many-branches)
-R:323, 4: Too many statements (53/50) (too-many-statements)
-R:396, 4: Too many local variables (16/15) (too-many-locals)
-R:422, 4: Too many local variables (16/15) (too-many-locals)
-W:495,12: Expression "plt.show() if self.showplot else plt.close()" is assigned to nothing (expression-not-assigned)
-R:521, 4: Too many local variables (19/15) (too-many-locals)
-C:593,12: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
-R: 37, 0: Too many public methods (27/20) (too-many-public-methods)
-R:635, 0: Too many local variables (19/15) (too-many-locals)
-W:636,17: Unused argument 'delta_t_save' (unused-argument)
-W: 20, 0: Unused USE_TQDM imported from usetqdm (unused-import)
-W: 22, 0: Unused wraplatex imported from plotsettings (unused-import)
-W: 23, 0: Unused sortedDistance imported from sortedDistance (unused-import)
-W: 24, 0: Unused std_fairness imported from fairnessMeasures (unused-import)
-W: 24, 0: Unused fairnessMeasure imported from fairnessMeasures (unused-import)
-W: 24, 0: Unused amplitude_fairness imported from fairnessMeasures (unused-import)
-W: 24, 0: Unused mean_fairness imported from fairnessMeasures (unused-import)
-W: 24, 0: Unused rajjain_fairness imported from fairnessMeasures (unused-import)
-W: 26, 0: Unused closerUserGetsReward imported from CollisionModels (unused-import)
-W: 26, 0: Unused rewardIsSharedUniformly imported from CollisionModels (unused-import)
-W: 26, 0: Unused onlyUniqUserGetsReward imported from CollisionModels (unused-import)
-W: 26, 0: Unused noCollision imported from CollisionModels (unused-import)
-************* Module Policies.IndexPolicy
-W: 83, 0: FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all' (fixme)
-W:125, 0: XXX remove this useless variable (fixme)
-W:103, 4: Arguments number differs from overridden 'choiceIMP' method (arguments-differ)
-************* Module Policies.Beta
-W: 39, 4: __init__ method from base class 'Posterior' is not called (super-init-not-called)
-W: 50, 4: Arguments number differs from overridden 'reset' method (arguments-differ)
-************* Module Policies.KLempUCB
-W: 11, 0: XXX Not detected as in the kullback.py file ? (fixme)
-W: 49, 0: FIXME this does not work apparently... (fixme)
-E: 11, 0: No name 'maxEV' in module 'Policies.kullback' (no-name-in-module)
-E: 41,19: No value for argument 'klMax' in staticmethod call (no-value-for-parameter)
-C: 51, 4: Missing method docstring (missing-docstring)
-W: 51, 4: Static method with 'self' as first argument (bad-staticmethod-argument)
-W: 51,15: Unused argument 'self' (unused-argument)
 ************* Module Policies.__init__
 W:111, 0: FIXME write it! Can be just a subclass of MusicalChair (fixme)
 ************* Module Policies
@@ -1000,6 +987,18 @@ E:119, 0: No name 'klucbExp' in module 'Policies.kullback' (no-name-in-module)
 E:119, 0: No name 'klucbGauss' in module 'Policies.kullback' (no-name-in-module)
 E:119, 0: No name 'klucbPoisson' in module 'Policies.kullback' (no-name-in-module)
 E:119, 0: No name 'klucbGamma' in module 'Policies.kullback' (no-name-in-module)
+************* Module Policies.KLempUCB
+W: 11, 0: XXX Not detected as in the kullback.py file ? (fixme)
+W: 49, 0: FIXME this does not work apparently... (fixme)
+E: 11, 0: No name 'maxEV' in module 'Policies.kullback' (no-name-in-module)
+E: 41,19: No value for argument 'klMax' in staticmethod call (no-value-for-parameter)
+C: 51, 4: Missing method docstring (missing-docstring)
+W: 51, 4: Static method with 'self' as first argument (bad-staticmethod-argument)
+W: 51,15: Unused argument 'self' (unused-argument)
+************* Module Policies.IndexPolicy
+W: 83, 0: FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all' (fixme)
+W:125, 0: XXX remove this useless variable (fixme)
+W:103, 4: Arguments number differs from overridden 'choiceIMP' method (arguments-differ)
 ************* Module Policies.klUCBHPlus
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 W: 50, 0: XXX We could adapt tolerance to the value of self.t (fixme)
@@ -1014,6 +1013,10 @@ E: 13, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 C: 13, 0: Import "from .kullback import klucbBern" should be placed at the top of the module (wrong-import-position)
 C: 14, 0: Import "from .klUCB import klUCB, c" should be placed at the top of the module (wrong-import-position)
 W: 22,78: Redefining name 'c' from outer scope (line 14) (redefined-outer-name)
+************* Module Policies.klUCBlog10
+W: 13, 0: XXX dangerous in general, controlled here! (fixme)
+W: 43, 0: XXX We could adapt tolerance to the value of self.t (fixme)
+C: 15, 0: Import "from .klUCB import klUCB" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.klUCBloglog10
 W: 13, 0: XXX dangerous in general, controlled here! (fixme)
 W: 43, 0: XXX We could adapt tolerance to the value of self.t (fixme)
@@ -1026,13 +1029,6 @@ C: 15, 0: Import "from .klUCB import klUCB" should be placed at the top of the m
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 W: 39, 0: XXX We could adapt tolerance to the value of self.t (fixme)
 C: 13, 0: Import "from .klUCB import klUCB" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.klUCB
-W: 12, 0: XXX dangerous in general, controlled here! (fixme)
-W: 54, 0: XXX We could adapt tolerance to the value of self.t (fixme)
-E: 15, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
-C: 15, 0: Import "from .kullback import klucbBern" should be placed at the top of the module (wrong-import-position)
-C: 16, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-W: 29,64: Redefining name 'c' from outer scope (line 20) (redefined-outer-name)
 ************* Module Policies.klUCBPlusPlus
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 W: 73, 0: XXX We could adapt tolerance to the value of self.t (fixme)
@@ -1040,143 +1036,28 @@ E: 13, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
 C: 13, 0: Import "from .kullback import klucbBern" should be placed at the top of the module (wrong-import-position)
 C: 14, 0: Import "from .klUCB import klUCB, c" should be placed at the top of the module (wrong-import-position)
 W: 41,78: Redefining name 'c' from outer scope (line 14) (redefined-outer-name)
+************* Module Policies.klUCB
+W: 12, 0: XXX dangerous in general, controlled here! (fixme)
+W: 54, 0: XXX We could adapt tolerance to the value of self.t (fixme)
+E: 15, 0: No name 'klucbBern' in module 'Policies.kullback' (no-name-in-module)
+C: 15, 0: Import "from .kullback import klucbBern" should be placed at the top of the module (wrong-import-position)
+C: 16, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
+W: 29,64: Redefining name 'c' from outer scope (line 20) (redefined-outer-name)
 ************* Module Policies.MOSSH
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 C: 13, 0: Import "from .MOSS import MOSS" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.klUCBlog10
-W: 13, 0: XXX dangerous in general, controlled here! (fixme)
-W: 43, 0: XXX We could adapt tolerance to the value of self.t (fixme)
-C: 15, 0: Import "from .klUCB import klUCB" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.MOSS
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.MEGA
 W: 44, 0: FIXME we should not require two parameters, as they are just used in the formula for epsilon_t (fixme)
 W: 79, 0: XXX Chose a random arm (fixme)
 R: 20, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
 W:106,35: Unused argument 'reward' (unused-argument)
+************* Module Policies.MOSS
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 ************* Module PoliciesMultiPlayers.BaseCentralizedPolicy
 C: 18, 4: Missing method docstring (missing-docstring)
 C: 21, 4: Missing method docstring (missing-docstring)
 C: 24, 4: Missing method docstring (missing-docstring)
-************* Module PoliciesMultiPlayers.BaseMPPolicy
-E: 25,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 29,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 33,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 37,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 41,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 45,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 49,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-E: 53,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
-R: 11, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.CentralizedCycling
-W: 79, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
-W: 24, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 51, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 51,52: Unused argument 'amplitude' (unused-argument)
-W: 51,42: Unused argument 'lower' (unused-argument)
-R: 47, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.ALOHA
-W:139, 0: FIXME check the algorithm (fixme)
-C: 28, 4: Missing function docstring (missing-docstring)
-C: 40, 4: Missing function docstring (missing-docstring)
-R: 47, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
-W: 86,101: Access to a protected member _players of a client class (protected-access)
-W: 90, 8: Access to a protected member _startGame_one of a client class (protected-access)
-W:109, 8: Access to a protected member _getReward_one of a client class (protected-access)
-W:142,21: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
-W:154, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-R:150, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.CentralizedIMP
-W: 26, 0: XXX Increasing order... (fixme)
-W: 27, 0: XXX Decreasing order... (fixme)
-R: 15, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.CentralizedFixed
-W: 77, 0: XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!) (fixme)
-W:109, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
-W: 25, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 25,51: Unused argument 'amplitude' (unused-argument)
-W: 25,41: Unused argument 'lower' (unused-argument)
-W: 50, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-R: 46, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.ChildPointer
-W: 21,51: Access to a protected member _players of a client class (protected-access)
-W: 24,63: Access to a protected member _players of a client class (protected-access)
-W: 30,15: Access to a protected member _startGame_one of a client class (protected-access)
-W: 34,15: Access to a protected member _getReward_one of a client class (protected-access)
-W: 38,15: Access to a protected member _handleCollision_one of a client class (protected-access)
-W: 36,35: Unused argument 'reward' (unused-argument)
-W: 42,15: Access to a protected member _choice_one of a client class (protected-access)
-W: 46,15: Access to a protected member _choiceWithRank_one of a client class (protected-access)
-W: 50,15: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
-W: 54,15: Access to a protected member _choiceMultiple_one of a client class (protected-access)
-W: 58,15: Access to a protected member _choiceIMP_one of a client class (protected-access)
-W: 62,15: Access to a protected member _estimatedOrder_one of a client class (protected-access)
-W:  8, 0: Unused warn imported from warnings (unused-import)
-************* Module PoliciesMultiPlayers.CentralizedMultiplePlay
-W: 77, 0: FIXME? We have to be sure that the internal player.t is not messed up (fixme)
-W: 88, 0: XXX Increasing order... (fixme)
-W: 89, 0: XXX Decreasing order... (fixme)
-W: 32, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 94,50: Unused argument 'reward' (unused-argument)
-R: 28, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.__init__
-W: 42, 0: FIXME implement it (fixme)
-************* Module PoliciesMultiPlayers.OracleFair
-W: 88, 0: FIXME improve this, when there is more player than arms, this is not optimal (fixme)
-W: 90, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
-W: 26, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 57, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 57,53: Unused argument 'amplitude' (unused-argument)
-W: 57,43: Unused argument 'lower' (unused-argument)
-R: 53, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.OracleNotFair
-W: 81, 0: XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal! (fixme)
-W: 27, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
-W: 52, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 52,53: Unused argument 'amplitude' (unused-argument)
-W: 52,43: Unused argument 'lower' (unused-argument)
-R: 48, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.rhoEst
-W: 85,84: Access to a protected member _players of a client class (protected-access)
-E:101,12: Bad first argument 'oneRhoRand' given to super() (bad-super-call)
-W:149, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
-R:145, 0: Too few public methods (0/2) (too-few-public-methods)
-W: 16, 0: Unused log imported from math (unused-import)
-W: 16, 0: Unused sqrt imported from math (unused-import)
-************* Module PoliciesMultiPlayers.rhoRand
-W: 36,85: Access to a protected member _players of a client class (protected-access)
-W: 66, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-R: 62, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.rhoLearn
-W: 62, 0: FIXME I should give it more arguments? (fixme)
-W: 67, 0: XXX not used anymore! (fixme)
-W: 77, 0: XXX not used anymore! (fixme)
-W: 83, 0: XXX not used anymore! (fixme)
-W:104, 0: XXX not used anymore! (fixme)
-W: 28,45: Unused argument 'amplitude' (unused-argument)
-W: 28,35: Unused argument 'lower' (unused-argument)
-C: 31, 8: Missing method docstring (missing-docstring)
-C: 34, 8: Missing method docstring (missing-docstring)
-C: 37, 8: Missing method docstring (missing-docstring)
-W: 70,97: Access to a protected member _players of a client class (protected-access)
-E:101,12: Bad first argument 'oneRhoRand' given to super() (bad-super-call)
-R:116, 0: Too many instance attributes (8/7) (too-many-instance-attributes)
-W:120, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
-R:116, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.Scenario1
-W: 40, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-W: 40,52: Unused argument 'amplitude' (unused-argument)
-W: 40,42: Unused argument 'lower' (unused-argument)
-R: 34, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.rhoRandRand
-W: 37,98: Access to a protected member _players of a client class (protected-access)
-W: 65, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
-R: 61, 0: Too few public methods (0/2) (too-few-public-methods)
-************* Module PoliciesMultiPlayers.rhoRandSticky
-W: 42,87: Access to a protected member _players of a client class (protected-access)
-W: 80, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
-R: 76, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module Policies.kullback
 W:443, 0: XXX where does this value come from? (fixme)
 W:448, 0: XXX where does this value come from? (fixme)
@@ -1205,22 +1086,151 @@ W:414,13: Redefining name 'x' from outer scope (line 639) (redefined-outer-name)
 W:414,16: Redefining name 'd' from outer scope (line 641) (redefined-outer-name)
 W:457,15: Redefining name 'x' from outer scope (line 639) (redefined-outer-name)
 W:457,18: Redefining name 'd' from outer scope (line 641) (redefined-outer-name)
-W:502,10: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
 W:502,16: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:502,13: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
+W:502,10: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
+W:539,17: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:539,14: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
 W:539,11: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
-W:539,17: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 C:568, 0: Import "from scipy.optimize import minimize" should be placed at the top of the module (wrong-import-position)
+W:571,18: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 W:571,15: Redefining name 'V' from outer scope (line 621) (redefined-outer-name)
 W:571,12: Redefining name 'p' from outer scope (line 619) (redefined-outer-name)
-W:571,18: Redefining name 'klMax' from outer scope (line 623) (redefined-outer-name)
 C:585, 4: Missing function docstring (missing-docstring)
+************* Module PoliciesMultiPlayers.BaseMPPolicy
+E: 25,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 29,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 33,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 37,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 41,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 45,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 49,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+E: 53,15: Instance of 'BaseMPPolicy' has no '_players' member (no-member)
+R: 11, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.ALOHA
+W:139, 0: FIXME check the algorithm (fixme)
+C: 28, 4: Missing function docstring (missing-docstring)
+C: 40, 4: Missing function docstring (missing-docstring)
+R: 47, 0: Too many instance attributes (10/7) (too-many-instance-attributes)
+W: 86,101: Access to a protected member _players of a client class (protected-access)
+W: 90, 8: Access to a protected member _startGame_one of a client class (protected-access)
+W:109, 8: Access to a protected member _getReward_one of a client class (protected-access)
+W:142,21: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
+W:154, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+R:150, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.CentralizedIMP
+W: 26, 0: XXX Increasing order... (fixme)
+W: 27, 0: XXX Decreasing order... (fixme)
+R: 15, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.CentralizedFixed
+W: 77, 0: XXX this "trash" arm with max number of collision will not change: that can be very good (if it is the worse!) or very bad (if it is the best!) (fixme)
+W:109, 0: FIXME It should re-generate the affectations every time a game is started! (fixme)
+W: 25, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 25,41: Unused argument 'lower' (unused-argument)
+W: 25,51: Unused argument 'amplitude' (unused-argument)
+W: 50, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+R: 46, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.CentralizedCycling
+W: 79, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
+W: 24, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 51, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 51,42: Unused argument 'lower' (unused-argument)
+W: 51,52: Unused argument 'amplitude' (unused-argument)
+R: 47, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.ChildPointer
+W: 21,51: Access to a protected member _players of a client class (protected-access)
+W: 24,63: Access to a protected member _players of a client class (protected-access)
+W: 30,15: Access to a protected member _startGame_one of a client class (protected-access)
+W: 34,15: Access to a protected member _getReward_one of a client class (protected-access)
+W: 38,15: Access to a protected member _handleCollision_one of a client class (protected-access)
+W: 36,35: Unused argument 'reward' (unused-argument)
+W: 42,15: Access to a protected member _choice_one of a client class (protected-access)
+W: 46,15: Access to a protected member _choiceWithRank_one of a client class (protected-access)
+W: 50,15: Access to a protected member _choiceFromSubSet_one of a client class (protected-access)
+W: 54,15: Access to a protected member _choiceMultiple_one of a client class (protected-access)
+W: 58,15: Access to a protected member _choiceIMP_one of a client class (protected-access)
+W: 62,15: Access to a protected member _estimatedOrder_one of a client class (protected-access)
+W:  8, 0: Unused warn imported from warnings (unused-import)
+************* Module PoliciesMultiPlayers.CentralizedMultiplePlay
+W: 77, 0: FIXME? We have to be sure that the internal player.t is not messed up (fixme)
+W: 88, 0: XXX Increasing order... (fixme)
+W: 89, 0: XXX Decreasing order... (fixme)
+W: 32, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 94,50: Unused argument 'reward' (unused-argument)
+R: 28, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.__init__
+W: 43, 0: FIXME implement it (fixme)
+************* Module PoliciesMultiPlayers.OracleNotFair
+W: 81, 0: XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal! (fixme)
+W: 27, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 52, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 52,53: Unused argument 'amplitude' (unused-argument)
+W: 52,43: Unused argument 'lower' (unused-argument)
+R: 48, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.OracleFair
+W: 88, 0: FIXME improve this, when there is more player than arms, this is not optimal (fixme)
+W: 90, 0: XXX this "trash" arm with max number of collision will cycle: that's the best we can do! (fixme)
+W: 26, 4: __init__ method from base class 'BaseCentralizedPolicy' is not called (super-init-not-called)
+W: 57, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 57,53: Unused argument 'amplitude' (unused-argument)
+W: 57,43: Unused argument 'lower' (unused-argument)
+R: 53, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module Policies.CPUCB
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
+E:136,106: Instance of 'float' has no 'flat' member (no-member)
+W:144, 4: Unused variable 'phat' (unused-variable)
+W:144,11: Unused variable 'lowerbound' (unused-variable)
+************* Module PoliciesMultiPlayers.rhoEst
+W: 85,84: Access to a protected member _players of a client class (protected-access)
+E:101,12: Bad first argument 'oneRhoRand' given to super() (bad-super-call)
+W:149, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
+R:145, 0: Too few public methods (0/2) (too-few-public-methods)
+W: 16, 0: Unused log imported from math (unused-import)
+W: 16, 0: Unused sqrt imported from math (unused-import)
+************* Module PoliciesMultiPlayers.rhoRand
+W: 36,85: Access to a protected member _players of a client class (protected-access)
+W: 66, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+R: 62, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.rhoRandRotating
+W: 60, 0: XXX new! (fixme)
+W: 36,93: Access to a protected member _players of a client class (protected-access)
+W: 74, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
+R: 70, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.rhoLearn
+W: 62, 0: FIXME I should give it more arguments? (fixme)
+W: 67, 0: XXX not used anymore! (fixme)
+W: 77, 0: XXX not used anymore! (fixme)
+W: 83, 0: XXX not used anymore! (fixme)
+W:104, 0: XXX not used anymore! (fixme)
+W: 28,35: Unused argument 'lower' (unused-argument)
+W: 28,45: Unused argument 'amplitude' (unused-argument)
+C: 31, 8: Missing method docstring (missing-docstring)
+C: 34, 8: Missing method docstring (missing-docstring)
+C: 37, 8: Missing method docstring (missing-docstring)
+W: 70,97: Access to a protected member _players of a client class (protected-access)
+E:101,12: Bad first argument 'oneRhoRand' given to super() (bad-super-call)
+R:116, 0: Too many instance attributes (8/7) (too-many-instance-attributes)
+W:120, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
+R:116, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.rhoRandRand
+W: 37,98: Access to a protected member _players of a client class (protected-access)
+W: 65, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+R: 61, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.Scenario1
+W: 40, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
+W: 40,42: Unused argument 'lower' (unused-argument)
+W: 40,52: Unused argument 'amplitude' (unused-argument)
+R: 34, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module PoliciesMultiPlayers.Selfish
 W: 62, 0: XXX they should not have such method! (fixme)
 W: 21,87: Access to a protected member _players of a client class (protected-access)
 W: 38, 4: __init__ method from base class 'BaseMPPolicy' is not called (super-init-not-called)
 R: 31, 0: Too few public methods (0/2) (too-few-public-methods)
+************* Module PoliciesMultiPlayers.rhoRandSticky
+W: 42,87: Access to a protected member _players of a client class (protected-access)
+W: 80, 4: __init__ method from base class 'rhoRand' is not called (super-init-not-called)
+R: 76, 0: Too few public methods (0/2) (too-few-public-methods)
 ************* Module Policies.OCUCB
 W: 12, 0: XXX dangerous in general, controlled here! (fixme)
 W: 69, 0: FIXME it does not work so far?! Why?!! (fixme)
@@ -1236,60 +1246,60 @@ E: 48,33: Instance of 'ProbabilityPursuit' has no 'nbChildren' member (no-member
 E: 90,70: Instance of 'ProbabilityPursuit' has no 'trusts' member (no-member)
 E: 97,46: Instance of 'ProbabilityPursuit' has no 'trusts' member (no-member)
 E:104,68: Instance of 'ProbabilityPursuit' has no 'trusts' member (no-member)
-************* Module Policies.Softmax
-W: 66, 0: XXX we don't need this, the BasePolicy.getReward does it already (fixme)
+************* Module Policies.MusicalChair
+R: 65, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
+C:166, 4: Missing method docstring (missing-docstring)
+W:179,35: Unused argument 'reward' (unused-argument)
+W:179,30: Unused argument 'arm' (unused-argument)
 ************* Module Policies.TakeRandomFixedArm
 W: 17, 4: __init__ method from base class 'TakeFixedArm' is not called (super-init-not-called)
-************* Module Policies.ThompsonRobust
-E: 25, 8: Bad first argument 'Thompson' given to super() (bad-super-call)
 ************* Module Policies.UCBalpha
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.UCBlog10alpha
-W: 12, 0: XXX dangerous in general, controlled here! (fixme)
-C: 14, 0: Import "from .UCBlog10 import UCBlog10" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.ThompsonRobust
+E: 25, 8: Bad first argument 'Thompson' given to super() (bad-super-call)
+************* Module Policies.Softmax
+W: 66, 0: XXX we don't need this, the BasePolicy.getReward does it already (fixme)
 ************* Module Policies.UCBH
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 C: 13, 0: Import "from .UCBalpha import UCBalpha, ALPHA" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.UCBlog10
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.UCB
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.UCBmin
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.UCBlog10alpha
+W: 12, 0: XXX dangerous in general, controlled here! (fixme)
+C: 14, 0: Import "from .UCBlog10 import UCBlog10" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.UCBplus
 W: 11, 0: XXX dangerous in general, controlled here! (fixme)
 C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.MusicalChair
-R: 65, 0: Too many instance attributes (9/7) (too-many-instance-attributes)
-C:166, 4: Missing method docstring (missing-docstring)
-W:179,30: Unused argument 'arm' (unused-argument)
-W:179,35: Unused argument 'reward' (unused-argument)
+************* Module Policies.UCBmin
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.UCB
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.UniformOnSome
 W: 17, 4: __init__ method from base class 'Uniform' is not called (super-init-not-called)
 ************* Module Policies.UCBwrong
 W: 16, 0: XXX dangerous in general, controlled here! (fixme)
 W: 38, 0: XXX Volontary typo, wrong mean estimate (fixme)
 C: 18, 0: Import "from .IndexPolicy import IndexPolicy" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.UCBV
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
-************* Module Policies.Uniform
-W: 16, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
-************* Module Policies.UCBVtuned
-W: 11, 0: XXX dangerous in general, controlled here! (fixme)
-C: 13, 0: Import "from .UCBV import UCBV" should be placed at the top of the module (wrong-import-position)
 ************* Module Policies.usenumba
 W: 11, 0: XXX Experimental (fixme)
 E: 27, 4: function already defined line 15 (function-redefined)
+************* Module Policies.UCBVtuned
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .UCBV import UCBV" should be placed at the top of the module (wrong-import-position)
+************* Module Policies.Uniform
+W: 16, 4: __init__ method from base class 'BasePolicy' is not called (super-init-not-called)
+************* Module Policies.UCBV
+W: 11, 0: XXX dangerous in general, controlled here! (fixme)
+C: 13, 0: Import "from .UCB import UCB" should be placed at the top of the module (wrong-import-position)
 
 
 Report
 ======
-6087 statements analysed.
+6128 statements analysed.
 
 Statistics by type
 ------------------
@@ -1297,13 +1307,13 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |111    |111        |=          |99.10       |16.22    |
+|module   |112    |NC         |NC         |99.11       |16.96    |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |115    |115        |=          |97.39       |16.52    |
+|class    |117    |NC         |NC         |97.44       |17.95    |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |606    |0          |+606.00    |97.69       |15.51    |
+|method   |613    |NC         |NC         |97.72       |15.33    |
 +---------+-------+-----------+-----------+------------+---------+
-|function |139    |0          |+139.00    |89.21       |39.57    |
+|function |139    |NC         |NC         |89.21       |39.57    |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -1320,17 +1330,17 @@ External dependencies
       \-CollisionModels (Environment.EvaluatorMultiPlayers)
       \-Evaluator (main)
       \-EvaluatorMultiPlayers (main_multiplayers_more)
-      \-MAB (Environment.EvaluatorMultiPlayers)
+      \-MAB (Environment.Evaluator)
       \-Result (Environment.Evaluator)
       \-ResultMultiPlayers (Environment.EvaluatorMultiPlayers)
       \-fairnessMeasures (Environment.EvaluatorMultiPlayers)
       \-notify (main_multiplayers_more)
-      \-plotsettings (Environment.EvaluatorMultiPlayers)
+      \-plotsettings (Environment.Evaluator)
       \-pykov (Environment.MAB)
-      \-sortedDistance (Environment.EvaluatorMultiPlayers)
-      \-usejoblib (Environment.EvaluatorMultiPlayers)
+      \-sortedDistance (Environment.Evaluator)
+      \-usejoblib (Environment.Evaluator)
       \-usenumba (Environment.plot_Cmu_HOI)
-      \-usetqdm (Environment.EvaluatorMultiPlayers)
+      \-usetqdm (Environment.Evaluator)
     Policies 
       \-BasePolicy (Policies.Uniform)
       \-BayesianIndexPolicy (Policies.Thompson)
@@ -1338,19 +1348,19 @@ External dependencies
       \-EpsilonGreedy (Policies.EpsilonFirst)
       \-IndexPolicy (Policies.UCBwrong)
       \-MOSS (Policies.MOSSH)
-      \-Posterior (Policies.Beta)
+      \-Posterior (Policies.Gamma)
       \-TakeFixedArm (Policies.TakeRandomFixedArm)
       \-Thompson (Policies.ThompsonRobust)
       \-UCB (Policies.UCBV)
-      \-UCBV (Policies.UCBVtuned)
       \-UCBalpha (Policies.UCBH)
       \-UCBlog10 (Policies.UCBlog10alpha)
       \-Uniform (Policies.UniformOnSome)
-      \-klUCB (Policies.klUCBlog10)
-      \-kullback (Policies.klUCBPlusPlus)
+      \-klUCB (Policies.klUCBPlusPlus)
+      \-kullback (Policies.klUCB)
+      \-usenumba (Policies.kullback)
     PoliciesMultiPlayers 
       \-ALOHA (configuration_multiplayers)
-      \-BaseCentralizedPolicy (PoliciesMultiPlayers.OracleNotFair)
+      \-BaseCentralizedPolicy (PoliciesMultiPlayers.OracleFair)
       \-BaseMPPolicy (PoliciesMultiPlayers.Selfish)
       \-CentralizedMultiplePlay (PoliciesMultiPlayers.CentralizedIMP)
       \-ChildPointer (PoliciesMultiPlayers.Selfish)
@@ -1367,19 +1377,19 @@ External dependencies
       \-repository (Environment.notify)
     joblib (Environment.usejoblib)
     matplotlib (Environment.plotsettings)
-      \-pyplot (Environment.EvaluatorMultiPlayers)
+      \-pyplot (Environment.Evaluator)
       \-ticker (Environment.plotsettings)
     numba 
       \-decorators (Policies.usenumba)
-    numpy (Policies.UCBVtuned)
-      \-random (Policies.TakeRandomFixedArm)
+    numpy (Policies.UCBV)
+      \-random (Policies.Softmax)
     recommonmark 
       \-parser (conf)
     scipy 
       \-optimize (Policies.kullback)
       \-sparse (Environment.pykov)
       | \-linalg (Environment.pykov)
-      \-special (Policies.Beta)
+      \-special (Policies.Gamma)
       \-stats (Policies.CPUCB)
     seaborn (Environment.plotsettings)
     six (Environment.pykov)
@@ -1394,13 +1404,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |6837   |44.33 |6844     |-7.00      |
+|code      |6875   |44.25 |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|docstring |4070   |26.39 |4042     |+28.00     |
+|docstring |4100   |26.39 |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|comment   |2382   |15.44 |2374     |+8.00      |
+|comment   |2412   |15.52 |NC       |NC         |
 +----------+-------+------+---------+-----------+
-|empty     |2135   |13.84 |2132     |+3.00      |
+|empty     |2151   |13.84 |NC       |NC         |
 +----------+-------+------+---------+-----------+
 
 
@@ -1411,9 +1421,9 @@ Duplication
 +-------------------------+------+---------+-----------+
 |                         |now   |previous |difference |
 +=========================+======+=========+===========+
-|nb duplicated lines      |0     |0        |=          |
+|nb duplicated lines      |0     |NC       |NC         |
 +-------------------------+------+---------+-----------+
-|percent duplicated lines |0.000 |0.000    |=          |
+|percent duplicated lines |0.000 |NC       |NC         |
 +-------------------------+------+---------+-----------+
 
 
@@ -1424,13 +1434,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |147    |0        |+147.00    |
+|convention |147    |NC       |NC         |
 +-----------+-------+---------+-----------+
-|refactor   |50     |0        |+50.00     |
+|refactor   |51     |NC       |NC         |
 +-----------+-------+---------+-----------+
-|warning    |896    |0        |+896.00    |
+|warning    |903    |NC       |NC         |
 +-----------+-------+---------+-----------+
-|error      |44     |0        |+44.00     |
+|error      |45     |NC       |NC         |
 +-----------+-------+---------+-----------+
 
 
@@ -1441,117 +1451,119 @@ Messages by category
 +---------------------------------------------+------+--------+---------+-----------+
 |module                                       |error |warning |refactor |convention |
 +=============================================+======+========+=========+===========+
-|PoliciesMultiPlayers.BaseMPPolicy            |18.18 |0.00    |2.00     |0.00       |
+|PoliciesMultiPlayers.BaseMPPolicy            |17.78 |0.00    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.__init__                            |11.36 |0.11    |0.00     |0.00       |
+|Policies.__init__                            |11.11 |0.11    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.ProbabilityPursuit                  |9.09  |0.22    |0.00     |1.36       |
+|Policies.ProbabilityPursuit                  |8.89  |0.22    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|my-small-slack-bot                           |6.82  |1.45    |2.00     |5.44       |
+|my-small-slack-bot                           |6.67  |1.44    |1.96     |5.44       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.MAB                              |6.82  |0.67    |2.00     |2.72       |
+|Environment.MAB                              |6.67  |0.66    |1.96     |2.72       |
 +---------------------------------------------+------+--------+---------+-----------+
-|configuration_comparing_KLUCB_aggregation    |4.55  |8.93    |0.00     |6.80       |
+|configuration_comparing_KLUCB_aggregation    |4.44  |8.86    |0.00     |6.80       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.pykov                            |4.55  |6.14    |10.00    |29.93      |
+|Environment.pykov                            |4.44  |6.09    |9.80     |29.93      |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.KLempUCB                            |4.55  |0.45    |0.00     |0.68       |
+|Policies.KLempUCB                            |4.44  |0.44    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|configuration                                |2.27  |11.05   |6.00     |1.36       |
+|configuration_multiplayers                   |2.22  |14.84   |0.00     |6.12       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.Evaluator                        |2.27  |3.68    |10.00    |1.36       |
+|configuration                                |2.22  |10.96   |5.88     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.EvaluatorMultiPlayers            |2.27  |3.46    |22.00    |2.72       |
+|Environment.Evaluator                        |2.22  |3.65    |9.80     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.rhoLearn                |2.27  |1.00    |4.00     |2.04       |
+|Environment.EvaluatorMultiPlayers            |2.22  |3.43    |21.57    |2.72       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.rhoEst                  |2.27  |0.45    |2.00     |0.00       |
+|PoliciesMultiPlayers.rhoLearn                |2.22  |1.00    |3.92     |2.04       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.klUCBPlusPlus                       |2.27  |0.33    |0.00     |1.36       |
+|PoliciesMultiPlayers.rhoEst                  |2.22  |0.44    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.klUCBHPlus                          |2.27  |0.33    |0.00     |1.36       |
+|Policies.klUCBPlusPlus                       |2.22  |0.33    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.klUCBH                              |2.27  |0.33    |0.00     |1.36       |
+|Policies.klUCBHPlus                          |2.22  |0.33    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.klUCB                               |2.27  |0.33    |0.00     |1.36       |
+|Policies.klUCBH                              |2.22  |0.33    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.CPUCB                               |2.27  |0.33    |0.00     |0.68       |
+|Policies.klUCB                               |2.22  |0.33    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.DMED                                |2.27  |0.11    |0.00     |1.36       |
+|Policies.CPUCB                               |2.22  |0.33    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.usenumba                            |2.27  |0.11    |0.00     |0.00       |
+|Policies.DMED                                |2.22  |0.11    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.usenumba                         |2.27  |0.11    |0.00     |0.00       |
+|Policies.usenumba                            |2.22  |0.11    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Arms.usenumba                                |2.27  |0.11    |0.00     |0.00       |
+|Environment.usenumba                         |2.22  |0.11    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.ThompsonRobust                      |2.27  |0.00    |0.00     |0.00       |
+|Arms.usenumba                                |2.22  |0.11    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|configuration_multiplayers                   |0.00  |14.51   |0.00     |6.12       |
+|Policies.ThompsonRobust                      |2.22  |0.00    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|configuration_markovian                      |0.00  |8.82    |2.00     |1.36       |
+|configuration_markovian                      |0.00  |8.75    |1.96     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.kullback                            |0.00  |4.02    |0.00     |1.36       |
+|Policies.kullback                            |0.00  |3.99    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Arms.kullback                                |0.00  |4.02    |0.00     |1.36       |
+|Arms.kullback                                |0.00  |3.99    |0.00     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|main_multiplayers_more                       |0.00  |3.46    |0.00     |0.00       |
+|main_multiplayers_more                       |0.00  |3.43    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|main_multiplayers                            |0.00  |2.57    |0.00     |0.00       |
+|main_multiplayers                            |0.00  |2.55    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.plot_Cmu_HOI                     |0.00  |2.23    |0.00     |0.68       |
+|Environment.plot_Cmu_HOI                     |0.00  |2.21    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|main                                         |0.00  |1.56    |0.00     |0.00       |
+|main                                         |0.00  |1.55    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.ChildPointer            |0.00  |1.45    |0.00     |0.00       |
+|PoliciesMultiPlayers.ChildPointer            |0.00  |1.44    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.CollisionModels                  |0.00  |1.12    |0.00     |0.68       |
+|Environment.CollisionModels                  |0.00  |1.11    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.plotsettings                     |0.00  |1.00    |2.00     |1.36       |
+|Environment.plotsettings                     |0.00  |1.00    |1.96     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.Aggr                                |0.00  |0.89    |2.00     |0.68       |
+|Policies.Aggr                                |0.00  |0.89    |1.96     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.ALOHA                   |0.00  |0.67    |4.00     |1.36       |
+|PoliciesMultiPlayers.ALOHA                   |0.00  |0.66    |3.92     |1.36       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.OracleFair              |0.00  |0.67    |2.00     |0.00       |
+|PoliciesMultiPlayers.OracleFair              |0.00  |0.66    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedFixed        |0.00  |0.67    |2.00     |0.00       |
+|PoliciesMultiPlayers.CentralizedFixed        |0.00  |0.66    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.OracleNotFair           |0.00  |0.56    |2.00     |0.00       |
+|PoliciesMultiPlayers.OracleNotFair           |0.00  |0.55    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedMultiplePlay |0.00  |0.56    |2.00     |0.00       |
+|PoliciesMultiPlayers.CentralizedMultiplePlay |0.00  |0.55    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedCycling      |0.00  |0.56    |2.00     |0.00       |
+|PoliciesMultiPlayers.CentralizedCycling      |0.00  |0.55    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.notify                           |0.00  |0.56    |0.00     |2.04       |
+|Environment.notify                           |0.00  |0.55    |0.00     |2.04       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.__init__                         |0.00  |0.56    |0.00     |0.00       |
+|Environment.__init__                         |0.00  |0.55    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.usejoblib                        |0.00  |0.45    |0.00     |0.68       |
+|Environment.usejoblib                        |0.00  |0.44    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.Exp3                                |0.00  |0.45    |0.00     |0.00       |
+|Policies.Exp3                                |0.00  |0.44    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.Selfish                 |0.00  |0.33    |2.00     |0.00       |
+|PoliciesMultiPlayers.rhoRandRotating         |0.00  |0.33    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.Scenario1               |0.00  |0.33    |2.00     |0.00       |
+|PoliciesMultiPlayers.Selfish                 |0.00  |0.33    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.MEGA                                |0.00  |0.33    |2.00     |0.00       |
+|PoliciesMultiPlayers.Scenario1               |0.00  |0.33    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.ResultMultiPlayers               |0.00  |0.33    |2.00     |0.00       |
+|Policies.MEGA                                |0.00  |0.33    |1.96     |0.00       |
++---------------------------------------------+------+--------+---------+-----------+
+|Environment.ResultMultiPlayers               |0.00  |0.33    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
 |Policies.IndexPolicy                         |0.00  |0.33    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
 |Arms.Gamma                                   |0.00  |0.33    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Policies.MusicalChair                        |0.00  |0.22    |2.00     |0.68       |
+|Policies.MusicalChair                        |0.00  |0.22    |1.96     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.rhoRandSticky           |0.00  |0.22    |2.00     |0.00       |
+|PoliciesMultiPlayers.rhoRandSticky           |0.00  |0.22    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.rhoRandRand             |0.00  |0.22    |2.00     |0.00       |
+|PoliciesMultiPlayers.rhoRandRand             |0.00  |0.22    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.rhoRand                 |0.00  |0.22    |2.00     |0.00       |
+|PoliciesMultiPlayers.rhoRand                 |0.00  |0.22    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|PoliciesMultiPlayers.CentralizedIMP          |0.00  |0.22    |2.00     |0.00       |
+|PoliciesMultiPlayers.CentralizedIMP          |0.00  |0.22    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
 |Policies.klUCBloglog10                       |0.00  |0.22    |0.00     |0.68       |
 +---------------------------------------------+------+--------+---------+-----------+
@@ -1577,7 +1589,7 @@ Messages by category
 +---------------------------------------------+------+--------+---------+-----------+
 |Arms.Gaussian                                |0.00  |0.22    |0.00     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
-|Environment.Result                           |0.00  |0.11    |2.00     |0.00       |
+|Environment.Result                           |0.00  |0.11    |1.96     |0.00       |
 +---------------------------------------------+------+--------+---------+-----------+
 |Arms.Exponential                             |0.00  |0.11    |0.00     |2.04       |
 +---------------------------------------------+------+--------+---------+-----------+
@@ -1644,19 +1656,19 @@ Messages
 +-------------------------------+------------+
 |message id                     |occurrences |
 +===============================+============+
-|unused-wildcard-import         |317         |
+|unused-wildcard-import         |321         |
 +-------------------------------+------------+
-|fixme                          |285         |
+|fixme                          |286         |
 +-------------------------------+------------+
 |redefined-outer-name           |68          |
 +-------------------------------+------------+
 |wrong-import-position          |50          |
 +-------------------------------+------------+
-|protected-access               |41          |
+|protected-access               |42          |
 +-------------------------------+------------+
 |unused-argument                |36          |
 +-------------------------------+------------+
-|super-init-not-called          |34          |
+|super-init-not-called          |35          |
 +-------------------------------+------------+
 |missing-docstring              |27          |
 +-------------------------------+------------+
@@ -1666,7 +1678,7 @@ Messages
 +-------------------------------+------------+
 |anomalous-backslash-in-string  |20          |
 +-------------------------------+------------+
-|too-few-public-methods         |17          |
+|too-few-public-methods         |18          |
 +-------------------------------+------------+
 |wildcard-import                |16          |
 +-------------------------------+------------+
@@ -1718,6 +1730,8 @@ Messages
 +-------------------------------+------------+
 |logging-too-many-args          |2           |
 +-------------------------------+------------+
+|invalid-sequence-index         |2           |
++-------------------------------+------------+
 |import-error                   |2           |
 +-------------------------------+------------+
 |expression-not-assigned        |2           |
@@ -1732,8 +1746,6 @@ Messages
 +-------------------------------+------------+
 |no-value-for-parameter         |1           |
 +-------------------------------+------------+
-|invalid-sequence-index         |1           |
-+-------------------------------+------------+
 |consider-iterating-dictionary  |1           |
 +-------------------------------+------------+
 |bad-staticmethod-argument      |1           |
@@ -1743,5 +1755,5 @@ Messages
 
 Global evaluation
 -----------------
-Your code has been rated at 7.84/10 (previous run: 10.00/10, -2.16)
+Your code has been rated at 7.84/10
 
