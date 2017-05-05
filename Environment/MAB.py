@@ -372,8 +372,11 @@ class MarkovianMAB(MAB):
             text = '{} Markovian rewards, {}[{}]{}'.format(
                 "Rested" if self.rested else "Restless",
                 dollar, ', '.join(
-                    "{}P: {}, pi: {} ∼ {}{}".format(openTag, np.asarray(mat).tolist(), st, repr(arm), endTag) if armId in bestArms
-                    else "{} : {}".format(np.asarray(mat).tolist(), repr(arm))
+                    "{}P: {}, pi: {} ∼ {}{}".format(
+                        openTag if armId in bestArms else "",
+                        np.asarray(mat).tolist(), st, repr(arm),
+                        endTag if armId in bestArms else ""
+                    )
                     for armId, (arm, mat, st) in enumerate(zip(self.arms, self.matrix_transitions, self.steadys))
                 ), dollar
             )

@@ -35,7 +35,8 @@ from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.
 from .rhoRandRand import rhoRandRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoEst import rhoEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearn import rhoLearn  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
-from .rhoRandSticky import rhoRandSticky  # My version, still experimental!
+from .rhoRandSticky import rhoRandSticky  # New version, still experimental!
+from .rhoRandRotating import rhoRandRotating  # New version, still experimental!
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log
 
