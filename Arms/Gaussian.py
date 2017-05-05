@@ -7,13 +7,35 @@ __version__ = "0.6"
 from random import gauss
 from numpy.random import standard_normal
 import numpy as np
+from scipy.special import erf
 
 from .Arm import Arm
 from .kullback import klGauss
 
 oo = float('+inf')  # Nice way to write +infinity
 
+#: Default value for the variance of a [0, 1] Gaussian arm
 VARIANCE = 0.05
+
+
+# def phi(xsi):
+#     r"""The :math:`\phi(\xsi)` function, defined by:
+
+#     .. math:: \phi(\xsi) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 \xsi^2 \right)
+
+#     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Standard_normal_distribution.
+#     """
+#     return np.exp(- 0.5 * xsi**2) / np.sqrt(2. * np.pi)
+
+
+# def Phi(x):
+#     r"""The :math:`\Phi(\x)` function, defined by:
+
+#     .. math:: \Phi(\x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 \xsi^2 \right).
+
+#     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Cumulative_distribution_function
+#     """
+#     return (1. + erf(x / np.sqrt(2.))) / 2.
 
 
 class Gaussian(Arm):
@@ -24,13 +46,15 @@ class Gaussian(Arm):
 
     def __init__(self, mu, sigma=VARIANCE, mini=0, maxi=1):
         """New arm."""
-        # FIXME truncated Gaussian does NOT have this mean! Cf. histograms!
         self.mu = self.mean = mu  #: Mean of Gaussian arm
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
         self.sigma = sigma  #: Variance of Gaussian arm
         assert mini <= maxi, "Error, the parameter 'mini' for Gaussian arm has to < 'maxi'."
         self.min = mini  #: Lower value of rewards
         self.max = maxi  #: Higher value of rewards
+        # Compute the true mean : Cf. https://en.wikipedia.org/wiki/Truncated_normal_distribution#Moments
+        # TODO ?
+        # real_mean = mu + sigma * (phi(mini) - phi(maxi)) / (Phi(maxi) - Phi(mini))
 
     # --- Random samples
 
