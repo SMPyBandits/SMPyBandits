@@ -15,8 +15,8 @@ from .BasePolicy import BasePolicy
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
 #: ie just r_t, or unbiased estimators, r_t / trusts_t
-UNBIASED = True
 UNBIASED = False
+UNBIASED = True
 
 #: Default gamma parameter
 GAMMA = 0.01
@@ -138,7 +138,7 @@ class Exp3WithHorizon(Exp3):
         self.horizon = horizon
 
     def __str__(self):
-        return "Exp3(horizon: {})".format(self.horizon)
+        return r"Exp3($T={:.3g}$)".format(self.horizon)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -191,7 +191,7 @@ DELTA = 0.01  #: Default value for the confidence parameter delta
 
 
 class Exp3ELM(Exp3):
-    r""" A variant of Exp3, designed to work better in stochastic environments.
+    r""" A variant of Exp3, apparently designed to work better in stochastic environments.
 
     - Reference: [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
     """
@@ -205,10 +205,7 @@ class Exp3ELM(Exp3):
         self.varianceTerm = np.zeros(nbArms)  #: Estimated variance term, for each arm.
 
     def __str__(self):
-        return "Exp3ELM"
-
-    def __repr__(self):
-        return r"Exp3ELM(\delta: {:.3g})".format(self.delta)
+        return r"Exp3ELM($\delta={:.3g}$)".format(self.delta)
 
     def choice(self):
         """ Choose among the remaining arms."""
@@ -216,7 +213,8 @@ class Exp3ELM(Exp3):
         if self.t < self.nbArms:
             return self._initial_exploration[self.t]
         else:
-            return rn.choice(self.availableArms, p=self.trusts)
+            p = self.trusts[self.availableArms]
+            return rn.choice(self.availableArms, p=p / np.sum(p))
 
     def getReward(self, arm, reward):
         r""" Get reward and update the weights, as in Exp3, but also update the variance term :math:`V_k(t)` for all arms, and the set of available arms :math:`\mathcal{A}(t)`, by removing arms whose empirical accumulated reward and variance term satisfy a certain inequality.
@@ -227,19 +225,38 @@ class Exp3ELM(Exp3):
            V_k(t+1) &= V_k(t) + \frac{1}{\mathrm{trusts}_k(t+1)}, \\
            \mathcal{A}(t+1) &= \mathcal{A}(t) \setminus \left\{ a : \hat{R}_{a^*(t+1)}(t+1) - \hat{R}_{a}(t+1) > \sqrt{B (V_{a^*(t+1)}(t+1) + V_{a}(t+1))} \right\}.
         """
+        assert arm in self.availableArms, "Error: at time {}, the arm {} was played by Exp3ELM but it is not in the set of remaining arms {}...".format(self.t, self.arm, self.availableArms)  # DEBUG
         # First, use the reward to update the weights
-        super(Exp3ELM, self).getReward(arm, reward)  # XXX Call to Exp3
-        # Then update the variance, possibly reducing its size
-        self.varianceTerm = self.varianceTerm[self.availableArms] + 1. / self.trusts
+        self.t += 1
+        self.pulls[arm] += 1
+
+        reward = (reward - self.lower) / self.amplitude
+        # Update weight of THIS arm, with this biased or unbiased reward
+        if self.unbiased:
+            reward /= self.trusts[arm]
+        self.rewards[arm] += reward
+
+        # Multiplicative weights
+        self.weights[arm] *= np.exp(reward * self.gamma)
+        # Renormalize weights at each step
+        self.weights[self.availableArms] /= np.sum(self.weights[self.availableArms])
+
+        # Then update the variance
+        self.varianceTerm[self.availableArms] += 1. / self.trusts[self.availableArms]
+
         # And update the set of available arms
         a_star = np.argmax(self.rewards[self.availableArms])
-        print("- Exp3ELM identified the arm of best accumulated rewards to be {}, at time {} ...".format(a_star, self.t))  # DEBUG
-        test = (self.rewards[a_star] - self.rewards) > np.sqrt(self.B * (self.varianceTerm[a_star] + self.varianceTerm))
+        # print("- Exp3ELM identified the arm of best accumulated rewards to be {}, at time {} ...".format(a_star, self.t))  # DEBUG
+        test = (self.rewards[a_star] - self.rewards[self.availableArms]) > np.sqrt(self.B * (self.varianceTerm[a_star] + self.varianceTerm[self.availableArms]))
         badArms = np.where(test)[0]
         # Do we have bad arms ? If yes, remove them
         if len(badArms) > 0:
             print("- Exp3ELM identified these arms to be bad at time {} : {}, removing them from the set of available arms ...".format(self.t, badArms))  # DEBUG
             self.availableArms = np.setdiff1d(self.availableArms, badArms)
+
+        # # DEBUG
+        # print("- Exp3ELM at time {} as this internal memory:\n  - B = {} and delta = {}\n  - Pulls {}\n  - Rewards {}\n  - Weights {}\n  - Variance {}\n  - Trusts {}\n  - a_star {}\n  - Left part of test {}\n  - Right part of test {}\n  - test {}\n  - Bad arms {}\n  - Available arms {}".format(self.t, self.B, self.delta, self.pulls, self.rewards, self.weights, self.varianceTerm, self.trusts, a_star, (self.rewards[a_star] - self.rewards[self.availableArms]), np.sqrt(self.B * (self.varianceTerm[a_star] + self.varianceTerm[self.availableArms])), test, badArms, self.availableArms))  # DEBUG
+        # print(input("[Enter to keep going on]"))  # DEBUG
 
     # --- Trusts and gamma coefficient
 
@@ -256,7 +273,8 @@ class Exp3ELM(Exp3):
         """
         # Mixture between the weights and the uniform distribution
         p_t = ((1 - self.gamma * len(self.availableArms)) * self.weights[self.availableArms]) + self.gamma
-        return p_t / np.sum(p_t)
+        return p_t
+        # return p_t / np.sum(p_t[self.availableArms])
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

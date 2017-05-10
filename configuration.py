@@ -46,7 +46,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
 # REPETITIONS = 50
@@ -159,10 +159,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -171,10 +171,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
         # },
-        # {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        # },
+        {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+        },
         # {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -299,12 +299,12 @@ configuration.update({
         #         "gamma": 0.001
         #     }
         # },
-        # {
-        #     "archtype": Exp3Decreasing,
-        #     "params": {
-        #         "gamma": 0.001
-        #     }
-        # },
+        {
+            "archtype": Exp3Decreasing,
+            "params": {
+                "gamma": 0.001
+            }
+        },
         # {
         #     "archtype": Exp3SoftMix,   # Another parameter-free Exp3
         #     "params": {}
@@ -316,9 +316,33 @@ configuration.update({
         #     }
         # },
         {
-            "archtype": Exp3ELM,   # This improved Exp3 should really be better
+            "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
+            "params": {
+                "delta": 0.5
+            }
+        },
+        {
+            "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
+            "params": {
+                "delta": 0.1
+            }
+        },
+        {
+            "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
             "params": {
                 "delta": 0.01
+            }
+        },
+        {
+            "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
+            "params": {
+                "delta": 0.001
+            }
+        },
+        {
+            "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
+            "params": {
+                "delta": 0.0001
             }
         },
         # # --- Probability pursuit algorithm
