@@ -59,7 +59,7 @@ class Uniform(Arm):
 
     @staticmethod
     def oneLR(mumax, mu):
-        """ One term of the Lai & Robbins lower bound for Bernoulli arms: (mumax - mu) / KL(mu, mumax). """
+        """ One term of the Lai & Robbins lower bound for Uniform arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klBern(mu, mumax)
 
 

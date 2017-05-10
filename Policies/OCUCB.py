@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ The Optimally Confident UCB (OC-UCB) policy for bounded stochastic bandits, with sub-Gaussian noise.
 
-- Reference: [Larrimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
+- Reference: [Lattimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
 """
 
 __author__ = "Lilian Besson"
@@ -23,7 +23,7 @@ RHO = 1
 class OCUCB(UCB):
     """ The Optimally Confident UCB (OC-UCB) policy for bounded stochastic bandits, with sub-Gaussian noise.
 
-    - Reference: [Larrimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
+    - Reference: [Lattimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
     """
 
     def __init__(self, nbArms, eta=ETA, rho=RHO, lower=0., amplitude=1.):

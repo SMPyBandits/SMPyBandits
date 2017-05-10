@@ -16,6 +16,7 @@ from copy import copy
 import numpy as np
 
 if __name__ != "__main__":
+    from .Constant import Constant
     from .Uniform import Uniform
     from .Bernoulli import Bernoulli
     from .Binomial import Binomial
