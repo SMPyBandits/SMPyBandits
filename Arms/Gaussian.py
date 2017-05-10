@@ -7,7 +7,7 @@ __version__ = "0.6"
 from random import gauss
 from numpy.random import standard_normal
 import numpy as np
-from scipy.special import erf
+# from scipy.special import erf
 
 from .Arm import Arm
 from .kullback import klGauss
@@ -19,20 +19,20 @@ VARIANCE = 0.05
 
 
 # def phi(xsi):
-#     r"""The :math:`\phi(\xsi)` function, defined by:
-
-#     .. math:: \phi(\xsi) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 \xsi^2 \right)
-
+#     r"""The :math:`\phi(x)` function, defined by:
+#
+#     .. math:: \phi(x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 x^2 \right)
+#
 #     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Standard_normal_distribution.
 #     """
 #     return np.exp(- 0.5 * xsi**2) / np.sqrt(2. * np.pi)
 
 
 # def Phi(x):
-#     r"""The :math:`\Phi(\x)` function, defined by:
-
-#     .. math:: \Phi(\x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 \xsi^2 \right).
-
+#     r"""The :math:`\Phi(x)` function, defined by:
+#
+#     .. math:: \Phi(x) := \frac{1}{2} \left(1 + \mathrm{erf}\left( \frac{x}{\sqrt{2}} \right) \right).
+#
 #     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Cumulative_distribution_function
 #     """
 #     return (1. + erf(x / np.sqrt(2.))) / 2.
