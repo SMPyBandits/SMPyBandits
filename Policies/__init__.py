@@ -46,7 +46,7 @@ from .EmpiricalMeans import EmpiricalMeans
 
 # --- Mine, Softmax and Exp3 policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
-from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon
+from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, Exp3ELM
 from .ProbabilityPursuit import ProbabilityPursuit
 
 # --- Simple UCB policies

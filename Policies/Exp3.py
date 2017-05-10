@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
-""" The Exp3 index policy.
+""" The Exp3 randomized index policy.
+
 Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
+
+See also [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.6"
 
 import numpy as np
 import numpy.random as rn
@@ -20,8 +23,11 @@ GAMMA = 0.01
 
 
 class Exp3(BasePolicy):
-    """ The Exp3 index policy.
+    """ The Exp3 randomized index policy.
+
     Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
+
+    See also [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
     """
 
     def __init__(self, nbArms, gamma=GAMMA,
@@ -126,8 +132,8 @@ class Exp3(BasePolicy):
 class Exp3WithHorizon(Exp3):
     """ Exp3 with fixed gamma, :math:`\gamma_t = \gamma_0`, chosen with a knowledge of the horizon."""
 
-    def __init__(self, nbArms, horizon, lower=0., amplitude=1.):
-        super(Exp3WithHorizon, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+    def __init__(self, nbArms, horizon, unbiased=UNBIASED, lower=0., amplitude=1.):
+        super(Exp3WithHorizon, self).__init__(nbArms, unbiased=unbiased, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for SoftmaxWithHorizon class has to be > 0."
         self.horizon = horizon
 
@@ -153,11 +159,11 @@ class Exp3Decreasing(Exp3):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def gamma(self):
-        r""" Decreasing gamma with the time: :math:`\gamma_t = \sqrt(\frac{\log(K)}{t K})` (*heuristic*).
+        r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).
 
         - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012].
         """
-        return np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
+        return min(1. / self.nbArms, np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)))
 
 
 class Exp3SoftMix(Exp3):
@@ -176,3 +182,87 @@ class Exp3SoftMix(Exp3):
         """
         c = np.sqrt(np.log(self.nbArms) / self.nbArms)
         return c * np.log(self.t) / self.t
+
+
+# --- Other variants
+
+
+DELTA = 0.01  #: Default value for the confidence parameter delta
+
+
+class Exp3ELM(Exp3):
+    r""" A variant of Exp3, designed to work better in stochastic environments.
+
+    - Reference: [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
+    """
+
+    def __init__(self, nbArms, delta=DELTA, unbiased=True, lower=0., amplitude=1.):
+        super(Exp3ELM, self).__init__(nbArms, unbiased=unbiased, lower=lower, amplitude=amplitude)
+        assert delta > 0, "Error: the 'delta' parameter for Exp3ELM class has to be > 0."
+        self.delta = delta  #: Confidence parameter, given in input
+        self.B = 4 * (np.exp(2) - 2.) * (2 * np.log(nbArms) + np.log(2. / delta))  #: Constant B given by :math:`B = 4 (e - 2) (2 \log K + \log(2 / \delta))`.
+        self.availableArms = np.arange(nbArms)  #: Set of available arms, starting from all arms, and it can get reduced at each step.
+        self.varianceTerm = np.zeros(nbArms)  #: Estimated variance term, for each arm.
+
+    def __str__(self):
+        return "Exp3ELM"
+
+    def __repr__(self):
+        return r"Exp3ELM(\delta: {:.3g})".format(self.delta)
+
+    def choice(self):
+        """ Choose among the remaining arms."""
+        # Force to first visit each arm once in the first steps
+        if self.t < self.nbArms:
+            return self._initial_exploration[self.t]
+        else:
+            return rn.choice(self.availableArms, p=self.trusts)
+
+    def getReward(self, arm, reward):
+        r""" Get reward and update the weights, as in Exp3, but also update the variance term :math:`V_k(t)` for all arms, and the set of available arms :math:`\mathcal{A}(t)`, by removing arms whose empirical accumulated reward and variance term satisfy a certain inequality.
+
+        .. math::
+
+           a^*(t+1) &= \arg\max_a \hat{R}_{a}(t+1), \\
+           V_k(t+1) &= V_k(t) + \frac{1}{\mathrm{trusts}_k(t+1)}, \\
+           \mathcal{A}(t+1) &= \mathcal{A}(t) \setminus \left\{ a : \hat{R}_{a^*(t+1)}(t+1) - \hat{R}_{a}(t+1) > \sqrt{B (V_{a^*(t+1)}(t+1) + V_{a}(t+1))} \right\}.
+        """
+        # First, use the reward to update the weights
+        super(Exp3ELM, self).getReward(arm, reward)  # XXX Call to Exp3
+        # Then update the variance, possibly reducing its size
+        self.varianceTerm = self.varianceTerm[self.availableArms] + 1. / self.trusts
+        # And update the set of available arms
+        a_star = np.argmax(self.rewards[self.availableArms])
+        print("- Exp3ELM identified the arm of best accumulated rewards to be {}, at time {} ...".format(a_star, self.t))  # DEBUG
+        test = (self.rewards[a_star] - self.rewards) > np.sqrt(self.B * (self.varianceTerm[a_star] + self.varianceTerm))
+        badArms = np.where(test)[0]
+        # Do we have bad arms ? If yes, remove them
+        if len(badArms) > 0:
+            print("- Exp3ELM identified these arms to be bad at time {} : {}, removing them from the set of available arms ...".format(self.t, badArms))  # DEBUG
+            self.availableArms = np.setdiff1d(self.availableArms, badArms)
+
+    # --- Trusts and gamma coefficient
+
+    @property
+    def trusts(self):
+        r""" Update the trusts probabilities according to Exp3ELM formula, and the parameter :math:`\gamma_t`.
+
+        .. math::
+
+           \mathrm{trusts}'_k(t+1) &= (1 - |\mathcal{A}_t| \gamma_t) w_k(t) + \gamma_t, \\
+           \mathrm{trusts}(t+1) &= \mathrm{trusts}'(t+1) / \sum_{k=1}^{K} \mathrm{trusts}'_k(t+1).
+
+        If :math:`w_k(t)` is the current weight from arm k.
+        """
+        # Mixture between the weights and the uniform distribution
+        p_t = ((1 - self.gamma * len(self.availableArms)) * self.weights[self.availableArms]) + self.gamma
+        return p_t / np.sum(p_t)
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def gamma(self):
+        r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).
+
+        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012].
+        """
+        return min(1. / self.nbArms, np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)))
