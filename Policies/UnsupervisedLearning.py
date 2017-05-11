@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
-r""" An experimental policy, using algorithms from Unsupervised Learning.
+r""" An experimental "on-line" policy, using algorithms from Unsupervised Learning.
 
-.. warning:: This is still highly experimental!
+Basically, it works like this:
+
+- Start with a purely random exploration phase (uniform exploration), to get some data about each arm,
+- Then, fit some unsupervised learning model on each arm, to build a model of its distribution (e.g., a simple Gaussian, with mean and variance obtained from the data).
+- And then, at each time step, use the models to generate some prediction for the output of each arm, and play according to the arm with highest prediction.
+  + If needed, refit the models once in a while, to incorporate all the collected data.
+  + If needed, use a robust estimate (e.g., mean of 100 samples) to chose the arm to play, instead of only *one* sample.
+
+.. warning:: This is still highly **experimental**! It is NOT efficient in terms of storage, and NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
+.. warning:: It is NOT really an on-line policy, as both the memory consumption and the time complexity of each step *increase* with time!
 """
 
 __author__ = "Lilian Besson"
@@ -13,9 +22,9 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from sklearn.neighbors.kde import KernelDensity
 
 
-T0 = 10          #: Default value for the parameter T_0
-FIT_EVERY = 100  #: Default value for the parameter fit_every
-MEAN_OF = 50     #: Default value for the parameter meanOf
+T0 = 10          #: Default value for the parameter `T_0`.
+FIT_EVERY = 100  #: Default value for the parameter `fit_every`.
+MEAN_OF = 50     #: Default value for the parameter `meanOf`.
 
 
 class UnsupervisedLearning(object):
@@ -26,7 +35,8 @@ class UnsupervisedLearning(object):
     .. warning:: This is still highly experimental!
 
 
-    .. info:: The algorithm I designed is not obvious, but here are some explanations:
+    .. note:: The algorithm I designed is not obvious, but here are some explanations:
+
 
     - Initially : create :math:`K` Unsupervised Learning algorithms :math:`\mathcal{U}_k(0)`, :math:`k\in\{1,\dots,K\}`, for instance `KernelDensity` estimators.
 
@@ -37,8 +47,9 @@ class UnsupervisedLearning(object):
     - Then, for the following time steps, :math:`t \geq T_0 + 1` :
 
       + Once in a while (every :math:`T_1 =` `fit_every` steps, e.g., :math:`100`), retrain all the Unsupervised Learning algorithms :
-        * For each arm :math:`k\in\{1,\dots,K\}`, use all the previous observations of that arm
-          to train the model :math:`\mathcal{U}_k(t)`.
+
+        - For each arm :math:`k\in\{1,\dots,K\}`,
+        - Use all the previous observations of that arm to train the model :math:`\mathcal{U}_k(t)`.
 
       + Otherwise, use the previously trained model to chose the arm :math:`A(t) \in \{1,\dots,K\}` to play next (see :meth:`choice` below).
     """
@@ -56,14 +67,15 @@ class UnsupervisedLearning(object):
         self.meanOf = int(meanOf)  #: Number of samples used to estimate the best arm.
         # Unsupervised Learning algorithm
         self._was_fitted = False
-        self._estimator = estimator  #: The class to use to create the estimator.
-        self._args = args  #: Other non-kwargs args given to the estimator.
-        self._kwargs = kwargs  #: Other kwargs given to the estimator.
+        self.givenEstimator = estimator  #: The class to use to create the estimator.
+        self._estimator = estimator  # The class to use to create the estimator.
+        self._args = args  # Other non-kwargs args given to the estimator.
+        self._kwargs = kwargs  # Other kwargs given to the estimator.
         self.ests = [self._estimator(*self._args, **self._kwargs) for _ in range(nbArms)]  #: List of estimators (i.e., an object with a `fit` and `sample` method).
         # Store all the observations
         self.observations = [[] for _ in range(nbArms)]  #: List of observations for each arm. This is the main weakness of this policy: it uses a **linear** storage space, in the number of observations so far (i.e., the time index t), in other words it has a **linear memory complexity** : that's really bad!
         self.lower = lower  #: Known lower bounds on the rewards.
-        self.amplitude = amplitude  #: Known lower amplitude of the rewards.
+        self.amplitude = amplitude  #: Known amplitude of the rewards.
 
     # --- Easy methods
 
@@ -85,32 +97,36 @@ class UnsupervisedLearning(object):
     def choice(self):
         r""" Choose an arm, according to this algorithm:
 
-        * Get a random sample, :math:`s_k(t)` from the :math:`K` Unsupervised Learning algorithms :math:`\mathcal{U}_k(t)`, :math:`k\in\{1,\dots,K\}` :
+        * If :math:`t < T_0 \times K`, choose arm :math:`t \;\mathrm{mod}\; K`, in order to select each arm exactly :math:`K` times initially.
 
-          .. math: \forall k\in\{1,\dots,K\}, \;\; s_k(t) \sim \mathcal{U}_k(t).
+        * Otherwise, get a random sample, :math:`s_k(t)` from the :math:`K` Unsupervised Learning algorithms :math:`\mathcal{U}_k(t)`, :math:`k\in\{1,\dots,K\}` :
+
+        .. math:: \forall k\in\{1,\dots,K\}, \;\; s_k(t) \sim \mathcal{U}_k(t).
 
         * Chose the arm :math:`A(t)` with *highest* sample :
 
-          .. math: A(t) \in \arg\max_{k\in\{1,\dots,K\}} s_k(t).
+        .. math:: A(t) \in \arg\max_{k\in\{1,\dots,K\}} s_k(t).
 
         * Play that arm :math:`A(t)`, receive a reward :math:`r_{A(t)}(t)` from its (unknown) distribution, and store it.
 
 
-        .. note:: A more robust approach ?
+        .. note::
 
            A more robust (and so more correct) variant could be to use a bunch of samples, and use their mean to give :math:`s_k(t)` :
 
            * Get a bunch of :math:`M` random samples (e.g., :math:`50`), :math:`s_k^i(t)` from the :math:`K` Unsupervised Learning algorithms :math:`\mathcal{U}_k(t)`, :math:`k\in\{1,\dots,K\}` :
 
-             .. math: \forall k\in\{1,\dots,K\}, \;\; \forall i\in\{1,\dots,M\}, \;\; s_k^i(t) \sim \mathcal{U}_k(t).
+           .. math:: \forall k\in\{1,\dots,K\}, \;\; \forall i\in\{1,\dots,M\}, \;\; s_k^i(t) \sim \mathcal{U}_k(t).
 
            * Average them to get :math:`\hat{s_k}(t)` :
 
-             .. math: \forall k\in\{1,\dots,K\}, \;\; \hat{s_k}(t) := \frac{1}{M} \sum_{i=1}^{M} s_k^i(t).
+           .. math:: \forall k\in\{1,\dots,K\}, \;\; \hat{s_k}(t) := \frac{1}{M} \sum_{i=1}^{M} s_k^i(t).
 
            * Chose the arm :math:`A(t)` with *highest* mean sample :
 
-             .. math: A(t) \in \arg\max_{k\in\{1,\dots,K\}} \hat{s_k}(t).
+           .. math:: A(t) \in \arg\max_{k\in\{1,\dots,K\}} \hat{s_k}(t).
+
+           Note that if :math:`M = 1`, this is equivalent to the naive approach.
         """
         self.t += 1
         # Start by sampling each arm a certain number of times
