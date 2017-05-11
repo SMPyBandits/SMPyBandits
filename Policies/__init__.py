@@ -49,6 +49,9 @@ from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
 from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, Exp3ELM
 from .ProbabilityPursuit import ProbabilityPursuit
 
+# --- Using unsupervised learning, from scikit-learn
+from .UnsupervisedLearning import UnsupervisedLearning
+
 # --- Simple UCB policies
 from .UCB import UCB
 from .UCBH import UCBH          # With log(T) instead of log(t)

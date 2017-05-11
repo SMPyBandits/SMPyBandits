@@ -2,19 +2,22 @@
 # List of Python modules required to run my simulations
 
 # --- Fully required
-numpy       # Required for numpy arrays and functions
-scipy>0.9   # Required for scipy.stats functions (Beta, Poisson, Exponentiels) and scipy.optimize.minimize
-matplotlib  # Required for the plots in Environment/Evaluator*.py
+numpy             # Required for numpy arrays and functions
+scipy>0.9         # Required for scipy.stats functions (Beta, Poisson, Exponentiels) and scipy.optimize.minimize
+matplotlib        # Required for the plots in Environment/Evaluator*.py
 
 # --- Optionnal, improve performance
-joblib      # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).
+joblib            # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).
 # numba       # Not yet required, but soon
 # h5py      # TODO: add support to h5py in order to constantly save the numerical values computed in the simulations?
 
 # --- Better plots
-seaborn     # Required for bar plots, and better colors
-tqdm        # Nice progress bars
+seaborn           # Required for bar plots, and better colors
+tqdm              # Nice progress bars
 
-# --- For the documentation:
+# --- For the documentation
 sphinx_rtd_theme  # better sphinx theme
 recommonmark      # parser to read Markdown files
+
+# --- For only one policy
+sklearn           # for UnsupervisedLearning
