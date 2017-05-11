@@ -20,6 +20,9 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 - [A simple example of Multi-Player simulation with 4 Centralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb), comparing [`CentralizedMultiplePlay`](../PoliciesMultiPlayers/CentralizedMultiplePlay.py) and [`CentralizedIMP`](../PoliciesMultiPlayers/CentralizedIMP.py) with [`UCB`](../Policies/UCB.py) and [`Thompson Sampling`](../Policies/Thompson.py).
 - [A simple example of Multi-Player simulation with 2 Decentralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_rhoRand_and_Selfish_Algorithms.ipynb), comparing [`rhoRand`](../PoliciesMultiPlayers/rhoRand.py) and [`Selfish`](../PoliciesMultiPlayers/Selfish.py) (for the "collision avoidance" part) combined with [`UCB`](../Policies/UCB.py) and [`Thompson Sampling`](../Policies/Thompson.py) for learning the arms. Spoiler: `Selfish` beats `rhoRand`!
 
+## Experiments
+- [Can we use a (non-online) Unsupervised Learning algorithm for (online) Bandit problem ?](Unsupervised_Learning_for_Bandit_problem.ipynb)
+
 ----
 
 ## 2. Question: *How to read these documents*?
