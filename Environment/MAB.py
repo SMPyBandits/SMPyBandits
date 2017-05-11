@@ -106,9 +106,21 @@ class MAB(object):
 
     # --- Draw samples
 
-    def draw(self, armId, t):
+    def draw(self, armId, t=1):
         """ Return a random sample from the armId-th arm, at time t. Usually t is not used."""
         return self.arms[armId].draw(t)
+
+    def draw_nparray(self, armId, shape=(1,)):
+        """ Return a numpy array of random sample from the armId-th arm, of a certain shape."""
+        return self.arms[armId].draw_nparray(shape)
+
+    def draw_each(self, t=1):
+        """ Return a random sample from each arm, at time t. Usually t is not used."""
+        return np.array([self.draw(armId, t) for armId in range(self.nbArms)])
+
+    def draw_each_nparray(self, shape=(1,)):
+        """ Return a numpy array of random sample from each arm, of a certain shape."""
+        return np.array([self.draw_nparray(armId, shape) for armId in range(self.nbArms)])
 
     #
     # --- Compute lower bounds
