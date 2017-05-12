@@ -130,7 +130,7 @@ class Exp3(BasePolicy):
 # --- Three special cases
 
 class Exp3WithHorizon(Exp3):
-    """ Exp3 with fixed gamma, :math:`\gamma_t = \gamma_0`, chosen with a knowledge of the horizon."""
+    r""" Exp3 with fixed gamma, :math:`\gamma_t = \gamma_0`, chosen with a knowledge of the horizon."""
 
     def __init__(self, nbArms, horizon, unbiased=UNBIASED, lower=0., amplitude=1.):
         super(Exp3WithHorizon, self).__init__(nbArms, unbiased=unbiased, lower=lower, amplitude=amplitude)
@@ -225,7 +225,7 @@ class Exp3ELM(Exp3):
            V_k(t+1) &= V_k(t) + \frac{1}{\mathrm{trusts}_k(t+1)}, \\
            \mathcal{A}(t+1) &= \mathcal{A}(t) \setminus \left\{ a : \hat{R}_{a^*(t+1)}(t+1) - \hat{R}_{a}(t+1) > \sqrt{B (V_{a^*(t+1)}(t+1) + V_{a}(t+1))} \right\}.
         """
-        assert arm in self.availableArms, "Error: at time {}, the arm {} was played by Exp3ELM but it is not in the set of remaining arms {}...".format(self.t, self.arm, self.availableArms)  # DEBUG
+        assert arm in self.availableArms, "Error: at time {}, the arm {} was played by Exp3ELM but it is not in the set of remaining arms {}...".format(self.t, arm, self.availableArms)  # DEBUG
         # First, use the reward to update the weights
         self.t += 1
         self.pulls[arm] += 1

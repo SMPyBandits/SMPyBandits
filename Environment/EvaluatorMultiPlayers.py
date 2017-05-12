@@ -139,6 +139,7 @@ class EvaluatorMultiPlayers(object):
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
         def store(r):
+            """Store the result of the experiment r."""
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)

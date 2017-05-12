@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-""" The AdBandits bandit algorithm
-Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
-Code from: https://github.com/flaviotruzzi/AdBandits/
+""" The AdBandits bandit algorithm, mixing Thompson Sampling and BayesUCB.
+
+- Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
+- Code from: https://github.com/flaviotruzzi/AdBandits/
 """
 from __future__ import print_function
 
 __author__ = "Flavio Truzzi et al."
-__version__ = "0.1"
+__version__ = "0.6"
 
 from random import random, choice
 import numpy as np
@@ -16,12 +17,14 @@ from .BasePolicy import BasePolicy
 
 
 class AdBandits(BasePolicy):
-    """ The AdBandits bandit algorithm
-    Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
-    Code from: https://github.com/flaviotruzzi/AdBandits/
+    """ The AdBandits bandit algorithm, mixing Thompson Sampling and BayesUCB.
+
+    - Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
+    - Code from: https://github.com/flaviotruzzi/AdBandits/
     """
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta, lower=0., amplitude=1.):
+        """ New policy."""
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter alpha
         self.horizon = horizon  #: Horizon
@@ -34,11 +37,13 @@ class AdBandits(BasePolicy):
         return r"AdBandits($\alpha={:.3g}$, $T={:.5g}$)".format(self.alpha, self.horizon)
 
     def startGame(self):
+        """ Reset each posterior."""
         super(AdBandits, self).startGame()
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
     def getReward(self, arm, reward):
+        """ Store the reward, and update the posterior for that arm."""
         super(AdBandits, self).getReward(arm, reward)
         reward = (reward - self.lower) / self.amplitude
         self.posterior[arm].update(reward)
@@ -46,9 +51,11 @@ class AdBandits(BasePolicy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
+        r""" Time variating parameter :math:`\varepsilon(t)`."""
         return float(self.t / (self.horizon * self.alpha))
 
     def choice(self):
+        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to chose one arm."""
         # Thompson Exploration
         if random() > self.epsilon:
             upperbounds = [self.posterior[i].sample() for i in range(self.nbArms)]
@@ -65,6 +72,7 @@ class AdBandits(BasePolicy):
         return arm
 
     def choiceWithRank(self, rank=1):
+        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to chose one arm of a certain rank."""
         if rank == 1:
             return self.choice()
         else:

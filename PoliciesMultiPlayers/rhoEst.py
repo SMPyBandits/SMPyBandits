@@ -98,7 +98,7 @@ class oneRhoEst(oneRhoRand):
         # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
-            super(oneRhoRand, self).getReward(arm, reward)
+            super(oneRhoEst, self).getReward(arm, reward)
 
         # First, pick a new random rank for this
         self.rank = 1 + rn.randint(self.nbPlayersEstimate)  # New random rank

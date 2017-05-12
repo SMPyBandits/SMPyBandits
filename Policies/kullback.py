@@ -583,6 +583,7 @@ def reseqp2(p, V, klMax):
 
     @jit  # TODO try numba.jit() on this function
     def f(value):
+        """ Function fo to minimize."""
         if MV < mV + tol:
             y = float('inf')
         else:

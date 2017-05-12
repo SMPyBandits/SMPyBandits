@@ -164,6 +164,7 @@ class MusicalChair(BasePolicy):
             self._endInitialPhase()
 
     def _endInitialPhase(self):
+        """ Small computation needed at the end of the initial random exploration phase."""
         # print("\n- A MusicalChair player has to switch from InitialPhase to MusicalChair ...")  # DEBUG
         self.state = State.MusicalChair  # Switch ONCE to state 2
         # First, we compute the empirical means mu_i

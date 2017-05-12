@@ -167,6 +167,7 @@ class MAB(object):
         bestMeans = sortedMeans[-nbPlayers:][::-1]
 
         def worstMeans_of_a(a):
+            """ Give the worst min if their is a arms."""
             return sortedMeans[:-(a + 1)]
 
         # First, the bound in Lemma 2 from [Anandkumar et al., 2010] uses this Upsilon(U, U)
@@ -340,9 +341,10 @@ class MarkovianMAB(MAB):
         try:
             self.steadys = [np.array(list(c.steady().values())) for c in self.chains]
         except ValueError:
-            if len(c.steady()) == 0:
-                print("[ERROR] the steady state of the Markov chain {} was not-found because it is non-ergodic...".format(c))
-                raise ValueError("The Markov chain {} is non-ergodic, and so does not have a steady state distribution... Please choose another transition matrix that as to be irreducible, aperiodic, and reversible.".format(c))
+            for c in self.chains:
+                if len(c.steady()) == 0:
+                    print("[ERROR] the steady state of the Markov chain {} was not-found because it is non-ergodic...".format(c))
+                    raise ValueError("The Markov chain {} is non-ergodic, and so does not have a steady state distribution... Please choose another transition matrix that as to be irreducible, aperiodic, and reversible.".format(c))
         # If the steady state exist, go on
         print(" - and steady state distributions:", self.steadys)  # DEBUG
         self.means = np.array([np.dot(s, p) for s, p in zip(self.states, self.steadys)])  #: Means of each arms, from their steady distributions.
@@ -394,7 +396,7 @@ class MarkovianMAB(MAB):
             )
         return wraplatex(text) if latex else wraptext(text)
 
-    def draw(self, armId, t):
+    def draw(self, armId, t=1):
         """ Move on the Markov chain and return its state as a reward (0 or 1, or else).
 
         - If *rested* Markovian, only the state of the Markov chain of arm `armId` changes. It is the simpler model, and the default model.

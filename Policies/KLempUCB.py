@@ -48,7 +48,8 @@ class KLempUCB(IndexPolicy):
 
     # FIXME this does not work apparently...
     @staticmethod
-    def _KLucb(self, obs, klMax, debug=False):
+    def _KLucb(obs, klMax, debug=False):
+        """ Optimization method."""
         p = np.array(list(obs.values()), dtype=float)
         p /= np.sum(p)
         v = np.array(list(obs.keys()), dtype=float)

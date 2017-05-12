@@ -161,7 +161,8 @@ class Evaluator(object):
         bestarm = env.maxArm
         index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
-        def store(r, repeatId):
+        def store(r, policyId, repeatId):
+            """ Store the result of the #repeatId experiment, for the #policyId policy."""
             self.rewards[policyId, envId, :] += r.rewards
             if hasattr(self, 'rewardsSquared'):
                 self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
@@ -185,12 +186,12 @@ class Evaluator(object):
                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
-                    store(r, repeatIdout)
+                    store(r, policyId, repeatIdout)
                     repeatIdout += 1
             else:
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                     r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
-                    store(r, repeatId)
+                    store(r, policyId, repeatId)
 
     # --- Save to disk methods
 
@@ -200,7 +201,7 @@ class Evaluator(object):
         # FIXME write it !
         # 2) store it
         with open(filepath, 'r') as hdf:
-            hdf.configuration = self.configuration
+            hdf.configuration = self.hdf_configuration
             hdf.rewards = self.rewards
             try:
                 hdf.minCumRewards = self.minCumRewards

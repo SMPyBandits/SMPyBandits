@@ -98,7 +98,7 @@ class oneRhoLearn(oneRhoRand):
         # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
-            super(oneRhoRand, self).getReward(arm, reward)
+            super(oneRhoLearn, self).getReward(arm, reward)
 
         # First, reset the time until collisions for that rank
         # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!

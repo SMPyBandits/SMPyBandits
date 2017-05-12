@@ -11,7 +11,6 @@ __version__ = "0.5"
 
 
 import numpy as np
-import numpy.random as rn
 
 
 def amplitude_fairness(X, axis=0):

@@ -17,6 +17,7 @@ except ImportError:
     def Parallel(*args, **kwargs):
         """Fake joblib.Parallel implementation."""
         def fakeParallelWrapper(iterator):
+            """ Just a list(iterator)."""
             return list(iterator)
         return fakeParallelWrapper
 

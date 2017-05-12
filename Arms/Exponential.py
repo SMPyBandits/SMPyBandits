@@ -19,12 +19,15 @@ def p_of_expectation(expectation, trunc=1):
     """Use a numerical solver (:func:`scipy.optimize.minimize`) to find the value p giving an arm Exp(p) of a given expectation."""
     if isinf(trunc):
         def expp(p):
+            """ mean = expectation(p)."""
             return 1. / p
     else:
         def expp(p):
+            """ mean = expectation(p)."""
             return (1. - exp(-p * trunc)) / p
 
     def objective(p):
+        """ Objective function to minimize."""
         return abs(expectation - expp(p))
 
     return minimize(objective, 1).x[0]

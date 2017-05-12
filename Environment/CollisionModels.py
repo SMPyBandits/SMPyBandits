@@ -168,7 +168,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     """
     if distances is None or (isinstance(distances, str) and distances == 'uniform'):  # Uniformly spacen distances, in (0, 1)
         distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]
-    elif (isinstance(distances, str) and distances == 'random'):  # Or fully uniform
+    elif isinstance(distances, str) and distances == 'random':  # Or fully uniform
         distances = random_distances(len(players))
     # For each arm, explore who chose it
     for armId, arm in enumerate(arms):

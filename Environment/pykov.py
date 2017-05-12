@@ -62,27 +62,27 @@ def _del_cache(fn):
     def wrapper(*args, **kwargs):
         self = args[0]
         try:
-            del(self._states)
+            del self._states
         except AttributeError:
             pass
         try:
-            del(self._succ)
+            del self._succ
         except AttributeError:
             pass
         try:
-            del(self._pred)
+            del self._pred
         except AttributeError:
             pass
         try:
-            del(self._steady)
+            del self._steady
         except AttributeError:
             pass
         try:
-            del(self._guess)
+            del self._guess
         except AttributeError:
             pass
         try:
-            del(self._fundamental_matrix)
+            del self._fundamental_matrix
         except AttributeError:
             pass
         return fn(*args, **kwargs)
@@ -115,13 +115,13 @@ class Vector(OrderedDict):
         {'A':.3, 'B':.7}
         """
         OrderedDict.__init__(self)
-        
+
         if data:
             self.update([item for item in six.iteritems(data)
-                if abs(item[1]) > numpy.finfo(numpy.float).eps])
+                         if abs(item[1]) > numpy.finfo(numpy.float).eps])
         if len(kwargs):
             self.update([item for item in six.iteritems(kwargs)
-                if abs(item[1]) > numpy.finfo(numpy.float).eps])
+                         if abs(item[1]) > numpy.finfo(numpy.float).eps])
 
     def __getitem__(self, key):
         """
@@ -149,7 +149,7 @@ class Vector(OrderedDict):
         if abs(value) > numpy.finfo(numpy.float).eps:
             OrderedDict.__setitem__(self, key, value)
         elif key in self:
-            del(self[key])
+            del self[key]
 
     def __mul__(self, M):
         """
@@ -187,7 +187,7 @@ class Vector(OrderedDict):
     def __rmul__(self, M):
         """
         >>> p = pykov.Vector(A=.3, B=.7)
-        >>> 3 * p 
+        >>> 3 * p
         {'A': 0.9, 'B': 2.1}
         """
         if isinstance(M, int) or isinstance(M, float):
@@ -286,26 +286,26 @@ class Vector(OrderedDict):
         for k in six.iterkeys(self):
             self[k] = self[k] / s
 
-    def choose(self, random_func = None):
+    def choose(self, random_func=None):
         """
-        Choose a state according to its probability. 
+        Choose a state according to its probability.
 
         >>> p = pykov.Vector(A=.3, B=.7)
         >>> p.choose()
         'B'
-        
+
         Optionally, a function that generates a random number can be supplied.
         >>> def FakeRandom(min, max): return 0.01
         >>> p = pykov.Vector(A=.05, B=.4, C=.4, D=.15)
         >>> p.choose(FakeRandom)
-        'A'        
+        'A'
 
         .. seealso::
 
            `Kevin Parks recipe <http://code.activestate.com/recipes/117241/>`_
         """
         if random_func is None:
-           random_func = random.uniform 
+            random_func = random.uniform
         n = random_func(0, 1)
         for state, prob in six.iteritems(self):
             if n < prob:
@@ -407,10 +407,10 @@ class Matrix(OrderedDict):
         >>> T = pykov.Matrix({('A','B'): .3, ('A','A'): .7, ('B','A'): 1.})
         """
         OrderedDict.__init__(self)
-        
+
         if data:
             self.update([item for item in six.iteritems(data)
-                if abs(item[1]) > numpy.finfo(numpy.float).eps])
+                        if abs(item[1]) > numpy.finfo(numpy.float).eps])
 
     def __getitem__(self, *args):
         """
@@ -419,7 +419,7 @@ class Matrix(OrderedDict):
         0.3
         >>> T['A','B']
         0.3
-        >>> 
+        >>>
         0.0
         """
         try:
@@ -457,13 +457,13 @@ class Matrix(OrderedDict):
         if abs(value) > numpy.finfo(numpy.float).eps:
             OrderedDict.__setitem__(self, key, value)
         elif key in self:
-            del(self[key])
+            del self[key]
 
     @_del_cache
     def __delitem__(self, key):
         """
         >>> T = pykov.Matrix({('A','B'): .3, ('A','A'): .7, ('B','A'): 1.})
-        >>> del(T['B', 'A'])
+        >>> del T['B', 'A']
         >>> T
         {('A', 'B'): 0.3, ('A', 'A'): 0.7}
         """
@@ -715,7 +715,7 @@ class Matrix(OrderedDict):
         {('C', 'D'): 0.5, ('D', 'C'): 1.0}
         """
         return Matrix(OrderedDict([(key, value) for key, value in six.iteritems(self) if
-                            key[0] not in states and key[1] not in states]))
+                                   key[0] not in states and key[1] not in states]))
 
     def states(self):
         """
@@ -733,7 +733,7 @@ class Matrix(OrderedDict):
                 self._states.add(link[0])
                 self._states.add(link[1])
             return self._states
-    
+
     def __pow__(self, n):
         """
         >>> T = pykov.Matrix({('A','B'): .3, ('A','A'): .7, ('B','A'): 1.})
@@ -751,7 +751,7 @@ class Matrix(OrderedDict):
 
     def pow(self, n):
         return self.__pow__(n)
-    
+
     def __mul__(self, v):
         """
         >>> T = pykov.Matrix({('A','B'): .3, ('A','A'): .7, ('B','A'): 1.})
@@ -789,7 +789,7 @@ class Matrix(OrderedDict):
             return res
         elif isinstance(v, int) or isinstance(v, float):
             return Matrix(OrderedDict([(key, value * v) for key, value in
-                                six.iteritems(self)]))
+                                       six.iteritems(self)]))
         else:
             raise TypeError('unsupported operand type(s) for *:' +
                             ' \'Matrix\' and ' + repr(type(v))[7:-1])
@@ -802,7 +802,7 @@ class Matrix(OrderedDict):
         """
         if isinstance(v, int) or isinstance(v, float):
             return Matrix(OrderedDict([(key, value * v) for key, value in
-                                six.iteritems(self)]))
+                                      six.iteritems(self)]))
         else:
             raise TypeError('unsupported operand type(s) for *:' +
                             ' \'Matrix\' and ' + repr(type(v))[7:-1])
@@ -878,7 +878,7 @@ class Matrix(OrderedDict):
         {('B', 'A'): 0.3, ('A', 'B'): 1.0, ('A', 'A'): 0.7}
         """
         return Matrix(OrderedDict([((key[1], key[0]), value) for key, value in
-                            six.iteritems(self)]))
+                                   six.iteritems(self)]))
 
     def _UMPFPACKSolve(self, b, x=None, method='UMFPACK_A'):
         """
@@ -887,7 +887,7 @@ class Matrix(OrderedDict):
         Parameters
         ----------
         method:
-          "UMFPACK_A"  : \mathbf{A} x = b (default) 
+          "UMFPACK_A"  : \mathbf{A} x = b (default)
           "UMFPACK_At" : \mathbf{A}^T x = b
 
         References
@@ -913,7 +913,7 @@ class Chain(Matrix):
     """
     """
 
-    def move(self, state, random_func = None):
+    def move(self, state, random_func=None):
         """
         Do one step from the indicated state, and return the final state.
 
@@ -924,7 +924,7 @@ class Chain(Matrix):
         Optionally, a function that generates a random number can be supplied.
         >>> def FakeRandom(min, max): return 0.01
         >>> T.move('A', FakeRandom)
-        'B'        
+        'B'
 
         """
         return self.succ(state).choose(random_func)
@@ -984,7 +984,7 @@ class Chain(Matrix):
             # not elegant singular matrix error
             Q[0, 0] = Q[0, 0] + _machineEpsilon()
             x = ssl.spsolve(Q, e, use_umfpack=True)
-            x = x/sum(x)
+            x = x / sum(x)
             res = Vector()
             res._fromarray(x, e2p)
             self._steady = res
@@ -1187,7 +1187,7 @@ class Chain(Matrix):
 
         .. seealso:
 
-           Kemeny J. G.; Snell, J. L. 
+           Kemeny J. G.; Snell, J. L.
            Finite Markov Chains.
            Springer-Verlag: New York, 1976.
 
@@ -1220,7 +1220,7 @@ class Chain(Matrix):
 
         .. seealso::
 
-           Kemeny J. G.; Snell, J. L. 
+           Kemeny J. G.; Snell, J. L.
            Finite Markov Chains.
            Springer-Verlag: New York, 1976.
 
@@ -1245,7 +1245,7 @@ class Chain(Matrix):
 
         .. seealso::
 
-           Kemeny J. G.; Snell, J. L. 
+           Kemeny J. G.; Snell, J. L.
            Finite Markov Chains.
            Springer-Verlag: New York, 1976.
 
@@ -1263,7 +1263,7 @@ class Chain(Matrix):
             d = len(p)
             A = numpy.matrix([p for i in range(d)])
             I = numpy.matrix(numpy.identity(d))
-            E = numpy.matrix(numpy.ones((d, d)))
+            # E = numpy.matrix(numpy.ones((d, d)))
             D = numpy.zeros((d, d))
             diag = 1. / p
             for pos, val in enumerate(diag):
@@ -1285,7 +1285,6 @@ class Chain(Matrix):
         Z = self.fundamental_matrix()
         return Z.trace()
 
-
     def accessibility_matrix(self):
         """
         Return the accessibility matrix of the Markov chain.
@@ -1297,7 +1296,7 @@ class Chain(Matrix):
         I = self.eye()
         n = len(self.states())
 
-        A = (I + Z)**(n-1)
+        A = (I + Z)**(n - 1)
         numpy_A = A._numpy_mat(el2pos)
         numpy_A = numpy_A > 0
         numpy_A = numpy_A.astype(int)
@@ -1336,22 +1335,22 @@ class Chain(Matrix):
         numpy_res = numpy.logical_and(numpy_A, numpy_A_trans)
         numpy_res = numpy_res.astype(int)
 
-        #remove duplicate rows
-        #remaining rows will give communication
-        #ref: http://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
+        # remove duplicate rows
+        # remaining rows will give communication
+        # ref: http://stackoverflow.com/questions/16970982/find-unique-rows-in-numpy-array
         a = numpy_res
         b = numpy.ascontiguousarray(a).view(
             numpy.dtype(
                 (numpy.void, a.dtype.itemsize * a.shape[1])
-                )
             )
+        )
         _, idx = numpy.unique(b, return_index=True)
 
         unique_a = a[idx]
 
         res = Set()
         for row in unique_a:
-            #each iteration here is a comm. class
+            # each iteration here is a comm. class
             comm_class = Set()
             number_of_elements = len(A.states())
             for el in range(number_of_elements):
@@ -1359,6 +1358,7 @@ class Chain(Matrix):
                     comm_class.add(pos2el[el])
             res.add(comm_class)
         return res
+
 
 def readmat(filename):
     """

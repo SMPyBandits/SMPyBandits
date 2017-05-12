@@ -5,8 +5,6 @@
 __author__ = "Lilian Besson"
 __version__ = "0.3"
 
-from warnings import warn
-
 
 class ChildPointer(object):
     """ Class that acts as a child policy, but in fact it passes *all* its method calls to the mother class (that can pass it to its internal i-th player, or use any centralized computation).
