@@ -9,8 +9,11 @@ Basically, it works like this:
   + If needed, refit the models once in a while, to incorporate all the collected data.
   + If needed, use a robust estimate (e.g., mean of 100 samples) to chose the arm to play, instead of only *one* sample.
 
-.. warning:: This is still highly **experimental**! It is NOT efficient in terms of storage, and NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
+.. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 .. warning:: It is NOT really an on-line policy, as both the memory consumption and the time complexity of each step *increase* with time!
+
+
+This module provides also two simple Unsupervised Learning algorithm, :class:`SimpleGaussianKernel` and :class:`SimpleBernoulliKernel`, see below.
 """
 
 __author__ = "Lilian Besson"
@@ -18,13 +21,139 @@ __version__ = "0.6"
 
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+import scipy.stats as st
 
 from sklearn.neighbors.kde import KernelDensity
 
 
-T0 = 10          #: Default value for the parameter `T_0`.
-FIT_EVERY = 100  #: Default value for the parameter `fit_every`.
-MEAN_OF = 50     #: Default value for the parameter `meanOf`.
+# --- Unsupervised fitting models
+
+class FittingModel(object):
+    """ Base class for any fitting model"""
+
+    def __init__(self, *args, **kwargs):
+        """ Nothing to do here."""
+        pass
+
+    def __repr__(self):
+        return str(self)
+
+    def fit(self, data):
+        """ Nothing to do here."""
+        return self
+
+    def sample(self, shape=1):
+        """ Always 0., for instance."""
+        return 0.
+
+    def score_samples(self, data):
+        """ Always 1., for instance."""
+        return 1.
+
+    def score(self, data):
+        """ Log likelihood of the point (or the vector of data), under the current Gaussian model."""
+        return np.log(np.sum(self.score_samples(data)))
+
+
+class SimpleGaussianKernel(FittingModel):
+    """ Basic Unsupervised Learning algorithm, which simply fits a 1D Gaussian on some 1D data.
+
+    - It works quite well, for Gaussian as well as Constant, Uniform and Bernoulli arms.
+    - It fails (more or less) dramatically on Exponential, Binomial and Poisson arms.
+
+    >>> K = SimpleGaussianKernel(loc=0.5, scale=0.1)
+    >>> K
+    N(0.5, 0.1)
+    >>> data = [0.33, 0.34, 0.40, 0.37]
+    >>> K.fit(data)
+    N(0.36, 0.0274)
+    >>> np.random.seed(0)  # reproducibility
+    >>> K.sample()  # doctest: +ELLIPSIS
+    0.4083...
+    >>> np.mean(K.sample((100, 100)))  # doctest: +ELLIPSIS
+    0.3594...
+    """
+
+    def __init__(self, loc=0., scale=1., *args, **kwargs):
+        r""" Starts with :math:`\mathcal{N}(0, 1)`, by default."""
+        self.loc = float(loc)
+        self.scale = float(scale)
+
+    def __str__(self):
+        return "N({:.3g}, {:.3g})".format(self.loc, self.scale)
+
+    def fit(self, data):
+        """ Use the mean and variance from the 1D vector data (of shape `n_samples` or `(n_samples, 1)`)."""
+        self.loc, self.scale = np.mean(data), np.std(data)
+        return self
+
+    def sample(self, shape=1):
+        """ Return one or more sample, from the current Gaussian model."""
+        if shape == 1:
+            return np.random.normal(self.loc, self.scale)
+        else:
+            return np.random.normal(self.loc, self.scale, shape)
+
+    def score_samples(self, data):
+        """ Likelihood of the point (or the vector of data), under the current Gaussian model, component-wise."""
+        return st.bernoulli.pdf(data, loc=self.loc, scale=np.sqrt(self.scale))
+
+
+class SimpleBernoulliKernel(FittingModel):
+    """ Basic Unsupervised Learning algorithm, which simply fits a 1D Bernoulli distribution on some 1D data.
+
+    - It works quite well, for Bernoulli as well as Constant arms.
+    - It fails (more or less) dramatically on Gaussian, Uniform, Exponential, Binomial and Poisson arms.
+
+    >>> K = SimpleBernoulliKernel(lower=0, amplitude=1)
+    >>> K.mu
+    0.5
+    >>> data = [0.33, 0.34, 0.40, 0.37]
+    >>> K.fit(data)
+    B(0.36)
+    >>> np.random.seed(0)  # reproducibility
+    >>> K.sample()
+    0.0
+    >>> np.mean(K.sample((100, 100)))  # doctest: +ELLIPSIS
+    0.3619...
+    """
+
+    def __init__(self, p=None, lower=0., amplitude=1., *args, **kwargs):
+        r""" Starts with :math:`\mathcal{B}(\mu)`, where :math:`\mu = p` or :math:`\mu = \mathrm{lower} + \mathrm{amplitude} / 2`, by default."""
+        self.lower = float(lower)  #: Known lower bounds on the rewards.
+        self.amplitude = float(amplitude)  #: Known amplitude of the rewards.
+        self.mu = p if p is not None else self.lower + (self.amplitude / 2.0)  #: Mean of the Bernoulli arm.
+
+    def __str__(self):
+        return "B({:.3g})".format(self.mu)
+
+    def fit(self, data):
+        """ Use the mean and variance from the 1D vector data (of shape `n_samples` or `(n_samples, 1)`)."""
+        assert np.min(data) >= self.lower, "Error: some point in this data is not >= {:.3g} (known lower bound on the rewards).".format(self.lower)  # DEBUG
+        assert np.max(data) <= self.amplitude - self.lower, "Error: some point in this data is not <= {:.3g} (known upper bound on the rewards).".format(self.amplitude - self.lower)  # DEBUG
+        data = (np.asarray(data) - self.lower) / self.amplitude
+        self.mu = np.nanmean(data)
+        return self
+
+    def sample(self, shape=1):
+        """ Return one or more sample, from the current Bernoulli model."""
+        if shape == 1:
+            obs = np.asarray(np.random.random_sample() <= self.mu, dtype=float)
+        else:
+            obs = np.asarray(np.random.random_sample(shape) <= self.mu, dtype=float)
+        return self.lower + self.amplitude * obs
+
+    def score_samples(self, data):
+        """ Likelihood of the point (or the vector of data), under the current Bernoulli model, component-wise."""
+        data = (np.asarray(data) - self.lower) / self.amplitude
+        return st.bernoulli.pmf(data, loc=self.mean)
+
+
+# --- Decision Making Policy
+
+T0 = 100          #: Default value for the parameter `T_0`.
+FIT_EVERY = 1000  #: Default value for the parameter `fit_every`.
+MEAN_OF = 100     #: Default value for the parameter `meanOf`.
 
 
 class UnsupervisedLearning(object):
@@ -32,7 +161,7 @@ class UnsupervisedLearning(object):
 
     - By default, it uses a [KernelDensity](http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KernelDensity.html#sklearn.neighbors.KernelDensity) estimator.
 
-    .. warning:: This is still highly experimental!
+    .. warning:: This is still **experimental**!
 
 
     .. note:: The algorithm I designed is not obvious, but here are some explanations:

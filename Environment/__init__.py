@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-""" Environment :
+""" Environment module :
 
-- MAB and DynamicMAB objects, used to wrap the problems (list of arms).
-- Result and ResultMultiPlayers objects, used to wrap simulation results (list of decisions and rewards).
-- Evaluator environment, used to wrap simulation, for the single player case.
-- EvaluatorMultiPlayers environment, used to wrap simulation, for the multi-players case.
+- :class:`MAB`, :class:`MarkovianMAB` and :class:`DynamicMAB` objects, used to wrap the problems (list of arms).
+- :class:`Result` and :class:`ResultMultiPlayers` objects, used to wrap simulation results (list of decisions and rewards).
+- :class:`Evaluator` environment, used to wrap simulation, for the single player case.
+- :class:`EvaluatorMultiPlayers` environment, used to wrap simulation, for the multi-players case.
 
-And useful functions for the plotting and stuff:
+And useful constants and functions for the plotting and stuff:
 
 - DPI, signature, maximizeWindow, palette, makemarkers, wraptext: for plotting
 - notify: send a notificaiton
@@ -18,7 +18,7 @@ And useful functions for the plotting and stuff:
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from .MAB import MAB, DynamicMAB
+from .MAB import MAB, MarkovianMAB, DynamicMAB
 
 from .Result import Result
 from .Evaluator import Evaluator

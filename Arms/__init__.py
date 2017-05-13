@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Arms : contains different types of bandit arms:
-Uniform, Bernoulli, Poisson, Gaussian, Exponential.
+:class:`Constant`, :class:`Uniform`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`.
 
 Also contain:
 

@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
 """ Policies module : contains various bandits algorithms:
 
-- "Stupid" algorithms: Uniform, UniformOnSome, TakeFixedArm, TakeRandomFixedArm
+- "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
-- Greedy algorithms: EpsilonGreedy, EpsilonFirst, EpsilonDecreasing
+- Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
 
-- Probabilistic weighting algorithms: Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, ProbabilityPursuit
+- Probabilistic weighting algorithms: :class:`Softmax`, :class:`SoftmaxDecreasing`, :class:`SoftMix`, :class:`SoftmaxWithHorizon`, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, :class:`ProbabilityPursuit`,
 
-- Index based and UCB algorithms: EmpiricalMeans, UCB, UCBlog10, UCBwrong, UCBlog10alpha, UCBalpha, UCBmin, UCBplus, UCBrandomInit, UCBV, UCBVtuned, UCBH, MOSS, MOSSH, CPUCB
+- Index based and UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, UCBlog10, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`MOSS`, :class:`MOSSH`, :class:`CPUCB`,
 
-- Bayesian algorithms: Thompson, ThompsonRobust, BayesUCB
+- Bayesian algorithms: :class:`Thompson`, :class:`ThompsonRobust`, :class:`BayesUCB`,
 
-- Based on Kullback-Leibler divergence: klUCB, klUCBlog10, klUCBloglog, klUCBloglog10, klUCBPlus, klUCBH, klUCBHPlus, klUCBPlusPlus
+- Based on Kullback-Leibler divergence: :class:`klUCB`, klUCBlog10, :class:`klUCBloglog`, klUCBloglog10, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`,
 
-- Empirical KL-UCB algorithm: KLempUCB
+- Empirical KL-UCB algorithm: :class:`KLempUCB`,
 
-- Other index algorithms: DMED, DMEDPlus, OCUCB
+- Other index algorithms: :class:`DMED`, :class:`DMEDPlus`, :class:`OCUCB`,
 
-- Hybrids algorithms, mixing Bayesian and UCB indexes: AdBandit
+- Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandit`,
 
-- Aggregation algorithms: Aggr
+- Aggregation algorithms: :class:`Aggr`,
 
-- Finite-Horizon Gittins index, approximated version: ApproximatedFHGittins
+- Finite-Horizon Gittins index, approximated version: :class:`ApproximatedFHGittins`,
 
-- Some are designed only for (fully decentralized) multi-player games: MusicalChair, MEGA
+- *New!* An experimental policy, using Unsupervised Learning: :class:`UnsupervisedLearning`,
+
+- Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`,
 """
 
 __author__ = "Lilian Besson"
@@ -50,7 +52,7 @@ from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, Exp3ELM
 from .ProbabilityPursuit import ProbabilityPursuit
 
 # --- Using unsupervised learning, from scikit-learn
-from .UnsupervisedLearning import UnsupervisedLearning
+from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
 
 # --- Simple UCB policies
 from .UCB import UCB

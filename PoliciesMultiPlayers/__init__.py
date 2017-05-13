@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 """ PoliciesMultiPlayers : contains various collision-avoidance protocol for the multi-players setting.
 
-- Selfish: a multi-player policy where every player is selfish, they do not try to handle the collisions.
+- :class:`Selfish`: a multi-player policy where every player is selfish, they do not try to handle the collisions.
 
-- CentralizedNotFair: a multi-player policy which uses a centralize intelligence to affect users to a FIXED arm.
-- CentralizedFair: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
+- :class:`CentralizedNotFair`: a multi-player policy which uses a centralize intelligence to affect users to a FIXED arm.
+- :class:`CentralizedFair`: a multi-player policy which uses a centralize intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbArms.
 
-- OracleNotFair: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
-- OracleFair: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
+- :class:`OracleNotFair`: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
+- :class:`OracleFair`: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
 
-- rhoRand, ALOHA: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. UCB, Thompson etc).
+- :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc).
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Mine, fully decentralized one
 from .Selfish import Selfish
