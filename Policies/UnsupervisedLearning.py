@@ -6,6 +6,7 @@ Basically, it works like this:
 - Start with a purely random exploration phase (uniform exploration), to get some data about each arm,
 - Then, fit some unsupervised learning model on each arm, to build a model of its distribution (e.g., a simple Gaussian, with mean and variance obtained from the data).
 - And then, at each time step, use the models to generate some prediction for the output of each arm, and play according to the arm with highest prediction.
+
   + If needed, refit the models once in a while, to incorporate all the collected data.
   + If needed, use a robust estimate (e.g., mean of 100 samples) to chose the arm to play, instead of only *one* sample.
 
