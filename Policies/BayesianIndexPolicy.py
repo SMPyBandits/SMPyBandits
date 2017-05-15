@@ -5,7 +5,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.3"
 
 from .IndexPolicy import IndexPolicy
-from .Beta import Beta
+from .Posterior import Beta
 
 
 class BayesianIndexPolicy(IndexPolicy):

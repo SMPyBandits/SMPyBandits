@@ -8,7 +8,7 @@ __version__ = "0.6"
 
 import numpy as np
 from .Thompson import Thompson
-from .Beta import Beta
+from .Posterior import Beta
 
 
 #: Default value of how many indexes are computed by sampling the posterior

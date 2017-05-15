@@ -31,6 +31,8 @@
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+from .Posterior import Beta, Gamma, Gauss
+
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
 from .UniformOnSome import UniformOnSome

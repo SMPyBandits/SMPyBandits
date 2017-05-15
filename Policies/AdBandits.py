@@ -12,7 +12,7 @@ __version__ = "0.6"
 from random import random, choice
 import numpy as np
 
-from .Beta import Beta
+from .Posterior import Beta
 from .BasePolicy import BasePolicy
 
 

@@ -39,10 +39,10 @@ class Beta(Posterior):
     def __init__(self, a=1, b=1):
         """Create a Beta posterior with no observation, i.e. alpha = 1 and beta = 1."""
         assert a >= 0, "Error: parameter 'a' for Beta posterior has to be >= 0."
-        self.a = a  #: Parameter alpha
+        self._a = a
         assert b >= 0, "Error: parameter 'b' for Beta posterior has to be >= 0."
-        self.b = b  #: Parameter beta
-        self.N = [a, b]  #: [a, b]
+        self._b = b
+        self.N = [a, b]  #: List of two parameters [a, b]
 
     def __str__(self):
         return "Beta({}, {})".format(self.N[1], self.N[0])
@@ -50,9 +50,9 @@ class Beta(Posterior):
     def reset(self, a=None, b=None):
         """Reset alpha and beta, both to 1 as when creating a new default Beta."""
         if a is None:
-            a = self.a
+            a = self._a
         if b is None:
-            b = self.b
+            b = self._b
         self.N = [a, b]
 
     def sample(self):

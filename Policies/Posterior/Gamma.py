@@ -26,9 +26,11 @@ class Gamma(Posterior):
     def __init__(self, k=1, lmbda=1):
         """Create a Gamma posterior."""
         assert k > 0, "Error: parameter 'k' for Beta posterior has to be > 0."
-        self.k0 = self.k = k  #: Parameter k
+        self._k = k
+        self.k = k  #: Parameter :math:`k`
         assert lmbda > 0, "Error: parameter 'lmbda' for Beta posterior has to be > 0."
-        self.lmbda0 = self.lmbda = lmbda  #: Parameter lambda
+        self._lmbda = lmbda
+        self.lmbda = lmbda  #: Parameter :math:`\lambda`
 
     def __str__(self):
         return "Gamma({}, {})".format(self.k, self.lmbda)
@@ -36,9 +38,9 @@ class Gamma(Posterior):
     def reset(self, k=None, lmbda=None):
         """Reset k and lmbda, both to 1 as when creating a new default Gamma."""
         if k is None:
-            self.k = self.k0
+            self.k = self._k
         if lmbda is None:
-            self.lmbda = self.lmbda0
+            self.lmbda = self._lmbda
 
     def sample(self):
         """Get a random sample from the Beta posterior (using :func:`numpy.random.gammavariate`).
@@ -61,11 +63,11 @@ class Gamma(Posterior):
     def forget(self, obs):
         """Forget the last observation."""
         # print("Info: calling Gamma.forget() with obs = {} ...".format(obs))  # DEBUG
-        self.k += self.k0
+        self.k += self._k
         self.lmbda += obs
 
     def update(self, obs):
         """Add an observation: increase k by k0, and lmbda by obs (do not have to be normalized)."""
         # print("Info: calling Gamma.update() with obs = {} ...".format(obs))  # DEBUG
-        self.k += self.k0
+        self.k += self._k
         self.lmbda += obs
