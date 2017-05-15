@@ -9,7 +9,7 @@ When reward `r_t in [0, 1]` is observed, the player receives the result of a Ber
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from random import random
 try:

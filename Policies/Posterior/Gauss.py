@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Manipulate a posterior of Gaussian experiments, i.e., a Normal-Inverse gamma distribution.
-    
+
 Cf. https://en.wikipedia.org/wiki/Normal-inverse-gamma_distribution
 No need for tricks to handle non-binary rewards.
 
@@ -24,7 +24,7 @@ from scipy.stats import invgamma, norm
 
 def inverse_gamma(alpha=1., beta=1.):
     r""" Sample sigma2 from an Inverse Gamma distribution of parameters :math:`\alpha, \beta`.
-    
+
     >>> np.random.seed(0)
     >>> inverse_gamma(1, 1)  # doctest: +ELLIPSIS
     1.6666...
@@ -33,8 +33,8 @@ def inverse_gamma(alpha=1., beta=1.):
     >>> inverse_gamma(1, 2)  # doctest: +ELLIPSIS
     3.9507...
     >>> inverse_gamma(2, 2)  # doctest: +ELLIPSIS
-    1.2996...    
-    
+    1.2996...
+
     - Cf. https://en.wikipedia.org/wiki/Inverse-gamma_distribution
     """
     return invgamma.rvs(alpha, scale=beta)
@@ -42,7 +42,7 @@ def inverse_gamma(alpha=1., beta=1.):
 
 def normal_inverse_gamma(mu=0., nu=1., alpha=1., beta=1.):
     r""" Sample (x, sigma2) from a Normal-Inverse Gamma distribution of four parameters :math:`\mu, \nu, \alpha, \beta`.
-    
+
     >>> np.random.seed(0)
     >>> normal_inverse_gamma(0, 1, 1, 1)  # doctest: +ELLIPSIS
     (1.2359..., 1.6666...)
@@ -50,7 +50,7 @@ def normal_inverse_gamma(mu=0., nu=1., alpha=1., beta=1.):
     (-17.4424..., 1.6469...)
     >>> normal_inverse_gamma(20, 1, 1, 1)  # doctest: +ELLIPSIS
     (19.0187..., 1.1643...)
-    
+
     - Cf. https://en.wikipedia.org/wiki/Normal-inverse-gamma_distribution#Generating_normal-inverse-gamma_random_variates
     """
     sigma2 = inverse_gamma(alpha=alpha, beta=beta)
@@ -64,7 +64,7 @@ from .Posterior import Posterior
 
 class Gauss(Posterior):
     """ Manipulate a posterior of Gaussian experiments, i.e., a Normal-Inverse gamma distribution.
-    
+
     Cf. https://en.wikipedia.org/wiki/Normal-inverse-gamma_distribution
     """
 
@@ -83,7 +83,7 @@ class Gauss(Posterior):
         self.beta = float(beta)  #: Parameter :math:`\beta` of the posterior
 
     def __str__(self):
-        return "InvGamma({:.3g}, {:.3g}, {:.3g}, {:.3g})".format(self.mu, self.nu, self.alpha, self.beta)
+        return "Gauss({:.3g}, {:.3g}, {:.3g}, {:.3g})".format(self.mu, self.nu, self.alpha, self.beta)
 
     def reset(self, mu=None, nu=None, alpha=None, beta=None):
         r""" Reset the for parameters :math:`\mu, \nu, \alpha, \beta`, as when creating a new Gauss posterior."""
@@ -101,13 +101,14 @@ class Gauss(Posterior):
 
         - Used only by Thompson Sampling so far.
         """
-        return normal_inverse_gamma(mu=self.mu, nu=self.nu, alpha=self.alpha, beta=self.beta)
+        loc, scale = normal_inverse_gamma(mu=self.mu, nu=self.nu, alpha=self.alpha, beta=self.beta)
+        return normalvariate(loc=loc, scale=scale)
 
     def quantile(self, p):
         """ Return the p-quantile of the Gauss posterior.
-        
+
         .. warning:: Very experiment, I am not sure of what I did here...
-        
+
         .. note:: I recommend to NOT use :class:`BayesUCB` with Gauss posteriors...
         """
         quantile_on_sigma2 = invgamma.ppf(p, self.alpha, scale=self.beta)
@@ -122,23 +123,23 @@ class Gauss(Posterior):
 
     def update(self, obs):
         r"""Add an observation :math:`x` or a vector of observations, assumed to be drawn from an unknown normal distribution.
-        
+
         - Initial mean was estimated from `\nu` observations with sample mean :math:`\mu _{0}`;
-        - Initial variance was estimated from :math:`2\alpha` observations with sample mean :math:`\mu _{0}` and sum of squared deviations :math:`2\beta`. 
-        
+        - Initial variance was estimated from :math:`2\alpha` observations with sample mean :math:`\mu _{0}` and sum of squared deviations :math:`2\beta`.
+
         Let :math:`n` the size of :math:`x` and :math:`\overline{x} = \frac{1}{n} \sum_{i=1}^{n} x_i` the mean of the observations :math:`x` (can be one sample, or more).
-        
+
         Then the four parameters :math:`\mu, \nu, \alpha, \beta` are updated like this:
-        
+
         .. math::
-        
+
            \mu' &:= \frac{\nu \mu + n \overline{x}}{\nu + n}, \\
            \nu' &:= \nu + n, \\
            \alpha' &:= \alpha + \frac{n}{2}, \\
            \beta' &:= \beta + \frac{1}{2} \sum_{i=1}^{n} (x_i - \overline{x})^2 + \frac{n \nu}{\nu + n} \frac{(\overline{x} - \mu)^2}{2}.\\
-        
+
         """
-        print("Info: calling Gauss.update() with obs = {} ...".format(obs))  # DEBUG
+        # print("Info: calling Gauss.update() with obs = {} ...".format(obs))  # DEBUG
         mu, nu, alpha, beta = self.mu, self.nu, self.alpha, self.beta
         n = np.size(obs)
         x = np.reshape(obs, (-1))  # = obs.flatten()

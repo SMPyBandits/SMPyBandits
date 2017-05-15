@@ -47,7 +47,12 @@ class IndexPolicy(BasePolicy):
         """ In an index policy, choose an arm with maximal index (uniformly at random)."""
         self.computeAllIndex()
         # Uniform choice among the best arms
-        return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
+        try:
+            return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
+        except ValueError:
+            if not np.all(np.isnan(self.index)):
+                raise ValueError("Error: unknown error in IndexPolicy.choice(): the indexes were {} but couldn't be used to select an arm.".format(self.index))
+            return np.random.randint(self.nbArms)
 
     # --- Others choice...() methods
 

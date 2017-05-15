@@ -6,7 +6,7 @@
 """
 
 __author__ = "Emilie Kaufmann, Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 try:
     from numpy.random import gamma as gammavariate  # Faster! Yes!
