@@ -12,11 +12,12 @@ class BayesianIndexPolicy(IndexPolicy):
     """ Basic Bayesian index policy. By default, it uses a Beta posterior. """
 
     def __init__(self, nbArms, posterior=Beta, lower=0., amplitude=1., *args, **kwargs):
+        """ Create a new Bayesian policy, by creating a default posterior on each arm."""
         super(BayesianIndexPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._posterior_name = str(posterior.__class__.__name__)
         self.posterior = [None] * nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior(*args, **kwargs)
+        self._posterior_name = str(self.posterior[0].__class__.__name__)
 
     def __str__(self):
         """ -> str"""
@@ -26,11 +27,13 @@ class BayesianIndexPolicy(IndexPolicy):
             return "{}({})".format(self.__class__.__name__, self._posterior_name)
 
     def startGame(self):
+        """ Reset the posterior on each arm."""
         self.t = 0
         for arm in range(self.nbArms):
             self.posterior[arm].reset()
 
     def getReward(self, arm, reward):
+        """ Update the posterior on each arm, with the normalized reward."""
         self.posterior[arm].update((reward - self.lower) / self.amplitude)
         self.t += 1
 

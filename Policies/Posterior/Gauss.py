@@ -99,7 +99,7 @@ class Gauss(Posterior):
     def sample(self):
         r""" Get a random sample :math:`(x, \sigma^2)` from the Gaussian posterior (using :func:`scipy.stats.invgamma` for the variance :math:`\sigma^2` parameter and :func:`numpy.random.normal` for the mean :math:`x`).
 
-        - Used only by Thompson Sampling so far.
+        - Used only by :class:`Thompson` Sampling and :class:`AdBandits` so far.
         """
         loc, scale = normal_inverse_gamma(mu=self.mu, nu=self.nu, alpha=self.alpha, beta=self.beta)
         return normalvariate(loc=loc, scale=scale)

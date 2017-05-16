@@ -24,7 +24,7 @@ class Gamma(Posterior):
     """ Manipulate a Gamma posterior."""
 
     def __init__(self, k=1, lmbda=1):
-        """Create a Gamma posterior."""
+        r"""Create a Gamma posterior, :math:`\Gamma(k, \lambda)`, with :math:`k=1` and :math:`\lambda=1` by default."""
         assert k > 0, "Error: parameter 'k' for Beta posterior has to be > 0."
         self._k = k
         self.k = k  #: Parameter :math:`k`
@@ -45,14 +45,14 @@ class Gamma(Posterior):
     def sample(self):
         """Get a random sample from the Beta posterior (using :func:`numpy.random.gammavariate`).
 
-        - Used only by Thompson Sampling so far.
+        - Used only by :class:`Thompson` Sampling and :class:`AdBandits` so far.
         """
         return gammavariate(self.k, 1. / self.lmbda)
 
     def quantile(self, p):
         """Return the p quantile of the Gamma posterior (using :func:`scipy.stats.gdtrix`).
 
-        - Used only by BayesUCB so far.
+        - Used only by :class:`BayesUCB` and :class:`AdBandits` so far.
         """
         return gdtrix(self.k, 1. / self.lmbda, p)
 
