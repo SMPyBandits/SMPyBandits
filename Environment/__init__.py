@@ -5,14 +5,15 @@
 - :class:`Result` and :class:`ResultMultiPlayers` objects, used to wrap simulation results (list of decisions and rewards).
 - :class:`Evaluator` environment, used to wrap simulation, for the single player case.
 - :class:`EvaluatorMultiPlayers` environment, used to wrap simulation, for the multi-players case.
+- :mod:`CollisionModels` implements different collision models.
 
 And useful constants and functions for the plotting and stuff:
 
-- DPI, signature, maximizeWindow, palette, makemarkers, wraptext: for plotting
-- notify: send a notificaiton
-- Parallel, delayed: joblib related
-- tqdm: pretty range() loops
-- sortedDistance, fairnessMeasures: science related
+- :func:`DPI`, :func:`signature`, :func:`maximizeWindow`, :func:`palette`, :func:`makemarkers`, :func:`wraptext`: for plotting
+- :func:`notify`: send a notificaiton
+- :func:`Parallel`, :func:`delayed`: joblib related
+- :func:`tqdm`: pretty range() loops
+- :func:`sortedDistance`, :func:`fairnessMeasures`: science related
 """
 
 __author__ = "Lilian Besson"

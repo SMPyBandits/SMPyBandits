@@ -24,6 +24,8 @@ import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 import scipy.stats as st
 
+
+# Cf. http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KernelDensity.html#sklearn.neighbors.KernelDensity
 from sklearn.neighbors.kde import KernelDensity
 
 

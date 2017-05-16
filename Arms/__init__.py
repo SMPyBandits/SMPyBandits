@@ -2,10 +2,23 @@
 """ Arms : contains different types of bandit arms:
 :class:`Constant`, :class:`Uniform`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`.
 
-Also contain:
+Each arm class follows the same interface:
 
-- uniformMeans, a small function to generate uniformly spacen means of arms.
-- randomMeans, generate randomly spacen means of arms.
+>>> my_arm = Arm(params)
+>>> my_arm.mean
+0.5
+>>> my_arm.draw()  # one random draw
+0.0
+>>> my_arm.draw_nparray(20)  # or ((3, 10)), many draw
+array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
+        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+
+
+Also contains:
+
+- :func:`uniformMeans`, a small function to generate uniformly spacen means of arms.
+- :func:`randomMeans`, generate randomly spacen means of arms.
+- :func:`shuffled`, to return a shuffled version of a list.
 """
 
 __author__ = "Lilian Besson"
@@ -71,7 +84,6 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
             mus = np.sort(np.random.rand(nbArms))
     if not isSorted:
         np.random.shuffle(mus)
-    # return lower + (amplitude * mus)
     return list(lower + (amplitude * mus))
 
 
