@@ -61,7 +61,7 @@ class Beta(Posterior):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
     def __init__(self, a=1, b=1):
-        r""" Create a Beta posterior :math:`\Beta(\alpha, \beta)` with no observation, i.e., :math:`\alpha = 1` and :math:`\beta = 1` by default."""
+        r""" Create a Beta posterior :math:`\mathrm{Beta}(\alpha, \beta)` with no observation, i.e., :math:`\alpha = 1` and :math:`\beta = 1` by default."""
         assert a >= 0, "Error: parameter 'a' for Beta posterior has to be >= 0."
         self._a = a
         assert b >= 0, "Error: parameter 'b' for Beta posterior has to be >= 0."
