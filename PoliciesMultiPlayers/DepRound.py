@@ -10,7 +10,7 @@ Dependent rounding developed by Gandhi et al. [6] is a kind of technique that ra
 - It runs in :math:`\mathcal{O}(K)` space complexity, and at most :math:`\mathcal{O}(K^2)` time complexity (note that the article [Uchiya et al., 2010] wrongly claim it is in :math:`\mathcal{O}(K)`).
 - References: see also https://www.cs.umd.edu/~samir/grant/jacm06.pdf
 """
-from __future__ import print_function
+from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"
