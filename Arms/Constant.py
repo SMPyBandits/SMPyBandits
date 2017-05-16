@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
-""" Arm with a constant reward. Useful for debugging."""
+""" Arm with a constant reward. Useful for debugging.
+
+Example of creating an arm:
+
+>>> C013 = Constant(0.13)
+>>> C013
+Constant(0.13)
+>>> C013.mean
+0.13
+
+Examples of sampling from an arm:
+
+>>> C013.draw()
+0.13
+>>> C013.draw_nparray(3)
+array([ 0.13,  0.13,  0.13])
+"""
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

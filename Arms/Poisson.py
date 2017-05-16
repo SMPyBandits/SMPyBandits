@@ -1,10 +1,35 @@
 # -*- coding: utf-8 -*-
-""" Poisson distributed arm, possibly truncated."""
+""" Poisson distributed arm, possibly truncated.
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> Poisson5 = Poisson(5, trunc=10)
+>>> Poisson5
+P(5, 10)
+>>> Poisson5.mean  # doctest: +ELLIPSIS
+4.9778
+
+Examples of sampling from an arm:
+
+>>> Poisson5.draw()  # doctest: +ELLIPSIS
+9
+>>> Poisson5.draw_nparray(20)  # doctest: +ELLIPSIS
+array([  1.35...e-01,   1.84...e-01,   5.71...e-02,
+         6.36...e-02,   4.94...e-01,   1.51...e-01,
+         1.48...e-04,   2.25...e-06,   4.56...e-01,
+         1.00...e+00,   7.59...e-02,   8.12...e-04,
+         1.54...e-03,   1.14...e-01,   1.18...e-02,
+         7.30...e-02,   1.76...e-06,   1.94...e-01,
+         1.00...e+00,   3.30...e-02])
+"""
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"
 
 from math import isinf, exp
+import numpy as np
 from scipy.stats import poisson
 
 from .Arm import Arm
@@ -43,7 +68,7 @@ class Poisson(Arm):
 
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""
-        return min(poisson.rvs(self.p, size=shape), self.trunc)
+        return np.minimum(poisson.rvs(self.p, size=shape), self.trunc)
 
     # --- Printing
 

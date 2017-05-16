@@ -1,11 +1,30 @@
 # -*- coding: utf-8 -*-
-""" Bernoulli distributed arm."""
+""" Bernoulli distributed arm.
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> B03 = Bernoulli(0.3)
+>>> B03
+B(0.3)
+>>> B03.mean
+0.3
+
+Examples of sampling from an arm:
+
+>>> B03.draw()
+0.0
+>>> B03.draw_nparray(20)
+array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
+        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+"""
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.6"
 
-from random import random
-from numpy.random import random as nprandom
+import numpy as np
+from numpy.random import binomial
 
 from .Arm import Arm
 from .kullback import klBern
@@ -24,11 +43,11 @@ class Bernoulli(Arm):
 
     def draw(self, t=None):
         """ Draw one random sample."""
-        return float(random() <= self.probability)
+        return np.asarray(binomial(1, self.probability), dtype=float)
 
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""
-        return 1.0 * (nprandom(shape) <= self.probability)
+        return np.asarray(binomial(1, self.probability, shape), dtype=float)
 
     # --- Printing
 

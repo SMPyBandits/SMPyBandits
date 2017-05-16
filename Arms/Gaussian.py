@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
-""" Gaussian distributed arm."""
+""" Gaussian distributed arm.
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> Gauss03 = Gaussian(0.3, 0.05)  # small variance
+>>> Gauss03
+G(0.3, 0.05)
+>>> Gauss03.mean
+0.3
+
+Examples of sampling from an arm:
+
+>>> Gauss03.draw()  # doctest: +ELLIPSIS
+0.2276...
+>>> Gauss03.draw_nparray(20)  # doctest: +ELLIPSIS
+array([ 0.3882...,  0.3200...,  0.3489... ,  0.4120...,  0.3933... ,
+        0.2511...,  0.3475...,  0.2924...,  0.2948...,  0.3205...,
+        0.3072...,  0.3727...,  0.3380...,  0.3060...,  0.3221...,
+        0.3166...,  0.3747...,  0.2897...,  0.3156...,  0.2572...])
+"""
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"
@@ -7,7 +28,7 @@ __version__ = "0.6"
 from random import gauss
 from numpy.random import standard_normal
 import numpy as np
-# from scipy.special import erf
+from scipy.special import erf
 
 from .Arm import Arm
 from .kullback import klGauss
@@ -16,26 +37,6 @@ oo = float('+inf')  # Nice way to write +infinity
 
 #: Default value for the variance of a [0, 1] Gaussian arm
 VARIANCE = 0.05
-
-
-# def phi(xsi):
-#     r"""The :math:`\phi(x)` function, defined by:
-#
-#     .. math:: \phi(x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 x^2 \right)
-#
-#     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Standard_normal_distribution.
-#     """
-#     return np.exp(- 0.5 * xsi**2) / np.sqrt(2. * np.pi)
-
-
-# def Phi(x):
-#     r"""The :math:`\Phi(x)` function, defined by:
-#
-#     .. math:: \Phi(x) := \frac{1}{2} \left(1 + \mathrm{erf}\left( \frac{x}{\sqrt{2}} \right) \right).
-#
-#     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Cumulative_distribution_function
-#     """
-#     return (1. + erf(x / np.sqrt(2.))) / 2.
 
 
 class Gaussian(Arm):
@@ -52,8 +53,7 @@ class Gaussian(Arm):
         assert mini <= maxi, "Error, the parameter 'mini' for Gaussian arm has to < 'maxi'."
         self.min = mini  #: Lower value of rewards
         self.max = maxi  #: Higher value of rewards
-        # Compute the true mean : Cf. https://en.wikipedia.org/wiki/Truncated_normal_distribution#Moments
-        # TODO ?
+        # XXX if needed, compute the true mean : Cf. https://en.wikipedia.org/wiki/Truncated_normal_distribution#Moments
         # real_mean = mu + sigma * (phi(mini) - phi(maxi)) / (Phi(maxi) - Phi(mini))
 
     # --- Random samples
@@ -101,6 +101,26 @@ class UnboundedGaussian(Gaussian):
     def __init__(self, mu, sigma=VARIANCE):
         """New arm."""
         super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)
+
+
+def phi(xsi):
+    r"""The :math:`\phi(x)` function, defined by:
+
+    .. math:: \phi(x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 x^2 \right)
+
+    It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Standard_normal_distribution.
+    """
+    return np.exp(- 0.5 * xsi**2) / np.sqrt(2. * np.pi)
+
+
+def Phi(x):
+    r"""The :math:`\Phi(x)` function, defined by:
+
+    .. math:: \Phi(x) := \frac{1}{2} \left(1 + \mathrm{erf}\left( \frac{x}{\sqrt{2}} \right) \right).
+
+    It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Cumulative_distribution_function
+    """
+    return (1. + erf(x / np.sqrt(2.))) / 2.
 
 
 # Only export and expose the class defined here

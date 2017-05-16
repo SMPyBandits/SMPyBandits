@@ -35,8 +35,8 @@ HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
-# HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 40000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -48,8 +48,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
-# REPETITIONS = 100
-REPETITIONS = 50
+REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -397,12 +397,12 @@ configuration.update({
         #     "archtype": UCBVtuned,   # UCB with variance term and one trick
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 4          # Below the alpha=4 like old classic UCB
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 4          # Below the alpha=4 like old classic UCB
+            }
+        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -439,17 +439,17 @@ configuration.update({
         #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.05         # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.05         # XXX Below the theoretically acceptable value!
+            }
+        },
         # --- MOSS algorithm, like UCB
-        # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
+        {
+            "archtype": MOSS,
+            "params": {}
+        },
         # # --- Optimally Confident UCB algorithm
         # {
         #     "archtype": OCUCB,
@@ -492,12 +492,12 @@ configuration.update({
         #     "params": {}
         # },
         # --- DMED algorithm, similar to klUCB
-        # {
-        #     "archtype": DMED,
-        #     "params": {
-        #         "genuine": True,
-        #     }
-        # },
+        {
+            "archtype": DMED,
+            "params": {
+                "genuine": True,
+            }
+        },
         # {
         #     "archtype": DMED,
         #     "params": {

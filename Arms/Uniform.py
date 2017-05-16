@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
-""" Uniformly distributed arm in [0, 1], or [lower, lower + amplitude]."""
+""" Uniformly distributed arm in [0, 1], or [lower, lower + amplitude].
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> Unif01 = Uniform(0, 1)
+>>> Unif01
+U(0, 1)
+>>> Unif01.mean
+0.5
+
+Examples of sampling from an arm:
+
+>>> Unif01.draw()  # doctest: +ELLIPSIS
+0.4049...
+>>> Unif01.draw_nparray(20)  # doctest: +ELLIPSIS
+array([ 0.5488...,  0.7151...,  0.6027...,  0.5448...,  0.4236...,
+        0.6458...,  0.4375...,  0.8917...,  0.9636...,  0.3834...,
+        0.7917...,  0.5288...,  0.5680...,  0.9255...,  0.0710...,
+        0.0871...,  0.0202...,  0.8326...,  0.7781...,  0.8700...])
+"""
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

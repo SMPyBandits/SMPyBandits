@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
-""" Exponentially distributed arm."""
+""" Exponentially distributed arm.
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> Exp03 = ExponentialFromMean(0.3)
+>>> Exp03
+Exp(3.21, 1)
+>>> Exp03.mean  # doctest: +ELLIPSIS
+0.3000...
+
+Examples of sampling from an arm:
+
+>>> Exp03.draw()  # doctest: +ELLIPSIS
+0.0109...
+>>> Exp03.draw_nparray(20)  # doctest: +ELLIPSIS
+array([ 0.1876...,  0.1048...,  0.1583...,  0.1899...,  0.2686...,
+        0.1367...,  0.2585...,  0.0358...,  0.0115...,  0.2998... ,
+        0.0730...,  0.1992...,  0.1768...,  0.0241...,  0.8271... ,
+        0.7633...,  1.    ...,  0.0572...,  0.0784...,  0.0435...])
+"""
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.5"

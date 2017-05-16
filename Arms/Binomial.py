@@ -1,19 +1,34 @@
 # -*- coding: utf-8 -*-
-""" Binomial distributed arm."""
+""" Binomial distributed arm.
+
+Example of creating an arm:
+
+>>> import random; import numpy as np
+>>> random.seed(0); np.random.seed(0)
+>>> B03_10 = Binomial(0.3, 10)
+>>> B03_10
+Bin(0.3, 10)
+>>> B03_10.mean
+3.0
+
+Examples of sampling from an arm:
+
+>>> B03_10.draw()
+3.0
+>>> B03_10.draw_nparray(20)
+array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
+        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+"""
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
-from random import random
+# from random import random
+import numpy as np
 from numpy.random import binomial as npbinomial
 
 from .Arm import Arm
 from .kullback import klBin
-
-
-def binomial(n, p):
-    """ Manual implementation of random sample from Bin(n, p), with random.random() <= p summed n times."""
-    return sum(float(random() <= p) for _ in range(n))
 
 
 class Binomial(Arm):
@@ -31,11 +46,11 @@ class Binomial(Arm):
 
     def draw(self, t=None):
         """ Draw one random sample. The parameter t is ignored in this Arm."""
-        return binomial(self.draws, self.probability)
+        return np.asarray(npbinomial(self.draws, self.probability), dtype=float)
 
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""
-        return npbinomial(self.draws, self.probability, shape)
+        return np.asarray(npbinomial(self.draws, self.probability, shape), dtype=float)
 
     # --- Printing
 
