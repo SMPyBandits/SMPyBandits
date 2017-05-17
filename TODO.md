@@ -52,3 +52,8 @@
 ### Dynamic settings
 - [ ] add the possibility to have a varying number of dynamic users for multi-users simulations in AlgoBandits.git
 - [ ] implement the experiments from [Musical Chair], [rhoRand] articles, and Navik Modi's experiments
+
+---
+
+## Other aspects
+- [ ] publish on GitHub my Python/Cython implementation of Lempel-Ziv
