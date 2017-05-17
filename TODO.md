@@ -48,3 +48,7 @@
 - [x] I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) multi-player policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](Policies/MEGA.py). It consists of the ALOHA collision avoidance protocol and a Epsilon-greedy arm selection algorithm.
 - [x] I also generalized it by implementing the ALOHA collision avoidance protocol for *any* single-player policy, in [`ALOHA`](PoliciesMultiPlayers/ALOHA.py). FIXME it has too much parameter, how to chose them??
 - [ ] TODO ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
+
+### Dynamic settings
+- [ ] add the possibility to have a varying number of dynamic users for multi-users simulations in AlgoBandits.git
+- [ ] implement the experiments from [Musical Chair], [rhoRand] articles, and Navik Modi's experiments
