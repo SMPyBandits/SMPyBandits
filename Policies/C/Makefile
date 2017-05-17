@@ -1,3 +1,4 @@
+# GNU Make makefile to build the kullback C extension
 all: clean build install clean
 
 build: build2 build3
