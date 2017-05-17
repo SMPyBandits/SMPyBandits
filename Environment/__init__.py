@@ -38,6 +38,5 @@ from .usetqdm import *
 from .sortedDistance import *
 from .fairnessMeasures import *
 
-# # Lempel-Ziv complexity, both Python and Cython version
-# from .LempelZiv import lempel_ziv_complexity
-# from .lempel_ziv_complexity_cython import lempel_ziv_complexity as lempel_ziv_complexity_cython
+# # Lempel-Ziv complexity, Cython version
+# from lempel_ziv_complexity import lempel_ziv_complexity
