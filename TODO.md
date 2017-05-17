@@ -56,4 +56,4 @@
 ---
 
 ## Other aspects
-- [ ] publish on GitHub my Python/Cython implementation of Lempel-Ziv
+- [x] publish on GitHub my Python/Cython implementation of Lempel-Ziv: it's here: https://github.com/Naereen/Lempel-Ziv_Complexity!
