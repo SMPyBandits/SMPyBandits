@@ -190,7 +190,7 @@ class Aggr(BasePolicy):
 
     # --- Internal method
 
-    def _makeChildrenChose(self):
+    def _makeChildrenChoose(self):
         """ Convenience method to make every children chose their best arm, and store their decision in ``self.choices``."""
         for i, child in enumerate(self.children):
             self.choices[i] = child.choice()
@@ -203,7 +203,7 @@ class Aggr(BasePolicy):
     def choice(self):
         """ Make each child vote, then sample the decision by importance sampling on their votes with the trust probabilities."""
         # 1. make vote every child
-        self._makeChildrenChose()
+        self._makeChildrenChoose()
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 

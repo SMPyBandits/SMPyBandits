@@ -8,7 +8,7 @@ Basically, it works like this:
 - And then, at each time step, use the models to generate some prediction for the output of each arm, and play according to the arm with highest prediction.
 
   + If needed, refit the models once in a while, to incorporate all the collected data.
-  + If needed, use a robust estimate (e.g., mean of 100 samples) to chose the arm to play, instead of only *one* sample.
+  + If needed, use a robust estimate (e.g., mean of 100 samples) to choose the arm to play, instead of only *one* sample.
 
 .. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 .. warning:: It is NOT really an on-line policy, as both the memory consumption and the time complexity of each step *increase* with time!
@@ -183,7 +183,7 @@ class UnsupervisedLearning(object):
         - For each arm :math:`k\in\{1,\dots,K\}`,
         - Use all the previous observations of that arm to train the model :math:`\mathcal{U}_k(t)`.
 
-      + Otherwise, use the previously trained model to chose the arm :math:`A(t) \in \{1,\dots,K\}` to play next (see :meth:`choice` below).
+      + Otherwise, use the previously trained model to choose the arm :math:`A(t) \in \{1,\dots,K\}` to play next (see :meth:`choice` below).
     """
 
     def __init__(self, nbArms, estimator=KernelDensity,
@@ -235,7 +235,7 @@ class UnsupervisedLearning(object):
 
         .. math:: \forall k\in\{1,\dots,K\}, \;\; s_k(t) \sim \mathcal{U}_k(t).
 
-        * Chose the arm :math:`A(t)` with *highest* sample :
+        * Choose the arm :math:`A(t)` with *highest* sample :
 
         .. math:: A(t) \in \arg\max_{k\in\{1,\dots,K\}} s_k(t).
 
@@ -254,7 +254,7 @@ class UnsupervisedLearning(object):
 
            .. math:: \forall k\in\{1,\dots,K\}, \;\; \hat{s_k}(t) := \frac{1}{M} \sum_{i=1}^{M} s_k^i(t).
 
-           * Chose the arm :math:`A(t)` with *highest* mean sample :
+           * Choose the arm :math:`A(t)` with *highest* mean sample :
 
            .. math:: A(t) \in \arg\max_{k\in\{1,\dots,K\}} \hat{s_k}(t).
 

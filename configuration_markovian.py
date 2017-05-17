@@ -33,7 +33,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -44,9 +44,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
+# REPETITIONS = 1000
 # REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -93,8 +93,8 @@ configuration = {
         {
             "arm_type": "Markovian",
             "params": {
-                "rested": True,
-                # "rested": False,  # FIXME
+                # "rested": True,
+                "rested": False,  # FIXME
                 # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
                     # 1st arm, either a dictionary, to customize the states

@@ -76,7 +76,7 @@ class MEGA(BasePolicy):
             availableArms = np.nonzero(self.tnext <= self.t)[0]
             if len(availableArms) == 0:
                 print("Error: MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET ... Choosing a random arm.")  # DEBUG
-                self.chosenArm = rn.randint(self.nbArms)  # XXX Chose a random arm
+                self.chosenArm = rn.randint(self.nbArms)  # XXX Choose a random arm
                 # raise ValueError("FIXME MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET")
             else:  # There is some available arms
                 epsilon = self._epsilon_t()

@@ -383,10 +383,10 @@ class MarkovianMAB(MAB):
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             dollar = '$' if latex else ''
-            text = '{} Markovian rewards, {}[{}]{}'.format(
+            text = r'{} Markovian rewards, {}[{}]{}'.format(
                 "Rested" if self.rested else "Restless",
                 dollar, ', '.join(
-                    "{}P: {}, pi: {} ∼ {}{}".format(
+                    r"{}P: {}, \pi: {} ∼ {}{}".format(
                         openTag if armId in bestArms else "",
                         np.asarray(mat).tolist(), st, repr(arm),
                         endTag if armId in bestArms else ""

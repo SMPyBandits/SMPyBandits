@@ -127,16 +127,16 @@ class MusicalChair(BasePolicy):
         if self.chair is not None:  # and self.state == State.Sitted:
             # If the player is already sit, nothing to do
             self.state = State.Sitted  # We can stay sitted: no collision right after we sit
-            # If we can chose this chair like this, it's because we were already sitted, without seeing a collision
+            # If we can choose this chair like this, it's because we were already sitted, without seeing a collision
             # print("\n- A MusicalChair player chose arm {} because it's his chair, and time t = {} ...".format(self.chair, self.t))  # DEBUG
             return self.chair
         elif self.state == State.InitialPhase:
-            # Play as initial phase: chose a random arm, uniformly among all the K arms
+            # Play as initial phase: choose a random arm, uniformly among all the K arms
             i = np.random.randint(self.nbArms)
             # print("\n- A MusicalChair player chose a random arm {} among [1,...,{}] as it is in state InitialPhase, and time t = {} ...".format(i, self.nbArms, self.t))  # DEBUG
             return i
         elif self.state == State.MusicalChair:
-            # Play as musical chair: chose a random arm, among the M bests
+            # Play as musical chair: choose a random arm, among the M bests
             i = np.random.choice(self.A)  # Random arm among the M bests
             self.chair = i  # Assume that it would be a good chair
             # print("\n- A MusicalChair player chose a random arm i={} of index={} among the {}-best arms in [1,...,{}] as it is in state MusicalChair, and time t = {} ...".format(i, k, self.nbPlayers, self.nbArms, self.t))  # DEBUG

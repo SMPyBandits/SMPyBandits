@@ -55,7 +55,7 @@ class AdBandits(BasePolicy):
         return float(self.t / (self.horizon * self.alpha))
 
     def choice(self):
-        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to chose one arm."""
+        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to choose one arm."""
         # Thompson Exploration
         if random() > self.epsilon:
             upperbounds = [self.posterior[i].sample() for i in range(self.nbArms)]
@@ -72,7 +72,7 @@ class AdBandits(BasePolicy):
         return arm
 
     def choiceWithRank(self, rank=1):
-        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to chose one arm of a certain rank."""
+        r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to choose one arm of a certain rank."""
         if rank == 1:
             return self.choice()
         else:
