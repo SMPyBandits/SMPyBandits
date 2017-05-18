@@ -164,7 +164,13 @@ def maximizeWindow():
                     # plt.show()
 
 
-def show_and_save(showplot=True, savefig=None, formats=('png', 'pdf')):
+#: List of formats to use for saving the figures, by default.
+#: It is a smart idea to save in both a raster and vectorial formats
+FORMATS = ('png', 'pdf')
+# FORMATS = ('png', 'pdf', 'svg')
+
+
+def show_and_save(showplot=True, savefig=None, formats=FORMATS):
     """ Maximize the window, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure

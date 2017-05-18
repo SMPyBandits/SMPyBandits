@@ -1,6 +1,8 @@
 # :boom: TODO
 > For others things to do, and issues to solve, see [the issue tracker on GitHub](https://github.com/Naereen/AlgoBandits/issues).
 
+- [x] Add support to save my figures in SVG ?
+
 ## Initial things to do! - OK
 - [x] Clean up initial code, keep it clean and commented, OK.
 - [x] Lint the code and make it (almost) "perfect" regarding [Python style recommandation](https://www.python.org/dev/peps/pep-0008/), OK.
