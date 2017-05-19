@@ -60,9 +60,9 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-REPETITIONS = 50
-# # REPETITIONS = 20
-REPETITIONS = 10
+# REPETITIONS = 50
+REPETITIONS = 20
+# REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -90,9 +90,9 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 4    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
-NB_PLAYERS = 9    # Less that the number of arms
+# NB_PLAYERS = 4    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
@@ -190,10 +190,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(19, 1 / (1. + 19))
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
@@ -215,11 +215,11 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
-        #     # nbPlayers = 4
-        # }
+        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
+            # nbPlayers = 4
+        }
         # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
@@ -410,24 +410,29 @@ configuration.update({
 
 
 configuration["successive_players"] = [
+
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+
     # --- 2) Musical Chair
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+
     # --- 3) EmpiricalMeans
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
     # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
+
     # --- 4) UCBalpha
     # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
     # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+
     # --- 5) klUCBPlus
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
@@ -437,10 +442,12 @@ configuration["successive_players"] = [
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
     # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+
     # --- 6) Thompson
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
+
     # --- 7) BayesUCB
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -450,28 +457,35 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+
     # --- 8) Aggr
     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+
     # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
-    # --- 9) Mixing rhoRand or Selfish with different learning algorithms
+    rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+
+    # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
     # + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
     # Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
     # + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children \
     # + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children,
-    # --- 10) Comparing different "robust" ThompsonSampling algorithms
+
+    # --- 11) Comparing different "robust" ThompsonSampling algorithms
     # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
     # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
@@ -480,7 +494,8 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
     # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
     # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
-    # --- 11) Comparing different rhoRandSticky algorithms
+
+    # --- 12) Comparing different rhoRandSticky algorithms
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=1).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,

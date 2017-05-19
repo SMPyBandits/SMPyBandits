@@ -53,7 +53,7 @@ def handleCollision_or_getZeroReward(player, arm, lower=0):
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions):
     """ Simple collision model where only the players alone on one arm samples it and receives the reward.
 
-    - This is the default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
+    - This is the default collision model, cf. [Liu & Zhao, 2009](https://arxiv.org/abs/0910.2065v3) collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     # First, sense in all the arms
@@ -90,7 +90,7 @@ def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, coll
     """ A variant of the first simple collision model where all players sample their arm, receive their rewards, and are informed of the collisions.
 
     - Note: it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
-    - This is the NOT default collision model, cf. https://arxiv.org/abs/0910.2065v3 collision model 1.
+    - This is the NOT default collision model, cf. [Liu & Zhao, 2009](https://arxiv.org/abs/0910.2065v3) collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     nbCollisions = np.bincount(choices, minlength=len(arms)) - 1  # XXX this is faster!

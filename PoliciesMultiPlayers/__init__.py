@@ -59,6 +59,7 @@ from .rhoEst import rhoEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ie
 from .rhoLearn import rhoLearn  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoRandSticky import rhoRandSticky  # New version, still experimental!
 from .rhoRandRotating import rhoRandRotating  # New version, still experimental!
+from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log
 
