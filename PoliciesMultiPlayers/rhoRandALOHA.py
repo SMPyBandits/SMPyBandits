@@ -18,12 +18,6 @@ from random import random, randint
 
 from .rhoRand import oneRhoRand, rhoRand
 
-#: Default value for P0, ideally, it should be 1/M the number of player
-P0 = 0.0
-
-#: Default value for ALPHA_P0, FIXME I have no idea what the best possible choise ca be!
-ALPHA_P0 = 0.99
-
 
 # --- Utilitary functions
 
@@ -71,9 +65,6 @@ def new_rank(rank, maxRank, forceChange=False):
     return r
 
 
-FORCE_CHANGE = False  #: Default value for forceChange. Logically, it should be True.
-
-
 # --- Class oneRhoRandALOHA, for children
 
 class oneRhoRandALOHA(oneRhoRand):
@@ -98,7 +89,7 @@ class oneRhoRandALOHA(oneRhoRand):
         self.forceChange = forceChange  #: Should a *different* rank be used when moving? Or not.
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{RandALOHA}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "", r", $p_0:{:.3g}$, $\alpha:{:.3g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")
+        return r"#{}<{}[{}{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{RandALOHA}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "", r", $p_0:{:.5g}$, $\alpha:{:.5g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")
 
     def startGame(self):
         """Start game."""
@@ -116,7 +107,7 @@ class oneRhoRandALOHA(oneRhoRand):
         if with_proba(1. - self.p):
             self.rank = new_rank(self.rank, self.maxRank, self.forceChange)  # New random rank, can be forced to be new or not.
             # print(" - A oneRhoRandALOHA player {} saw a collision, so she had to select a new random rank : {} ...".format(self, self.rank))  # DEBUG
-            # print(" - A oneRhoRandALOHA player {} saw a collision, so she reinitialized her probability p from {:.3g} to {:.3g}...".format(self, self.p, self.p0))  # DEBUG
+            # print(" - A oneRhoRandALOHA player {} saw a collision, so she reinitialized her probability p from {:.5g} to {:.5g}...".format(self, self.p, self.p0))  # DEBUG
             self.p = self.p0  # Reinitialize the proba p
         # 2. With probability p, keep the rank
         # else:
@@ -130,7 +121,17 @@ class oneRhoRandALOHA(oneRhoRand):
         super(oneRhoRandALOHA, self).getReward(arm, reward)
         # old_p = self.p  # DEBUG
         self.p = self.p * self.alpha_p0 + (1 - self.alpha_p0)  # Update proba p
-        # print(" - A oneRhoRandALOHA player {} saw a reward, so she updated her probability p from {:.3g} to {:.3g}...".format(self, old_p, self.p))  # DEBUG
+        # print(" - A oneRhoRandALOHA player {} saw a reward, so she updated her probability p from {:.5g} to {:.5g}...".format(self, old_p, self.p))  # DEBUG
+
+
+#: Default value for P0, ideally, it should be 1/M the number of player
+P0 = 0.0
+
+#: Default value for ALPHA_P0, FIXME I have no idea what the best possible choise ca be!
+ALPHA_P0 = 0.9999
+
+#: Default value for forceChange. Logically, it should be True.
+FORCE_CHANGE = False
 
 
 # --- Class rhoRandALOHA
@@ -178,4 +179,4 @@ class rhoRandALOHA(rhoRand):
             self.children[playerId] = oneRhoRandALOHA(maxRank, p0, alpha_p0, forceChange, self, playerId)
 
     def __str__(self):
-        return "rhoRandALOHA({} x {}{})".format(self.nbPlayers, str(self._players[0]), r"$p_0:{:.3g}$, $\alpha:{:.3g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")
+        return "rhoRandALOHA({} x {}{})".format(self.nbPlayers, str(self._players[0]), r"$p_0:{:.5g}$, $\alpha:{:.5g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")

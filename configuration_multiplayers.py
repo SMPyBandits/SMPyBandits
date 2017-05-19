@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -59,9 +59,9 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
@@ -178,10 +178,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
         # }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(9, 1 / (1. + 9))
-        # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": uniformMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -215,11 +215,11 @@ configuration = {
         #     "params": [0.3, 0.4, 0.5, 0.6, 0.7]
         #     # nbPlayers = 2
         # }
-        {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
-            # nbPlayers = 4
-        }
+        # {   # Variant on scenario 1 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.6, 0.7, 0.8, 0.9]
+        #     # nbPlayers = 4
+        # }
         # {   # Scenario 2 from [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]
         #     "arm_type": Bernoulli,
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
@@ -472,10 +472,10 @@ configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
     rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
