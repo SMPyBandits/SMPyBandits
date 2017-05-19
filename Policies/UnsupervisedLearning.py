@@ -21,7 +21,6 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 import numpy as np
-np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 import scipy.stats as st
 
 

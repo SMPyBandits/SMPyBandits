@@ -25,6 +25,8 @@
 
 - *New!* An experimental policy, using Unsupervised Learning: :class:`UnsupervisedLearning`,
 
+- *New!* An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -66,6 +68,8 @@ from .ProbabilityPursuit import ProbabilityPursuit
 
 # --- Using unsupervised learning, from scikit-learn
 from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
+
+from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
 
 # --- Simple UCB policies
 from .UCB import UCB
