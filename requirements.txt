@@ -20,4 +20,5 @@ sphinx_rtd_theme  # better sphinx theme
 recommonmark      # parser to read Markdown files
 
 # --- For only one policy
-sklearn           # for UnsupervisedLearning
+scikit-learn           # for UnsupervisedLearning
+scikit-optimize        # for BlackBoxOpt

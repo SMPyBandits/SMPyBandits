@@ -5,7 +5,7 @@ It solves the problem of efficiently selecting a set of :math:`k` distinct actio
 
 The distribution :math:`(p_1, \dots, p_K)` on :math:`\{1,\dots,K\}` is assumed to be given.
 
-Dependent rounding developed by Gandhi et al. [6] is a kind of technique that randomly selects a set of edges from a bipartite graph under some cardinality constraints.
+Dependent rounding developed by [Gandhi et al.] is a kind of technique that randomly selects a set of edges from a bipartite graph under some cardinality constraints.
 
 - It runs in :math:`\mathcal{O}(K)` space complexity, and at most :math:`\mathcal{O}(K^2)` time complexity (note that the article [Uchiya et al., 2010] wrongly claim it is in :math:`\mathcal{O}(K)`).
 - References: see also https://www.cs.umd.edu/~samir/grant/jacm06.pdf
