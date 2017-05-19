@@ -100,7 +100,7 @@ class rhoRandSticky(rhoRand):
         if maxRank is None:
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        self.stickyTime = stickyTime  #: Max rank, usually nbPlayers but can be different
+        self.stickyTime = stickyTime  #: Number of time steps needed without collisions before sitting (never changing rank again)
         self.nbPlayers = nbPlayers  #: Number of players
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
