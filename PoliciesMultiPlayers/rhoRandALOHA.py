@@ -124,7 +124,7 @@ class oneRhoRandALOHA(oneRhoRand):
         # print(" - A oneRhoRandALOHA player {} saw a reward, so she updated her probability p from {:.5g} to {:.5g}...".format(self, old_p, self.p))  # DEBUG
 
 
-#: Default value for P0, ideally, it should be 1/M the number of player
+#: Default value for P0, ideally, it should be 1/(K*M) the number of player
 P0 = 0.0
 
 #: Default value for ALPHA_P0, FIXME I have no idea what the best possible choise ca be!
@@ -165,8 +165,8 @@ class rhoRandALOHA(rhoRand):
         if maxRank is None:
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        if p0 is None:  # If not given, use 1/M by default
-            p0 = 1. / nbPlayers
+        if p0 is None:  # If not given, use 1/(K*M) by default
+            p0 = 1. / (nbArms * nbPlayers)
         self.p0 = p0  #: Initial value for p, current probability of staying with the current rank after a collision
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         self.forceChange = forceChange  #: Should a *different* rank be used when moving? Or not.
