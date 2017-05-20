@@ -21,6 +21,10 @@ simplefilter("ignore", UserWarning)
 import skopt.learning
 from skopt import Optimizer
 
+from .BasePolicy import BasePolicy
+
+
+# --- Default estimator and optimizer
 
 def default_estimator(*args, **kwargs):
     """Default estimator object.
@@ -53,7 +57,7 @@ def default_optimizer(nbArms, est, *args, **kwargs):
 
 # --- Decision Making Policy
 
-class BlackBoxOpt(object):
+class BlackBoxOpt(BasePolicy):
     r"""Black-box Bayesian optimizer for Multi-Armed Bandit, using Gaussian processes.
 
     - By default, it uses :func:`default_optimizer`.
