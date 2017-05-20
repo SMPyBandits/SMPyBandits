@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 r""" An experimental "on-line" policy, using algorithms from black-box Bayesian optimization, using [scikit-optimize](https://scikit-optimize.github.io/).
 
-It uses an iterative black-box Bayesian optimizer, with two methods :meth:`ask` and :meth:`tell` to be used as :meth:`choice` and :meth:`getReward` for our Multi-Armed Bandit optimization environment.
+- It uses an iterative black-box Bayesian optimizer, with two methods :meth:`ask` and :meth:`tell` to be used as :meth:`choice` and :meth:`getReward` for our Multi-Armed Bandit optimization environment.
+- See https://scikit-optimize.github.io/notebooks/ask-and-tell.html for more details.
+
+.. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and probably NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 """
 
 __author__ = "Lilian Besson"
@@ -9,19 +12,27 @@ __version__ = "0.6"
 
 import numpy as np
 
+# Ignore the UserWarning skopt/optimizer/optimizer.py:208:
+# UserWarning: The objective has been evaluated at this point before.
+from warnings import simplefilter
+simplefilter("ignore", UserWarning)
+
 # Cf. https://scikit-optimize.github.io/
-from skopt.learning import ExtraTreesRegressor, GaussianProcessRegressor
+import skopt.learning
 from skopt import Optimizer
 
 
 def default_estimator(*args, **kwargs):
     """Default estimator object.
 
-    - Default is :class:`ExtraTreesRegressor` (https://scikit-optimize.github.io/learning/index.html#skopt.learning.ExtraTreesRegressor).
+    - Default is :class:`RandomForestRegressor` (https://scikit-optimize.github.io/learning/index.html#skopt.learning.RandomForestRegressor).
+    - Another possibility is to use :class:`ExtraTreesRegressor` (https://scikit-optimize.github.io/learning/index.html#skopt.learning.ExtraTreesRegressor), but it is slower!
+    - :class:`GaussianProcessRegressor` (https://scikit-optimize.github.io/learning/index.html#skopt.learning.GaussianProcessRegressor) was failing, don't really know why. I think it is not designed to work with Categorical inputs.
     - Any of https://scikit-optimize.github.io/learning/index.html can be used.
     """
-    etr = ExtraTreesRegressor()
-    etr = GaussianProcessRegressor()
+    etr = skopt.learning.RandomForestRegressor(*args, **kwargs)
+    # etr = skopt.learning.ExtraTreesRegressor(*args, **kwargs)
+    # etr = skopt.learning.GaussianProcessRegressor(*args, **kwargs)
     return etr
 
 
@@ -31,24 +42,23 @@ def default_optimizer(nbArms, est, *args, **kwargs):
     - Default is :class:`Optimizer` (https://scikit-optimize.github.io/#skopt.Optimizer).
     """
     opt = Optimizer([
-                    list(range(nbArms))  # Categorical
+                    list(range(nbArms))  # Categorical dimensions: arm index!
                     ],
                     est(*args, **kwargs),
                     acq_optimizer="sampling",
-                    n_random_starts=100  # Sure ?
+                    n_random_starts=3 * nbArms  # Sure ?
                     )
     return opt
 
 
 # --- Decision Making Policy
 
-
 class BlackBoxOpt(object):
     r"""Black-box Bayesian optimizer for Multi-Armed Bandit, using Gaussian processes.
 
     - By default, it uses :func:`default_optimizer`.
 
-    .. warning:: This is still **experimental**!
+    .. warning:: This is still **experimental**! It works fine, but it is EXTREMELY SLOW!
     """
 
     def __init__(self, nbArms,
@@ -70,28 +80,28 @@ class BlackBoxOpt(object):
     # --- Easy methods
 
     def __str__(self):
-        return "BlackBoxOpt({})".format(self.opt.__name__)
+        return "BlackBoxOpt({}, {})".format(self._opt.__name__, self._est.__name__)
 
     def startGame(self):
         """ Reinitialize the black-box optimizer."""
         self.t = -1
-        self.opt = self._opt(self.nbArms, self.est, *self._args, **self._kwargs)  #: The black-box optimizer to use, initialized from the other arguments
+        self.opt = self._opt(self.nbArms, self._est, *self._args, **self._kwargs)  # The black-box optimizer to use, initialized from the other arguments
 
-    def getReward(self, x, y):
-        """ Store this observation `reward` for that arm `armId`."""
-        return self.opt.tell(x, y)
+    def getReward(self, armId, reward):
+        """ Store this observation `reward` for that arm `armId`.
+
+        - In fact, :class:`skopt.Optimizer` is a *minimizer*, so `loss=1-reward` is stored, to maximize the rewards by minimizing the losses.
+        """
+        reward = (reward - self.lower) / self.amplitude  # project the reward to [0, 1]
+        loss = 1. - reward  # flip
+        # print("- A {} policy saw a reward = {} (= loss = {}) from arm = {}...".format(self, reward, loss, armId))  # DEBUG
+        return self.opt.tell([armId], loss)
 
     def choice(self):
         r""" Choose an arm, according to the black-box optimizer."""
         self.t += 1
         asked = self.opt.ask()
-        # That's a np.array of float!
+        # That's a np.array of int, as we use Categorical input dimension!
         arm = int(np.round(asked[0]))
-        # Now it's a float, ok
+        # print("- At time t = {}, a {} policy chose to play arm = {}...".format(self, self.t, arm))  # DEBUG
         return arm
-
-    # --- Other method
-
-    def estimatedOrder(self):
-        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
-        return np.argsort(self.index())  # FIXME find a way to do that!

@@ -11,7 +11,7 @@
 - :class:`OracleNotFair`: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
 - :class:`OracleFair`: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
 
-- :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc). And variants, :class:`rhoRandRand`, :class:`rhoRandSticky`, :class:`rhoRandRotating`, :class:`rhoRandEst`, :class:`rhoRandLearn`,
+- :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc). And variants, :class:`rhoRandRand`, :class:`rhoRandSticky`, :class:`rhoRandRotating`, :class:`rhoRandEst`, :class:`rhoRandLearn`, :class:`rhoRandALOHA`,
 
 
 All policies have the same interface, as described in :class:`BaseMPPolicy` for decentralized policies,
