@@ -232,12 +232,6 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # --- Black Box optimizer, using Gaussian Processes
-        {
-            "archtype": BlackBoxOpt,
-            "params": {
-            }
-        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -656,6 +650,12 @@ configuration.update({
         #         "alpha": 0.5,
         #     }
         # },
+        # --- Black Box optimizer, using Gaussian Processes
+        {
+            "archtype": BlackBoxOpt,
+            "params": {
+            }
+        },
     ]
 })
 
