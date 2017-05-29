@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r""" Define some function to measure fairness of a vector of cumulated rewards, of shape (nbPlayers, horizon).
+r""" Define some function to measure fairness of a vector of cumulated rewards, of shape `(nbPlayers, horizon)`.
 
 - All functions are valued in :math:`[0, 1]`: :math:`100\%` means fully unfair (one player has :math:`0` rewards, another one has :math:`>0` rewards), and :math:`0\%` means fully fair (they all have exactly the same rewards).
 - Reference: https://en.wikipedia.org/wiki/Fairness_measure and http://ica1www.epfl.ch/PS_files/LEB3132.pdf#search=%22max-min%20fairness%22.
@@ -76,7 +76,7 @@ def std_fairness(X, axis=0):
 
 
 def rajjain_fairness(X, axis=0):
-    r""" Raj Jain's fairness index: :math:`(\sum_{i=1}^{N} x_i)^2 / (N * \sum_{i=1}^{N} x_i^2)`, projected to :math:`[0, 1]` instead of :math:`[\frac{1}{n}, 1]` as introduced in the reference article.
+    r""" Raj Jain's fairness index: :math:`(\sum_{i=1}^{n} x_i)^2 / (n \times \sum_{i=1}^{n} x_i^2)`, projected to :math:`[0, 1]` instead of :math:`[\frac{1}{n}, 1]` as introduced in the reference article.
 
     - cf. https://en.wikipedia.org/wiki/Fairness_measure#Jain.27s_fairness_index.
 
