@@ -16,7 +16,9 @@ import numpy as np
 def amplitude_fairness(X, axis=0):
     r""" (Normalized) Amplitude fairness, homemade formula: :math:`1 - \min(X, axis) / \max(X, axis)`.
 
-    >>> rn.seed(1)
+    Examples:
+
+    >>> import numpy.random as rn; rn.seed(1)  # for reproductibility
     >>> X = np.cumsum(rn.rand(10, 1000))
     >>> amplitude_fairness(X)  # doctest: +ELLIPSIS
     0.999...
@@ -25,7 +27,7 @@ def amplitude_fairness(X, axis=0):
     >>> amplitude_fairness(np.log(1 + np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.959...
 
-    >>> rn.seed(3)
+    >>> rn.seed(3)  # for reproductibility
     >>> X = rn.randint(0, 10, (10, 1000)); Y = np.cumsum(X, axis=1)
     >>> np.min(Y, axis=0)[0], np.max(Y, axis=0)[0]
     (3, 9)
@@ -53,7 +55,9 @@ def amplitude_fairness(X, axis=0):
 def std_fairness(X, axis=0):
     r""" (Normalized) Standard-variation fairness, homemade formula: :math:`2 * \mathrm{std}(X, axis) / \max(X, axis)`.
 
-    >>> rn.seed(1)
+    Examples:
+
+    >>> import numpy.random as rn; rn.seed(1)  # for reproductibility
     >>> X = np.cumsum(rn.rand(10, 1000))
     >>> std_fairness(X)  # doctest: +ELLIPSIS
     0.575...
@@ -62,7 +66,7 @@ def std_fairness(X, axis=0):
     >>> std_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.470...
 
-    >>> rn.seed(2)
+    >>> rn.seed(2)  # for reproductibility
     >>> X = np.cumsum(rn.randint(0, 10, (10, 100)))
     >>> std_fairness(X)  # doctest: +ELLIPSIS
     0.570...
@@ -80,7 +84,9 @@ def rajjain_fairness(X, axis=0):
 
     - cf. https://en.wikipedia.org/wiki/Fairness_measure#Jain.27s_fairness_index.
 
-    >>> rn.seed(1)
+    Examples:
+
+    >>> import numpy.random as rn; rn.seed(1)  # for reproductibility
     >>> X = np.cumsum(rn.rand(10, 1000))
     >>> rajjain_fairness(X)  # doctest: +ELLIPSIS
     0.248...
@@ -89,7 +95,7 @@ def rajjain_fairness(X, axis=0):
     >>> rajjain_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.110...
 
-    >>> rn.seed(2)
+    >>> rn.seed(2)  # for reproductibility
     >>> X = np.cumsum(rn.randint(0, 10, (10, 100)))
     >>> rajjain_fairness(X)  # doctest: +ELLIPSIS
     0.246...
@@ -106,10 +112,88 @@ def rajjain_fairness(X, axis=0):
         return (n - (np.sum(X, axis=axis) ** 2) / (np.sum(X ** 2, axis=axis))) / (n - 1)
 
 
-def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_fairness)):
-    """Fairness index, based on mean of the 3 fairness measures: Amplitude, STD and Raj Jain fairness.
+def mo_walrand_fairness(X, axis=0, alpha=2):
+    r""" Mo and Walrand's family fairness index: :math:`U_{\alpha}(X)`, **NOT** projected to :math:`[0, 1]`.
 
-    >>> rn.seed(1)
+    .. math::
+
+       U_{\alpha}(X) = \begin{cases}
+       \frac{1}{1 - \alpha} \sum_{i=1}^n x_i^{1 - \alpha} & \;\text{if}\; \alpha\in[0,+\infty)\setminus\{1\}, \\
+       \sum_{i=1}^{n} \ln(x_i) & \;\text{otherwise}.
+       \end{cases}
+
+    Examples:
+
+    >>> import numpy.random as rn; rn.seed(1)  # for reproductibility
+    >>> X = np.cumsum(rn.rand(10, 1000))
+
+    >>> alpha = 0
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    24972857.013...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    82933940429.039...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    471371.219...
+
+    >>> alpha = 0.99999
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    1000075176.390...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    1000150358.528...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    1000037587.478...
+
+    >>> alpha = 1
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    75173.509...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    150347.019...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    37586.754...
+
+    >>> alpha = 1.00001
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    -999924829.359...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    -999849664.476...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    -999962413.957...
+
+    >>> alpha = 2
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    -22.346...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    -9.874...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    -283.255...
+
+    >>> alpha = 5
+    >>> mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+    -8.737...
+    >>> mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+    -273.522...
+    >>> mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+    -2.468...
+    """
+    X = np.asarray(X)
+    n = X.shape[axis]
+    if n <= 1:
+        return 0
+    else:
+        assert alpha >= 0, "Error: the parameter 'alpha' for mo_walrand_fairness() function has to be >= 0, but it was {} instead.".format(alpha)  # DEBUG
+        if alpha == 1:
+            return np.sum(np.log(X))
+        else:
+            oneMalpha = 1. - alpha
+            return (1. / oneMalpha) * np.sum(X ** oneMalpha)
+
+
+def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_fairness)):
+    """ Fairness index, based on mean of the 3 fairness measures: Amplitude, STD and Raj Jain fairness.
+
+    Examples:
+
+    >>> import numpy.random as rn; rn.seed(1)  # for reproductibility
     >>> X = np.cumsum(rn.rand(10, 1000))
     >>> mean_fairness(X)  # doctest: +ELLIPSIS
     0.607...
@@ -118,7 +202,7 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
     >>> mean_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
     0.523...
 
-    >>> rn.seed(2)
+    >>> rn.seed(2)  # for reproductibility
     >>> X = np.cumsum(rn.randint(0, 10, (10, 100)))
     >>> mean_fairness(X)  # doctest: +ELLIPSIS
     0.605...
@@ -128,10 +212,7 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
     0.509...
     """
     X = np.asarray(X)
-    fairnesses = []
-    for method in methods:
-        fairnesses.append(method(X, axis=axis))
-    fairnesses = np.array(fairnesses)
+    fairnesses = np.array([m(X, axis=axis) for m in methods])
     return np.mean(fairnesses, axis=0)
 
 
@@ -140,21 +221,22 @@ fairnessMeasure = mean_fairness
 
 #: Mapping of names of measure to their function
 fairness_mapping = {
-    # "amplitude_fairness": amplitude_fairness,
-    # "std_fairness": std_fairness,
-    # "rajjain_fairness": rajjain_fairness,
-    # "mean_fairness": mean_fairness,
-    # "fairnessMeasure": fairnessMeasure,
-    # "amplitude": amplitude_fairness,
-    # "std": std_fairness,
-    # "rajjain": rajjain_fairness,
-    # "mean": mean_fairness,
-    # "default": fairnessMeasure,
-    "Amplitude": amplitude_fairness,
-    "STD": std_fairness,
-    "RajJain": rajjain_fairness,
-    "Mean": mean_fairness,
-    "Default": fairnessMeasure,
+    # "amplitude_fairness":   amplitude_fairness,
+    # "std_fairness":         std_fairness,
+    # "rajjain_fairness":     rajjain_fairness,
+    # "mean_fairness":        mean_fairness,
+    # "fairnessMeasure":      fairnessMeasure,
+    # "amplitude":            amplitude_fairness,
+    # "std":                  std_fairness,
+    # "rajjain":              rajjain_fairness,
+    # "mean":                 mean_fairness,
+    # "default":              fairnessMeasure,
+    "Amplitude":            amplitude_fairness,
+    "STD":                  std_fairness,
+    "RajJain":              rajjain_fairness,
+    "MoWalrand":            mo_walrand_fairness,
+    "Mean":                 mean_fairness,
+    "Default":              fairnessMeasure,
 }
 
 
@@ -163,6 +245,7 @@ __all__ = [
     "amplitude_fairness",
     "std_fairness",
     "rajjain_fairness",
+    "mo_walrand_fairness",
     "mean_fairness",
     "fairnessMeasure",
     "fairness_mapping",
