@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 r""" Manipulate posteriors of Bernoulli/Beta experiments.
 
-Rewards not in :math:`{0, 1}` are handled with a trick, see :func:`bernoulliBinarization`, with a "random binarization", cf., [[Agrawal & Goyal, 2012]](http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf) (algorithm 2).
-When reward :math:`r_t \in [0, 1]` is observed, the player receives the result of a Bernoulli sample of average :math:`r_t`: :math:`r_t \sim \mathrm{Bernoulli}(r_t)` so it is well in :math:``{0, 1}`.
+Rewards not in :math:`{0, 1}` are handled with a trick, see :func:`bernoulliBinarization`, with a "random binarization", cf., [Agrawal12]_ (algorithm 2).
+When reward :math:`r_t \in [0, 1]` is observed, the player receives the result of a Bernoulli sample of average :math:`r_t`: :math:`r_t \sim \mathrm{Bernoulli}(r_t)` so it is well in :math:`{0, 1}`.
 
 - See https://en.wikipedia.org/wiki/Bernoulli_distribution#Related_distributions
 - And https://en.wikipedia.org/wiki/Conjugate_prior#Discrete_distributions
+
+.. [Agrawal12] http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf
 """
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
@@ -27,6 +29,9 @@ def bernoulliBinarization(r_t):
 
     - Useful to allow to use a Beta posterior for non-Bernoulli experiments,
     - That way, :class:`Thompson` sampling can be used for any continuous-valued bounded rewards.
+
+    Examples:
+
     >>> import random
     >>> random.seed(0)
 
