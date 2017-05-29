@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-""" Define some function to measure fairness of a vector of cumulated rewards, of shape (nbPlayers, horizon).
+r""" Define some function to measure fairness of a vector of cumulated rewards, of shape (nbPlayers, horizon).
 
-- All functions are valued in [0, 1]: 100% means fully unfair (one player has 0 rewards, another one has >0 rewards), and 0% means fully fair (they all have exactly the same rewards).
+- All functions are valued in :math:`[0, 1]`: :math:`100\%` means fully unfair (one player has :math:`0` rewards, another one has :math:`>0` rewards), and :math:`0\%` means fully fair (they all have exactly the same rewards).
 - Reference: https://en.wikipedia.org/wiki/Fairness_measure and http://ica1www.epfl.ch/PS_files/LEB3132.pdf#search=%22max-min%20fairness%22.
 """
 from __future__ import division, print_function
@@ -14,7 +14,7 @@ import numpy as np
 
 
 def amplitude_fairness(X, axis=0):
-    """ (Normalized) Amplitude fairness, homemade formula: 1 - min(X, axis) / max(X, axis).
+    r""" (Normalized) Amplitude fairness, homemade formula: :math:`1 - \min(X, axis) / \max(X, axis)`.
 
     >>> rn.seed(1)
     >>> X = np.cumsum(rn.rand(10, 1000))
@@ -51,7 +51,7 @@ def amplitude_fairness(X, axis=0):
 
 
 def std_fairness(X, axis=0):
-    """ (Normalized) Standard-variation fairness, homemade formula: 2 * std(X, axis) / max(X, axis).
+    r""" (Normalized) Standard-variation fairness, homemade formula: :math:`2 * \mathrm{std}(X, axis) / \max(X, axis)`.
 
     >>> rn.seed(1)
     >>> X = np.cumsum(rn.rand(10, 1000))
@@ -76,7 +76,7 @@ def std_fairness(X, axis=0):
 
 
 def rajjain_fairness(X, axis=0):
-    """ Raj Jain's fairness index: (sum x)**2 / (N * sum x**2), projected to [0, 1].
+    r""" Raj Jain's fairness index: :math:`(\sum_{i=1}^{N} x_i)^2 / (N * \sum_{i=1}^{N} x_i^2)`, projected to :math:`[0, 1]` instead of :math:`[\frac{1}{n}, 1]` as introduced in the reference article.
 
     - cf. https://en.wikipedia.org/wiki/Fairness_measure#Jain.27s_fairness_index.
 
@@ -135,9 +135,10 @@ def mean_fairness(X, axis=0, methods=(amplitude_fairness, std_fairness, rajjain_
     return np.mean(fairnesses, axis=0)
 
 
-# Default fairness measure
+#: Default fairness measure
 fairnessMeasure = mean_fairness
 
+#: Mapping of names of measure to their function
 fairness_mapping = {
     # "amplitude_fairness": amplitude_fairness,
     # "std_fairness": std_fairness,
