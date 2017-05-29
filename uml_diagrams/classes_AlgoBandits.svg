@@ -697,7 +697,7 @@
 <text text-anchor="start" x="3982" y="-2270.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="3982" y="-2255.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="3982" y="-2240.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="3982" y="-2225.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
+<text text-anchor="start" x="3982" y="-2225.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
 <text text-anchor="start" x="3982" y="-2210.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="3982" y="-2195.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="3982" y="-2180.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -1172,7 +1172,7 @@
 <text text-anchor="middle" x="6674.5" y="-2225.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="6567,-2218 6782,-2218 "/>
 <text text-anchor="start" x="6575" y="-2202.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="6575" y="-2187.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="6575" y="-2187.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="6575" y="-2172.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="6575" y="-2157.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="6575" y="-2142.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
