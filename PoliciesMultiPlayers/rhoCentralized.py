@@ -6,6 +6,8 @@
 - Every player has rank_i = i + 1, as given by the base station.
 
 - Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players, and an initial orthogonal configuration.
+
+.. warning:: This policy is NOT efficient at ALL! Don't use it! It seems a smart idea, but it's not.
 """
 from __future__ import print_function
 
