@@ -448,15 +448,15 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
 
-    # --- 7) BayesUCB
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # --- 7) rhoLearn with BayesUCB
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 
     # --- 8) Aggr
     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
@@ -505,16 +505,16 @@ configuration["successive_players"] = [
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
 
-    # --- 13) Comparing Selfish, and rhoRand with or without initial orthogonal ranks
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoCentralized(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoCentralized(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=False).children,
-    # rhoCentralized(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
+    # # --- 13) Comparing Selfish, and rhoRand with or without initial orthogonal ranks
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoCentralized(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoCentralized(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=False).children,
+    # # rhoCentralized(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
 ]
 
 
