@@ -507,14 +507,14 @@ configuration["successive_players"] = [
 
     # --- 13) Comparing Selfish, and rhoRand with or without initial orthogonal ranks
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms, orthogonalRanks=False).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms, orthogonalRanks=True).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoCentralized(NB_PLAYERS, BayesUCB, nbArms).children,
     Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms, orthogonalRanks=False).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms, orthogonalRanks=True).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoCentralized(NB_PLAYERS, klUCBPlus, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=False).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
+    # rhoCentralized(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
 ]
 
 
