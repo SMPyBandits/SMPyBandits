@@ -27,10 +27,12 @@ class oneRhoRand(ChildPointer):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, *args, **kwargs):
+    def __init__(self, maxRank, *args, rank=None, **kwargs):
         super(oneRhoRand, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        self.rank = None  #: Current rank, starting to 1
+        assert rank is None or 1 <= rank <= maxRank, "Error: the 'rank' parameter = {} for oneRhoRand was not correct: only possible values are None or an integer 1 <= rank <= maxRank = {}.".format(rank, maxRank)  # DEBUG
+        self.keep_the_same_rank = rank is not None  #: If True, the rank is kept constant during the game, as if it was given by the Base Station
+        self.rank = int(rank) if self.keep_the_same_rank else None  #: Current rank, starting to 1 by default, or 'rank' if given as an argument
 
     def __str__(self):   # Better to recompute it automatically
         return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Rand}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
@@ -64,12 +66,14 @@ class rhoRand(BaseMPPolicy):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
-                 lower=0., amplitude=1., maxRank=None, *args, **kwargs):
+                 maxRank=None, orthogonalRanks=False,
+                 lower=0., amplitude=1., *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the rhoRand child (default to nbPlayers, but for instance if there is 2 × rhoRand[UCB] + 2 × rhoRand[klUCB], maxRank should be 4 not 2).
+        - orthogonalRanks: if True, orthogonal ranks 1..M are directly affected to the players 1..M.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -84,12 +88,16 @@ class rhoRand(BaseMPPolicy):
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.nbPlayers = nbPlayers  #: Number of players
+        self.orthogonalRanks = orthogonalRanks  #: Using orthogonal ranks from starting
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoRand(maxRank, self, playerId)
+            if orthogonalRanks:
+                self.children[playerId] = oneRhoRand(maxRank, self, playerId, rank=playerId + 1)
+            else:
+                self.children[playerId] = oneRhoRand(maxRank, self, playerId)
 
     def __str__(self):
-        return "rhoRand({} x {})".format(self.nbPlayers, str(self._players[0]))
+        return "rhoRand({} x {}{})".format(self.nbPlayers, str(self._players[0]), ", orthogonal ranks" if self.orthogonalRanks else "")

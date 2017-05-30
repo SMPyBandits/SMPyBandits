@@ -74,7 +74,7 @@ class oneRhoRandALOHA(oneRhoRand):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, p0, alpha_p0, forceChange, *args, **kwargs):
+    def __init__(self, maxRank, p0, alpha_p0, forceChange, *args, rank=None, **kwargs):
         super(oneRhoRandALOHA, self).__init__(maxRank, *args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         # p0
@@ -85,7 +85,9 @@ class oneRhoRandALOHA(oneRhoRand):
         assert 0 <= alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in [0, 1]."
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # rank
-        self.rank = None  #: Current rank, starting to 1
+        assert rank is None or 1 <= rank <= maxRank, "Error: the 'rank' parameter = {} for oneRhoRand was not correct: only possible values are None or an integer 1 <= rank <= maxRank = {}.".format(rank, maxRank)  # DEBUG
+        self.keep_the_same_rank = rank is not None  #: If True, the rank is kept constant during the game, as if it was given by the Base Station
+        self.rank = int(rank) if self.keep_the_same_rank else None  #: Current rank, starting to 1 by default, or 'rank' if given as an argument
         self.forceChange = forceChange  #: Should a *different* rank be used when moving? Or not.
 
     def __str__(self):   # Better to recompute it automatically
@@ -142,7 +144,8 @@ class rhoRandALOHA(rhoRand):
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
                  p0=None, alpha_p0=ALPHA_P0, forceChange=FORCE_CHANGE,
-                 lower=0., amplitude=1., maxRank=None,
+                 maxRank=None, orthogonalRanks=False,
+                 lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -152,6 +155,7 @@ class rhoRandALOHA(rhoRand):
         - alpha_p0: given to the oneRhoRandALOHA objects (see above).
         - forceChange: given to the oneRhoRandALOHA objects (see above).
         - maxRank: maximum rank allowed by the rhoRandALOHA child (default to nbPlayers, but for instance if there is 2 × rhoRandALOHA[UCB] + 2 × rhoRandALOHA[klUCB], maxRank should be 4 not 2).
+        - orthogonalRanks: if True, orthogonal ranks 1..M are directly affected to the players 1..M.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -174,9 +178,13 @@ class rhoRandALOHA(rhoRand):
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
+        self.orthogonalRanks = orthogonalRanks  #: Using orthogonal ranks from starting
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoRandALOHA(maxRank, p0, alpha_p0, forceChange, self, playerId)
+            if orthogonalRanks:
+                self.children[playerId] = oneRhoRandALOHA(maxRank, p0, alpha_p0, forceChange, self, playerId, rank=playerId + 1)
+            else:
+                self.children[playerId] = oneRhoRandALOHA(maxRank, p0, alpha_p0, forceChange, self, playerId)
 
     def __str__(self):
-        return "rhoRandALOHA({} x {}{})".format(self.nbPlayers, str(self._players[0]), r"$p_0:{:.5g}$, $\alpha:{:.5g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")
+        return "rhoRandALOHA({} x {}{}{})".format(self.nbPlayers, str(self._players[0]), r"$p_0:{:.5g}$, $\alpha:{:.5g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "", ", orthogonal ranks" if self.orthogonalRanks else "")

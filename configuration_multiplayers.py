@@ -59,8 +59,8 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
-# REPETITIONS = 50
+# REPETITIONS = 100
+REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
 
@@ -463,19 +463,19 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
-    # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+    # # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
@@ -504,6 +504,17 @@ configuration["successive_players"] = [
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
     # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
+
+    # --- 13) Comparing Selfish, and rhoRand with or without initial orthogonal ranks
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms, orthogonalRanks=False).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms, orthogonalRanks=True).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms, orthogonalRanks=False).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms, orthogonalRanks=True).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=False).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
 ]
 
 
