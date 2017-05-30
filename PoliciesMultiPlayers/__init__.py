@@ -17,22 +17,22 @@
 
 All policies have the same interface, as described in :class:`BaseMPPolicy` for decentralized policies,
 and :class:`BaseCentralizedPolicy` for centralized policies,
-in order to use them in any experiment with the following approach:
+in order to use them in any experiment with the following approach: ::
 
->>> my_policy_MP = Policy_MP(nbPlayers, nbArms, *args, lower=0, amplitude=1, **kwargs)
->>> children = my_policy_MP.children             # get a list of usable single-player policies
->>> for one_policy in children:
->>>     one_policy.startGame()                       # start the game
->>> for t in range(T):
->>>     for i in range(nbPlayers):
->>>         k_t[i] = children[i].choice()            # chose one arm, for each player
->>>     for k in range(nbArms):
->>>         players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
->>>         reward = reward_t[k] = sampled from the arm k     # sample a reward
->>>         if len(players_who_played_k) > 1:
->>>            reward = 0
->>>         for i in players_who_played_k:
->>>             children[i].getReward(k, reward)
+    my_policy_MP = Policy_MP(nbPlayers, nbArms, *args, lower=0, amplitude=1, **kwargs)
+    children = my_policy_MP.children             # get a list of usable single-player policies
+    for one_policy in children:
+        one_policy.startGame()                       # start the game
+    for t in range(T):
+        for i in range(nbPlayers):
+            k_t[i] = children[i].choice()            # chose one arm, for each player
+        for k in range(nbArms):
+            players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
+            reward = reward_t[k] = sampled from the arm k     # sample a reward
+            if len(players_who_played_k) > 1:
+               reward = 0
+            for i in players_who_played_k:
+                children[i].getReward(k, reward)
 """
 
 __author__ = "Lilian Besson"

@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
+r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
-- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where Mhat_i is the estimated number of player by player i,
-- The procedure to estimate Mhat_i is not so simple, but basically everyone starts with Mhat_i = 1, and when colliding Mhat_i += 1, for some time (with a complicated threshold).
+- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on :math:`[1, \dots, \hat{M}_i(t)]` where :math:`\hat{M}_i(t)` is the current estimated number of player by player i,
+- The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
 
-- Note: this is fully decentralized: each child player does NOT need to know the number of players, but require the horizon.
+- Note: this is fully decentralized: each child player does NOT need to know the number of players, but require the horizon :math:`T` (in the proposed algorithm).
+- My choice for the threshold function, see :func:`threshold_on_t`, does not need the horizon either, and uses :math:`t` instead.
 """
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from math import log, sqrt
 import numpy.random as rn
@@ -19,31 +20,34 @@ import numpy.random as rn
 from .rhoRand import oneRhoRand, rhoRand
 
 
-# --- threshold function Xsi(n, k)
+# --- threshold function xi(n, k)
 
 def default_threshold(horizon, nbPlayersEstimate):
-    """Function Xsi(T, k) used as a threshold in rhoEst.
+    r""" Function :math:`\xi(T, k)` used as a threshold in :class:`rhoEst`.
 
-    - 0 if nbPlayersEstimate is 0,
-    - 1 if nbPlayersEstimate is 1,
-    - any function such that: Xsi(T, k) = omega(log T) for all k > 1. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose T, as sqrt(T) and T**0.1 were too small (the nbPlayersEstimate was always growing too fast).
+    - `0` if `nbPlayersEstimate` is `0`,
+    - `1` if `nbPlayersEstimate` is `1`,
+    - any function such that: :math:`\xi(T, k) = \omega(\log T)` for all `k > 1`. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose :math:`T`, as :math:`\sqrt(T)` and :math:`T^{0.1}` were too small (the `nbPlayersEstimate` was always growing too fast).
+
+    .. warning:: It requires the horizon :math:`T`.
     """
     if nbPlayersEstimate == 0:
         return 0
     elif nbPlayersEstimate == 1:
         return 1
     else:
-        # return horizon ** 0.5
-        # return horizon ** 0.1
+        # return horizon ** 0.5  # XXX not efficient enough!
+        # return horizon ** 0.1  # XXX not efficient enough!
         return horizon
 
 
 def threshold_on_t(t, nbPlayersEstimate):
-    """Function Xsi(t, k) used as a threshold in rhoEst.
+    r""" Function :math:`\xi(t, k)` used as a threshold in :class:`rhoEst`.
 
-    - 0 if nbPlayersEstimate is 0,
-    - 1 if nbPlayersEstimate is 1,
-    - My heuristic is to use a function of t (current time) and not T (horizon).
+    - `0` if `nbPlayersEstimate` is `0`,
+    - `1` if `nbPlayersEstimate` is `1`,
+    - My heuristic is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
+    - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = t`.
     """
     if nbPlayersEstimate == 0:
         return 0
@@ -64,8 +68,8 @@ class oneRhoEst(oneRhoRand):
 
     - Except for the handleCollision method: a new random rank is sampled after observing a collision,
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy,
-    - The rhoEst policy is used to keep an estimate on the total number of players, Mhat_i.
-    - The procedure to estimate Mhat_i is not so simple, but basically everyone starts with Mhat_i = 1, and when colliding Mhat_i += 1, for some time (with a complicated threshold).
+    - The rhoEst policy is used to keep an estimate on the total number of players, :math:`\hat{M}_i(t)`.
+    - The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
     """
 
     def __init__(self, horizon, threshold, *args, **kwargs):
@@ -146,17 +150,20 @@ class rhoEst(rhoRand):
     """ rhoEst: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon, threshold=threshold_on_t, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+                 threshold=threshold_on_t, lower=0., amplitude=1.,
+                 *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
         - horizon: needed for the estimate of nb of users.
+        - threshold: the threshold function to use, see :func:`default_threshold` or :func:`threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
 
-        >>> s = rhoEst(nbPlayers, UCB, nbArms, horizon)
+        >>> s = rhoEst(nbPlayers, UCB, nbArms, horizon, threshold=threshold_on_t)
 
         - To get a list of usable players, use s.children.
         - Warning: s._players is for internal use ONLY!

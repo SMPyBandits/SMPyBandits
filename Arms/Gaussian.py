@@ -103,14 +103,14 @@ class UnboundedGaussian(Gaussian):
         super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)
 
 
-def phi(xsi):
-    r"""The :math:`\phi(x)` function, defined by:
+def phi(xi):
+    r"""The :math:`\phi(\xi)` function, defined by:
 
-    .. math:: \phi(x) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 x^2 \right)
+    .. math:: \phi(\xi) := \frac{1}{\sqrt{2 \pi}} \exp\left(- \frac12 \xi^2 \right)
 
     It is the probability density function of the standard normal distribution, see https://en.wikipedia.org/wiki/Standard_normal_distribution.
     """
-    return np.exp(- 0.5 * xsi**2) / np.sqrt(2. * np.pi)
+    return np.exp(- 0.5 * xi**2) / np.sqrt(2. * np.pi)
 
 
 def Phi(x):

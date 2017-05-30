@@ -31,14 +31,14 @@
 
 
 All policies have the same interface, as described in :class:`BasePolicy`,
-in order to use them in any experiment with the following approach:
+in order to use them in any experiment with the following approach: ::
 
->>> my_policy = Policy(nbArms, *args, lower=0, amplitude=1, **kwargs)
->>> my_policy.startGame()  # start the game
->>> for t in range(T):
->>>     chosen_arm_t = k_t = my_policy.choice()  # chose one arm
->>>     reward_t     = sampled from an arm k_t   # sample a reward
->>>     my_policy.getReward(k_t, reward_t)       # give it the the policy
+    my_policy = Policy(nbArms, *args, lower=0, amplitude=1, **kwargs)
+    my_policy.startGame()  # start the game
+    for t in range(T):
+        chosen_arm_t = k_t = my_policy.choice()  # chose one arm
+        reward_t     = sampled from an arm k_t   # sample a reward
+        my_policy.getReward(k_t, reward_t)       # give it the the policy
 """
 
 __author__ = "Lilian Besson"
