@@ -30,13 +30,11 @@ class oneRhoRandSticky(oneRhoRand):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, stickyTime, *args, rank=None, **kwargs):
+    def __init__(self, maxRank, stickyTime, *args, **kwargs):
         super(oneRhoRandSticky, self).__init__(maxRank, *args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.stickyTime = stickyTime  #: Number of time steps needed without collisions before sitting (never changing rank again)
-        assert rank is None or 1 <= rank <= maxRank, "Error: the 'rank' parameter = {} for oneRhoRand was not correct: only possible values are None or an integer 1 <= rank <= maxRank = {}.".format(rank, maxRank)  # DEBUG
-        self.keep_the_same_rank = rank is not None  #: If True, the rank is kept constant during the game, as if it was given by the Base Station
-        self.rank = int(rank) if self.keep_the_same_rank else None  #: Current rank, starting to 1 by default, or 'rank' if given as an argument
+        self.rank = None  #: Current rank, starting to 1 by default
         self.sitted = False  #: Not yet sitted. After stickyTime steps without collisions, sit and never change rank again.
         self.stepsWithoutCollisions = 0  #: Number of steps since we chose that rank and did not see any collision. As soon as this gets greater than stickyTime, the player sit.
 
@@ -80,9 +78,7 @@ class rhoRandSticky(rhoRand):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
-                 stickyTime=STICKY_TIME,
-                 maxRank=None, orthogonalRanks=False,
-                 lower=0., amplitude=1.,
+                 stickyTime=STICKY_TIME, maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -90,7 +86,6 @@ class rhoRandSticky(rhoRand):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - stickyTime: given to the oneRhoRandSticky objects (see above).
         - maxRank: maximum rank allowed by the rhoRandSticky child (default to nbPlayers, but for instance if there is 2 × rhoRandSticky[UCB] + 2 × rhoRandSticky[klUCB], maxRank should be 4 not 2).
-        - orthogonalRanks: if True, orthogonal ranks 1..M are directly affected to the players 1..M.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -106,16 +101,12 @@ class rhoRandSticky(rhoRand):
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.stickyTime = stickyTime  #: Number of time steps needed without collisions before sitting (never changing rank again)
         self.nbPlayers = nbPlayers  #: Number of players
-        self.orthogonalRanks = orthogonalRanks  #: Using orthogonal ranks from starting
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            if orthogonalRanks:
-                self.children[playerId] = oneRhoRandSticky(maxRank, stickyTime, self, playerId, rank=playerId + 1)
-            else:
-                self.children[playerId] = oneRhoRandSticky(maxRank, stickyTime, self, playerId)
+            self.children[playerId] = oneRhoRandSticky(maxRank, stickyTime, self, playerId)
 
     def __str__(self):
-        return "rhoRandSticky({} x {}{}{})".format(self.nbPlayers, str(self._players[0]), "$T_0:{}$".format(self.stickyTime) if self.stickyTime > 0 else "", ", orthogonal ranks" if self.orthogonalRanks else "")
+        return "rhoRandSticky({} x {}{}{})".format(self.nbPlayers, str(self._players[0]), "$T_0:{}$".format(self.stickyTime) if self.stickyTime > 0 else "")
