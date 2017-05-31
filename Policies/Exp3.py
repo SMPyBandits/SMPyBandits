@@ -71,8 +71,21 @@ class Exp3(BasePolicy):
         If :math:`w_k(t)` is the current weight from arm k.
         """
         # Mixture between the weights and the uniform distribution
-        p_t = ((1 - self.gamma) * self.weights) + (self.gamma / self.nbArms)
-        return p_t / np.sum(p_t)
+        trusts = ((1 - self.gamma) * self.weights) + (self.gamma / self.nbArms)
+        # XXX Handle weird cases, slow down everything but safer!
+        if not np.all(np.isfinite(trusts)):
+            # XXX some value has non-finite trust, probably on the first steps
+            # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
+            if np.all(~np.isfinite(trusts)):
+                trusts = np.full(self.nbArms, 1. / self.nbArms)
+            # 2nd case: only few values are non-finite: set them to 0
+            else:
+                trusts[~np.isfinite(trusts)] = 0
+        # Bad case, where the sum is so small that it's only rounding errors
+        if np.isclose(np.sum(trusts), 0):
+                trusts = np.full(self.nbArms, 1. / self.nbArms)
+        # Normalize it and return it
+        return trusts / np.sum(trusts)
 
     def getReward(self, arm, reward):
         r"""Give a reward: accumulate rewards on that arm k, then update the weight :math:`w_k(t)` and renormalize the weights.
@@ -88,7 +101,7 @@ class Exp3(BasePolicy):
         super(Exp3, self).getReward(arm, reward)  # XXX Call to BasePolicy
         # Update weight of THIS arm, with this biased or unbiased reward
         if self.unbiased:
-            reward /= self.trusts[arm]
+            reward = reward / self.trusts[arm]
         # Multiplicative weights
         self.weights[arm] *= np.exp(reward * (self.gamma / self.nbArms))
         # Renormalize weights at each step
@@ -106,8 +119,11 @@ class Exp3(BasePolicy):
             return rn.choice(self.nbArms, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
-        """Multiple (rank >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`, and select the last one (less probable)."""
-        if (self.t < self.nbArms) or (rank == 1):
+        """Multiple (rank >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`, and select the last one (less probable).
+
+        - Note that if not enough entries in the trust vector are non-zero, then :func:`choice` is called instead (rank is ignored).
+        """
+        if (self.t < self.nbArms) or (rank == 1) or np.sum(~np.isclose(self.trusts, 0)) < rank:
             return self.choice()
         else:
             return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
@@ -125,6 +141,12 @@ class Exp3(BasePolicy):
             return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
             return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+
+    # --- Other methods
+
+    def estimatedOrder(self):
+        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing trust probabilities."""
+        return np.argsort(self.trusts)
 
 
 # --- Three special cases
@@ -233,7 +255,7 @@ class Exp3ELM(Exp3):
         reward = (reward - self.lower) / self.amplitude
         # Update weight of THIS arm, with this biased or unbiased reward
         if self.unbiased:
-            reward /= self.trusts[arm]
+            reward = reward / self.trusts[arm]
         self.rewards[arm] += reward
 
         # Multiplicative weights
@@ -272,9 +294,22 @@ class Exp3ELM(Exp3):
         If :math:`w_k(t)` is the current weight from arm k.
         """
         # Mixture between the weights and the uniform distribution
-        p_t = ((1 - self.gamma * len(self.availableArms)) * self.weights[self.availableArms]) + self.gamma
-        return p_t
-        # return p_t / np.sum(p_t[self.availableArms])
+        trusts = ((1 - self.gamma * len(self.availableArms)) * self.weights[self.availableArms]) + self.gamma
+        # XXX Handle weird cases, slow down everything but safer!
+        if not np.all(np.isfinite(trusts)):
+            # XXX some value has non-finite trust, probably on the first steps
+            # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
+            if np.all(~np.isfinite(trusts)):
+                trusts = np.full(len(self.availableArms), 1. / len(self.availableArms))
+            # 2nd case: only few values are non-finite: set them to 0
+            else:
+                trusts[~np.isfinite(trusts)] = 0
+        # Bad case, where the sum is so small that it's only rounding errors
+        if np.isclose(np.sum(trusts), 0):
+                trusts = np.full(len(self.availableArms), 1. / len(self.availableArms))
+        # Normalize it and return it
+        return trusts
+        # return trusts / np.sum(trusts[self.availableArms])
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

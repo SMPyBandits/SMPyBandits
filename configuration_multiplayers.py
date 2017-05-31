@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 20000
+HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -90,8 +90,8 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 4    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 4    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -463,7 +463,19 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
-    # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
+    # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
+    # FIXME Comparing XXX adversarial algorithm...
+    Selfish(NB_PLAYERS, SoftMix, nbArms).children,
+    rhoRand(NB_PLAYERS, SoftMix, nbArms).children,
+    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    Selfish(NB_PLAYERS, Exp3, nbArms).children,
+    rhoRand(NB_PLAYERS, Exp3, nbArms).children,
+    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
+    rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
+    Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    rhoRand(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    # XXX against stochastic algorithms
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -476,13 +488,6 @@ configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
-    # FIXME with an adversarial algorithm!
-    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3, nbArms).children,
-    rhoRand(NB_PLAYERS, Exp3, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
-    rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \

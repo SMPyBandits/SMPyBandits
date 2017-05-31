@@ -7,7 +7,7 @@ Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit P
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import numpy as np
 import numpy.random as rn
@@ -67,8 +67,21 @@ class Softmax(BasePolicy):
         rewards = self.rewards
         trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
         if self.unbiased:
-            rewards /= trusts
+            rewards = self.rewards / trusts
             trusts = np.exp(rewards / (self.temperature * (1 + self.pulls)))  # 1 + pulls to prevent division by 0
+        # XXX Handle weird cases, slow down everything but safer!
+        if not np.all(np.isfinite(trusts)):
+            # XXX some value has non-finite trust, probably on the first steps
+            # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
+            if np.all(~np.isfinite(trusts)):
+                trusts = np.full(self.nbArms, 1. / self.nbArms)
+            # 2nd case: only few values are non-finite: set them to 0
+            else:
+                trusts[~np.isfinite(trusts)] = 0
+        # Bad case, where the sum is so small that it's only rounding errors
+        if np.isclose(np.sum(trusts), 0):
+                trusts = np.full(self.nbArms, 1. / self.nbArms)
+        # Normalize it and return it
         return trusts / np.sum(trusts)
 
     # --- Choice methods
@@ -83,8 +96,11 @@ class Softmax(BasePolicy):
             return rn.choice(self.nbArms, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
-        """Multiple (rank >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`, and select the last one (less probable)."""
-        if (self.t < self.nbArms) or (rank == 1):
+        """Multiple (rank >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`, and select the last one (least probable one).
+
+        - Note that if not enough entries in the trust vector are non-zero, then :func:`choice` is called instead (rank is ignored).
+        """
+        if (self.t < self.nbArms) or (rank == 1) or np.sum(~np.isclose(self.trusts, 0)) < rank:
             return self.choice()
         else:
             return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[-1]
@@ -104,6 +120,12 @@ class Softmax(BasePolicy):
             return np.array([self.choice()])
         else:
             return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+
+    # --- Other methods
+
+    def estimatedOrder(self):
+        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing trust probabilities."""
+        return np.argsort(self.trusts)
 
 
 # --- Three special cases
