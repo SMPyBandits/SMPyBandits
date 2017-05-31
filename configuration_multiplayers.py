@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -60,9 +60,9 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
-# REPETITIONS = 10
+REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -90,8 +90,8 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-# NB_PLAYERS = 4    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 4    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -448,34 +448,41 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
 
-    # --- 7) rhoLearn with BayesUCB
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # # --- 7) rhoLearn with BayesUCB
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 
     # --- 8) Aggr
     # Selfish(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
-    # # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # --- 9) Comparing Selfish, rhoRand and rhoRandRotating with different learning algorithms
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+    # FIXME with an adversarial algorithm!
+    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    Selfish(NB_PLAYERS, Exp3, nbArms).children,
+    rhoRand(NB_PLAYERS, Exp3, nbArms).children,
+    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
+    rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
@@ -512,29 +519,26 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoCentralized(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoRand(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=False).children,
-    # # rhoCentralized(NB_PLAYERS, Thompson, nbArms, orthogonalRanks=True).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoCentralized(NB_PLAYERS, Thompson, nbArms).children,
+
+    # # DONE Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
+    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+    # CentralizedIMP(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
+    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
+    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
+    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
+    # # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
+    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
+    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
+    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
+    # # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
 ]
-
-
-# # DONE Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
-# configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-#     CentralizedIMP(NB_PLAYERS, BayesUCB, nbArms).children,
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-#     # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
-#     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
-#     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
-#     Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
-#     # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
-#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-#     # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
-#     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
-#     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
-#     rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
-#     # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
-# ]
 
 
 # DONE

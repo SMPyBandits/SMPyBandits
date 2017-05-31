@@ -320,33 +320,9 @@ configuration.update({
         #     }
         # },
         # {
-        #     "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
-        #     "params": {
-        #         "delta": 0.5
-        #     }
-        # },
-        # {
-        #     "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
+        #     "archtype": Exp3ELM,   # This improved Exp3 is not better, it targets a different problem
         #     "params": {
         #         "delta": 0.1
-        #     }
-        # },
-        # {
-        #     "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
-        #     "params": {
-        #         "delta": 0.01
-        #     }
-        # },
-        # {
-        #     "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
-        #     "params": {
-        #         "delta": 0.001
-        #     }
-        # },
-        # {
-        #     "archtype": Exp3ELM,   # XXX This improved Exp3 should really be better
-        #     "params": {
-        #         "delta": 0.0001
         #     }
         # },
         # # --- Probability pursuit algorithm
