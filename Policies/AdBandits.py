@@ -34,7 +34,7 @@ class AdBandits(BasePolicy):
 
     def __str__(self):
         # OK, they all have knowledge of T, but it's good to display it to, remember it
-        return r"AdBandits($\alpha={:.3g}$, $T={:.5g}$)".format(self.alpha, self.horizon)
+        return r"AdBandits($\alpha={:.3g}$, $T={}$)".format(self.alpha, self.horizon)
 
     def startGame(self):
         """ Reset each posterior."""

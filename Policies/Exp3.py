@@ -160,7 +160,7 @@ class Exp3WithHorizon(Exp3):
         self.horizon = horizon
 
     def __str__(self):
-        return r"Exp3($T={:.3g}$)".format(self.horizon)
+        return r"Exp3($T={}$)".format(self.horizon)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

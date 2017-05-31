@@ -60,9 +60,9 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
-REPETITIONS = 10
+# REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -464,18 +464,6 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
     # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
-    # FIXME Comparing XXX adversarial algorithm...
-    Selfish(NB_PLAYERS, SoftMix, nbArms).children,
-    rhoRand(NB_PLAYERS, SoftMix, nbArms).children,
-    Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3, nbArms).children,
-    rhoRand(NB_PLAYERS, Exp3, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
-    rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
-    Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    rhoRand(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    # XXX against stochastic algorithms
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -528,7 +516,7 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
     # rhoCentralized(NB_PLAYERS, Thompson, nbArms).children,
 
-    # # DONE Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
+    # # --- 14) Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     # CentralizedIMP(NB_PLAYERS, BayesUCB, nbArms).children,
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -543,6 +531,25 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
     # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
     # # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
+
+    # # --- 15) Comparing Selfish, rhoRand (and variants) with different learning algorithms
+    # Selfish(NB_PLAYERS, SoftMix, nbArms).children,
+    # rhoRand(NB_PLAYERS, SoftMix, nbArms).children,
+    # # Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    # # rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
+    # # Selfish(NB_PLAYERS, Exp3, nbArms).children,
+    # # rhoRand(NB_PLAYERS, Exp3, nbArms).children,
+    # # Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
+    # # rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
+    # Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    # rhoRand(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    # # XXX against stochastic algorithms
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
 ]
 
 

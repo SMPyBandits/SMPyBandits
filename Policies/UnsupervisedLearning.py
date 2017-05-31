@@ -211,7 +211,7 @@ class UnsupervisedLearning(object):
     # --- Easy methods
 
     def __str__(self):
-        return "UnsupervisedLearning({.__name__}, :math:`T_0={:.3g}`, :math:`T_1={:.3g}`, :math:`M={:.3g}`)".format(self._estimator, self.T_0, self.fit_every, self.meanOf)
+        return "UnsupervisedLearning({.__name__}, :math:`T_0={}`, :math:`T_1={}`, :math:`M={}`)".format(self._estimator, self.T_0, self.fit_every, self.meanOf)
 
     def startGame(self):
         """ Reinitialize the estimators."""
