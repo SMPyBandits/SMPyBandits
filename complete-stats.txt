@@ -2,33 +2,33 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-   754	Lilian Besson
+   760	Lilian Besson
      2	Lilian Besson (Naereen)
 
 ----------------------
 Statistics for: Lilian
   - Number of files changed: 295
-  - Number of lines added: 474754
-  - Number of lines deleted: 424691
+  - Number of lines added: 477970
+  - Number of lines deleted: 427773
   - Number of merges: 0
 
 ----------------------
 Statistics for: Lilian
   - Number of files changed: 295
-  - Number of lines added: 474754
-  - Number of lines deleted: 424691
+  - Number of lines added: 477970
+  - Number of lines deleted: 427773
   - Number of merges: 0
     May Jun           Jul       Aug     Sep     Oct       Nov     Dec       Jan     Feb     Mar     Apr       May 
                                                         o o   . o         . o o           o   .                 
     M                                                   O O   O .       .   . . . O .   o o o             . . . 
-                                                        . o . O O         o . o .   . o o O 0 .       .   o   . 
-    W                                                   0 o . O 0   . .   o   O O . . 0   O O .       . . o     
+                                                        . o . O O         o . o .   . o o O 0 .       .   o   o 
+    W                                                   0 o . O 0   . .   o   O O . . 0   O O .       . . o   . 
                                                       o 0 0 . . o   .   0 . . O o O o o O o o .         . .     
     F                                                   o   O O       . O . .   O .   O O   . o     . . . o     
                                                       o .     o .           o           .   .           . .     
 
                                                                                           Less   . o O 0  More
- 754: Total commits
+ 760: Total commits
   16: Days ( Dec  6 2016 - Dec 22 2016 ) - Longest streak excluding weekends       
   13: Days ( Nov 19 2016 - Dec  1 2016 ) - Longest streak including weekends       
-   2: Days ( May 29 2017 - May 30 2017 ) - Current streak                          
+   3: Days ( May 29 2017 - May 31 2017 ) - Current streak                          

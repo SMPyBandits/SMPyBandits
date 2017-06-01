@@ -134,13 +134,14 @@ pyreverse:
 	# Output packages and classes graphs to PNG...
 	dot -Tpng uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.png
 	dot -Tpng uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.png
+	-advpng -z -2 ./uml_diagrams/*.png
 	# Output packages and classes graphs to SVG...
 	dot -Tsvg uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.svg
 	dot -Tsvg uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.svg
 	# Output packages and classes graphs to PDF...
-	# dot -Tpdf uml_diagrams/packages_AlgoBandits.dot > uml_diagrams/packages_AlgoBandits.pdf
-	# dot -Tpdf uml_diagrams/classes_AlgoBandits.dot  > uml_diagrams/classes_AlgoBandits.pdf
-	-advpng -z -2 ./uml_diagrams/*.png
+	dot -Tpdf uml_diagrams/packages_AlgoBandits.dot > uml_diagrams/packages_AlgoBandits.pdf
+	dot -Tpdf uml_diagrams/classes_AlgoBandits.dot  > uml_diagrams/classes_AlgoBandits.pdf
+	-PDFCompress -f ./uml_diagrams/*.pdf
 
 ignorelogs:
 	git checkout -- logs/
