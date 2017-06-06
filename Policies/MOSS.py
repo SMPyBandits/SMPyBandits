@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The MOSS policy for bounded bandits.
-Reference: [Audibert & Bubeck, 2010].
+Reference: [Audibert & Bubeck, 2010](http://www.jmlr.org/papers/volume11/audibert10a/audibert10a.pdf).
 """
 
 __author__ = "Lilian Besson"
@@ -15,7 +15,7 @@ from .IndexPolicy import IndexPolicy
 
 class MOSS(IndexPolicy):
     """ The MOSS policy for bounded bandits.
-    Reference: [Audibert & Bubeck, 2010].
+    Reference: [Audibert & Bubeck, 2010](http://www.jmlr.org/papers/volume11/audibert10a/audibert10a.pdf).
     """
 
     def computeIndex(self, arm):

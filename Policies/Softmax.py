@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """ The Boltzmann Exploration (Softmax) index policy.
-Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
 
-Very similar to Exp3 but uses a Boltzmann distribution.
-Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
+- Reference: [Algorithms for the multi-armed bandit problem, V.Kuleshov & D.Precup, JMLR, 2008, §2.1](http://www.cs.mcgill.ca/~vkules/bandits.pdf) and [Boltzmann Exploration Done Right, N.Cesa-Bianchi & C.Gentile & G.Lugosi & G.Neu, arXiv 2017](https://arxiv.org/pdf/1705.10257.pdf).
+
+- Very similar to Exp3 but uses a Boltzmann distribution.
+  Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://sbubeck.com/SurveyBCB12.pdf)
 """
 
 __author__ = "Lilian Besson"
@@ -21,10 +22,11 @@ UNBIASED = False
 
 class Softmax(BasePolicy):
     r"""The Boltzmann Exploration (Softmax) index policy, with a constant temperature :math:`\eta_t`.
-    Reference: [http://www.cs.mcgill.ca/~vkules/bandits.pdf §2.1].
 
-    Very similar to Exp3 but uses a Boltzmann distribution.
-    Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
+    - Reference: [Algorithms for the multi-armed bandit problem, V.Kuleshov & D.Precup, JMLR, 2008, §2.1](http://www.cs.mcgill.ca/~vkules/bandits.pdf) and [Boltzmann Exploration Done Right, N.Cesa-Bianchi & C.Gentile & G.Lugosi & G.Neu, arXiv 2017](https://arxiv.org/pdf/1705.10257.pdf).
+
+    - Very similar to Exp3 but uses a Boltzmann distribution.
+      Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://sbubeck.com/SurveyBCB12.pdf)
     """
 
     def __init__(self, nbArms, temperature=None, unbiased=UNBIASED, lower=0., amplitude=1.):
@@ -146,7 +148,7 @@ class SoftmaxWithHorizon(Softmax):
     def temperature(self):
         r""" Fixed temperature, small, knowing the horizon: :math:`\eta_t = \sqrt(\frac{2 \log(K)}{T K})` (*heuristic*).
 
-        - Cf. Theorem 3.1 case #1 of [Bubeck & Cesa-Bianchi, 2012].
+        - Cf. Theorem 3.1 case #1 of [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
         """
         return np.sqrt(2 * np.log(self.nbArms) / (self.horizon * self.nbArms))
 
@@ -162,7 +164,7 @@ class SoftmaxDecreasing(Softmax):
     def temperature(self):
         r""" Decreasing temperature with the time: :math:`\eta_t = \sqrt(\frac{\log(K)}{t K})` (*heuristic*).
 
-        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012].
+        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
         """
         return np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
 
@@ -178,7 +180,7 @@ class SoftMix(Softmax):
     def temperature(self):
         r""" Decreasing temperature with the time: :math:`\eta_t = c \frac{\log(t)}{t}` (*heuristic*).
 
-        - Cf. [Cesa-Bianchi & Fisher, 1998].
+        - Cf. [Cesa-Bianchi & Fisher, 1998](http://dl.acm.org/citation.cfm?id=657473).
         - Default value for is :math:`c = \sqrt(\frac{\log(K)}{K})`.
         """
         c = np.sqrt(np.log(self.nbArms) / self.nbArms)

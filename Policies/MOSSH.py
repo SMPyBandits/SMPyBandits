@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The MOSS-H policy for bounded bandits, with knowing the horizon.
-Reference: [Audibert & Bubeck, 2010].
+Reference: [Audibert & Bubeck, 2010](http://www.jmlr.org/papers/volume11/audibert10a/audibert10a.pdf).
 """
 
 __author__ = "Lilian Besson"
@@ -15,7 +15,7 @@ from .MOSS import MOSS
 
 class MOSSH(MOSS):
     """ The MOSS-H policy for bounded bandits, with knowing the horizon.
-    Reference: [Audibert & Bubeck, 2010].
+    Reference: [Audibert & Bubeck, 2010](http://www.jmlr.org/papers/volume11/audibert10a/audibert10a.pdf).
     """
 
     def __init__(self, nbArms, horizon=None, lower=0., amplitude=1.):

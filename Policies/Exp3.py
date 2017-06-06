@@ -167,7 +167,7 @@ class Exp3WithHorizon(Exp3):
     def gamma(self):
         r""" Fixed temperature, small, knowing the horizon: :math:`\gamma_t = \sqrt(\frac{2 \log(K)}{T K})` (*heuristic*).
 
-        - Cf. Theorem 3.1 case #1 of [Bubeck & Cesa-Bianchi, 2012].
+        - Cf. Theorem 3.1 case #1 of [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
         """
         return np.sqrt(2 * np.log(self.nbArms) / (self.horizon * self.nbArms))
 
@@ -183,7 +183,7 @@ class Exp3Decreasing(Exp3):
     def gamma(self):
         r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).
 
-        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012].
+        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
         """
         return min(1. / self.nbArms, np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)))
 
@@ -199,7 +199,7 @@ class Exp3SoftMix(Exp3):
     def gamma(self):
         r""" Decreasing gamma parameter with the time: :math:`\gamma_t = c \frac{\log(t)}{t}` (*heuristic*).
 
-        - Cf. [Cesa-Bianchi & Fisher, 1998].
+        - Cf. [Cesa-Bianchi & Fisher, 1998](http://dl.acm.org/citation.cfm?id=657473).
         - Default value for is :math:`c = \sqrt(\frac{\log(K)}{K})`.
         """
         c = np.sqrt(np.log(self.nbArms) / self.nbArms)
@@ -316,6 +316,6 @@ class Exp3ELM(Exp3):
     def gamma(self):
         r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).
 
-        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012].
+        - Cf. Theorem 3.1 case #2 of [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
         """
         return min(1. / self.nbArms, np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)))

@@ -96,7 +96,7 @@ LEARNING_RATES = [LEARNING_RATE]
 # FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
 DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
-DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
 #: To know if my Aggr policy is tried.
 TEST_AGGR = True

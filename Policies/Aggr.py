@@ -126,7 +126,7 @@ class Aggr(BasePolicy):
         if self.decreaseRate is None:  # Constant learning rate
             return self.learningRate
         elif self.decreaseRate == 'auto':
-            # DONE Implement the two smart values given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012]
+            # DONE Implement the two smart values given in Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
             if self.horizon is None:
                 return np.sqrt(np.log(self.nbChildren) / (self.t * self.nbArms))
             else:
