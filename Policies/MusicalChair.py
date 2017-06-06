@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
-""" MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+r""" MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
 
 - Each player has 3 states, 1st is random exploration, 2nd is musical chair, 3rd is staying sit
 - 1st step
-  - Every player tries uniformly an arm for T0 steps, counting the empirical means of each arm, and the number of observed collisions C_T0
-  - Finally, N* = nbPlayers is estimated based on nb of collisions C_T0, and the N* best arms are computed from their empirical means
+    + Every player tries uniformly an arm for :math:`T_0` steps, counting the empirical means of each arm, and the number of observed collisions :math:`C_{T_0}`
+    + Finally, :math:`N^* = M` = ``nbPlayers`` is estimated based on nb of collisions :math:`C_{T_0}`, and the :math:`N^*` best arms are computed from their empirical means
 - 2nd step:
-  - Every player chose an arm uniformly, among the N* best arms, until she does not encounter collision right after choosing it
-  - When an arm was chosen by only one player, she decides to sit on this chair (= arm)
+    + Every player chose an arm uniformly, among the :math:`N^*` best arms, until she does not encounter collision right after choosing it
+    + When an arm was chosen by only one player, she decides to sit on this chair (= arm)
 - 3rd step:
-  - Every player stays sitted on her chair for the rest of the game
-  - ==> constant regret if N* is well estimated and if the estimated N* best arms were correct
-  - ==> linear regret otherwise
+    + Every player stays sitted on her chair for the rest of the game
+    + :math:`\implies` constant regret if :math:`N^*` is well estimated and if the estimated N* best arms were correct
+    + :math:`\implies` linear regret otherwise
 """
 from __future__ import print_function, division
 
@@ -26,12 +26,28 @@ from .BasePolicy import BasePolicy
 # --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]
 
 def optimalT0(nbArms, epsilon, delta=0.05):
-    """ Ch. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+    r""" Compute the lower-bound suggesting "large-enough" values for :math:`T_0` that should guarantee constant regret with probability at least :math:`1 - \varepsilon`, if the gap :math:`\Delta` is larger than ``delta``.
+
+    - Cf. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+
+    Examples:
+
+    - For :math:`K=2` arms, and in order to have a constant regret with probability at least :math:`90\%`, if the gap :math:`\Delta` is known to be :math:`\geq 0.05`, then their theoretical analysis suggests to use :math:`T_0 \geq 18459`. That's very huge, for just two arms!
 
     >>> optimalT0(2, 0.1, 0.05)     # Just 2 arms !
     18459                           # ==> That's a LOT of steps for just 2 arms!
-    >>> optimalT0(17, 0.01, 0.05)   # Constant regret with >95% proba
-    27331794                        # ==> That's a LOT of steps!!!
+
+    - For a harder problem with :math:`K=6` arms, for a risk smaller than :math:`1\%` and a gap :math:`\Delta \geq 0.05`, they suggest at least :math:`T_0 \geq 7646924`, i.e., about 7 millions of trials. That is simply too much for any realistic system, and starts to be too large for simulated systems.
+
+    >>> optimalT0(6, 0.01, 0.05)    # Constant regret with >99% proba
+    7646924                         # ==> That's a LOT of steps!
+    >>> optimalT0(6, 0.001, 0.05)   # Reasonable value of epsilon
+    764692376                       # ==> That's a LOT of steps!!!
+
+    - For an even harder problem with :math:`K=17` arms, the values given by their Theorem 1 start to be really unrealistic:
+
+    >>> optimalT0(17, 0.01, 0.05)   # Constant regret with >99% proba
+    27331794                        # ==> That's a LOT of steps!
     >>> optimalT0(17, 0.001, 0.05)  # Reasonable value of epsilon
     2733179304                      # ==> That's a LOT of steps!!!
     """
@@ -44,14 +60,28 @@ def optimalT0(nbArms, epsilon, delta=0.05):
 
 
 def boundOnFinalRegret(T0, nbPlayers):
-    """ Ch. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+    r""" Use the upper-bound on regret when :math:`T_0` and :math:`M` are known.
 
-    >>> boundOnFinalRegret(18459, 2)       # Crazy constant regret!
-    36948
-    >>> boundOnFinalRegret(27331794, 6)    # Crazy constant regret!!
-    163990852
-    >>> boundOnFinalRegret(2733179304, 6)  # Crazy constant regret!!
-    16399075913
+    - The "constant" regret of course grows linearly with :math:`T_0`, as:
+
+        .. math:: \forall T \geq T_0, \;\; R_T \leq T_0 K + 2 \mathrm{exp}(2) K.
+
+    .. warning:: this bound is not a deterministic result, it is only value with a certain probability (at least :math:`1 - \varepsilon`, if :math:`T_0` is chosen as given by :func:`optimalT0`).
+
+
+    - Cf. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+    - Examples:
+
+    >>> boundOnFinalRegret(18459, 2)        # Crazy constant regret!  # doctest: +ELLIPSIS
+    36947.5..
+    >>> boundOnFinalRegret(7646924, 6)      # Crazy constant regret!!  # doctest: +ELLIPSIS
+    45881632.6...
+    >>> boundOnFinalRegret(764692376, 6)    # Crazy constant regret!!  # doctest: +ELLIPSIS
+    4588154344.6...
+    >>> boundOnFinalRegret(27331794, 17)    # Crazy constant regret!!  # doctest: +ELLIPSIS
+    464640749.2...
+    >>> boundOnFinalRegret(2733179304, 17)  # Crazy constant regret!!  # doctest: +ELLIPSIS
+    46464048419.2...
     """
     return T0 * nbPlayers + 2 * np.exp(2) * nbPlayers
 
