@@ -553,15 +553,15 @@ configuration["successive_players"] = [
 
     # --- 16) Comparing rhoLearn and rhoLearnEst (doesn't know M)
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
     rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so ~= bad rhoRand
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,  # should be bad!
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,  # should be bad!
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # should be bad!
 ]
 
 
