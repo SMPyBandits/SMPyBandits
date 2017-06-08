@@ -11,7 +11,7 @@
 - :class:`OracleNotFair`: a multi-player policy with full knowledge and centralized intelligence to affect users to a FIXED arm, among the best arms.
 - :class:`OracleFair`: a multi-player policy which uses a centralized intelligence to affect users an offset, each one take an orthogonal arm based on (offset + t) % nbBestArms, among the best arms.
 
-- :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc). And variants, :class:`rhoRandRand`, :class:`rhoRandSticky`, :class:`rhoRandRotating`, :class:`rhoRandEst`, :class:`rhoRandLearn`, :class:`rhoRandALOHA`,
+- :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc). And variants, :class:`rhoRandRand`, :class:`rhoRandSticky`, :class:`rhoRandRotating`, :class:`rhoRandEst`, :class:`rhoRandLearn` :class:`rhoRandLearnEst`, :class:`rhoRandALOHA`,
 - :class:`rhoCentralized` is a semi-centralized version where orthogonal ranks 1..M are given to the players, instead of just giving them the value of M, but a decentralized learning policy is still used to learn the best arms.
 
 
@@ -58,6 +58,7 @@ from .rhoRand import rhoRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.
 from .rhoRandRand import rhoRandRand  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoEst import rhoEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearn import rhoLearn  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
+from .rhoLearnEst import rhoLearnEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoRandSticky import rhoRandSticky  # New version, still experimental!
 from .rhoRandRotating import rhoRandRotating  # New version, still experimental!
 from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!

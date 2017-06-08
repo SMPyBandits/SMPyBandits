@@ -463,19 +463,19 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, Aggr, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # # rhoEst(NB_PLAYERS, Aggr, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
-    # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
-    Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+    # # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
+    # # rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # # rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # # rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
+    # # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
     # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
@@ -550,6 +550,18 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+
+    # --- 16) Comparing rhoLearn and rhoLearnEst (doesn't know M)
+    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so ~= bad rhoRand
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
+    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
 ]
 
 

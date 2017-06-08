@@ -149,7 +149,7 @@ class rhoLearn(rhoRand):
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
-        # Fake rankSelection algorirhtm, for pretty print
+        # Fake rankSelection algorithm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)
 
     def __str__(self):
