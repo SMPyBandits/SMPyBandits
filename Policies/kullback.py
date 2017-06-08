@@ -292,7 +292,9 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
     - upperbound, lowerbound=float('-inf'): the known bound of the values x,
     - precision=1e-6: the threshold from where to stop the research,
 
-    - Note: it uses a bisection search.
+
+    .. note:: It uses a bisection search.
+
     """
     value = max(x, lowerbound)
     u = upperbound
@@ -539,7 +541,9 @@ def maxEV(p, V, klMax):
 def reseqp(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
 
-    - Note: This is a subroutine of maxEV.
+
+    .. note:: This is a subroutine of :func:`maxEV`.
+
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
     - Warning: `np.dot` is very slow!
     """
@@ -572,7 +576,9 @@ def reseqp2(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using a blackbox minimizer, from scipy.optimize.
 
     - FIXME it does not work well yet!
-    - Note: This is a subroutine of maxEV.
+
+    .. note:: This is a subroutine of :func:`maxEV`.
+
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
     - Warning: `np.dot` is very slow!
     """

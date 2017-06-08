@@ -5,7 +5,9 @@
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
 - At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
 
-- Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
+.. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
 """
 from __future__ import print_function
 

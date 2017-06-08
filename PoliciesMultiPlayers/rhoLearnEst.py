@@ -8,9 +8,9 @@ r""" rhoLearnEst: implementation of the multi-player policy from [Distributed Al
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy, it *might* be better! Warning: no theoretical guarantees exist!
 - Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 
-.. note:: this is fully decentralized: each child player does *not* need to know the (fixed) number of players, it will learn to select ranks only in :math:`\{1,\dots,M\}` instead of :math:`\{1,\dots,K\}`.
+.. note:: This is fully decentralized: each child player does *not* need to know the (fixed) number of players, it will learn to select ranks only in :math:`\{1,\dots,M\}` instead of :math:`\{1,\dots,K\}`.
 
-.. warning:: this policy does not work very well!
+.. warning:: This policy does not work very well!
 """
 from __future__ import print_function
 

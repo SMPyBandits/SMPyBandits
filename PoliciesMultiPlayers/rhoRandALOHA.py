@@ -7,7 +7,9 @@ r""" rhoRandALOHA: implementation of a variant of the multi-player policy rhoRan
 - The *only* difference with rhoRand is that when colliding, users have a small chance of keeping the same rank, following a Bernoulli experiment: with probability = :math:`p(t)`, it keeps the same rank, with proba :math:`1 - p(t)` it changes its rank (uniformly in :math:`\{1,\dots,M\}`, so there is a chance it finds the same again? FIXME).
 - There is also a variant, like in MEGA (ALOHA-like protocol), the proba change after time: p(t+1) = alpha p(t) + (1-alpha)
 
-- Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
+.. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
 """
 from __future__ import print_function
 

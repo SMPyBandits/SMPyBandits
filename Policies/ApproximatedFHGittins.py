@@ -48,7 +48,9 @@ class ApproximatedFHGittins(IndexPolicy):
            I_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha}{2 N_k(t)} \log\left( \frac{m}{N_k(t) \log^{1/2}\left( \frac{m}{N_k(t)} \right)} \right)}, \\
            \text{where}\;\; & m = T - t + 1.
 
-        - Note: this :math:`\log^{1/2}(\dots) = \sqrt(\log(\dots))` term can be *undefined*, as soon as :math:`m < N_k(t)`, so empirically, :math:`\sqrt(\max(0, \log(\dots))` is used instead, or a larger horizon can be used to make :math:`m` artificially larger (e.g., :math:`T' = 1.1 T`).
+
+        .. note:: This :math:`\log^{1/2}(\dots) = \sqrt(\log(\dots)))` term can be *undefined*, as soon as :math:`m < N_k(t)`, so empirically, :math:`\sqrt(\max(0, \log(\dots))` is used instead, or a larger horizon can be used to make :math:`m` artificially larger (e.g., :math:`T' = 1.1 T`).
+
         """
         if self.pulls[arm] < 1:
             return float('+inf')

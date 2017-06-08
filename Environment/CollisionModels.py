@@ -89,7 +89,9 @@ defaultCollisionModel = onlyUniqUserGetsReward
 def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, collisions):
     """ A variant of the first simple collision model where all players sample their arm, receive their rewards, and are informed of the collisions.
 
-    - Note: it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
+
+    .. note:: it is NOT the one we consider, and so our lower-bound on centralized regret is wrong (users don't care about collisions for their internal rewards so regret does not take collisions into account!)
+
     - This is the NOT default collision model, cf. [Liu & Zhao, 2009](https://arxiv.org/abs/0910.2065v3) collision model 1.
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
@@ -129,7 +131,9 @@ def rewardIsSharedUniformly(t, arms, players, choices, rewards, pulls, collision
     - The players alone on one arm sample it and receive the reward.
     - In case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward. It is chosen by the base station.
 
-    - Note: it can also model a choice from the users point of view: in a time frame (eg. 1 second), when there is a collision, each colliding user chose (uniformly) a random small time offset (eg. 20 ms), and start sensing + emitting again after that time. The first one to sense is alone, it transmits, and the next ones find the channel used when sensing. So only one player is transmitting, and from the base station point of view, it is the same as if it was chosen uniformly among the colliding users.
+
+    .. Note:: it can also model a choice from the users point of view: in a time frame (eg. 1 second), when there is a collision, each colliding user chose (uniformly) a random small time offset (eg. 20 ms), and start sensing + emitting again after that time. The first one to sense is alone, it transmits, and the next ones find the channel used when sensing. So only one player is transmitting, and from the base station point of view, it is the same as if it was chosen uniformly among the colliding users.
+
     """
     # For each arm, explore who chose it
     for armId, arm in enumerate(arms):
@@ -165,6 +169,8 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
     - The players alone on one arm sample it and receive the reward.
     - In case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a distance of each player to the base station (numbers in [0, 1]).
     - If distances is not given, it is either generated randomly (random numbers in [0, 1]) or is a linspace of nbPlayers values in (0, 1), equally spacen (default).
+
+    .. note:: This kind of effects is known in telecommunication as the Near-Far effect or the Capture effect [Roberts, 1975](https://dl.acm.org/citation.cfm?id=1024920)
     """
     if distances is None or (isinstance(distances, str) and distances == 'uniform'):  # Uniformly spacen distances, in (0, 1)
         distances = np.linspace(0, 1, len(players) + 1, endpoint=False)[1:]

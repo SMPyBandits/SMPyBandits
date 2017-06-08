@@ -112,8 +112,9 @@ class oneALOHA(ChildPointer):
     def handleCollision(self, arm, reward=None):
         """ Handle a collision, on arm of index 'arm'.
 
-        - Warning: this method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
-        - Note: we do not care on which arm the collision occured.
+        .. warning:: This method has to be implemented in the collision model, it is NOT implemented in the EvaluatorMultiPlayers.
+
+        .. note:: We do not care on which arm the collision occured.
         """
         # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
         # self.getReward(arm, self.mother.lower)  # FIXED should we give a 0 reward ? Not in this model!

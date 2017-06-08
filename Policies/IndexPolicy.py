@@ -62,7 +62,9 @@ class IndexPolicy(BasePolicy):
         - For instance, if rank is 1, the best arm is chosen (the 1-st best).
         - If rank is 4, the 4-th best arm is chosen.
 
-        - Note: this method is *required* for the rhoRand policy.
+
+        .. note:: This method is *required* for the rhoRand policy.
+
         """
         if rank == 1:
             return self.choice()

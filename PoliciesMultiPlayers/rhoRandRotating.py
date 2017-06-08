@@ -6,7 +6,9 @@
 - At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
 - The *only* difference with rhoRand is that at every time step, the rank is updated by 1, and cycles in [1, .., M] iteratively.
 
-- Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
+.. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
 """
 from __future__ import print_function
 

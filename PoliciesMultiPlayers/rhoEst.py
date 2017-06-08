@@ -6,8 +6,9 @@ r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Alg
 - At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on :math:`[1, \dots, \hat{M}_i(t)]` where :math:`\hat{M}_i(t)` is the current estimated number of player by player i,
 - The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
 
-- Note: this is fully decentralized: each child player does NOT need to know the number of players, but require the horizon :math:`T` (in the proposed algorithm).
 - My choice for the threshold function, see :func:`threshold_on_t`, does not need the horizon either, and uses :math:`t` instead.
+
+.. note:: This is fully decentralized: each child player does NOT need to know the number of players, but require the horizon :math:`T` (in the proposed algorithm).
 """
 from __future__ import print_function
 

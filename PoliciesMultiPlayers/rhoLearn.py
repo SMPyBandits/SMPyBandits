@@ -7,7 +7,9 @@
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy, it *might* be better! Warning: no theoretical guarantees exist!
 - Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 
-- Note: this is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
+.. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
+
 """
 from __future__ import print_function
 
