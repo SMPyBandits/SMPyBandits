@@ -49,8 +49,8 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
-# REPETITIONS = 50
-REPETITIONS = 20
+REPETITIONS = 50
+# REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False
@@ -65,9 +65,9 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
+RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
-RANDOM_INVERT = True  #: The arms are inverted (``arms = arms[::-1]``).
-NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -231,10 +231,6 @@ except (TypeError, KeyError):
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
 
 
-SlidingUCBalpha = SlidingWindowsRestart(Policy=UCBalpha, smallHistory=1000, threshold=0.005, full_restart_when_refresh=True)
-SlidingklUCB = SlidingWindowsRestart(Policy=klUCB, smallHistory=1000, threshold=0.005, full_restart_when_refresh=True)
-
-
 configuration.update({
     "policies": [
         # # --- Stupid algorithms
@@ -388,12 +384,6 @@ configuration.update({
                 "alpha": 4          # Below the alpha=4 like old classic UCB
             }
         },
-        {
-            "archtype": SlidingUCBalpha,   # FIXME experimental sliding window algorithm
-            "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
-            }
-        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -413,23 +403,17 @@ configuration.update({
             }
         },
         {
-            "archtype": SlidingUCBalpha,   # FIXME experimental sliding window algorithm
-            "params": {
-                "alpha": 1
-            }
-        },
-        {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
                 "alpha": 0.5          # XXX Below the theoretically acceptable value!
             }
         },
-        {
-            "archtype": SlidingUCBalpha,   # FIXME experimental sliding window algorithm
-            "params": {
-                "alpha": 0.5
-            }
-        },
+        # {
+        #     "archtype": SlidingUCBalpha,   # XXX experimental sliding window algorithm
+        #     "params": {
+        #         "alpha": 0.5
+        #     }
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -527,12 +511,12 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        {
-            "archtype": SlidingklUCB,   # FIXME experimental sliding window algorithm
-            "params": {
-                "klucb": klucb
-            }
-        },
+        # {
+        #     "archtype": SlidingklUCB,   # XXX experimental sliding window algorithm
+        #     "params": {
+        #         "klucb": klucb
+        #     }
+        # },
         # {
         #     "archtype": klUCB,
         #     "params": {
@@ -709,6 +693,30 @@ configuration.update({
 #             "archtype": KLempUCB,
 #             "params": {}
 #         },
+#     ]
+# })
+
+
+# # XXX compare different values of the experimental sliding window algorithm
+# configuration.update({
+#     "policies": [
+#         {
+#             "archtype": UCBalpha,
+#             "params": {
+#                 "alpha": 0.5
+#             }
+#         }
+#     ] +
+#     [
+#         # --- # XXX experimental sliding window algorithm
+#         {
+#             "archtype": SlidingWindowsRestart(Policy=UCBalpha, smallHistory=sh, threshold=eps, full_restart_when_refresh=True),
+#             "params": {
+#                 "alpha": 0.5
+#             }
+#         }
+#         for sh in [50, 100, 500, 1000, 2000]
+#         for eps in [1e-4, 1e-3, 1e-2]
 #     ]
 # })
 

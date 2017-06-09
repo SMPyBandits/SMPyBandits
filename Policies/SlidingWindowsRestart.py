@@ -8,7 +8,7 @@ r""" An experimental policy, using a sliding window of for instance 100 draws, a
 >>> policy = SlidingUCB(nbArms)
 >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
 
-- It uses an additional :math:`\mathcal{O}(T_0)` memory but do not cost anything else in terms of time complexity (the average is done with a sliding window, and costs :math`\mathcal{O}(1)` at every time step).
+- It uses an additional :math:`\mathcal{O}(T_0)` memory but do not cost anything else in terms of time complexity (the average is done with a sliding window, and costs :math:`\mathcal{O}(1)` at every time step).
 
 .. warning:: This is very experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history) !
@@ -22,20 +22,20 @@ import numpy as np
 
 from .UCB import UCB as DefaultPolicy
 from .UCB import UCB
-from .UCBalpha import UCBalpha
+from .UCBalpha import UCBalpha, ALPHA
 # from .UCBalpha import UCBalpha as DefaultPolicy
-from .klUCB import klUCB
+from .klUCB import klUCB, klucbBern, c
 # from .klUCB import klUCB as DefaultPolicy
 
 
 #: Size of the sliding window.
-SMALLHISTORY = 100
+SMALLHISTORY = 300
 
 #: Threshold to know when to restart the base algorithm.
-THRESHOLD = 1e-2
+THRESHOLD = 5e-3
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
-FULL_RESTART_WHEN_REFRESH = False
+FULL_RESTART_WHEN_REFRESH = True
 
 
 # --- Main function
@@ -45,6 +45,13 @@ def SlidingWindowsRestart(Policy=DefaultPolicy,
                           threshold=THRESHOLD,
                           full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
                           ):
+    """
+    Function implementing this algorithm, for a generic base policy ``Policy``.
+
+    .. warning:: it works fine, but the return class is not a manually defined class, and it is not pickable, so cannot be used with joblib.Parallel::
+
+        AttributeError: Can't pickle local object 'SlidingWindowsRestart.<locals>.SlidingWindowsRestart_Policy'
+    """
 
     class SlidingWindowsRestart_Policy(Policy):
         """ An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
@@ -97,6 +104,149 @@ def SlidingWindowsRestart(Policy=DefaultPolicy,
 
 # --- Some basic ones
 
-SlidingUCB = SlidingWindowsRestart(Policy=UCB, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH)
-SlidingUCBalpha = SlidingWindowsRestart(Policy=UCBalpha, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH)
-SlidingklUCB = SlidingWindowsRestart(Policy=klUCB, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH)
+# SlidingUCB = SlidingWindowsRestart(Policy=UCB)
+# SlidingUCBalpha = SlidingWindowsRestart(Policy=UCBalpha, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH)
+# SlidingklUCB = SlidingWindowsRestart(Policy=klUCB, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH)
+
+
+# --- Manually written
+
+class SlidingUCB(UCB):
+    """ An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+    """
+
+    def __init__(self, nbArms, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, lower=0., amplitude=1., *args, **kwargs):
+        super(SlidingUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        assert 1 <= smallHistory, "Error: parameter 'smallHistory' for class SlidingUCB has to be >= 1, but was {}.".format(smallHistory)  # DEBUG
+        self.smallHistory = int(smallHistory)  #: Size of the sliding window.
+        assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SlidingUCB has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
+        self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
+        self.small_rewards = np.zeros((nbArms, smallHistory))  #: Keep in memory all the rewards obtained in the last :math:`T_0` steps.
+        self.last_selections = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
+
+    def __str__(self):
+        return r"SlidingWindowsRestart({}, $T_0={}$, $\varepsilon={:.3g}$)".format(super(SlidingUCB, self).__str__(), self.smallHistory, self.threshold)
+
+    def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
+
+        - Reset the empirical average
+        """
+        super(SlidingUCB, self).getReward(arm, reward)
+        # Get reward
+        reward = (reward - self.lower) / self.amplitude
+        # We seen it one more time
+        self.last_selections[arm] += 1
+        # Store it in place for the empirical average of that arm
+        self.small_rewards[arm, self.last_selections[arm] % self.smallHistory] = reward
+        if self.last_selections[arm] >= self.smallHistory \
+                 and self.pulls[arm] >= self.smallHistory:
+            # Compute the empirical average for that arm
+            empirical_average = self.rewards[arm] / self.pulls[arm]
+            # And the small empirical average for that arm
+            small_empirical_average = np.mean(self.small_rewards[arm])
+            if np.abs(empirical_average - small_empirical_average) >= self.threshold:
+                # Fully restart the algorithm ?!
+                if self.full_restart_when_refresh:
+                    self.startGame()
+                # Or simply reset one of the empirical averages?
+                else:
+                    self.rewards[arm] = np.sum(self.small_rewards[arm])
+                    self.pulls[arm] = self.last_selections
+        # DONE
+
+
+class SlidingUCBalpha(UCBalpha):
+    """ An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+    """
+
+    def __init__(self, nbArms, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, alpha=ALPHA, lower=0., amplitude=1., *args, **kwargs):
+        super(SlidingUCBalpha, self).__init__(nbArms, alpha=alpha, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        assert 1 <= smallHistory, "Error: parameter 'smallHistory' for class SlidingUCBalpha has to be >= 1, but was {}.".format(smallHistory)  # DEBUG
+        self.smallHistory = int(smallHistory)  #: Size of the sliding window.
+        assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SlidingUCBalpha has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
+        self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
+        self.small_rewards = np.zeros((nbArms, smallHistory))  #: Keep in memory all the rewards obtained in the last :math:`T_0` steps.
+        self.last_selections = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
+
+    def __str__(self):
+        return r"SlidingWindowsRestart({}, $T_0={}$, $\varepsilon={:.3g}$)".format(super(SlidingUCBalpha, self).__str__(), self.smallHistory, self.threshold)
+
+    def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
+
+        - Reset the empirical average
+        """
+        super(SlidingUCBalpha, self).getReward(arm, reward)
+        # Get reward
+        reward = (reward - self.lower) / self.amplitude
+        # We seen it one more time
+        self.last_selections[arm] += 1
+        # Store it in place for the empirical average of that arm
+        self.small_rewards[arm, self.last_selections[arm] % self.smallHistory] = reward
+        if self.last_selections[arm] >= self.smallHistory \
+                 and self.pulls[arm] >= self.smallHistory:
+            # Compute the empirical average for that arm
+            empirical_average = self.rewards[arm] / self.pulls[arm]
+            # And the small empirical average for that arm
+            small_empirical_average = np.mean(self.small_rewards[arm])
+            if np.abs(empirical_average - small_empirical_average) >= self.threshold:
+                # Fully restart the algorithm ?!
+                if self.full_restart_when_refresh:
+                    self.startGame()
+                # Or simply reset one of the empirical averages?
+                else:
+                    self.rewards[arm] = np.sum(self.small_rewards[arm])
+                    self.pulls[arm] = self.last_selections
+        # DONE
+
+
+class SlidingklUCB(klUCB):
+    """ An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+    """
+
+    def __init__(self, nbArms, smallHistory=SMALLHISTORY, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1., *args, **kwargs):
+        super(SlidingklUCB, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        assert 1 <= smallHistory, "Error: parameter 'smallHistory' for class SlidingklUCB has to be >= 1, but was {}.".format(smallHistory)  # DEBUG
+        self.smallHistory = int(smallHistory)  #: Size of the sliding window.
+        assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SlidingklUCB has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
+        self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
+        self.small_rewards = np.zeros((nbArms, smallHistory))  #: Keep in memory all the rewards obtained in the last :math:`T_0` steps.
+        self.last_selections = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
+
+    def __str__(self):
+        return r"SlidingWindowsRestart({}, $T_0={}$, $\varepsilon={:.3g}$)".format(super(SlidingklUCB, self).__str__(), self.smallHistory, self.threshold)
+
+    def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
+
+        - Reset the empirical average
+        """
+        super(SlidingklUCB, self).getReward(arm, reward)
+        # Get reward
+        reward = (reward - self.lower) / self.amplitude
+        # We seen it one more time
+        self.last_selections[arm] += 1
+        # Store it in place for the empirical average of that arm
+        self.small_rewards[arm, self.last_selections[arm] % self.smallHistory] = reward
+        if self.last_selections[arm] >= self.smallHistory \
+                 and self.pulls[arm] >= self.smallHistory:
+            # Compute the empirical average for that arm
+            empirical_average = self.rewards[arm] / self.pulls[arm]
+            # And the small empirical average for that arm
+            small_empirical_average = np.mean(self.small_rewards[arm])
+            if np.abs(empirical_average - small_empirical_average) >= self.threshold:
+                # Fully restart the algorithm ?!
+                if self.full_restart_when_refresh:
+                    self.startGame()
+                # Or simply reset one of the empirical averages?
+                else:
+                    self.rewards[arm] = np.sum(self.small_rewards[arm])
+                    self.pulls[arm] = self.last_selections
+        # DONE
