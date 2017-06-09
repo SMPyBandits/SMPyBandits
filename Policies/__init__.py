@@ -27,6 +27,8 @@
 
 - *New!* An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
 
+- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowsRestart`
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -70,6 +72,8 @@ from .ProbabilityPursuit import ProbabilityPursuit
 from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
 
 from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
+
+from .SlidingWindowsRestart import SlidingWindowsRestart, SlidingUCB, SlidingUCBalpha, SlidingklUCB
 
 # --- Simple UCB policies
 from .UCB import UCB
