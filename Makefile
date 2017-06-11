@@ -97,7 +97,7 @@ receive_plots_ws3:
 # Cleaner
 clean:
 	-mv -vf *.pyc */*.pyc /tmp/
-	-rm -vfr __pycache__/ */__pycache__/
+	-rm -vfr __pycache__/ **/__pycache__/
 	-rm -vf *.pyc */*.pyc
 
 # Stats
