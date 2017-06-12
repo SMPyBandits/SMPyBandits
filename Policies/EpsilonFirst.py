@@ -25,7 +25,7 @@ class EpsilonFirst(EpsilonGreedy):
         self._epsilon = epsilon
 
     def __str__(self):
-        return "EpsilonFirst(e:{}, h:{})".format(self._epsilon, self.horizon)
+        return r"EpsilonFirst($\varepsilon={:.3g}$, $T={}$)".format(self._epsilon, self.horizon)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

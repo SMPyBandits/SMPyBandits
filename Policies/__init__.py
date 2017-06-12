@@ -4,6 +4,7 @@
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
+- And two variants of the Explore-Then-Commit policy: :class:`ETC_KnownGap`, :class:`ETC_RandomStop`,
 
 - Probabilistic weighting algorithms: :class:`Softmax`, :class:`SoftmaxDecreasing`, :class:`SoftMix`, :class:`SoftmaxWithHorizon`, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, :class:`ProbabilityPursuit`,
 
@@ -62,6 +63,9 @@ from .EpsilonDecreasing import EpsilonDecreasing
 from .EpsilonDecreasingMEGA import EpsilonDecreasingMEGA
 from .EpsilonExpDecreasing import EpsilonExpDecreasing
 from .EmpiricalMeans import EmpiricalMeans
+
+# --- Variants on EpsilonFirst, Explore-Then-Commit from E.Kaufmann's slides at IEEE ICC 2017
+from .ExploreThenCommit import ETC_KnownGap, ETC_RandomStop
 
 # --- Mine, Softmax and Exp3 policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon

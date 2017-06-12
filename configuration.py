@@ -49,7 +49,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -65,8 +65,9 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
-RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
+# RANDOM_INVERT = True  #: The arms are inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
@@ -269,13 +270,47 @@ configuration.update({
         #         "decreasingRate": 0.005,
         #     }
         # },
-        # {
-        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": ETC_KnownGap,  # FIXME
+            "params": {
+                "horizon": HORIZON,
+                "gap": 0.1
+            }
+        },
+        {
+            "archtype": ETC_KnownGap,  # FIXME
+            "params": {
+                "horizon": HORIZON,
+                "gap": 0.05
+            }
+        },
+        {
+            "archtype": ETC_KnownGap,  # FIXME
+            "params": {
+                "horizon": HORIZON,
+                "gap": 0.01
+            }
+        },
+        {
+            "archtype": ETC_KnownGap,  # FIXME
+            "params": {
+                "horizon": HORIZON,
+                "gap": 0.5
+            }
+        },
+        {
+            "archtype": ETC_RandomStop,  # FIXME
+            "params": {
+                "horizon": HORIZON
+            }
+        },
         # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
