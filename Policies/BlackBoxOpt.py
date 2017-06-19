@@ -4,7 +4,7 @@ r""" An experimental "on-line" policy, using algorithms from black-box Bayesian 
 - It uses an iterative black-box Bayesian optimizer, with two methods :meth:`ask` and :meth:`tell` to be used as :meth:`choice` and :meth:`getReward` for our Multi-Armed Bandit optimization environment.
 - See https://scikit-optimize.github.io/notebooks/ask-and-tell.html for more details.
 
-.. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and probably NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
+.. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and **highly** NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 """
 
 __author__ = "Lilian Besson"
