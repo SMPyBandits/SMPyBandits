@@ -22,6 +22,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 
 ## Experiments
 - [Can we use a (non-online) Unsupervised Learning algorithm for (online) Bandit problem ?](Unsupervised_Learning_for_Bandit_problem.ipynb)
+- [Can we use a computationally expensive Black-Box Bayesian optimization algorithm for (online) Bandit problem ?](BlackBox_Bayesian_Optimization_for_Bandit_problems.ipynb)
 
 ----
 
