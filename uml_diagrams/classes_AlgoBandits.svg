@@ -697,7 +697,7 @@
 <text text-anchor="start" x="4200" y="-2270.3" font-family="Times,serif" font-size="14.00">children : list</text>
 <text text-anchor="start" x="4200" y="-2255.3" font-family="Times,serif" font-size="14.00">children_cumulated_losses</text>
 <text text-anchor="start" x="4200" y="-2240.3" font-family="Times,serif" font-size="14.00">choices</text>
-<text text-anchor="start" x="4200" y="-2225.3" font-family="Times,serif" font-size="14.00">decreaseRate : NoneType, str</text>
+<text text-anchor="start" x="4200" y="-2225.3" font-family="Times,serif" font-size="14.00">decreaseRate : str, NoneType</text>
 <text text-anchor="start" x="4200" y="-2210.3" font-family="Times,serif" font-size="14.00">horizon : NoneType</text>
 <text text-anchor="start" x="4200" y="-2195.3" font-family="Times,serif" font-size="14.00">learningRate : NoneType</text>
 <text text-anchor="start" x="4200" y="-2180.3" font-family="Times,serif" font-size="14.00">lower : float</text>
@@ -1208,7 +1208,7 @@
 <text text-anchor="middle" x="7291.5" y="-2225.8" font-family="Times,serif" font-size="14.00">Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="black" points="7184,-2218 7399,-2218 "/>
 <text text-anchor="start" x="7192" y="-2202.8" font-family="Times,serif" font-size="14.00">A</text>
-<text text-anchor="start" x="7192" y="-2187.8" font-family="Times,serif" font-size="14.00">Time0 : float, int</text>
+<text text-anchor="start" x="7192" y="-2187.8" font-family="Times,serif" font-size="14.00">Time0 : int, float</text>
 <text text-anchor="start" x="7192" y="-2172.8" font-family="Times,serif" font-size="14.00">chair : NoneType</text>
 <text text-anchor="start" x="7192" y="-2157.8" font-family="Times,serif" font-size="14.00">cumulatedRewards</text>
 <text text-anchor="start" x="7192" y="-2142.8" font-family="Times,serif" font-size="14.00">nbCollision : int</text>
@@ -1754,7 +1754,7 @@
 <polygon fill="none" stroke="black" points="9942,-1502.5 9942,-1616.5 10199,-1616.5 10199,-1502.5 9942,-1502.5"/>
 <text text-anchor="middle" x="10070.5" y="-1601.3" font-family="Times,serif" font-size="14.00">Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="black" points="9942,-1593.5 10199,-1593.5 "/>
-<text text-anchor="start" x="9950" y="-1578.3" font-family="Times,serif" font-size="14.00">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="9950" y="-1578.3" font-family="Times,serif" font-size="14.00">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="9950" y="-1563.3" font-family="Times,serif" font-size="14.00">nbArms</text>
 <polyline fill="none" stroke="black" points="9942,-1555.5 10199,-1555.5 "/>
 <text text-anchor="start" x="9950" y="-1540.3" font-family="Times,serif" font-size="14.00">__init__()</text>
@@ -2426,7 +2426,7 @@
 <text text-anchor="middle" x="11959.5" y="-1616.3" font-family="Times,serif" font-size="14.00">PoliciesMultiPlayers.rhoRand.oneRhoRand</text>
 <polyline fill="none" stroke="black" points="11832.5,-1608.5 12086.5,-1608.5 "/>
 <text text-anchor="start" x="11840.5" y="-1593.3" font-family="Times,serif" font-size="14.00">maxRank</text>
-<text text-anchor="start" x="11840.5" y="-1578.3" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="11840.5" y="-1578.3" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="11832.5,-1570.5 12086.5,-1570.5 "/>
 <text text-anchor="start" x="11840.5" y="-1555.3" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="11840.5" y="-1540.3" font-family="Times,serif" font-size="14.00">__str__()</text>
@@ -2535,7 +2535,7 @@
 <text text-anchor="start" x="11793" y="-1089.8" font-family="Times,serif" font-size="14.00">maxRank</text>
 <text text-anchor="start" x="11793" y="-1074.8" font-family="Times,serif" font-size="14.00">p</text>
 <text text-anchor="start" x="11793" y="-1059.8" font-family="Times,serif" font-size="14.00">p0</text>
-<text text-anchor="start" x="11793" y="-1044.8" font-family="Times,serif" font-size="14.00">rank : NoneType, int</text>
+<text text-anchor="start" x="11793" y="-1044.8" font-family="Times,serif" font-size="14.00">rank : int, NoneType</text>
 <polyline fill="none" stroke="black" points="11785,-1037 12134,-1037 "/>
 <text text-anchor="start" x="11793" y="-1021.8" font-family="Times,serif" font-size="14.00">__init__()</text>
 <text text-anchor="start" x="11793" y="-1006.8" font-family="Times,serif" font-size="14.00">__str__()</text>
