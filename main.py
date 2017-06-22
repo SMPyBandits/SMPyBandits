@@ -43,6 +43,8 @@ USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
 semilogx = False  #: Plot in semilogx by default?
+semilogy = False  #: Plot in semilogy by default?
+loglog   = False  #: Plot in loglog   by default?
 meanRegret = True  #: Plot mean regret ?
 normalizedRegret = False  #: Plot instantaneous regret?
 
@@ -150,13 +152,17 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogx')
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_semilogy')
+            evaluation.plotRegrets(envId, savefig=savefig, semilogy=True)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_loglog')
+            evaluation.plotRegrets(envId, savefig=savefig, loglog=True)  # XXX To save the figure
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     savefig = savefig.replace('main', 'main_STD')
-                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotSTD=True)  # XXX To save the figure
+                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotSTD=True)  # XXX To save the figure
                 if plotMaxMin:
                     savefig = savefig.replace('main', 'main_MaxMin')
-                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, plotMaxMin=True)  # XXX To save the figure
+                    evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotMaxMin=True)  # XXX To save the figure
         else:
             evaluation.plotRegrets(envId)
             evaluation.plotRegrets(envId, semilogx=True)
@@ -165,37 +171,37 @@ if __name__ == '__main__':
             # evaluation.plotRegrets(envId, loglog=True)
             if configuration['repetitions'] > 1:
                 if plotSTD:
-                    evaluation.plotRegrets(envId, semilogx=semilogx, plotSTD=True)
+                    evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotSTD=True)
                 if plotMaxMin:
-                    evaluation.plotRegrets(envId, semilogx=semilogx, plotMaxMin=True)
+                    evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotMaxMin=True)
 
         if meanRegret:
             if saveallfigs:
                 savefig = mainfig.replace('main', 'main_MeanRewards')
                 print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, meanRegret=True)  # XXX To save the figure
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanRegret=True)  # XXX To save the figure
             else:
-                evaluation.plotRegrets(envId, semilogx=semilogx, meanRegret=True)
+                evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanRegret=True)
 
         if normalizedRegret:
             if saveallfigs:
                 savefig = mainfig.replace('main', 'main_Normalized')
                 print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True)  # XXX To save the figure
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True)  # XXX To save the figure
                 if configuration['repetitions'] > 1:
                     if plotSTD:
                         savefig = savefig.replace('main', 'main_STD')
-                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotSTD=True)  # XXX To save the figure
+                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotSTD=True)  # XXX To save the figure
                     if plotMaxMin:
                         savefig = savefig.replace('main', 'main_MaxMin')
-                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)  # XXX To save the figure
+                        evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotMaxMin=True)  # XXX To save the figure
             else:
-                evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True)
+                evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True)
                 if configuration['repetitions'] > 1:
                     if plotSTD:
-                        evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotSTD=True)
+                        evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotSTD=True)
                     if plotMaxMin:
-                        evaluation.plotRegrets(envId, semilogx=semilogx, normalizedRegret=True, plotMaxMin=True)
+                        evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotMaxMin=True)
 
         # --- Also plotting the probability of picking the best arm
         if evaluation.random_shuffle or evaluation.random_invert:

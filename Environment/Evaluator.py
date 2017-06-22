@@ -315,8 +315,8 @@ class Evaluator(object):
     def plotRegrets(self, envId,
                     savefig=None, meanRegret=False,
                     plotSTD=False, plotMaxMin=False,
-                    semilogx=False, normalizedRegret=False,
-                    drawUpperBound=False,
+                    semilogx=False, semilogy=False, loglog=False,
+                    normalizedRegret=False, drawUpperBound=False,
                     ):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
         fig = plt.figure()
@@ -324,6 +324,9 @@ class Evaluator(object):
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
         X = self.times - 1
+        plot_method = plt.loglog if loglog else plt.plot
+        plot_method = plt.semilogy if semilogy else plot_method
+        plot_method = plt.semilogx if semilogx else plot_method
         for i, policy in enumerate(self.policies):
             if meanRegret:
                 Y = self.getAverageRewards(i, envId)
@@ -337,7 +340,7 @@ class Evaluator(object):
                 # FIXED for semilogx plots, truncate to only show t >= 100
                 plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
-                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             # Print standard deviation of regret
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
