@@ -37,9 +37,9 @@ class BoltzmannGumbel(IndexPolicy):
 
         .. math::
 
-           I_k(t) &= \frac{X_k(t)}{N_k(t)} + \beta_k(t) Z_k(t),
-           \text{where}\;\; \beta_k(t) := \sqrt{C^2 / N_k(t)},
-           \text{and}\;\; Z_k(t) \sim \mathrm{Gumbel}(0, 1).
+           I_k(t) &= \frac{X_k(t)}{N_k(t)} + \beta_k(t) Z_k(t), \\
+           \text{where}\;\; \beta_k(t) &:= \sqrt{C^2 / N_k(t)}, \\
+           \text{and}\;\; Z_k(t) &\sim \mathrm{Gumbel}(0, 1).
 
         Where :math:`\mathrm{Gumbel}(0, 1)` is the standard Gumbel distribution.
         See [Numpy documentation](https://docs.scipy.org/doc/numpy/reference/generated/numpy.random.gumbel.html#numpy.random.gumbel) or [Wikipedia page](https://en.wikipedia.org/wiki/Gumbel_distribution) for more details.
