@@ -50,7 +50,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False
@@ -270,47 +270,48 @@ configuration.update({
         #         "decreasingRate": 0.005,
         #     }
         # },
-        {
-            "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
-            "params": {
-                "epsilon": EPSILON,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": ETC_KnownGap,  # FIXME
-            "params": {
-                "horizon": HORIZON,
-                "gap": 0.1
-            }
-        },
-        {
-            "archtype": ETC_KnownGap,  # FIXME
-            "params": {
-                "horizon": HORIZON,
-                "gap": 0.05
-            }
-        },
-        {
-            "archtype": ETC_KnownGap,  # FIXME
-            "params": {
-                "horizon": HORIZON,
-                "gap": 0.01
-            }
-        },
-        {
-            "archtype": ETC_KnownGap,  # FIXME
-            "params": {
-                "horizon": HORIZON,
-                "gap": 0.5
-            }
-        },
-        {
-            "archtype": ETC_RandomStop,  # FIXME
-            "params": {
-                "horizon": HORIZON
-            }
-        },
+        # {
+        #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
+        #     "params": {
+        #         "epsilon": EPSILON,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # --- Explore-Then-Commit policies
+        # {
+        #     "archtype": ETC_KnownGap,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "gap": 0.1
+        #     }
+        # },
+        # {
+        #     "archtype": ETC_KnownGap,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "gap": 0.05
+        #     }
+        # },
+        # {
+        #     "archtype": ETC_KnownGap,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "gap": 0.01
+        #     }
+        # },
+        # {
+        #     "archtype": ETC_KnownGap,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "gap": 0.5
+        #     }
+        # },
+        # {
+        #     "archtype": ETC_RandomStop,
+        #     "params": {
+        #         "horizon": HORIZON
+        #     }
+        # },
         # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -332,6 +333,31 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
+        # --- Boltzmann-Gumbel algorithms
+        {
+            "archtype": BoltzmannGumbel,
+            "params": {
+                "C": 1.
+            }
+        },
+        {
+            "archtype": BoltzmannGumbel,
+            "params": {
+                "C": 2.
+            }
+        },
+        {
+            "archtype": BoltzmannGumbel,
+            "params": {
+                "C": 0.5
+            }
+        },
+        {
+            "archtype": BoltzmannGumbel,
+            "params": {
+                "C": 0.1
+            }
+        },
         # --- Exp3 algorithms - Very bad !!!!
         # {
         #     "archtype": Exp3,   # This basic Exp3 is not very good

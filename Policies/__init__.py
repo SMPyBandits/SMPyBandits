@@ -6,7 +6,7 @@
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
 - And two variants of the Explore-Then-Commit policy: :class:`ETC_KnownGap`, :class:`ETC_RandomStop`,
 
-- Probabilistic weighting algorithms: :class:`Softmax`, :class:`SoftmaxDecreasing`, :class:`SoftMix`, :class:`SoftmaxWithHorizon`, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, :class:`ProbabilityPursuit`,
+- Probabilistic weighting algorithms: :class:`Softmax`, :class:`SoftmaxDecreasing`, :class:`SoftMix`, :class:`SoftmaxWithHorizon`, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, :class:`ProbabilityPursuit`, and a smart variant :class:`BoltzmannGumbel`,
 
 - Index based and UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, UCBlog10, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`MOSS`, :class:`MOSSH`, :class:`CPUCB`,
 
@@ -71,6 +71,7 @@ from .ExploreThenCommit import ETC_KnownGap, ETC_RandomStop
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
 from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, Exp3ELM
 from .ProbabilityPursuit import ProbabilityPursuit
+from .BoltzmannGumbel import BoltzmannGumbel
 
 # --- Using unsupervised learning, from scikit-learn
 from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
