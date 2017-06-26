@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Lilian Besson's AlgoBandits project documentation!
-=============================================================
+Welcome to Lilian Besson's "AlgoBandits" project documentation!
+===============================================================
 
 A research framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms: UCB, KL-UCB, Thompson... and MusicalChair, ALOHA, MEGA, rhoRand etc.
 
@@ -12,28 +12,22 @@ A research framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algor
 
    See more on `the GitHub page for this project <https://naereen.github.io/AlgoBandits/>`_: `<https://naereen.github.io/AlgoBandits/>`_.
    The project is also hosted on `Inria GForge <https://gforge.inria.fr/project/admin/?group_id=9477>`_, and the documentation can be seen online at `<http://banditslilian.gforge.inria.fr/>`_.
+   |Website up|
 
-----
-
-Bandit algorithms, Lilian Besson's AlgoBandits project
-------------------------------------------------------
+Bandit algorithms, Lilian Besson's "AlgoBandits" project
+--------------------------------------------------------
 
 This repository contains the code of `my <http://perso.crans.org/besson/>`_ numerical environment, written in `Python <https://www.python.org/>`_, in order to perform numerical
 simulations on *single*-player and *multi*-players `Multi-Armed Bandits
 (MAB) <https://en.wikipedia.org/wiki/Multi-armed_bandit>`_ algorithms.
 
-|PyPI implementation| |PyPI pyversions| |Maintenance| |Ask Me Anything|
+|PyPI implementation| |PyPI pyversions| |MIT license|
 
 `I (Lilian Besson) <http://perso.crans.org/besson/>`_ have `started my
 PhD <http://perso.crans.org/besson/phd/>`_ in October 2016, and this is
 a part of my **on going** research since December 2016.
 
-.. |PyPI implementation| image:: https://img.shields.io/pypi/implementation/ansicolortags.svg
-.. |PyPI pyversions| image:: https://img.shields.io/pypi/pyversions/ansicolortags.svg
-.. |Maintenance| image:: https://img.shields.io/badge/Maintained%3F-yes-green.svg
-   :target: https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity
-.. |Ask Me Anything| image:: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
-   :target: https://GitHub.com/Naereen/ama
+|Maintenance| |Ask Me Anything|
 
 ----
 
@@ -42,17 +36,28 @@ a part of my **on going** research since December 2016.
    :caption: Contents:
 
    README.md
+   docs/modules.rst
    How_to_run_the_code.md
    Aggr.md
+   notebooks/README.md
    MultiPlayers.md
    API.md
-   TODO.md
-   notebooks/README.md
-   docs/modules.rst
-   plots/README.md
-   uml_diagrams/README.md
-   logs/README.md
    Policies/C/README.md
+   TODO.md
+   plots/README.md
+   logs/README.md
+   uml_diagrams/README.md
+   Profiling.md
+
+
+.. note::
+
+   This documentation is publically available, but the code is not (yet) open-source.
+   I will publish it soon, when it will be stable and clean enough to be used by others.
+
+   |GitHub forks| |GitHub stars| |GitHub watchers|
+
+   |GitHub contributors| |GitHub issues| |GitHub issues-closed|
 
 
 Indices and tables
@@ -65,4 +70,45 @@ Indices and tables
 * :ref:`methindex`,
 * :ref:`staticmethindex`,
 * :ref:`attrindex`,
-* :ref:`search`
+* :ref:`search`.
+
+|made-with-latex| |made-with-sphinx|
+
+|ForTheBadge uses-badges| |ForTheBadge uses-git|
+|forthebadge made-with-python| |ForTheBadge built-with-science|
+
+
+.. |PyPI implementation| image:: https://img.shields.io/pypi/implementation/ansicolortags.svg
+.. |PyPI pyversions| image:: https://img.shields.io/pypi/pyversions/ansicolortags.svg
+.. |Maintenance| image:: https://img.shields.io/badge/Maintained%3F-yes-green.svg
+   :target: https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity
+.. |Ask Me Anything| image:: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
+   :target: https://GitHub.com/Naereen/ama
+.. |Website up| image:: https://img.shields.io/website-up-down-green-red/http/banditslilian.gforge.inria.fr.svg
+   :target: http://banditslilian.gforge.inria.fr/
+.. |made-with-latex| image:: https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg
+   :target: https://www.latex-project.org/
+.. |made-with-sphinx| image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg
+   :target: https://www.sphinx-doc.org/
+.. |GitHub forks| image:: https://img.shields.io/github/forks/Naereen/AlgoBandits.svg?style=social&label=Fork&maxAge=2592000
+   :target: https://GitHub.com/Naereen/AlgoBandits/network/
+.. |GitHub stars| image:: https://img.shields.io/github/stars/Naereen/AlgoBandits.svg?style=social&label=Star&maxAge=2592000
+   :target: https://GitHub.com/Naereen/AlgoBandits/stargazers/
+.. |GitHub watchers| image:: https://img.shields.io/github/watchers/Naereen/AlgoBandits.svg?style=social&label=Watch&maxAge=2592000
+   :target: https://GitHub.com/Naereen/AlgoBandits/watchers/
+.. |GitHub contributors| image:: https://img.shields.io/github/contributors/Naereen/AlgoBandits.svg
+   :target: https://GitHub.com/Naereen/AlgoBandits/graphs/contributors/
+.. |GitHub issues| image:: https://img.shields.io/github/issues/Naereen/AlgoBandits.svg
+   :target: https://GitHub.com/Naereen/AlgoBandits/issues/
+.. |GitHub issues-closed| image:: https://img.shields.io/github/issues-closed/Naereen/AlgoBandits.svg
+   :target: https://GitHub.com/Naereen/AlgoBandits/issues?q=is%3Aissue+is%3Aclosed
+.. |ForTheBadge uses-badges| image:: http://ForTheBadge.com/images/badges/uses-badges.svg
+   :target: http://ForTheBadge.com
+.. |ForTheBadge uses-git| image:: http://ForTheBadge.com/images/badges/uses-git.svg
+   :target: https://GitHub.com/
+.. |forthebadge made-with-python| image:: http://ForTheBadge.com/images/badges/made-with-python.svg
+   :target: https://www.python.org/
+.. |ForTheBadge built-with-science| image:: http://ForTheBadge.com/images/badges/built-with-science.svg
+   :target: https://GitHub.com/Naereen/
+.. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://lbesson.mit-license.org/
