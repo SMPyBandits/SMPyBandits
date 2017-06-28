@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-""" The Boltzmann-Gumbel Exploration (BGE) index policy.
+""" The Boltzmann-Gumbel Exploration (BGE) index policy, a different formulation of the :class:`Exp3` policy with an optimally tune decreasing sequence of temperature parameters :math:`\gamma_t:.
 
 - Reference: Section 4 of [Boltzmann Exploration Done Right, N.Cesa-Bianchi & C.Gentile & G.Lugosi & G.Neu, arXiv 2017](https://arxiv.org/pdf/1705.10257.pdf).
-- It is a index policy with indexes computed from the empirical mean estimators and a random sample from a Gumbel distribution.
+- It is an index policy with indexes computed from the empirical mean estimators and a random sample from a Gumbel distribution.
 """
 
 __author__ = "Lilian Besson"
@@ -18,10 +18,10 @@ from .IndexPolicy import IndexPolicy
 SIGMA = 1
 
 class BoltzmannGumbel(IndexPolicy):
-    r""" The Boltzmann-Gumbel Exploration (BGE) index policy.
+    r""" The Boltzmann-Gumbel Exploration (BGE) index policy, a different formulation of the :class:`Exp3` policy with an optimally tune decreasing sequence of temperature parameters :math:`\gamma_t:.
 
     - Reference: Section 4 of [Boltzmann Exploration Done Right, N.Cesa-Bianchi & C.Gentile & G.Lugosi & G.Neu, arXiv 2017](https://arxiv.org/pdf/1705.10257.pdf).
-    - It is a index policy with indexes computed from the empirical mean estimators and a random sample from a Gumbel distribution.
+    - It is an index policy with indexes computed from the empirical mean estimators and a random sample from a Gumbel distribution.
     """
 
     def __init__(self, nbArms, C=SIGMA, lower=0., amplitude=1.):
