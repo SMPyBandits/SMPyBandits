@@ -19,6 +19,7 @@ try:
     from .pykov import Chain
 except ImportError:
     print("Warning: 'pykov' module seems to not be available. Have you installed it from https://github.com/riccardoscalco/Pykov ?")
+    print("Warning: the 'MarkovianMAB' class won't work...")
 
 # Local imports
 from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
@@ -79,6 +80,18 @@ class MAB(object):
         # Print lower bound and HOI factor
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.lowerbound(), self.hoifactor()))  # DEBUG
         print(" - with 'arms' represented as:", self.reprarms(1, latex=True))  # DEBUG
+
+    def new_order_of_arm(self, arms):
+        """ Feed a new order of the arms to the environment.
+
+        - Updates self.means correctly.
+        - Return the new position of the best arm (to count and plot ``BestArmPulls`` correctly).
+        """
+        assert sorted([arm.mean for arm in self.arms]) == sorted([arm.mean for arm in arms]), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
+        assert set(self.arms) == set(arms), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
+        self.arms = arms
+        self.means = np.array([arm.mean for arm in self.arms])
+        return np.nonzero(np.isclose(self.means, self.maxArm))[0]
 
     def __repr__(self):
         return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self.arms, self.minArm, self.maxArm)
@@ -322,6 +335,7 @@ class MarkovianMAB(MAB):
         self.dict_transitions = dict_transitions
         print(" - Using these transition dictionaries:", dict_transitions)  # DEBUG
 
+        # FIXED this will fail harshly if Pykov is not installed/present
         self.chains = [Chain(d) for d in dict_transitions]
         print(" - For these Markov chains:", self.chains)  # DEBUG
 

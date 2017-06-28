@@ -2,7 +2,7 @@
 """ ResultMultiPlayers.ResultMultiPlayers class to wrap the simulation results, for the multi-players case."""
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import numpy as np
 

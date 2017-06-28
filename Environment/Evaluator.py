@@ -156,11 +156,6 @@ class Evaluator(object):
         else:
             allrewards = None
 
-        # Get the position of the best arms
-        means = env.means
-        bestarm = env.maxArm
-        index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
-
         def store(r, policyId, repeatId):
             """ Store the result of the #repeatId experiment, for the #policyId policy."""
             self.rewards[policyId, envId, :] += r.rewards
@@ -172,8 +167,7 @@ class Evaluator(object):
                 self.minCumRewards[policyId, envId, :] = np.minimum(self.minCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             if hasattr(self, 'maxCumRewards'):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
-            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, index_bestarm))
-            # FIXME this BestArmPulls is wrong in case of dynamic change of arm configurations
+            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.equal(r.choices, r.indeces_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
 
         # Start for all policies
@@ -456,9 +450,11 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         env.newRandomArms()
     policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
 
+    index_bestarm = np.nonzero(np.isclose(env.means, env.maxArm))[0]
+
     # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon)  # One Result object, for every policy
+    result = Result(env.nbArms, horizon, index_bestarm=index_bestarm)  # One Result object, for every policy
     # , delta_t_save=delta_t_save
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
@@ -471,7 +467,7 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     for t in prettyRange:
         choice = policy.choice()
 
-        # FIXME do this quicker!
+        # XXX do this quicker!?
         if allrewards is None:
             reward = env.draw(choice, t)
         else:
@@ -486,12 +482,16 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle and t in t_events:
-                random.shuffle(env.arms)
-                # print("Shuffling the arms ...")  # DEBUG
+                index_bestarm = env.new_order_of_arm(shuffled(env.arms))
+                result.change_in_arms(t, index_bestarm)
+                if repeatId == 0:
+                    print("Shuffling the arms ...")  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert and t in t_events:
-                env.arms = env.arms[::-1]
-                # print("Inverting the order of the arms ...")  # DEBUG
+                index_bestarm = env.new_order_of_arm(env.arms[::-1])
+                result.change_in_arms(t, index_bestarm)
+                if repeatId == 0:
+                    print("Inverting the order of the arms ...")  # DEBUG
 
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0 and hasattr(policy, 'estimatedOrder'):
@@ -515,3 +515,28 @@ def EvaluatorFromDisk(filepath='/tmp/saveondiskEvaluator.hdf5'):
         evaluator = Evaluator(configuration)
         evaluator.loadfromdisk(hdf)
     return evaluator
+
+
+# --- Utility function
+
+from random import shuffle
+from copy import copy
+
+
+def shuffled(mylist):
+    """Returns a shuffled version of the input 1D list. sorted() exists instead of list.sort(), but shuffled() does not exist instead of random.shuffle()...
+
+    >>> from random import seed; seed(1234)  # reproducible results
+    >>> mylist = [ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9]
+    >>> shuffled(mylist)
+    [0.9, 0.4, 0.3, 0.6, 0.5, 0.7, 0.1, 0.2, 0.8]
+    >>> shuffled(mylist)
+    [0.4, 0.3, 0.7, 0.5, 0.8, 0.1, 0.9, 0.6, 0.2]
+    >>> shuffled(mylist)
+    [0.4, 0.6, 0.9, 0.5, 0.7, 0.2, 0.1, 0.3, 0.8]
+    >>> shuffled(mylist)
+    [0.8, 0.7, 0.3, 0.1, 0.9, 0.5, 0.6, 0.2, 0.4]
+    """
+    copiedlist = copy(mylist)
+    shuffle(copiedlist)
+    return copiedlist
