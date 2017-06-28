@@ -1,5 +1,8 @@
 ## 2nd contribution: [**Multi-players simulation environment**](MultiPlayers.md)
-> I have started the multi-player part, it will take time to be finished.
+
+- FIXME change the plot, and add more up-to-date explanations!
+
+- Remark: I am finishing an article on that topic, it will be a better introduction as a small self-contained document to explain this idea and the algorithms, the models etc.
 
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.

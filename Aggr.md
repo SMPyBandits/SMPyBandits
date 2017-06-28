@@ -1,5 +1,9 @@
 ## 1st contribution: The **policy aggregation algorithm**
 
+- FIXME change the plot, and add more up-to-date explanations!
+
+- Remark: I am finishing an article on that topic, it will be a better introduction as a small self-contained document to explain this idea and the algorithms.
+
 ### More mathematical explanations
 Initially, every child algorithms `A_i` has the same "trust" probability `p_i`, and at every step, the aggregated bandit first listen to the decision from all its children `A_i` (`a_{i,t}` in `1 .. K`), and then decide which arm to select by a probabilistic vote: the probability of selecting arm `k` is the sum of the trust probability of the children who voted for arm `k`.
 It could also be done the other way: the aggregated bandit could first decide which children to listen to, then trust him.
