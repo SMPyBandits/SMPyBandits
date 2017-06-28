@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -50,7 +50,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False
@@ -70,7 +70,7 @@ RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
 # NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
-# NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
 # NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
@@ -773,7 +773,7 @@ ALPHAS = [2, 0.5, 0.1]
 
 configuration.update({
     "policies":
-    # [ 
+    # [
     #     # --- # XXX experimental sliding window algorithm
     #     {
     #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
