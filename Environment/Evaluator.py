@@ -65,6 +65,12 @@ class Evaluator(object):
         self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)  #: Random shuffling of arms?
         self.random_invert = self.cfg.get('random_invert', random_invert)  #: Random inversion of arms?
         self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)  #: How many random events?
+        self.signature = signature
+        if self.nb_random_events > 0:
+            if self.random_shuffle:
+                self.signature = (r", $\Upsilon={}$ random arms shuffling".format(self.nb_random_events)) + self.signature
+            elif self.random_invert:
+                self.signature = (r", $\Upsilon={}$ arms inversion".format(self.nb_random_events)) + self.signature
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
         self.averageOn = averageOn  #: How many last steps for final rank average rewards
@@ -347,7 +353,7 @@ class Evaluator(object):
                 if normalizedRegret:
                     MaxMinY /= np.log(2 + X)
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         if not meanRegret:
@@ -402,7 +408,7 @@ class Evaluator(object):
             lw = 3 if str(policy)[:4] == 'Aggr' else 2
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
