@@ -570,7 +570,7 @@ class EvaluatorMultiPlayers(object):
         assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
         for armId, arm in enumerate(self.envs[envId].arms):
             labels[armId] = "#${}$: ${}$ (${:.1%}$$\%$)".format(armId, repr(arm), Y[armId])
-            print("  - For {},\tfrequency of collisions is {:g}  ...".format(labels[armId], Y[armId]))  # DEBUG
+            print("  - For {},\tfrequency of collisions is {:.5g}  ...".format(labels[armId], Y[armId]))  # DEBUG
             if Y[armId] < 1e-4:  # Do not display small slices
                 labels[armId] = ''
         if np.isclose(np.sum(Y), 0):
@@ -617,7 +617,7 @@ class EvaluatorMultiPlayers(object):
         index_of_sorting = np.argsort(-lastY)  # Get them by INCREASING rewards, not decreasing regrets
         for i, k in enumerate(index_of_sorting):
             player = self.players[k]
-            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
+            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
     def strPlayers(self, short=False):
