@@ -166,8 +166,7 @@ if __name__ == '__main__':
         else:
             evaluation.plotRegrets(envId)
             evaluation.plotRegrets(envId, semilogx=True)
-            # FIXME write semilogy, loglog for Evaluator.py also!
-            # evaluation.plotRegrets(envId, semilogy=True)
+            evaluation.plotRegrets(envId, semilogy=True)
             # evaluation.plotRegrets(envId, loglog=True)
             if configuration['repetitions'] > 1:
                 if plotSTD:
