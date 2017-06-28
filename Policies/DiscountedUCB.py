@@ -57,7 +57,7 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-           N_{k,\gamma}(t+1) &= gamma \times N_{k,\gamma}( t) + \mathbbm{1}(A(t+1) = k), \\
+           N_{k,\gamma}(t+1) &= gamma \times N_{k,\gamma}( t) + \mathbb{1}(A(t+1) = k), \\
            X_{k,\gamma}(t+1) &= gamma \times X_{k,\gamma}( t) + X_k(t+1).
         """
         self.t += 1

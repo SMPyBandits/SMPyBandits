@@ -65,7 +65,7 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
-RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 # NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
