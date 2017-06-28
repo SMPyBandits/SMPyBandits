@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -49,7 +49,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 100
-REPETITIONS = 50
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -64,11 +64,12 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
-RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
-# RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
+RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms are inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -333,37 +334,37 @@ configuration.update({
         #         "horizon": HORIZON
         #     }
         # },
-        # --- Boltzmann-Gumbel algorithms
-        {
-            "archtype": BoltzmannGumbel,
-            "params": {
-                "C": 1.
-            }
-        },
-        {
-            "archtype": BoltzmannGumbel,
-            "params": {
-                "C": 2.
-            }
-        },
-        {
-            "archtype": BoltzmannGumbel,
-            "params": {
-                "C": 0.5
-            }
-        },
-        {
-            "archtype": BoltzmannGumbel,
-            "params": {
-                "C": 0.1
-            }
-        },
-        {
-            "archtype": BoltzmannGumbel,
-            "params": {
-                "C": 0.01
-            }
-        },
+        # # --- Boltzmann-Gumbel algorithms
+        # {
+        #     "archtype": BoltzmannGumbel,
+        #     "params": {
+        #         "C": 1.
+        #     }
+        # },
+        # {
+        #     "archtype": BoltzmannGumbel,
+        #     "params": {
+        #         "C": 2.
+        #     }
+        # },
+        # {
+        #     "archtype": BoltzmannGumbel,
+        #     "params": {
+        #         "C": 0.5
+        #     }
+        # },
+        # {
+        #     "archtype": BoltzmannGumbel,
+        #     "params": {
+        #         "C": 0.1
+        #     }
+        # },
+        # {
+        #     "archtype": BoltzmannGumbel,
+        #     "params": {
+        #         "C": 0.01
+        #     }
+        # },
         # --- Exp3 algorithms - Very bad !!!!
         # {
         #     "archtype": Exp3,   # This basic Exp3 is not very good
@@ -476,7 +477,7 @@ configuration.update({
             }
         },
         # {
-        #     "archtype": SlidingUCBalpha,   # XXX experimental sliding window algorithm
+        #     "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
         #     "params": {
         #         "alpha": 0.5
         #     }
@@ -764,28 +765,42 @@ configuration.update({
 # })
 
 
-# # XXX compare different values of the experimental sliding window algorithm
-# configuration.update({
-#     "policies": [
-#         {
-#             "archtype": UCBalpha,
-#             "params": {
-#                 "alpha": 0.5
-#             }
-#         }
-#     ] +
-#     [
-#         # --- # XXX experimental sliding window algorithm
-#         {
-#             "archtype": SlidingWindowsRestart(Policy=UCBalpha, smallHistory=sh, threshold=eps, full_restart_when_refresh=True),
-#             "params": {
-#                 "alpha": 0.5
-#             }
-#         }
-#         for sh in [50, 100, 500, 1000, 2000]
-#         for eps in [1e-4, 1e-3, 1e-2]
-#     ]
-# })
+# XXX compare different values of the experimental sliding window algorithm
+configuration.update({
+    "policies": [
+        {
+            "archtype": UCBalpha,
+            "params": {
+                "alpha": 0.5
+            }
+        }
+        for alpha in [4, 2, 1, 0.5, 0.25, 0.1, 0.05, 0.01]
+    ] +
+    [
+        # --- # XXX experimental sliding window algorithm
+        {
+            "archtype": SlidingWindowsRestart(Policy=UCBalpha, smallHistory=sh, threshold=eps, full_restart_when_refresh=True),
+            "params": {
+                "alpha": 0.5
+            }
+        }
+        for sh in [50, 100, 500, 1000]
+        for eps in [1e-4, 1e-3, 1e-2]
+        # for alpha in [4, 2, 1, 0.5, 0.25, 0.1, 0.05, 0.01]
+    ] +
+    [
+        # --- # XXX experimental other version of the sliding window algorithm
+        {
+            "archtype": SWUCB,
+            "params": {
+                "alpha": alpha,
+                "tau": tau
+            }
+        }
+        for alpha in [4, 2, 1, 0.5, 0.25, 0.1, 0.05, 0.01]
+        for tau in [50, 100, 500, 1000, 2000]
+    ]
+})
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
 # from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once

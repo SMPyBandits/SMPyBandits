@@ -28,7 +28,9 @@
 
 - *New!* An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
 
-- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`
+- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SWR_UCB`, :class:`SWR_UCBalpha`, :class:`SWR_klUCB`,
+
+- *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SWUCB`, and :class:`SWUCBPlus` if the horizon is known.
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
@@ -77,8 +79,6 @@ from .BoltzmannGumbel import BoltzmannGumbel
 from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
 
 from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
-
-from .SlidingWindowRestart import SlidingWindowRestart, SWRestartUCB, SWRestartUCBalpha, SWRestartklUCB
 
 # --- Simple UCB policies
 from .UCB import UCB
@@ -134,6 +134,10 @@ from .Aggr import Aggr
 
 # --- Gittins index policy
 from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-Horizon Gittins index
+
+# --- Smart policies trying to adapt to dynamically changing environments
+from .SlidingWindowRestart import SlidingWindowRestart, SWR_UCB, SWR_UCBalpha, SWR_klUCB
+from .SlidingWindowUCB import SWUCB, SWUCBPlus
 
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies

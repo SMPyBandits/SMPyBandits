@@ -1,0 +1,107 @@
+# -*- coding: utf-8 -*-
+r""" An experimental policy, using only a sliding window (of for instance :math:`\tau=1000` *steps*, not counting draws of each arms) instead of using the full-size history.
+
+- Reference: [On Upper-Confidence Bound Policies for Non-Stationary Bandit Problems, by A.Garivier & E.Moulines, ALT 2011](https://arxiv.org/pdf/0805.3415.pdf)
+
+- It uses an additional :math:`\mathcal{O}(\tau)` memory but do not cost anything else in terms of time complexity (the average is done with a sliding window, and costs :math:`\mathcal{O}(1)` at every time step).
+
+.. warning:: This is very experimental!
+.. note:: This is similar to :class:`SWUCB` but slightly different: :class:`SWUCB` uses a window of size :math:`T_0=100` to keep in memory the last 100 *draws* of *each* arm, and restart the index if the small history mean is too far away from the whole mean, while this :class:`SlidingWindowUCB` uses a fixed-size window of size :math:`\tau=1000` to keep in memory the last 1000 *steps*.
+"""
+
+__author__ = "Lilian Besson"
+__version__ = "0.6"
+
+from math import sqrt, log
+import numpy as np
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+
+
+from .IndexPolicy import IndexPolicy
+
+
+#: Size of the sliding window.
+TAU = 1000
+
+#: Default value for the constant :math:`\xi`.
+DEFAULT_XI = 0.6
+
+
+# --- Manually written
+
+class SWUCB(IndexPolicy):
+    r""" An experimental policy, using only a sliding window (of for instance :math:`\tau=1000` *steps*, not counting draws of each arms) instead of using the full-size history.
+    """
+
+    def __init__(self, nbArms,
+                 tau=TAU, xi=DEFAULT_XI,
+                 lower=0., amplitude=1., *args, **kwargs):
+        super(SWUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        assert 1 <= tau, "Error: parameter 'tau' for class SWUCB has to be >= 1, but was {}.".format(tau)  # DEBUG
+        self.tau = int(tau)  #: Size of the sliding window.
+        assert xi > 0, "Error: parameter 'xi' for class SWUCB has to be > 0, but was {}.".format(xi)  # DEBUG
+        self.xi = xi  #: Constant in the square-root in the computation for the index.
+        self.B = self.amplitude  #: Known amplitude of the rewards.
+        # Internal memory
+        self.last_rewards = np.zeros((nbArms, tau))  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
+        self.last_choices = np.full(tau, -1)  #: Keep in memory the times where each arm was last seen.
+
+    def __str__(self):
+        return r"SW-UCB($\tau={}$, $B={:.3g}$, $\xi={:3g}$)".format(self.tau, self.B, self.xi)
+
+    def getReward(self, arm, reward):
+        """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
+        """
+        self.t += 1
+        # Get reward, normalized to [0, 1]
+        reward = (reward - self.lower) / self.amplitude
+        # We seen it one more time
+        self.last_choices[self.t % self.tau] = arm
+        # Store it in place for the empirical average of that arm
+        self.last_rewards[arm, self.t % self.tau] = reward
+
+    def computeIndex(self, arm):
+        r""" Compute the current index, at time :math:`t` and after :math:`N_{k,\tau}(t)` pulls of arm :math:`k`:
+
+        .. math::
+
+           I_k(t) &= \frac{X_{k,\tau}(t)}{N_{k,\tau}(t)} + c_{k,\tau}(t),\\
+           \text{where}\;\; c_{k,\tau}(t) &:= B \sqrt{\xi \frac{\log(\min(t,\tau))}{N_{k,\tau}(t)}},
+           \text{and}\;\; X_{k,\tau}(t) &:= \frac{1}{N_{k,\tau}(t)} \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),
+           \text{and}\;\; N_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} \mathbb{1}(A(t) = k).
+        """
+        last_pulls_of_this_arm = np.count_nonzero(self.last_choices == arm)
+        if last_pulls_of_this_arm < 1:
+            return float('+inf')
+        else:
+            return (np.sum(self.last_rewards[arm]) / last_pulls_of_this_arm) + self.B * sqrt((self.xi * log(min(self.t, self.tau))) / last_pulls_of_this_arm)
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms, in a vectorized manner."""
+        last_pulls = np.bincount(self.last_choices, minlength=np.nbArms)
+        indexes = (np.sum(self.last_rewards, axis=1) / last_pulls) + self.B * sqrt((self.xi * log(min(self.t, self.tau))) / last_pulls)
+        indexes[last_pulls < 1] = float('+inf')
+        self.index = indexes
+
+
+# --- Horizon dependent version
+
+class SWUCBPlus(IndexPolicy):
+    r""" An experimental policy, using only a sliding window (of :math:`\tau` *steps*, not counting draws of each arms) instead of using the full-size history.
+
+    - Uses :math:`\tau = 4 \sqrt{T \log(T)}` if the horizon :math:`T` is given, otherwise use the default value.
+    """
+
+    def __init__(self, nbArms, horizon=None,
+                 lower=0., amplitude=1., *args, **kwargs):
+        if horizon is not None:
+            T = int(horizon)
+            tau = int(4 * np.sqrt(T * np.log(T)))
+        else:
+            tau = TAU
+        super(SWUCBPlus, self).__init__(nbArms, tau=tau, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameter
+
+    def __str__(self):
+        return r"SW-UCB+($\tau={}$, $B={:.3g}$, $\xi={:3g}$)".format(self.tau, self.B, self.xi)
