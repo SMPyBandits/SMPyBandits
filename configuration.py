@@ -71,7 +71,7 @@ RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_RANDOM_EVENTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_RANDOM_EVENTS = 10  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-# NB_RANDOM_EVENTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+NB_RANDOM_EVENTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -772,13 +772,14 @@ EPSS   = [0.1, 0.05]
 ALPHAS = [2, 1, 0.5, 0.1]
 ALPHAS = [2, 0.5, 0.1]
 ALPHAS = [0.5]
+ALPHAS = [1]
 TAUS   = [
         500, 1000, 2000,
         # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
 GAMMAS = [
         # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
-        0.8, 0.9, 0.95, 0.99, 0.9999,
+        0.8, 0.9, 0.95, 0.99, 0.999999,
        # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
 
