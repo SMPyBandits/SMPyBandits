@@ -50,15 +50,15 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} gamma \times N_{k,\gamma}( s), \\
-           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} gamma \times X_{k,\gamma}( s).
+           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma \times N_{k,\gamma}( s), \\
+           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma \times X_{k,\gamma}( s).
 
-        - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from `s=0` to `s=t`, because updating it is easy (2 operations instead of just 1 for classical :class:`UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically).
+        - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from `s=0` to `s=t`, because updating it is easy (2 operations instead of just 1 for classical :class:`Policies.UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically).
 
         .. math::
 
-           N_{k,\gamma}(t+1) &= gamma \times N_{k,\gamma}( t) + \mathbb{1}(A(t+1) = k), \\
-           X_{k,\gamma}(t+1) &= gamma \times X_{k,\gamma}( t) + X_k(t+1).
+           N_{k,\gamma}(t+1) &= \gamma \times N_{k,\gamma}( t) + \mathbb{1}(A(t+1) = k), \\
+           X_{k,\gamma}(t+1) &= \gamma \times X_{k,\gamma}( t) + X_k(t+1).
         """
         self.t += 1
         self.pulls[arm] = (self.gamma * self.pulls[arm]) + 1
