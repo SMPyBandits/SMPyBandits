@@ -32,6 +32,8 @@
 
 - *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known.
 
+- *New!* Another experimental policy with a discount factor, :class:`DiscountedUCB`.
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -138,6 +140,8 @@ from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-
 # --- Smart policies trying to adapt to dynamically changing environments
 from .SlidingWindowRestart import SlidingWindowRestart, SWR_UCB, SWR_UCBalpha, SWR_klUCB
 from .SlidingWindowUCB import SWUCB, SWUCBPlus
+
+from .DiscountedUCB import DiscountedUCB
 
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies

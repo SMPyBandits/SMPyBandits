@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -68,9 +68,9 @@ RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
 RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
-NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
-# NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
-NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
 # NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
@@ -784,39 +784,51 @@ configuration.update({
     #     for tau in [500, 1000, 2000]
     #     for eps in [0.1, 0.05]
     #     for alpha in ALPHAS
+    # # ] +
+    # [
+    #     # --- # XXX experimental other version of the sliding window algorithm
+    #     {
+    #         "archtype": SWUCB,
+    #         "params": {
+    #             "alpha": alpha,
+    #             "tau": tau
+    #         }
+    #     }
+    #     for alpha in ALPHAS
+    #     for tau in [500, 1000, 2000]
+    # ] +
+    # [
+    #     # --- # XXX experimental other version of the sliding window algorithm
+    #     {
+    #         "archtype": SWUCBPlus,
+    #         "params": {
+    #             "horizon": HORIZON,
+    #             "alpha": alpha
+    #         }
+    #     }
+    #     for alpha in ALPHAS
     # ] +
     [
-        # --- # XXX experimental other version of the sliding window algorithm
+        # --- # XXX experimental discounted UCB algorithm
         {
-            "archtype": SWUCB,
+            "archtype": DiscountedUCB,
             "params": {
                 "alpha": alpha,
-                "tau": tau
+                "gamma": gamma
             }
         }
-        for alpha in ALPHAS
-        for tau in [500, 1000, 2000]
-    ] +
-    [
-        # --- # XXX experimental other version of the sliding window algorithm
-        {
-            "archtype": SWUCBPlus,
-            "params": {
-                "horizon": HORIZON,
-                "alpha": alpha
-            }
-        }
-        for alpha in ALPHAS
-    ] +
-    [
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": alpha
-            }
-        }
+        for gamma in [0.7, 0.8, 0.9, 0.95, 1.0]
         for alpha in ALPHAS
     ]
+    # [
+    #     {
+    #         "archtype": UCBalpha,
+    #         "params": {
+    #             "alpha": alpha
+    #         }
+    #     }
+    #     for alpha in ALPHAS
+    # ]
 })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]

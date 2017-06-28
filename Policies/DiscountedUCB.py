@@ -15,11 +15,11 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .UCBalpha import UCBalpha
 
-#: Default parameter for alpha
+#: Default parameter for alpha.
 ALPHA = 4
 
 
-#: Default parameter for gamma
+#: Default parameter for gamma.
 GAMMA = 1.0
 
 
@@ -36,7 +36,7 @@ class DiscountedUCB(UCBalpha):
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."
         self.alpha = alpha  #: Parameter alpha
         assert 0 < gamma <= 1, "Error: the 'gamma' parameter for DiscountedUCB class has to be 0 < gamma <= 1."  # DEBUG
-        if np.iscole(gamma, 1):
+        if np.isclose(gamma, 1):
             print("Warning: using DiscountedUCB with 'gamma' too close to 1 will result in UCBalpha, you should rather use it...")  # DEBUG
         self.gamma = gamma  #: Parameter gamma
 
