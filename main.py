@@ -203,16 +203,12 @@ if __name__ == '__main__':
                         evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotMaxMin=True)
 
         # --- Also plotting the probability of picking the best arm
-        if evaluation.random_shuffle or evaluation.random_invert:
-            print(" - Not plotting probability of picking the best arm as we used random events ...")
-            print("   ==> FIXME correct this bug")
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_BestArmPulls')
+            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+            evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
         else:
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_BestArmPulls')
-                print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
-                evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
-            else:
-                evaluation.plotBestArmPulls(envId)
+            evaluation.plotBestArmPulls(envId)
 
         if saveallfigs:
             print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG

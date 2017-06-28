@@ -485,13 +485,13 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
                 index_bestarm = env.new_order_of_arm(shuffled(env.arms))
                 result.change_in_arms(t, index_bestarm)
                 if repeatId == 0:
-                    print("Shuffling the arms ...")  # DEBUG
+                    print("\nShuffling the arms at time t = {} ...".format(t))  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert and t in t_events:
                 index_bestarm = env.new_order_of_arm(env.arms[::-1])
                 result.change_in_arms(t, index_bestarm)
                 if repeatId == 0:
-                    print("Inverting the order of the arms ...")  # DEBUG
+                    print("\nInverting the order of the arms at time t = {} ...".format(t))  # DEBUG
 
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0 and hasattr(policy, 'estimatedOrder'):

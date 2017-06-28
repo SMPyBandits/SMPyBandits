@@ -64,13 +64,14 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
-RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
-RANDOM_SHUFFLE = True  #: The arms are shuffled (``shuffle(arms)``).
-RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
-# RANDOM_INVERT = True  #: The arms are inverted (``arms = arms[::-1]``).
-# NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
+RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
+RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
 NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -777,21 +778,10 @@ configuration.update({
                 # "alpha": 0.5
             }
         }
-        for sh in [50, 100, 500, 1000]
+        for sh in [100, 500, 1000]
         for eps in [1e-4, 1e-3, 1e-2]
         # for alpha in [2, 1, 0.5, 0.1]
     ] +
-    # [
-    #     # --- # XXX experimental other version of the sliding window algorithm
-    #     {
-    #         "archtype": SWUCBPlus,
-    #         "params": {
-    #             "horizon": HORIZON,
-    #             "alpha": alpha
-    #         }
-    #     }
-    #     for alpha in [2, 1, 0.5, 0.1]
-    # ] +
     # [
     #     # --- # XXX experimental other version of the sliding window algorithm
     #     {
@@ -804,6 +794,17 @@ configuration.update({
     #     for alpha in [2, 1, 0.5, 0.1]
     #     for tau in [500, 1000, 2000, 5000]
     # ] +
+    [
+        # --- # XXX experimental other version of the sliding window algorithm
+        {
+            "archtype": SWUCBPlus,
+            "params": {
+                "horizon": HORIZON,
+                "alpha": alpha
+            }
+        }
+        for alpha in [2, 1, 0.5, 0.1]
+    ] +
     [
         {
             "archtype": UCBalpha,

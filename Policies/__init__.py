@@ -12,7 +12,7 @@
 
 - Bayesian algorithms: :class:`Thompson`, :class:`ThompsonRobust`, :class:`BayesUCB`,
 
-- Based on Kullback-Leibler divergence: :class:`klUCB`, klUCBlog10, :class:`klUCBloglog`, klUCBloglog10, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`,
+- Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBlog10`, :class:`klUCBloglog`, :class:`klUCBloglog10`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`,
 
 - Empirical KL-UCB algorithm: :class:`KLempUCB`,
 
@@ -28,7 +28,7 @@
 
 - *New!* An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
 
-- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SWR_UCB`, :class:`SWR_UCBalpha`, :class:`SWR_klUCB`,
+- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB`,
 
 - *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SWUCB`, and :class:`SWUCBPlus` if the horizon is known.
 

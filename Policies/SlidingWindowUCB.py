@@ -6,7 +6,7 @@ r""" An experimental policy, using only a sliding window (of for instance :math:
 - It uses an additional :math:`\mathcal{O}(\tau)` memory but do not cost anything else in terms of time complexity (the average is done with a sliding window, and costs :math:`\mathcal{O}(1)` at every time step).
 
 .. warning:: This is very experimental!
-.. note:: This is similar to :class:`SWUCB` but slightly different: :class:`SWUCB` uses a window of size :math:`T_0=100` to keep in memory the last 100 *draws* of *each* arm, and restart the index if the small history mean is too far away from the whole mean, while this :class:`SlidingWindowUCB` uses a fixed-size window of size :math:`\tau=1000` to keep in memory the last 1000 *steps*.
+.. note:: This is similar to :class:`SlidingWindowRestart.SWR_UCB` but slightly different: :class:`SlidingWindowRestart.SWR_UCB` uses a window of size :math:`T_0=100` to keep in memory the last 100 *draws* of *each* arm, and restart the index if the small history mean is too far away from the whole mean, while this :class:`SWUCB` uses a fixed-size window of size :math:`\tau=1000` to keep in memory the last 1000 *steps*.
 """
 
 __author__ = "Lilian Besson"
