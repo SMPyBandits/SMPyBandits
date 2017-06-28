@@ -37,14 +37,17 @@ class IndexPolicy(BasePolicy):
         raise NotImplementedError("This method computeIndex(arm) has to be implemented in the child class inheriting from IndexPolicy.")
 
     def computeAllIndex(self):
-        """ Compute the current indexes for all arms. Possibly vectorized, by default not."""
+        """ Compute the current indexes for all arms. Possibly vectorized, by default it can *not* be vectorized automatically."""
         for arm in range(self.nbArms):
             self.index[arm] = self.computeIndex(arm)
 
     # --- Basic choice() method
 
     def choice(self):
-        """ In an index policy, choose an arm with maximal index (uniformly at random)."""
+        r""" In an index policy, choose an arm with maximal index (uniformly at random):
+
+        .. math:: A(t) \sim U(\arg\max_{1 \leq k \leq K} I_k(t)).
+        """
         self.computeAllIndex()
         # Uniform choice among the best arms
         try:
