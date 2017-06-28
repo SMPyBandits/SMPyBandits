@@ -65,13 +65,13 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
-# RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
+RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
-RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
+# RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
-NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
-NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
-NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -768,32 +768,35 @@ configuration.update({
 
 
 # XXX compare different values of the experimental sliding window algorithm
+# ALPHAS = [2, 1, 0.5, 0.1]
+ALPHAS = [2, 0.5, 0.1]
+
 configuration.update({
     "policies":
-    [
-        # --- # XXX experimental sliding window algorithm
-        {
-            "archtype": SlidingWindowRestart(Policy=klUCB, smallHistory=sh, threshold=eps, full_restart_when_refresh=True),
-            "params": {
-                # "alpha": 0.5
-            }
-        }
-        for sh in [100, 500, 1000]
-        for eps in [1e-4, 1e-3, 1e-2]
-        # for alpha in [2, 1, 0.5, 0.1]
-    ] +
     # [
-    #     # --- # XXX experimental other version of the sliding window algorithm
+    #     # --- # XXX experimental sliding window algorithm
     #     {
-    #         "archtype": SWUCB,
+    #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
     #         "params": {
-    #             "alpha": alpha,
-    #             "tau": tau
+    #             "alpha": alpha
     #         }
     #     }
-    #     for alpha in [2, 1, 0.5, 0.1]
-    #     for tau in [500, 1000, 2000, 5000]
+    #     for tau in [500, 1000, 2000]
+    #     for eps in [0.1, 0.05]
+    #     for alpha in ALPHAS
     # ] +
+    [
+        # --- # XXX experimental other version of the sliding window algorithm
+        {
+            "archtype": SWUCB,
+            "params": {
+                "alpha": alpha,
+                "tau": tau
+            }
+        }
+        for alpha in ALPHAS
+        for tau in [500, 1000, 2000]
+    ] +
     [
         # --- # XXX experimental other version of the sliding window algorithm
         {
@@ -803,7 +806,7 @@ configuration.update({
                 "alpha": alpha
             }
         }
-        for alpha in [2, 1, 0.5, 0.1]
+        for alpha in ALPHAS
     ] +
     [
         {
@@ -812,7 +815,7 @@ configuration.update({
                 "alpha": alpha
             }
         }
-        for alpha in [2, 1, 0.5, 0.1]
+        for alpha in ALPHAS
     ]
 })
 

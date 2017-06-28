@@ -66,8 +66,8 @@ class SWUCB(IndexPolicy):
         .. math::
 
            I_k(t) &= \frac{X_{k,\tau}(t)}{N_{k,\tau}(t)} + c_{k,\tau}(t),\\
-           \text{where}\;\; c_{k,\tau}(t) &:= B \sqrt{\alpha \frac{\log(\min(t,\tau))}{N_{k,\tau}(t)}},
-           \text{and}\;\; X_{k,\tau}(t) &:= \frac{1}{N_{k,\tau}(t)} \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),
+           \text{where}\;\; c_{k,\tau}(t) &:= B \sqrt{\alpha \frac{\log(\min(t,\tau))}{N_{k,\tau}(t)}},\\
+           \text{and}\;\; X_{k,\tau}(t) &:= \frac{1}{N_{k,\tau}(t)} \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),\\
            \text{and}\;\; N_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} \mathbb{1}(A(t) = k).
         """
         last_pulls_of_this_arm = np.count_nonzero(self.last_choices == arm)

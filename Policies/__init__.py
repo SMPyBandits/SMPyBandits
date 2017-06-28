@@ -4,11 +4,11 @@
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
-- And two variants of the Explore-Then-Commit policy: :class:`ETC_KnownGap`, :class:`ETC_RandomStop`,
+- And two variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`,
 
-- Probabilistic weighting algorithms: :class:`Softmax`, :class:`SoftmaxDecreasing`, :class:`SoftMix`, :class:`SoftmaxWithHorizon`, Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, :class:`ProbabilityPursuit`, and a smart variant :class:`BoltzmannGumbel`,
+- Probabilistic weighting algorithms: :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, and a smart variant :class:`BoltzmannGumbel`,
 
-- Index based and UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, UCBlog10, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`MOSS`, :class:`MOSSH`, :class:`CPUCB`,
+- Index based and UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`MOSS`, :class:`MOSSH`, :class:`CPUCB`,
 
 - Bayesian algorithms: :class:`Thompson`, :class:`ThompsonRobust`, :class:`BayesUCB`,
 
@@ -16,9 +16,9 @@
 
 - Empirical KL-UCB algorithm: :class:`KLempUCB`,
 
-- Other index algorithms: :class:`DMED`, :class:`DMEDPlus`, :class:`OCUCB`,
+- Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`,
 
-- Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandit`,
+- Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
 - Aggregation algorithms: :class:`Aggr`,
 
@@ -30,7 +30,7 @@
 
 - *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB`,
 
-- *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SWUCB`, and :class:`SWUCBPlus` if the horizon is known.
+- *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known.
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
