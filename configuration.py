@@ -67,11 +67,11 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
 # RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
-# RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
-# NB_RANDOM_EVENTS = 3  #: Number of random events. They are uniformly spaced in time steps.
-NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
-# NB_RANDOM_EVENTS = 10  #: Number of random events. They are uniformly spaced in time steps.
-# NB_RANDOM_EVENTS = 20  #: Number of random events. They are uniformly spaced in time steps.
+RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
+# NB_RANDOM_EVENTS = 3  #: Number - 1 of random events. They are uniformly spaced in time steps.
+NB_RANDOM_EVENTS = 5  #: Number - 1 of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 10  #: Number - 1 of random events. They are uniformly spaced in time steps.
+# NB_RANDOM_EVENTS = 20  #: Number - 1 of random events. They are uniformly spaced in time steps.
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -768,8 +768,15 @@ configuration.update({
 
 
 # XXX compare different values of the experimental sliding window algorithm
-# ALPHAS = [2, 1, 0.5, 0.1]
+EPSS   = [0.1, 0.05]
+ALPHAS = [2, 1, 0.5, 0.1]
 ALPHAS = [2, 0.5, 0.1]
+ALPHAS = [0.5]
+TAUS   = [500, 1000, 2000]
+       + [2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))]  # "optimal" value according to [Garivier & Moulines, 2008]
+GAMMAS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7] \
+       + [0.8, 0.9, 0.95, 0.99, 0.9999, 1.0]
+       # + [(1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.]  # "optimal" value according to [Garivier & Moulines, 2008]
 
 configuration.update({
     "policies":
@@ -781,8 +788,8 @@ configuration.update({
     #             "alpha": alpha
     #         }
     #     }
-    #     for tau in [500, 1000, 2000]
-    #     for eps in [0.1, 0.05]
+    #     for tau in TAUS
+    #     for eps in EPSS
     #     for alpha in ALPHAS
     # # ] +
     # [
@@ -795,10 +802,10 @@ configuration.update({
     #         }
     #     }
     #     for alpha in ALPHAS
-    #     for tau in [500, 1000, 2000]
+    #     for tau in TAUS
     # ] +
     # [
-    #     # --- # XXX experimental other version of the sliding window algorithm
+    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
     #     {
     #         "archtype": SWUCBPlus,
     #         "params": {
@@ -817,18 +824,29 @@ configuration.update({
                 "gamma": gamma
             }
         }
-        for gamma in [0.7, 0.8, 0.9, 0.95, 1.0]
+        for gamma in GAMMAS
+        for alpha in ALPHAS
+    ] +
+    [
+        # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+        {
+            "archtype": DiscountedUCBPlus,
+            "params": {
+                "alpha": alpha,
+                "horizon": HORIZON
+            }
+        }
+        for alpha in ALPHAS
+    ] +
+    [
+        {
+            "archtype": UCBalpha,
+            "params": {
+                "alpha": alpha
+            }
+        }
         for alpha in ALPHAS
     ]
-    # [
-    #     {
-    #         "archtype": UCBalpha,
-    #         "params": {
-    #             "alpha": alpha
-    #         }
-    #     }
-    #     for alpha in ALPHAS
-    # ]
 })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]

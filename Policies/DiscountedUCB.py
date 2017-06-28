@@ -87,3 +87,29 @@ class DiscountedUCB(UCBalpha):
         indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(n_t_gamma)) / (2 * self.pulls))
         indexes[self.pulls < 1] = float('+inf')
         self.index = indexes
+
+
+# --- Horizon dependent version
+
+class DiscountedUCBPlus(DiscountedUCB):
+    r""" The Discounted-UCB index policy, with a discount factor of :math:`\gamma\in(0,1]`.
+
+    - Reference: ["On Upper-Confidence Bound Policies for Non-Stationary Bandit Problems", by A.Garivier & E.Moulines, ALT 2011](https://arxiv.org/pdf/0805.3415.pdf)
+    - Uses :math:`\gamma =  1 - \sqrt{\Upsilon / T} / 4`, if the horizon :math:`T` is given and an upper-bound on the number of random events ("breakpoints") :math:`\Upsilon` is known, otherwise use the default value.
+    """
+
+    def __init__(self, nbArms,
+                 horizon=None, max_nb_random_events=None,
+                 alpha=ALPHA,
+                 lower=0., amplitude=1., *args, **kwargs):
+        # New parameter
+        if horizon is not None and max_nb_random_events is not None:
+            gamma = 1 - np.sqrt(max_nb_random_events / horizon) / 4.
+            if gamma > 1 or gamma <= 0:
+                gamma = 1.
+        else:
+            gamma = GAMMA
+        super(DiscountedUCB, self).__init__(nbArms, alpha=alpha, gamma=gamma, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.3g}$)".format(self.alpha, self.gamma)
