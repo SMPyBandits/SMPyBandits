@@ -773,7 +773,7 @@ ALPHAS = [2, 0.5, 0.1]
 
 configuration.update({
     "policies":
-    # [
+    # [ 
     #     # --- # XXX experimental sliding window algorithm
     #     {
     #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
