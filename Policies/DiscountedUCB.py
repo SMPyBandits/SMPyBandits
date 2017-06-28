@@ -2,7 +2,7 @@
 r""" The Discounted-UCB index policy, with a discount factor of :math:`\gamma\in(0,1]`.
 
 - Reference: ["On Upper-Confidence Bound Policies for Non-Stationary Bandit Problems", by A.Garivier & E.Moulines, ALT 2011](https://arxiv.org/pdf/0805.3415.pdf)
-- :math:`\gamma` should not be 1, otherwise you should rather use :class:`UCBalpha.UCBalpha` instead.
+- :math:`\gamma` should not be 1, otherwise you should rather use :class:`Policies.UCBalpha.UCBalpha` instead.
 - The smaller the :math:`\gamma`, the shorter the *"memory"* of the algorithm is.
 """
 
@@ -50,8 +50,8 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma N_k(s), \\
-           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma X_k(s).
+           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} N_k(s), \\
+           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} X_k(s).
 
         - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from `s=0` to `s=t`, because updating it is easy (2 operations instead of just 1 for classical :class:`Policies.UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically).
 

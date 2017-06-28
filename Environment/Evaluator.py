@@ -68,9 +68,9 @@ class Evaluator(object):
         self.signature = signature
         if self.nb_random_events > 0:
             if self.random_shuffle:
-                self.signature = (r", $\Upsilon={}$ random arms shuffling".format(self.nb_random_events)) + self.signature
+                self.signature = (r", $\Upsilon={}$ random arms shuffling".format(self.nb_random_events - 1)) + self.signature
             elif self.random_invert:
-                self.signature = (r", $\Upsilon={}$ arms inversion".format(self.nb_random_events)) + self.signature
+                self.signature = (r", $\Upsilon={}$ arms inversion".format(self.nb_random_events - 1)) + self.signature
         # Flags
         self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
         self.averageOn = averageOn  #: How many last steps for final rank average rewards
