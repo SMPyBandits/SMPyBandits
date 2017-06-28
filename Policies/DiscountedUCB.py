@@ -41,7 +41,7 @@ class DiscountedUCB(UCBalpha):
         self.gamma = gamma  #: Parameter gamma
 
     def __str__(self):
-        return r"D-UCB($\alpha={:.3g}$, $\gamma={:.3g}$)".format(self.alpha, self.gamma)
+        return r"D-UCB($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)
 
     def getReward(self, arm, reward):
         r""" Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1]).
@@ -50,15 +50,15 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma \times N_{k,\gamma}( s), \\
-           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma \times X_{k,\gamma}( s).
+           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma N_k(s), \\
+           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma X_k(s).
 
         - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from `s=0` to `s=t`, because updating it is easy (2 operations instead of just 1 for classical :class:`Policies.UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically).
 
         .. math::
 
-           N_{k,\gamma}(t+1) &= \gamma \times N_{k,\gamma}( t) + \mathbb{1}(A(t+1) = k), \\
-           X_{k,\gamma}(t+1) &= \gamma \times X_{k,\gamma}( t) + X_k(t+1).
+           N_{k,\gamma}(t+1) &= \gamma \times N_{k,\gamma}(t) + \mathbb{1}(A(t+1) = k), \\
+           X_{k,\gamma}(t+1) &= \gamma \times X_{k,\gamma}(t) + X_k(t+1).
         """
         self.t += 1
         self.pulls[arm] = (self.gamma * self.pulls[arm]) + 1
@@ -92,10 +92,10 @@ class DiscountedUCB(UCBalpha):
 # --- Horizon dependent version
 
 class DiscountedUCBPlus(DiscountedUCB):
-    r""" The Discounted-UCB index policy, with a discount factor of :math:`\gamma\in(0,1]`.
+    r""" The Discounted-UCB index policy, with a particular value of the discount factor of :math:`\gamma\in(0,1]`, knowing the horizon and the number of breakpoints (or an upper-bound).
 
     - Reference: ["On Upper-Confidence Bound Policies for Non-Stationary Bandit Problems", by A.Garivier & E.Moulines, ALT 2011](https://arxiv.org/pdf/0805.3415.pdf)
-    - Uses :math:`\gamma =  1 - \sqrt{\Upsilon / T} / 4`, if the horizon :math:`T` is given and an upper-bound on the number of random events ("breakpoints") :math:`\Upsilon` is known, otherwise use the default value.
+    - Uses :math:`\gamma =  1 - \frac{1}{4}\sqrt{\frac{\Upsilon}{T}}`, if the horizon :math:`T` is given and an upper-bound on the number of random events ("breakpoints") :math:`\Upsilon` is known, otherwise use the default value.
     """
 
     def __init__(self, nbArms,
@@ -109,7 +109,7 @@ class DiscountedUCBPlus(DiscountedUCB):
                 gamma = 1.
         else:
             gamma = GAMMA
-        super(DiscountedUCB, self).__init__(nbArms, alpha=alpha, gamma=gamma, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(DiscountedUCBPlus, self).__init__(nbArms, alpha=alpha, gamma=gamma, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
-        return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.3g}$)".format(self.alpha, self.gamma)
+        return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)
