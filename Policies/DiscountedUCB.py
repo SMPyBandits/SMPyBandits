@@ -71,7 +71,7 @@ class DiscountedUCB(UCBalpha):
         .. math::
 
            I_k(t) &:= \frac{X_{k,\gamma}(t)}{N_{k,\gamma}(t)} + \sqrt{\frac{\alpha \log(n_{\gamma}(t))}{2 N_{k,\gamma}(t)}}, \\
-           \text{where}\;\; n_{\gamma}(t) &:= \sum_{k=1}^{k} N_{k,\gamma}(t).
+           \text{where}\;\; n_{\gamma}(t) &:= \sum_{k=1}^{K} N_{k,\gamma}(t).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
