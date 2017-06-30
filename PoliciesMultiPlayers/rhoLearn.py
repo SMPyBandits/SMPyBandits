@@ -65,8 +65,6 @@ class oneRhoLearn(oneRhoRand):
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.rank = None  #: Current rank, starting to 1
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
-        # Keep in memory how many times a rank could be used while giving no collision
-        # self.timesUntilCollision = np.zeros(maxRank, dtype=int)  # XXX not used anymore!
 
     def __str__(self):   # Better to recompute it automatically
         return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
@@ -76,13 +74,11 @@ class oneRhoLearn(oneRhoRand):
         self.rankSelection.startGame()
         super(oneRhoLearn, self).startGame()
         self.rank = 1 + self.rankSelection.choice()  # XXX Start with a rank given from the algorithm (probably uniformly at random, not important)
-        # self.timesUntilCollision.fill(0)  # XXX not used anymore!
 
     def getReward(self, arm, reward):
         """Give a 1 reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a (possibly new) rank."""
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step for this rank
-        # self.timesUntilCollision[self.rank - 1] += 1  # XXX not used anymore!
 
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
         self.rankSelection.getReward(self.rank - 1, 1)
@@ -91,6 +87,9 @@ class oneRhoLearn(oneRhoRand):
         # Then, use the rankSelection algorithm to select a (possibly new) rank
         if self.change_rank_each_step:  # That's new! rhoLearn (can) change its rank at ALL steps!
             self.rank = 1 + self.rankSelection.choice()
+            # print(" - A oneRhoLearn player {} received a reward {:.3g}, and selected a (possibly new) rank from her algorithm {} : {} ...".format(self, reward, self.rankSelection, self.rank))  # DEBUG
+        # else:
+        #     print(" - A oneRhoLearn player {} received a reward {:.3g}, without selecting a new rank...".format(self, reward))  # DEBUG
 
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearn, self).getReward(arm, reward)
@@ -101,9 +100,6 @@ class oneRhoLearn(oneRhoRand):
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneRhoLearn, self).getReward(arm, reward)
-
-        # First, reset the time until collisions for that rank
-        # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!
 
         # And give a 0 reward to this rank
         self.rankSelection.getReward(self.rank - 1, 0)
