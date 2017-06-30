@@ -10,16 +10,23 @@
 
 .. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
 
+For the Exp3 algorithm:
+
+- Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi, §3.1](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
+- See also [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
 """
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+import numpy as np
+import numpy.random as rn
+
 try:
     from sys import path
     path.insert(0, '..')
-    from Policies import Exp3
+    from Policies import Exp3, Exp3Decreasing
 except ImportError as e:
     print("Warning: ../Policies/Exp3.py was not imported correctly...")  # DEBUG
     raise e
@@ -27,14 +34,9 @@ except ImportError as e:
 from .rhoRand import oneRhoRand, rhoRand
 
 
-#: Should oneRhoLearnExp3 players select a new rank *at each step* ?
-#: The algorithm P2 from https://dx.doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
-#: But I found it works better *without* this trick.
-CHANGE_RANK_EACH_STEP = True
-CHANGE_RANK_EACH_STEP = False
+# --- Define various function mapping the two decoupled feedback to a numerical reward
 
-
-def successful_transmission(sensing, collision):
+def binary_feedback(sensing, collision):
     r""" Count 1 iff the sensing authorized to communicate and no collision was observed.
 
     .. math::
@@ -87,6 +89,14 @@ def generic_ternary_feedback(sensing, collision, bonus=1, malus=-1):
     return mapped_reward
 
 
+def make_generic_ternary_feedback(bonus=1, malus=-1):
+    if bonus is None:
+        bonus = 1
+    if malus is None:
+        malus = -1
+    return lambda sensing, collision: generic_ternary_feedback(sensing, collision, bonus=bonus, malus=malus)
+
+
 def generic_continuous_feedback(sensing, collision, bonus=1, malus=-1):
     r""" Count 'bonus' iff the sensing authorized to communicate and no collision was observed, 'malus' iff communication but a collision was observed, *but possibly does not count* 0 if no communication.
 
@@ -105,17 +115,30 @@ def generic_continuous_feedback(sensing, collision, bonus=1, malus=-1):
     return mapped_reward
 
 
-#: List of possible function mapping the two decoupled feedback to a numerical reward
-functions__reward_from_decoupled_feedback = [
-    successful_transmission,
-    ternary_feedback,
-    generic_ternary_feedback,
-    generic_continuous_feedback,
-]
+def make_generic_continuous_feedback(bonus=1, malus=-1):
+    if bonus is None:
+        bonus = 1
+    if malus is None:
+        malus = -1
+    return lambda sensing, collision: generic_continuous_feedback(sensing, collision, bonus=bonus, malus=malus)
 
-#: Decide the default function to use
-reward_from_decoupled_feedback = successful_transmission
-reward_from_decoupled_feedback = ternary_feedback
+
+NAME_OF_FEEDBACKS = {
+    "binary_feedback": "$0/1$",
+    "ternary_feedback": "$-1/0/1$"
+}
+
+#: Decide the default function to use.
+#: FIXME try all of them!
+reward_from_decoupled_feedback = binary_feedback
+# reward_from_decoupled_feedback = ternary_feedback
+
+
+#: Should oneRhoLearnExp3 players select a (possibly new) rank *at each step* ?
+#: The algorithm P2 from https://dx.doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
+#: But I found it works better *without* this trick.
+CHANGE_RANK_EACH_STEP = True
+CHANGE_RANK_EACH_STEP = False
 
 
 # --- Class oneRhoLearnExp3, for children
@@ -123,63 +146,67 @@ reward_from_decoupled_feedback = ternary_feedback
 class oneRhoLearnExp3(oneRhoRand):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
-    - Except for the handleCollision method: a new rank is sampled after observing a collision, from the rankSelection algorithm.
+    - Except for the handleCollision method: a (possibly new) rank is sampled after observing a collision, from the rankSelection algorithm.
     - When no collision is observed on a arm, a small reward is given to the rank used for this play, in order to learn the best ranks with rankSelection.
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, rankSelectionAlgo, change_rank_each_step, *args, **kwargs):
+    def __init__(self, maxRank,
+                 rankSelectionAlgo, change_rank_each_step,
+                 feedback_function=reward_from_decoupled_feedback,
+                 *args, **kwargs):
         super(oneRhoLearnExp3, self).__init__(maxRank, *args, **kwargs)
-        self.rankSelection = rankSelectionAlgo(maxRank)  # FIXME I should give it more arguments?
+        self.rankSelection = rankSelectionAlgo(maxRank)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.rank = None  #: Current rank, starting to 1
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
-        # Keep in memory how many times a rank could be used while giving no collision
-        # self.timesUntilCollision = np.zeros(maxRank, dtype=int)  # XXX not used anymore!
+        self.feedback_function = feedback_function  #: Feedback function: (sensing, collision) -> reward
+        feedback_name = str(feedback_function.__name__)
+        self.feedback_function_label = ", feedback:{}".format(NAME_OF_FEEDBACKS[feedback_name]) if feedback_name in NAME_OF_FEEDBACKS else ""
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
+        return r"#{}<{}[{}, rank{} ~ {}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection, self.feedback_function_label)
 
     def startGame(self):
         """Initialize both rank and arm selection algorithms."""
         self.rankSelection.startGame()
         super(oneRhoLearnExp3, self).startGame()
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
-        # self.timesUntilCollision.fill(0)  # XXX not used anymore!
+        self.rank = 1 + rn.randint(self.maxRank)  # XXX Start with a random rank, safer to avoid first collisions.
 
     def getReward(self, arm, reward):
-        """Give a 1 reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a new rank."""
+        """Give a "good" reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a (possibly new) rank."""
         # Obtaining a reward, even 0, means no collision on that arm for this time
-        # So, first, we count one more step for this rank
-        # self.timesUntilCollision[self.rank - 1] += 1  # XXX not used anymore!
 
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
-        self.rankSelection.getReward(self.rank - 1, 1)
+        reward_on_rank = self.feedback_function(reward, 0)
+        self.rankSelection.getReward(self.rank - 1, reward_on_rank)
         # Note: this is NOTHING BUT a heuristic! See equation (13) in https://dx.doi.org/10.4108/eai.5-9-2016.151647
 
-        # Then, use the rankSelection algorithm to select a new rank
+        # Then, use the rankSelection algorithm to select a (possibly new) rank
         if self.change_rank_each_step:  # That's new! rhoLearnExp3 (can) change its rank at ALL steps!
             self.rank = 1 + self.rankSelection.choice()
+            # print(" - A oneRhoLearnExp3 player {} received a reward {:.3g}, and selected a (possibly new) rank from her algorithm {} : {} ...".format(self, reward, self.rankSelection, self.rank))  # DEBUG
+        # else:
+        #     print(" - A oneRhoLearnExp3 player {} received a reward {:.3g}, without selecting a new rank...".format(self, reward))  # DEBUG
 
         # Then use the reward for the arm learning algorithm
         return super(oneRhoLearnExp3, self).getReward(arm, reward)
 
-    def handleCollision(self, arm, reward=None):
-        """Give a 0 reward to the rank selection algorithm, and select a new rank."""
+    # WARNING here reward=None is NOT present: reward is MANDATORY HERE
+    def handleCollision(self, arm, reward):
+        """Give a "bad" reward to the rank selection algorithm, and select a (possibly new) rank."""
         # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneRhoLearnExp3, self).getReward(arm, reward)
 
-        # First, reset the time until collisions for that rank
-        # self.timesUntilCollision[self.rank - 1] = 0  # XXX not used anymore!
+        # And give a reward to this rank
+        reward_on_rank = self.feedback_function(reward, 1)
+        self.rankSelection.getReward(self.rank - 1, reward_on_rank)
 
-        # And give a 0 reward to this rank
-        self.rankSelection.getReward(self.rank - 1, 0)
-
-        # Then, use the rankSelection algorithm to select a new rank
+        # Then, use the rankSelection algorithm to select a (possibly new) rank
         self.rank = 1 + self.rankSelection.choice()
-        # print(" - A oneRhoLearnExp3 player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
+        # print(" - A oneRhoLearnExp3 player {} saw a collision, so she had to select a (possibly new) rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
 
 
 # --- Class rhoRand
@@ -188,8 +215,10 @@ class rhoLearnExp3(rhoRand):
     """ rhoLearnExp3: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Exp3,
-                 lower=0., amplitude=1., maxRank=None, change_rank_each_step=CHANGE_RANK_EACH_STEP,
+    def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Exp3Decreasing,
+                 maxRank=None, change_rank_each_step=CHANGE_RANK_EACH_STEP,
+                 feedback_function=reward_from_decoupled_feedback,
+                 lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -201,11 +230,11 @@ class rhoLearnExp3(rhoRand):
 
         Example:
 
-        >>> s = rhoLearnExp3(nbPlayers, Thompson, nbArms, Uniform)  # Exactly rhoRand!
-        >>> s = rhoLearnExp3(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
+        >>> s = rhoLearnExp3(nbPlayers, BayesUCB, nbArms, Uniform)  # Exactly rhoRand!
+        >>> s = rhoLearnExp3(nbPlayers, BayesUCB, nbArms)           # Possibly better than rhoRand!
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use ONLY!
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         if maxRank is None:
@@ -219,7 +248,7 @@ class rhoLearnExp3(rhoRand):
         self.change_rank_each_step = change_rank_each_step  #: Change rank at every steps?
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoLearnExp3(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
+            self.children[playerId] = oneRhoLearnExp3(maxRank, rankSelectionAlgo, change_rank_each_step, feedback_function=feedback_function, self, playerId)
         # Fake rankSelection algorithm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)
 
