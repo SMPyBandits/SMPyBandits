@@ -42,8 +42,8 @@ def binary_feedback(sensing, collision):
     .. math::
 
        \mathrm{reward}(\text{user}\;j, \text{time}\;t) &:= r_{j,t} = F_{m,t} \times (1 - c_{m,t}), \\
-       \text{where}\;\; F_{m,t} \; \text{is the sensing feedback (1 iff channel is free)}, \\
-       \text{and}  \;\; c_{m,t} \; \text{is the collision feedback (1 iff user j experienced a collision)}.
+       \text{where}\;\; F_{m,t} &\; \text{is the sensing feedback (1 iff channel is free)}, \\
+       \text{and}  \;\; c_{m,t} &\; \text{is the collision feedback (1 iff user j experienced a collision)}.
     """
     assert 0 <= sensing <= 1, "Error: 'sensing' argument was not in [0, 1] (was {:.3g}).".format(sensing)  # DEBUG
     if sensing not in [0, 1]:
