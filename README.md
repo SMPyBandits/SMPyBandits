@@ -39,6 +39,19 @@ The basic difference is about **collisions** : at each time `t`, if two or more 
 - Some piece of code come from the [pymaBandits](http://mloss.org/software/view/415/) project, but most of them were refactored. Thanks to the initial project!
 - [G.Varoquaux](http://gael-varoquaux.info/)'s [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) and [`EvaluatorMultiPlayers`](Environment/EvaluatorMultiPlayers.py) classes, so the simulations are easily parallelized on multi-core machines. (Put `n_jobs = -1` or `PARALLEL = True` in the config file to use all your CPU cores, as it is by default).
 
+### Should you use bandits?
+
+> In 2015, [Chris Stucchio advised against](https://www.chrisstucchio.com/blog/2015/dont_use_bandits.html)
+> the use of bandits, in the context of improving A/B testings, opposed to
+> his [2013 blog post](https://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html)
+> in favor of bandits, also for A/B testings. Both articles are worth
+> reading, but in this research we are not studying A/B testing, and it
+> has been already proved how efficient bandit algorithms can be for
+> real-world and simulated cognitive radio networks. (See for instance
+> [this article by Wassim Jouini, Christophe Moy and Jacques Palicot](https://scholar.google.com/scholar?q=Multi-armed+bandit+based+policies+for+cognitive+radio%27s+decision+making+issues+by+W+Jouini%2C+D+Ernst%2C+C+Moy%2C+J+Palicot+2009&btnG=&hl=fr&as_sdt=0%2C39),
+> [\["Multi-armed bandit based policies for cognitive radio's decision making issues", W Jouini, D Ernst, C Moy, J Palicot 2009\]](http://orbi.ulg.be/bitstream/2268/16757/1/SCS09_Jouini_Wassim.pdf)).
+
+
 ### Warning
 - This work is still in **its early stage of development**! It's [active research](https://github.com/Naereen/AlgoBandits/graphs/contributors).
 - This aggregated bandit algorithm has no theoretical warranties what so ever - *yet*.
