@@ -46,9 +46,9 @@ def binary_feedback(sensing, collision):
        \text{and}  \;\; c_{m,t} \; \text{is the collision feedback (1 iff user j experienced a collision)}.
     """
     assert 0 <= sensing <= 1, "Error: 'sensing' argument was not in [0, 1] (was {:.3g}).".format(sensing)  # DEBUG
-    if sensing not in {0, 1}:
+    if sensing not in [0, 1]:
         print("Warning: 'sensing' argument was not 0 or 1, but this policy rhoLearnExp3 was only designed for binary sensing model... (was {:.3g}).".format(sensing))  # DEBUG
-    assert collision in {0, 1}, "Error: 'collision' argument was not binary, it can only be 0 or 1 (was {:.3g}).".format(collision)  # DEBUG
+    assert collision in [0, 1], "Error: 'collision' argument was not binary, it can only be 0 or 1 (was {:.3g}).".format(collision)  # DEBUG
     return sensing * (1 - collision)
 
 
@@ -63,9 +63,9 @@ def ternary_feedback(sensing, collision):
        \text{and}  \;\; c_{m,t} &\; \text{is the collision feedback (1 iff user j experienced a collision)}.
     """
     assert 0 <= sensing <= 1, "Error: 'sensing' argument was not in [0, 1] (was {:.3g}).".format(sensing)  # DEBUG
-    if sensing not in {0, 1}:
+    if sensing not in [0, 1]:
         print("Warning: 'sensing' argument was not 0 or 1, but this policy rhoLearnExp3 was only designed for binary sensing model... (was {:.3g}).".format(sensing))  # DEBUG
-    assert collision in {0, 1}, "Error: 'collision' argument was not binary, it can only be 0 or 1 (was {:.3g}).".format(collision)  # DEBUG
+    assert collision in [0, 1], "Error: 'collision' argument was not binary, it can only be 0 or 1 (was {:.3g}).".format(collision)  # DEBUG
     first_reward = sensing * (1 - collision)
     assert 0 <= first_reward <= 1, "Error: variable 'first_reward' should have been only binary 0 or 1 (was {:.3g}).".format(first_reward)
     reward = sensing * (2 * first_reward - 1)
@@ -152,8 +152,7 @@ class oneRhoLearnExp3(oneRhoRand):
     """
 
     def __init__(self, maxRank,
-                 rankSelectionAlgo, change_rank_each_step,
-                 feedback_function=reward_from_decoupled_feedback,
+                 rankSelectionAlgo, change_rank_each_step, feedback_function,
                  *args, **kwargs):
         super(oneRhoLearnExp3, self).__init__(maxRank, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(maxRank)
@@ -248,7 +247,7 @@ class rhoLearnExp3(rhoRand):
         self.change_rank_each_step = change_rank_each_step  #: Change rank at every steps?
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoLearnExp3(maxRank, rankSelectionAlgo, change_rank_each_step, feedback_function=feedback_function, self, playerId)
+            self.children[playerId] = oneRhoLearnExp3(maxRank, rankSelectionAlgo, change_rank_each_step, feedback_function, self, playerId)
         # Fake rankSelection algorithm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)
 

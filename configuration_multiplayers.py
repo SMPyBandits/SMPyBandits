@@ -60,7 +60,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
 
@@ -563,14 +563,19 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # should be bad!
 
-    # --- 17) FIXME Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
+    # --- 17) TODO Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
     rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms).children,
 ]
 
 
