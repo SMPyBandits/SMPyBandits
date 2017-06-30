@@ -40,7 +40,7 @@ class oneRhoRandRotating(oneRhoRand):
     def startGame(self):
         """Start game."""
         super(oneRhoRandRotating, self).startGame()
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        self.rank = 1 + rn.randint(self.maxRank)  # XXX Start with a random rank, safer to avoid first collisions.
 
     def handleCollision(self, arm, reward=None):
         """ Get a new fully random rank, and give reward to the algorithm if not None."""

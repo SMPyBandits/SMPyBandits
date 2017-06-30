@@ -17,6 +17,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 from random import random, randint
+import numpy.random as rn
 
 from .rhoRand import oneRhoRand, rhoRand
 
@@ -96,7 +97,7 @@ class oneRhoRandALOHA(oneRhoRand):
     def startGame(self):
         """Start game."""
         super(oneRhoRandALOHA, self).startGame()
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        self.rank = 1 + rn.randint(self.maxRank)  # XXX Start with a random rank, safer to avoid first collisions.
         self.p = self.p0  # Reinitialize the probability
 
     def handleCollision(self, arm, reward=None):

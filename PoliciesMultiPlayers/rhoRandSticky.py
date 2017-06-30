@@ -46,7 +46,7 @@ class oneRhoRandSticky(oneRhoRand):
     def startGame(self):
         """Start game."""
         super(oneRhoRandSticky, self).startGame()
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        self.rank = 1 + rn.randint(self.maxRank)  # XXX Start with a random rank, safer to avoid first collisions.
         self.sitted = False  # Start not sitted, of course!
         self.stepsWithoutCollisions = 0  # No previous steps without collision, of course
 

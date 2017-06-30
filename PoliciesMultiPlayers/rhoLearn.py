@@ -42,7 +42,7 @@ except ImportError:
 from .rhoRand import oneRhoRand, rhoRand
 
 
-#: Should oneRhoLearn players select a new rank *at each step* ?
+#: Should oneRhoLearn players select a (possibly new) rank *at each step* ?
 #: The algorithm P2 from https://dx.doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
 #: But I found it works better **without** this trick.
 CHANGE_RANK_EACH_STEP = True
@@ -54,14 +54,14 @@ CHANGE_RANK_EACH_STEP = False
 class oneRhoLearn(oneRhoRand):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
-    - Except for the handleCollision method: a new rank is sampled after observing a collision, from the rankSelection algorithm.
+    - Except for the handleCollision method: a (possibly new) rank is sampled after observing a collision, from the rankSelection algorithm.
     - When no collision is observed on a arm, a small reward is given to the rank used for this play, in order to learn the best ranks with rankSelection.
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
     def __init__(self, maxRank, rankSelectionAlgo, change_rank_each_step, *args, **kwargs):
         super(oneRhoLearn, self).__init__(maxRank, *args, **kwargs)
-        self.rankSelection = rankSelectionAlgo(maxRank)  # FIXME I should give it more arguments?
+        self.rankSelection = rankSelectionAlgo(maxRank)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.rank = None  #: Current rank, starting to 1
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
@@ -75,11 +75,11 @@ class oneRhoLearn(oneRhoRand):
         """Initialize both rank and arm selection algorithms."""
         self.rankSelection.startGame()
         super(oneRhoLearn, self).startGame()
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        self.rank = 1 + self.rankSelection.choice()  # XXX Start with a rank given from the algorithm (probably uniformly at random, not important)
         # self.timesUntilCollision.fill(0)  # XXX not used anymore!
 
     def getReward(self, arm, reward):
-        """Give a 1 reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a new rank."""
+        """Give a 1 reward to the rank selection algorithm (no collision), give reward to the arm selection algorithm, and if self.change_rank_each_step, select a (possibly new) rank."""
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step for this rank
         # self.timesUntilCollision[self.rank - 1] += 1  # XXX not used anymore!
@@ -88,7 +88,7 @@ class oneRhoLearn(oneRhoRand):
         self.rankSelection.getReward(self.rank - 1, 1)
         # Note: this is NOTHING BUT a heuristic! See equation (13) in https://dx.doi.org/10.4108/eai.5-9-2016.151647
 
-        # Then, use the rankSelection algorithm to select a new rank
+        # Then, use the rankSelection algorithm to select a (possibly new) rank
         if self.change_rank_each_step:  # That's new! rhoLearn (can) change its rank at ALL steps!
             self.rank = 1 + self.rankSelection.choice()
 
@@ -96,7 +96,7 @@ class oneRhoLearn(oneRhoRand):
         return super(oneRhoLearn, self).getReward(arm, reward)
 
     def handleCollision(self, arm, reward=None):
-        """Give a 0 reward to the rank selection algorithm, and select a new rank."""
+        """Give a 0 reward to the rank selection algorithm, and select a (possibly new) rank."""
         # rhoRand UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
             # print("Info: rhoRand UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
@@ -108,9 +108,9 @@ class oneRhoLearn(oneRhoRand):
         # And give a 0 reward to this rank
         self.rankSelection.getReward(self.rank - 1, 0)
 
-        # Then, use the rankSelection algorithm to select a new rank
+        # Then, use the rankSelection algorithm to select a (possibly new) rank
         self.rank = 1 + self.rankSelection.choice()
-        # print(" - A oneRhoLearn player {} saw a collision, so she had to select a new rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
+        # print(" - A oneRhoLearn player {} saw a collision, so she had to select a (possibly new) rank from her algorithm {} : {} ...".format(self, self.rankSelection, self.rank))  # DEBUG
 
 
 # --- Class rhoRand
