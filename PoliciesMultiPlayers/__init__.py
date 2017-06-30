@@ -60,6 +60,7 @@ from .rhoEst import rhoEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ie
 from .rhoLearn import rhoLearn  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearnEst import rhoLearnEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearnExp3 import rhoLearnExp3  # New version, still experimental!
+from .rhoLearnExp3 import binary_feedback, ternary_feedback, generic_ternary_feedback, make_generic_ternary_feedback, generic_continuous_feedback, make_generic_continuous_feedback  # Useful functions
 from .rhoRandSticky import rhoRandSticky  # New version, still experimental!
 from .rhoRandRotating import rhoRandRotating  # New version, still experimental!
 from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!
