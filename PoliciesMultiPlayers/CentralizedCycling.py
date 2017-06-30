@@ -57,8 +57,8 @@ class CentralizedCycling(BaseMPPolicy):
 
         >>> s = CentralizedCycling(10, 14)
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for CentralizedCycling class has to be > 0."
         if nbPlayers > nbArms:

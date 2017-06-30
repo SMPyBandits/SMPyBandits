@@ -51,8 +51,8 @@ class rhoLearnEst(rhoLearn):
         >>> s = rhoLearnEst(nbPlayers, Thompson, nbArms, Uniform)  # rhoRand but with a wrong estimate of maxRanks!
         >>> s = rhoLearnEst(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use ONLY!
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players

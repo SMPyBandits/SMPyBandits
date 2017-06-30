@@ -47,8 +47,8 @@ class Selfish(BaseMPPolicy):
         >>> s = Selfish(10, TakeFixedArm, 14)
         >>> s = Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use ONLY!
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players

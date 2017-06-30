@@ -58,8 +58,8 @@ class OracleNotFair(BaseMPPolicy):
 
         >>> s = OracleNotFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for OracleNotFair class has to be > 0."
         nbArms = armsMAB.nbArms

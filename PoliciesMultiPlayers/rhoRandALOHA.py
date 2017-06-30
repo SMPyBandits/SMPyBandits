@@ -161,8 +161,8 @@ class rhoRandALOHA(rhoRand):
 
         >>> s = rhoRandALOHA(nbPlayers, Thompson, nbArms, p0, alpha_p0, forceChange)
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use ONLY!
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRandALOHA class has to be > 0."
         if maxRank is None:

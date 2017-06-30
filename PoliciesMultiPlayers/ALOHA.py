@@ -175,8 +175,8 @@ class ALOHA(BaseMPPolicy):
         >>> s = ALOHA(nbPlayers, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
         >>> s = ALOHA(nbPlayers, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use ONLY!
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players

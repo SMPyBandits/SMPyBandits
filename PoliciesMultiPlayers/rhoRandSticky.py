@@ -94,9 +94,9 @@ class rhoRandSticky(rhoRand):
 
         >>> s = rhoRandSticky(nbPlayers, Thompson, nbArms, stickyTime)
 
-        - To get a list of usable players, use s.children.
+        - To get a list of usable players, use ``s.children``.
 
-        .. warning:: s._players is for internal use ONLY!
+        .. warning:: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRandSticky class has to be > 0."
         if maxRank is None:

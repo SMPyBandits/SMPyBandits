@@ -45,8 +45,8 @@ class Scenario1(BaseMPPolicy):
 
         >>> s = Scenario1(10)
 
-        - To get a list of usable players, use s.children.
-        - Warning: s._players is for internal use
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Scenario1 class has to be > 0."
         assert nbArms >= 2, "Error, the parameter 'nbArms' for Scenario1 class can only be >= 2."
