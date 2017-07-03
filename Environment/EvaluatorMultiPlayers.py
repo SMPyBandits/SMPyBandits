@@ -663,6 +663,15 @@ def delayed_play(env, players, horizon, collisionModel,
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
     collisions = np.zeros(nbArms, dtype=int)
 
+    # print the ranks if possible  # DEBUG
+    all_players_have_ranks = (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
+    # this will count all the transitions in the Markov chain, to count their empirical probability at the end  # DEBUG
+    if all_players_have_ranks:
+        markov_chain_transitions = dict()  # DEBUG
+        ranks = [p.rank for p in players]
+        binranks = tuple(np.bincount(ranks, minlength=nbPlayers + 1)[1:])
+        state = binranks
+
     prettyRange = tqdm(range(horizon), desc="Time t") if repeatId == 0 else range(horizon)
     for t in prettyRange:
         # Reset the array, faster than reallocating them!
@@ -685,8 +694,53 @@ def delayed_play(env, players, horizon, collisionModel,
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
 
+        # XXX During the simulation, if using rhoRand or other ranks policy
+        if all_players_have_ranks and t > 1:
+            ranks = [p.rank for p in players]
+            binranks = tuple(np.bincount(ranks, minlength=nbPlayers + 1)[1:])
+            # print(" Round t = \t{}, the list of ranks is \t{}\n   and the point of view of ranks it is \t{} ...".format(t, ranks, binranks))  # DEBUG
+            previous_state, state = state, binranks
+            markov_chain_transitions[(previous_state, state)] = markov_chain_transitions.get((previous_state, state), 0) + 1
+            # print("  One more transition from {} to {} ... Currently it was seen {} times ...".format(previous_state, state, markov_chain_transitions[(previous_state, state)]))
+
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0:
+        if all_players_have_ranks:
+            # At the end, print the information about the markov chain states and transitions
+            print("==> Information about the markov chain states:")  # DEBUG
+            states = {s1 for (s1, _) in markov_chain_transitions} or {s2 for (_, s2) in markov_chain_transitions}
+            states = sorted(list(states))  # sort it, once and for all
+            print("    The Markov chain has {:>4} = (2M-1 choose M) differents states ...".format(len(states)))  # DEBUG
+            for s in states:
+                print("        ", s)
+            print("==> Information about the markov chain transitions:")  # DEBUG
+            count_states = {}
+            for (sum_count_out, s1) in sorted(zip([
+                    sum(
+                        markov_chain_transitions.get((s11, s3), 0)
+                        for s3 in states
+                    ) for s11 in states],
+                    states)):
+                print("\nState s1 = {} was seen {:>6} times ...".format(s1, sum_count_out))  # DEBUG
+                count_states[tuple(sorted(s1))] = \
+                    count_states.get(tuple(sorted(s1)), 0) + sum_count_out
+                for (count, s2) in sorted(zip([
+                        markov_chain_transitions.get((s1, s3), 0)
+                        for s3 in states],
+                        states)):
+                    if count > 0:
+                        print("    The transition {} --> {} was seen {:>7} times ({:.2%}) ...".format(s1, s2, count, count / float(horizon)))  # DEBUG
+                        if sum_count_out > 0:
+                            print("        So the estimated proba is {:.3g} ...".format(count / sum_count_out))
+            # now from the set point of view
+            print("\n\nNow with states just counting the strong partitions of M = {} ...".format(nbPlayers))  # DEBUG
+            suniques = list({tuple(sorted(s1)) for s1 in states})
+            for (seen, sunique) in sorted(zip(
+                    [count_states[s] for s in suniques],
+                    suniques)):
+                print("    The state {} was seen {:>7} times ({:.2%}) ...".format(sunique, seen, seen / float(horizon)))  # DEBUG
+        # DONE for this visualization
+
         for playerId, player in enumerate(players):
             try:
                 order = player.estimatedOrder()

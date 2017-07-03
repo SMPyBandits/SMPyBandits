@@ -43,8 +43,8 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
 
@@ -56,13 +56,13 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
-REPETITIONS = 20
-# REPETITIONS = 10
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# # REPETITIONS = 1000
+# # REPETITIONS = 200
+# # REPETITIONS = 100
+# # REPETITIONS = 50
+# REPETITIONS = 20
+# # REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -91,7 +91,8 @@ NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
 NB_PLAYERS = 4    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 5    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
@@ -182,14 +183,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(9, 1 / (1. + 9))
         # }
-        {   # An easy problem (14 arms)
-            "arm_type": Bernoulli,
-            "params": uniformMeans(14, 1 / (1. + 14))
-        }
-        # {   # An easy problem (19 arms)
+        # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(19, 1 / (1. + 19))
+        #     "params": uniformMeans(14, 1 / (1. + 14))
         # }
+        {   # An easy problem (19 arms)
+            "arm_type": Bernoulli,
+            "params": uniformMeans(19, 1 / (1. + 19))
+        }
         # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
@@ -566,19 +567,19 @@ configuration["successive_players"] = [
     # --- 17) DONE Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
     CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
-    Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
-    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
+    # Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
 
     # # --- 18) TODO Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with klUCB for arm selection
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
