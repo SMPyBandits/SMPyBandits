@@ -449,10 +449,10 @@ class DynamicMAB(MAB):
         """New dynamic MAB."""
         self.isDynamic = True  #: Flag to know if the problem is static or not.
 
-        assert isinstance(configuration, dict) \  # DEBUG
+        assert isinstance(configuration, dict) \
             and "arm_type" in configuration and "params" in configuration \
             and "function" in configuration["params"] and "args" in configuration["params"], \
-            "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"
+            "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"  # DEBUG
 
         print("  Special MAB problem, changing at every repetitions, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
 
