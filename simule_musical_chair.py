@@ -132,7 +132,7 @@ def plot_collisions(M, collisions, sticky=False):
     plt.show()
 
 
-def plot_all(M, nbRepetitions=1000, sticky=False):
+def plot_all(M, nbRepetitions=5000, sticky=False):
     absorption_times, collisions = simulate_count_and_print(M, nbRepetitions=nbRepetitions, sticky=sticky)
     plot_absorption(M, absorption_times, sticky=sticky)
     plot_collisions(M, collisions, sticky=sticky)
@@ -144,5 +144,5 @@ def main(M, sticky=False):
 if __name__ == '__main__':
     from sys import argv
     M = int(argv[1]) if len(argv) > 1 else 3
-    main(M, sticky=False)
+    # main(M, sticky=False)
     main(M, sticky=True)

@@ -46,12 +46,10 @@ class oneSmartMusicalChair(ChildPointer):
 
     def __str__(self):   # Better to recompute it automatically
         player = self.mother._players[self.playerId]
-        str_Mbest = list(self.Mbest)
         Mbest_is_incorrect = np.any(np.isinf(player.index)) or np.any(np.isnan(player.index))
-        if Mbest_is_incorrect:
-            str_Mbest = "??"
-        str_chosen_arm = self.chosen_arm if self.chosen_arm is not None else "??"
-        return r"#{}<SmartMusicalChair[{}, {}{}{}]>".format(self.playerId + 1, player, r"$M$-best: ${}$".format(str_Mbest), r", arm: ${}$".format(str_chosen_arm), ", with chair" if self._withChair else "")
+        str_Mbest = "" if Mbest_is_incorrect else r", $M$-best: ${}$".format(list(self.Mbest))
+        str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
+        return r"#{}<SmartMusicalChair[{}{}{}{}]>".format(self.playerId + 1, player, str_Mbest, str_chosen_arm, ", staying sitted" if self._withChair else "")
 
     def startGame(self):
         """Start game."""
@@ -106,7 +104,8 @@ class oneSmartMusicalChair(ChildPointer):
         # Done
         self.t += 1
         # FIXME remove: this cost too much time!
-        assert self.chosen_arm in self.Mbest, "Error: at time t = {}, a oneSmartMusicalChair player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest)  # DEBUG
+        # XXX It's also making SmartMusicalChair[Thompson] fail : its set Mbest is RANDOM
+        # assert self.chosen_arm in self.Mbest, "Error: at time t = {}, a oneSmartMusicalChair player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest)  # DEBUG
         return self.chosen_arm
 
 
