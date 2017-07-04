@@ -85,7 +85,7 @@ class oneRhoRandALOHA(oneRhoRand):
         self.p0 = p0  #: Initial probability, should not be modified.
         self.p = p0  #: Current probability of staying with the current rank after a collision. If 0, then it is like the initial rhoRand policy.
         # alpha
-        assert 0 <= alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in [0, 1]."
+        assert 0 <= alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in [0, 1]."  # DEBUG
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # rank
         self.rank = None  #: Current rank, starting to 1 by default

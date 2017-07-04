@@ -108,7 +108,7 @@ class MAB(object):
         if nbPlayers is None:
             text = repr(self.arms)
         else:
-            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
+            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."  # DEBUG
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             text = '[{}]'.format(', '.join(
@@ -149,7 +149,7 @@ class MAB(object):
     def lowerbound_multiplayers(self, nbPlayers=1):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means)
-        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
+        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))  # DEBUG
         # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms
         bestMeans = sortedMeans[-nbPlayers:]
         worstMeans = sortedMeans[:-nbPlayers]
@@ -176,7 +176,7 @@ class MAB(object):
     def upperbound_collisions(self, nbPlayers, times):
         """ Compute Anandkumar et al. multi-players upper bound for this MAB problem (complexity), for UCB only. Warning: it is HIGHLY asymptotic! """
         sortedMeans = sorted(self.means)
-        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))
+        assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))  # DEBUG
         bestMeans = sortedMeans[-nbPlayers:][::-1]
 
         def worstMeans_of_a(a):
@@ -313,7 +313,7 @@ class MarkovianMAB(MAB):
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
 
-        assert isinstance(configuration, dict), "Error: 'configuration' for a MarkovianMAB must be a dictionary."
+        assert isinstance(configuration, dict), "Error: 'configuration' for a MarkovianMAB must be a dictionary."  # DEBUG
         assert "params" in configuration and \
                isinstance(configuration["params"], dict) and \
                "transitions" in configuration["params"], \
@@ -393,7 +393,7 @@ class MarkovianMAB(MAB):
         if nbPlayers is None:
             text = repr(self.matrix_transitions)
         else:
-            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."
+            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."  # DEBUG
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             dollar = '$' if latex else ''
@@ -449,7 +449,7 @@ class DynamicMAB(MAB):
         """New dynamic MAB."""
         self.isDynamic = True  #: Flag to know if the problem is static or not.
 
-        assert isinstance(configuration, dict) \
+        assert isinstance(configuration, dict) \  # DEBUG
             and "arm_type" in configuration and "params" in configuration \
             and "function" in configuration["params"] and "args" in configuration["params"], \
             "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"

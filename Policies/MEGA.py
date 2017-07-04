@@ -43,12 +43,12 @@ class MEGA(BasePolicy):
         self.c = c  #: Parameter c
         # FIXME we should not require two parameters, as they are just used in the formula for epsilon_t
         self.d = d  #: Parameter d
-        assert 0 <= p0 <= 1, "Error: parameter 'p0' for a MEGA player should be in [0, 1]."
+        assert 0 <= p0 <= 1, "Error: parameter 'p0' for a MEGA player should be in [0, 1]."  # DEBUG
         self.p0 = p0  #: Parameter p0, should not be modified
         self.p = p0  #: Parameter p, can be modified
-        assert 0 < alpha <= 1, "Error: parameter 'alpha' for a MEGA player should be in (0, 1]."
+        assert 0 < alpha <= 1, "Error: parameter 'alpha' for a MEGA player should be in (0, 1]."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
-        assert 0 < beta <= 1, "Error: parameter 'beta' for a MEGA player should be in (0, 1]."
+        assert 0 < beta <= 1, "Error: parameter 'beta' for a MEGA player should be in (0, 1]."  # DEBUG
         self.beta = beta  #: Parameter beta
         # Internal memory
         self.chosenArm = None  #: Last chosen arm
@@ -97,7 +97,7 @@ class MEGA(BasePolicy):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        assert self.chosenArm == arm, "Error: a MEGA player can only get a reward on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
+        assert self.chosenArm == arm, "Error: a MEGA player can only get a reward on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)  # DEBUG
         # print("- A MEGA player receive reward = {} on arm {}, and time t = {}...".format(reward, arm, self.t))  # DEBUG
         self.rewards[arm] += (reward - self.lower) / self.amplitude
         self.pulls[arm] += 1
@@ -111,7 +111,7 @@ class MEGA(BasePolicy):
         .. note:: We do not care on which arm the collision occured.
 
         """
-        assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)
+        assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)  # DEBUG
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
         # 1. With proba p, persist
         # if random() < self.p:

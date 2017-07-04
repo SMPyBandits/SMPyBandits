@@ -55,10 +55,10 @@ class oneALOHA(ChildPointer):
         super(oneALOHA, self).__init__(mother, playerId)
         self.nbPlayers = nbPlayers  #: Number of players
         # Parameters for the ALOHA protocol
-        assert 0 <= p0 <= 1, "Error: parameter 'p0' for a ALOHA player should be in [0, 1]."
+        assert 0 <= p0 <= 1, "Error: parameter 'p0' for a ALOHA player should be in [0, 1]."  # DEBUG
         self.p0 = p0  #: Initial probability, should not be modified
         self.p = p0   #: Current probability, can be modified
-        assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."
+        assert 0 < alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in (0, 1]."  # DEBUG
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # Parameters for the ftnext function
         self.beta = beta  #: Parameter beta

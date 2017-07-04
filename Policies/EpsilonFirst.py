@@ -21,7 +21,7 @@ class EpsilonFirst(EpsilonGreedy):
         super(EpsilonFirst, self).__init__(nbArms, epsilon=epsilon, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for EpsilonFirst class has to be > 0."
         self.horizon = horizon
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."
+        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
     def __str__(self):

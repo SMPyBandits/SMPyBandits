@@ -67,9 +67,9 @@ class Beta(Posterior):
 
     def __init__(self, a=1, b=1):
         r""" Create a Beta posterior :math:`\mathrm{Beta}(\alpha, \beta)` with no observation, i.e., :math:`\alpha = 1` and :math:`\beta = 1` by default."""
-        assert a >= 0, "Error: parameter 'a' for Beta posterior has to be >= 0."
+        assert a >= 0, "Error: parameter 'a' for Beta posterior has to be >= 0."  # DEBUG
         self._a = a
-        assert b >= 0, "Error: parameter 'b' for Beta posterior has to be >= 0."
+        assert b >= 0, "Error: parameter 'b' for Beta posterior has to be >= 0."  # DEBUG
         self._b = b
         self.N = [a, b]  #: List of two parameters [a, b]
 

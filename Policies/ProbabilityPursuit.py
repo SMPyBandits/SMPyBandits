@@ -40,12 +40,12 @@ class ProbabilityPursuit(BasePolicy):
     def __init__(self, nbArms, beta=BETA, prior='uniform', lower=0., amplitude=1.):
         super(ProbabilityPursuit, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # Constant _beta
-        assert 0 <= beta <= 1, "Error: the 'beta' parameter for ProbabilityPursuit class has to be in [0, 1]."
+        assert 0 <= beta <= 1, "Error: the 'beta' parameter for ProbabilityPursuit class has to be in [0, 1]."  # DEBUG
         self._beta = beta
         # Initialize the probabilities
         self._prior = prior
         if prior is not None and prior != 'uniform':
-            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to ProbabilityPursuit has to be an array of the good size ({}).".format(nbArms)
+            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to ProbabilityPursuit has to be an array of the good size ({}).".format(nbArms)  # DEBUG
             self.probabilities = prior  #: Probabilities of each arm
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.probabilities = np.ones(nbArms) / float(nbArms)

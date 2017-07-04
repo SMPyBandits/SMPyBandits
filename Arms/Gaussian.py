@@ -50,7 +50,7 @@ class Gaussian(Arm):
         self.mu = self.mean = mu  #: Mean of Gaussian arm
         assert sigma > 0, "Error, the parameter 'sigma' for Gaussian arm has to be > 0."
         self.sigma = sigma  #: Variance of Gaussian arm
-        assert mini <= maxi, "Error, the parameter 'mini' for Gaussian arm has to < 'maxi'."
+        assert mini <= maxi, "Error, the parameter 'mini' for Gaussian arm has to < 'maxi'."  # DEBUG
         self.min = mini  #: Lower value of rewards
         self.max = maxi  #: Higher value of rewards
         # XXX if needed, compute the true mean : Cf. https://en.wikipedia.org/wiki/Truncated_normal_distribution#Moments

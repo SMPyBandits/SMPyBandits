@@ -23,7 +23,7 @@ class ThompsonRobust(Thompson):
 
     def __init__(self, nbArms, posterior=Beta, averageOn=AVERAGEON, lower=0., amplitude=1.):
         super(ThompsonRobust, self).__init__(nbArms, posterior=posterior, lower=lower, amplitude=amplitude)
-        assert averageOn >= 1, "Error: invalid value for 'averageOn' parameter for ThompsonRobust, should be >= 1."
+        assert averageOn >= 1, "Error: invalid value for 'averageOn' parameter for ThompsonRobust, should be >= 1."  # DEBUG
         self.averageOn = averageOn  #: How many indexes are computed before averaging
 
     def __str__(self):

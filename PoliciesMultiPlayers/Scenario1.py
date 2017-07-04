@@ -49,7 +49,7 @@ class Scenario1(BaseMPPolicy):
         - Warning: ``s._players`` is for internal use
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Scenario1 class has to be > 0."
-        assert nbArms >= 2, "Error, the parameter 'nbArms' for Scenario1 class can only be >= 2."
+        assert nbArms >= 2, "Error, the parameter 'nbArms' for Scenario1 class can only be >= 2."  # DEBUG
         # Attributes
         self.nbPlayers = nbPlayers
         self.nbArms = nbArms

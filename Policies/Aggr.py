@@ -90,7 +90,7 @@ class Aggr(BasePolicy):
                 self.children.append(child)
         # Initialize the arrays
         if prior is not None and prior != 'uniform':
-            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr has to be an array of the good size ({}).".format(self.nbChildren)
+            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
             self.trusts = prior  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.trusts = np.ones(self.nbChildren) / self.nbChildren

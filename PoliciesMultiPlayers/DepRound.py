@@ -100,7 +100,7 @@ def DepRound(weights_p, k=1):
     subset = [a for a in range(K) if np.isclose(p[a], 1)]
     if len(subset) < k:
         subset = [a for a in range(K) if not np.isclose(p[a], 0)]
-    assert len(subset) == k, "Error: DepRound({}, {}) is supposed to return a set of size {}, but {} has size {}...".format(weights_p, k, k, subset, len(subset))
+    assert len(subset) == k, "Error: DepRound({}, {}) is supposed to return a set of size {}, but {} has size {}...".format(weights_p, k, k, subset, len(subset))  # DEBUG
     return subset
 
 

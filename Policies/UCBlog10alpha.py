@@ -26,7 +26,7 @@ class UCBlog10alpha(UCBlog10):
 
     def __init__(self, nbArms, alpha=ALPHA, lower=0., amplitude=1.):
         super(UCBlog10alpha, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert alpha >= 0, "Error: the alpha parameter for UCBalpha class has to be >= 0."
+        assert alpha >= 0, "Error: the alpha parameter for UCBalpha class has to be >= 0."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
 
     def __str__(self):

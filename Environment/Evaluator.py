@@ -290,7 +290,7 @@ class Evaluator(object):
         # if meanRegret:  # Cumulated expectation on time
         #     Ycum2 = (np.cumsum(Y) / X)**2
         #     Y2cum = np.cumsum(Y2) / X
-        #     assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."
+        #     assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."  # DEBUG
         #     stdY = np.sqrt(Y2cum - Ycum2)
         #     YMAX *= 20  # XXX make it look smaller, for the plots
         # else:  # Expectation on nb of repetitions
@@ -418,7 +418,7 @@ class Evaluator(object):
 
     def printFinalRanking(self, envId=0):
         """Print the final ranking of the different policies."""
-        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
+        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
         print("\nFinal ranking for this environment #{} :".format(envId))
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)

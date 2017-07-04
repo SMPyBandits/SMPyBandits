@@ -35,7 +35,7 @@ class Bernoulli(Arm):
 
     def __init__(self, probability):
         """New arm."""
-        assert 0 <= probability <= 1, "Error, the parameter probability for Bernoulli class has to be in [0, 1]."
+        assert 0 <= probability <= 1, "Error, the parameter probability for Bernoulli class has to be in [0, 1]."  # DEBUG
         self.probability = probability  #: Parameter p for this Bernoulli arm
         self.mean = probability  #: Mean for this Bernoulli arm
 

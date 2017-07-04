@@ -55,7 +55,7 @@ class Gamma(Arm):
         assert scale > 0, "Error, the parameter 'scale' for Gamma arm has to be > 0."
         self.scale = scale  #: Scale parameter for this Gamma arm
         self.mean = shape * scale  #: Mean for this Gamma arm
-        assert mini <= maxi, "Error, the parameter 'mini' for Gamma arm has to a tuple with > 'maxi'."
+        assert mini <= maxi, "Error, the parameter 'mini' for Gamma arm has to a tuple with > 'maxi'."  # DEBUG
         self.min = mini  #: Lower value of rewards
         self.max = maxi  #: Larger value of rewards
 

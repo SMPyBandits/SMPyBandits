@@ -67,9 +67,9 @@ def ternary_feedback(sensing, collision):
         print("Warning: 'sensing' argument was not 0 or 1, but this policy rhoLearnExp3 was only designed for binary sensing model... (was {:.3g}).".format(sensing))  # DEBUG
     assert collision in [0, 1], "Error: 'collision' argument was not binary, it can only be 0 or 1 (was {:.3g}).".format(collision)  # DEBUG
     first_reward = sensing * (1 - collision)
-    assert 0 <= first_reward <= 1, "Error: variable 'first_reward' should have been only binary 0 or 1 (was {:.3g}).".format(first_reward)
+    assert 0 <= first_reward <= 1, "Error: variable 'first_reward' should have been only binary 0 or 1 (was {:.3g}).".format(first_reward)  # DEBUG
     reward = sensing * (2 * first_reward - 1)
-    assert -1 <= reward <= 1, "Error: variable 'reward' should have been only binary 0 or 1 (was {:.3g}).".format(reward)
+    assert -1 <= reward <= 1, "Error: variable 'reward' should have been only binary 0 or 1 (was {:.3g}).".format(reward)  # DEBUG
     if reward not in {-1, 0, 1}:
         print("Warning: 'reward' argument was not -1, 0 or 1, but this function should give ternary reward... (was {:.3g}).".format(reward))  # DEBUG
     return reward

@@ -567,7 +567,7 @@ class EvaluatorMultiPlayers(object):
             # Y[armId] = np.sum(self.getCollisions(armId, envId) >= 1)  # XXX no, we should not count just the fact that there were collisions, but instead count all collisions
             Y[armId] = np.sum(self.getCollisions(armId, envId))
         Y /= (self.horizon * self.nbPlayers)
-        assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))
+        assert 0 <= np.sum(Y) <= 1, "Error: the sum of collisions = {}, averaged by horizon and nbPlayers, cannot be outside of [0, 1] ...".format(np.sum(Y))  # DEBUG
         for armId, arm in enumerate(self.envs[envId].arms):
             labels[armId] = "#${}$: ${}$ (${:.1%}$$\%$)".format(armId, repr(arm), Y[armId])
             print("  - For {},\tfrequency of collisions is {:.5g}  ...".format(labels[armId], Y[armId]))  # DEBUG
@@ -604,7 +604,7 @@ class EvaluatorMultiPlayers(object):
 
     def printFinalRanking(self, envId=0):
         """Compute and print the ranking of the different players."""
-        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)
+        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
         print("\nFinal ranking for this environment #{} :".format(envId))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
         for playerId, player in enumerate(self.players):

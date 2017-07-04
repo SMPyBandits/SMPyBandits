@@ -28,7 +28,7 @@ class EpsilonExpDecreasing(EpsilonGreedy):
 
     def __init__(self, nbArms, epsilon=EPSILON, decreasingRate=DECREASINGRATE, lower=0., amplitude=1.):
         super(EpsilonExpDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonExpDecreasing class has to be in [0, 1]."
+        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonExpDecreasing class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
         assert decreasingRate > 0, "Error: the 'decreasingRate' parameter for EpsilonExpDecreasing class has to be > 0."
         self._decreasingRate = decreasingRate

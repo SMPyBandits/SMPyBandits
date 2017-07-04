@@ -31,7 +31,7 @@ class ETC_KnownGap(EpsilonGreedy):
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_KnownGap class has to be > 0."
         self.horizon = horizon
-        assert 0 <= gap <= 1, "Error: the 'gap' parameter for ETC_KnownGap class has to be in [0, 1]."
+        assert 0 <= gap <= 1, "Error: the 'gap' parameter for ETC_KnownGap class has to be in [0, 1]."  # DEBUG
         self.gap = gap
         # Compute the time m
         m = int(np.floor(((2. / gap**2) * np.log(horizon * gap**2 / 2.))))

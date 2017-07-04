@@ -217,5 +217,5 @@ class MusicalChair(BasePolicy):
             # count one more collision in this initial phase (no matter the arm)
             self.nbCollision += 1
         elif self.state == State.MusicalChair:
-            assert self.chair is not None, "Error: bug in my code in handleCollision() for MusicalChair class."
+            assert self.chair is not None, "Error: bug in my code in handleCollision() for MusicalChair class."  # DEBUG
             self.chair = None  # Cannot stay sit here

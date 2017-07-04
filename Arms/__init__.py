@@ -54,8 +54,8 @@ def uniformMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     >>> uniformMeans(9, 1 / (1. + 9))
     array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
     """
-    assert nbArms >= 1, "Error: nbArms has to be >= 1."
-    assert 0. < delta < 1., "Error: delta has to be in (0, 1)."
+    assert nbArms >= 1, "Error: nbArms has to be >= 1."  # DEBUG
+    assert 0. < delta < 1., "Error: delta has to be in (0, 1)."  # DEBUG
     # return lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
     return list(lower + amplitude * np.linspace(delta, 1 - delta, nbArms))
 

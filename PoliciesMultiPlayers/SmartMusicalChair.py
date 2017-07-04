@@ -90,7 +90,7 @@ class SmartMusicalChair(rhoRand):
 
         .. warning:: ``s._players`` is for internal use ONLY!
         """
-        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for SmartMusicalChair class has to be > 0."
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for SmartMusicalChair class has to be > 0."  # DEBUG
         if maxRank is None:
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different

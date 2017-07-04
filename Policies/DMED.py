@@ -85,7 +85,7 @@ class DMED(BasePolicy):
     def choiceMultiple(self, nb=1):
         """ If there is still enough actions to play, pop them and play them, otherwise make new list and play nb first actions."""
         choices = [self.choice() for _ in range(nb)]
-        assert len(set(choices)) == nb, "Error: choiceMultiple({}) for DMED policy does not work yet...".format(nb)
+        assert len(set(choices)) == nb, "Error: choiceMultiple({}) for DMED policy does not work yet...".format(nb)  # DEBUG
         # while len(set(choices)) < nb:  # Not enough different actions? Try again.
         #     choices = [self.choice() for _ in range(nb)]
         return choices

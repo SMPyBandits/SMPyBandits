@@ -33,7 +33,7 @@ class DiscountedUCB(UCBalpha):
                  alpha=ALPHA, gamma=GAMMA,
                  lower=0., amplitude=1., *args, **kwargs):
         super(DiscountedUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
-        assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."
+        assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
         assert 0 < gamma <= 1, "Error: the 'gamma' parameter for DiscountedUCB class has to be 0 < gamma <= 1."  # DEBUG
         if np.isclose(gamma, 1):

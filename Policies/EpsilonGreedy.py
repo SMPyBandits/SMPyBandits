@@ -28,7 +28,7 @@ class EpsilonGreedy(BasePolicy):
 
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonGreedy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."
+        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property

@@ -16,10 +16,10 @@ class BasePolicy(object):
     def __init__(self, nbArms, lower=0., amplitude=1.):
         """ New policy."""
         # Parameters
-        assert nbArms > 0, "Error: the 'nbArms' parameter of a {} object cannot be <= 0.".format(self)
+        assert nbArms > 0, "Error: the 'nbArms' parameter of a {} object cannot be <= 0.".format(self)  # DEBUG
         self.nbArms = nbArms  #: Number of arms
         self.lower = lower  #: Lower values for rewards
-        assert amplitude > 0, "Error: the 'amplitude' parameter of a {} object cannot be <= 0.".format(self)
+        assert amplitude > 0, "Error: the 'amplitude' parameter of a {} object cannot be <= 0.".format(self)  # DEBUG
         self.amplitude = amplitude  #: Larger values for rewards
         # Internal memory
         self.t = -1  #: Internal time
