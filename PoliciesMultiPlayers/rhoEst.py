@@ -3,7 +3,7 @@ r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Alg
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
-- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on :math:`[1, \dots, \hat{M}_i(t)]` where :math:`\hat{M}_i(t)` is the current estimated number of player by player i,
+- At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is sampled from a uniform distribution on :math:`[1, \dots, \hat{M}_i(t)]` where :math:`\hat{M}_i(t)` is the current estimated number of player by player i,
 - The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
 
 - My choice for the threshold function, see :func:`threshold_on_t`, does not need the horizon either, and uses :math:`t` instead.

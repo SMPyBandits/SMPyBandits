@@ -3,7 +3,7 @@ r""" rhoRandALOHA: implementation of a variant of the multi-player policy rhoRan
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
-- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
+- At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
 - The *only* difference with rhoRand is that when colliding, users have a small chance of keeping the same rank, following a Bernoulli experiment: with probability = :math:`p(t)`, it keeps the same rank, with proba :math:`1 - p(t)` it changes its rank (uniformly in :math:`\{1,\dots,M\}`, so there is a chance it finds the same again? FIXME).
 - There is also a variant, like in MEGA (ALOHA-like protocol), the proba change after time: p(t+1) = alpha p(t) + (1-alpha)
 

@@ -3,7 +3,7 @@
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
-- At first, every player has rank_i = 1, but when a collision occurs, rank_i is given by a second learning algorithm, playing on arms = ranks from [1, .., M], where M is the number of player.
+- At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is given by a second learning algorithm, playing on arms = ranks from [1, .., M], where M is the number of player.
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy (like Exp3 here), it *might* be better! Warning: no theoretical guarantees exist!
 - Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 

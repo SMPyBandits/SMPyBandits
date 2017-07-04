@@ -3,7 +3,7 @@
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
-- At first, every player has rank_i = 1, but when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
+- At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is sampled from a uniform distribution on [1, .., M] where M is the number of player.
 - The *only* difference with rhoRand is that at every time step, the rank is updated by 1, and cycles in [1, .., M] iteratively.
 
 
