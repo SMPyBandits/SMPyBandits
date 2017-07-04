@@ -46,7 +46,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -56,7 +56,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
@@ -91,9 +91,9 @@ NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
 NB_PLAYERS = 4    # Less that the number of arms
-# NB_PLAYERS = 5    # Less that the number of arms
-# NB_PLAYERS = 6    # Less that the number of arms
-# NB_PLAYERS = 9    # Less that the number of arms
+NB_PLAYERS = 5    # Less that the number of arms
+NB_PLAYERS = 6    # Less that the number of arms
+NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
@@ -596,17 +596,17 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against SmartMusicalChair[UCB]
-    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
-    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
-    CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
-    Selfish(NB_PLAYERS, UCB, nbArms).children,
-    rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children,
-    # rhoLearn(NB_PLAYERS, UCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
-    rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against SmartMusicalChair[UCB]
+    # SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
+    # Selfish(NB_PLAYERS, UCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, UCB, nbArms).children,
+    # rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children,
+    # # rhoLearn(NB_PLAYERS, UCB, nbArms, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
     # # --- 20) TODO Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against SmartMusicalChair[BayesUCB]
     # # FIXME it is *failing* with SmartMusicalChair[BayesUCB]
@@ -621,17 +621,29 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # # --- 21) FIXME Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against SmartMusicalChair[klUCB]
+    # # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against SmartMusicalChair[klUCB]
     # SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
     # SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     # Selfish(NB_PLAYERS, klUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
     # # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
     # # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+
+    # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against SmartMusicalChair[Thompson]
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
+    CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+    Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoLearn(NB_PLAYERS, Thompson, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, Thompson, nbArms, BayesUCB).children,
+    rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children,
+    rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 ]
 
 

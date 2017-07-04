@@ -47,8 +47,8 @@ class oneSmartMusicalChair(ChildPointer):
     def __str__(self):   # Better to recompute it automatically
         player = self.mother._players[self.playerId]
         str_Mbest = list(self.Mbest)
-        Mbest_is_correct = not(np.any(np.isinf(player.index)) or np.any(np.isnan(player.index)))
-        if Mbest_is_correct:
+        Mbest_is_incorrect = np.any(np.isinf(player.index)) or np.any(np.isnan(player.index))
+        if Mbest_is_incorrect:
             str_Mbest = "??"
         str_chosen_arm = self.chosen_arm if self.chosen_arm is not None else "??"
         return r"#{}<SmartMusicalChair[{}, {}{}{}]>".format(self.playerId + 1, player, r"$M$-best: ${}$".format(str_Mbest), r", arm: ${}$".format(str_chosen_arm), ", with chair" if self._withChair else "")
@@ -58,7 +58,7 @@ class oneSmartMusicalChair(ChildPointer):
         super(oneSmartMusicalChair, self).startGame()
         self.t = 0
         self.sitted = False  # Start not sitted, of course!
-        self.chosen_arm = 1 + rn.randint(self.maxRank)  # XXX Start with a random arm, safer to avoid first collisions.
+        self.chosen_arm = None
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
@@ -105,6 +105,8 @@ class oneSmartMusicalChair(ChildPointer):
                 # print("\n - A oneSmartMusicalChair player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
         # Done
         self.t += 1
+        # FIXME remove: this cost too much time!
+        assert self.chosen_arm in self.Mbest, "Error: at time t = {}, a oneSmartMusicalChair player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest)  # DEBUG
         return self.chosen_arm
 
 
