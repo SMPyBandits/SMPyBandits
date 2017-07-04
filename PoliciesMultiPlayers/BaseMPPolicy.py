@@ -51,3 +51,7 @@ class BaseMPPolicy(object):
     def _estimatedOrder_one(self, playerId):
         """Forward the call to self._players[playerId]."""
         return self._players[playerId].estimatedOrder()
+
+    def _estimatedBestArms_one(self, playerId, M=1):
+        """Forward the call to self._players[playerId]."""
+        return self._players[playerId].estimatedBestArms(M=M)

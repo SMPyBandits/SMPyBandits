@@ -138,3 +138,9 @@ class IndexPolicy(BasePolicy):
         """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
         self.computeAllIndex()
         return np.argsort(self.index)
+
+    def estimatedBestArms(self, M=1):
+        """ Return a (non-necessarily sorted) list of the indexes of the M-best arms. Identify the set M-best."""
+        assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
+        order = self.estimatedOrder()
+        return order[-M:]

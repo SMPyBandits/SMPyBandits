@@ -58,3 +58,7 @@ class ChildPointer(object):
     def estimatedOrder(self):
         """ Pass the call to self.mother._estimatedOrder_one(playerId) with the player's ID number. """
         return self.mother._estimatedOrder_one(self.playerId)
+
+    def estimatedBestArms(self, M=1):
+        """ Pass the call to self.mother._estimatedBestArms_one(playerId) with the player's ID number. """
+        return self.mother._estimatedBestArms_one(self.playerId, M=M)
