@@ -16,12 +16,13 @@ __version__ = "0.6"
 
 import numpy.random as rn
 
-from .rhoRand import oneRhoRand, rhoRand
+from .BaseMPPolicy import BaseMPPolicy
+from .ChildPointer import ChildPointer
 
 
 # --- Class oneSmartMusicalChair, for children
 
-class oneSmartMusicalChair(oneRhoRand):
+class oneSmartMusicalChair(ChildPointer):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
     - Except for the handleCollision method: a new random rank is sampled after observing a collision,
@@ -29,16 +30,18 @@ class oneSmartMusicalChair(oneRhoRand):
     """
 
     def __init__(self, maxRank, *args, **kwargs):
-        super(oneSmartMusicalChair, self).__init__(maxRank, *args, **kwargs)
+        super(oneSmartMusicalChair, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different.
         self.chosen_arm = None  #: Current chosen arm.
+        self.t = -1  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<SmartMusicalChair[{}, M-best: {}]>".format(self.playerId + 1, self.mother._players[self.playerId], self.Mbest)
+        return r"#{}<SmartMusicalChair[{}, {}]>".format(self.playerId + 1, self.mother._players[self.playerId], r"$M$-$\mathrm{best}$: {}$".format(self.Mbest))
 
     def startGame(self):
         """Start game."""
         super(oneSmartMusicalChair, self).startGame()
+        self.t = 0
         self.chosen_arm = 1 + rn.randint(self.maxRank)  # XXX Start with a random arm, safer to avoid first collisions.
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
@@ -54,21 +57,31 @@ class oneSmartMusicalChair(oneRhoRand):
             # print("Info: SmartMusicalChair UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneSmartMusicalChair, self).getReward(arm, reward)
         self.chosen_arm = rn.choice(self.Mbest)  # New random arm
-        print(" - A oneSmartMusicalChair player {} saw a collision, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, self.chosen_arm))  # DEBUG
+        print(" - A oneSmartMusicalChair player {} saw a collision, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, self.chosen_arm, self.Mbest))  # DEBUG
 
     def getReward(self, arm, reward):
         """ Pass the call to self.mother._getReward_one(playerId, arm, reward) with the player's ID number. """
         super(oneSmartMusicalChair, self).getReward(arm, reward)
-        current_Mbest = self.Mbest
-        if self.chosen_arm not in current_Mbest:
-            old_arm = self.chosen_arm
-            self.chosen_arm = rn.choice(current_Mbest)  # New random arm
-            print(" - A oneSmartMusicalChair player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} ...".format(self, old_arm, current_Mbest, self.chosen_arm))  # DEBUG
+
+    def choice(self):
+        """Use the chosen arm."""
+        if self.t < self.nbArms:
+            chosen_arm = super(oneSmartMusicalChair, self).choice()
+            self.chosen_arm = chosen_arm
+        else:
+            current_Mbest = self.Mbest
+            if self.chosen_arm not in current_Mbest:
+                old_arm = self.chosen_arm
+                self.chosen_arm = rn.choice(current_Mbest)  # New random arm
+                print(" - A oneSmartMusicalChair player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} ...".format(self, old_arm, current_Mbest, self.chosen_arm))  # DEBUG
+        # Done
+        self.t += 1
+        return self.chosen_arm
 
 
 # --- Class SmartMusicalChair
 
-class SmartMusicalChair(rhoRand):
+class SmartMusicalChair(BaseMPPolicy):
     """ SmartMusicalChair: our proposal for an efficient multi-players learning policy.
     """
 
