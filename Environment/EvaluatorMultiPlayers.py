@@ -30,6 +30,7 @@ from .ResultMultiPlayers import ResultMultiPlayers
 REPETITIONS = 1  #: Default nb of repetitions
 DELTA_T_SAVE = 1  #: Default sampling rate for saving
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
+COUNT_RANKS_MARKOV_CHAIN = False  #: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
 
 
 # --- Class EvaluatorMultiPlayers
@@ -62,6 +63,7 @@ class EvaluatorMultiPlayers(object):
         self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
+        self.count_ranks_markov_chain = self.cfg.get('count_ranks_markov_chain', COUNT_RANKS_MARKOV_CHAIN)#: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
         # Internal object memory
         self.envs = []  #: List of environments
         self.players = []  #: List of policies
@@ -664,7 +666,7 @@ def delayed_play(env, players, horizon, collisionModel,
     collisions = np.zeros(nbArms, dtype=int)
 
     # print the ranks if possible  # DEBUG
-    all_players_have_ranks = (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
+    all_players_have_ranks = self.count_ranks_markov_chain and (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
     # this will count all the transitions in the Markov chain, to count their empirical probability at the end  # DEBUG
     if all_players_have_ranks:
         markov_chain_transitions = dict()  # DEBUG
