@@ -14,10 +14,17 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+import numpy as np
 import numpy.random as rn
 
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
+
+
+#: Whether to use or not the variant with the "chair": after using an arm successfully (no collision), a player won't move after future collisions (she assumes the other will move). But she will still change her chosen arm if it lies outside of the estimated M-best.
+#: **Warning** experimental!
+WITHCHAIR = False
+WITHCHAIR = True
 
 
 # --- Class oneSmartMusicalChair, for children
@@ -29,19 +36,28 @@ class oneSmartMusicalChair(ChildPointer):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, *args, **kwargs):
+    def __init__(self, maxRank, withChair, *args, **kwargs):
         super(oneSmartMusicalChair, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different.
         self.chosen_arm = None  #: Current chosen arm.
+        self._withChair = withChair  # Whether to use or not the variant with the "chair".
+        self.sitted = False  #: Not yet sitted. After 1 step without collision, don't react to collision (but still react when the chosen arm lies outside M-best).
         self.t = -1  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<SmartMusicalChair[{}, {}]>".format(self.playerId + 1, self.mother._players[self.playerId], r"$M$-$\mathrm{best}$: {}$".format(self.Mbest))
+        player = self.mother._players[self.playerId]
+        str_Mbest = list(self.Mbest)
+        Mbest_is_correct = not(np.any(np.isinf(player.index)) or np.any(np.isnan(player.index)))
+        if Mbest_is_correct:
+            str_Mbest = "??"
+        str_chosen_arm = self.chosen_arm if self.chosen_arm is not None else "??"
+        return r"#{}<SmartMusicalChair[{}, {}{}{}]>".format(self.playerId + 1, player, r"$M$-best: ${}$".format(str_Mbest), r", arm: ${}$".format(str_chosen_arm), ", with chair" if self._withChair else "")
 
     def startGame(self):
         """Start game."""
         super(oneSmartMusicalChair, self).startGame()
         self.t = 0
+        self.sitted = False  # Start not sitted, of course!
         self.chosen_arm = 1 + rn.randint(self.maxRank)  # XXX Start with a random arm, safer to avoid first collisions.
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
@@ -56,24 +72,37 @@ class oneSmartMusicalChair(ChildPointer):
         if reward is not None:
             # print("Info: SmartMusicalChair UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
             super(oneSmartMusicalChair, self).getReward(arm, reward)
-        self.chosen_arm = rn.choice(self.Mbest)  # New random arm
-        print(" - A oneSmartMusicalChair player {} saw a collision, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, self.chosen_arm, self.Mbest))  # DEBUG
+        if not (self._withChair and self.sitted):
+            self.chosen_arm = rn.choice(self.Mbest)  # New random arm
+            # print(" - A oneSmartMusicalChair player {} saw a collision on arm {}, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, arm, self.chosen_arm, self.Mbest))  # DEBUG
+        # else:
+        #     print(" - A oneSmartMusicalChair player {} saw a collision on arm {}, but she ignores it as she plays with a chair and is now sitted ...".format(self, arm))  # DEBUG
 
     def getReward(self, arm, reward):
         """ Pass the call to self.mother._getReward_one(playerId, arm, reward) with the player's ID number. """
         super(oneSmartMusicalChair, self).getReward(arm, reward)
+        if self.t >= self.nbArms:
+            if self._withChair:
+                if not self.sitted:
+                    # print(" - A oneSmartMusicalChair player {} used this arm {} without any collision, so she is now sitted on this rank, and will not change in case of collision (but will change if the arm lies outside her estimate of M-best)...".format(self, self.chosen_arm))  # DEBUG
+                    self.sitted = True
+                # else:
+                #     print(" - A oneSmartMusicalChair player {} is already sitted on this arm {} ...".format(self, self.chosen_arm))  # DEBUG
+            # else:
+            #     print(" - A oneSmartMusicalChair player {} is not playing with a chair, nothing to do ...".format(self)  # DEBUG
 
     def choice(self):
         """Use the chosen arm."""
-        if self.t < self.nbArms:
-            chosen_arm = super(oneSmartMusicalChair, self).choice()
-            self.chosen_arm = chosen_arm
-        else:
+        if self.t < self.nbArms:  # Force to sample each arm at least one
+            self.chosen_arm = super(oneSmartMusicalChair, self).choice()
+        else:  # But now, trust the estimated set Mbest
             current_Mbest = self.Mbest
             if self.chosen_arm not in current_Mbest:
+                if self._withChair:
+                    self.sitted = False
                 old_arm = self.chosen_arm
                 self.chosen_arm = rn.choice(current_Mbest)  # New random arm
-                print(" - A oneSmartMusicalChair player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} ...".format(self, old_arm, current_Mbest, self.chosen_arm))  # DEBUG
+                # print("\n - A oneSmartMusicalChair player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
         # Done
         self.t += 1
         return self.chosen_arm
@@ -86,7 +115,7 @@ class SmartMusicalChair(BaseMPPolicy):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
-                 maxRank=None, lower=0., amplitude=1.,
+                 withChair=WITHCHAIR, maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -108,12 +137,13 @@ class SmartMusicalChair(BaseMPPolicy):
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.nbPlayers = nbPlayers  #: Number of players
+        self.withChair = withChair  #: Using a chair ?
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneSmartMusicalChair(maxRank, self, playerId)
+            self.children[playerId] = oneSmartMusicalChair(maxRank, withChair, self, playerId)
 
     def __str__(self):
         return "SmartMusicalChair({} x {})".format(self.nbPlayers, str(self._players[0]))

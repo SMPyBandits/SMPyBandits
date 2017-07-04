@@ -46,7 +46,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -56,12 +56,12 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+# REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
@@ -179,14 +179,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
         # }
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(9, 1 / (1. + 9))
-        # }
-        {   # An easy problem (14 arms)
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
             "arm_type": Bernoulli,
-            "params": uniformMeans(14, 1 / (1. + 14))
+            "params": uniformMeans(9, 1 / (1. + 9))
         }
+        # {   # An easy problem (14 arms)
+        #     "arm_type": Bernoulli,
+        #     "params": uniformMeans(14, 1 / (1. + 14))
+        # }
         # {   # An easy problem (19 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(19, 1 / (1. + 19))
@@ -596,30 +596,34 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against SmartMusicalChair[UCB]
-    # SmartMusicalChair(NB_PLAYERS, UCB, nbArms).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
-    # Selfish(NB_PLAYERS, UCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children,
-    # # rhoLearn(NB_PLAYERS, UCB, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against SmartMusicalChair[UCB]
+    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
+    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
+    CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
+    Selfish(NB_PLAYERS, UCB, nbArms).children,
+    rhoRand(NB_PLAYERS, UCB, nbArms).children,
+    rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children,
+    # rhoLearn(NB_PLAYERS, UCB, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
+    rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # --- 20) FIXME Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against SmartMusicalChair[BayesUCB]
-    SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms).children,
-    CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-    Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # # --- 20) TODO Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against SmartMusicalChair[BayesUCB]
+    # # FIXME it is *failing* with SmartMusicalChair[BayesUCB]
+    # SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms, withChair=True).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
+    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
     # # --- 21) FIXME Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against SmartMusicalChair[klUCB]
-    # SmartMusicalChair(NB_PLAYERS, klUCB, nbArms).children,
+    # SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     # Selfish(NB_PLAYERS, klUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, klUCB, nbArms).children,

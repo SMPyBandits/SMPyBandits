@@ -593,7 +593,7 @@ class EvaluatorMultiPlayers(object):
                 Y /= np.sum(Y)   # project back to [0, 1)
             for i in range(len(Y)):
                 plt.axvspan(i - 0.25, i + 0.25, 0, Y[i], label=labels[i], color=colors[i])
-            plt.xticks(np.arange(len(Y)), ['Collision \non arm #$%i$' % i for i in range(nbArms)] + ['No collision'])
+            plt.xticks(np.arange(len(Y)), ["Arm #$%i$" % i for i in range(nbArms)] + ["No collision"])
             plt.ylabel("Frequency of collision, in logarithmic scale" if semilogy else "Frequency of collision")
             if not semilogy:
                 add_percent_formatter("yaxis", 1.0)
