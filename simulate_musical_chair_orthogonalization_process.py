@@ -93,7 +93,7 @@ def simulate_musical_chair(M=1, sticky=False, DEBUG=False):
     return t, collisions
 
 
-def simulate_count_and_print(M, nbRepetitions=5000, sticky=False, DEBUG=False):
+def simulate_count_and_print(M, nbRepetitions=10000, sticky=False, DEBUG=False):
     if DEBUG: print("Starting", nbRepetitions, "simulations with M =", M, "players...")
     results = [ None ] * nbRepetitions
     for i in tqdm_range(nbRepetitions, desc="Repetitions"):
@@ -132,7 +132,7 @@ def plot_collisions(M, collisions, sticky=False):
     plt.show()
 
 
-def plot_all(M, nbRepetitions=5000, sticky=False):
+def plot_all(M, nbRepetitions=10000, sticky=False):
     absorption_times, collisions = simulate_count_and_print(M, nbRepetitions=nbRepetitions, sticky=sticky)
     plot_absorption(M, absorption_times, sticky=sticky)
     plot_collisions(M, collisions, sticky=sticky)
