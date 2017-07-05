@@ -158,13 +158,13 @@ class EvaluatorMultiPlayers(object):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId)
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
                 store(r)
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 store(r)
 
     # --- Getter methods
@@ -636,7 +636,7 @@ class EvaluatorMultiPlayers(object):
 
 
 def delayed_play(env, players, horizon, collisionModel,
-                 delta_t_save=1, seed=None, repeatId=0):
+                 delta_t_save=1, seed=None, repeatId=0, count_ranks_markov_chain=False):
     """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
     try:
@@ -666,7 +666,7 @@ def delayed_play(env, players, horizon, collisionModel,
     collisions = np.zeros(nbArms, dtype=int)
 
     # print the ranks if possible  # DEBUG
-    all_players_have_ranks = self.count_ranks_markov_chain and (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
+    all_players_have_ranks = count_ranks_markov_chain and (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
     # this will count all the transitions in the Markov chain, to count their empirical probability at the end  # DEBUG
     if all_players_have_ranks:
         markov_chain_transitions = dict()  # DEBUG

@@ -61,7 +61,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 # REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
@@ -90,7 +90,7 @@ DECREASE_RATE = None
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = 4    # Less that the number of arms
+# NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 7    # Less that the number of arms
@@ -181,15 +181,15 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
         # }
-        {   # A very easy problem (5 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": uniformMeans(5, 1 / (1. + 5))
-        }
-        # XXX Default!
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(9, 1 / (1. + 9))
+        #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
+        # XXX Default!
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": uniformMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -637,8 +637,12 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
     rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
+    SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
 
     # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against SmartMusicalChair[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,

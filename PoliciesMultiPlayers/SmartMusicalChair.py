@@ -46,8 +46,10 @@ class oneSmartMusicalChair(ChildPointer):
 
     def __str__(self):   # Better to recompute it automatically
         player = self.mother._players[self.playerId]
-        Mbest_is_incorrect = np.any(np.isinf(player.index)) or np.any(np.isnan(player.index))
+        Mbest_is_incorrect = self.t < self.nbArms or np.any(np.isinf(player.index)) or np.any(np.isnan(player.index))
         str_Mbest = "" if Mbest_is_incorrect else r", $M$-best: ${}$".format(list(self.Mbest))
+        # # FIXME it messes up with the display of the titles...
+        # str_Mbest = ""
         str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
         return r"#{}<SmartMusicalChair[{}{}{}{}]>".format(self.playerId + 1, player, str_Mbest, str_chosen_arm, ", staying sitted" if self._withChair else "")
 
