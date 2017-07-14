@@ -33,10 +33,10 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-# HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 20000
+# HORIZON = 30000
+# # HORIZON = 40000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -164,18 +164,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
         # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
+        {   # Lots of bad arms, significative difference between the best and the others
+            "arm_type": Bernoulli,
+            "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+        },
         # {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
@@ -237,53 +237,6 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # # --- Horizon-dependent algorithm
-        # {
-        #     "archtype": UCBH,
-        #     "params": {
-        #         "alpha": 4,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": UCBH,
-        #     "params": {
-        #         "alpha": 1,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # {
-        #     "archtype": UCBH,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON
-        #     }
-        # },
-        # # --- FIXME Doubling trick algorithm
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__linear,
-        #         "policy": UCBH,
-        #         "alpha": 0.5
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__geometric,
-        #         "policy": UCBH,
-        #         "alpha": 0.5
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__exponential,
-        #         "policy": UCBH,
-        #         "alpha": 0.5
-        #     }
-        # },
         # --- Horizon-dependent algorithm ApproximatedFHGittins
         {
             "archtype": ApproximatedFHGittins,
@@ -306,15 +259,15 @@ configuration.update({
                 "horizon": HORIZON
             }
         },
-        # --- FIXME Doubling trick algorithm
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__linear,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5
-            }
-        },
+        # --- XXX Doubling trick algorithm
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__arithmetic,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5
+        #     }
+        # },
         {
             "archtype": DoublingTrickWrapper,
             "params": {

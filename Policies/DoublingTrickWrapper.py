@@ -31,9 +31,6 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from math import sqrt, log
-import numpy as np
-np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .BasePolicy import BasePolicy
 
@@ -58,14 +55,14 @@ DEFAULT_FIRST_HORIZON = 1000
 #: Default stepsize for the arithmetic horizon progression.
 ARITHMETIC_STEP = DEFAULT_FIRST_HORIZON
 
-def next_horizon__linear(horizon):
+def next_horizon__arithmetic(horizon):
     r""" The arithmetic horizon progression function:
-    
+
     .. math:: T \mapsto T + 1000.
     """
     return int(horizon + ARITHMETIC_STEP)
 
-next_horizon__linear.__latex_name__ = "arithmetic"
+next_horizon__arithmetic.__latex_name__ = "arithmetic"
 
 
 #: Default multiplicative constant for the geometric horizon progression.
@@ -73,7 +70,7 @@ GEOMETRIC_STEP = 10
 
 def next_horizon__geometric(horizon):
     r""" The geometric horizon progression function:
-    
+
     .. math:: T \mapsto T \times 10.
     """
     return int(horizon * GEOMETRIC_STEP)
@@ -86,7 +83,7 @@ EXPONENTIAL_STEP = 1.5
 
 def next_horizon__exponential(horizon):
     r""" The exponential horizon progression function:
-    
+
     .. math:: T \mapsto \lfloor T^{1.5} \rfloor.
     """
     return int(horizon ** EXPONENTIAL_STEP)
@@ -95,25 +92,25 @@ next_horizon__exponential.__latex_name__ = "exponential"
 
 def next_horizon__exponential_slow(horizon):
     r""" The exponential horizon progression function:
-    
+
     .. math:: T \mapsto \lfloor T^{1.1} \rfloor.
     """
     return int(horizon ** 1.1)
 
-next_horizon__exponential_slow.__latex_name__ = "slow exponential"
+next_horizon__exponential_slow.__latex_name__ = "slow exp"
 
 def next_horizon__exponential_fast(horizon):
     r""" The exponential horizon progression function:
-    
+
     .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
     return int(horizon ** 2)
 
-next_horizon__exponential_fast.__latex_name__ = "fast exponential"
+next_horizon__exponential_fast.__latex_name__ = "fast exp"
 
 
 #: Chose the default horizon growth function.
-# default_next_horizon = next_horizon__linear
+# default_next_horizon = next_horizon__arithmetic
 # default_next_horizon = next_horizon__geometric
 default_next_horizon = next_horizon__exponential
 
@@ -164,13 +161,13 @@ class DoublingTrickWrapper(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
-    
+
     # --- Pass the call to the subpolicy
 
     def getReward(self, arm, reward):
         """ Pass the reward, as usual, update t and sometimes restart the underlying policy."""
         # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
-        
+
         # super(DoublingTrickWrapper, self).getReward(arm, reward)
         self.t += 1
         self.policy.getReward(arm, reward)

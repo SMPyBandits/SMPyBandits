@@ -79,7 +79,7 @@ class BasePolicy(object):
         else:
             raise NotImplementedError("This method choiceMultiple(nb) has to be implemented in the child class inheriting from BasePolicy.")
 
-    def choiceIMP(self, nb=1):
+    def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Not defined."""
         if nb == 1:
             return self.choice()
