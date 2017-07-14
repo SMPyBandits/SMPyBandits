@@ -43,10 +43,10 @@ from .UCBH import UCBH
 #: Default horizon-dependent policy
 default_horizonDependent_policy = UCBH
 
-#: Default constant to know what to do when restarting the underlying policy
-#: with a new horizon parameter. `True` means that a new policy, initialized from scratch,
-#: will be created at every breakpoint. `False` means that the same policy object is used
-#: but just its attribute `horizon` is updated (default).
+#: Default constant to know what to do when restarting the underlying policy with a new horizon parameter.
+#:
+#: - `True` means that a new policy, initialized from scratch, will be created at every breakpoint.
+#: - `False` means that the same policy object is used but just its attribute `horizon` is updated (default).
 FULL_RESTART = True
 FULL_RESTART = False
 
@@ -87,7 +87,7 @@ EXPONENTIAL_STEP = 1.5
 def next_horizon__exponential(horizon):
     r""" The exponential horizon progression function:
     
-    .. math:: T \mapsto T ** 2.
+    .. math:: T \mapsto \lfloor T^{1.5} \rfloor.
     """
     return int(horizon ** EXPONENTIAL_STEP)
 
@@ -96,7 +96,7 @@ next_horizon__exponential.__latex_name__ = "exponential"
 def next_horizon__exponential_slow(horizon):
     r""" The exponential horizon progression function:
     
-    .. math:: T \mapsto T ** 1.1.
+    .. math:: T \mapsto \lfloor T^{1.1} \rfloor.
     """
     return int(horizon ** 1.1)
 
@@ -105,7 +105,7 @@ next_horizon__exponential_slow.__latex_name__ = "slow exponential"
 def next_horizon__exponential_fast(horizon):
     r""" The exponential horizon progression function:
     
-    .. math:: T \mapsto T ** 2.
+    .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
     return int(horizon ** 2)
 
@@ -135,13 +135,13 @@ class DoublingTrickWrapper(BasePolicy):
         self.full_restart = full_restart  #: Constant to know how to refresh the underlying policy.
         # --- Policy
         self._policy = policy  # Class to create the underlying policy
-        self._args = args
-        self._kwargs = kwargs
+        self._args = args  # To keep them
+        self._kwargs = kwargs  # To keep them
         self.policy = None  #: Underlying policy
         # --- Horizon
-        self._next_horizon = next_horizon  #: Function for the growing horizon
+        self._next_horizon = next_horizon  # Function for the growing horizon
         self.next_horizon_name = getattr(next_horizon, '__latex_name__', '?')  #: Pretty string of the name of this growing function
-        self._first_horizon = first_horizon  #: First guess for the horizon
+        self._first_horizon = first_horizon  # First guess for the horizon
         self.horizon = first_horizon  #: Last guess for the horizon
         # FIXME Force it, for pretty printing...
         self.startGame()
