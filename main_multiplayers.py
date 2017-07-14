@@ -26,9 +26,9 @@ from configuration_multiplayers import configuration
 if getenv('SLEEP', False):
     from subprocess import call
     SLEEP = str(getenv('SLEEP'))
-    print("\nSleeping for", SLEEP, "before starting the simulation...")  # DEBUG
+    print("\nSleeping for", SLEEP, "seconds secondsbefore starting the simulation...")  # DEBUG
     call(["sleep", SLEEP])  # more general
-    print("Done sleeping for", SLEEP, "... Now I can start the simulation...")
+    print("Done Sleeping for", SLEEP, "seconds seconds... Now I can start the simulation...")
 
 USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
