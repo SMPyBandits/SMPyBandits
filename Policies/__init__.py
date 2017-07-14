@@ -34,6 +34,8 @@
 
 - *New!* Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
+- *New!* An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -143,6 +145,7 @@ from .SlidingWindowUCB import SWUCB, SWUCBPlus
 
 from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
+from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__linear, next_horizon__geometric, next_horizon__exponential
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 
