@@ -153,7 +153,7 @@ class Evaluator(object):
 
     def startOneEnv(self, envId, env):
         """Simulate that env."""
-        print("\nEvaluating environment:", repr(env))
+        print("\n\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
         # Precompute rewards
@@ -178,7 +178,7 @@ class Evaluator(object):
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
-            print("\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
+            print("\n\n\n- Evaluating policy #{}/{}: {} ...".format(policyId + 1, self.nbPolicies, policy))
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 repeatIdout = 0

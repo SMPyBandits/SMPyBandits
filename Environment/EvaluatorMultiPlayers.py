@@ -132,7 +132,7 @@ class EvaluatorMultiPlayers(object):
 
     def startOneEnv(self, envId, env):
         """Simulate that env."""
-        print("\nEvaluating environment:", repr(env))  # DEBUG
+        print("\n\nEvaluating environment:", repr(env))  # DEBUG
         self.players = []
         self.__initPlayers__(env)
         # Get the position of the best arms
