@@ -5,7 +5,7 @@ Configuration for the simulations, for the single-player case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 # Tries to know number of CPU
 try:
@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -65,7 +65,7 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
-RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
@@ -237,6 +237,116 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
+        # # --- Horizon-dependent algorithm
+        # {
+        #     "archtype": UCBH,
+        #     "params": {
+        #         "alpha": 4,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": UCBH,
+        #     "params": {
+        #         "alpha": 1,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # {
+        #     "archtype": UCBH,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": HORIZON
+        #     }
+        # },
+        # # --- FIXME Doubling trick algorithm
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__linear,
+        #         "policy": UCBH,
+        #         "alpha": 0.5
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__geometric,
+        #         "policy": UCBH,
+        #         "alpha": 0.5
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential,
+        #         "policy": UCBH,
+        #         "alpha": 0.5
+        #     }
+        # },
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 4,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 1,
+                "horizon": HORIZON
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON
+            }
+        },
+        # --- FIXME Doubling trick algorithm
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__linear,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__geometric,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_fast,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_slow,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5
+            }
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -496,12 +606,12 @@ configuration.update({
         #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.05         # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.05         # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # # --- MOSS algorithm, like UCB
         # {
         #     "archtype": MOSS,
@@ -715,6 +825,7 @@ configuration.update({
         #     "params": {
         #     }
         # },
+        # },
     ]
 })
 
@@ -767,92 +878,92 @@ configuration.update({
 # })
 
 
-# XXX compare different values of the experimental sliding window algorithm
-EPSS   = [0.1, 0.05]
-ALPHAS = [2, 1, 0.5, 0.1]
-ALPHAS = [2, 0.5, 0.1]
-ALPHAS = [0.5]
-ALPHAS = [1]
-TAUS   = [
-        500, 1000, 2000,
-        # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
-    ]
-GAMMAS = [
-        # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
-        0.8, 0.9, 0.95, 0.99, 0.999999,
-       # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
-    ]
+# # XXX compare different values of the experimental sliding window algorithm
+# EPSS   = [0.1, 0.05]
+# ALPHAS = [2, 1, 0.5, 0.1]
+# ALPHAS = [2, 0.5, 0.1]
+# ALPHAS = [0.5]
+# ALPHAS = [1]
+# TAUS   = [
+#         500, 1000, 2000,
+#         # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
+#     ]
+# GAMMAS = [
+#         # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
+#         0.8, 0.9, 0.95, 0.99, 0.999999,
+#        # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
+#     ]
 
-configuration.update({
-    "policies":
-    # [
-    #     # --- # XXX experimental sliding window algorithm
-    #     {
-    #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
-    #         "params": {
-    #             "alpha": alpha
-    #         }
-    #     }
-    #     for tau in TAUS
-    #     for eps in EPSS
-    #     for alpha in ALPHAS
-    # # ] +
-    [
-        # --- # XXX experimental other version of the sliding window algorithm
-        {
-            "archtype": SWUCB,
-            "params": {
-                "alpha": alpha,
-                "tau": tau
-            }
-        }
-        for alpha in ALPHAS
-        for tau in TAUS
-    ] +
-    [
-        # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-        {
-            "archtype": SWUCBPlus,
-            "params": {
-                "horizon": HORIZON,
-                "alpha": alpha
-            }
-        }
-        for alpha in ALPHAS
-    ] +
-    [
-        # --- # XXX experimental discounted UCB algorithm
-        {
-            "archtype": DiscountedUCB,
-            "params": {
-                "alpha": alpha,
-                "gamma": gamma
-            }
-        }
-        for gamma in GAMMAS
-        for alpha in ALPHAS
-    ] +
-    [
-        # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-        {
-            "archtype": DiscountedUCBPlus,
-            "params": {
-                "alpha": alpha,
-                "horizon": HORIZON
-            }
-        }
-        for alpha in ALPHAS
-    ] +
-    [
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": alpha
-            }
-        }
-        for alpha in ALPHAS
-    ]
-})
+# configuration.update({
+#     "policies":
+#     # [
+#     #     # --- # XXX experimental sliding window algorithm
+#     #     {
+#     #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
+#     #         "params": {
+#     #             "alpha": alpha
+#     #         }
+#     #     }
+#     #     for tau in TAUS
+#     #     for eps in EPSS
+#     #     for alpha in ALPHAS
+#     # # ] +
+#     [
+#         # --- # XXX experimental other version of the sliding window algorithm
+#         {
+#             "archtype": SWUCB,
+#             "params": {
+#                 "alpha": alpha,
+#                 "tau": tau
+#             }
+#         }
+#         for alpha in ALPHAS
+#         for tau in TAUS
+#     ] +
+#     [
+#         # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+#         {
+#             "archtype": SWUCBPlus,
+#             "params": {
+#                 "horizon": HORIZON,
+#                 "alpha": alpha
+#             }
+#         }
+#         for alpha in ALPHAS
+#     ] +
+#     [
+#         # --- # XXX experimental discounted UCB algorithm
+#         {
+#             "archtype": DiscountedUCB,
+#             "params": {
+#                 "alpha": alpha,
+#                 "gamma": gamma
+#             }
+#         }
+#         for gamma in GAMMAS
+#         for alpha in ALPHAS
+#     ] +
+#     [
+#         # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+#         {
+#             "archtype": DiscountedUCBPlus,
+#             "params": {
+#                 "alpha": alpha,
+#                 "horizon": HORIZON
+#             }
+#         }
+#         for alpha in ALPHAS
+#     ] +
+#     [
+#         {
+#             "archtype": UCBalpha,
+#             "params": {
+#                 "alpha": alpha
+#             }
+#         }
+#         for alpha in ALPHAS
+#     ]
+# })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
 # from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once

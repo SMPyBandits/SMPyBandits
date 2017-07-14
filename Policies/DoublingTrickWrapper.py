@@ -7,8 +7,8 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 
 .. note::
 
-   This is implemented in a very generic way, with simply a function `next_horizon(i, horizon)` that gives the next horizon to try when crossing the current guess.
-   It can be a simple linear function (`next_horizon(i, horizon) = horizon + 100`), a geometric growth to have the "real" doubling trick (`next_horizon(i, horizon) = horizon * 10`), or even a faster growing function (`next_horizon(i, horizon) = horizon ** 2`).
+   This is implemented in a very generic way, with simply a function `next_horizon(horizon)` that gives the next horizon to try when crossing the current guess.
+   It can be a simple linear function (`next_horizon(horizon) = horizon + 100`), a geometric growth to have the "real" doubling trick (`next_horizon(horizon) = horizon * 10`), or even a faster growing function (`next_horizon(horizon) = horizon ** 2`).
 
 .. seealso::
 
@@ -52,18 +52,18 @@ FULL_RESTART = False
 
 
 #: Default horizon, used for the first step.
-DEFAULT_FIRST_HORIZON = 100
+DEFAULT_FIRST_HORIZON = 1000
 
 
 #: Default stepsize for the arithmetic horizon progression.
-ARITHMETIC_STEP = 100
+ARITHMETIC_STEP = DEFAULT_FIRST_HORIZON
 
-def next_horizon__linear(i, horizon):
+def next_horizon__linear(horizon):
     r""" The arithmetic horizon progression function:
     
-    .. math:: T \mapsto T + 100.
+    .. math:: T \mapsto T + 1000.
     """
-    return horizon + ARITHMETIC_STEP
+    return int(horizon + ARITHMETIC_STEP)
 
 next_horizon__linear.__latex_name__ = "arithmetic"
 
@@ -71,27 +71,45 @@ next_horizon__linear.__latex_name__ = "arithmetic"
 #: Default multiplicative constant for the geometric horizon progression.
 GEOMETRIC_STEP = 10
 
-def next_horizon__geometric(i, horizon):
+def next_horizon__geometric(horizon):
     r""" The geometric horizon progression function:
     
     .. math:: T \mapsto T \times 10.
     """
-    return horizon * GEOMETRIC_STEP
+    return int(horizon * GEOMETRIC_STEP)
 
 next_horizon__geometric.__latex_name__ = "geometric"
 
 
 #: Default exponential constant for the exponential horizon progression.
-EXPONENTIAL_STEP = 2
+EXPONENTIAL_STEP = 1.5
 
-def next_horizon__exponential(i, horizon):
+def next_horizon__exponential(horizon):
     r""" The exponential horizon progression function:
     
     .. math:: T \mapsto T ** 2.
     """
-    return horizon ** EXPONENTIAL_STEP
+    return int(horizon ** EXPONENTIAL_STEP)
 
 next_horizon__exponential.__latex_name__ = "exponential"
+
+def next_horizon__exponential_slow(horizon):
+    r""" The exponential horizon progression function:
+    
+    .. math:: T \mapsto T ** 1.1.
+    """
+    return int(horizon ** 1.1)
+
+next_horizon__exponential_slow.__latex_name__ = "slow exponential"
+
+def next_horizon__exponential_fast(horizon):
+    r""" The exponential horizon progression function:
+    
+    .. math:: T \mapsto T ** 2.
+    """
+    return int(horizon ** 2)
+
+next_horizon__exponential_fast.__latex_name__ = "fast exponential"
 
 
 #: Chose the default horizon growth function.
@@ -116,55 +134,77 @@ class DoublingTrickWrapper(BasePolicy):
         super(DoublingTrickWrapper, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.full_restart = full_restart  #: Constant to know how to refresh the underlying policy.
         # --- Policy
-        self._policy = default_horizonDependent_policy  # Class to create the underlying policy
+        self._policy = policy  # Class to create the underlying policy
         self._args = args
         self._kwargs = kwargs
         self.policy = None  #: Underlying policy
         # --- Horizon
-        self.next_horizon = next_horizon  #: Function for the growing horizon
+        self._next_horizon = next_horizon  #: Function for the growing horizon
         self.next_horizon_name = getattr(next_horizon, '__latex_name__', '?')  #: Pretty string of the name of this growing function
         self._first_horizon = first_horizon  #: First guess for the horizon
         self.horizon = first_horizon  #: Last guess for the horizon
+        # FIXME Force it, for pretty printing...
+        self.startGame()
+
+    # --- pretty printing
 
     def __str__(self):
-        return r"DoublingTrick($T_1={:.3g}$, steps: {}{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
+        return r"DoublingTrick($T_1={}$, steps: {}{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
 
-    # --- Start game, and receive rewards
+    # --- Start game by creating new underlying policy
 
     def startGame(self):
         """ Initialize the policy for a new game."""
         super(DoublingTrickWrapper, self).startGame()
         self.horizon = self._first_horizon  #: Last guess for the horizon
-        self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+        try:
+            self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+        except Exception as e:
+            print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
+            self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+        # now also start game for the underlying policy
+        self.policy.startGame()
     
+    # --- Pass the call to the subpolicy
+
     def getReward(self, arm, reward):
         """ Pass the reward, as usual, update t and sometimes restart the underlying policy."""
         # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
-        super(DoublingTrickWrapper, self).getReward(arm, reward)
+        
+        # super(DoublingTrickWrapper, self).getReward(arm, reward)
+        self.t += 1
+        self.policy.getReward(arm, reward)
+
         # Maybe we have to update the horizon?
-        new_horizon = self.next_horizon(self.t, self.horizon)
-        # print("   ==> Considering a new horizon... t = {}, current horizon = {} and next horizon = {} ...".format(self.t, self.horizon, new_horizon))  # DEBUG
         if self.t > self.horizon:
+            new_horizon = self._next_horizon(self.horizon)
             assert new_horizon > self.horizon, "Error: the new_horizon = {} is not > the current horizon = {} ...".format(new_horizon, self.horizon)  # DEBUG
-            print("  - At time t = {}, a DoublingTrickWrapper class was running with current horizon T_i = {} and decided to use {} as a new horizon...".format(self.t, self.horizon, new_horizon))  # DEBUG
+            # print("  - At time t = {}, a DoublingTrickWrapper class was running with current horizon T_i = {} and decided to use {} as a new horizon...".format(self.t, self.horizon, new_horizon))  # DEBUG
             self.horizon = new_horizon
             # now we have to update or restart the underlying policy
             if self.full_restart:
-                self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
-                print("   ==> Fully restarting the underlying policy by creating a new object... Now it is = {} ...".format(self.policy))  # DEBUG
+                try:
+                    self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+                except Exception as e:
+                    print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
+                    self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+                # now also start game for the underlying policy
+                self.policy.startGame()
+                # print("   ==> Fully restarting the underlying policy by creating a new object... Now it is = {} ...".format(self.policy))  # DEBUG
             else:
                 if hasattr(self.policy, 'horizon'):
                     try:
                         self.policy.horizon = self.horizon
                     except AttributeError:
                         try:
-                            print("Warning: unable to update the parameter 'horizon' of the underlying policy {}... Trying '_horizon' ...".format(self.policy))  # DEBUG
+                            # print("Warning: unable to update the parameter 'horizon' of the underlying policy {}... Trying '_horizon' ...".format(self.policy))  # DEBUG
                             self.policy._horizon = self.horizon
                         except AttributeError:
-                            print("Warning: unable to update the parameter '_horizon' of the underlying policy {} ...".format(self.policy))  # DEBUG
-                    print("   ==> Just updating the horizon parameter of the underlying policy... Now it is = {} ...".format(self.policy))  # DEBUG
-                else:
-                    print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG
+                            # print("Warning: unable to update the parameter '_horizon' of the underlying policy {} ...".format(self.policy))  # DEBUG
+                            pass
+                    # print("   ==> Just updating the horizon parameter of the underlying policy... Now it is = {} ...".format(self.policy))  # DEBUG
+                # else:
+                #     print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG
 
     # --- Sub methods
 
@@ -188,13 +228,17 @@ class DoublingTrickWrapper(BasePolicy):
         r""" Pass the call to the underlying policy."""
         return self.policy.choiceIMP(nb=nb, startWithChoiceMultiple=startWithChoiceMultiple)
 
-    # --- Hack!
+    def estimatedOrder(self):
+        r""" Pass the call to the underlying policy."""
+        return self.policy.estimatedOrder()
 
-    def __getattr__(self, name):
-        """ Generic method to capture all attribute/method call and pass them to the underlying policy."""
-        # print("Using hacking method DoublingTrickWrapper.__getattr__({}, {})...".format(self, name))  # DEBUG
-        if hasattr(self.policy, name):
-            return getattr(self.policy, name)
-        else:
-            raise AttributeError
-        
+    def estimatedBestArms(self, M=1):
+        r""" Pass the call to the underlying policy."""
+        return self.policy.estimatedBestArms(M=M)
+
+    # --- Hack!  FIXME bad idea!
+
+    # def __getattr__(self, name):
+    #     """ Generic method to capture all attribute/method call and pass them to the underlying policy."""
+    #     # print("Using hacking method DoublingTrickWrapper.__getattr__({}, {})...".format(self, name))  # DEBUG
+    #     return getattr(self.policy, name)
