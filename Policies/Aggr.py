@@ -48,7 +48,7 @@ update_all_children = False
 class Aggr(BasePolicy):
     """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent."""
 
-    def __init__(self, nbArms, children,
+    def __init__(self, nbArms, children=None,
                  learningRate=None, decreaseRate=None, horizon=None,
                  update_all_children=update_all_children, update_like_exp4=update_like_exp4,
                  unbiased=unbiased, prior='uniform',

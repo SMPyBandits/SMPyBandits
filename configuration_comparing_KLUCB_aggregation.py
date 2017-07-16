@@ -32,11 +32,11 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-# HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 10000
+# HORIZON = 20000
+# HORIZON = 30000
+# # HORIZON = 40000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -48,7 +48,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
-REPETITIONS = 200
+# REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -69,12 +69,15 @@ RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
 
-TEST_AGGR = True
 TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
+TEST_AGGR = True
+
+TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRAL policy
+TEST_CORRAL = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
-CACHE_REWARDS = TEST_AGGR
+CACHE_REWARDS = TEST_AGGR or TEST_CORRAL
 
 #: Should the Aggr policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -123,47 +126,47 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
-        },
-        {   # A very hard problem, as used in [Cappé et al, 2012]
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
+        # },
+        # {   # A very hard problem, as used in [Cappé et al, 2012]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
+        # },
     # ],
-    # "environment": [  # 2)  Exponential arms
-        {   # An example problem with 9 arms
-            "arm_type": Exponential,
-            "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
-        },
-    # ],
-    # "environment": [  # 3)  Gaussian arms
-        {   # An example problem with 3 or 9 arms
-            "arm_type": Gaussian,
-            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-            "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-        },
-    # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
-        [
-            arm_type(mean)
-            for mean in [0.1, 0.5, 0.9]
-            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-        ],
-    # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
-        [
-            arm_type(mean)
-            for mean in [0.01, 0.02, 0.09]
-            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-        ],
-    # ],
-    # "environment": [  # FIXME Gamma arms
-    #     {   # An example problem with 3 arms
-    #         "arm_type": GammaFromMean,
-    #         "params": [(shape, SCALE, 0, 10) for shape in [1, 2, 3, 4, 5]]
+    # # "environment": [  # 2)  Exponential arms
+    #     {   # An example problem with 9 arms
+    #         "arm_type": Exponential,
+    #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
-    # ],
+    # # ],
+    # # "environment": [  # 3)  Gaussian arms
+    #     {   # An example problem with 3 or 9 arms
+    #         "arm_type": Gaussian,
+    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+    #         "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+    #         # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+    #     },
+    # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
+    #     [
+    #         arm_type(mean)
+    #         for mean in [0.1, 0.5, 0.9]
+    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+    #     ],
+    # # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
+    #     [
+    #         arm_type(mean)
+    #         for mean in [0.01, 0.02, 0.09]
+    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+    #     ],
+    # # ],
+    # # "environment": [  # FIXME Gamma arms
+    # #     {   # An example problem with 3 arms
+    # #         "arm_type": GammaFromMean,
+    # #         "params": [(shape, SCALE, 0, 10) for shape in [1, 2, 3, 4, 5]]
+    # #     },
+    # # ],
     ],
 }
 
@@ -271,10 +274,10 @@ configuration.update({
 
 
 from itertools import product  # XXX If needed!
+NON_AGGR_POLICIES = configuration["policies"]
 
 # Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGR:
-    NON_AGGR_POLICIES = configuration["policies"]
     # for UPDATE_LIKE_EXP4 in [False, True]:
     for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
         CURRENT_POLICIES = configuration["policies"]
@@ -282,11 +285,27 @@ if TEST_AGGR:
         configuration["policies"] = [{
             "archtype": Aggr,
             "params": {
+                "children": NON_AGGR_POLICIES,
                 "unbiased": UNBIASED,
                 "update_all_children": UPDATE_ALL_CHILDREN,
                 "decreaseRate": "auto",
-                "children": NON_AGGR_POLICIES,
                 "update_like_exp4": UPDATE_LIKE_EXP4
+            },
+        }] + CURRENT_POLICIES
+
+
+# Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
+if TEST_CORRAL:
+    # for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+    for UPDATE_LIKE_EXP4 in [False, True]:
+        CURRENT_POLICIES = configuration["policies"]
+        # Add one CORRAL policy
+        configuration["policies"] = [{
+            "archtype": CORRAL,
+            "params": {
+                "children": NON_AGGR_POLICIES,
+                "horizon": HORIZON,
+                "unbiased": UNBIASED,
             },
         }] + CURRENT_POLICIES
 

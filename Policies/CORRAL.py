@@ -10,7 +10,7 @@ The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..
 - The trust probabilities are first uniform, :math:`P_i = 1/N`, and then at every step, after receiving the feedback for *one* arm k (the reward), the trust in each slave Ai is updated: :math:`P_i` by the reward received.
 - The detail about how to increase or decrease the probabilities are specified in the reference article.
 
-.. note:: Reference: [["Corralling a Band of Bandit Algorithms", by A. Agarwal, H. Luo, B. Neyshabur, R.E. Schapire, 01.2017]](https://arxiv.org/abs/1612.06246v2).
+.. note:: Reference: [["Corralling a Band of Bandit Algorithms", by A. Agarwal, H. Luo, B. Neyshabur, R.E. Schapire, 01.2017](https://arxiv.org/abs/1612.06246v2)].
 """
 from __future__ import print_function
 
@@ -39,7 +39,7 @@ def log_Barrier_OMB(trusts, losses, steps):
         rhs = 1.
         return (lhs - rhs) ** 2
     result = minimize_scalar(objective, bounds=(min_loss, max_loss))
-    best_loss = result[0]
+    best_loss = result.x
     return 1. / ((1. / trusts) + steps * (losses - best_loss))
 
 
@@ -48,15 +48,10 @@ def log_Barrier_OMB(trusts, losses, steps):
 # Default values for the parameters
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: ie just r_t, or unbiased estimators, r_t / p_t, if p_t is the probability of selecting that arm at time t.
+#: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
 unbiased = False
 unbiased = True  # Better
-
-#: Non parametric flag to know if the Exp4-like update uses losses or rewards.
-#: Losses are 1 - reward, in which case the rate_t is negative.
-use_losses = False
-use_losses = True  # Better
 
 #: Default for the initial value of the constant eta.
 RATE = 1.
@@ -68,8 +63,8 @@ RATE = 1.
 class CORRAL(BasePolicy):
     """ The CORRAL aggregation bandit algorithm, similar to Exp4 but not exactly equivalent."""
 
-    def __init__(self, nbArms, children,
-                 learningRate=None, horizon=None, rate=RATE,
+    def __init__(self, nbArms, children=None,
+                 horizon=None, rate=RATE,
                  unbiased=unbiased, prior='uniform',
                  lower=0., amplitude=1.,
                  ):
@@ -78,18 +73,16 @@ class CORRAL(BasePolicy):
         self.lower = lower  #: Lower values for rewards
         self.amplitude = amplitude  #: Larger values for rewards
         self.unbiased = unbiased  #: Flag, see above.
-        # XXX If we use the Exp4 update rule, it's better to be unbiased
-        # XXX If we use my update rule, it seems to be better to be "biased"
 
+        # FIXME I should make this algorithm subject to be used with DoublingTrickWrapper, by making these static attributes, changed if self.horizon is changed
         self.horizon = horizon
         self.gamma = 1 / horizon  #: Constant :math:`\gamma = 1 / T`.
         self.beta = np.exp(1 / np.log(horizon))  #: Constant :math:`\beta = \exp(1 / \log(T))`.
 
         self.nbChildren = len(children)  #: Number N of slave algorithms.
-        self.rates = np.full(self.nbChildren, learningRate)  #: Value of the learning rate (will be decreasing in time)
+        self.rates = np.full(self.nbChildren, rate)  #: Value of the learning rate (will be decreasing in time)
 
         # Internal object memory
-        self.t = -1  #: Internal time
         self.children = []  #: List of slave algorithms.
         for i, child in enumerate(children):
             if isinstance(child, dict):
@@ -118,13 +111,13 @@ class CORRAL(BasePolicy):
 
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
-        return r"CORRAL($N={}$, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, self.gamma, self.beta, list(self.rhos), list(self.rates))
+        # return r"CORRAL($N={}$, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, self.gamma, self.beta, list(self.rhos), list(self.rates))
+        return r"CORRAL($N={}$, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={:.3g}$, $\eta={:.3g}$)".format(self.nbChildren, self.gamma, self.beta, self.rhos[0], self.rates[0])
 
     # --- Start the game
 
     def startGame(self):
         """ Start the game for each child."""
-        self.t = 0
         # Start all children
         for i in range(self.nbChildren):
             self.children[i].startGame()
@@ -133,7 +126,6 @@ class CORRAL(BasePolicy):
 
     def getReward(self, arm, reward):
         """ Give reward for each child, and then update the trust probabilities."""
-        self.t += 1
 
         # 1. First, give rewards to all children
         for child in self.children:
@@ -174,11 +166,11 @@ class CORRAL(BasePolicy):
             #     self.rhos[i] = self.rhos[i]
             #     self.rates[i] = self.rates[i]
 
-        print("  The most trusted child policy is the {}th with confidence {}...".format(1 + np.argmax(self.bar_trusts), np.max(self.bar_trusts)))  # DEBUG
+        # print("  The most trusted child policy is the {}th with confidence {}...".format(1 + np.argmax(self.bar_trusts), np.max(self.bar_trusts)))  # DEBUG
         assert np.isclose(np.sum(self.bar_trusts), 1), "Error: bar_trusts don't sum to 1."  # DEBUG
-        print("self.bar_trusts =", self.bar_trusts)  # DEBUG
+        # print("self.bar_trusts =", self.bar_trusts)  # DEBUG
         assert np.isclose(np.sum(self.trusts), 1), "Error: trusts don't sum to 1."  # DEBUG
-        print("self.trusts =", self.trusts)  # DEBUG
+        # print("self.trusts =", self.trusts)  # DEBUG
 
     # --- Choice of arm methods
 
