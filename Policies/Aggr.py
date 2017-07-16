@@ -101,7 +101,7 @@ class Aggr(BasePolicy):
 
     # Print, different output according to the parameters
     def __str__(self):
-        """ Nicely print the name of the algorithms with its relevant parameters."""
+        """ Nicely print the name of the algorithm with its relevant parameters."""
         exp4 = ", Exp4" if self.update_like_exp4 else ""
         all_children = ", updateAll" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
@@ -148,7 +148,7 @@ class Aggr(BasePolicy):
     def getReward(self, arm, reward):
         """ Give reward for each child, and then update the trust probabilities."""
         self.t += 1
-        # First, give reward to all child children
+        # First, give reward to all children
         for child in self.children:
             child.getReward(arm, reward)
         # Then compute the new learning rate
