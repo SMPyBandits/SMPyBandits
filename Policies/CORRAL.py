@@ -96,7 +96,8 @@ class CORRAL(BasePolicy):
 
         self.nbChildren = nbChildren = len(children)  #: Number N of slave algorithms.
         if rate is None:
-            rate = np.sqrt(nbChildren / horizon)
+            # rate = np.sqrt(nbChildren / horizon)
+            rate = np.sqrt(nbChildren / (nbArms * horizon))
         self.rates = np.full(nbChildren, rate)  #: Value of the learning rate (will be decreasing in time)
 
         # Internal object memory
