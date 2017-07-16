@@ -33,10 +33,10 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
-# # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 20000
+# HORIZON = 30000
+# # # HORIZON = 40000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -51,7 +51,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -229,35 +229,35 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # # --- KL algorithms, here only klUCBPlus with different klucb functions
+        # --- KL algorithms, here only klUCBPlus with different klucb functions
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+                "klucb": klucbBern,  # "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+                "klucb": klucbExp,  # "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+                "klucb": klucbGauss,  # "horizon": HORIZON,
+            }
+        },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbBern,  # "horizon": HORIZON,
+        #         "klucb": klucbGamma,  # "horizon": HORIZON,
         #     }
         # },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbExp,  # "horizon": HORIZON,
-        #     }
-        # },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGauss,  # "horizon": HORIZON,
-        #     }
-        # },
-        # # {
-        # #     "archtype": klUCBPlus,
-        # #     "params": {
-        # #         "lower": LOWER, "amplitude": AMPLITUDE,
-        # #         "klucb": klucbGamma,  # "horizon": HORIZON,
-        # #     }
-        # # },
         # # --- BayesUCB algorithm
         # {
         #     "archtype": BayesUCB,
@@ -266,20 +266,20 @@ configuration.update({
         #     }
         # },
         # --- Finite-Horizon Gittins index
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 2,
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 1,
-        #     }
-        # },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 2,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.1 * HORIZON,
+                "alpha": 1,
+            }
+        },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
@@ -315,15 +315,16 @@ if TEST_AGGR:
 # Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
 if TEST_CORRAL:
     CURRENT_POLICIES = configuration["policies"]
-    # Add one CORRAL policy
-    configuration["policies"] = [{
-        "archtype": CORRAL,
-        "params": {
-            "children": NON_AGGR_POLICIES,
-            "horizon": HORIZON,
-            # "unbiased": UNBIASED,
-        },
-    }] + CURRENT_POLICIES
+    for UNBIASED in [False, True]:
+        # Add one CORRAL policy
+        configuration["policies"] = [{
+            "archtype": CORRAL,
+            "params": {
+                "children": NON_AGGR_POLICIES,
+                "horizon": HORIZON,
+                "unbiased": UNBIASED,
+            },
+        }] + CURRENT_POLICIES
 
 
 print("Loaded experiments configuration from 'configuration.py' :")

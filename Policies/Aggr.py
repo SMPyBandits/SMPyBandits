@@ -234,7 +234,7 @@ class Aggr(BasePolicy):
                 self.choices[i] = child.choiceMultiple(nb)
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
 
-    def choiceIMP(self, nb=1):
+    def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Make each child vote, multiple times (with IMP scheme), then sample the decision by importance sampling on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()

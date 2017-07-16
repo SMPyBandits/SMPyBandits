@@ -70,8 +70,8 @@ def log_Barrier_OMB(trusts, losses, steps):
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
 #: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
-unbiased = False
-unbiased = True  # Better
+UNBIASED = False
+UNBIASED = True  # Better
 
 
 # --- CORRAL algorithm
@@ -81,7 +81,7 @@ class CORRAL(BasePolicy):
 
     def __init__(self, nbArms, children=None,
                  horizon=None, rate=None,
-                 unbiased=unbiased, prior='uniform',
+                 unbiased=UNBIASED, prior='uniform',
                  lower=0., amplitude=1.,
                  ):
         # Attributes
@@ -153,18 +153,24 @@ class CORRAL(BasePolicy):
 
     def getReward(self, arm, reward):
         """ Give reward for each child, and then update the trust probabilities."""
-        reward = renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude, trust=self.bar_trusts[self.last_choice], unbiased=self.unbiased)
+        # FIXME FIXME
+        # The CORRAL algorithm is written with LOSSES and my algorithms use REWARDS
+        # I must be careful when converting from one and another...
+        # FIXME FIXME
+        reward = float(reward)  # ??
+        new_reward = renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude, trust=self.bar_trusts[self.last_choice], unbiased=self.unbiased)
+        print("  A CORRAL player received a reward = {:.3g} on arm {} and trust = {:.3g} on that choice = {}, giving {:.3g} ...".format(reward, arm, self.bar_trusts[self.last_choice], self.last_choice, new_reward))  # DEBUG
         # 1. First, give rewards to all children
         for i, child in enumerate(self.children):
             if i == self.last_choice:
                 # Give reward, biased or not
-                child.getReward(arm, renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude))
+                child.getReward(arm, unnormalize_reward(new_reward, lower=self.lower, amplitude=self.amplitude))
             else:  # give 0 reward to all other children
                 child.getReward(arm, 0)
 
         # 2. Then reinitialize this array of losses
         self.losses[:] = 0
-        self.losses[self.last_choice]  = 1 - reward
+        self.losses[self.last_choice]  = 1 - new_reward
 
         # 3. Compute the new trust proba, with a log-barrier step
         trusts = log_Barrier_OMB(self.trusts, self.losses, self.rates)
@@ -222,7 +228,7 @@ class CORRAL(BasePolicy):
         # 2. then listen to him
         return self.children[self.last_choice].choiceMultiple(nb=nb)
 
-    def choiceIMP(self, nb=1):
+    def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Trust one of the slave and listen to his choiceIMP."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
