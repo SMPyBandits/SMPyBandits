@@ -32,9 +32,9 @@ HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-# HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 10000
+HORIZON = 20000
+HORIZON = 30000
 # # HORIZON = 40000
 # HORIZON = 100000
 
@@ -51,7 +51,7 @@ REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -218,50 +218,64 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
-        # --- Thompson algorithm
-        {
-            "archtype": Thompson,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # --- KL algorithms, here only klUCBPlus with different klucb functions
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbBern,  # "horizon": HORIZON,
-            }
-        },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbExp,  # "horizon": HORIZON,
-            }
-        },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss,  # "horizon": HORIZON,
-            }
-        },
+        # # --- Thompson algorithm
+        # {
+        #     "archtype": Thompson,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- KL algorithms, here only klUCBPlus with different klucb functions
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGamma,  # "horizon": HORIZON,
+        #         "klucb": klucbBern,  # "horizon": HORIZON,
         #     }
         # },
-        # --- BayesUCB algorithm
-        {
-            "archtype": BayesUCB,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbExp,  # "horizon": HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbGauss,  # "horizon": HORIZON,
+        #     }
+        # },
+        # # {
+        # #     "archtype": klUCBPlus,
+        # #     "params": {
+        # #         "lower": LOWER, "amplitude": AMPLITUDE,
+        # #         "klucb": klucbGamma,  # "horizon": HORIZON,
+        # #     }
+        # # },
+        # # --- BayesUCB algorithm
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- Finite-Horizon Gittins index
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 2,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 1,
+        #     }
+        # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
@@ -296,18 +310,16 @@ if TEST_AGGR:
 
 # Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
 if TEST_CORRAL:
-    # for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-    for UPDATE_LIKE_EXP4 in [False, True]:
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one CORRAL policy
-        configuration["policies"] = [{
-            "archtype": CORRAL,
-            "params": {
-                "children": NON_AGGR_POLICIES,
-                "horizon": HORIZON,
-                "unbiased": UNBIASED,
-            },
-        }] + CURRENT_POLICIES
+    CURRENT_POLICIES = configuration["policies"]
+    # Add one CORRAL policy
+    configuration["policies"] = [{
+        "archtype": CORRAL,
+        "params": {
+            "children": NON_AGGR_POLICIES,
+            "horizon": HORIZON,
+            # "unbiased": UNBIASED,
+        },
+    }] + CURRENT_POLICIES
 
 
 print("Loaded experiments configuration from 'configuration.py' :")
