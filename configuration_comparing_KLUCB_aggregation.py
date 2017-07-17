@@ -30,11 +30,11 @@ from Policies import *
 #: Warning Should be >= 10000 to be interesting "asymptotically".
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
+HORIZON = 20000
+HORIZON = 30000
 # # # HORIZON = 40000
 # HORIZON = 100000
 
@@ -314,7 +314,8 @@ if TEST_AGGR:
 
 # Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
 if TEST_CORRAL:
-    for UNBIASED in [False, True]:
+    # for UNBIASED in [False, True]:
+    for (UNBIASED, BROADCAST_ALL) in product([False, True], repeat=2):  # XXX If needed!
         CURRENT_POLICIES = configuration["policies"]
         # Add one CORRAL policy
         configuration["policies"] = [{
@@ -323,6 +324,7 @@ if TEST_CORRAL:
                 "children": NON_AGGR_POLICIES,
                 "horizon": HORIZON,
                 "unbiased": UNBIASED,
+                "broadcast_all": BROADCAST_ALL,
             },
         }] + CURRENT_POLICIES
 

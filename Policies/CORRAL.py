@@ -84,6 +84,11 @@ UNBIASED = False
 UNBIASED = True  # Better
 
 
+#: Whether to give back a reward to only one slave algorithm (default, `False`) or to all slaves who voted for the same arm
+BROADCAST_ALL = True
+BROADCAST_ALL = False
+
+
 # --- CORRAL algorithm
 
 class CORRAL(BasePolicy):
@@ -91,7 +96,7 @@ class CORRAL(BasePolicy):
 
     def __init__(self, nbArms, children=None,
                  horizon=None, rate=None,
-                 unbiased=UNBIASED, prior='uniform',
+                 unbiased=UNBIASED, broadcast_all=BROADCAST_ALL, prior='uniform',
                  lower=0., amplitude=1.
                  ):
         # Attributes
@@ -99,6 +104,7 @@ class CORRAL(BasePolicy):
         self.lower = lower  #: Lower values for rewards.
         self.amplitude = amplitude  #: Larger values for rewards.
         self.unbiased = unbiased  #: Flag, see above.
+        self.broadcast_all = broadcast_all  #: Flag, see above.
 
         # FIXED I should make this algorithm subject to be used with DoublingTrickWrapper, by changing these if self.horizon is changed
         self.gamma = 1. / horizon  #: Constant :math:`\gamma = 1 / T`.
@@ -137,6 +143,9 @@ class CORRAL(BasePolicy):
             self.trusts = prior
         self.bar_trusts = np.copy(self.trusts)  #: Initial bar trusts in the slaves. Default to uniform, but a prior can also be given.
 
+        # Internal vectorial memory
+        self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
+
         # Internal memory, additionally to what is found not in Aggr
         self.last_choice = None  #: Remember the index of the last child trusted for a decision.
         self.losses = np.zeros(nbChildren)  #: For the log-barrier OMD step, a vector of losses has to be given. Faster to keep it as an attribute instead of reallocating it every time.
@@ -144,10 +153,12 @@ class CORRAL(BasePolicy):
 
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
+        is_unbiased = "unbiased" if self.unbiased else "biased"
+        is_broadcast_all = "broadcast to all" if self.broadcast_all else "broadcast to one"
         if len(set(self.rhos)) > 1 or len(set(self.rates)) > 1:
-            return r"CORRAL($N={}$, {}, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, "unbiased" if self.unbiased else "biased", self.gamma, self.beta, list(self.rhos), list(self.rates))
+            return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, list(self.rhos), list(self.rates))
         else:
-            return r"CORRAL($N={}$, {}, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={:.3g}$, $\eta={:.3g}$)".format(self.nbChildren, "unbiased" if self.unbiased else "biased", self.gamma, self.beta, self.rhos[0], self.rates[0])
+            return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={:.2g}$, $\eta={:.2g}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, self.rhos[0], self.rates[0])
 
     def __setattr__(self, name, value):
         r"""Trick method, to update the :math:`\gamma` and :math:`\beta` parameters of the CORRAL algorithm if the horizon T changes.
@@ -184,24 +195,31 @@ class CORRAL(BasePolicy):
 
         # print("  A CORRAL player {} received a reward = {:.3g} on arm {} and trust = {:.3g} on that choice = {}, giving {:.3g} ...".format(self, reward, arm, self.bar_trusts[self.last_choice], self.last_choice, new_reward))  # DEBUG
         # 1. First, give rewards to all children
-        # for i, child in enumerate(self.children):
-        #     if i == self.last_choice:
-        #         # Give reward, biased or not
-        #         # child.getReward(arm, unnormalize_reward(new_reward, lower=self.lower, amplitude=self.amplitude))
-        #         child.getReward(arm, reward)
-        #     else:  # give 0 reward to all other children
-        #         child.getReward(arm, 0)  # <-- this is a bad idea!
-        # XXX this makes WAY more sense!
-        self.children[self.last_choice].getReward(arm, reward)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                # # if i == self.last_choice:
+                # if self.choices[i] == arm:
+                #     # Give reward, biased or not
+                #     # child.getReward(arm, unnormalize_reward(new_reward, lower=self.lower, amplitude=self.amplitude))
+                child.getReward(arm, reward)
+                #     child.getReward(arm, reward)
+                # else:  # give 0 reward to all other children
+                #     child.getReward(arm, 0)  # <-- this is a bad idea!
+        else:
+            # XXX this makes WAY more sense!
+            self.children[self.last_choice].getReward(arm, reward)
 
         # 2. Then reinitialize this array of losses
         self.losses[:] = 0
         assert 0 <= new_reward <= 1, "Error: the normalized reward {:.3g} was NOT in [0, 1] ...".format(new_reward)  # DEBUG
-        if self.unbiased:
-            self.losses[self.last_choice] = (1 - new_reward) / self.bar_trusts[self.last_choice]
+        if self.broadcast_all:
+            self.losses[self.choices == arm] = (1 - new_reward)
+            if self.unbiased:
+                self.losses[self.choices == arm] /= self.bar_trusts[self.choices == arm]
         else:
             self.losses[self.last_choice] = (1 - new_reward)
-
+            if self.unbiased:
+                self.losses[self.last_choice] /= self.bar_trusts[self.last_choice]
 
         # 3. Compute the new trust proba, with a log-barrier Online-Mirror-Descent step
         trusts = log_Barrier_OMB(self.trusts, self.losses, self.rates)
@@ -235,36 +253,61 @@ class CORRAL(BasePolicy):
         """ Trust one of the slave and listen to his `choice`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choice()
+        else:
         # 2. then listen to him
-        return self.children[self.last_choice].choice()
+            self.choices[self.last_choice] = self.children[self.last_choice].choice()
+        return self.choices[self.last_choice]
 
     def choiceWithRank(self, rank=1):
         """ Trust one of the slave and listen to his `choiceWithRank`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choiceWithRank(rank=rank)
+        else:
         # 2. then listen to him
-        return self.children[self.last_choice].choiceWithRank(rank=rank)
+            self.choices[self.last_choice] = self.children[self.last_choice].choiceWithRank(rank=rank)
+        return self.choices[self.last_choice]
 
     def choiceFromSubSet(self, availableArms='all'):
         """ Trust one of the slave and listen to his `choiceFromSubSet`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choiceFromSubSet(availableArms=availableArms)
+        else:
         # 2. then listen to him
-        return self.children[self.last_choice].choiceFromSubSet(availableArms=availableArms)
+            self.choices[self.last_choice] = self.children[self.last_choice].choiceFromSubSet(availableArms=availableArms)
+        return self.choices[self.last_choice]
 
     def choiceMultiple(self, nb=1):
         """ Trust one of the slave and listen to his `choiceMultiple`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choiceMultiple(nb=nb)
+        else:
         # 2. then listen to him
-        return self.children[self.last_choice].choiceMultiple(nb=nb)
+            self.choices[self.last_choice] = self.children[self.last_choice].choiceMultiple(nb=nb)
+        return self.choices[self.last_choice]
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Trust one of the slave and listen to his `choiceIMP`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
+        if self.broadcast_all:
+            for i, child in enumerate(self.children):
+                self.choices[i] = child.choiceIMP(nb=nb)
+        else:
         # 2. then listen to him
-        return self.children[self.last_choice].choiceIMP(nb=nb)
+            self.choices[self.last_choice] = self.children[self.last_choice].choiceIMP(nb=nb)
+        return self.choices[self.last_choice]
 
     def estimatedOrder(self):
         r""" Trust one of the slave and listen to his `estimatedOrder`.
