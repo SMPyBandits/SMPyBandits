@@ -30,9 +30,9 @@ from Policies import *
 #: Warning Should be >= 10000 to be interesting "asymptotically".
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # # # HORIZON = 40000
@@ -49,7 +49,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -222,13 +222,13 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
-        # # --- Thompson algorithm
-        # {
-        #     "archtype": Thompson,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
+        # --- Thompson algorithm
+        {
+            "archtype": Thompson,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- KL algorithms, here only klUCBPlus with different klucb functions
         {
             "archtype": klUCBPlus,
@@ -237,20 +237,20 @@ configuration.update({
                 "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbExp,  # "horizon": HORIZON,
-            }
-        },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss,  # "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbExp,  # "horizon": HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbGauss,  # "horizon": HORIZON,
+        #     }
+        # },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
@@ -258,13 +258,13 @@ configuration.update({
         #         "klucb": klucbGamma,  # "horizon": HORIZON,
         #     }
         # },
-        # # --- BayesUCB algorithm
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
+        # --- BayesUCB algorithm
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- Finite-Horizon Gittins index
         {
             "archtype": ApproximatedFHGittins,
@@ -314,8 +314,8 @@ if TEST_AGGR:
 
 # Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
 if TEST_CORRAL:
-    CURRENT_POLICIES = configuration["policies"]
     for UNBIASED in [False, True]:
+        CURRENT_POLICIES = configuration["policies"]
         # Add one CORRAL policy
         configuration["policies"] = [{
             "archtype": CORRAL,

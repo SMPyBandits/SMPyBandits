@@ -23,9 +23,7 @@ import numpy as np
 from .UCB import UCB as DefaultPolicy
 from .UCB import UCB
 from .UCBalpha import UCBalpha, ALPHA
-# from .UCBalpha import UCBalpha as DefaultPolicy
 from .klUCB import klUCB, klucbBern, c
-# from .klUCB import klUCB as DefaultPolicy
 
 
 #: Size of the sliding window.

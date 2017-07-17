@@ -25,28 +25,38 @@ from .BasePolicy import BasePolicy
 
 # --- Renormalize function
 
-def renormalize_reward(reward, lower=0., amplitude=1., trust=1., unbiased=True):
-    r"""Renormalize the reward to [0, 1], maybe devide by the trust if unbiased is true."""
+def renormalize_reward(reward, lower=0., amplitude=1., trust=1., unbiased=True, mintrust=None):
+    r"""Renormalize the reward to `[0, 1]`:
+
+    - divide by (`trust/mintrust`) if `unbiased` is `True`.
+    - simply project to `[0, 1]` if `unbiased` is `False`,
+
+    .. warning:: If `mintrust` is unknown, the unbiased estimator CANNOT be projected back to a bounded interval.
+    """
     if unbiased:
-        return (reward - lower) / (amplitude * trust)
+        if mintrust is not None:
+            return (reward - lower) / (amplitude * (trust / mintrust))
+        else:
+            return (reward - lower) / (amplitude * trust)
     else:
         return (reward - lower) / amplitude
 
 
 def unnormalize_reward(reward, lower=0., amplitude=1.):
-    r"""Project back reward to [lower, lower + amplitude]."""
+    r"""Project back reward to `[lower, lower + amplitude]`."""
     return lower + (reward * amplitude)
 
 
 # --- Log-Barrier-OMD
 
 def log_Barrier_OMB(trusts, losses, steps):
-    r""" A step of the mirror barrier descent, updating the trusts:
+    r""" A step of the *log-barrier Online Mirror Descent*, updating the trusts:
 
     - Find :math:`\lambda \in [\min_i l_{t,i}, \max_i l_{t,i}]` such that :math:`\sum_i \frac{1}{1/p_{t,i} + \eta_{t,i}(l_{t,i} - \lambda)} = 1`.
     - Return :math:`\mathbf{p}_{t+1,i}` such that :math:`\frac{1}{p_{t+1,i}} = \frac{1}{p_{t,i}} + \eta_{t,i}(l_{t,i} - \lambda)`.
 
     - Note: uses `scipy.optimize.minimize_scalar` for the optimization.
+    - Reference: [Learning in games: Robustness of fast convergence, by D.Foster, Z.Li, T.Lykouris, K.Sridharan, and E.Tardos, NIPS 2016].
     """
     min_loss, max_loss = np.min(losses), np.max(losses)
     def objective(a_loss):
@@ -55,7 +65,7 @@ def log_Barrier_OMB(trusts, losses, steps):
         rhs = 1.
         # return np.abs(lhs - rhs)
         return (lhs - rhs) ** 2
-    result = minimize_scalar(objective, bounds=(min_loss, max_loss))
+    result = minimize_scalar(objective, bounds=(min_loss, max_loss), method='bounded')
     best_loss = result.x
     assert min_loss <= best_loss <= max_loss, "Error: the loss 'lambda={:.3g}' was supposed to be found in [min_loss, max_loss] = [{:.3g}, {:.3g}]...".format(best_loss, min_loss, max_loss)  # DEBUG
     new_trusts = 1. / ((1. / trusts) + steps * (losses - best_loss))
@@ -82,23 +92,27 @@ class CORRAL(BasePolicy):
     def __init__(self, nbArms, children=None,
                  horizon=None, rate=None,
                  unbiased=UNBIASED, prior='uniform',
-                 lower=0., amplitude=1.,
+                 lower=0., amplitude=1.
                  ):
         # Attributes
-        self.nbArms = nbArms  #: Number of arms
-        self.lower = lower  #: Lower values for rewards
-        self.amplitude = amplitude  #: Larger values for rewards
+        self.nbArms = nbArms  #: Number of arms.
+        self.lower = lower  #: Lower values for rewards.
+        self.amplitude = amplitude  #: Larger values for rewards.
         self.unbiased = unbiased  #: Flag, see above.
 
-        # FIXME I should make this algorithm subject to be used with DoublingTrickWrapper, by making these static attributes, changed if self.horizon is changed
+        # FIXED I should make this algorithm subject to be used with DoublingTrickWrapper, by changing these if self.horizon is changed
         self.gamma = 1. / horizon  #: Constant :math:`\gamma = 1 / T`.
+        assert self.gamma < 1, "Error: parameter 'gamma' for a CORRAL player was expected to be < 1, but = {:.3g}...".format(self.gamma)  # DEBUG
         self.beta = np.exp(1. / np.log(horizon))  #: Constant :math:`\beta = \exp(1 / \log(T))`.
+        assert self.beta > 1, "Error: parameter 'beta' for a CORRAL player was expected to be > 1, but = {:.3g}...".format(self.beta)  # DEBUG
 
         self.nbChildren = nbChildren = len(children)  #: Number N of slave algorithms.
         if rate is None:
-            # rate = np.sqrt(nbChildren / horizon)
-            rate = np.sqrt(nbChildren / (nbArms * horizon))
-        self.rates = np.full(nbChildren, rate)  #: Value of the learning rate (will be decreasing in time)
+            # Use the default horizon-dependent rate value
+            # rate = np.sqrt(nbChildren / (nbArms * horizon))
+            rate = np.sqrt(nbChildren / horizon)
+        assert rate > 0, "Error: parameter 'rate' for a CORRAL player was expected to be > 0, but = {:.3g}...".format(rate)  # DEBUG
+        self.rates = np.full(nbChildren, rate)  #: Value of the learning rate (will be **increasing** in time).
 
         # Internal object memory
         self.children = []  #: List of slave algorithms.
@@ -116,30 +130,39 @@ class CORRAL(BasePolicy):
                 self.children.append(child)
 
         # Initialize the arrays
+        # Assume uniform prior if not given or if = 'uniform'
+        self.trusts = np.full(nbChildren, 1. / nbChildren)  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         if prior is not None and prior != 'uniform':
             assert len(prior) == nbChildren, "Error: the 'prior' argument given to CORRAL has to be an array of the good size ({}).".format(nbChildren)  # DEBUG
-            self.trusts = prior  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
-        else:   # Assume uniform prior if not given or if = 'uniform'
-            self.trusts = np.ones(nbChildren) / nbChildren
-        self.bar_trusts = np.copy(self.trusts)
-        # Internal memory not in Aggr
-        self.last_choice = None
-        self.losses = np.zeros(nbChildren)
-        self.rhos = np.full(nbChildren, 2 * nbChildren)
+            self.trusts = prior
+        self.bar_trusts = np.copy(self.trusts)  #: Initial bar trusts in the slaves. Default to uniform, but a prior can also be given.
+
+        # Internal memory, additionally to what is found not in Aggr
+        self.last_choice = None  #: Remember the index of the last child trusted for a decision.
+        self.losses = np.zeros(nbChildren)  #: For the log-barrier OMD step, a vector of losses has to be given. Faster to keep it as an attribute instead of reallocating it every time.
+        self.rhos = self.bar_trusts / 2  #: I use the inverses of the :math:`\rho_{t,i}` from the Algorithm in the reference article. Simpler to understand, less numerical errors.
 
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
-        # return r"CORRAL($N={}$, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, self.gamma, self.beta, list(self.rhos), list(self.rates))
-        return r"CORRAL($N={}$, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={:.3g}$, $\eta={:.3g}$)".format(self.nbChildren, self.gamma, self.beta, self.rhos[0], self.rates[0])
+        if len(set(self.rhos)) > 1 or len(set(self.rates)) > 1:
+            return r"CORRAL($N={}$, {}, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, "unbiased" if self.unbiased else "biased", self.gamma, self.beta, list(self.rhos), list(self.rates))
+        else:
+            return r"CORRAL($N={}$, {}, $\gamma={:.3g}$, $\beta={:.3g}$, $\rho={:.3g}$, $\eta={:.3g}$)".format(self.nbChildren, "unbiased" if self.unbiased else "biased", self.gamma, self.beta, self.rhos[0], self.rates[0])
 
     def __setattr__(self, name, value):
-        if name == 'horizon' or name == '_horizon':
+        r"""Trick method, to update the :math:`\gamma` and :math:`\beta` parameters of the CORRAL algorithm if the horizon T changes.
+
+        - This is here just to eventually allow :class:`Policies.DoublingTrickWrapper` to be used with a CORRAL player.
+
+        .. warning:: Not tested yet!
+        """
+        if name in ['horizon', '_horizon']:
             horizon = float(value)
             self.gamma = 1. / horizon  #: Constant :math:`\gamma = 1 / T`.
             self.beta = np.exp(1. / np.log(horizon))  #: Constant :math:`\beta = \exp(1 / \log(T))`.
         else:
-            # self.__dict__[name] = value
-            object.__setattr__(self, name, value)
+            # self.__dict__[name] = value  # <-- old style class
+            object.__setattr__(self, name, value)  # <-- new style class
 
     # --- Start the game
 
@@ -153,90 +176,98 @@ class CORRAL(BasePolicy):
 
     def getReward(self, arm, reward):
         """ Give reward for each child, and then update the trust probabilities."""
-        # FIXME FIXME
-        # The CORRAL algorithm is written with LOSSES and my algorithms use REWARDS
-        # I must be careful when converting from one and another...
-        # FIXME FIXME
-        reward = float(reward)  # ??
-        new_reward = renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude, trust=self.bar_trusts[self.last_choice], unbiased=self.unbiased)
-        print("  A CORRAL player received a reward = {:.3g} on arm {} and trust = {:.3g} on that choice = {}, giving {:.3g} ...".format(reward, arm, self.bar_trusts[self.last_choice], self.last_choice, new_reward))  # DEBUG
+        reward = float(reward)
+
+        new_reward = renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude, unbiased=False)
+        # new_reward = renormalize_reward(reward, lower=self.lower, amplitude=self.amplitude, trust=self.bar_trusts[self.last_choice], unbiased=self.unbiased)
+        # , mintrust=(self.gamma / self.nbChildren)  # XXX
+
+        # print("  A CORRAL player {} received a reward = {:.3g} on arm {} and trust = {:.3g} on that choice = {}, giving {:.3g} ...".format(self, reward, arm, self.bar_trusts[self.last_choice], self.last_choice, new_reward))  # DEBUG
         # 1. First, give rewards to all children
-        for i, child in enumerate(self.children):
-            if i == self.last_choice:
-                # Give reward, biased or not
-                child.getReward(arm, unnormalize_reward(new_reward, lower=self.lower, amplitude=self.amplitude))
-            else:  # give 0 reward to all other children
-                child.getReward(arm, 0)
+        # for i, child in enumerate(self.children):
+        #     if i == self.last_choice:
+        #         # Give reward, biased or not
+        #         # child.getReward(arm, unnormalize_reward(new_reward, lower=self.lower, amplitude=self.amplitude))
+        #         child.getReward(arm, reward)
+        #     else:  # give 0 reward to all other children
+        #         child.getReward(arm, 0)  # <-- this is a bad idea!
+        # XXX this makes WAY more sense!
+        self.children[self.last_choice].getReward(arm, reward)
 
         # 2. Then reinitialize this array of losses
         self.losses[:] = 0
-        self.losses[self.last_choice]  = 1 - new_reward
+        assert 0 <= new_reward <= 1, "Error: the normalized reward {:.3g} was NOT in [0, 1] ...".format(new_reward)  # DEBUG
+        if self.unbiased:
+            self.losses[self.last_choice] = (1 - new_reward) / self.bar_trusts[self.last_choice]
+        else:
+            self.losses[self.last_choice] = (1 - new_reward)
 
-        # 3. Compute the new trust proba, with a log-barrier step
+
+        # 3. Compute the new trust proba, with a log-barrier Online-Mirror-Descent step
         trusts = log_Barrier_OMB(self.trusts, self.losses, self.rates)
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
-        self.trusts = trusts / np.sum(trusts)
+        # self.trusts = trusts / np.sum(trusts)  # XXX maybe this isn't necessary...
 
         # add uniform mixing of proportion gamma
         bar_trusts = (1 - self.gamma) * self.trusts + (self.gamma / self.nbChildren)
-        self.bar_trusts = bar_trusts / np.sum(bar_trusts)
+        # self.bar_trusts = bar_trusts / np.sum(bar_trusts)  # XXX maybe this isn't necessary...
 
         # 5. Compare trusts with the self.rhos values to compute the new learning rates and rhos
         for i in range(self.nbChildren):
-            if (1. / self.bar_trusts[i]) > self.rhos[i]:
-                self.rhos[i] = 2 / self.bar_trusts[i]
-                # increase the rate for this guy
-                self.rates[i] *= self.beta
+            if self.bar_trusts[i] < self.rhos[i]:
+                print("  For child #i = {}, the sampling trust was = {:.3g}, smaller than the threshold rho = {:.3g} so the learning rate is increased from {:.3g} to {:.3g}, and the threshold is now {:.3g} ...".format(i, self.bar_trusts[i], self.rhos[i], self.rates[i], self.rates[i] * self.beta, self.bar_trusts[i] / 2.))  # DEBUG
+                self.rhos[i] = self.bar_trusts[i] / 2.
+                self.rates[i] *= self.beta  # increase the rate for this guy
             # else:  # nothing to do
             #     self.rhos[i] = self.rhos[i]
             #     self.rates[i] = self.rates[i]
 
         # print("  The most trusted child policy is the {}th with confidence {}...".format(1 + np.argmax(self.bar_trusts), np.max(self.bar_trusts)))  # DEBUG
-        assert np.isclose(np.sum(self.bar_trusts), 1), "Error: bar_trusts don't sum to 1."  # DEBUG
+        assert np.isclose(np.sum(self.bar_trusts), 1), "Error: 'bar_trusts' do not sum to 1 but to {:.3g} instead...".format(np.sum(self.bar_trusts))  # DEBUG
         # print("self.bar_trusts =", self.bar_trusts)  # DEBUG
-        assert np.isclose(np.sum(self.trusts), 1), "Error: trusts don't sum to 1."  # DEBUG
+        assert np.isclose(np.sum(self.trusts), 1), "Error: 'trusts' do not sum to 1 but to {:.3g} instead...".format(np.sum(self.trusts))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
     # --- Choice of arm methods
 
     def choice(self):
-        """ Trust one of the slave and listen to his choice."""
+        """ Trust one of the slave and listen to his `choice`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
         # 2. then listen to him
         return self.children[self.last_choice].choice()
 
     def choiceWithRank(self, rank=1):
-        """ Trust one of the slave and listen to his choiceWithRank."""
+        """ Trust one of the slave and listen to his `choiceWithRank`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
         # 2. then listen to him
         return self.children[self.last_choice].choiceWithRank(rank=rank)
 
     def choiceFromSubSet(self, availableArms='all'):
-        """ Trust one of the slave and listen to his choiceFromSubSet."""
+        """ Trust one of the slave and listen to his `choiceFromSubSet`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
         # 2. then listen to him
         return self.children[self.last_choice].choiceFromSubSet(availableArms=availableArms)
 
     def choiceMultiple(self, nb=1):
-        """ Trust one of the slave and listen to his choiceMultiple."""
+        """ Trust one of the slave and listen to his `choiceMultiple`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
         # 2. then listen to him
         return self.children[self.last_choice].choiceMultiple(nb=nb)
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        """ Trust one of the slave and listen to his choiceIMP."""
+        """ Trust one of the slave and listen to his `choiceIMP`."""
         # 1. first decide who to listen to
         self.last_choice = rn.choice(self.nbChildren, p=self.bar_trusts)
         # 2. then listen to him
         return self.children[self.last_choice].choiceIMP(nb=nb)
 
     def estimatedOrder(self):
-        r""" Trust one of the slave and listen to his estimated order.
+        r""" Trust one of the slave and listen to his `estimatedOrder`.
 
         - Return the estimate order of the arms, as a permutation on :math:`[0,...,K-1]` that would order the arms by increasing means.
         """

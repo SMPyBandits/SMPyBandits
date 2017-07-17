@@ -89,13 +89,13 @@ class Aggr(BasePolicy):
                 print("  Using this already created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child)
         # Initialize the arrays
+        # Assume uniform prior if not given or if = 'uniform'
+        self.trusts = np.full(self.nbChildren, 1. / self.nbChildren)  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         if prior is not None and prior != 'uniform':
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
-            self.trusts = prior  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
-        else:   # Assume uniform prior if not given or if = 'uniform'
-            self.trusts = np.ones(self.nbChildren) / self.nbChildren
+            self.trusts = prior
         # Internal vectorial memory
-        self.choices = (-10000) * np.ones(self.nbChildren, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
+        self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
         if self.update_like_exp4:
             self.children_cumulated_losses = np.zeros(self.nbChildren)  #: Keep track of the cumulated loss (empirical mean)
 

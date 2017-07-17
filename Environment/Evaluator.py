@@ -335,7 +335,7 @@ class Evaluator(object):
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
-            lw = 3 if str(policy)[:4] == 'Aggr' else 2
+            lw = 3 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy)) else 2
             if semilogx:
                 # FIXED for semilogx plots, truncate to only show t >= 100
                 plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
@@ -405,7 +405,7 @@ class Evaluator(object):
         X = self.times[2:]
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
-            lw = 3 if str(policy)[:4] == 'Aggr' else 2
+            lw = 3 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy)) else 2
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))

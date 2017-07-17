@@ -15,7 +15,6 @@ __version__ = "0.6"
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-
 from .IndexPolicy import IndexPolicy
 
 
@@ -38,9 +37,9 @@ class SWUCB(IndexPolicy):
         super(SWUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SWUCB has to be >= 1, but was {}.".format(tau)  # DEBUG
-        self.tau = int(tau)  #: Size of the sliding window.
+        self.tau = int(tau)  #: Size :math:`\tau` of the sliding window.
         assert alpha > 0, "Error: parameter 'alpha' for class SWUCB has to be > 0, but was {}.".format(alpha)  # DEBUG
-        self.alpha = alpha  #: Constant in the square-root in the computation for the index.
+        self.alpha = alpha  #: Constant :math:`\alpha` in the square-root in the computation for the index.
         # Internal memory
         self.last_rewards = np.zeros(tau)  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
         self.last_choices = np.full(tau, -1)  #: Keep in memory the times where each arm was last seen.
@@ -75,14 +74,6 @@ class SWUCB(IndexPolicy):
             return float('+inf')
         else:
             return (np.sum(self.last_rewards[self.last_choices == arm]) / last_pulls_of_this_arm) + np.sqrt((self.alpha * np.log(min(self.t, self.tau))) / last_pulls_of_this_arm)
-
-    # FIXME finish this function!
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     last_pulls = np.bincount(self.last_choices + 1, minlength=1 + self.nbArms)[1:]
-    #     indexes = (np.sum(self.last_rewards, axis=1) / last_pulls) + np.sqrt((self.alpha * np.log(min(self.t, self.tau))) / last_pulls)
-    #     indexes[last_pulls < 1] = float('+inf')
-    #     self.index = indexes
 
 
 # --- Horizon dependent version

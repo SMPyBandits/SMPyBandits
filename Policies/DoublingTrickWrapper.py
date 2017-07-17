@@ -2,30 +2,39 @@
 r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick":
 
 - starts to assume that :math:`T=T_1=1000`, and run the policy :math:`P(T_1)`, from :math:`t=1` to :math:`t=T_1`,
-- if :math:`t > T_1`, then the "doubling trick" is performed, by either reinitializing or just changing the parameter `horizon` of the policy P, with :math:`T_2 = 10 \times T_1`,
+- if :math:`t > T_1`, then the "doubling trick" is performed, by either reinitializing or just changing the parameter `horizon` of the policy P, for instance with :math:`T_2 = 10 \times T_1`,
 - and keep doing this until :math:`t = T`.
 
 .. note::
 
    This is implemented in a very generic way, with simply a function `next_horizon(horizon)` that gives the next horizon to try when crossing the current guess.
-   It can be a simple linear function (`next_horizon(horizon) = horizon + 100`), a geometric growth to have the "real" doubling trick (`next_horizon(horizon) = horizon * 10`), or even a faster growing function (`next_horizon(horizon) = horizon ** 2`).
-
-.. seealso::
-
-   Reference? Not yet, this is my own idea and it is *active* research.
-   I will try to experiment on it, prove some things, and if it turns out to be an interesting idea, we will publish something about it.
-   Stay posted!
-
-.. warning::
-
-   This is FULLY EXPERIMENTAL! Not tested yet!
+   It can be a simple linear function (`next_horizon(horizon) = horizon + 100`), a geometric growth to have the "real" doubling trick (`next_horizon(horizon) = horizon * 10`), or even functions growing exponentially fast (`next_horizon(horizon) = horizon ** 1.1`, `next_horizon(horizon) = horizon ** 1.5`, `next_horizon(horizon) = horizon ** 2`).
 
 .. note::
 
    My guess is that this "doubling trick" wrapping policy can only be efficient if:
 
-   - the underlying policy `P` is a very efficient hoziron-dependent algorithm, e.g., the :class:`Policies.DoublingTrickWrapper`,
+   - the underlying policy `P` is a very efficient horizon-dependent algorithm, e.g., the :class:`Policies.DoublingTrickWrapper`,
    - the growth function `next_horizon` is growing faster than any geometric rate, so that the number of refresh is :math:`o(\log T)` and not :math:`O(\log T)`.
+
+.. seealso::
+
+   Reference? Not yet, this is my own idea and it is *active* research.
+   I will try to experiment on it, prove some things, and if it turns out to be an interesting idea, we will publish something about it.
+   Stay posted! I will work on that as soon as possible!
+
+.. warning::
+
+   This is very EXPERIMENTAL! No proof yet!
+   But experimentally, it worked so well... On simple stationary problems with Bernoulli arms,
+   the DoublingTrickWrapper[ApproximatedFHGittins] worked much better than UCB or klUCB or Thompson...
+
+.. warning::
+
+   Interface: If `FULL_RESTART=False` (default), the underlying algorithm is recreated at every breakpoint,
+   instead its attribute `horizon` or `_horizon` is updated. Be sure that this is enough to really
+   change the internal value used by the policy. Some policy use T only once to compute others parameters,
+   which should be updated as well. A manual implementation of the `__setattr__` method can help.
 """
 
 __author__ = "Lilian Besson"
@@ -35,7 +44,6 @@ __version__ = "0.6"
 from .BasePolicy import BasePolicy
 
 from .UCBH import UCBH
-# from .ApproximatedFHGittins import ApproximatedFHGittins
 
 #: Default horizon-dependent policy
 default_horizonDependent_policy = UCBH
@@ -113,6 +121,8 @@ next_horizon__exponential_fast.__latex_name__ = "fast exp"
 # default_next_horizon = next_horizon__arithmetic
 # default_next_horizon = next_horizon__geometric
 default_next_horizon = next_horizon__exponential
+default_next_horizon = next_horizon__exponential_slow
+default_next_horizon = next_horizon__exponential_fast
 
 
 # --- The interesting class
@@ -189,7 +199,7 @@ class DoublingTrickWrapper(BasePolicy):
                 self.policy.startGame()
                 # print("   ==> Fully restarting the underlying policy by creating a new object... Now it is = {} ...".format(self.policy))  # DEBUG
             else:
-                if hasattr(self.policy, 'horizon'):
+                if hasattr(self.policy, 'horizon') or hasattr(self.policy, '_horizon'):
                     try:
                         self.policy.horizon = self.horizon
                     except AttributeError:
@@ -201,40 +211,40 @@ class DoublingTrickWrapper(BasePolicy):
                             pass
                     # print("   ==> Just updating the horizon parameter of the underlying policy... Now it is = {} ...".format(self.policy))  # DEBUG
                 # else:
-                #     print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG
+                #     print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' or '_horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG
 
     # --- Sub methods
 
     def choice(self):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `choice` of the underlying policy."""
         return self.policy.choice()
 
     def choiceWithRank(self, rank=1):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `choiceWithRank` of the underlying policy."""
         return self.policy.choiceWithRank(rank=rank)
 
     def choiceFromSubSet(self, availableArms='all'):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `choiceFromSubSet` of the underlying policy."""
         return self.policy.choiceFromSubSet(availableArms=availableArms)
 
     def choiceMultiple(self, nb=1):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `choiceMultiple` of the underlying policy."""
         return self.policy.choiceMultiple(nb=nb)
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `choiceIMP` of the underlying policy."""
         return self.policy.choiceIMP(nb=nb, startWithChoiceMultiple=startWithChoiceMultiple)
 
     def estimatedOrder(self):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `estimatedOrder` of the underlying policy."""
         return self.policy.estimatedOrder()
 
     def estimatedBestArms(self, M=1):
-        r""" Pass the call to the underlying policy."""
+        r""" Pass the call to `estimatedBestArms` of the underlying policy."""
         return self.policy.estimatedBestArms(M=M)
 
     # --- Hack!  FIXME bad idea!
-
+    #
     # def __getattr__(self, name):
     #     """ Generic method to capture all attribute/method call and pass them to the underlying policy."""
     #     # print("Using hacking method DoublingTrickWrapper.__getattr__({}, {})...".format(self, name))  # DEBUG
