@@ -99,6 +99,9 @@ from .UCBrandomInit import UCBrandomInit
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
 
+# --- SparseUCB policies for sparse stochastic bandit
+from .SparseUCB import SparseUCB
+
 # --- Clopper-Pearson UCB
 from .CPUCB import CPUCB        # Different indexes
 

@@ -34,6 +34,12 @@ comparing_KLUCB_aggregation3:
 comparing_KLUCB_aggregation2:
 	time nice -n 19 python2 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py2_log.txt
 
+sparse:	sparse3
+sparse3:
+	time nice -n 19 ipython3 ./main.py configuration_sparse | tee ./logs/main_py3_log.txt
+sparse2:
+	time nice -n 19 python2 ./main.py configuration_sparse | tee ./logs/main_py2_log.txt
+
 markovian:	markovian3
 markovian3:
 	time nice -n 19 ipython3 ./main.py configuration_markovian | tee ./logs/main_py3_log.txt

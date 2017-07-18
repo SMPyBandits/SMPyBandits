@@ -26,6 +26,9 @@ if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
     from configuration_comparing_KLUCB_aggregation import configuration
 elif 'configuration_markovian' in sys.argv:
     from configuration_markovian import configuration
+    from configuration_comparing_KLUCB_aggregation import configuration
+elif 'configuration_sparse' in sys.argv:
+    from configuration_sparse import configuration
 else:
     from configuration import configuration
 

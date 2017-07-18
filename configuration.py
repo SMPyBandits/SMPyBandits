@@ -147,72 +147,72 @@ configuration = {
     # --- Cache rewards: use the same random rewards for the Aggr[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
-    "environment": [  # XXX Bernoulli arms
-        # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
-        #     "arm_type": Bernoulli,
-        #     "params": [0, 1]
-        # },
-        # {   # A very very easy problem: 2 arms, one better than the other
-        #     "arm_type": Bernoulli,
-        #     "params": [0.375, 0.571]
-        # },
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # },
-        # {   # Another very easy problem: 3 arms, two very bad, one bad
-        #     "arm_type": Bernoulli,
-        #     "params": [0.04, 0.05, 0.1]
-        # },
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        # },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
-        {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
-            "arm_type": Bernoulli,
-            "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
-        },
-        # {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
-        # {   # A random problem: every repetition use a different mean vectors!
-        #     "arm_type": Bernoulli,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": 6,
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             "mingap": 0.05,
-        #         }
-        #     }
-        # },
-    ],
+    # "environment": [  # XXX Bernoulli arms
+    #     # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0, 1]
+    #     # },
+    #     # {   # A very very easy problem: 2 arms, one better than the other
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.375, 0.571]
+    #     # },
+    #     # {   # A very very easy problem: 3 arms, one bad, one average, one good
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.5, 0.9]
+    #     # },
+    #     # {   # Another very easy problem: 3 arms, two very bad, one bad
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.04, 0.05, 0.1]
+    #     # },
+    #     # {   # A very easy problem, but it is used in a lot of articles
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    #     # },
+    #     # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+    #     # },
+    #     # {   # Lots of bad arms, significative difference between the best and the others
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
+    #     # },
+    #     {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
+    #         "arm_type": Bernoulli,
+    #         "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
+    #     },
+    #     # {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+    #     # },
+    #     # {   # A random problem: every repetition use a different mean vectors!
+    #     #     "arm_type": Bernoulli,
+    #     #     "params": {
+    #     #         "function": randomMeans,
+    #     #         "args": {
+    #     #             "nbArms": 6,
+    #     #             "lower": 0.,
+    #     #             "amplitude": 1.,
+    #     #             "mingap": 0.05,
+    #     #         }
+    #     #     }
+    #     # },
+    # ],
     # "environment": [  # XXX Exponential arms
     #     {   # An example problem with 9 arms
     #         "arm_type": ExponentialFromMean,
     #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     #     },
     # ],
-    # "environment": [  # XXX Gaussian arms
-    #     {   # An example problem with 3 arms
-    #         "arm_type": Gaussian,
-    #         "params": [(0.2, VARIANCE), (0.5, VARIANCE), (0.8, VARIANCE)]
-    #     },
-    #     # {   # An example problem with 9 arms
-    #     #     "arm_type": Gaussian,
-    #     #     "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-    #     # },
-    # ],
+    "environment": [  # XXX Gaussian arms
+        {   # An example problem with 3 arms
+            "arm_type": Gaussian,
+            "params": [(0.2, VARIANCE), (0.5, VARIANCE), (0.8, VARIANCE)]
+        },
+        # {   # An example problem with 9 arms
+        #     "arm_type": Gaussian,
+        #     "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+        # },
+    ],
     # "environment": [  # XXX Unbounded Gaussian arms
     #     {   # An example problem with 9 arms
     #         "arm_type": UnboundedGaussian,
