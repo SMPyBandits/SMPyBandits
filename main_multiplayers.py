@@ -55,7 +55,11 @@ if str(getenv('DEBUG', False)) == 'True' and __name__ == '__main__':
     print("====> TURNING DEBUG MODE ON <=====")
     saveallfigs, interactive = False, True
 
-if getenv('XKCD', False) and interactive and not saveallfigs:
+if str(getenv('SAVEALL', False)) == 'True' and __name__ == '__main__':
+    print("====> SAVING FIGURES <=====")
+    saveallfigs = True
+
+if str(getenv('XKCD', False)) == 'True' and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
