@@ -178,10 +178,10 @@ send:	send_zamok send_gforge
 send_zamok:
 	cd notebooks ; make send_zamok ; cd ..
 	CP "$(BUILDDIR)"/html/ ${Szam}phd/AlgoBandits/
-	-ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/AlgoBandits/_modules/ /tmp/besson/"
+	# -ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/AlgoBandits/_modules/ /tmp/besson/"
 send_gforge:
 	CP "$(BUILDDIR)"/html/ lbesson@scm.gforge.inria.fr:/home/groups/banditslilian/htdocs/
-	-ssh lbesson@scm.gforge.inria.fr "rm -rfv /tmp/banditslilian/_modules/ ; mv -vf /home/groups/banditslilian/htdocs/_modules/ /tmp/banditslilian/"
+	# -ssh lbesson@scm.gforge.inria.fr "rm -rfv /tmp/banditslilian/_modules/ ; mv -vf /home/groups/banditslilian/htdocs/_modules/ /tmp/banditslilian/"
 
 apidoc:
 	-mkdir -vp /tmp/AlgoBandits/docs/

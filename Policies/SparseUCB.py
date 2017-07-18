@@ -122,9 +122,9 @@ class SparseUCB(UCBalpha):
                 self.update_k()
                 k = self.goods
                 if np.sum(k) < self.sparsity:
-                self.phase = Phase.ForceLog
-                diff_of_set = j & (~k)
-                return np.random.choice(np.nonzero(diff_of_set)[0])
+                    self.phase = Phase.ForceLog
+                    diff_of_set = j & (~k)
+                    return np.random.choice(np.nonzero(diff_of_set)[0])
                 # 3rd case: UCB phase
                 else:
                     self.phase = Phase.UCB
