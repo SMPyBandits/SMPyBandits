@@ -45,9 +45,11 @@ def SlidingWindowRestart(Policy=DefaultPolicy,
     """
     Function implementing this algorithm, for a generic base policy ``Policy``.
 
-    .. warning:: it works fine, but the return class is not a manually defined class, and it is not pickable, so cannot be used with joblib.Parallel::
+    .. warning::
 
-        AttributeError: Can't pickle local object 'SlidingWindowRestart.<locals>.SlidingWindowsRestart_Policy'
+        It works fine, but the return class is not a manually defined class, and it is not pickable, so cannot be used with joblib.Parallel::
+
+            AttributeError: Can't pickle local object 'SlidingWindowRestart.<locals>.SlidingWindowsRestart_Policy'
     """
 
     class SlidingWindowsRestart_Policy(Policy):

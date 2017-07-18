@@ -34,6 +34,8 @@
 
 - *New!* Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
+- *New!* A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`.
+
 - *New!* An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.

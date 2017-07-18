@@ -68,9 +68,7 @@ class SparseUCB(UCBalpha):
     def update_j(self):
         r""" Recompute the set :math:`\mathcal{J}(t)`:
 
-        .. math::
-
-           \mathcal{J}(t) &= \big\{ k \in [1,\dots,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(N_k(t))}{N_k(t)}}.
+        .. math:: \mathcal{J}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(N_k(t))}{N_k(t)}} \right\}.
         """
         assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.force_to_see.fill(False)  # faster than sets
@@ -81,9 +79,7 @@ class SparseUCB(UCBalpha):
     def update_k(self):
         r""" Recompute the set :math:`\mathcal{K}(t)`:
 
-        .. math::
-
-           \mathcal{K}(t) &= \big\{ k \in [1,\dots,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(t)}{N_k(t)}}.
+        .. math:: \mathcal{K}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(t)}{N_k(t)}} \right\}.
         """
         assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.goods.fill(False)  # faster than sets
