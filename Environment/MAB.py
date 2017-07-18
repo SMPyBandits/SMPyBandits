@@ -136,6 +136,13 @@ class MAB(object):
         return np.array([self.draw_nparray(armId, shape) for armId in range(self.nbArms)])
 
     #
+    # --- Estimate sparsity
+
+    def sparsity(self):
+        """ Estimate the sparsity of the problem, i.e., the number of arms with non-zero means."""
+        return np.count_nonzero(self.means)
+
+    #
     # --- Compute lower bounds
 
     def lowerbound(self):

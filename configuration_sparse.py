@@ -93,9 +93,9 @@ MAXI = 1  #: upper bound on rewards from Gaussian arms, ie amplitude = 1
 SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
-NB_ARMS = 20
+NB_ARMS = 30
 SPARSITY = 4
-MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.2, amplitude=1.)
+MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.8, amplitude=1.)
 
 
 #: This dictionary configures the experiments
@@ -123,18 +123,18 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": MEANS
-        },
-        # # "environment": [  # 2)  Gaussian arms
-        # {   # An example problem with 3 or 9 arms
-        #     "arm_type": Gaussian,
-        #     # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-        #     "params": [(mean, VARIANCE) for mean in MEANS]
-        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": MEANS
         # },
+        # "environment": [  # 2)  Gaussian arms
+        {   # An example problem with 3 or 9 arms
+            "arm_type": Gaussian,
+            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            "params": [(mean, VARIANCE) for mean in MEANS]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+        },
     ],
 }
 
@@ -258,31 +258,32 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- SparseUCB algorithm with a larger value for s
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 4,
-                "sparsity": min(SPARSITY + 1, NB_ARMS),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 1,
-                "sparsity": min(SPARSITY + 1, NB_ARMS),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 0.5,
-                "sparsity": min(SPARSITY + 1, NB_ARMS),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- DONE SparseUCB algorithm with a larger value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 4,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- Thompson algorithm
         {
             "archtype": Thompson,
