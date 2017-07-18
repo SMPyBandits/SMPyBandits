@@ -27,14 +27,14 @@ class AdBandits(BasePolicy):
         """ New policy."""
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter alpha
-        self.horizon = horizon  #: Horizon
+        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
         self.posterior = [None] * self.nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
 
     def __str__(self):
         # OK, they all have knowledge of T, but it's good to display it to, remember it
-        return r"AdBandits($\alpha={:.3g}$, $T={}$)".format(self.alpha, self.horizon)
+        return r"AdBandits($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
 
     def startGame(self):
         """ Reset each posterior."""

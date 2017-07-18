@@ -199,16 +199,12 @@ class DoublingTrickWrapper(BasePolicy):
                 self.policy.startGame()
                 # print("   ==> Fully restarting the underlying policy by creating a new object... Now it is = {} ...".format(self.policy))  # DEBUG
             else:
-                if hasattr(self.policy, 'horizon') or hasattr(self.policy, '_horizon'):
+                if hasattr(self.policy, 'horizon'):
                     try:
                         self.policy.horizon = self.horizon
                     except AttributeError:
-                        try:
-                            # print("Warning: unable to update the parameter 'horizon' of the underlying policy {}... Trying '_horizon' ...".format(self.policy))  # DEBUG
-                            self.policy._horizon = self.horizon
-                        except AttributeError:
-                            # print("Warning: unable to update the parameter '_horizon' of the underlying policy {} ...".format(self.policy))  # DEBUG
-                            pass
+                        pass
+                        # print("Warning: unable to update the parameter 'horizon' of the underlying policy {}... Trying '_horizon' ...".format(self.policy))  # DEBUG
                     # print("   ==> Just updating the horizon parameter of the underlying policy... Now it is = {} ...".format(self.policy))  # DEBUG
                 # else:
                 #     print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' or '_horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG

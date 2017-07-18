@@ -30,15 +30,15 @@ class ETC_KnownGap(EpsilonGreedy):
         super(ETC_KnownGap, self).__init__(nbArms, epsilon=0.5, lower=lower, amplitude=amplitude)
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_KnownGap class has to be > 0."
-        self.horizon = horizon
+        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
         assert 0 <= gap <= 1, "Error: the 'gap' parameter for ETC_KnownGap class has to be in [0, 1]."  # DEBUG
-        self.gap = gap
+        self.gap = gap  #: Known gap parameter for the stopping rule.
         # Compute the time m
         m = int(np.floor(((2. / gap**2) * np.log(horizon * gap**2 / 2.))))
-        self.maxt = self.nbArms * m
+        self.max_t = self.nbArms * m  #: Time until exporation, ``m_`` steps in each arm.
 
     def __str__(self):
-        return r"ETC_KnownGap($T={}$, $\Delta={:.3g}$, $T_0={}$)".format(self.horizon, self.gap, self.maxt)
+        return r"ETC_KnownGap($T={}$, $\Delta={:.3g}$, $T_0={}$)".format(self.horizon, self.gap, self.max_t)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -47,7 +47,7 @@ class ETC_KnownGap(EpsilonGreedy):
 
         .. math:: T_0 = \lfloor \frac{2}{\Delta^2} \log(\frac{T \Delta^2}{2}) \rfloor.
         """
-        if self.t <= self.maxt:
+        if self.t <= self.max_t:
             # First phase: randomly explore!
             return 1
         else:
@@ -66,8 +66,8 @@ class ETC_RandomStop(EpsilonGreedy):
         super(ETC_RandomStop, self).__init__(nbArms, epsilon=0.5, lower=lower, amplitude=amplitude)
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_RandomStop class has to be > 0."
-        self.horizon = horizon
-        self.stillRandom = True
+        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
+        self.stillRandom = True  #: Still randomly exploring?
 
     def __str__(self):
         return r"ETC_RandomStop($T={}$)".format(self.horizon)

@@ -63,7 +63,7 @@ class Aggr(BasePolicy):
         self.unbiased = unbiased or update_like_exp4  #: Flag, see above.
         # XXX If we use the Exp4 update rule, it's better to be unbiased
         # XXX If we use my update rule, it seems to be better to be "biased"
-        self.horizon = horizon  #: Horizon T, if given and not None, can be used to compute a "good" constant learning rate, sqrt(2 log(N) / (T K)) for N slaves, K arms (heuristic).
+        self.horizon = horizon  #: Horizon T, if given and not None, can be used to compute a "good" constant learning rate, :math:`\sqrt{\frac{2 \log(N)}{T K}}` for N slaves, K arms (heuristic).
         self.update_all_children = update_all_children  #: Flag, see above.
         self.nbChildren = len(children)  #: Number N of slave algorithms.
         self.t = -1  #: Internal time
@@ -106,7 +106,7 @@ class Aggr(BasePolicy):
         all_children = ", updateAll" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"Aggr($N={}${}{}, $T={}$)".format(self.nbChildren, exp4, all_children, self.horizon)
+                return r"Aggr($T={}$, $N={}${}{})".format(self.horizon, self.nbChildren, exp4, all_children)
             else:
                 return r"Aggr($N={}${}{})".format(self.nbChildren, exp4, all_children)
         elif self.decreaseRate is not None:

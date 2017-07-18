@@ -20,13 +20,10 @@ class MOSSH(MOSS):
 
     def __init__(self, nbArms, horizon=None, lower=0., amplitude=1.):
         super(MOSSH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self._horizon = horizon
+        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def horizon(self):
-        """ If the 'horizon' parameter was not provided, acts like the MOSS policy. """
-        return self.t if self._horizon is None else self._horizon
+    def __str__(self):
+        return r"MOSS-H($T={}$)".format(self.horizon)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k, if there is K arms:

@@ -28,10 +28,10 @@ class ApproximatedFHGittins(IndexPolicy):
     def __init__(self, nbArms, horizon=None, alpha=ALPHA, lower=0., amplitude=1.):
         super(ApproximatedFHGittins, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter :math:`\alpha > 0`.
-        self.horizon = horizon  #: Constant parameter T = horizon of the experiment.
+        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
-        return r"ApproximatedFHGittins($\alpha={:.3g}$)".format(self.alpha)
+        return r"ApproximatedFHGittins($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
 
     @property
     def m(self):
