@@ -93,8 +93,8 @@ MAXI = 1  #: upper bound on rewards from Gaussian arms, ie amplitude = 1
 SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
-NB_ARMS = 30
-SPARSITY = 4
+NB_ARMS = 12
+SPARSITY = 3
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.8, amplitude=1.)
 
 
@@ -280,6 +280,31 @@ configuration.update({
         #     "archtype": SparseUCB,
         #     "params": {
         #         "alpha": 0.5,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # --- SparseklUCB algorithm
+        {
+            "archtype": SparseklUCB,
+            "params": {
+                "sparsity": SPARSITY,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- SparseklUCB algorithm with a too small value for s
+        {
+            "archtype": SparseklUCB,
+            "params": {
+                "sparsity": max(SPARSITY - 1, 1),
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # # --- DONE SparseklUCB algorithm with a larger value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseklUCB,
+        #     "params": {
         #         "sparsity": min(SPARSITY + 1, NB_ARMS),
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }

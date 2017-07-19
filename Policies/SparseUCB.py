@@ -119,27 +119,11 @@ class SparseUCB(UCBalpha):
                 k = self.goods
                 if np.sum(k) < self.sparsity:
                     self.phase = Phase.ForceLog
-                    diff_of_set = j & (~k)
+                    diff_of_set = j & (~k)  # component-wise boolean operations to the numpy array
                     return np.random.choice(np.nonzero(diff_of_set)[0])
                 # 3rd case: UCB phase
                 else:
                     self.phase = Phase.UCB
                     return self.choiceFromSubSet(availableArms=np.nonzero(self.goods)[0])
 
-    # --- Same as UCBalpha
-
-    # def computeIndex(self, arm):
-    #     r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
-
-    #     .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha \log(t)}{N_k(t)}}.
-    #     """
-    #     if self.pulls[arm] < 1:
-    #         return float('+inf')
-    #     else:
-    #         return (self.rewards[arm] / self.pulls[arm]) + sqrt((self.alpha * log(self.t)) / self.pulls[arm])
-
-    # def computeAllIndex(self):
-        """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(self.t)) / self.pulls)
-        indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+    # --- computeIndex and computeAllIndex are the same as UCBalpha

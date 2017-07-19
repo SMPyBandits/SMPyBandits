@@ -34,7 +34,7 @@
 
 - *New!* Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
-- *New!* A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`.
+- *New!* A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`.
 
 - *New!* An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
 
@@ -101,8 +101,9 @@ from .UCBrandomInit import UCBrandomInit
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
 
-# --- SparseUCB policies for sparse stochastic bandit
+# --- SparseUCB and variants policies for sparse stochastic bandit
 from .SparseUCB import SparseUCB
+from .SparseklUCB import SparseklUCB
 
 # --- Clopper-Pearson UCB
 from .CPUCB import CPUCB        # Different indexes

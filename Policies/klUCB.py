@@ -15,9 +15,9 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
 
-# Default value for the constant c used in the computation of KL-UCB index
-# c = 3.  # as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
-c = 1.  # default value, as it was in pymaBandits v1.0
+#: Default value for the constant c used in the computation of KL-UCB index
+c = 1.  #: default value, as it was in pymaBandits v1.0
+# c = 1.  #: as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
 
 
 class klUCB(IndexPolicy):
