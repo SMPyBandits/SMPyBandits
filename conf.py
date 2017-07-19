@@ -44,6 +44,8 @@ extensions = [
     # From https://bitbucket.org/birkenfeld/sphinx-contrib/
     'sphinxcontrib.googleanalytics',
     'sphinxcontrib.autorun',
+    # http://nbsphinx.readthedocs.io/en/
+    'nbsphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -77,9 +79,9 @@ author = 'Lilian Besson'
 # built documents.
 #
 # The short X.Y version.
-version = '0.6'
+version = '0.7'
 # The full version, including alpha/beta/rc tags.
-release = '0.6'
+release = '0.7'
 
 # http://pypi.python.org/pypi/sphinxcontrib-googleanalytics
 # https://bitbucket.org/birkenfeld/sphinx-contrib/src/default/googleanalytics/
@@ -99,7 +101,7 @@ html_last_updated_fmt = '%d %b %Y, %Hh:%Mm:%Ss'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**.ipynb_checkpoints']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

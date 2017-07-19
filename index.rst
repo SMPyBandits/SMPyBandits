@@ -32,22 +32,23 @@ a part of my **on going** research since December 2016.
 ----
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: Contents:
 
    README.md
    docs/modules.rst
    How_to_run_the_code.md
    Aggregation.md
-   notebooks/README.md
    MultiPlayers.md
    API.md
-   Policies/C/README.md
    TODO.md
    plots/README.md
-   logs/README.md
-   uml_diagrams/README.md
+   notebooks/README.md
+   notebooks/list.rst
+   Policies/C/README.md
    Profiling.md
+   uml_diagrams/README.md
+   logs/README.md
 
 
 .. note::

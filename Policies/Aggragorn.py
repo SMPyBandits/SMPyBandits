@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
 """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent.
 
-The algorithm is a master A, managing several "slave" algorithms, A1, .., AN.
+The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..., A_N`.
 
 - At every step, the prediction of every slave is gathered, and a vote is done to decide A's decision.
-- The vote is simply a majority vote, weighted by a trust probability. If Ai decides arm Ii, then the probability of selecting k is the sum of trust probabilities, Pi, of every Ai for which Ii = k.
-- The trust probabilities are first uniform, Pi = 1/N, and then at every step, after receiving the feedback for *one* arm k (the reward), the trust in each slave Ai is updated: Pi increases if Ai advised k (Ii = k), or decreases if Ai advised another arm.
+- The vote is simply a majority vote, weighted by a trust probability. If :math:`A_i` decides arm :math:`I_i`, then the probability of selecting :math:`k` is the sum of trust probabilities, :math:`P_i`, of every :math:`A_i` for which :math:`I_i = k`.
+- The trust probabilities are first uniform, :math:`P_i = 1/N`, and then at every step, after receiving the feedback for *one* arm :math:`k` (the reward), the trust in each slave :math:`A_i` is updated: :math:`P_i` increases if :math:`A_i` advised :math:`k` (:math:`I_i = k`), or decreases if :math:`A_i` advised another arm.
 
 - The detail about how to increase or decrease the probabilities are specified below.
+
+.. note::
+
+   Why call it *Aggragorn* ?
+   Because this algorithm is like `Aragorn the ranger <https://en.wikipedia.org/wiki/Aragorn>`_,
+   it starts like a simple bandit, but soon it will become king!!
+
+   .. image::  https://media.giphy.com/media/12GSQqUY9CSmJO/giphy.gif
+      :target: https://en.wikipedia.org/wiki/Aragorn
+      :alt:    https://en.wikipedia.org/wiki/Aragorn
 """
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 import numpy as np
 import numpy.random as rn
@@ -21,27 +31,27 @@ from .BasePolicy import BasePolicy
 
 # Default values for the parameters
 
-#: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: ie just r_t, or unbiased estimators, r_t / p_t, if p_t is the probability of selecting that arm at time t.
+#: A flag to know if the rewards are used as biased estimator,
+#: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
 unbiased = False
 unbiased = True    # Better
 
 #: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
 #:
-#: - First choice: like Exp4, trusts are fully recomputed, trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t),
-#: - Second choice: my proposal, trusts are just updated multiplicatively, trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t).
+#: - First choice: like Exp4, trusts are fully recomputed, ``trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t)`,
+#: - Second choice: my proposal, trusts are just updated multiplicatively, ``trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t)`.
 #:
 #: Both choices seem fine, and anyway the trusts are renormalized to be a probability distribution, so it doesn't matter much.
 update_like_exp4 = True
 update_like_exp4 = False  # Better
 
 #: Non parametric flag to know if the Exp4-like update uses losses or rewards.
-#: Losses are 1 - reward, in which case the rate_t is negative.
+#: Losses are ``1 - reward``, in which case the ``rate_t`` is negative.
 USE_LOSSES = True
 USE_LOSSES = False
 
-#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision Aggragorn[A1..AN] followed.
+#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision ``Aggragorn[A1..AN]`` followed.
 update_all_children = False
 
 
@@ -120,8 +130,8 @@ class Aggragorn(BasePolicy):
         """ Learning rate, can be constant if self.decreaseRate is None, or decreasing.
 
         - if horizon is known, use the formula which uses it,
-        - if horizon is not known, use the formula which uses current time t,
-        - else, if decreaseRate is a number, use an exponentionally decreasing learning rate, rate = learningRate * exp(- t / decreaseRate). Bad.
+        - if horizon is not known, use the formula which uses current time :math:`t`,
+        - else, if decreaseRate is a number, use an exponentionally decreasing learning rate, ``rate = learningRate * exp(- t / decreaseRate)``. Bad.
         """
         if self.decreaseRate is None:  # Constant learning rate
             return self.learningRate
@@ -201,14 +211,14 @@ class Aggragorn(BasePolicy):
     # --- Choice of arm methods
 
     def choice(self):
-        """ Make each child vote, then sample the decision by importance sampling on their votes with the trust probabilities."""
+        """ Make each child vote, then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         # 1. make vote every child
         self._makeChildrenChoose()
         # 2. select the vote to trust, randomly
         return rn.choice(self.choices, p=self.trusts)
 
     def choiceWithRank(self, rank=1):
-        """ Make each child vote, with rank, then sample the decision by importance sampling on their votes with the trust probabilities."""
+        """ Make each child vote, with rank, then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if rank == 1:
             return self.choice()
         else:
@@ -217,7 +227,7 @@ class Aggragorn(BasePolicy):
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceFromSubSet(self, availableArms='all'):
-        """ Make each child vote, on subsets of arms, then sample the decision by importance sampling on their votes with the trust probabilities."""
+        """ Make each child vote, on subsets of arms, then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
@@ -226,7 +236,7 @@ class Aggragorn(BasePolicy):
             return rn.choice(self.choices, p=self.trusts)
 
     def choiceMultiple(self, nb=1):
-        """ Make each child vote, multiple times, then sample the decision by importance sampling on their votes with the trust probabilities."""
+        """ Make each child vote, multiple times, then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()
         else:
@@ -235,7 +245,7 @@ class Aggragorn(BasePolicy):
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        """ Make each child vote, multiple times (with IMP scheme), then sample the decision by importance sampling on their votes with the trust probabilities."""
+        """ Make each child vote, multiple times (with IMP scheme), then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()
         else:
@@ -244,8 +254,8 @@ class Aggragorn(BasePolicy):
             return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
 
     def estimatedOrder(self):
-        """ Make each child vote for their estimate order of the arms, then randomly select an ordering by importance sampling with the trust probabilities.
-        Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means."""
+        """ Make each child vote for their estimate order of the arms, then randomly select an ordering by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ with the trust probabilities.
+        Return the estimate order of the arms, as a permutation on ``[0..K-1]`` that would order the arms by increasing means."""
         alltrusts = self.trusts
         orders = []
         trusts = []
