@@ -157,7 +157,7 @@ class Exp3WithHorizon(Exp3):
     def __init__(self, nbArms, horizon, unbiased=UNBIASED, lower=0., amplitude=1.):
         super(Exp3WithHorizon, self).__init__(nbArms, unbiased=unbiased, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for SoftmaxWithHorizon class has to be > 0."
-        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         return r"Exp3($T={}$)".format(self.horizon)

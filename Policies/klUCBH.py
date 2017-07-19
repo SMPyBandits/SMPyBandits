@@ -21,7 +21,7 @@ class klUCBH(klUCB):
 
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCBH, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude)
-        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         return r"KL-UCB-H($T={}$, {}{})".format(self.horizon, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])

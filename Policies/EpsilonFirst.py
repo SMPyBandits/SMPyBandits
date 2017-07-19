@@ -20,7 +20,7 @@ class EpsilonFirst(EpsilonGreedy):
     def __init__(self, nbArms, horizon, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonFirst, self).__init__(nbArms, epsilon=epsilon, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for EpsilonFirst class has to be > 0."
-        self.horizon = horizon  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
