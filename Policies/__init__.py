@@ -20,7 +20,7 @@
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
-- Aggregation algorithms: :class:`Aggr`, :class:`CORRAL`,
+- Aggregation algorithms: :class:`Aggragorn` (mine), :class:`CORRAL`,
 
 - Finite-Horizon Gittins index, approximated version: :class:`ApproximatedFHGittins`,
 
@@ -138,8 +138,8 @@ from .OCUCB import OCUCB
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
 
-# --- Mine, aggregation algorithm, like Exp4  FIXME give it a better name!
-from .Aggr import Aggr
+# --- Mine, aggregation algorithm, like Exp4
+from .Aggragorn import Aggragorn
 # --- Others aggregation algorithms
 from .CORRAL import CORRAL
 

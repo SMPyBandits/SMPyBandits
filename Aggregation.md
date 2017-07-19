@@ -56,12 +56,12 @@ configuration = {
 }
 ```
 
-To add an aggregated bandit algorithm ([`Aggr` class](Policies/Aggr.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
+To add an aggregated bandit algorithm ([`Aggragorn` class](Policies/Aggragorn.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
 ```python
 current_policies = configuration["policies"]
 configuration["policies"] = current_policies +
-    [{  # Add one Aggr policy, from all the policies defined above
-        "archtype": Aggr,
+    [{  # Add one Aggragorn policy, from all the policies defined above
+        "archtype": Aggragorn,
         "params": {
             "learningRate": 0.05,  # Tweak this if needed
             "updateAllChildren": True,
@@ -121,26 +121,26 @@ make single   # run and log the main.py script
 Here are some plots illustrating the performances of the different [policies](Policies/) implemented in this project, against various problems (with [`Bernoulli`](Arms/Bernoulli.py) arms only):
 
 ### Small tests
-[![5 tests - AdBandit and Aggr](plots/5_tests_AdBandit__et_Aggr.png)](plots/5_tests_AdBandit__et_Aggr.png)
+[![5 tests - AdBandit and Aggragorn](plots/5_tests_AdBandit__et_Aggr.png)](plots/5_tests_AdBandit__et_Aggr.png)
 [![2000 steps - 100 repetition](plots/2000_steps__100_average.png)](plots/2000_steps__100_average.png)
 
 ### Larger tests
-- 4 different [`Aggr`](Policies/Aggr.py) on 6 policies:
-[![10000 steps - 50 repetition - 6 policies - With 4 Aggr](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)
-- 1 [`Aggr`](Policies/Aggr.py) performing very well:
-[![10000 steps - 50 repetition - 6 policies - With Softmax and 1 Aggr](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)
+- 4 different [`Aggragorn`](Policies/Aggragorn.py) on 6 policies:
+[![10000 steps - 50 repetition - 6 policies - With 4 Aggragorn](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)
+- 1 [`Aggragorn`](Policies/Aggragorn.py) performing very well:
+[![10000 steps - 50 repetition - 6 policies - With Softmax and 1 Aggragorn](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)
 - 3 different UCB, with alpha values lower than 0.5 (nothing is known theoretically for alpha < 1/2).
-[![10000 steps - 50 repetition - 3 UCB and Aggr](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)
+[![10000 steps - 50 repetition - 3 UCB and Aggragorn](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)
 
-### Some examples where [`Aggr`](Policies/Aggr.py) performs well
-- [`Aggr`](Policies/Aggr.py) is the best on this example:
-[![Aggr is the best here](plots/Aggr_is_the_best_here.png)](plots/Aggr_is_the_best_here.png)
+### Some examples where [`Aggragorn`](Policies/Aggragorn.py) performs well
+- [`Aggragorn`](Policies/Aggragorn.py) is the best on this example:
+[![Aggragorn is the best here](plots/Aggr_is_the_best_here.png)](plots/Aggr_is_the_best_here.png)
 - And it performed well here also:
-[![one Aggr does very well](plots/one_Aggr_does_very_well.png)](plots/one_Aggr_does_very_well.png)
+[![one Aggragorn does very well](plots/one_Aggr_does_very_well.png)](plots/one_Aggr_does_very_well.png)
 
 ### Another example
-The [`Aggr`](Policies/Aggr.py) can have a fixed learning rate, whose value has a great effect on its performance, as illustrated here:
-[![20000 steps - 100 repetition - 6 policies - With 5 Aggr](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)
+The [`Aggragorn`](Policies/Aggragorn.py) can have a fixed learning rate, whose value has a great effect on its performance, as illustrated here:
+[![20000 steps - 100 repetition - 6 policies - With 5 Aggragorn](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)
 
 ### One a harder problem
 [![example harder problem](plots/example_harder_problem.png)](plots/example_harder_problem.png)
@@ -156,7 +156,7 @@ This last example shows the aggregation of various policies, all being order-opt
 ## Code organization
 ### Layout of the code:
 - Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](Arms/Bernoulli.py)
-- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](Policies/BayesUCB.py), [`Policies.klUCB`](Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggr`](Policies/Aggr.py) for my *aggregated bandits* algorithms.
+- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](Policies/BayesUCB.py), [`Policies.klUCB`](Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggragorn`](Policies/Aggragorn.py) for my *aggregated bandits* algorithms.
 - Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](Environment/MAB.py), simulation results are stored in a [`Environment.Result`](Environment/Result.py), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluator`](Environment/Evaluator.py).
 - [`configuration.py`](configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
 - [`main.py`](main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).

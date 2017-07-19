@@ -58,7 +58,7 @@ class MyArm(Arm):
 6. Finally, add it to the [`Policies/__init__.py`](Policies/__init__.py) file: `from .MyPolicy import MyPolicy`
 
 > - For examples, see [`Arms.Uniform`](Arms/Uniform.py) for a fully randomized policy, [`Arms.EpsilonGreedy`](Arms/EpsilonGreedy.py) for a simple exploratory policy, [`Arms.Softmax`](Arms/Softmax.py) for another simple approach, [`Arms.UCB`](Arms/UCB.py) for the class Upper Confidence-Bounds policy (based on indexes, so inheriting from [`Policies/IndexPolicy`](Policies/IndexPolicy.py)). There is also [`Arms.Thompson`](Arms/Thompson.py) and [`Arms.BayesUCB`](Arms/BayesUCB.py) for Bayesian policies (using a posterior, e.g., like [`Arms.Beta`](Arms/Beta.py)), [`Arms.klUCB`](Arms/klUCB.py) for a policy based on the [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence).
-> - For less classical [`Arms.AdBandit`](Arms/AdBandit.py) is an approach combining Bayesian and frequentist point of view, and [`Arms.Aggr`](Arms/Aggr.py) is [my aggregating policy](Aggr.md).
+> - For less classical [`Arms.AdBandit`](Arms/AdBandit.py) is an approach combining Bayesian and frequentist point of view, and [`Arms.Aggragorn`](Arms/Aggragorn.py) is [my aggregating policy](Aggregation.md).
 
 > - For example, use this template:
 

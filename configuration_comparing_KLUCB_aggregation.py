@@ -69,25 +69,25 @@ RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
 
-TEST_AGGR = False  # XXX do not let this = False if you want to test my Aggr policy
-TEST_AGGR = True
+TEST_AGGRAGORN = False  # XXX do not let this = False if you want to test my Aggragorn policy
+TEST_AGGRAGORN = True
 
 TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRAL policy
 TEST_CORRAL = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = TEST_AGGR or TEST_CORRAL
+CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL
 CACHE_REWARDS = False  # XXX to disable manually this feature
 
-#: Should the Aggr policy update the trusts in each child or just the one trusted for last decision?
+#: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
-#: Should the rewards for Aggr policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
+#: Should the rewards for Aggragorn policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
 UNBIASED = True
 UNBIASED = False
 
-#: Should we update the trusts proba like in Exp4 or like in my initial Aggr proposal
+#: Should we update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
@@ -118,7 +118,7 @@ configuration = {
     "random_shuffle": RANDOM_SHUFFLE,
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
-    # --- Cache rewards: use the same random rewards for the Aggr[..] and the algorithms
+    # --- Cache rewards: use the same random rewards for the Aggragorn[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # 1)  Bernoulli arms
@@ -294,14 +294,14 @@ configuration.update({
 from itertools import product  # XXX If needed!
 NON_AGGR_POLICIES = configuration["policies"]
 
-# Dynamic hack to force the Aggr (policies aggregator) to use all the policies previously/already defined
-if TEST_AGGR:
+# Dynamic hack to force the Aggragorn (policies aggregator) to use all the policies previously/already defined
+if TEST_AGGRAGORN:
     # for UPDATE_LIKE_EXP4 in [False, True]:
     for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
         CURRENT_POLICIES = configuration["policies"]
-        # Add one Aggr policy
+        # Add one Aggragorn policy
         configuration["policies"] = [{
-            "archtype": Aggr,
+            "archtype": Aggragorn,
             "params": {
                 "children": NON_AGGR_POLICIES,
                 "unbiased": UNBIASED,

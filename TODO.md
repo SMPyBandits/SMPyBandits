@@ -8,14 +8,14 @@
 - [x] Lint the code and make it (almost) "perfect" regarding [Python style recommandation](https://www.python.org/dev/peps/pep-0008/), OK.
 - [x] Pass it to Python 3.4 (while still being valid Python 2.7), OK. It is valid Python, both v2 (2.7), and v3 (3.4, 3.5, 3.6).
 - [x] Add more arms: [Gaussian](Arms/Gaussian.py), [Exponential](Arms/Exponential.py), [Poisson](Arms/Poisson.py), [Uniform](Arms/Uniform.py), OK.
-- [x] Add my [aggregated bandit algorithm](Policies/Aggr.py), OK. FIXME finish to work on it!
+- [x] Add my [aggregated bandit algorithm](Policies/Aggragorn.py), OK. FIXME finish to work on it!
 
 ## Improve the code? - OK
 - [x] In fact, [exhaustive grid search](http://scikit-learn.org/stable/modules/grid_search.html#exhaustive-grid-search) cannot be easily used as it cannot run *on-line*! Sadly, OK.
 - [x] add plots that show the percentage of optimal arms play ([e.g., as done in this paper](http://www.cs.mcgill.ca/~vkules/bandits.pdf#page=11))
 - [x] fully profile my code, with [`cProfile`](https://docs.python.org/2/library/profile.html) for functions and [`line_profiler`](https://github.com/rkern/line_profiler) for line-by-line. No surprise here: [`Beta.py`](Policies/Beta.py) is the slow part, as it takes time to sample and compute the quantiles (even by using the good `numpy.random`/`scipy.stats` functions). See for instance [this log file (with `cProfile`)](logs/main_py3_profile_log.txt) or [this one (with `line_profiler`)](logs/main_py3_line_profiler_log.txt).
 - [x] I could have tried to improve the efficiency bottlenecks, with smart `numpy`/`scipy` code (I did not find anything useful), or [`numba.jit`](http://numba.pydata.org/) ? (does not seem to be possible), or [`cython`](http://cython.org/) code (not so easy, not so interesting)... Maybe using [`numexpr`](https://github.com/pydata/numexpr/wiki/Numexpr-Users-Guide): nope! Maybe using [`glumpy`](http://glumpy.readthedocs.io/en/latest/) for faster vizualisations: nope! Using [pypy](http://pypy.org/compat.html) is impossible as it does not support all of `numpy` yet, and none of `matplotlib`.
-- [x] Explore the behavior of my Aggr algorithm, and understand it better (and improve it? it would only be by parameter tweaking, not interesting, so NOPE).
+- [x] Explore the behavior of my Aggragorn algorithm, and understand it better (and improve it? it would only be by parameter tweaking, not interesting, so NOPE).
 - [x] Rewards not in `{0, 1}` are handled with a trick, with a "random binarization", cf., [[Agrawal & Goyal, 2012]](http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf) (algorithm 2): when reward `r_t \in [0, 1]` is observed, the player receives the result of a [Bernoulli](Arms/Bernoulli.py) sample of average `r_t`: `r_t <- sample from Bernoulli(r_t)` so it is well in `{0, 1}`. Works fine for `Exponential` arms, for instance.
 - [x] Test again (and adapt, if needed) each single-player policy against non-[Bernoulli](Arms/Bernoulli.py) arms ([Gaussian](Arms/Gaussian.py), [Exponential](Arms/Exponential.py), [Poisson](Arms/Poisson.py)).
 - [x] My framework can also handle rewards which are not bounded in `[0, 1]`, but can not handle unbounded rewards (eg. non-truncated Gaussian or Poisson), *yet*.

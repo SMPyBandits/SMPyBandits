@@ -32,7 +32,7 @@ Have a look to:
 
 ## Configuration:
 A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
-See the explanations given for [the simple-player case](Aggr.md).
+See the explanations given for [the simple-player case](Aggregation.md).
 
 ```python
 nbArms = len(configuration['environment'][0]['params'])

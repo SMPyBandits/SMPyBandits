@@ -38,7 +38,7 @@ a part of my **on going** research since December 2016.
    README.md
    docs/modules.rst
    How_to_run_the_code.md
-   Aggr.md
+   Aggregation.md
    notebooks/README.md
    MultiPlayers.md
    API.md

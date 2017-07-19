@@ -27,7 +27,7 @@ from .BasePolicy import BasePolicy
 unbiased = False
 unbiased = True    # Better
 
-#: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggr proposal
+#: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
 #:
 #: - First choice: like Exp4, trusts are fully recomputed, trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t),
 #: - Second choice: my proposal, trusts are just updated multiplicatively, trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t).
@@ -41,11 +41,11 @@ update_like_exp4 = False  # Better
 USE_LOSSES = True
 USE_LOSSES = False
 
-#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision Aggr[A1..AN] followed.
+#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision Aggragorn[A1..AN] followed.
 update_all_children = False
 
 
-class Aggr(BasePolicy):
+class Aggragorn(BasePolicy):
     """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent."""
 
     def __init__(self, nbArms, children=None,
@@ -92,7 +92,7 @@ class Aggr(BasePolicy):
         # Assume uniform prior if not given or if = 'uniform'
         self.trusts = np.full(self.nbChildren, 1. / self.nbChildren)  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         if prior is not None and prior != 'uniform':
-            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggr has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
+            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggragorn has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
             self.trusts = prior
         # Internal vectorial memory
         self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
@@ -106,13 +106,13 @@ class Aggr(BasePolicy):
         all_children = ", updateAll" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"Aggr($T={}$, $N={}${}{})".format(self.horizon, self.nbChildren, exp4, all_children)
+                return r"Aggragorn($T={}$, $N={}${}{})".format(self.horizon, self.nbChildren, exp4, all_children)
             else:
-                return r"Aggr($N={}${}{})".format(self.nbChildren, exp4, all_children)
+                return r"Aggragorn($N={}${}{})".format(self.nbChildren, exp4, all_children)
         elif self.decreaseRate is not None:
-            return r"Aggr($N={}${}{}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate, self.decreaseRate)
+            return r"Aggragorn($N={}${}{}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate, self.decreaseRate)
         else:
-            return r"Aggr($N={}${}{}, $\eta={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate)
+            return r"Aggragorn($N={}${}{}, $\eta={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

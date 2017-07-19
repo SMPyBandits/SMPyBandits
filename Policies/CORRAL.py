@@ -146,7 +146,7 @@ class CORRAL(BasePolicy):
         # Internal vectorial memory
         self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
 
-        # Internal memory, additionally to what is found not in Aggr
+        # Internal memory, additionally to what is found not in Aggragorn
         self.last_choice = None  #: Remember the index of the last child trusted for a decision.
         self.losses = np.zeros(nbChildren)  #: For the log-barrier OMD step, a vector of losses has to be given. Faster to keep it as an attribute instead of reallocating it every time.
         self.rhos = self.bar_trusts / 2  #: I use the inverses of the :math:`\rho_{t,i}` from the Algorithm in the reference article. Simpler to understand, less numerical errors.
