@@ -32,7 +32,7 @@ class klUCBloglog(klUCB):
 
            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{\log(t) + c \log(\max(1, \log(t)))}{N_k(t)} \right\},\\
-           I_k(t) &= \hat{\mu}_k(t) + U_k(t).
+           I_k(t) &= U_k(t).
 
         If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
         and c is the parameter (default to 1).
