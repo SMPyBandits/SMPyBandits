@@ -90,9 +90,17 @@ class SparseUCB(UCBalpha):
     # --- SparseUCB choice() method
 
     def choice(self):
-        r""" In an index policy, choose an arm with maximal index (uniformly at random):
+        r""" Choose the next arm to play:
 
-        .. math:: A(t) \sim U(\arg\max_{1 \leq k \leq K} I_k(t)).
+        - If still in a Round-Robin phase, play the next arm,
+        - Otherwise, recompute the set :math:`\mathcal{J}(t)`,
+        - If it is too small, if :math:`\mathcal{J}(t) < s`:
+           + Start a new Round-Robin phase from arm 0.
+        - Otherwise, recompute the second set :math:`\mathcal{K}(t)`,
+        - If it is too small, if :math:`\mathcal{K}(t) < s`:
+           + Play a Force-Log step by choosing an arm uniformly at random from the set :math:`\mathcal{J}(t) \setminus \mathcal{K}(t)`.
+        - Otherwise,
+           + Play a UCB step by choosing an arm with highest UCB index from the set :math:`\mathcal{K}(t)`.
         """
         # print("  At step t = {} a SparseUCB algorithm was in phase {} ...".format(self.t, self.phase))  # DEBUG
         if (self.phase == Phase.RoundRobin) and ((1 + self.offset) < self.nbArms):

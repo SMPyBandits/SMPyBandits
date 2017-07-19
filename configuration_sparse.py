@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # # # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -49,7 +49,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -94,7 +94,7 @@ SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
 NB_ARMS = 12
-SPARSITY = 3
+SPARSITY = 6
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.8, amplitude=1.)
 
 

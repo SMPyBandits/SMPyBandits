@@ -4,8 +4,9 @@
 - This means that only a small subset of size ``s`` of the ``K`` arms has non-zero means.
 - The SparseklUCB algorithm requires to known **exactly** the value of ``s``.
 
+- This SparseklUCB is my version. It uses the KL-UCB index for both the decision in the UCB phase and the construction of the sets :math:`\mathcal{J}(t)` and :math:`\mathcal{K}(t)`.
+- The usual UCB indexes can be used for the sets by setting the flag ``use_ucb_for_sets`` to true.
 - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)] who introduced SparseUCB.
-- This SparseklUCB is my version.
 """
 
 __author__ = "Lilian Besson"
@@ -33,6 +34,12 @@ c = 1.  #: default value, as it was in pymaBandits v1.0
 # c = 1.  #: as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
 
 
+#: Default value for the flag controlling whether the usual UCB indexes are used for the sets :math:`\mathcal{J}(t)`
+#: and :math:`\mathcal{K}(t)`. Default it to use the KL-UCB indexes, which should be more efficient.
+USE_UCB_FOR_SETS = True
+USE_UCB_FOR_SETS = False
+
+
 class SparseklUCB(klUCB):
     """ The SparseklUCB policy, designed to tackle sparse stochastic bandit problems:
 
@@ -43,13 +50,17 @@ class SparseklUCB(klUCB):
     - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
     """
 
-    def __init__(self, nbArms, sparsity=None, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
+    def __init__(self, nbArms, sparsity=None,
+                 tolerance=1e-4, klucb=klucbBern, c=c,
+                 use_ucb_for_sets=USE_UCB_FOR_SETS,
+                 lower=0., amplitude=1.):
         super(SparseklUCB, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude)
         if sparsity is None:
             sparsity = nbArms
             print("Warning: regular klUCB should be used instead of SparseklUCB if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
         assert 1 <= sparsity <= nbArms, "Error: 'sparsity' has to be in [1, nbArms = {}] but was {} ...".format(nbArms, sparsity)  # DEBUG
         self.sparsity = sparsity  #: Known value of the sparsity of the current problem.
+        self.use_ucb_for_sets = use_ucb_for_sets  #: Whether the usual UCB indexes are used for the sets :math:`\mathcal{J}(t)` and :math:`\mathcal{K}(t)`
         self.phase = Phase.RoundRobin  #: Current phase of the algorithm.
         # internal memory
         self.force_to_see = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{J}(t)`.
@@ -57,7 +68,7 @@ class SparseklUCB(klUCB):
         self.offset = -1  #: Next arm to sample, for the Round-Robin phase
 
     def __str__(self):
-        return r"Sparse-KL-UCB($s={}$, {}{})".format(self.sparsity, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
+        return r"Sparse-KL-UCB($s={}$, {}{}{})".format(self.sparsity, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:], ", UCB for sets" if self.use_ucb_for_sets else "")
 
     def startGame(self):
         """ Initialize the policy for a new game."""
@@ -72,33 +83,57 @@ class SparseklUCB(klUCB):
     def update_j(self):
         r""" Recompute the set :math:`\mathcal{J}(t)`:
 
-        .. math:: \mathcal{J}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\c \log(N_k(t))}{N_k(t)}} \right\}.
+        .. math::
+
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           U^{\mathcal{J}}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(N_k(t))}{N_k(t)} \right\},\\
+           \mathcal{J}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{J}}_k(t) - \hat{\mu}_k(t) \right\}.
+
+        - If ``use_ucb_for_sets`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
         assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.force_to_see.fill(False)  # faster than sets
         means = self.rewards / self.pulls
-        # UCB_J = np.sqrt((self.c * np.log(self.pulls)) / self.pulls)
-        UCB_J = self.klucb(self.rewards / self.pulls, self.c * np.log(self.pulls) / self.pulls, self.tolerance) - means
+        if self.use_ucb_for_sets:
+            UCB_J = np.sqrt((self.c * np.log(self.pulls)) / self.pulls)
+        else:
+            UCB_J = self.klucb(self.rewards / self.pulls, self.c * np.log(self.pulls) / self.pulls, self.tolerance) - means
         self.force_to_see[means >= UCB_J] = True
 
     def update_k(self):
         r""" Recompute the set :math:`\mathcal{K}(t)`:
 
-        .. math:: \mathcal{K}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\c \log(t)}{N_k(t)}} \right\}.
+        .. math::
+
+           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+           U^{\mathcal{K}}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t)}{N_k(t)} \right\},\\
+           \mathcal{J}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{K}}_k(t) - \hat{\mu}_k(t) \right\}.
+
+        - If ``use_ucb_for_sets`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
         assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.goods.fill(False)  # faster than sets
         means = self.rewards / self.pulls
-        # UCB_K = np.sqrt((self.c * np.log(self.t)) / self.pulls)
-        UCB_K = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance) - means
+        if self.use_ucb_for_sets:
+            UCB_K = np.sqrt((self.c * np.log(self.t)) / self.pulls)
+        else:
+            UCB_K = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance) - means
         self.goods[means >= UCB_K] = True
 
     # --- SparseklUCB choice() method
 
     def choice(self):
-        r""" In an index policy, choose an arm with maximal index (uniformly at random):
+        r""" Choose the next arm to play:
 
-        .. math:: A(t) \sim U(\arg\max_{1 \leq k \leq K} I_k(t)).
+        - If still in a Round-Robin phase, play the next arm,
+        - Otherwise, recompute the set :math:`\mathcal{J}(t)`,
+        - If it is too small, if :math:`\mathcal{J}(t) < s`:
+           + Start a new Round-Robin phase from arm 0.
+        - Otherwise, recompute the second set :math:`\mathcal{K}(t)`,
+        - If it is too small, if :math:`\mathcal{K}(t) < s`:
+           + Play a Force-Log step by choosing an arm uniformly at random from the set :math:`\mathcal{J}(t) \setminus K(t)`.
+        - Otherwise,
+           + Play a UCB step by choosing an arm with highest KL-UCB index from the set :math:`\mathcal{K}(t)`.
         """
         # print("  At step t = {} a SparseklUCB algorithm was in phase {} ...".format(self.t, self.phase))  # DEBUG
         if (self.phase == Phase.RoundRobin) and ((1 + self.offset) < self.nbArms):
@@ -128,29 +163,3 @@ class SparseklUCB(klUCB):
                     return self.choiceFromSubSet(availableArms=np.nonzero(self.goods)[0])
 
     # --- computeIndex and computeAllIndex are the same as klUCB
-
-    # --- Same as klUCB
-
-    # def computeIndex(self, arm):
-    #     r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
-
-    #     .. math::
-
-    #        \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-    #        U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t)}{N_k(t)} \right\},\\
-    #        I_k(t) &= \hat{\mu}_k(t) + U_k(t).
-
-    #     If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
-    #     and c is the parameter (default to 1).
-    #     """
-    #     if self.pulls[arm] < 1:
-    #         return float('+inf')
-    #     else:
-    #         # XXX We could adapt tolerance to the value of self.t
-    #         return self.klucb(self.rewards[arm] / self.pulls[arm], self.c * log(self.t) / self.pulls[arm], self.tolerance)
-
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance)
-    #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index = indexes
