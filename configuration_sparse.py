@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # # # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -94,7 +94,7 @@ SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
 NB_ARMS = 12
-SPARSITY = NB_ARMS
+SPARSITY = 3
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.1, amplitude=1.)
 
 
@@ -186,6 +186,47 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
+        # --- FIXME SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCBPlus,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCBPlus,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": False,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCBPlus,
+                "use_ucb_for_set_J": False,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCBPlus,
+                "use_ucb_for_set_J": False,
+                "use_ucb_for_set_K": False,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- UCBalpha algorithm
         {
             "archtype": UCBalpha,
@@ -233,31 +274,31 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- SparseUCB algorithm with a too small value for s
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 4,
-                "sparsity": max(SPARSITY - 2, 1),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 1,
-                "sparsity": max(SPARSITY - 2, 1),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 0.5,
-                "sparsity": max(SPARSITY - 2, 1),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- SparseUCB algorithm with a too small value for s
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 4,
+        #         "sparsity": max(SPARSITY - 2, 1),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": max(SPARSITY - 2, 1),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "sparsity": max(SPARSITY - 2, 1),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # # --- DONE SparseUCB algorithm with a larger value for s
         # # XXX It fails completely!
         # {
@@ -285,15 +326,15 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- SparseklUCB algorithm with a too small value for s, using KL-UCB for sets J(t) and K(t)
-        {
-            "archtype": SparseklUCB,
-            "params": {
-                "sparsity": max(SPARSITY - 2, 1),
-                "use_ucb_for_sets": False,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- SparseklUCB algorithm with a too small value for s, using KL-UCB for sets J(t) and K(t)
+        # {
+        #     "archtype": SparseklUCB,
+        #     "params": {
+        #         "sparsity": max(SPARSITY - 2, 1),
+        #         "use_ucb_for_sets": False,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- SparseklUCB algorithm, using old UCB for sets J(t) and K(t)
         {
             "archtype": SparseklUCB,
@@ -303,15 +344,15 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- SparseklUCB algorithm with a too small value for s, using old UCB for sets J(t) and K(t)
-        {
-            "archtype": SparseklUCB,
-            "params": {
-                "sparsity": max(SPARSITY - 2, 1),
-                "use_ucb_for_sets": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- SparseklUCB algorithm with a too small value for s, using old UCB for sets J(t) and K(t)
+        # {
+        #     "archtype": SparseklUCB,
+        #     "params": {
+        #         "sparsity": max(SPARSITY - 2, 1),
+        #         "use_ucb_for_sets": True,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # # --- DONE SparseklUCB algorithm with a larger value for s
         # # XXX It fails completely!
         # {
@@ -330,7 +371,7 @@ configuration.update({
         },
         # --- KL algorithms, here only klUCBPlus with different klucb functions
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCB,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbBern,  # "horizon": HORIZON,
@@ -340,16 +381,23 @@ configuration.update({
             "archtype": klUCBPlus,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbExp,  # "horizon": HORIZON,
+                "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbGauss,  # "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbExp,  # "horizon": HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "klucb": klucbGauss,  # "horizon": HORIZON,
+        #     }
+        # },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
