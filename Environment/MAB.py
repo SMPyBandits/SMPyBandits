@@ -10,7 +10,7 @@ Such class has to have *at least* these methods:
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -141,6 +141,11 @@ class MAB(object):
     def sparsity(self):
         """ Estimate the sparsity of the problem, i.e., the number of arms with non-zero means."""
         return np.count_nonzero(self.means)
+
+    def str_sparsity(self):
+        """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
+        s, K = self.sparsity, self.nbArms
+        return "" if s == K else ", $s={}$".format(s)
 
     #
     # --- Compute lower bounds

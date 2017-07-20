@@ -5,7 +5,7 @@ Lots of plotting methods, to have various visualizations.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 # Generic imports
 from copy import deepcopy
@@ -367,13 +367,13 @@ class Evaluator(object):
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
             if not self.envs[envId].isDynamic:
                 plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
-            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1, latex=True)))
+            plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n{} arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             legend()
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
-            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1, latex=True)))
+            plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         else:
             if drawUpperBound and not semilogx:
                 # Experiment to print also an upper bound: it is CRAZILY huge!!
@@ -390,7 +390,7 @@ class Evaluator(object):
             plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
-            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1, latex=True)))
+            plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n{} arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -412,7 +412,7 @@ class Evaluator(object):
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
-        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n{} arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
