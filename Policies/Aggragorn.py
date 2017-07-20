@@ -39,8 +39,8 @@ unbiased = True    # Better
 
 #: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
 #:
-#: - First choice: like Exp4, trusts are fully recomputed, ``trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t)`,
-#: - Second choice: my proposal, trusts are just updated multiplicatively, ``trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t)`.
+#: - First choice: like Exp4, trusts are fully recomputed, ``trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t)``,
+#: - Second choice: my proposal, trusts are just updated multiplicatively, ``trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t)``.
 #:
 #: Both choices seem fine, and anyway the trusts are renormalized to be a probability distribution, so it doesn't matter much.
 update_like_exp4 = True

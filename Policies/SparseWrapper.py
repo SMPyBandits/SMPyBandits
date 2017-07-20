@@ -13,6 +13,7 @@
 .. warning::
 
    This is very EXPERIMENTAL! No proof yet!
+   But it works fine!!
 """
 
 __author__ = "Lilian Besson"
@@ -94,7 +95,16 @@ class SparseWrapper(BasePolicy):
     # --- pretty printing
 
     def __str__(self):
-        return r"SparseWrapper($s={}${}{})[{}]".format(self.sparsity, ", UCB for K" if self.use_ucb_for_set_K else "", ", UCB for J" if self.use_ucb_for_set_J else "", self.policy)
+        ucb_for = ""
+        if self.use_ucb_for_set_K or self.use_ucb_for_set_J:
+            ucb_for = ", UCB for "
+        if self.use_ucb_for_set_J and self.use_ucb_for_set_K:
+            ucb_for += "K and J"
+        elif self.use_ucb_for_set_K and not self.use_ucb_for_set_J:
+            ucb_for += "K"
+        elif self.use_ucb_for_set_J and not self.use_ucb_for_set_K:
+            ucb_for += "J"
+        return r"SparseWrapper($s={}$)[{}{}]".format(self.sparsity, self.policy, ucb_for)
 
     # --- Start game by creating new underlying policy
 
