@@ -87,7 +87,7 @@ class SWUCBPlus(SWUCB):
     def __init__(self, nbArms, horizon=None,
                  lower=0., amplitude=1., *args, **kwargs):
         if horizon is not None:
-            T = int(horizon)
+            T = int(horizon) if horizon is not None else None
             tau = int(4 * np.sqrt(T * np.log(T)))
         else:
             tau = TAU

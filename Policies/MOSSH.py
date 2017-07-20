@@ -20,7 +20,7 @@ class MOSSH(MOSS):
 
     def __init__(self, nbArms, horizon=None, lower=0., amplitude=1.):
         super(MOSSH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         return r"MOSS-H($T={}$)".format(self.horizon)

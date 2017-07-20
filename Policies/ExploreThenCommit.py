@@ -30,7 +30,7 @@ class ETC_KnownGap(EpsilonGreedy):
         super(ETC_KnownGap, self).__init__(nbArms, epsilon=0.5, lower=lower, amplitude=amplitude)
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_KnownGap class has to be > 0."
-        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
         assert 0 <= gap <= 1, "Error: the 'gap' parameter for ETC_KnownGap class has to be in [0, 1]."  # DEBUG
         self.gap = gap  #: Known gap parameter for the stopping rule.
         # Compute the time m
@@ -66,7 +66,7 @@ class ETC_RandomStop(EpsilonGreedy):
         super(ETC_RandomStop, self).__init__(nbArms, epsilon=0.5, lower=lower, amplitude=amplitude)
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_RandomStop class has to be > 0."
-        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
         self.stillRandom = True  #: Still randomly exploring?
 
     def __str__(self):

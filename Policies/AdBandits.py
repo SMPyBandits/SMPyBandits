@@ -27,7 +27,7 @@ class AdBandits(BasePolicy):
         """ New policy."""
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter alpha
-        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
         self.posterior = [None] * self.nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()

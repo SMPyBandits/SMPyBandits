@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # # # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -76,8 +76,8 @@ TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRA
 TEST_CORRAL = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL
 CACHE_REWARDS = False  # XXX to disable manually this feature
+CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL
 
 #: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -122,22 +122,22 @@ configuration = {
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # 1)  Bernoulli arms
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]
+        },
         {   # A easy problem, but it is used in a lot of articles
             "arm_type": Bernoulli,
             "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
-        # },
-        # {   # A very hard problem, as used in [Cappé et al, 2012]
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
-        # },
+        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
+        },
+        {   # A very hard problem, as used in [Cappé et al, 2012]
+            "arm_type": Bernoulli,
+            "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
+        },
     # ],
     # # "environment": [  # 2)  Exponential arms
     #     {   # An example problem with 9 arms
@@ -222,6 +222,28 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
+        # --- UCBalpha algorithm
+        {
+            "archtype": UCBalpha,
+            "params": {
+                "alpha": 4,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": UCBalpha,
+            "params": {
+                "alpha": 1,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": UCBalpha,
+            "params": {
+                "alpha": 0.5,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- Thompson algorithm
         {
             "archtype": Thompson,
@@ -237,20 +259,20 @@ configuration.update({
                 "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbExp,  # "horizon": HORIZON,
-        #     }
-        # },
-        # {
-        #     "archtype": klUCBPlus,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGauss,  # "horizon": HORIZON,
-        #     }
-        # },
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+                "klucb": klucbExp,  # "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": klUCBPlus,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+                "klucb": klucbGauss,  # "horizon": HORIZON,
+            }
+        },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
@@ -265,28 +287,28 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- Finite-Horizon Gittins index
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 2,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 1,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 0.5,
-            }
-        },
+        # # --- Finite-Horizon Gittins index
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 2,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 1,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.1 * HORIZON,
+        #         "alpha": 0.5,
+        #     }
+        # },
     ]
 })
 

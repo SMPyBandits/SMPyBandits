@@ -93,10 +93,9 @@ MAXI = 1  #: upper bound on rewards from Gaussian arms, ie amplitude = 1
 SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
-NB_ARMS = 15
+NB_ARMS = 10
 SPARSITY = 4
-# MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.7, amplitude=1.)
-MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=2., amplitude=10.)
+MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.5, amplitude=1.)
 
 
 #: This dictionary configures the experiments
