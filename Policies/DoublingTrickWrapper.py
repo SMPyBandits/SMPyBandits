@@ -248,7 +248,6 @@ class DoublingTrickWrapper(BasePolicy):
     def getReward(self, arm, reward):
         """ Pass the reward, as usual, update t and sometimes restart the underlying policy."""
         # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
-
         # super(DoublingTrickWrapper, self).getReward(arm, reward)
         self.t += 1
         self.policy.getReward(arm, reward)
@@ -283,31 +282,31 @@ class DoublingTrickWrapper(BasePolicy):
     # --- Sub methods
 
     def choice(self):
-        r""" Pass the call to `choice` of the underlying policy."""
+        r""" Pass the call to ``choice`` of the underlying policy."""
         return self.policy.choice()
 
     def choiceWithRank(self, rank=1):
-        r""" Pass the call to `choiceWithRank` of the underlying policy."""
+        r""" Pass the call to ``choiceWithRank`` of the underlying policy."""
         return self.policy.choiceWithRank(rank=rank)
 
     def choiceFromSubSet(self, availableArms='all'):
-        r""" Pass the call to `choiceFromSubSet` of the underlying policy."""
+        r""" Pass the call to ``choiceFromSubSet`` of the underlying policy."""
         return self.policy.choiceFromSubSet(availableArms=availableArms)
 
     def choiceMultiple(self, nb=1):
-        r""" Pass the call to `choiceMultiple` of the underlying policy."""
+        r""" Pass the call to ``choiceMultiple`` of the underlying policy."""
         return self.policy.choiceMultiple(nb=nb)
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        r""" Pass the call to `choiceIMP` of the underlying policy."""
+        r""" Pass the call to ``choiceIMP`` of the underlying policy."""
         return self.policy.choiceIMP(nb=nb, startWithChoiceMultiple=startWithChoiceMultiple)
 
     def estimatedOrder(self):
-        r""" Pass the call to `estimatedOrder` of the underlying policy."""
+        r""" Pass the call to ``estimatedOrder`` of the underlying policy."""
         return self.policy.estimatedOrder()
 
     def estimatedBestArms(self, M=1):
-        r""" Pass the call to `estimatedBestArms` of the underlying policy."""
+        r""" Pass the call to ``estimatedBestArms`` of the underlying policy."""
         return self.policy.estimatedBestArms(M=M)
 
     # --- Hack!  FIXME bad idea!

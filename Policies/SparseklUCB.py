@@ -40,14 +40,13 @@ USE_UCB_FOR_SETS = True
 USE_UCB_FOR_SETS = False
 
 
+# --- The interesting class
+
+
 class SparseklUCB(klUCB):
-    """ The SparseklUCB policy, designed to tackle sparse stochastic bandit problems:
+    """ The SparseklUCB policy, designed to tackle sparse stochastic bandit problems.
 
-    - This means that only a small subset of size ``s`` of the ``K`` arms has non-zero means.
-    - The SparseklUCB algorithm requires to known **exactly** the value of ``s``.
-
-    - By default, assume 'sparsity' = 'nbArms'.
-    - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
+    - By default, assume ``sparsity`` = ``nbArms``.
     """
 
     def __init__(self, nbArms, sparsity=None,
@@ -60,12 +59,14 @@ class SparseklUCB(klUCB):
             print("Warning: regular klUCB should be used instead of SparseklUCB if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
         assert 1 <= sparsity <= nbArms, "Error: 'sparsity' has to be in [1, nbArms = {}] but was {} ...".format(nbArms, sparsity)  # DEBUG
         self.sparsity = sparsity  #: Known value of the sparsity of the current problem.
-        self.use_ucb_for_sets = use_ucb_for_sets  #: Whether the usual UCB indexes are used for the sets :math:`\mathcal{J}(t)` and :math:`\mathcal{K}(t)`
+        self.use_ucb_for_sets = use_ucb_for_sets  #: Whether the usual UCB indexes are used for the sets :math:`\mathcal{J}(t)` and :math:`\mathcal{K}(t)`.
         self.phase = Phase.RoundRobin  #: Current phase of the algorithm.
         # internal memory
         self.force_to_see = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{J}(t)`.
         self.goods = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{K}(t)`.
         self.offset = -1  #: Next arm to sample, for the Round-Robin phase
+
+    # --- pretty printing
 
     def __str__(self):
         return r"Sparse-KL-UCB($s={}$, {}{}{})".format(self.sparsity, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:], ", UCB for sets" if self.use_ucb_for_sets else "")
@@ -143,7 +144,6 @@ class SparseklUCB(klUCB):
         else:
             self.update_j()
             j = self.force_to_see
-            # print("    At step t = {}, set j = {} and set k = {} ...".format(self.t, set_j, set_k))  # DEBUG
             # 1st case: Round-Robin phase
             if np.sum(j) < self.sparsity:
                 self.phase = Phase.RoundRobin

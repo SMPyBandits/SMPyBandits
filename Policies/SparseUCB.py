@@ -25,18 +25,17 @@ from .UCBalpha import UCBalpha
 #: - ``UCB`` is the phase that the algorithm should converge to, when a normal UCB selection is done only on the "good" arms, i.e., :math:`\mathcal{K}(t)`.
 Phase = Enum('Phase', ['RoundRobin', 'ForceLog', 'UCB'])
 
-#: Default parameter for alpha.
+#: Default parameter for :math:`\alpha` for the UCB indexes.
 ALPHA = 4
 
 
+# --- The interesting class
+
+
 class SparseUCB(UCBalpha):
-    """ The SparseUCB policy, designed to tackle sparse stochastic bandit problems:
+    """ The SparseUCB policy, designed to tackle sparse stochastic bandit problems.
 
-    - This means that only a small subset of size ``s`` of the ``K`` arms has non-zero means.
-    - The SparseUCB algorithm requires to known **exactly** the value of ``s``.
-
-    - By default, assume 'sparsity' = 'nbArms'.
-    - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
+    - By default, assume ``sparsity`` = ``nbArms``.
     """
 
     def __init__(self, nbArms, sparsity=None, alpha=ALPHA, lower=0., amplitude=1.):
@@ -51,6 +50,8 @@ class SparseUCB(UCBalpha):
         self.force_to_see = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{J}(t)`.
         self.goods = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{K}(t)`.
         self.offset = -1  #: Next arm to sample, for the Round-Robin phase
+
+    # --- pretty printing
 
     def __str__(self):
         return r"SparseUCB($s={}$, $\alpha={:.3g}$)".format(self.sparsity, self.alpha)

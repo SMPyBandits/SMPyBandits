@@ -14,29 +14,29 @@
 
 - Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBlog10`, :class:`klUCBloglog`, :class:`klUCBloglog10`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`,
 
-- Empirical KL-UCB algorithm: :class:`KLempUCB`,
+- Empirical KL-UCB algorithm: :class:`KLempUCB` (FIXME),
 
 - Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`,
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
-- Aggregation algorithms: :class:`Aggragorn` (mine), :class:`CORRAL`,
+- Aggregation algorithms: :class:`Aggragorn` (mine, it's awesome, go on try it!), and :class:`CORRAL`,
 
 - Finite-Horizon Gittins index, approximated version: :class:`ApproximatedFHGittins`,
 
-- *New!* An experimental policy, using Unsupervised Learning: :class:`UnsupervisedLearning`,
+- **New!** An experimental policy, using Unsupervised Learning: :class:`UnsupervisedLearning`,
 
-- *New!* An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
+- **New!** An experimental policy, using Black-box optimization: :class:`BlackBoxOpt`,
 
-- *New!* An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB`,
+- **New!** An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB` (my algorithm, unpublished yet),
 
-- *New!* An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known.
+- An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known.
 
-- *New!* Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
+- Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
-- *New!* A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`.
+- **New!** A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`, and :class:`SparseWrapper` that can be used with *any* index policy.
 
-- *New!* An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
+- **New!** An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
@@ -53,7 +53,7 @@ in order to use them in any experiment with the following approach: ::
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 from .Posterior import Beta, Gamma, Gauss
 
@@ -104,6 +104,7 @@ from .UCBVtuned import UCBVtuned  # Different indexes
 # --- SparseUCB and variants policies for sparse stochastic bandit
 from .SparseUCB import SparseUCB
 from .SparseklUCB import SparseklUCB
+from .SparseWrapper import SparseWrapper  # generic wrapper class
 
 # --- Clopper-Pearson UCB
 from .CPUCB import CPUCB        # Different indexes
@@ -153,7 +154,7 @@ from .SlidingWindowUCB import SWUCB, SWUCBPlus
 
 from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
-from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, print_breakpoints
+from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, breakpoints
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 
