@@ -56,6 +56,7 @@ FULL_RESTART = True
 FULL_RESTART = False
 
 
+
 #: Default horizon, used for the first step.
 DEFAULT_FIRST_HORIZON = 1000
 
@@ -123,6 +124,76 @@ next_horizon__exponential_fast.__latex_name__ = "fast exp"
 default_next_horizon = next_horizon__exponential
 default_next_horizon = next_horizon__exponential_slow
 default_next_horizon = next_horizon__exponential_fast
+
+
+# --- Utility function
+
+def breakpoints(next_horizon, first_horizon, horizon, debug=False):
+    r""" Return the list of restart point (breakpoints), if starting from ``first_horizon`` to ``horizon`` with growth function ``next_horizon``.
+
+    - Also return the gap between the last guess for horizon and the true horizon. This gap should not be too large.
+    - Nicely print all the values if ``debug=True``.
+
+    - First examples:
+
+    >>> first_horizon = 1000
+    >>> horizon = 30000
+    >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+    ([1000, 2000, 3000, 4000, 5000, ..., 28000, 29000, 30000], 0)
+    >>> breakpoints(next_horizon__geometric, first_horizon, horizon)
+    ([1000, 10000, 100000], 70000)
+    >>> breakpoints(next_horizon__exponential, first_horizon, horizon)
+    ([1000, 31622], 1622)
+    >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
+    ([1000, 1995, 4265, 9838, 24671, 67827], 37827)
+    >>> breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
+    ([1000, 1000000], 970000)
+
+    - Second examples:
+
+    >>> first_horizon = 5000
+    >>> horizon = 1000000
+    >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+    ([5000, 6000, 7000, ..., 998000, 999000, 1000000], 0)
+    >>> breakpoints(next_horizon__geometric, first_horizon, horizon)
+    ([5000, 50000, 500000, 5000000], 4000000)
+    >>> breakpoints(next_horizon__exponential, first_horizon, horizon)
+    ([5000, 353553, 210223755], 209223755)
+    >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
+    ([5000, 11718, 29904, 83811, 260394, 906137, 3572014], 2572014)
+    >>> breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
+    ([5000, 25000000], 24000000)
+
+    - Third examples:
+
+    >>> first_horizon = 10
+    >>> horizon = 1123456
+    >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon, debug=True)  # doctest: +ELLIPSIS
+    ([10, 1010, ..., 1122010, 1123010, 1124010], 554)
+    >>> breakpoints(next_horizon__geometric, first_horizon, horizon, debug=True)
+    ([10, 100, 1000, 10000, 100000, 1000000, 10000000], 8876544)
+    >>> breakpoints(next_horizon__exponential, first_horizon, horizon, debug=True)
+    ([10, 31, 172, 2255, 107082, 35040856], 33917400)
+    >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon, debug=True)
+    ([10, 12, 15, 19, 25, 34, 48, 70, 107, 170, 284, 499, 928, 1837, 3895, 8903, 22104, 60106, 180638, 606024, 2294768], 1171312)
+    >>> breakpoints(next_horizon__exponential_fast, first_horizon, horizon, debug=True)
+    ([10, 100, 10000, 100000000], 98876544)
+    """
+    i = 0
+    t = first_horizon
+    times = [t]
+    if debug:
+        print("\n\nFor the growth function {}, named '{}', first guess of the horizon = {} and true horizon = {} ...\n ==> The times will be:".format(next_horizon, getattr(next_horizon, '__latex_name__', '?'), first_horizon, horizon))
+    while t < horizon:
+        t = next_horizon(t)
+        i += 1
+        times.append(t)
+        if debug:
+            print("    The {}th breakpoint is {} ...".format(i, t))  # DEBUG
+    assert horizon <= t, "Error: the last guess for horizon = {} was found smaller than the true horizon = {}...".format(t, horizon)  # DEBUG
+    gap = t - horizon
+    print("This last guess for horizon = {} gives a gap = {} against the true horizon {}. Relative difference = {:.3%}...".format(t, gap, horizon, gap / float(horizon)))  # DEBUG
+    return times, gap
 
 
 # --- The interesting class
@@ -245,3 +316,12 @@ class DoublingTrickWrapper(BasePolicy):
     #     """ Generic method to capture all attribute/method call and pass them to the underlying policy."""
     #     # print("Using hacking method DoublingTrickWrapper.__getattr__({}, {})...".format(self, name))  # DEBUG
     #     return getattr(self.policy, name)
+
+
+# # --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
