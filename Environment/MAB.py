@@ -144,7 +144,7 @@ class MAB(object):
 
     def str_sparsity(self):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
-        s, K = self.sparsity, self.nbArms
+        s, K = self.sparsity(), self.nbArms
         return "" if s == K else ", $s={}$".format(s)
 
     #
