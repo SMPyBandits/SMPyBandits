@@ -15,3 +15,4 @@ all*.pdf
 # List of files
 .dirs*html
 .files*html
+*algos
