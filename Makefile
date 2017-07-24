@@ -28,11 +28,11 @@ singleplayer3:
 singleplayer2:
 	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt
 
-comparing_KLUCB_aggregation:	comparing_KLUCB_aggregation3
-comparing_KLUCB_aggregation3:
-	time nice -n 19 ipython3 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py3_log.txt
-comparing_KLUCB_aggregation2:
-	time nice -n 19 python2 ./main.py configuration_comparing_KLUCB_aggregation | tee ./logs/main_py2_log.txt
+comparing_aggregation_algorithms:	comparing_aggregation_algorithms3
+comparing_aggregation_algorithms3:
+	time nice -n 19 ipython3 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt
+comparing_aggregation_algorithms2:
+	time nice -n 19 python2 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py2_log.txt
 
 sparse:	sparse3
 sparse3:

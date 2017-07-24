@@ -6,7 +6,7 @@ The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..
 - At every step, one slave algorithm is selected, by a random selection from a trust distribution on :math:`[1,...,N]`.
 - Then its decision is listen to, played by the master algorithm, and a feedback reward is received.
 - The reward is reweighted by the trust of the listened algorithm, and given back to it.
-- The other slaves receive, whose decision was not even asked, a zero reward, or no reward at all.
+- The other slaves, whose decision was not even asked, receive a zero reward, or no reward at all.
 - The trust probabilities are first uniform, :math:`P_i = 1/N`, and then at every step, after receiving the feedback for *one* arm k (the reward), the trust in each slave Ai is updated: :math:`P_i` by the reward received.
 - The detail about how to increase or decrease the probabilities are specified in the reference article.
 

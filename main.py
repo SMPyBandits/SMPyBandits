@@ -22,11 +22,10 @@ import pickle
 from Environment import Evaluator, notify
 
 # Import a configuration file
-if 'configuration_comparing_KLUCB_aggregation' in sys.argv:
-    from configuration_comparing_KLUCB_aggregation import configuration
+if 'configuration_comparing_aggregation_algorithms' in sys.argv:
+    from configuration_comparing_aggregation_algorithms import configuration
 elif 'configuration_markovian' in sys.argv:
     from configuration_markovian import configuration
-    from configuration_comparing_KLUCB_aggregation import configuration
 elif 'configuration_sparse' in sys.argv:
     from configuration_sparse import configuration
 else:

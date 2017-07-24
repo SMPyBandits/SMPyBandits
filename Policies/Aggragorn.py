@@ -112,17 +112,17 @@ class Aggragorn(BasePolicy):
     # Print, different output according to the parameters
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
-        exp4 = ", Exp4" if self.update_like_exp4 else ""
-        all_children = ", updateAll" if self.update_all_children else ""
+        name = "Exp4" if self.update_like_exp4 else "Aggragorn"
+        all_children = ", update all" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"Aggragorn($T={}$, $N={}${}{})".format(self.horizon, self.nbChildren, exp4, all_children)
+                return r"{}($T={}$, $N={}${})".format(name, self.horizon, self.nbChildren, all_children)
             else:
-                return r"Aggragorn($N={}${}{})".format(self.nbChildren, exp4, all_children)
+                return r"{}($N={}${})".format(name, self.nbChildren, all_children)
         elif self.decreaseRate is not None:
-            return r"Aggragorn($N={}${}{}, $\eta={:.3g}$, $dRate={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate, self.decreaseRate)
+            return r"{}($N={}${}, $\eta={:.3g}$, $dRate={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate, self.decreaseRate)
         else:
-            return r"Aggragorn($N={}${}{}, $\eta={:.3g}$)".format(self.nbChildren, exp4, all_children, self.learningRate)
+            return r"{}($N={}${}, $\eta={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

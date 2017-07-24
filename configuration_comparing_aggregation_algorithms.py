@@ -5,7 +5,7 @@ Configuration for the simulations, for the single-player case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.7"
 
 # Tries to know number of CPU
 try:
@@ -75,9 +75,12 @@ TEST_AGGRAGORN = True
 TEST_CORRAL = False  # XXX do not let this = False if you want to test the CORRAL policy
 TEST_CORRAL = True
 
+TEST_LEARNEXP = False  # XXX do not let this = False if you want to test the LearnExp policy
+TEST_LEARNEXP = True
+
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
+CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL or TEST_LEARNEXP
 CACHE_REWARDS = False  # XXX to disable manually this feature
-CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL
 
 #: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -122,10 +125,10 @@ configuration = {
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
     "environment": [  # 1)  Bernoulli arms
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]
+        # },
         {   # A easy problem, but it is used in a lot of articles
             "arm_type": Bernoulli,
             "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -134,10 +137,10 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
         },
-        {   # A very hard problem, as used in [Cappé et al, 2012]
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
-        },
+        # {   # A very hard problem, as used in [Cappé et al, 2012]
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
+        # },
     # ],
     # # "environment": [  # 2)  Exponential arms
     #     {   # An example problem with 9 arms
@@ -145,19 +148,19 @@ configuration = {
     #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # # ],
-    # # "environment": [  # 3)  Gaussian arms
-    #     {   # An example problem with 3 or 9 arms
-    #         "arm_type": Gaussian,
-    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-    #         "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-    #         # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-    #     },
-    # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
-    #     [
-    #         arm_type(mean)
-    #         for mean in [0.1, 0.5, 0.9]
-    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-    #     ],
+    # "environment": [  # 3)  Gaussian arms
+        {   # An example problem with 3 or 9 arms
+            "arm_type": Gaussian,
+            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+            "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+        },
+    # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
+        [
+            arm_type(mean)
+            for mean in [0.1, 0.5, 0.9]
+            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+        ],
     # # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
     #     [
     #         arm_type(mean)
@@ -318,37 +321,65 @@ NON_AGGR_POLICIES = configuration["policies"]
 
 # Dynamic hack to force the Aggragorn (policies aggregator) to use all the policies previously/already defined
 if TEST_AGGRAGORN:
-    # for UPDATE_LIKE_EXP4 in [False, True]:
-    for (UPDATE_ALL_CHILDREN, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one Aggragorn policy
-        configuration["policies"] = [{
-            "archtype": Aggragorn,
-            "params": {
-                "children": NON_AGGR_POLICIES,
-                "unbiased": UNBIASED,
-                "update_all_children": UPDATE_ALL_CHILDREN,
-                "decreaseRate": "auto",
-                "update_like_exp4": UPDATE_LIKE_EXP4
-            },
-        }] + CURRENT_POLICIES
+    UPDATE_LIKE_EXP4_VALUES = [False, True]
+    # UPDATE_LIKE_EXP4_VALUES = [True]
+    UPDATE_ALL_CHILDREN_VALUES = [False, True]
+    # UPDATE_ALL_CHILDREN_VALUES = [True]
+    for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
+       for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
+            CURRENT_POLICIES = configuration["policies"]
+            # Add one Aggragorn policy
+            configuration["policies"] = [{
+                "archtype": Aggragorn,
+                "params": {
+                    "children": NON_AGGR_POLICIES,
+                    "unbiased": UNBIASED,
+                    "update_all_children": UPDATE_ALL_CHILDREN,
+                    "decreaseRate": "auto",
+                    "update_like_exp4": UPDATE_LIKE_EXP4
+                },
+            }] + CURRENT_POLICIES
 
 
 # Dynamic hack to force the CORRAL (policies aggregator) to use all the policies previously/already defined
 if TEST_CORRAL:
-    # for UNBIASED in [False, True]:
-    for (UNBIASED, BROADCAST_ALL) in product([False, True], repeat=2):  # XXX If needed!
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one CORRAL policy
-        configuration["policies"] = [{
-            "archtype": CORRAL,
-            "params": {
-                "children": NON_AGGR_POLICIES,
-                "horizon": HORIZON,
-                "unbiased": UNBIASED,
-                "broadcast_all": BROADCAST_ALL,
-            },
-        }] + CURRENT_POLICIES
+    # UNBIASED_VALUES = [False, True]
+    UNBIASED_VALUES = [True]
+    # BROADCAST_ALL_VALUES = [False, True]
+    BROADCAST_ALL_VALUES = [True]
+    for UNBIASED in UNBIASED_VALUES:
+       for BROADCAST_ALL in BROADCAST_ALL_VALUES:
+            CURRENT_POLICIES = configuration["policies"]
+            # Add one CORRAL policy
+            configuration["policies"] = [{
+                "archtype": CORRAL,
+                "params": {
+                    "children": NON_AGGR_POLICIES,
+                    "horizon": HORIZON,
+                    "unbiased": UNBIASED,
+                    "broadcast_all": BROADCAST_ALL,
+                },
+            }] + CURRENT_POLICIES
+
+
+# Dynamic hack to force the LearnExp (policies aggregator) to use all the policies previously/already defined
+if TEST_LEARNEXP:
+    # ETA_VALUES = [0.2, 0.4, 0.6, 0.8]
+    ETA_VALUES = [0.9]
+    # UNBIASED_VALUES = [False, True]
+    UNBIASED_VALUES = [True]
+    for ETA in ETA_VALUES:
+        for UNBIASED in UNBIASED_VALUES:
+            CURRENT_POLICIES = configuration["policies"]
+            # Add one LearnExp policy
+            configuration["policies"] = [{
+                "archtype": LearnExp,
+                "params": {
+                    "children": NON_AGGR_POLICIES,
+                    "unbiased": UNBIASED,
+                    "eta": ETA,
+                },
+            }] + CURRENT_POLICIES
 
 
 print("Loaded experiments configuration from 'configuration.py' :")

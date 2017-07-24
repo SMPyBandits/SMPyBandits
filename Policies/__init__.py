@@ -20,7 +20,7 @@
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
-- Aggregation algorithms: :class:`Aggragorn` (mine, it's awesome, go on try it!), and :class:`CORRAL`,
+- Aggregation algorithms: :class:`Aggragorn` (mine, it's awesome, go on try it!), and :class:`CORRAL`, :class:`LearnExp`,
 
 - Finite-Horizon Gittins index, approximated version: :class:`ApproximatedFHGittins`,
 
@@ -144,6 +144,7 @@ from .AdBandits import AdBandits
 from .Aggragorn import Aggragorn
 # --- Others aggregation algorithms
 from .CORRAL import CORRAL
+from .LearnExp import LearnExp
 
 # --- Gittins index policy
 from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-Horizon Gittins index
