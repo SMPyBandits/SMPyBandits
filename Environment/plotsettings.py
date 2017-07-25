@@ -213,14 +213,17 @@ def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', f
     ax.set_major_formatter(my_frmt)
 
 
-def wraptext(text, width=110):
-    """ Wrap the text, using textwrap module, and width."""
+#: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
+WIDTH = 150
+
+
+def wraptext(text, width=WIDTH):
+    """ Wrap the text, using ``textwrap`` module, and ``width``."""
     return '\n'.join(wrap(text, width=width))
 
 
-def wraplatex(text, width=110):
-    """ Wrap the text, for LaTeX, using textwrap module, and width."""
-    # return '$' + '$\n$'.join(wrap(text, width=width)) + '$'
+def wraplatex(text, width=WIDTH):
+    """ Wrap the text, for LaTeX, using ``textwrap`` module, and ``width``."""
     return '$\n$'.join(wrap(text, width=width))
 
 

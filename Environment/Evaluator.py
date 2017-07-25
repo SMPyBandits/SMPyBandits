@@ -173,7 +173,7 @@ class Evaluator(object):
                 self.minCumRewards[policyId, envId, :] = np.minimum(self.minCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             if hasattr(self, 'maxCumRewards'):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
-            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.equal(r.choices, r.indeces_bestarm))
+            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
 
         # Start for all policies
@@ -456,11 +456,11 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
         env.newRandomArms()
     policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
 
-    index_bestarm = np.nonzero(np.isclose(env.means, env.maxArm))[0]
+    indexes_bestarm = np.nonzero(np.isclose(env.means, env.maxArm))[0]
 
     # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon, index_bestarm=index_bestarm)  # One Result object, for every policy
+    result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm)  # One Result object, for every policy
     # , delta_t_save=delta_t_save
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
@@ -488,14 +488,14 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle and t in t_events:
-                index_bestarm = env.new_order_of_arm(shuffled(env.arms))
-                result.change_in_arms(t, index_bestarm)
+                indexes_bestarm = env.new_order_of_arm(shuffled(env.arms))
+                result.change_in_arms(t, indexes_bestarm)
                 if repeatId == 0:
                     print("\nShuffling the arms at time t = {} ...".format(t))  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert and t in t_events:
-                index_bestarm = env.new_order_of_arm(env.arms[::-1])
-                result.change_in_arms(t, index_bestarm)
+                indexes_bestarm = env.new_order_of_arm(env.arms[::-1])
+                result.change_in_arms(t, indexes_bestarm)
                 if repeatId == 0:
                     print("\nInverting the order of the arms at time t = {} ...".format(t))  # DEBUG
 

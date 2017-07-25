@@ -94,7 +94,7 @@ class Exponential(Arm):
         return "Exponential"
 
     def __repr__(self):
-        return "Exp({:.3g}{})".format(self.p, '' if isinf(self.trunc) else ', {:.3g}'.format(self.trunc))
+        return r"{}({:.3g}{})".format(r'\mathrm{Exp}', self.p, '' if isinf(self.trunc) else ', {:.3g}'.format(self.trunc))
 
     # --- Lower bound
 

@@ -138,7 +138,7 @@ class EvaluatorMultiPlayers(object):
         # Get the position of the best arms
         means = env.means
         bestarm = env.maxArm
-        index_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
+        indexes_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
         def store(r):
             """Store the result of the experiment r."""
@@ -150,7 +150,7 @@ class EvaluatorMultiPlayers(object):
             self.collisions[envId] += r.collisions
             for playerId in range(self.nbPlayers):
                 self.NbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
-                self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], index_bestarm))
+                self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
                 # FIXME there is probably a bug in this computation
                 self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.duration)])
 

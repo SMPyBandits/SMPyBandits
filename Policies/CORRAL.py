@@ -112,11 +112,14 @@ class CORRAL(BasePolicy):
         self.beta = np.exp(1. / np.log(horizon))  #: Constant :math:`\beta = \exp(1 / \log(T))`.
         assert self.beta > 1, "Error: parameter 'beta' for a CORRAL player was expected to be > 1, but = {:.3g}...".format(self.beta)  # DEBUG
 
+        self._default_parameters = True
         self.nbChildren = nbChildren = len(children)  #: Number N of slave algorithms.
         if rate is None:
             # Use the default horizon-dependent rate value
             # rate = np.sqrt(nbChildren / (nbArms * horizon))
             rate = np.sqrt(nbChildren / horizon)
+        else:
+            self._default_parameters = False
         assert rate > 0, "Error: parameter 'rate' for a CORRAL player was expected to be > 0, but = {:.3g}...".format(rate)  # DEBUG
         self.rates = np.full(nbChildren, rate)  #: Value of the learning rate (will be **increasing** in time).
 
@@ -155,10 +158,13 @@ class CORRAL(BasePolicy):
         """ Nicely print the name of the algorithm with its relevant parameters."""
         is_unbiased = "unbiased" if self.unbiased else "biased"
         is_broadcast_all = "broadcast to all" if self.broadcast_all else "broadcast to one"
-        if len(set(self.rhos)) > 1 or len(set(self.rates)) > 1:
-            return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, list(self.rhos), list(self.rates))
+        if self._default_parameters:
+            return r"CORRAL($N={}$, {}, {})".format(self.nbChildren, is_unbiased, is_broadcast_all)
         else:
-            return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={:.2g}$, $\eta={:.2g}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, self.rhos[0], self.rates[0])
+            if len(set(self.rhos)) > 1 or len(set(self.rates)) > 1:
+                return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={}$, $\eta={}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, list(self.rhos), list(self.rates))
+            else:
+                return r"CORRAL($N={}$, {}, {}, $\gamma=1/T$, $\beta={:.3g}$, $\rho={:.2g}$, $\eta={:.2g}$)".format(self.nbChildren, is_unbiased, is_broadcast_all, self.beta, self.rhos[0], self.rates[0])
 
     def __setattr__(self, name, value):
         r"""Trick method, to update the :math:`\gamma` and :math:`\beta` parameters of the CORRAL algorithm if the horizon T changes.

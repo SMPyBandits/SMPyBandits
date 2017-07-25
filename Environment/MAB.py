@@ -48,7 +48,7 @@ class MAB(object):
 
     def __init__(self, configuration):
         """New MAB."""
-        print("Creating a new MAB problem ...")  # DEBUG
+        print("\n\nCreating a new MAB problem ...")  # DEBUG
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = False  #: Flag to know if the problem is Markovian or not.
         self.arms = []  #: List of arms
@@ -85,12 +85,14 @@ class MAB(object):
         """ Feed a new order of the arms to the environment.
 
         - Updates self.means correctly.
-        - Return the new position of the best arm (to count and plot ``BestArmPulls`` correctly).
+        - Return the new position(s) of the best arm (to count and plot ``BestArmPulls`` correctly).
         """
         assert sorted([arm.mean for arm in self.arms]) == sorted([arm.mean for arm in arms]), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
         assert set(self.arms) == set(arms), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
         self.arms = arms
         self.means = np.array([arm.mean for arm in self.arms])
+        self.maxArm = np.max(self.means)
+        self.minArm = np.min(self.means)
         return np.nonzero(np.isclose(self.means, self.maxArm))[0]
 
     def __repr__(self):
@@ -110,9 +112,10 @@ class MAB(object):
         else:
             assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."  # DEBUG
             means = self.means
+            bestmean = np.max(means)
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
             text = '[{}]'.format(', '.join(
-                openTag + repr(arm) + endTag if armId in bestArms else repr(arm)
+                openTag + repr(arm) + endTag if (armId in bestArms or np.isclose(arm.mean, bestmean)) else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
         return wraplatex('$' + text + '$') if latex else wraptext(text)
@@ -321,7 +324,7 @@ class MarkovianMAB(MAB):
 
     def __init__(self, configuration):
         """ New MarkovianMAB."""
-        print("Creating a new MarkovianMAB problem ...")  # DEBUG
+        print("\n\nCreating a new MarkovianMAB problem ...")  # DEBUG
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
 
