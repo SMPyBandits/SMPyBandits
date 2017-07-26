@@ -16,11 +16,25 @@ python main.py
 make main
 ```
 
-### [Single player, aggregating algorithms](main.py)
+### [Single player, aggregating algorithms](configuration_comparing_aggregation_algorithms.py)
 ```bash
-python main.py configuration_comparing_KLUCB_aggregation
+python main.py configuration_comparing_aggregation_algorithms
 # or
-make comparing_KLUCB_aggregation
+make comparing_aggregation_algorithms
+```
+
+### [Single player, with Sparse Stochastic Bandit](configuration_sparse.py)
+```bash
+python main.py configuration_sparse
+# or
+make sparse
+```
+
+### [Single player, with Markovian problem](configuration_markovian.py)
+```bash
+python main.py configuration_markovian
+# or
+make markovian
 ```
 
 ### [Multi-Player, one algorithm](main_multiplayers.py)
