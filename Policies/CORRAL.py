@@ -49,27 +49,45 @@ def unnormalize_reward(reward, lower=0., amplitude=1.):
 
 # --- Log-Barrier-OMD
 
-def log_Barrier_OMB(trusts, losses, steps):
+def log_Barrier_OMB(trusts, losses, rates):
     r""" A step of the *log-barrier Online Mirror Descent*, updating the trusts:
 
     - Find :math:`\lambda \in [\min_i l_{t,i}, \max_i l_{t,i}]` such that :math:`\sum_i \frac{1}{1/p_{t,i} + \eta_{t,i}(l_{t,i} - \lambda)} = 1`.
     - Return :math:`\mathbf{p}_{t+1,i}` such that :math:`\frac{1}{p_{t+1,i}} = \frac{1}{p_{t,i}} + \eta_{t,i}(l_{t,i} - \lambda)`.
 
-    - Note: uses `scipy.optimize.minimize_scalar` for the optimization.
+    - Note: uses :func:`scipy.optimize.minimize_scalar` for the optimization.
     - Reference: [Learning in games: Robustness of fast convergence, by D.Foster, Z.Li, T.Lykouris, K.Sridharan, and E.Tardos, NIPS 2016].
     """
-    min_loss, max_loss = np.min(losses), np.max(losses)
+    min_loss = max(0, np.min(losses))
+    max_loss = np.max(losses)
     def objective(a_loss):
         """Objective function of the loss."""
-        lhs = np.sum(1. / ((1. / trusts) + steps * (losses - a_loss)))
+        lhs = np.sum(1. / ((1. / trusts) + rates * (losses - a_loss)))
         rhs = 1.
         # return np.abs(lhs - rhs)
         return (lhs - rhs) ** 2
+    assert min_loss <= max_loss, "Error: the interval [min_loss, max_loss] = [{:.3g}, {:.3g}] is not a valid constraint...".format(min_loss, max_loss)  # DEBUG
     result = minimize_scalar(objective, bounds=(min_loss, max_loss), method='bounded')
     best_loss = result.x
     assert min_loss <= best_loss <= max_loss, "Error: the loss 'lambda={:.3g}' was supposed to be found in [min_loss, max_loss] = [{:.3g}, {:.3g}]...".format(best_loss, min_loss, max_loss)  # DEBUG
-    new_trusts = 1. / ((1. / trusts) + steps * (losses - best_loss))
-    assert np.isclose(np.sum(new_trusts), 1) and np.all(0 <= new_trusts) and np.all(new_trusts <= 1), "Error: the new trusts vector = {} was not a valid probability but it is not...".format(list(new_trusts))  # DEBUG
+
+    new_trusts = 1. / ((1. / trusts) + rates * (losses - best_loss))
+
+    new_trusts /= np.sum(new_trusts)
+    assert np.isclose(np.sum(new_trusts), 1), "Error: the new trusts vector = {} was supposed to sum to 1 but does not...".format(list(new_trusts))  # DEBUG
+
+    if not np.all(new_trusts >= 0):
+        print("Warning: the new trusts vector = {} was supposed to be a valid probability >= 0, but it is not... Let's cheat!".format(list(new_trusts)))  # DEBUG)
+        x = np.min(new_trusts)
+        assert x < 0
+        new_trusts /= np.abs(x)
+        new_trusts += 1
+        assert np.isclose(np.min(new_trusts), 0)
+        assert np.all(new_trusts >= 0)
+        new_trusts /= np.sum(new_trusts)
+    assert np.all(new_trusts >= 0), "Error: the new trusts vector = {} was supposed to be a valid probability >= 0, but it is not...".format(list(new_trusts))  # DEBUG
+
+    assert np.all(new_trusts <= 1), "Error: the new trusts vector = {} was supposed to be a valid probability <= 1, but it is not...".format(list(new_trusts))  # DEBUG
     return new_trusts
 
 
@@ -98,7 +116,7 @@ class CORRAL(BasePolicy):
                  horizon=None, rate=None,
                  unbiased=UNBIASED, broadcast_all=BROADCAST_ALL, prior='uniform',
                  lower=0., amplitude=1.
-                 ):
+                ):
         # Attributes
         self.nbArms = nbArms  #: Number of arms.
         self.lower = lower  #: Lower values for rewards.
@@ -231,16 +249,16 @@ class CORRAL(BasePolicy):
         trusts = log_Barrier_OMB(self.trusts, self.losses, self.rates)
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
-        # self.trusts = trusts / np.sum(trusts)  # XXX maybe this isn't necessary...
+        self.trusts = trusts / np.sum(trusts)  # XXX maybe this isn't necessary...
 
         # add uniform mixing of proportion gamma
         bar_trusts = (1 - self.gamma) * self.trusts + (self.gamma / self.nbChildren)
-        # self.bar_trusts = bar_trusts / np.sum(bar_trusts)  # XXX maybe this isn't necessary...
+        self.bar_trusts = bar_trusts / np.sum(bar_trusts)  # XXX maybe this isn't necessary...
 
         # 5. Compare trusts with the self.rhos values to compute the new learning rates and rhos
         for i in range(self.nbChildren):
             if self.bar_trusts[i] < self.rhos[i]:
-                print("  For child #i = {}, the sampling trust was = {:.3g}, smaller than the threshold rho = {:.3g} so the learning rate is increased from {:.3g} to {:.3g}, and the threshold is now {:.3g} ...".format(i, self.bar_trusts[i], self.rhos[i], self.rates[i], self.rates[i] * self.beta, self.bar_trusts[i] / 2.))  # DEBUG
+                # print("  For child #i = {}, the sampling trust was = {:.3g}, smaller than the threshold rho = {:.3g} so the learning rate is increased from {:.3g} to {:.3g}, and the threshold is now {:.3g} ...".format(i, self.bar_trusts[i], self.rhos[i], self.rates[i], self.rates[i] * self.beta, self.bar_trusts[i] / 2.))  # DEBUG
                 self.rhos[i] = self.bar_trusts[i] / 2.
                 self.rates[i] *= self.beta  # increase the rate for this guy
             # else:  # nothing to do

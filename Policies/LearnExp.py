@@ -111,6 +111,7 @@ class LearnExp(BasePolicy):
                 print("  Using this already created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child)
 
+        self.last_choice = None  #: Remember the index of the last child trusted for a decision.
         # Initialize the arrays
         # Assume uniform prior if not given or if = 'uniform'
         self.trusts = np.full(nbChildren, 1. / nbChildren)  #: Initial trusts in the slaves :math:`p_j^t`. Default to uniform, but a prior can also be given.

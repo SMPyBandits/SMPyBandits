@@ -34,8 +34,8 @@ from .BasePolicy import BasePolicy
 #: A flag to know if the rewards are used as biased estimator,
 #: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
-unbiased = False
-unbiased = True    # Better
+UNBIASED = False
+UNBIASED = True    # Better
 
 #: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
 #:
@@ -43,8 +43,8 @@ unbiased = True    # Better
 #: - Second choice: my proposal, trusts are just updated multiplicatively, ``trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t)``.
 #:
 #: Both choices seem fine, and anyway the trusts are renormalized to be a probability distribution, so it doesn't matter much.
-update_like_exp4 = True
-update_like_exp4 = False  # Better
+UPDATE_LIKE_EXP4 = True
+UPDATE_LIKE_EXP4 = False  # Better
 
 #: Non parametric flag to know if the Exp4-like update uses losses or rewards.
 #: Losses are ``1 - reward``, in which case the ``rate_t`` is negative.
@@ -52,7 +52,7 @@ USE_LOSSES = True
 USE_LOSSES = False
 
 #: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision ``Aggragorn[A1..AN]`` followed.
-update_all_children = False
+UPDATE_ALL_CHILDREN = False
 
 
 class Aggragorn(BasePolicy):
@@ -60,10 +60,10 @@ class Aggragorn(BasePolicy):
 
     def __init__(self, nbArms, children=None,
                  learningRate=None, decreaseRate=None, horizon=None,
-                 update_all_children=update_all_children, update_like_exp4=update_like_exp4,
-                 unbiased=unbiased, prior='uniform',
+                 update_all_children=UPDATE_ALL_CHILDREN, update_like_exp4=UPDATE_LIKE_EXP4,
+                 unbiased=UNBIASED, prior='uniform',
                  lower=0., amplitude=1.,
-                 ):
+                ):
         # Attributes
         self.nbArms = nbArms  #: Number of arms
         self.lower = lower  #: Lower values for rewards
