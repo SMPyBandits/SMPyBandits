@@ -59,11 +59,17 @@ moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
 server:
-	# clear ; time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
-	clear ; time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	clear
+	# time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
+	time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
 
-client:
-	clear ; time ./client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0.1, 0.2, 0.04], "speed": 0.1}'
+client.py:
+	clear
+	time ./client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0.1, 0.2, 0.04], "speed": 0.1}'
+client.cpp:
+	clear
+	g++ -o client.exe client.cpp
+	time ./client.exe
 
 # Time profilers
 profile:
