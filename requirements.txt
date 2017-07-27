@@ -22,3 +22,6 @@ recommonmark      # parser to read Markdown files
 # --- For only one policy
 scikit-learn           # for UnsupervisedLearning
 scikit-optimize        # for BlackBoxOpt
+
+# --- For command line scripts
+docopt           # for server.py

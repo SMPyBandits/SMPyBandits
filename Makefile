@@ -58,6 +58,13 @@ moremultiplayers3:
 moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
+server:
+	# clear ; time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
+	clear ; time ./server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+
+client:
+	clear ; time ./client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0.1, 0.2, 0.04], "speed": 0.1}'
+
 # Time profilers
 profile:
 	time nice -n 19 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
