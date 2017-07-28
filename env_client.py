@@ -89,7 +89,7 @@ def client(env, host, port, speed):
             message = str(reward)[:7].encode()
             print("Environment = {}, at time t = {}:".format(env, t))
             print("Sending random reward = {!r} from arm {} ...".format(message, arm))
-            send(sock, message)
+            send_message(sock, message)
             print("Sleeping for {} second(s)...".format(speed))
             time.sleep(speed)
     finally:
@@ -108,6 +108,8 @@ def main(arguments):
     configuration = read_configuration_env(json_configuration)
     # try to map strings in the dictionary to variables, e.g., policies
     for (key, value) in configuration.items():
+        if isinstance(value, list):  # unhashable
+            value = tuple(value)
         if value in globals():
             configuration[key] = globals()[value]
     # configuration['arm_type'] = globals()[configuration['arm_type']]

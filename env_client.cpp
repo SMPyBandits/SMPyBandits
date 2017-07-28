@@ -8,8 +8,9 @@
     - Online: http://banditslilian.gforge.inria.fr/
     - Reference: http:// www.binarytides.com/code-a-simple-socket-client-class-in-c/
 */
+
+// Include libraries
 #include <cstdlib>         // rand
-#include <iostream>        // cout
 #include <stdio.h>         // printf
 #include <string.h>        // strlen
 #include <string>          // string
@@ -19,6 +20,7 @@
 #include <thread>          // sleep
 #include <chrono>          // milliseconds
 
+// No need for std::printf, std::string etc
 using namespace std;
 
 /**
@@ -27,7 +29,7 @@ using namespace std;
 class tcp_client {
     private:
         int sock;
-        std::string address;
+        string address;
         int port;
         struct sockaddr_in server;
 
@@ -38,6 +40,9 @@ class tcp_client {
         string receive(int);
 };
 
+/**
+    Default initializer
+*/
 tcp_client::tcp_client() {
     sock = -1;
     port = 0;
@@ -47,7 +52,10 @@ tcp_client::tcp_client() {
 /**
     Connect to a host on a certain port number
 */
-bool tcp_client::conn(string address , int port) {
+bool tcp_client::conn(string address, int port) {
+    const char* c_address;
+    c_address = address.c_str();
+
     // create socket if it is not already created
     if (sock == -1) {
         // Create socket
@@ -55,52 +63,47 @@ bool tcp_client::conn(string address , int port) {
         if (sock == -1) {
             perror("Could not create socket");
         }
-
-        cout << "Socket created\n";
+        printf("Socket created\n");
     }
     else    {   /* OK , nothing */  }
 
     // setup address structure
-    if (inet_addr(address.c_str()) == -1) {
+    if (inet_addr(c_address) == -1) {
         struct hostent *he;
         struct in_addr **addr_list;
 
         // resolve the hostname, its not an ip address
-        if ( (he = gethostbyname( address.c_str() ) ) == NULL) {
+        if ( (he = gethostbyname(c_address) ) == NULL) {
             // gethostbyname failed
             herror("gethostbyname");
-            cout << "Failed to resolve hostname\n";
-
+            printf("Failed to resolve hostname for '%s'... Try again please.\n", c_address);
             return false;
         }
 
         // Cast the h_addr_list to in_addr , since h_addr_list also has the ip address in long format only
         addr_list = (struct in_addr **) he->h_addr_list;
 
-        for(int i = 0; addr_list[i] != NULL; i++) {
+        for (int i = 0; addr_list[i] != NULL; i++) {
             server.sin_addr = *addr_list[i];
-
-            cout << address << " resolved to " << inet_ntoa(*addr_list[i]) << endl;
-
+            printf("Address '%s' resolved to '%s'...\n", c_address, inet_ntoa(*addr_list[i]));
             break;
         }
     }
-
     // plain ip address
     else {
-        server.sin_addr.s_addr = inet_addr( address.c_str() );
+        server.sin_addr.s_addr = inet_addr( c_address );
     }
 
     server.sin_family = AF_INET;
-    server.sin_port = htons( port );
+    server.sin_port = htons(port);
 
     // Connect to remote server
     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0) {
-        perror("connect failed. Error");
-        return 1;
+        perror("Connect failed. Error!");
+        return false;
     }
 
-    cout << "Connected\n";
+    printf("Connected to '%s' with port '%d' !\n", c_address, port);
     return true;
 }
 
@@ -109,12 +112,11 @@ bool tcp_client::conn(string address , int port) {
 */
 bool tcp_client::send_data(string data) {
     // Send some data
-    if ( send(sock , data.c_str() , strlen( data.c_str() ) , 0) < 0) {
+    if ( send(sock , data.c_str(), strlen( data.c_str() ), 0) < 0) {
         perror("Send failed : ");
         return false;
     }
-    std::printf("\nData %s send\n", data.c_str());
-
+    printf("\nData '%s' send\n", data.c_str());
     return true;
 }
 
@@ -126,9 +128,8 @@ string tcp_client::receive(int size=1) {
     string reply;
 
     // Receive a reply from the server
-    if ( recv(sock , buffer , sizeof(buffer) , 0) < 0)
-    {
-        puts("recv failed");
+    if ( recv(sock , buffer , sizeof(buffer) , 0) < 0) {
+        printf("recv failed...");
     }
 
     reply = buffer;
@@ -136,7 +137,7 @@ string tcp_client::receive(int size=1) {
 }
 
 int main(int argc , char *argv[]) {
-    std::srand(std::time(0)); // use current time as seed for random generator
+    srand(time(0)); // use current time as seed for random generator
 
     float reward;
     tcp_client c;
@@ -146,17 +147,17 @@ int main(int argc , char *argv[]) {
     // TODO read this from command line
     c.conn("0.0.0.0", 10000);
 
-    // send some data
+    // send some data, just a stupid useless handcheck
     c.send_data("Hi!");
 
     // receive and echo reply
     while (true) {
         received = c.receive();
-        std::printf("\nReceived '%s'...", received.c_str());
-        // send some data
+        printf("\nReceived '%s'...", received.c_str());
+        // send some data, random in [0, 1]
         reward = rand() / static_cast<float>(RAND_MAX);
-        c.send_data(std::to_string(reward));
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        c.send_data(to_string(reward));
+        this_thread::sleep_for(chrono::milliseconds(2000));
     };
 
     // done

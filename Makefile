@@ -60,12 +60,14 @@ moremultiplayers2:
 
 policy_server.py:
 	clear
+	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
 	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
-	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "DoublingTrickWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" }}'
+	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3, "horizon": 10000 }}'
 
 env_client.py:
 	clear
-	time ./env_client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0.1, 0.2, 0.04], "speed": 0.1}'
+	time ./env_client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9], "speed": 0.1}'
 env_client.cpp:
 	clear
 	g++ -Wall -o env_client.exe env_client.cpp
