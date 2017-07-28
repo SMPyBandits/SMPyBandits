@@ -103,6 +103,7 @@ def transform_str(params):
     """Like a safe exec() on a dictionary that can contain special values:
 
     - strings are interpreted as variables names (e.g., policy names) from the current ``globals()`` scope,
+    - list are transformed to tuples to be constant and hashable,
     - dictionary are recursively transformed.
     """
     for (key, value) in params.items():
@@ -123,7 +124,7 @@ def main(arguments):
     """
     host = arguments['--host']
     port = int(arguments['--port'])
-    speed = int(arguments['--speed'])
+    speed = int(int(arguments['--speed']) / 1000)
     json_configuration = arguments['<json_configuration>']
     configuration = read_configuration_env(json_configuration)
     transform_str(configuration)

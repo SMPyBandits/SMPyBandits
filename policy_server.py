@@ -66,52 +66,58 @@ def server(policy, host, port):
     sock.listen(1)
 
     chosen_arm = None
+    
+    try:
+        while True:
+            # Wait for a connection
+            print("Waiting for a connection...")
+            connection, client_address = sock.accept()
+            try:
+                print("(New) connection from", client_address)
 
-    while True:
-        # Wait for a connection
-        print("Waiting for a connection...")
-        connection, client_address = sock.accept()
-        try:
-            print("(New) connection from", client_address)
+                # Receive the data in small chunks and react to it
+                while True:
+                    print("Learning algorithm = {} and chosen_arm = {}, at time t = {}:".format(policy, chosen_arm, policy.t))
+                    print("\n  Its pulls   = {}...\n  Its rewards = {}...\n  ==> means   = {}...".format(policy.pulls, policy.rewards, policy.rewards / (1 + policy.pulls)))
+                    if has_index:
+                        print("  And internal indexes =", policy.index)
+                    data = connection.recv(16)
+                    message = data.decode()
+                    print("\nData received: {!r}".format(message))
+                    try:
+                        reward = float(message)
 
-            # Receive the data in small chunks and react to it
-            while True:
-                print("Learning algorithm = {} and chosen_arm = {}, at time t = {}:".format(policy, chosen_arm, policy.t))
-                print("\n  Its pulls   = {}...\n  Its rewards = {}...\n  ==> means   = {}...".format(policy.pulls, policy.rewards, policy.rewards / (1 + policy.pulls)))
-                if has_index:
-                    print("  And internal indexes =", policy.index)
-                data = connection.recv(16)
-                message = data.decode()
-                print("\nData received: {!r}".format(message))
-                try:
-                    reward = float(message)
+                        if chosen_arm is not None:
+                            print("Passing reward {} on arm {} to the policy".format(reward, chosen_arm))
+                            policy.getReward(chosen_arm, reward)
+                    except ValueError:
+                        print("Unable to convert message = {!r} to a float reward...".format(message))  # DEBUG
+                    try:
+                        chosen_arm = policy.choice()
+                    except ValueError:
+                        print("Unable to use policy's choice() method... playing the (t+1)%K-th arm...")  # DEBUG
+                        chosen_arm = (policy.t + 1) % policy.nbArms
+                    message = str(chosen_arm)
+                    print("Send: {!r}".format(message))
+                    connection.sendall(message.encode())
 
-                    if chosen_arm is not None:
-                        print("Passing reward {} on arm {} to the policy".format(reward, chosen_arm))
-                        policy.getReward(chosen_arm, reward)
-                except ValueError:
-                    print("Unable to convert message = {!r} to a float reward...".format(message))  # DEBUG
-                try:
-                    chosen_arm = policy.choice()
-                except ValueError:
-                    print("Unable to use policy's choice() method... playing the (t+1)%K-th arm...")  # DEBUG
-                    chosen_arm = (policy.t + 1) % policy.nbArms
-                message = str(chosen_arm)
-                print("Send: {!r}".format(message))
-                connection.sendall(message.encode())
-
-        except ConnectionResetError:
-            print("Remote connection was not found... waiting for the next one!")
-        finally:
-            # Clean up the connection
-            print("Closing connection...")
-            connection.close()
+            except ConnectionResetError:
+                print("Remote connection was not found... waiting for the next one!")
+            finally:
+                # Clean up the connection
+                print("Closing connection...")
+                connection.close()
+    finally:
+        # Clean up the socket
+        print("Closing socket...")
+        sock.close()
 
 
 def transform_str(params):
     """Like a safe exec() on a dictionary that can contain special values:
 
     - strings are interpreted as variables names (e.g., policy names) from the current ``globals()`` scope,
+    - list are transformed to tuples to be constant and hashable,
     - dictionary are recursively transformed.
     """
     for (key, value) in params.items():

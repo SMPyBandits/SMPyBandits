@@ -1,6 +1,7 @@
-// #! g++ -Wall -o env_client.exe env_client.cpp
+// #! g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
 /**
     C++ client, using sockets, to simulate a MAB environment.
+    So far, only Bernoulli arms are supported.
 
     - Author: Lilian Besson
     - License: MIT License (https://lbesson.mit-license.org/)
@@ -12,7 +13,7 @@
 // Include libraries
 #include <cstdlib>         // rand
 #include <stdio.h>         // printf
-#include <cstdio>          // scanf ?
+#include <iostream>        // streams, <<, >>
 #include <string.h>        // strlen
 #include <string>          // string
 #include <sys/socket.h>    // socket
@@ -70,7 +71,7 @@ bool tcp_client::conn(string address, int port) {
     else    {   /* OK , nothing */  }
 
     // setup address structure
-    if (inet_addr(c_address) == -1) {
+    if (inet_addr(c_address) < 0) {
         struct hostent *he;
         struct in_addr **addr_list;
 
@@ -118,14 +119,14 @@ bool tcp_client::send_data(string data) {
         perror("Send failed : ");
         return false;
     }
-    printf("\nData '%s' send\n", data.c_str());
+    printf("\nData '%s' successfully sent!\n", data.c_str());
     return true;
 }
 
 /**
     Receive data from the connected host
 */
-string tcp_client::receive(int size=16) {
+string tcp_client::receive(int size=4) {
     char buffer[size];
     string reply;
 
@@ -138,49 +139,121 @@ string tcp_client::receive(int size=16) {
     return reply;
 }
 
-#define random_float()  rand() / static_cast<float>(RAND_MAX);
+// Macro to have a random float in [0, 1)
+#define random_float()  (rand() / static_cast<float>(RAND_MAX))
 
-int loop(string address, int port, float* means, int mssleep=2000) {
-    srand(time(0)); // use current time as seed for random generator
+/**
+    Draw one sample from a Bernoulli distribution of a certain mean.
+*/
+float bernoulli_draw(float mean) {
+    // send some data, random in [0, 1]
+    if (random_float() < mean) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+/**
+    Infinite loop, sending random rewards on the asked arm.
+
+    - create the socket and connect,
+    - continuously read the socket for a channel id number #i,
+    - generate a random reward for mean = mu[i],
+    - send back that reward to the socket.
+*/
+int loop(string address, int port, vector<float> means, int milli_sleep=2000) {
+    srand(time(0));  // use current time as seed for random generator
 
     tcp_client c;
     string received;
-    float bern;
-    int reward;
+    float reward;
     int channel;
 
-    // connect to host
-    c.conn(address, port);
+    c.conn(address, port);  // connect to host
 
-    // send some data, just a stupid useless handcheck
-    c.send_data("Hi!");
+    c.send_data("Hi from env_client.exe !");  // send some data, just a stupid useless handcheck
 
-    // receive and echo reply
-    while (true) {
-        received = c.receive();
-        printf("\nReceived '%s'...", received.c_str());
-        channel = stoi(received);
-        printf("\n  = Channel '%d'...", channel);
-        // send some data, random in [0, 1]
-        bern = random_float();
-        if (bern < means[channel]) {
-            reward = 1;
-        } else {
-            reward = 0;
+    while (true) {  // receive and echo reply
+        try {
+            received = c.receive();
+            try {
+                channel = stoi(received);
+            }
+            catch (const invalid_argument&) {
+                channel = 0;
+            }
+            printf("\nReceived '%s' = channel #'%d'...", received.c_str(), channel);
+            reward = bernoulli_draw(means[channel]);
+            c.send_data(to_string(reward));
         }
-        c.send_data(to_string(reward));
-        this_thread::sleep_for(chrono::milliseconds(mssleep));
+        catch (const invalid_argument&) {
+            printf("\nReceived something not correctly understood by stoi(), no issue we continue.");
+        }
+        catch (const runtime_error&) {
+            printf("\nRuntime error in the loop, no issue we continue.");
+        }
+        this_thread::sleep_for(chrono::milliseconds(milli_sleep));
     };
 
-    // done
-    return 0;
+    return 0;   // done
 }
 
+/**
+    Convert a string, read from the cli, to a vector of float number.
+    In Python, that would be map(float, arr.split(',')), but it takes 15 lines here. Yay!
+*/
+vector<float> array_from_str(string arr) {
+    // cout << "arr = " << arr << endl;  // DEBUG
+    uint nb = 1;
+    uint size_arr = arr.size();
+    // cout << "size_arr = " << size_arr << endl;  // DEBUG
+    // first, find nb
+    uint index = 0;
+    uint found;
+    while (true) {
+        // cout << "found = " <<found << endl;  // DEBUG
+        // cout << "index = " << index << endl;  // DEBUG
+        found = arr.find(',', index);
+        if ((found == string::npos) || (found >= size_arr)) {
+            break;
+        } else {
+            nb += 1;
+            index = found + 1;
+        }
+    }
+    // cout << "nb = " << nb << endl;  // DEBUG
+
+    // allocate vector
+    vector<float> means;
+    // cout << "\nSecond step...\n";  // DEBUG
+
+    // then iterate on the string, convert and store
+    uint i = 0;
+    index = 0;
+    while (true) {
+        found = arr.find(',', index);
+        // cout << "found = " << found << endl;  // DEBUG
+        if ((found == string::npos) || (found >= size_arr)) {
+            break;
+        } else {
+            index = found + 1;
+            // cout << "index = " << index << endl;  // DEBUG
+            i += 1;
+            // cout << "i = " << i << endl;  // DEBUG
+            means.push_back(stof(arr.substr(index, found)));
+            // cout << "means[i] = " << means[i] << endl;  // DEBUG
+        }
+    }
+    return means;
+}
+
+// documentation for the cli generated with docopt
 static const char USAGE[] =
 R"(C++ Client to play multi-armed bandits problem against.
 
 Usage:
-    env_client.exe [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>]
+    env_client.exe [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] [<bernoulli_means>]
     env_client.exe (-h|--help)
     env_client.exe --version
 
@@ -192,11 +265,18 @@ Options:
     --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
 )";
 
+/**
+    Main function, parsing the cli arguments with docopt::docopt and calling loop() with the good arguments.
+*/
 int main(int argc , const char** argv) {
     string address;
-    long port;
-    long speed;
+    long port, speed;
+    vector<float> default_means = {
+        0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9
+    };
+    vector<float> means;
 
+    // parse the cli arguments, magically with docopt::docopt
     map<string, docopt::value> args
         = docopt::docopt(USAGE,
                          { argv + 1, argv + argc },
@@ -205,10 +285,21 @@ int main(int argc , const char** argv) {
     );
 
     address = args["--host"].asString();
-    port = args["--port"].asLong();
-    speed = args["--speed"].asLong();
+    port    = args["--port"].asLong();
+    speed   = args["--speed"].asLong();
+    if (args["<bernoulli_means>"].isString()) {
+        printf("Bernoulli means = '%s'\n", args["<bernoulli_means>"].asString());
+        means = array_from_str(args["<bernoulli_means>"].asString());
+    } else {
+        means = default_means;
+    }
 
-    // TODO read this from command line
-    float means[] = { 0., 0., 0., 0., 0., 0., 0., 0.7, 0.8, 0.9 };
+    cout << "- address = " << address << endl;  // DEBUG
+    cout << "- port = " << port << endl;  // DEBUG
+    cout << "- speed = " << speed << endl;  // DEBUG
+    for (uint i = 0; i < means.size(); i++ ) {
+        cout << "- means[" << i << "] = " << means[i] << endl;  // DEBUG
+    }
+    cout << endl << "Calling loop... starting..." << endl;  // DEBUG
     return loop(address, port, means, speed);
 }

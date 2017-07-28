@@ -69,12 +69,14 @@ policy_server_py:
 
 env_client_py:
 	clear
-	time ./env_client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9], "speed": 0.1}'
+	time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9], "speed": 0.1}'
 
-env_client_cpp:
-	clear
+env_client.exe:
 	g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
-	time ./env_client.exe
+
+env_client_cpp:	env_client.exe
+	clear
+	time ./env_client.exe --speed=1000 --port=10000 --host=127.0.0.1
 
 # Time profilers
 profile:
