@@ -65,4 +65,4 @@ class ApproximatedFHGittins(IndexPolicy):
         loghalf = np.sqrt(np.maximum(0, np.log(m_by_Nk)))
         indexes = (self.rewards / self.pulls) + np.sqrt(self.alpha / (2. * self.pulls) * np.log(m_by_Nk / loghalf))
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

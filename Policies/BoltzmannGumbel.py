@@ -57,4 +57,4 @@ class BoltzmannGumbel(IndexPolicy):
         z_t = rn.gumbel(0, 1, self.nbArms)  # vector samples
         indexes = (self.rewards / self.pulls) + beta_t * z_t
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

@@ -71,4 +71,4 @@ class OCUCB(UCB):
     #     """ Compute the current indexes for all arms, in a vectorized manner."""
     #     indexes = (self.rewards / self.pulls) + np.sqrt(2 * self.eta * np.log(self._Bterms()) / self.pulls)
     #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index = indexes
+    #     self.index[:] = indexes

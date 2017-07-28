@@ -46,4 +46,4 @@ class UCBlog10alpha(UCBlog10):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log10(self.t)) / (2 * self.pulls))
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

@@ -86,7 +86,7 @@ class DiscountedUCB(UCBalpha):
         assert n_t_gamma <= self.t, "Error: n_t_gamma was computed as {:.3g} but should be < t = {:.3g}...".format(n_t_gamma, self.t)  # DEBUG
         indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(n_t_gamma)) / (2 * self.pulls))
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes
 
 
 # --- Horizon dependent version

@@ -57,4 +57,4 @@ class UCBV(UCB):
         variances = (self.rewardsSquared / self.pulls) - means ** 2  # Variance estimate
         indexes = means + np.sqrt(2.0 * np.log(self.t) * variances / self.pulls) + 3.0 * self.amplitude * np.log(self.t) / self.pulls
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

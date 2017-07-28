@@ -47,4 +47,4 @@ class klUCBloglog(klUCB):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = self.klucb(self.rewards / self.pulls, (np.log(self.t) + self.c * np.log(np.maximum(1., np.log(self.t)))) / self.pulls, self.tolerance)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

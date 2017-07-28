@@ -42,4 +42,4 @@ class UCBwrong(IndexPolicy):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = (self.rewards / self.t) + np.sqrt((2 * np.log(self.t)) / self.pulls)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

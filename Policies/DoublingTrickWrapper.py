@@ -242,6 +242,10 @@ class DoublingTrickWrapper(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
+        self.rewards = self.policy.rewards
+        self.pulls = self.policy.pulls
+        if hasattr(self.policy, "index"):
+            self.index = self.policy.index
 
     # --- Pass the call to the subpolicy
 

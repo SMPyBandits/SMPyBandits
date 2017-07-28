@@ -71,4 +71,4 @@ class klUCBPlusPlus(klUCB):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = self.klucb(self.rewards / self.pulls, self.c * np_g(self.pulls, self.horizon, self.nbArms) / self.pulls, self.tolerance)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

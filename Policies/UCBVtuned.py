@@ -48,4 +48,4 @@ class UCBVtuned(UCBV):
         variances += np.sqrt(2.0 * np.log(self.t) / self.pulls)
         indexes = means + np.sqrt(np.log(self.t) * variances / self.pulls)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

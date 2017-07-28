@@ -39,4 +39,4 @@ class MOSSH(MOSS):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = (self.rewards / self.pulls) + np.sqrt(np.maximum(0., np.log(self.horizon / (self.nbArms * self.pulls))) / self.pulls)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

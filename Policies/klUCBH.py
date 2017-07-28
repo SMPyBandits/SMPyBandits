@@ -48,4 +48,4 @@ class klUCBH(klUCB):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.horizon) / self.pulls, self.tolerance)
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

@@ -40,4 +40,4 @@ class UCBH(UCBalpha):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(self.horizon)) / (2 * self.pulls))
         indexes[self.pulls < 1] = float('+inf')
-        self.index = indexes
+        self.index[:] = indexes

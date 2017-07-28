@@ -182,7 +182,7 @@ class CPUCB(UCB):
     #     """ Compute the current indexes for all arms, in a vectorized manner."""
     #     indexes = ClopperPearsonUCB(self.rewards, self.pulls, 1. / (self.t ** self.c))
     #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index = indexes
+    #     self.index[:] = indexes
 
 
 # --- Debugging
