@@ -12,6 +12,7 @@
 // Include libraries
 #include <cstdlib>         // rand
 #include <stdio.h>         // printf
+#include <cstdio>          // scanf ?
 #include <string.h>        // strlen
 #include <string>          // string
 #include <sys/socket.h>    // socket
@@ -19,6 +20,7 @@
 #include <netdb.h>         // hostent
 #include <thread>          // sleep
 #include <chrono>          // milliseconds
+#include <docopt.h>        // docopt command line parser
 
 // No need for std::printf, std::string etc
 using namespace std;
@@ -123,7 +125,7 @@ bool tcp_client::send_data(string data) {
 /**
     Receive data from the connected host
 */
-string tcp_client::receive(int size=1) {
+string tcp_client::receive(int size=16) {
     char buffer[size];
     string reply;
 
@@ -136,16 +138,19 @@ string tcp_client::receive(int size=1) {
     return reply;
 }
 
-int main(int argc , char *argv[]) {
+#define random_float()  rand() / static_cast<float>(RAND_MAX);
+
+int loop(string address, int port, float* means, int mssleep=2000) {
     srand(time(0)); // use current time as seed for random generator
 
-    float reward;
     tcp_client c;
     string received;
+    float bern;
+    int reward;
+    int channel;
 
     // connect to host
-    // TODO read this from command line
-    c.conn("0.0.0.0", 10000);
+    c.conn(address, port);
 
     // send some data, just a stupid useless handcheck
     c.send_data("Hi!");
@@ -154,12 +159,56 @@ int main(int argc , char *argv[]) {
     while (true) {
         received = c.receive();
         printf("\nReceived '%s'...", received.c_str());
+        channel = stoi(received);
+        printf("\n  = Channel '%d'...", channel);
         // send some data, random in [0, 1]
-        reward = rand() / static_cast<float>(RAND_MAX);
+        bern = random_float();
+        if (bern < means[channel]) {
+            reward = 1;
+        } else {
+            reward = 0;
+        }
         c.send_data(to_string(reward));
-        this_thread::sleep_for(chrono::milliseconds(2000));
+        this_thread::sleep_for(chrono::milliseconds(mssleep));
     };
 
     // done
     return 0;
+}
+
+static const char USAGE[] =
+R"(C++ Client to play multi-armed bandits problem against.
+
+Usage:
+    env_client.exe [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>]
+    env_client.exe (-h|--help)
+    env_client.exe --version
+
+Options:
+    -h --help   Show this screen.
+    --version   Show version.
+    --port=<PORT>   Port to use for the TCP connection [default: 10000].
+    --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
+    --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
+)";
+
+int main(int argc , const char** argv) {
+    string address;
+    long port;
+    long speed;
+
+    map<string, docopt::value> args
+        = docopt::docopt(USAGE,
+                         { argv + 1, argv + argc },
+                         true,               // show help if requested
+                         "MAB environment C++ client v0.1"  // version string
+    );
+
+    address = args["--host"].asString();
+    port = args["--port"].asLong();
+    speed = args["--speed"].asLong();
+
+    // TODO read this from command line
+    float means[] = { 0., 0., 0., 0., 0., 0., 0., 0.7, 0.8, 0.9 };
+    return loop(address, port, means, speed);
 }

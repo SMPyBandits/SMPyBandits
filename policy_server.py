@@ -4,9 +4,9 @@
 Server to play multi-armed bandits problem against.
 
 Usage:
-    server.py [--port=<PORT>] [--host=<HOST>] <json_configuration>
-    server.py (-h|--help)
-    server.py --version
+    policy_server.py [--port=<PORT>] [--host=<HOST>] <json_configuration>
+    policy_server.py (-h|--help)
+    policy_server.py --version
 
 Options:
     -h --help   Show this screen.
@@ -77,7 +77,7 @@ def server(policy, host, port):
             # Receive the data in small chunks and react to it
             while True:
                 print("Learning algorithm = {} and chosen_arm = {}, at time t = {}:".format(policy, chosen_arm, policy.t))
-                print("\n  Its pulls = {}...\n  Its rewards = {}...\n  ==> means = {}...".format(policy.pulls, policy.rewards, policy.rewards / (1 + policy.pulls)))
+                print("\n  Its pulls   = {}...\n  Its rewards = {}...\n  ==> means   = {}...".format(policy.pulls, policy.rewards, policy.rewards / (1 + policy.pulls)))
                 if has_index:
                     print("  And internal indexes =", policy.index)
                 data = connection.recv(16)
@@ -108,6 +108,22 @@ def server(policy, host, port):
             connection.close()
 
 
+def transform_str(params):
+    """Like a safe exec() on a dictionary that can contain special values:
+
+    - strings are interpreted as variables names (e.g., policy names) from the current ``globals()`` scope,
+    - dictionary are recursively transformed.
+    """
+    for (key, value) in params.items():
+        try:
+            if isinstance(value, dict):
+                transform_str(value)
+            elif value in globals():
+                params[key] = globals()[value]
+        except TypeError:
+            pass
+
+
 def main(args):
     """
     Take args, construct the learning policy and starts the server.
@@ -119,9 +135,8 @@ def main(args):
     nbArms = int(configuration['nbArms'])
     # try to map strings in the dictionary to variables, e.g., policies
     params = configuration['params']
-    for (key, value) in params.items():
-        if value in globals():
-            params[key] = globals()[value]
+    transform_str(params)
+    print("Params =", params)
     policy = globals()[configuration['archtype']](nbArms, **params)
     print("Using the policy", policy)
     return server(policy, host, port)

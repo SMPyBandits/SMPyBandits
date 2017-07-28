@@ -4,15 +4,16 @@
 Client to play multi-armed bandits problem against.
 
 Usage:
-    client.py [--port=<PORT>] [--host=<HOST>] <json_configuration>
-    client.py (-h|--help)
-    client.py --version
+    env_client.py [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] <json_configuration>
+    env_client.py (-h|--help)
+    env_client.py --version
 
 Options:
     -h --help   Show this screen.
     --version   Show version.
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
+    --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
 """
 from __future__ import print_function, division
 
@@ -98,24 +99,36 @@ def client(env, host, port, speed):
         sock.close()
 
 
+def transform_str(params):
+    """Like a safe exec() on a dictionary that can contain special values:
+
+    - strings are interpreted as variables names (e.g., policy names) from the current ``globals()`` scope,
+    - dictionary are recursively transformed.
+    """
+    for (key, value) in params.items():
+        if isinstance(value, dict):
+            transform_str(value)
+        if isinstance(value, list):  # unhashable
+            value = tuple(value)
+        try:
+            if value in globals():
+                params[key] = globals()[value]
+        except TypeError:
+            pass
+
+
 def main(arguments):
     """
     Take arguments, construct the learning policy and starts the server.
     """
     host = arguments['--host']
     port = int(arguments['--port'])
+    speed = int(arguments['--speed'])
     json_configuration = arguments['<json_configuration>']
     configuration = read_configuration_env(json_configuration)
-    # try to map strings in the dictionary to variables, e.g., policies
-    for (key, value) in configuration.items():
-        if isinstance(value, list):  # unhashable
-            value = tuple(value)
-        if value in globals():
-            configuration[key] = globals()[value]
-    # configuration['arm_type'] = globals()[configuration['arm_type']]
+    transform_str(configuration)
     env = MAB(configuration)
     print("Using the environment: ", env)  # DEBUG
-    speed = float(configuration['speed'])
     print("Emitting regularly every", speed, "seconds.")  # DEBUG
     return client(env, host, port, speed)
 

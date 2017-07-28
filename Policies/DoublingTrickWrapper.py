@@ -214,6 +214,9 @@ class DoublingTrickWrapper(BasePolicy):
         # --- Policy
         self._policy = policy  # Class to create the underlying policy
         self._args = args  # To keep them
+        if 'params' in kwargs:
+            kwargs.update(kwargs['params'])
+            del kwargs['params']
         self._kwargs = kwargs  # To keep them
         self.policy = None  #: Underlying policy
         # --- Horizon
@@ -244,8 +247,6 @@ class DoublingTrickWrapper(BasePolicy):
         self.policy.startGame()
         self.rewards = self.policy.rewards
         self.pulls = self.policy.pulls
-        if hasattr(self.policy, "index"):
-            self.index = self.policy.index
 
     # --- Pass the call to the subpolicy
 
@@ -285,6 +286,12 @@ class DoublingTrickWrapper(BasePolicy):
 
     # --- Sub methods
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def index(self):
+        r""" Get attribute ``index`` from the underlying policy."""
+        return self.policy.index
+
     def choice(self):
         r""" Pass the call to ``choice`` of the underlying policy."""
         return self.policy.choice()
@@ -313,12 +320,13 @@ class DoublingTrickWrapper(BasePolicy):
         r""" Pass the call to ``estimatedBestArms`` of the underlying policy."""
         return self.policy.estimatedBestArms(M=M)
 
-    # --- Hack!  FIXME bad idea!
-    #
-    # def __getattr__(self, name):
-    #     """ Generic method to capture all attribute/method call and pass them to the underlying policy."""
-    #     # print("Using hacking method DoublingTrickWrapper.__getattr__({}, {})...".format(self, name))  # DEBUG
-    #     return getattr(self.policy, name)
+    def computeIndex(self, arm):
+        r""" Pass the call to ``computeIndex`` of the underlying policy."""
+        return self.policy.computeIndex(arm)
+
+    def computeAllIndex(self):
+        r""" Pass the call to ``computeAllIndex`` of the underlying policy."""
+        return self.policy.computeAllIndex()
 
 
 # # --- Debugging

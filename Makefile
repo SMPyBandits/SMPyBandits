@@ -58,19 +58,22 @@ moremultiplayers3:
 moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
-policy_server.py:
+policy_server_py:
 	clear
-	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
-	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
-	# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "DoublingTrickWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" }}'
-	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3, "horizon": 10000 }}'
+	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
+	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "DoublingTrickWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" }}'
+	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "policy": "ApproximatedFHGittins", "sparsity": 3, "horizon": 10000, "alpha": 0.5 }}'
+	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "policy": "DoublingTrickWrapper", "sparsity": 3, "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" } }}'
+	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "DoublingTrickWrapper", "params": { "policy": "SparseWrapper", "next_horizon": "next_horizon__exponential_slow", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3 } }}'
 
-env_client.py:
+env_client_py:
 	clear
 	time ./env_client.py --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9], "speed": 0.1}'
-env_client.cpp:
+
+env_client_cpp:
 	clear
-	g++ -Wall -o env_client.exe env_client.cpp
+	g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
 	time ./env_client.exe
 
 # Time profilers

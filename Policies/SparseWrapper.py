@@ -83,6 +83,9 @@ class SparseWrapper(BasePolicy):
         # --- Policy
         self._policy = policy  # Class to create the underlying policy
         self._args = args  # To keep them
+        if 'params' in kwargs:
+            kwargs.update(kwargs['params'])
+            del kwargs['params']
         self._kwargs = kwargs  # To keep them
         self.policy = None  #: Underlying policy
         # --- internal memory
@@ -224,11 +227,6 @@ class SparseWrapper(BasePolicy):
     def index(self):
         r""" Get attribute ``index`` from the underlying policy."""
         return self.policy.index
-
-    # XXX no the choice() method is more complicated!
-    # def choice(self):
-    #     r""" Pass the call to ``choice`` of the underlying policy."""
-    #     return self.policy.choice()
 
     def choiceWithRank(self, rank=1):
         r""" Pass the call to ``choiceWithRank`` of the underlying policy."""
