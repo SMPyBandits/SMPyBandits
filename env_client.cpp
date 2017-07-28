@@ -1,6 +1,12 @@
+// #! g++ -Wall -o env_client.exe env_client.cpp
 /**
-    C++ client example using sockets
-    http:// www.binarytides.com/code-a-simple-socket-client-class-in-c/
+    C++ client, using sockets, to simulate a MAB environment.
+
+    - Author: Lilian Besson
+    - License: MIT License (https://lbesson.mit-license.org/)
+    - Date: 28-07-2017
+    - Online: http://banditslilian.gforge.inria.fr/
+    - Reference: http:// www.binarytides.com/code-a-simple-socket-client-class-in-c/
 */
 #include <cstdlib>         // rand
 #include <iostream>        // cout

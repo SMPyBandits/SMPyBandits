@@ -1,13 +1,13 @@
-# Cache
+# Python cache
 *.pyc
+*.pyo
 __pycache__/
 */__pycache__/
-.idea/
 
-# Backup
+# Nano backup
 *~
 
-# Useless files
+# Useless files, generated during builds
 *.so
 *.dot
 *.lprof
@@ -16,10 +16,20 @@ __pycache__/
 
 # Documentation
 _build/
+# auto generated with 'make apidoc'
 docs/*.rst
 
 # Tests
 *slack*bot*.py
+
+# Notebooks
 notebooks/.ipynb_checkpoints/
+
+# Visual Studio Code configuration
 .vscode/
+
+# JetBrains PyCharm IDE configuration
+.idea/
+
+# C++ executables
 *.exe

@@ -18,7 +18,7 @@ from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"
-version = "MAB server v{}".format(__version__)
+version = "MAB Policy server v{}".format(__version__)
 
 import json
 import socket
@@ -90,11 +90,11 @@ def server(policy, host, port):
                         print("Passing reward {} on arm {} to the policy".format(reward, chosen_arm))
                         policy.getReward(chosen_arm, reward)
                 except ValueError:
-                    pass
-
+                    print("Unable to convert message = {!r} to a float reward...".format(message))  # DEBUG
                 try:
                     chosen_arm = policy.choice()
                 except ValueError:
+                    print("Unable to use policy's choice() method... playing the (t+1)%K-th arm...")  # DEBUG
                     chosen_arm = (policy.t + 1) % policy.nbArms
                 message = str(chosen_arm)
                 print("Send: {!r}".format(message))
@@ -108,17 +108,22 @@ def server(policy, host, port):
             connection.close()
 
 
-def main(arguments):
+def main(args):
     """
-    Take arguments, construct the learning policy and starts the server.
+    Take args, construct the learning policy and starts the server.
     """
-    host = arguments['--host']
-    port = int(arguments['--port'])
-    json_configuration = arguments['<json_configuration>']
+    host = str(args['--host'])
+    port = int(args['--port'])
+    json_configuration = args['<json_configuration>']
     configuration = read_configuration_policy(json_configuration)
     nbArms = int(configuration['nbArms'])
-    policy = globals()[configuration['archtype']](nbArms, **configuration['params'])
-    print("Using the policy", policy)  # DEBUG
+    # try to map strings in the dictionary to variables, e.g., policies
+    params = configuration['params']
+    for (key, value) in params.items():
+        if value in globals():
+            params[key] = globals()[value]
+    policy = globals()[configuration['archtype']](nbArms, **params)
+    print("Using the policy", policy)
     return server(policy, host, port)
 
 

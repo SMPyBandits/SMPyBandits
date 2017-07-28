@@ -18,7 +18,7 @@ from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"
-version = "MAB client v{}".format(__version__)
+version = "MAB environment client v{}".format(__version__)
 
 import json
 import socket
@@ -47,7 +47,7 @@ def read_configuration_env(a_string):
     return obj
 
 
-def send(sock, message):
+def send_message(sock, message):
     # Send data
     print("sending {!r}".format(message))
     sock.sendall(message)
@@ -73,7 +73,7 @@ def client(env, host, port, speed):
     try:
         message = "Hi!".encode()
         print("\nSending first message = {!r}".format(message))
-        send(sock, message)
+        send_message(sock, message)
         print("Sleeping for {} second(s)...".format(speed))
         time.sleep(speed)
         while True:
@@ -106,7 +106,11 @@ def main(arguments):
     port = int(arguments['--port'])
     json_configuration = arguments['<json_configuration>']
     configuration = read_configuration_env(json_configuration)
-    configuration['arm_type'] = globals()[configuration['arm_type']]
+    # try to map strings in the dictionary to variables, e.g., policies
+    for (key, value) in configuration.items():
+        if value in globals():
+            configuration[key] = globals()[value]
+    # configuration['arm_type'] = globals()[configuration['arm_type']]
     env = MAB(configuration)
     print("Using the environment: ", env)  # DEBUG
     speed = float(configuration['speed'])
