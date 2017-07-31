@@ -36,7 +36,7 @@ HORIZON = 10000
 HORIZON = 20000
 HORIZON = 30000
 # # # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -49,7 +49,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 
@@ -78,8 +78,11 @@ TEST_CORRAL = True
 TEST_LEARNEXP = False  # XXX do not let this = False if you want to test the LearnExp policy
 TEST_LEARNEXP = True
 
+TEST_HEDGE = False  # XXX do not let this = False if you want to test the Hedge policy
+TEST_HEDGE = True
+
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL or TEST_LEARNEXP
+CACHE_REWARDS = TEST_AGGRAGORN or TEST_CORRAL or TEST_LEARNEXP or TEST_HEDGE
 CACHE_REWARDS = False  # XXX to disable manually this feature
 
 #: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
@@ -148,19 +151,19 @@ configuration = {
     #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # # ],
-    # "environment": [  # 3)  Gaussian arms
-        {   # An example problem with 3 or 9 arms
-            "arm_type": Gaussian,
-            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-            "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-        },
-    # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
-        [
-            arm_type(mean)
-            for mean in [0.1, 0.5, 0.9]
-            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-        ],
+    # # "environment": [  # 3)  Gaussian arms
+    #     {   # An example problem with 3 or 9 arms
+    #         "arm_type": Gaussian,
+    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+    #         "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+    #         # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+    #     },
+    # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
+    #     [
+    #         arm_type(mean)
+    #         for mean in [0.1, 0.5, 0.9]
+    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+    #     ],
     # # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
     #     [
     #         arm_type(mean)
@@ -380,6 +383,22 @@ if TEST_LEARNEXP:
                     "eta": ETA,
                 },
             }] + CURRENT_POLICIES
+
+
+# Dynamic hack to force the Hedge (policies aggregator) to use all the policies previously/already defined
+if TEST_LEARNEXP:
+    # EPSILON_VALUES = [0.9]
+    EPSILON_VALUES = [0.2, 0.4, 0.6, 0.8]
+    for EPSILON in EPSILON_VALUES:
+        CURRENT_POLICIES = configuration["policies"]
+        # Add one Hedge policy
+        configuration["policies"] = [{
+            "archtype": Hedge,
+            "params": {
+                "children": NON_AGGR_POLICIES,
+                "epsilon": EPSILON,
+            },
+        }] + CURRENT_POLICIES
 
 
 print("Loaded experiments configuration from 'configuration.py' :")

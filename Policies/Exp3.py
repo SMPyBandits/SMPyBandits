@@ -14,11 +14,11 @@ import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: ie just r_t, or unbiased estimators, r_t / trusts_t
+#: i.e., just :math:`r_t`, or unbiased estimators, :math:`r_t / trusts_t`.
 UNBIASED = False
 UNBIASED = True
 
-#: Default gamma parameter
+#: Default :math:`\gamma` parameter.
 GAMMA = 0.01
 
 
@@ -39,7 +39,7 @@ class Exp3(BasePolicy):
         self._gamma = gamma
         self.unbiased = unbiased  #: Unbiased estimators ?
         # Internal memory
-        self.weights = np.ones(nbArms) / nbArms  #: Weights on the arms
+        self.weights = np.full(nbArms, 1. / nbArms)  #: Weights on the arms
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # XXX do even more randomized, take a random permutation of the arm ?
         self._initial_exploration = rn.permutation(nbArms)
@@ -51,7 +51,7 @@ class Exp3(BasePolicy):
         self.weights.fill(1. / self.nbArms)
 
     def __str__(self):
-        return "Exp3(gamma: {:.3g})".format(self.gamma)
+        return r"Exp3($\gamma: {:.3g}$)".format(self.gamma)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -90,7 +90,7 @@ class Exp3(BasePolicy):
     def getReward(self, arm, reward):
         r"""Give a reward: accumulate rewards on that arm k, then update the weight :math:`w_k(t)` and renormalize the weights.
 
-        - With unbiased estimators, devide by the trust on that arm k, ie the probability of observing arm k: :math:`\tilde{r}_k(t) = \frac{r_k(t)}{\mathrm{trusts}_k(t)}`.
+        - With unbiased estimators, divide by the trust on that arm k, i.e., the probability of observing arm k: :math:`\tilde{r}_k(t) = \frac{r_k(t)}{\mathrm{trusts}_k(t)}`.
         - But with a biased estimators, :math:`\tilde{r}_k(t) = r_k(t)`.
 
         .. math::
@@ -147,6 +147,12 @@ class Exp3(BasePolicy):
     def estimatedOrder(self):
         """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing trust probabilities."""
         return np.argsort(self.trusts)
+
+    def estimatedBestArms(self, M=1):
+        """ Return a (non-necessarily sorted) list of the indexes of the M-best arms. Identify the set M-best."""
+        assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
+        order = self.estimatedOrder()
+        return order[-M:]
 
 
 # --- Three special cases

@@ -63,7 +63,7 @@ def unnormalize_reward(reward, lower=0., amplitude=1.):
 # Default values for the parameters
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
+#: i.e., just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
 UNBIASED = False
 UNBIASED = True  # Better
@@ -212,3 +212,9 @@ class LearnExp(BasePolicy):
         self.last_choice = rn.choice(self.nbChildren, p=self.trusts)
         # 2. then listen to him
         return self.children[self.last_choice].estimatedOrder()
+
+    def estimatedBestArms(self, M=1):
+        """ Return a (non-necessarily sorted) list of the indexes of the M-best arms. Identify the set M-best."""
+        assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
+        order = self.estimatedOrder()
+        return order[-M:]

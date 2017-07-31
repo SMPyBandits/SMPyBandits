@@ -48,7 +48,7 @@ class ProbabilityPursuit(BasePolicy):
             assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to ProbabilityPursuit has to be an array of the good size ({}).".format(nbArms)  # DEBUG
             self.probabilities = prior  #: Probabilities of each arm
         else:   # Assume uniform prior if not given or if = 'uniform'
-            self.probabilities = np.ones(nbArms) / float(nbArms)
+            self.probabilities = np.full(nbArms, 1. / nbArms)
 
     def startGame(self):
         """Reinitialize probabilities."""
@@ -56,7 +56,7 @@ class ProbabilityPursuit(BasePolicy):
         if self._prior is not None and self._prior != 'uniform':
             self.probabilities = self._prior  #: Probabilities of each arm
         else:   # Assume uniform prior if not given or if = 'uniform'
-            self.probabilities = np.ones(self.nbArms) / float(self.nbArms)
+            self.probabilities = np.full(self.nbArms, 1. / self.nbArms)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

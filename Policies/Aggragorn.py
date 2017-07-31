@@ -32,7 +32,7 @@ from .BasePolicy import BasePolicy
 # Default values for the parameters
 
 #: A flag to know if the rewards are used as biased estimator,
-#: ie just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
+#: i.e., just :math:`r_t`, or unbiased estimators, :math:`r_t / p_t`, if :math:`p_t` is the probability of selecting that arm at time :math:`t`.
 #: It seemed to work better with unbiased estimators (of course).
 UNBIASED = False
 UNBIASED = True    # Better
@@ -194,7 +194,7 @@ class Aggragorn(BasePolicy):
         # FIXME experiment dynamic resetting of proba, put this as a parameter
         # if self.t % 2000 == 0:
         #     print("   => t % 2000 == 0 : reinitializing the trust proba ...")  # DEBUG
-        #     self.trusts = np.ones(self.nbChildren) / self.nbChildren
+        #     self.trusts = np.full(self.nbChildren, 1. / self.nbChildren)
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
@@ -267,3 +267,9 @@ class Aggragorn(BasePolicy):
         trusts /= np.sum(trusts)
         chosenOrder = int(rn.choice(len(orders), size=1, replace=False, p=trusts))
         return orders[chosenOrder]
+
+    def estimatedBestArms(self, M=1):
+        """ Return a (non-necessarily sorted) list of the indexes of the M-best arms. Identify the set M-best."""
+        assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
+        order = self.estimatedOrder()
+        return order[-M:]
