@@ -34,9 +34,9 @@ HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -48,8 +48,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
-# REPETITIONS = 100
-REPETITIONS = 50
+REPETITIONS = 100
+# REPETITIONS = 50
 # REPETITIONS = 20
 
 #: To profile the code, turn down parallel computing
@@ -197,33 +197,33 @@ configuration = {
         #     }
         # },
     ],
-    "environment": [  # XXX Exponential arms
-        {   # An example problem with 9 arms
-            "arm_type": ExponentialFromMean,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-    ],
-    "environment": [  # XXX Gaussian arms
-        {   # An example problem with 3 arms
-            "arm_type": Gaussian,
-            "params": [(0.2, VARIANCE), (0.5, VARIANCE), (0.8, VARIANCE)]
-        },
-        # {   # An example problem with 9 arms
-        #     "arm_type": Gaussian,
-        #     "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
-        # },
-    ],
-    "environment": [  # XXX Unbounded Gaussian arms
-        {   # An example problem with 9 arms
-            "arm_type": UnboundedGaussian,
-            "params": [(-40, VARIANCE), (-30, VARIANCE), (-20, VARIANCE), (-VARIANCE, VARIANCE), (0, VARIANCE), (VARIANCE, VARIANCE), (20, VARIANCE), (30, VARIANCE), (40, VARIANCE)]
-        },
-    ],
+    # "environment": [  # XXX Exponential arms
+    #     {   # An example problem with 9 arms
+    #         "arm_type": ExponentialFromMean,
+    #         "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    #     },
+    # ],
+    # "environment": [  # XXX Gaussian arms
+    #     {   # An example problem with 3 arms
+    #         "arm_type": Gaussian,
+    #         "params": [(0.2, VARIANCE), (0.5, VARIANCE), (0.8, VARIANCE)]
+    #     },
+    #     # {   # An example problem with 9 arms
+    #     #     "arm_type": Gaussian,
+    #     #     "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #     # },
+    # ],
+    # "environment": [  # XXX Unbounded Gaussian arms
+    #     {   # An example problem with 9 arms
+    #         "arm_type": UnboundedGaussian,
+    #         "params": [(-40, VARIANCE), (-30, VARIANCE), (-20, VARIANCE), (-VARIANCE, VARIANCE), (0, VARIANCE), (VARIANCE, VARIANCE), (20, VARIANCE), (30, VARIANCE), (40, VARIANCE)]
+    #     },
+    # ],
 }
 
-if len(configuration['environment']) > 1:
-    raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
-    # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
+# if len(configuration['environment']) > 1:
+#     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
+#     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
 
 try:
     #: Number of arms *in the first environment*
@@ -237,69 +237,6 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 4,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 1,
-                "horizon": HORIZON
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON
-            }
-        },
-        # --- XXX Doubling trick algorithm
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__arithmetic,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5
-        #     }
-        # },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__geometric,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_fast,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_slow,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5
-            }
-        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -326,7 +263,7 @@ configuration.update({
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
         #     "params": {
-        #         "epsilon": EPSILON
+        #         "epsilon": EPSILON,
         #     }
         # },
         # {
@@ -340,7 +277,7 @@ configuration.update({
         #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
         #     "params": {
         #         "epsilon": EPSILON,
-        #         "horizon": HORIZON
+        #         "horizon": HORIZON,
         #     }
         # },
         # --- Explore-Then-Commit policies
@@ -348,21 +285,21 @@ configuration.update({
         #     "archtype": ETC_KnownGap,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.1
+        #         "gap": 0.1,
         #     }
         # },
         # {
         #     "archtype": ETC_KnownGap,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.05
+        #         "gap": 0.05,
         #     }
         # },
         # {
         #     "archtype": ETC_KnownGap,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.01
+        #         "gap": 0.01,
         #     }
         # },
         # {
@@ -375,128 +312,138 @@ configuration.update({
         # {
         #     "archtype": ETC_RandomStop,
         #     "params": {
-        #         "horizon": HORIZON
+        #         "horizon": HORIZON,
         #     }
         # },
         # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
         #     "params": {
-        #         "temperature": TEMPERATURE
+        #         "temperature": TEMPERATURE,
         #     }
         # },
-        # {
-        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": SoftMix,   # Another parameter-free Softmax
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
-        #     "params": {
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+            "params": {}
+        },
+        {
+            "archtype": SoftMix,   # Another parameter-free Softmax
+            "params": {}
+        },
+        {
+            "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # # --- Boltzmann-Gumbel algorithms
         # {
         #     "archtype": BoltzmannGumbel,
         #     "params": {
-        #         "C": 1.
+        #         "C": 1.0,
         #     }
         # },
         # {
         #     "archtype": BoltzmannGumbel,
         #     "params": {
-        #         "C": 2.
+        #         "C": 2.0,
         #     }
         # },
         # {
         #     "archtype": BoltzmannGumbel,
         #     "params": {
-        #         "C": 0.5
+        #         "C": 0.5,
         #     }
         # },
         # {
         #     "archtype": BoltzmannGumbel,
         #     "params": {
-        #         "C": 0.1
+        #         "C": 0.1,
         #     }
         # },
         # {
         #     "archtype": BoltzmannGumbel,
         #     "params": {
-        #         "C": 0.01
+        #         "C": 0.01,
         #     }
         # },
         # --- Exp3 algorithms - Very bad !!!!
         # {
         #     "archtype": Exp3,   # This basic Exp3 is not very good
         #     "params": {
-        #         "gamma": 0.001
+        #         "gamma": 0.001,
         #     }
         # },
         # {
         #     "archtype": Exp3Decreasing,
         #     "params": {
-        #         "gamma": 0.001
+        #         "gamma": 0.001,
         #     }
         # },
-        # {
-        #     "archtype": Exp3SoftMix,   # Another parameter-free Exp3
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": Exp3WithHorizon,  # Other Exp3, knowing the horizon
-        #     "params": {
-        #         "horizon": HORIZON
-        #     }
-        # },
+        {
+            "archtype": Exp3SoftMix,   # Another parameter-free Exp3
+            "params": {}
+        },
+        {
+            "archtype": Exp3WithHorizon,  # Other Exp3, knowing the horizon
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # {
         #     "archtype": Exp3ELM,   # This improved Exp3 is not better, it targets a different problem
         #     "params": {
-        #         "delta": 0.1
+        #         "delta": 0.1,
         #     }
         # },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
         #     "params": {
-        #         "beta": 0.5
+        #         "beta": 0.5,
         #     }
         # },
         # {
         #     "archtype": ProbabilityPursuit,
         #     "params": {
-        #         "beta": 0.1
+        #         "beta": 0.1,
         #     }
         # },
         # {
         #     "archtype": ProbabilityPursuit,
         #     "params": {
-        #         "beta": 0.05
+        #         "beta": 0.05,
         #     }
         # },
         # # --- Hedge algorithm
         # {
         #     "archtype": Hedge,
         #     "params": {
-        #         "epsilon": 0.5
+        #         "epsilon": 0.5,
         #     }
         # },
         # {
         #     "archtype": Hedge,
         #     "params": {
-        #         "epsilon": 0.1
+        #         "epsilon": 0.1,
         #     }
         # },
         # {
         #     "archtype": Hedge,
         #     "params": {
-        #         "epsilon": 0.05
+        #         "epsilon": 0.05,
         #     }
         # },
+        {
+            "archtype": HedgeDecreasing,
+            "params": {}
+        },
+        {
+            "archtype": HedgeWithHorizon,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -533,96 +480,96 @@ configuration.update({
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
-                "alpha": 4          # Below the alpha=4 like old classic UCB
+                "alpha": 4,         # Below the alpha=4 like old classic UCB
             }
         },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 3
+        #         "alpha": 3,
         #     }
         # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 2
+        #         "alpha": 2,
         #     }
         # },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
-                "alpha": 1
+                "alpha": 1,
             }
         },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
+                "alpha": 0.5,       # XXX Below the theoretically acceptable value!
+            }
+        },
+        {
+            "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
+            "params": {
+                "alpha": 0.5,
             }
         },
         # {
-        #     "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 0.5
+        #         "alpha": 0.25,      # XXX Below the theoretically acceptable value!
         #     }
         # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 0.25          # XXX Below the theoretically acceptable value!
+        #         "alpha": 0.1,       # XXX Below the theoretically acceptable value!
         #     }
         # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 0.1          # XXX Below the theoretically acceptable value!
+        #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.05         # XXX Below the theoretically acceptable value!
-        #     }
-        # },
-        # # --- MOSS algorithm, like UCB
-        # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
-        # # --- Optimally Confident UCB algorithm
+        # --- MOSS algorithm, like UCB
+        {
+            "archtype": MOSS,
+            "params": {}
+        },
+        # # --- Optimally-Confident UCB algorithm
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 1
+        #         "rho": 1,
         #     }
         # },
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 0.9
+        #         "rho": 0.9,
         #     }
         # },
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 0.8
+        #         "rho": 0.8,
         #     }
         # },
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 0.7
+        #         "rho": 0.7,
         #     }
         # },
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 0.6
+        #         "rho": 0.6,
         #     }
         # },
         # --- CPUCB algorithm, other variant of UCB
@@ -647,53 +594,53 @@ configuration.update({
         {
             "archtype": Thompson,
             "params": {
-                "posterior": Beta
+                "posterior": Beta,
             }
         },
         # {
         #     "archtype": Thompson,
         #     "params": {
-        #         "posterior": Gauss
+        #         "posterior": Gauss,
         #     }
         # },
         # --- KL algorithms
         {
             "archtype": klUCB,
             "params": {
-                "klucb": klucb
+                "klucb": klucb,
             }
         },
-        # {
-        #     "archtype": SlidingklUCB,   # XXX experimental sliding window algorithm
-        #     "params": {
-        #         "klucb": klucb
-        #     }
-        # },
+        {
+            "archtype": SWR_klUCB,   # XXX experimental sliding window algorithm
+            "params": {
+                "klucb": klucb,
+            }
+        },
         # {
         #     "archtype": klUCB,
         #     "params": {
         #         "c": 0.434294,  # = 1. / np.log(10) ==> like klUCBlog10
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         # {
         #     "archtype": klUCB,
         #     "params": {
         #         "c": 3.,
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         # {
         #     "archtype": klUCBloglog,
         #     "params": {
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         # {
         #     "archtype": klUCBloglog,
         #     "params": {
         #         "c": 3.,
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         # {
@@ -705,20 +652,20 @@ configuration.update({
         # {
         #     "archtype": klUCBloglog10,
         #     "params": {
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         {
             "archtype": klUCBPlus,
             "params": {
-                "klucb": klucb
+                "klucb": klucb,
             }
         },
         # {
         #     "archtype": klUCBHPlus,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "klucb": klucb
+        #         "klucb": klucb,
         #     }
         # },
         # {
@@ -737,7 +684,7 @@ configuration.update({
         {
             "archtype": BayesUCB,
             "params": {
-                "posterior": Beta
+                "posterior": Beta,
             }
         },
         # --- AdBandits with different alpha paramters
@@ -745,52 +692,86 @@ configuration.update({
         #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.5,
-        #         "horizon": HORIZON
+        #         "horizon": HORIZON,
         #     }
         # },
         # {
         #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.125,
-        #         "horizon": HORIZON
+        #         "horizon": HORIZON,
         #     }
         # },
         # {
         #     "archtype": AdBandits,
         #     "params": {
         #         "alpha": 0.01,
-        #         "horizon": HORIZON
+        #         "horizon": HORIZON,
         #     }
         # },
-        # --- Finite-Horizon Gittins index
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 4,
+                "horizon": 1.1 * HORIZON,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 1,
+                "horizon": 1.1 * HORIZON,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 0.5,
+                "horizon": 1.1 * HORIZON,
+            }
+        },
+        # --- XXX Doubling trick algorithm
         # {
-        #     "archtype": ApproximatedFHGittins,
+        #     "archtype": DoublingTrickWrapper,
         #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 4,
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 2,
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 1,
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
+        #         "next_horizon": next_horizon__arithmetic,
+        #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
         #     }
         # },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__geometric,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_fast,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_slow,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,
