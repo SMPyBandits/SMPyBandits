@@ -78,6 +78,11 @@ env_client_cpp:	env_client.exe
 	clear
 	time ./env_client.exe --speed=1000 --port=10000 --host=127.0.0.1
 
+test_sub:
+	clear
+	g++ -std=c++11 -Iinclude -o test_sub.exe test_sub.cpp -pthread
+	./test_sub.exe
+
 # Time profilers
 profile:
 	time nice -n 19 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
