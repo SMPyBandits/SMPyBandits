@@ -123,8 +123,8 @@ class LearnExp(BasePolicy):
 
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
-        is_unbiased = "unbiased" if self.unbiased else "biased"
-        return r"LearnExp($N={}$, {}, $\eta={:.3g}$)".format(self.nbChildren, is_unbiased, self.eta)
+        is_unbiased = "" if self.unbiased else ", biased"
+        return r"LearnExp($N={}${}, $\eta={:.3g}$)".format(self.nbChildren, is_unbiased, self.eta)
 
     # --- Start the game
 

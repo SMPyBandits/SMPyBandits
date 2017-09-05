@@ -24,7 +24,7 @@ import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.ht
 locale.setlocale(locale.LC_TIME, 'C')
 monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
 signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
-# signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
+signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
 
 DPI = 110  #: DPI to use for the figures
 FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
@@ -39,7 +39,7 @@ BBOX_INCHES = None
 
 if __name__ != '__main__':
     # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk", style="darkgrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=1.05)
+    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=1.05)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX

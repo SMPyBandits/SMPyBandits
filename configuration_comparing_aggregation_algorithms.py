@@ -34,7 +34,7 @@ HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
 HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 30000
 # # # HORIZON = 40000
 # HORIZON = 100000
 
@@ -47,7 +47,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
+REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
@@ -151,19 +151,19 @@ configuration = {
     #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # # ],
-    # # "environment": [  # 3)  Gaussian arms
-    #     {   # An example problem with 3 or 9 arms
-    #         "arm_type": Gaussian,
-    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-    #         "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-    #         # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-    #     },
+    # "environment": [  # 3)  Gaussian arms
+        {   # An example problem with 3 or 9 arms
+            "arm_type": Gaussian,
+            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+            "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+        },
     # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
-    #     [
-    #         arm_type(mean)
-    #         for mean in [0.1, 0.5, 0.9]
-    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-    #     ],
+        [
+            arm_type(mean)
+            for mean in [0.1, 0.5, 0.9]
+            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+        ],
     # # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
     #     [
     #         arm_type(mean)
@@ -229,13 +229,13 @@ def klucbGamma(x, d, precision=0.):
 configuration.update({
     "policies": [
         # --- UCBalpha algorithm
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": 4,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,
+        #     "params": {
+        #         "alpha": 4,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         {
             "archtype": UCBalpha,
             "params": {
@@ -243,13 +243,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": 0.5,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- Thompson algorithm
         {
             "archtype": Thompson,
@@ -259,28 +259,28 @@ configuration.update({
         },
         # --- KL algorithms, here only klUCBPlus with different klucb functions
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCB,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCB,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbExp,  # "horizon": HORIZON,
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCB,
             "params": {
                 "lower": LOWER, "amplitude": AMPLITUDE,
                 "klucb": klucbGauss,  # "horizon": HORIZON,
             }
         },
         # {
-        #     "archtype": klUCBPlus,
+        #     "archtype": klUCB,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #         "klucb": klucbGamma,  # "horizon": HORIZON,
@@ -322,24 +322,23 @@ configuration.update({
 from itertools import product  # XXX If needed!
 NON_AGGR_POLICIES = configuration["policies"]
 
-# Dynamic hack to force the Aggragorn (policies aggregator) to use all the policies previously/already defined
-if TEST_AGGRAGORN:
-    UPDATE_LIKE_EXP4_VALUES = [False, True]
-    # UPDATE_LIKE_EXP4_VALUES = [True]
-    UPDATE_ALL_CHILDREN_VALUES = [False, True]
-    # UPDATE_ALL_CHILDREN_VALUES = [True]
-    for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
-       for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
+
+# Dynamic hack to force the LearnExp (policies aggregator) to use all the policies previously/already defined
+if TEST_LEARNEXP:
+    # ETA_VALUES = [0.2, 0.4, 0.6, 0.8]
+    ETA_VALUES = [0.9]
+    # UNBIASED_VALUES = [False, True]
+    UNBIASED_VALUES = [True]
+    for ETA in ETA_VALUES:
+        for UNBIASED in UNBIASED_VALUES:
             CURRENT_POLICIES = configuration["policies"]
-            # Add one Aggragorn policy
+            # Add one LearnExp policy
             configuration["policies"] = [{
-                "archtype": Aggragorn,
+                "archtype": LearnExp,
                 "params": {
                     "children": NON_AGGR_POLICIES,
                     "unbiased": UNBIASED,
-                    "update_all_children": UPDATE_ALL_CHILDREN,
-                    "decreaseRate": "auto",
-                    "update_like_exp4": UPDATE_LIKE_EXP4
+                    "eta": ETA,
                 },
             }] + CURRENT_POLICIES
 
@@ -365,40 +364,26 @@ if TEST_CORRAL:
             }] + CURRENT_POLICIES
 
 
-# Dynamic hack to force the LearnExp (policies aggregator) to use all the policies previously/already defined
-if TEST_LEARNEXP:
-    # ETA_VALUES = [0.2, 0.4, 0.6, 0.8]
-    ETA_VALUES = [0.9]
-    # UNBIASED_VALUES = [False, True]
-    UNBIASED_VALUES = [True]
-    for ETA in ETA_VALUES:
-        for UNBIASED in UNBIASED_VALUES:
+# Dynamic hack to force the Aggragorn (policies aggregator) to use all the policies previously/already defined
+if TEST_AGGRAGORN:
+    UPDATE_LIKE_EXP4_VALUES = [False, True]
+    # UPDATE_LIKE_EXP4_VALUES = [True]
+    # UPDATE_ALL_CHILDREN_VALUES = [False, True]
+    UPDATE_ALL_CHILDREN_VALUES = [True]
+    for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
+       for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
             CURRENT_POLICIES = configuration["policies"]
-            # Add one LearnExp policy
+            # Add one Aggragorn policy
             configuration["policies"] = [{
-                "archtype": LearnExp,
+                "archtype": Aggragorn,
                 "params": {
                     "children": NON_AGGR_POLICIES,
                     "unbiased": UNBIASED,
-                    "eta": ETA,
+                    "update_all_children": UPDATE_ALL_CHILDREN,
+                    "decreaseRate": "auto",
+                    "update_like_exp4": UPDATE_LIKE_EXP4
                 },
             }] + CURRENT_POLICIES
-
-
-# Dynamic hack to force the Hedge (policies aggregator) to use all the policies previously/already defined
-if TEST_LEARNEXP:
-    # EPSILON_VALUES = [0.9]
-    EPSILON_VALUES = [0.2, 0.4, 0.6, 0.8]
-    for EPSILON in EPSILON_VALUES:
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one Hedge policy
-        configuration["policies"] = [{
-            "archtype": Hedge,
-            "params": {
-                "children": NON_AGGR_POLICIES,
-                "epsilon": EPSILON,
-            },
-        }] + CURRENT_POLICIES
 
 
 print("Loaded experiments configuration from 'configuration.py' :")
