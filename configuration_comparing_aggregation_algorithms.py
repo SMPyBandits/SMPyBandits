@@ -228,6 +228,10 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
+        # {
+        #     "archtype": Uniform,   # The stupidest policy, fully uniform
+        #     "params": {}
+        # },
         # --- UCBalpha algorithm
         # {
         #     "archtype": UCBalpha,
@@ -370,8 +374,9 @@ if TEST_AGGRAGORN:
     # UPDATE_LIKE_EXP4_VALUES = [True]
     # UPDATE_ALL_CHILDREN_VALUES = [False, True]
     UPDATE_ALL_CHILDREN_VALUES = [True]
-    for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
-       for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
+    # for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
+    #    for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
+    for (UPDATE_LIKE_EXP4, UPDATE_ALL_CHILDREN) in [(True, False), (False, True), (False, False)]:
             CURRENT_POLICIES = configuration["policies"]
             # Add one Aggragorn policy
             configuration["policies"] = [{
