@@ -132,23 +132,23 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 VARIANCE = 0.05   #: Variance of Gaussian arms
 
 
-#: Should I test the Aggragorn algorithm here also ?
-TEST_AGGRAGORN = True
-TEST_AGGRAGORN = False  # XXX do not let this = False if you want to test my Aggragorn policy
+#: Should I test the Aggregator algorithm here also ?
+TEST_Aggregator = True
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
-CACHE_REWARDS = TEST_AGGRAGORN
+CACHE_REWARDS = TEST_Aggregator
 
-#: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
+#: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
-#: Should the rewards for Aggragorn policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
+#: Should the rewards for Aggregator policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
 UNBIASED = True
 UNBIASED = False
 
-#: Should we update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
+#: Should we update the trusts proba like in Exp4 or like in my initial Aggregator proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
@@ -466,10 +466,10 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
 
-    # --- 8) Aggragorn
-    # Selfish(NB_PLAYERS, Aggragorn, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoRand(NB_PLAYERS, Aggragorn, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # # rhoEst(NB_PLAYERS, Aggragorn, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # --- 8) Aggregator
+    # Selfish(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoRand(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # # rhoEst(NB_PLAYERS, Aggregator, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
     # # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,

@@ -66,9 +66,9 @@ VARIANCE = 0.05   #: Variance of Gaussian arms
 VARIANCE = 10   #: Variance of Gaussian arms
 
 
-#: To know if my Aggragorn policy is tried.
-TEST_AGGRAGORN = False  # XXX do not let this = False if you want to test my Aggragorn policy
-TEST_AGGRAGORN = True
+#: To know if my Aggregator policy is tried.
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Aggregator = True
 
 
 #: This dictionary configures the experiments
@@ -212,14 +212,14 @@ configuration.update({
     ]
 })
 
-# Dynamic hack to force the Aggragorn (policies aggregator) to use all the policies previously/already defined
-if TEST_AGGRAGORN:
+# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
+if TEST_Aggregator:
     NON_AGGR_POLICIES = configuration["policies"]
     for UPDATE_LIKE_EXP4 in [False, True]:
         CURRENT_POLICIES = configuration["policies"]
-        # Add one Aggragorn policy
+        # Add one Aggregator policy
         configuration["policies"] = [{
-            "archtype": Aggragorn,
+            "archtype": Aggregator,
             "params": {
                 "unbiased": False,
                 "update_all_children": False,

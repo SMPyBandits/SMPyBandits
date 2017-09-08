@@ -69,15 +69,15 @@ RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
 RANDOM_INVERT = False  #: The arms are inverted (``arms = arms[::-1]``).
 NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in time steps.
 
-#: Should the Aggragorn policy update the trusts in each child or just the one trusted for last decision?
+#: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
-#: Should the rewards for Aggragorn policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
+#: Should the rewards for Aggregator policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
 UNBIASED = True
 UNBIASED = False
 
-#: Should we update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
+#: Should we update the trusts proba like in Exp4 or like in my initial Aggregator proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
