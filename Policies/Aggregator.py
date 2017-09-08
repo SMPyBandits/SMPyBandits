@@ -11,7 +11,18 @@ The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..
 
 .. note::
 
-   Why call it *Aggragorn* ?
+   Why call it *Aggregator* ?
+   Because this algorithm is an efficient *aggregation* algorithm,
+   and like The Terminator, he beats his opponents with an iron fist!
+   (*OK, that's a stupid joke but a cool name, thanks Emilie!*)
+
+   .. image::  https://media.giphy.com/media/YoB1eEFB6FZ1m/giphy.gif
+      :target: https://en.wikipedia.org/wiki/Terminator_T-800_Model_101
+      :alt:    https://en.wikipedia.org/wiki/Terminator_T-800_Model_101
+
+.. note::
+
+   I wanted to call it *Aggragorn*.
    Because this algorithm is like `Aragorn the ranger <https://en.wikipedia.org/wiki/Aragorn>`_,
    it starts like a simple bandit, but soon it will become king!!
 
@@ -37,7 +48,7 @@ from .BasePolicy import BasePolicy
 UNBIASED = False
 UNBIASED = True    # Better
 
-#: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggragorn proposal
+#: Flag to know if we should update the trusts proba like in Exp4 or like in my initial Aggregator proposal
 #:
 #: - First choice: like Exp4, trusts are fully recomputed, ``trusts^(t+1) = exp(rate_t * estimated mean rewards upto time t)``,
 #: - Second choice: my proposal, trusts are just updated multiplicatively, ``trusts^(t+1) <-- trusts^t * exp(rate_t * estimate instant reward at time t)``.
@@ -51,11 +62,11 @@ UPDATE_LIKE_EXP4 = False  # Better
 USE_LOSSES = True
 USE_LOSSES = False
 
-#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision ``Aggragorn[A1..AN]`` followed.
+#: Should all trusts be updated, or only the trusts of slaves Ai who advised the decision ``Aggregator[A1..AN]`` followed.
 UPDATE_ALL_CHILDREN = False
 
 
-class Aggragorn(BasePolicy):
+class Aggregator(BasePolicy):
     """ My Aggregated bandit algorithm, similar to Exp4 but not exactly equivalent."""
 
     def __init__(self, nbArms, children=None,
@@ -102,7 +113,7 @@ class Aggragorn(BasePolicy):
         # Assume uniform prior if not given or if = 'uniform'
         self.trusts = np.full(self.nbChildren, 1. / self.nbChildren)  #: Initial trusts in the slaves. Default to uniform, but a prior can also be given.
         if prior is not None and prior != 'uniform':
-            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggragorn has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
+            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to Aggregator has to be an array of the good size ({}).".format(self.nbChildren)  # DEBUG
             self.trusts = prior
         # Internal vectorial memory
         self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
@@ -112,7 +123,7 @@ class Aggragorn(BasePolicy):
     # Print, different output according to the parameters
     def __str__(self):
         """ Nicely print the name of the algorithm with its relevant parameters."""
-        name = "Exp4" if self.update_like_exp4 else "Aggragorn"
+        name = "Exp4" if self.update_like_exp4 else "Aggregator"
         all_children = ", update all" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:

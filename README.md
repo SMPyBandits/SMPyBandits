@@ -11,7 +11,7 @@ This repository contains the code of [my](http://perso.crans.org/besson/) numeri
 ----
 
 ## 1st contribution: The [**policy aggregation algorithm**](Aggregation.md)
-I designed and added the [`Aggragorn`](Policies/Aggragorn.py) policy, in order to test its validity and performance.
+I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
