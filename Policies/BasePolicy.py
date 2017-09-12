@@ -85,3 +85,10 @@ class BasePolicy(object):
             return self.choice()
         else:
             return self.choiceMultiple(nb=nb)
+
+    def estimatedOrder(self):
+        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means.
+
+        - For a base policy, it is completely random.
+        """
+        return np.random.permutation(self.nbArms)
