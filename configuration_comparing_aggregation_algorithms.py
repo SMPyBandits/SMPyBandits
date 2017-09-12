@@ -324,7 +324,10 @@ configuration.update({
 
 
 from itertools import product  # XXX If needed!
-NON_AGGR_POLICIES = configuration["policies"]
+NON_AGGR_POLICIES = configuration["policies"] + [{
+    "archtype": Uniform,   # The stupidest policy, fully uniform
+    "params": {}
+}]
 
 
 # Dynamic hack to force the LearnExp (policies aggregator) to use all the policies previously/already defined
@@ -376,7 +379,8 @@ if TEST_Aggregator:
     UPDATE_ALL_CHILDREN_VALUES = [True]
     # for UPDATE_LIKE_EXP4 in UPDATE_LIKE_EXP4_VALUES:
     #    for UPDATE_ALL_CHILDREN in UPDATE_ALL_CHILDREN_VALUES:
-    for (UPDATE_LIKE_EXP4, UPDATE_ALL_CHILDREN) in [(True, False), (False, True), (False, False)]:
+    # for (UPDATE_LIKE_EXP4, UPDATE_ALL_CHILDREN) in [(True, False), (False, True), (False, False)]:
+    for (UPDATE_LIKE_EXP4, UPDATE_ALL_CHILDREN) in [(True, False), (False, False)]:
             CURRENT_POLICIES = configuration["policies"]
             # Add one Aggregator policy
             configuration["policies"] = [{
