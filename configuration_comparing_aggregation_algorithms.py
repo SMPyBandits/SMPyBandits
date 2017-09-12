@@ -324,10 +324,11 @@ configuration.update({
 
 
 from itertools import product  # XXX If needed!
-NON_AGGR_POLICIES = configuration["policies"] + [{
-    "archtype": Uniform,   # The stupidest policy, fully uniform
-    "params": {}
-}]
+NON_AGGR_POLICIES = configuration["policies"]
+# NON_AGGR_POLICIES += [{
+#     "archtype": Uniform,   # The stupidest policy, fully uniform
+#     "params": {}
+# }]
 
 
 # Dynamic hack to force the LearnExp (policies aggregator) to use all the policies previously/already defined
