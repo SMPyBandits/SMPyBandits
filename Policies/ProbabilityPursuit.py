@@ -45,7 +45,7 @@ class ProbabilityPursuit(BasePolicy):
         # Initialize the probabilities
         self._prior = prior
         if prior is not None and prior != 'uniform':
-            assert len(prior) == self.nbChildren, "Error: the 'prior' argument given to ProbabilityPursuit has to be an array of the good size ({}).".format(nbArms)  # DEBUG
+            assert len(prior) == self.nbArms, "Error: the 'prior' argument given to ProbabilityPursuit has to be an array of the good size ({}).".format(nbArms)  # DEBUG
             self.probabilities = prior  #: Probabilities of each arm
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.probabilities = np.full(nbArms, 1. / nbArms)
@@ -87,18 +87,18 @@ class ProbabilityPursuit(BasePolicy):
         if (self.t < self.nbArms) or (rank == 1):
             return self.choice()
         else:
-            return rn.choice(self.nbArms, size=rank, replace=False, p=self.trusts)[rank - 1]
+            return rn.choice(self.nbArms, size=rank, replace=False, p=self.probabilities)[rank - 1]
 
     def choiceFromSubSet(self, availableArms='all'):
         r"""One random selection, from availableArms, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`."""
         if (self.t < self.nbArms) or (availableArms == 'all') or (len(availableArms) == self.nbArms):
             return self.choice()
         else:
-            return rn.choice(availableArms, p=self.trusts[availableArms])
+            return rn.choice(availableArms, p=self.probabilities[availableArms])
 
     def choiceMultiple(self, nb=1):
         r"""Multiple (nb >= 1) random selection, with probabilities :math:`(p_k(t))_{1 \leq k \leq K}`, thank to :func:`numpy.random.choice`."""
         if (self.t < self.nbArms) or (nb == 1):
             return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
         else:
-            return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+            return rn.choice(self.nbArms, size=nb, replace=False, p=self.probabilities)
