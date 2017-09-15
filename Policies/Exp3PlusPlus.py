@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The Exp3PlusPlus randomized index policy.
+""" The EXP3++ randomized index policy, an improved version of the EXP3 policy.
 
 Reference: [[One practical algorithm for both stochastic and adversarial bandits, S.Seldin & A.Slivkins, ICML, 2014](http://www.jmlr.org/proceedings/papers/v32/seldinb14-supp.pdf)].
 
@@ -28,7 +28,7 @@ BETA = 256
 
 
 class Exp3PlusPlus(BasePolicy):
-    """ The Exp3PlusPlus randomized index policy.
+    """ The EXP3++ randomized index policy, an improved version of the EXP3 policy.
 
     Reference: [[One practical algorithm for both stochastic and adversarial bandits, S.Seldin & A.Slivkins, ICML, 2014](http://www.jmlr.org/proceedings/papers/v32/seldinb14-supp.pdf)].
 
@@ -39,8 +39,8 @@ class Exp3PlusPlus(BasePolicy):
                  lower=0., amplitude=1.):
         super(Exp3PlusPlus, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.unbiased = unbiased  #: Unbiased estimators ?
-        self.alpha = alpha  #: :math:`\alpha` parameter for computations of :math:`\xsi_t(a)`.
-        self.beta = beta  #: :math:`\beta` parameter for computations of :math:`\xsi_t(a)`.
+        self.alpha = alpha  #: :math:`\alpha` parameter for computations of :math:`\xi_t(a)`.
+        self.beta = beta  #: :math:`\beta` parameter for computations of :math:`\xi_t(a)`.
         # Internal memory
         self.weights = np.full(nbArms, 1. / nbArms)  #: Weights on the arms
         self.losses = np.zeros(nbArms)  #: Cumulative sum of losses estimates for each arm
@@ -83,17 +83,17 @@ class Exp3PlusPlus(BasePolicy):
         return Delta
 
     @property
-    def xsi(self):
-        r"""Compute the :math:`\xsi_t(a) = \frac{\beta \log t}{t \hat{\Delta}^{\mathrm{LCB}}_t(a)^2}` vector of indexes."""
+    def xi(self):
+        r"""Compute the :math:`\xi_t(a) = \frac{\beta \log t}{t \hat{\Delta}^{\mathrm{LCB}}_t(a)^2}` vector of indexes."""
         return self.beta * np.log(self.t) / (self.t * (self.gap_estimate ** 2))
 
     @property
     def epsilon(self):
-        r"""Compute the vector of parameters :math:`\eta_t(a) = \min\left(\frac{1}{2 K}, \frac{1}{2} \sqrt{\frac{\log K}{t K}}, \xsi_t(a) \right)`."""
+        r"""Compute the vector of parameters :math:`\eta_t(a) = \min\left(\frac{1}{2 K}, \frac{1}{2} \sqrt{\frac{\log K}{t K}}, \xi_t(a) \right)`."""
         return np.minimum(
             0.5 / self.nbArms,
             0.5 * np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms)),
-            self.xsi
+            self.xi
         )
 
     @property
@@ -103,7 +103,7 @@ class Exp3PlusPlus(BasePolicy):
         .. math::
 
            \tilde{\rho}'_{t+1}(a) &= (1 - \sum_{a'=1}^{K}\eta_t(a')) w_t(a) + \eta_t(a), \\
-           \tilde{\rho}_{t+1} &= \tilde{\rho}'_t+1 / \sum_{a=1}^{K} \tilde{\rho}'_{t+1}(a).
+           \tilde{\rho}_{t+1} &= \tilde{\rho}'_{t+1} / \sum_{a=1}^{K} \tilde{\rho}'_{t+1}(a).
 
         If :math:`rho_t(a)` is the current weight from arm a.
         """
@@ -127,14 +127,14 @@ class Exp3PlusPlus(BasePolicy):
     def getReward(self, arm, reward):
         r"""Give a reward: accumulate losses on that arm a, then update the weight :math:`\rho_t(a)` and renormalize the weights.
 
-        - With unbiased estimators, divide by the trust on that arm a, i.e., the probability of observing arm a: :math:`\tilde{l}_t(a) = \frac{l_t(a)}{\mathrm{trusts}_t(a)}`.
+        - With unbiased estimators, divide by the trust on that arm a, i.e., the probability of observing arm a: :math:`\tilde{l}_t(a) = \frac{l_t(a)}{\tilde{\rho}_t(a)}`.
         - But with a biased estimators, :math:`\tilde{l}_t(a) = l_t(a)`.
         - Add this loss to the cumulative loss: :math:`\tilde{L}_t(a) := \tilde{L}_{t-1}(a) + \tilde{l}_t(a)`.
 
         .. math::
 
-           \rho'_t(a+1) &= \exp\left( - \tilde{L}_t(a) \eta_t \right) \\
-           \rho(t+1) &= \rho'(t+1) / \sum_{a=1}^{K} \rho'_t(a+1).
+           \rho'_{t+1}(a) &= \exp\left( - \tilde{L}_t(a) \eta_t \right) \\
+           \rho_{t+1} &= \rho'_{t+1} / \sum_{a=1}^{K} \rho'_{t+1}(a).
         """
         super(Exp3PlusPlus, self).getReward(arm, reward)  # XXX Call to BasePolicy
         # Compute loss estimate
