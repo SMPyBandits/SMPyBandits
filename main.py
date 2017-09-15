@@ -110,8 +110,12 @@ if __name__ == '__main__':
         evaluation.startOneEnv(envId, env)
 
         # Display the final rankings for that env
-        print("Giving the final ranks ...")
+        print("\n\nGiving the final ranks ...")
         evaluation.printFinalRanking(envId)
+
+        print("\n\nGiving the vector of final regrets ...")
+        evaluation.printLastRegrets(envId)
+        # break  # FIXME
 
         # Sub folder with a useful name
         subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
@@ -215,6 +219,16 @@ if __name__ == '__main__':
             evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotBestArmPulls(envId)
+
+        # --- Also plotting the probability of picking the best arm
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_HistogramsRegret')
+            print(" - Plotting the results, and saving the plot to {} ...".format(savefig))
+            evaluation.plotLastRegrets(envId, subplots=False, savefig=savefig)  # XXX To save the figure
+            evaluation.plotLastRegrets(envId, subplots=True, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotLastRegrets(envId, subplots=False)
+            evaluation.plotLastRegrets(envId, subplots=True)
 
         if saveallfigs:
             print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG

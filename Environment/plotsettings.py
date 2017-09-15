@@ -23,8 +23,13 @@ from datetime import datetime
 import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
 locale.setlocale(locale.LC_TIME, 'C')
 monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
-signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
-signature = ""  # FIXME revert to ↑ after having generating the figures for the paper
+
+from os import getenv
+
+if str(getenv('DEBUG', False)):
+    signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
+else:
+    signature = ""
 
 DPI = 110  #: DPI to use for the figures
 FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!

@@ -28,12 +28,13 @@ from Policies import *
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".
+HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
-HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 10000
+# HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
@@ -48,6 +49,7 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
+# REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -168,10 +170,10 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
+        # },
         # {   # Lots of bad arms, significative difference between the best and the others
         #     "arm_type": Bernoulli,
         #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
@@ -322,20 +324,20 @@ configuration.update({
         #         "temperature": TEMPERATURE,
         #     }
         # },
-        {
-            "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
-            "params": {}
-        },
-        {
-            "archtype": SoftMix,   # Another parameter-free Softmax
-            "params": {}
-        },
-        {
-            "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": SoftmaxDecreasing,   # XXX Efficient parameter-free Softmax
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": SoftMix,   # Another parameter-free Softmax
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": SoftmaxWithHorizon,  # Other Softmax, knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
         # # --- Boltzmann-Gumbel algorithms
         # {
         #     "archtype": BoltzmannGumbel,
@@ -380,22 +382,27 @@ configuration.update({
         #         "gamma": 0.001,
         #     }
         # },
-        {
-            "archtype": Exp3SoftMix,   # Another parameter-free Exp3
-            "params": {}
-        },
-        {
-            "archtype": Exp3WithHorizon,  # Other Exp3, knowing the horizon
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": Exp3SoftMix,   # Another parameter-free Exp3
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": Exp3WithHorizon,  # Other Exp3, knowing the horizon
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
         # {
         #     "archtype": Exp3ELM,   # This improved Exp3 is not better, it targets a different problem
         #     "params": {
         #         "delta": 0.1,
         #     }
         # },
+        # --- FIXME Exp3PlusPlus algorithm
+        {
+            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+            "params": {}
+        },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -434,16 +441,16 @@ configuration.update({
         #         "epsilon": 0.05,
         #     }
         # },
-        {
-            "archtype": HedgeDecreasing,
-            "params": {}
-        },
-        {
-            "archtype": HedgeWithHorizon,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": HedgeDecreasing,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": HedgeWithHorizon,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
         # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -507,12 +514,12 @@ configuration.update({
                 "alpha": 0.5,       # XXX Below the theoretically acceptable value!
             }
         },
-        {
-            "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
-            "params": {
-                "alpha": 0.5,
-            }
-        },
+        # {
+        #     "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
+        #     "params": {
+        #         "alpha": 0.5,
+        #     }
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -610,12 +617,12 @@ configuration.update({
                 "klucb": klucb,
             }
         },
-        {
-            "archtype": SWR_klUCB,   # XXX experimental sliding window algorithm
-            "params": {
-                "klucb": klucb,
-            }
-        },
+        # {
+        #     "archtype": SWR_klUCB,   # XXX experimental sliding window algorithm
+        #     "params": {
+        #         "klucb": klucb,
+        #     }
+        # },
         # {
         #     "archtype": klUCB,
         #     "params": {
@@ -668,13 +675,13 @@ configuration.update({
         #         "klucb": klucb,
         #     }
         # },
-        # {
-        #     "archtype": klUCBPlusPlus,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb
-        #     }
-        # },
+        {
+            "archtype": klUCBPlusPlus,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb
+            }
+        },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -709,21 +716,21 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 4,
-                "horizon": 1.1 * HORIZON,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 1,
-                "horizon": 1.1 * HORIZON,
-            }
-        },
+        # # --- Horizon-dependent algorithm ApproximatedFHGittins
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "alpha": 4,
+        #         "horizon": 1.1 * HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "alpha": 1,
+        #         "horizon": 1.1 * HORIZON,
+        #     }
+        # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
@@ -731,47 +738,47 @@ configuration.update({
                 "horizon": 1.1 * HORIZON,
             }
         },
-        # --- XXX Doubling trick algorithm
+        # # --- Doubling trick algorithm
+        # # {
+        # #     "archtype": DoublingTrickWrapper,
+        # #     "params": {
+        # #         "next_horizon": next_horizon__arithmetic,
+        # #         "policy": ApproximatedFHGittins,
+        # #         "alpha": 0.5,
+        # #     }
+        # # },
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
-        #         "next_horizon": next_horizon__arithmetic,
+        #         "next_horizon": next_horizon__geometric,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
         #     }
         # },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__geometric,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_fast,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_slow,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_fast,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_slow,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,

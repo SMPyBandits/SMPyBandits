@@ -86,6 +86,7 @@ class Evaluator(object):
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards, ie accumulated rewards
+        self.last_cum_rewards = np.zeros((self.nbPolicies, len(self.envs), self.repetitions))  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
         self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
         self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
 
@@ -165,6 +166,7 @@ class Evaluator(object):
         def store(r, policyId, repeatId):
             """ Store the result of the #repeatId experiment, for the #policyId policy."""
             self.rewards[policyId, envId, :] += r.rewards
+            self.last_cum_rewards[policyId, envId, repeatId] = np.sum(r.rewards)
             if hasattr(self, 'rewardsSquared'):
                 self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
             if hasattr(self, 'allRewards'):
@@ -272,6 +274,10 @@ class Evaluator(object):
         """Compute cumulative regret."""
         # return self.times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
         return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
+
+    def getLastRegrets(self, policyId, envId=0):
+        """Extract last regrets."""
+        return self.horizon * self.envs[envId].maxArm - self.last_cum_rewards[policyId, envId, :]
 
     def getAverageRewards(self, policyId, envId=0):
         """Extract mean rewards (not `rewards` but `cumsum(rewards)/cumsum(1)`."""
@@ -434,6 +440,57 @@ class Evaluator(object):
             policy = self.policies[k]
             print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
+
+    def printLastRegrets(self, envId=0):
+        """Print the last regrets of the different policies."""
+        for policyId, policy in enumerate(self.policies):
+            print("\n  For policy #{} called '{}' ...".format(policyId, policy))
+            last_regrets = self.getLastRegrets(policyId, envId=envId)
+            print("  Last regrets vector (for all repetitions) is:")
+            # print(last_regrets)  # XXX takes too much printing
+            print("Mean of   last regret R_T =", np.mean(last_regrets))
+            print("Median of last regret R_T =", np.median(last_regrets))
+            print("VAR of    last regret R_T =", np.var(last_regrets))
+
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=None, savefig=None):
+        """Plot histogram of the regrets R_T for all policies."""
+        colors = palette(self.nbPolicies)
+        if subplots:
+            # Use a subplots of the good size
+            N = self.nbPolicies
+            nrows = 1 + int(np.sqrt(N))
+            ncols = N // nrows
+            if N > nrows * ncols:
+                ncols += 1
+            nrows, ncols = max(nrows, ncols), min(nrows, ncols)
+            fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
+            fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+            for policyId, policy in enumerate(self.policies):
+                i, j = policyId % nrows, policyId // nrows
+                last_regrets = self.getLastRegrets(policyId, envId=envId)
+                n, _, _ = axes[i, j].hist(last_regrets, normed=normed, color=colors[policyId], bins=bins)
+                axes[i, j].vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
+                axes[i, j].set_title(str(policy))
+                # Add only once the ylabel, xlabel, in the middle
+                if i == (nrows // 2) and j == 0:
+                    axes[i, j].set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                if i == nrows - 1 and j == (ncols // 2):
+                    axes[i, j].set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+        else:
+            fig = plt.figure()
+            plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+            plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            all_last_regrets = []
+            labels = []
+            for policyId, policy in enumerate(self.policies):
+                all_last_regrets.append(self.getLastRegrets(policyId, envId=envId))
+                labels.append(str(policy))
+            plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
+            legend()
+        # Common part
+        show_and_save(self.showplot, savefig)
+        return fig
 
 
 # Helper function for the parallelization
