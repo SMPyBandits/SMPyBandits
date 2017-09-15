@@ -6,7 +6,7 @@
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
 - And two variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`,
 
-- Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, and a smart variant :class:`BoltzmannGumbel`,
+- Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
 
 - Index based and UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`MOSS`, :class:`MOSSH`, :class:`CPUCB`,
 
@@ -78,6 +78,7 @@ from .ExploreThenCommit import ETC_KnownGap, ETC_RandomStop
 # --- Mine, Softmax and Exp3 policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon
 from .Exp3 import Exp3, Exp3Decreasing, Exp3SoftMix, Exp3WithHorizon, Exp3ELM
+from .Exp3PlusPlus import Exp3PlusPlus
 from .ProbabilityPursuit import ProbabilityPursuit
 from .BoltzmannGumbel import BoltzmannGumbel
 from .Hedge import Hedge, HedgeDecreasing, HedgeWithHorizon
