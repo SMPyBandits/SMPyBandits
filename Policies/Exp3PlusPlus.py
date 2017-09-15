@@ -61,7 +61,7 @@ class Exp3PlusPlus(BasePolicy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def eta(self):
-        r"""Decreasing :math:`\eta_t = \frac{1}{2} \sqrt{\frac{\log K}{t K}}`."""
+        r"""Decreasing sequence of learning rates, given by :math:`\eta_t = \frac{1}{2} \sqrt{\frac{\log K}{t K}}`."""
         return 0.5 * np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
 
     @property
@@ -69,7 +69,7 @@ class Exp3PlusPlus(BasePolicy):
         r"""Compute the gap estimate :math:`\hat{\Delta}^{\mathrm{LCB}}_t(a)` from :
 
         - Compute the UCB: :math:`\mathrm{UCB}_t(a) = \min\left( 1, \frac{\hat{L}_{t-1}(a)}{N_{t-1}(a)} + \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
-        - Compute the LCB: :math:`\mathrm{LCB}_t(a) = \min\left( 1, \frac{\hat{L}_{t-1}(a)}{N_{t-1}(a)} - \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
+        - Compute the LCB: :math:`\mathrm{LCB}_t(a) = \max\left( 0, \frac{\hat{L}_{t-1}(a)}{N_{t-1}(a)} - \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
         - Then the gap: :math:`\hat{\Delta}^{\mathrm{LCB}}_t(a) = \max\left( 0, \mathrm{LCB}_t(a) - \min_{a'} \mathrm{UCB}_t(a') \right)`.
         - The gap should be in :math:`[0, 1]`.
         """
