@@ -3,8 +3,7 @@
 """ Experimental code to perform complete tree exploration for Multi-Player bandits, using exact formal computations with sympy/Lea.
 
 Requirements:
-- sympy and Lea are required.
-- If tdqm (https://github.com/tqdm/tqdm#usage) is installed, use it.
+- sympy and numpy is required.
 
 About:
 - *Date:* 16/09/2017.

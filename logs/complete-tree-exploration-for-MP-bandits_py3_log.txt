@@ -1,0 +1,4052 @@
+Info: numba.jit seems to be available.
+
+Starting to explore every transitions up-to depth 2 for this root state:
+    State : M = 2, K = 2 and t = 4, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 1]
+ [1 1]] =: N
+[[1 1]
+ [1 1]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f7d0f9f5378>)...
+  - Player #1/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f7d0f9f5378>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+
+
+For depth = 2, starting from this node :
+    State : M = 2, K = 2 and t = 4, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 1]
+ [1 1]] =: N
+[[1 1]
+ [1 1]] =: Ntilde
+
+  we saw 36 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+  we saw 36 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+  we saw 4 possible transitions...
+  leading to only 4 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 4 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+  we saw 4 possible transitions...
+  leading to only 4 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+  we saw 36 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 4 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+  we saw 4 possible transitions...
+  leading to only 4 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+  we saw 36 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 16 different states...
+
+
+
+For depth = 1, starting from this node :
+    State : M = 2, K = 2 and t = 5, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+  we saw 16 possible transitions...
+  leading to only 4 different states...
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 4, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 1]
+ [1 1]] =: N
+[[1 1]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 4, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 1]
+ [1 1]] =: N
+[[1 1]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 1]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 1]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 1]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 4*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 2]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 3]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 3]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 3]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 4*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 2]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 1]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 1]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [1 1]] =: S
+[[1 2]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 1]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 4*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 3]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 3]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 3]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 3]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 2]] =: S
+[[2 0]
+ [2 1]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 4*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 3]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[2 1]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[2 1]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = 4*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [2 2]] =: S
+[[2 0]
+ [2 1]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 2]] =: S
+[[2 0]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 3]] =: S
+[[2 0]
+ [1 2]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 4*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 3]] =: S
+[[2 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 2]] =: S
+[[3 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 3]] =: S
+[[3 0]
+ [1 2]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = 4*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+==> Done for the 4 children of this state...
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+==> Done for the 4 children of this state...
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 4 children of this state...
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [3 1]] =: S
+[[1 0]
+ [3 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 4*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 2]] =: S
+[[1 0]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 4*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 4*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [3 1]] =: S
+[[1 0]
+ [3 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [3 1]] =: S
+[[1 1]
+ [3 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [3 1]] =: S
+[[1 0]
+ [3 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 2]] =: S
+[[2 0]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = 4*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 2]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 4 children of this state...
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 4 children of this state...
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 4*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 4*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [3 1]] =: S
+[[1 2]
+ [3 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [3 1]] =: S
+[[1 1]
+ [3 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 1]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 4*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 2]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 2]] =: S
+[[1 1]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [3 1]] =: N
+[[1 3]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[2 1]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 2]] =: S
+[[2 1]
+ [2 1]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [3 1]] =: S
+[[1 1]
+ [3 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [3 1]] =: S
+[[1 1]
+ [3 0]] =: Stilde
+[[2 2]
+ [3 1]] =: N
+[[1 2]
+ [3 1]] =: Ntilde
+
+
+- Probability of transition = 4*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 2]
+ [2 1]] =: S
+[[1 2]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[2 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[2 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 2*mu_1*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 2]] =: S
+[[3 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 2]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [1 1]] =: S
+[[2 1]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [1 1]] =: S
+[[3 0]
+ [1 0]] =: Stilde
+[[3 1]
+ [1 3]] =: N
+[[3 1]
+ [1 3]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[2 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 1]
+ [2 1]] =: S
+[[2 1]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[2 2]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[3 0]
+ [2 1]] =: S
+[[2 0]
+ [2 0]] =: Stilde
+[[3 1]
+ [2 2]] =: N
+[[2 1]
+ [2 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 4*(-mu_1 + 1)*(-mu_2 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [2 1]] =: S
+[[1 1]
+ [2 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [2 2]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 1]] =: S
+[[2 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 1]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 3]
+ [2 2]] =: N
+[[1 3]
+ [2 1]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+- Probability of transition = mu_1*mu_2/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[2 0]
+ [1 2]] =: S
+[[2 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1)/4 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+
+
+
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+The state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 3]
+ [1 3]] =: N
+[[1 3]
+ [1 1]] =: Ntilde
+
+seems to be absorbing...
+X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+
+==> Done for the 16 children of this state...
+
+
+- Probability of transition = 2*mu_2*(-mu_1 + 1)/9 to this other state:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+
+From this state :
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = (-mu_1 + 1)*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*mu_2 to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 3]] =: S
+[[1 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_2*(-mu_1 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 0]
+ [1 3]] =: S
+[[1 0]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+- Probability of transition = mu_1*(-mu_2 + 1) to this other state:
+    State : M = 2, K = 2 and t = 7, depth = 0.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 1]] =: Stilde
+[[2 2]
+ [1 3]] =: N
+[[2 2]
+ [1 2]] =: Ntilde
+
+
+==> Done for the 4 children of this state...
+
+
+==> Done for the 16 children of this state...
+
+There is 16 unique leafs...
+At depth 2, a leaf was found to be absorbing, with probability = (-mu_1 + 1)*(-mu_2 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [1 2]] =: N
+[[2 1]
+ [1 2]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = 2*(-mu_1 + 1)*(-mu_2 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [2 1]] =: N
+[[1 2]
+ [2 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = mu_1*mu_2/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = mu_1*(-mu_2 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[2 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = 4*(-mu_1 + 1)*(-mu_2 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 1]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = mu_2*(-mu_1 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [2 1]] =: S
+[[1 0]
+ [2 0]] =: Stilde
+[[2 1]
+ [2 1]] =: N
+[[1 1]
+ [2 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = 4*mu_1*mu_2/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 1]
+ [1 2]] =: S
+[[1 1]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+At depth 2, a leaf was found to be absorbing, with probability = 4*mu_2*(-mu_1 + 1)/9 ... Leaf:
+    State : M = 2, K = 2 and t = 5, depth = 1.
+[[1 0]
+ [1 2]] =: S
+[[1 0]
+ [1 0]] =: Stilde
+[[1 2]
+ [1 2]] =: N
+[[1 2]
+ [1 1]] =: Ntilde
+
+
+
+[Enter] to continue...
