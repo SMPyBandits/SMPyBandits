@@ -58,6 +58,12 @@ moremultiplayers3:
 moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
+treeexploration: treeexploration3
+treeexploration3:
+	time nice -n 19 ipython3 ./complete-tree-exploration-for-MP-bandits.py | tee ./logs/complete-tree-exploration-for-MP-bandits_py3_log.txt
+treeexploration2:
+	time nice -n 19 python2 ./complete-tree-exploration-for-MP-bandits.py | tee ./logs/complete-tree-exploration-for-MP-bandits_py3_log.txt
+
 policy_server_py:
 	clear
 	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'

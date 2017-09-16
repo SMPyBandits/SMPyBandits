@@ -22,7 +22,11 @@ import sympy
 oo = float('+inf')  #: Shortcut for float('+inf').
 
 
-def tupleit(anarray):
+def tupleit1(anarray):
+    """Convert a non-hashable 1D numpy array to a hashable tuple."""
+    return tuple(anarray.tolist())
+
+def tupleit2(anarray):
     """Convert a non-hashable 2D numpy array to a hashable tuple-of-tuples."""
     return tuple([tuple(r) for r in anarray.tolist()])
 
@@ -90,7 +94,7 @@ def Selfish_UCB_Ubar(state):
 
 from Policies import klucbBern
 tolerance = 1e-6
-klucb = klucbBern
+klucb = np.vectorize(klucbBern)
 c = 1
 
 def Selfish_KLUCB_U(state):
@@ -163,44 +167,55 @@ class State(object):
     # --- Utility
 
     def __str__(self):
-        return """    State : M = {}, K = {} and t = {}, depth = {}.
-{} =: S
-{} =: Stilde
-{} =: N
-{} =: Ntilde
-        """.format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
+        return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
         return State(S=self.S, Stilde=self.Stilde, N=self.N, Ntilde=self.Ntilde, mus=self.mus, players=self.players, depth=0)
 
     def __hash__(self):
-        return hash(tupleit(self.S) + tupleit(self.N) + tupleit(self.Stilde) + tupleit(self.Ntilde) + (self.t, self.depth, ))
+        return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
+
+    def is_absorbing(self):
+        """Try to detect if this state is absorbing, ie only one transition is possible, and again infinitely for the only child.
+
+        .. warning:: Still very experimental!
+        """
+        # FIXME still not sure about the characterization of absorbing states
+        # if at least two players have the same S, Stilde, N, Ntilde lines
+        if np.min(self.N) < 1:
+            return False
+        bad_line, bad_j1, bad_j2 = [], None, None
+        for j1 in range(self.M):
+            for j2 in range(j1 + 1, self.M):
+                for a in [self.S, self.Stilde, self.N, self.Ntilde]:
+                    if tupleit1(a[j1]) == tupleit1(a[j2]):
+                        bad_line, bad_j1, bad_j2 = tupleit1(a[j1]), j1, j2
+                        break
+        # and if that line has K different values
+        return len(set(bad_line)) == self.K
 
     # --- High level view of a depth-1 exploration
 
     def compute_one_depth(self):
         """Use all_deltas to store all the possible transitions and their probabilities. Increase depth by 1 at the end."""
-        # First, accumulate all proba, child
-        probas, children = [], []
-        for delta, proba in self.all_deltas():
-            # copy the current state, apply decision of algorithms and random branching
-            probas.append(proba)
-            children.append(delta(self.copy()))
-        print("  children has {} elements...".format(len(children)))
-        # Then, merge the identical child
         uniq_children = {}
-        for proba, child in zip(probas, children):
-            h = hash(child)
+        uniq_probas = {}
+        nb_transitions = 0
+        for delta, proba in self.all_deltas():
+            nb_transitions += 1
+            # copy the current state, apply decision of algorithms and random branching
+            child = delta(self.copy())
+            h = hash(child)  # I guess I could use states directly as key, but this would cost more in terms of memory
             if h in uniq_children:
-                uniq_children[h][0] += proba
+                uniq_probas[h] += proba
             else:
-                uniq_children[h] = [proba, child]
-        print("  uniq_children has {} elements...".format(len(uniq_children)))
-        # raise NotImplementedError
-        for proba, child in uniq_children.values():
-            self.probas.append(proba)
-            self.children.append(child)
+                uniq_children[h] = child
+                uniq_probas[h] = proba
+        print("  we saw {} possible transitions...".format(nb_transitions))
+        print("  leading to only {} different states...".format(len(uniq_children)))
+        self.probas = list(uniq_probas.values())
+        self.children = list(uniq_children.values())
         # Done for computing all the children and probability of transitions
         if len(self.children) > 0:
             self.depth += 1
@@ -236,12 +251,44 @@ class State(object):
 
 def pretty_print_result_recursively(root):
     """Print all the transitions, depth by depth (recursively)."""
+    if root.is_absorbing():
+        print("\n\n")
+        print("X "*87)
+        print("The state:\n{}\nseems to be absorbing...".format(root))
+        print("X "*87)
+        # return
     if root.depth > 0:
         print("\n\nFrom this state :\n{}".format(root))
         for (proba, child) in zip(root.probas, root.children):
-            print("\n- The transition to this other state has probabilities = {} :\n{}".format(proba, child))
+            print("\n- Probability of transition = {} to this other state:\n{}".format(proba, child))
             pretty_print_result_recursively(child)
         print("\n==> Done for the {} children of this state...\n".format(len(root.children)))
+
+def get_all_leafs(root):
+    if root.depth == 1:
+        return root.probas, root.children
+    else:
+        complete_probas, leafs = [], []
+        for (proba, child) in zip(root.probas, root.children):
+            c, l = get_all_leafs(child)
+            c = [proba * p for p in c]
+            complete_probas += c
+            leafs += l
+        return complete_probas, leafs
+
+def get_unique_leafs(root):
+    uniq_complete_probas = {}
+    uniq_leafs = {}
+    complete_probas, leafs = get_all_leafs(root)
+    for proba, leaf in zip(complete_probas, leafs):
+        h = hash(leaf)
+        if h in uniq_leafs:
+            uniq_complete_probas[h] += proba
+        else:
+            uniq_complete_probas[h] = proba
+            uniq_leafs[h] = leaf
+    return list(uniq_complete_probas.values()), list(uniq_leafs.values())
+
 
 def explore_from_node_to_depth(root, depth=1):
     print("\n\n\nFor depth = {}, starting from this node :\n{}".format(depth, root))
@@ -255,24 +302,24 @@ def explore_from_node_to_depth(root, depth=1):
 
 # --- Main function
 
-def main(depth=2, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None):
+def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None):
     """Compute all the transitions, and print them."""
-    if mus == None:
+    if mus is None:
         mus = symbol_means(K=K)
     K = len(mus)
-    if players == None:
+    if players is None:
         players = [default_policy for _ in range(M)]
     M = len(players)
     assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported..."  # FIXME
     assert 0 <= depth <= 4, "Error: only 0 <= depth <= 4 is supported..."  # FIXME
     # Compute starting state
-    if S == None:
+    if S is None:
         S = np.zeros((M, K))
-    if Stilde == None:
+    if Stilde is None:
         Stilde = np.zeros((M, K))
-    if N == None:
+    if N is None:
         N = np.zeros((M, K), dtype=int)
-    if Ntilde == None:
+    if Ntilde is None:
         Ntilde = np.zeros((M, K),  dtype=int)
     # Create the root state
     root = State(S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, players=players)
@@ -287,12 +334,42 @@ def main(depth=2, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
     explore_from_node_to_depth(root, depth=depth)
     # Print everything
     pretty_print_result_recursively(root)
+    # Get all leafs
+    complete_probas, leafs = get_unique_leafs(root)
+    print("There is {} unique leafs...".format(len(leafs)))
+    for proba, leaf in zip(complete_probas, leafs):
+        if leaf.is_absorbing():
+            print("At depth {}, a leaf was found to be absorbing, with probability = {} ... Leaf:\n{}".format(depth, proba, leaf))
     return root
 
 
 # --- Main script
 
 if __name__ == '__main__':
-    main()
+    depth = 2
+
+    K = 2
+    M = 2
+    S = np.array([[1, 0], [1, 1]])
+    N = np.array([[1, 1], [1, 1]])
+    Stilde = np.array([[1, 0], [1, 0]])
+    Ntilde = np.array([[1, 1], [1, 1]])
+    # for various policies
+    for policy in [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]:
+        players = [ policy for _ in range(M) ]
+        main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde)
+        print(input("\n\n[Enter] to continue..."))
+
+    K = 3
+    M = 2
+    S = np.array([[2, 1, 0], [2, 1, 0]])
+    N = np.array([[4, 3, 1], [4, 3, 1]])
+    Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
+    # for various policies
+    for policy in [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]:
+        players = [ policy for _ in range(M) ]
+        main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde)
+        print(input("\n\n[Enter] to continue..."))
 
 # End of complete-tree-exploration-for-MP-bandits.py
