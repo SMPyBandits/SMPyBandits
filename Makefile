@@ -60,9 +60,9 @@ moremultiplayers2:
 
 treeexploration: treeexploration3
 treeexploration3:
-	time nice -n 19 ipython3 ./complete-tree-exploration-for-MP-bandits.py | tee ./logs/complete-tree-exploration-for-MP-bandits_py3_log.txt
+	time nice -n 19 ipython3 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 treeexploration2:
-	time nice -n 19 python2 ./complete-tree-exploration-for-MP-bandits.py | tee ./logs/complete-tree-exploration-for-MP-bandits_py3_log.txt
+	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 
 policy_server_py:
 	clear
