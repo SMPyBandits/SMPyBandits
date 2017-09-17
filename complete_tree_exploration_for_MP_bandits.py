@@ -7,9 +7,11 @@
 - TODO : add rhoRand, TopBestM etc
 
 Requirements:
+
 - sympy and numpy are required.
 
 About:
+
 - *Date:* 16/09/2017.
 - *Author:* Lilian Besson, (C) 2017
 - *Licence:* MIT Licence (http://lbesson.mit-license.org).
@@ -395,20 +397,20 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
 
 if __name__ == '__main__':
     mus = None
-    depth = 2
+    depth = 1
 
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
     #     test(depth=depth, M=M, K=K, mus=mus)
 
-    # M, K = 2, 2
-    # # mus = [0.8, 0.2]
-    # # mus = [Fraction(4, 5), Fraction(1, 5)]
-    # # for depth in [1, 2, 3]:
-    # for depth in [3]:
-    #     print("For depth = {} ...".format(depth))
-    #     test(depth=depth, M=M, K=K, mus=mus)
+    M, K = 2, 2
+    # mus = [0.8, 0.2]
+    # mus = [Fraction(4, 5), Fraction(1, 5)]
+    # for depth in [1, 2, 3]:
+    for depth in [1]:
+        print("For depth = {} ...".format(depth))
+        test(depth=depth, M=M, K=K, mus=mus)
 
     # M, K = 2, 2
     # S = np.array([[1, 0], [1, 1]])
@@ -421,13 +423,13 @@ if __name__ == '__main__':
     # M, K = 2, 3
     # test(depth=depth, M=M, K=K, mus=mus)
 
-    M, K = 2, 3
-    S = np.array([[2, 1, 0], [2, 1, 0]])
-    N = np.array([[4, 3, 1], [4, 3, 1]])
-    Stilde = np.array([[2, 1, 0], [2, 1, 0]])
-    Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
-    for depth in [1]:
-        test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    # M, K = 2, 3
+    # S = np.array([[2, 1, 0], [2, 1, 0]])
+    # N = np.array([[4, 3, 1], [4, 3, 1]])
+    # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
+    # for depth in [1]:
+    #     test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
 
     # M, K = 3, 3
     # test(depth=depth, M=M, K=K, mus=mus)

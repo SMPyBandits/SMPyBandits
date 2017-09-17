@@ -1,0 +1,752 @@
+Info: numba.jit seems to be available.
+For depth = 1 ...
+
+Starting to explore every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f113331b510>)...
+  - Player #1/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f113331b510>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+For depth = 1, exploring from this node :
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+  we saw 16 different states...
+
+
+
+There are 16 unique leafs for depth 1...
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  1.]] =: S
+[[ 1.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  1.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 1.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 1.  0.]] =: S
+[[ 0.  1.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+Done for exploring every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 1.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f113331b510>)...
+  - Player #1/2 uses Selfish_0Greedy_Ubar (which is <function Selfish_0Greedy_Ubar at 0x7f113331b510>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+There were 16 unique leafs for depth 1...
+
+
+[Enter] to continue...
+
+Starting to explore every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_UCB_Ubar (which is <function Selfish_UCB_Ubar at 0x7f113331b6a8>)...
+  - Player #1/2 uses Selfish_UCB_Ubar (which is <function Selfish_UCB_Ubar at 0x7f113331b6a8>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+For depth = 1, exploring from this node :
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+  we saw 16 different states...
+
+
+
+There are 16 unique leafs for depth 1...
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  1.]] =: S
+[[ 1.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  1.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 1.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 1.  0.]] =: S
+[[ 0.  1.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+Done for exploring every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 1.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_UCB_Ubar (which is <function Selfish_UCB_Ubar at 0x7f113331b6a8>)...
+  - Player #1/2 uses Selfish_UCB_Ubar (which is <function Selfish_UCB_Ubar at 0x7f113331b6a8>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+There were 16 unique leafs for depth 1...
+
+
+[Enter] to continue...
+
+Starting to explore every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_KLUCB_Ubar (which is <function Selfish_KLUCB_Ubar at 0x7f1121ea19d8>)...
+  - Player #1/2 uses Selfish_KLUCB_Ubar (which is <function Selfish_KLUCB_Ubar at 0x7f1121ea19d8>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+For depth = 1, exploring from this node :
+    State : M = 2, K = 2 and t = 0, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+  we saw 16 different states...
+
+
+
+There are 16 unique leafs for depth 1...
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  1.]] =: S
+[[ 1.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  1.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 0.  0.]] =: S
+[[ 0.  1.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = (-mu_1 + 1)*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  1.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_1*(-mu_2 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 1.  0.]
+ [ 0.  0.]] =: S
+[[ 1.  0.]
+ [ 0.  0.]] =: Stilde
+[[1 0]
+ [0 1]] =: N
+[[1 0]
+ [0 1]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[1 0]
+ [1 0]] =: N
+[[0 0]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_1*mu_2/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  1.]
+ [ 1.  0.]] =: S
+[[ 0.  1.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 0.  1.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 1]
+ [0 1]] =: N
+[[0 1]
+ [0 0]] =: Ntilde
+
+
+ Leaf with probability = mu_2*(-mu_1 + 1)/4:
+    State : M = 2, K = 2 and t = 1, depth = 0.
+[[ 0.  0.]
+ [ 1.  0.]] =: S
+[[ 0.  0.]
+ [ 1.  0.]] =: Stilde
+[[0 1]
+ [1 0]] =: N
+[[0 1]
+ [1 0]] =: Ntilde
+
+
+Done for exploring every transitions up-to depth 1 for this root state:
+    State : M = 2, K = 2 and t = 0, depth = 1.
+[[ 0.  0.]
+ [ 0.  0.]] =: S
+[[ 0.  0.]
+ [ 0.  0.]] =: Stilde
+[[0 0]
+ [0 0]] =: N
+[[0 0]
+ [0 0]] =: Ntilde
+
+    Using these policies:
+  - Player #0/2 uses Selfish_KLUCB_Ubar (which is <function Selfish_KLUCB_Ubar at 0x7f1121ea19d8>)...
+  - Player #1/2 uses Selfish_KLUCB_Ubar (which is <function Selfish_KLUCB_Ubar at 0x7f1121ea19d8>)...
+    Using these arms:
+  - Arm #0/2 has mean mu_1 ...
+  - Arm #1/2 has mean mu_2 ...
+
+There were 16 unique leafs for depth 1...
+
+
+[Enter] to continue...
