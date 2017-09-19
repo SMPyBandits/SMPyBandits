@@ -41,9 +41,9 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -637,13 +637,13 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
     rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
-    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
-    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
+    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
 
     # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against SmartMusicalChair[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
