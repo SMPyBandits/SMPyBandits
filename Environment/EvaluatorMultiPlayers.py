@@ -76,11 +76,13 @@ class EvaluatorMultiPlayers(object):
         self.collisions = dict()  #: For each env, keep the history of collisions on all arms
         self.NbSwitchs = dict()  #: For each env, keep the history of switches (change of configuration of players)
         self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
-        self.FreeTransmissions = dict()  #: For each env, keep the history of succesful transmission (1 - collisions, basically)
+        self.FreeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
+        self.last_cum_rewards = dict()  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
         print("Number of environments to try:", len(self.envs))  # DEBUG
         for envId in range(len(self.envs)):  # Zeros everywhere
             self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.last_cum_rewards[envId] = np.zeros(self.repetitions)
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
             self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.duration))
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.duration))
@@ -140,11 +142,12 @@ class EvaluatorMultiPlayers(object):
         bestarm = env.maxArm
         indexes_bestarm = np.nonzero(np.isclose(means, bestarm))[0]
 
-        def store(r):
+        def store(r, repeatId):
             """Store the result of the experiment r."""
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
+            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards, axis=1)
             self.pulls[envId] += r.pulls
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions
@@ -157,15 +160,17 @@ class EvaluatorMultiPlayers(object):
         # Start now
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
+            repeatIdout = 0
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                 delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
-                store(r)
+                store(r, repeatIdout)
+                repeatIdout += 1
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
-                store(r)
+                store(r, repeatId)
 
     # --- Getter methods
 
@@ -191,7 +196,7 @@ class EvaluatorMultiPlayers(object):
         return self.BestArmPulls[envId][playerId, :] / (float(self.repetitions) * self.times)
 
     def getFreeTransmissions(self, playerId, envId=0):
-        """Extract mean of succesful transmission."""
+        """Extract mean of successful transmission."""
         return self.FreeTransmissions[envId][playerId, :] / float(self.repetitions)
 
     def getCollisions(self, armId, envId=0):
@@ -224,6 +229,19 @@ class EvaluatorMultiPlayers(object):
         # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
         actualRewards = sum(self.getRewards(playerId, envId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
+
+    def getLastRegrets(self, envId=0):
+        """Extract last regrets."""
+        meansArms = np.sort(self.envs[envId].means)
+        meansBestArms = meansArms[-self.nbPlayers:]
+        sumBestMeans = np.sum(meansBestArms)
+        # FIXED how to count it when there is more players than arms ?
+        # FIXME it depends on the collision model !
+        if self.envs[envId].nbArms < self.nbPlayers:
+            # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
+            worseArm = np.min(meansArms)
+            sumBestMeans -= worseArm  # This count the collisions
+        return self.horizon * sumBestMeans - self.last_cum_rewards[envId]
 
     # --- Three terms in the regret
 
@@ -621,6 +639,16 @@ class EvaluatorMultiPlayers(object):
             player = self.players[k]
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
+
+    def printLastRegrets(self, envId=0):
+        """Print the last regrets of the different policies."""
+        last_regrets = self.getLastRegrets(envId=envId)
+        print("  Last regrets vector (for all repetitions) is:")
+        # print(last_regrets)  # XXX takes too much printing
+        print("Shape of  last regrets R_T =", np.shape(last_regrets))
+        print("Mean of   last regrets R_T =", np.mean(last_regrets))
+        print("Median of last regrets R_T =", np.median(last_regrets))
+        print("VAR of    last regrets R_T =", np.var(last_regrets))
 
     def strPlayers(self, short=False):
         """Get a string of the players for this environment."""
