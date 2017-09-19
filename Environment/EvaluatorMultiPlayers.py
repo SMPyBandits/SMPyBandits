@@ -58,6 +58,7 @@ class EvaluatorMultiPlayers(object):
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)  #: Which collision model should be used
         self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)  #: Is there a full loss of rewards if collision ? To compute the correct decomposition of regret
         print("Using collision model {} (function {}).\nMore details:\n{}".format(self.collisionModel.__name__, self.collisionModel, self.collisionModel.__doc__))
+        self.signature = signature
         # Flags
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)  #: Final display of ranks are done on average rewards?
         self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
@@ -147,7 +148,7 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
-            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards, axis=1)
+            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards)
             self.pulls[envId] += r.pulls
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions
@@ -302,7 +303,7 @@ class EvaluatorMultiPlayers(object):
             else:
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$" % self.repetitions)
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
@@ -333,7 +334,7 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
@@ -408,7 +409,7 @@ class EvaluatorMultiPlayers(object):
         plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=1)
         # Labels and legends
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
@@ -430,7 +431,7 @@ class EvaluatorMultiPlayers(object):
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '')
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         ymax = max(plt.ylim()[1], 1)
         plt.ylim(ymin, ymax)
         if not cumulated:
@@ -458,7 +459,7 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
@@ -480,7 +481,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ (collision model: {}):\nBest arm pulls frequency for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -504,7 +505,7 @@ class EvaluatorMultiPlayers(object):
                     Y /= 1 + X
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1))
             legend()
-            plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+            plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
             plt.title("Multi-players $M = {}$ (collision model: {}):\n{} of pulls of the arm #{} for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -528,7 +529,7 @@ class EvaluatorMultiPlayers(object):
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], linewidth=1, markersize=1)
             # should only plot with markers
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -569,7 +570,7 @@ class EvaluatorMultiPlayers(object):
         else:
             print("No upper bound for the non-cumulated number of collisions...")  # DEBUG
         # Start the figure
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         legend()
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -602,7 +603,7 @@ class EvaluatorMultiPlayers(object):
         colors[-1] = 'lightgrey'
         # Start the figure
         fig = plt.figure()
-        plt.xlabel("{}{}".format(self.strPlayers(), signature))
+        plt.xlabel("{}{}".format(self.strPlayers(), self.signature))
         if piechart:
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
@@ -640,15 +641,63 @@ class EvaluatorMultiPlayers(object):
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
-    def printLastRegrets(self, envId=0):
-        """Print the last regrets of the different policies."""
-        last_regrets = self.getLastRegrets(envId=envId)
-        print("  Last regrets vector (for all repetitions) is:")
-        # print(last_regrets)  # XXX takes too much printing
-        print("Shape of  last regrets R_T =", np.shape(last_regrets))
-        print("Mean of   last regrets R_T =", np.mean(last_regrets))
-        print("Median of last regrets R_T =", np.median(last_regrets))
-        print("VAR of    last regrets R_T =", np.var(last_regrets))
+    def printLastRegrets(self, envId=0, evaluators=()):
+        """Print the last regrets of the different evaluators."""
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for evaId, eva in enumerate(evaluators):
+            print("\nFor evaluator #{}/{} : {} ...".format(1 + evaId, len(evaluators), evaluators))
+            last_regrets = eva.getLastRegrets(envId=envId)
+            print("  Last regrets vector (for all repetitions) is:")
+            print("Shape of  last regrets R_T =", np.shape(last_regrets))
+            print("Min of    last regrets R_T =", np.min(last_regrets))
+            print("Mean of   last regrets R_T =", np.mean(last_regrets))
+            print("Median of last regrets R_T =", np.median(last_regrets))
+            print("Max of    last regrets R_T =", np.max(last_regrets))
+            print("VAR of    last regrets R_T =", np.var(last_regrets))
+
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=None, savefig=None, evaluators=()):
+        """Plot histogram of the regrets R_T for all evaluators."""
+        if len(evaluators) == 0:  # no need for a subplot
+            subplots = False
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        N = len(evaluators)
+        colors = palette(N)
+        if subplots:
+            # Use a subplots of the good size
+            nrows = 1 + int(np.sqrt(N))
+            ncols = N // nrows
+            if N > nrows * ncols:
+                ncols += 1
+            nrows, ncols = max(nrows, ncols), min(nrows, ncols)
+            fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
+            fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+            for evaId, eva in enumerate(evaluators):
+                i, j = evaId % nrows, evaId // nrows
+                ax = axes[i, j] if ncols > 1 else axes[i]
+                last_regrets = eva.getLastRegrets(envId=envId)
+                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins)
+                ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
+                ax.set_title(eva.strPlayers(short=True))
+                # Add only once the ylabel, xlabel, in the middle
+                if i == (nrows // 2) and j == 0:
+                    ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                if i == nrows - 1 and j == (ncols // 2):
+                    axes[i, j].set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+        else:
+            fig = plt.figure()
+            plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+            plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            all_last_regrets = []
+            labels = []
+            for evaId, eva in enumerate(evaluators):
+                all_last_regrets.append(eva.getLastRegrets(envId=envId))
+                labels.append(eva.strPlayers(short=True))
+            plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
+            legend()
+        # Common part
+        show_and_save(self.showplot, savefig)
+        return fig
 
     def strPlayers(self, short=False):
         """Get a string of the players for this environment."""

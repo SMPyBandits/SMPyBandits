@@ -5,7 +5,7 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 # Tries to know number of CPU
 try:
@@ -38,11 +38,12 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".
+HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -59,9 +60,9 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
-REPETITIONS = 20
+# REPETITIONS = 20
 # REPETITIONS = 10
 
 #: To profile the code, turn down parallel computing
@@ -636,13 +637,13 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
     rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
-    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
-    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
+    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
 
     # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against SmartMusicalChair[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,

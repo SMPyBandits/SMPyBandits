@@ -447,18 +447,21 @@ class Evaluator(object):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
             last_regrets = self.getLastRegrets(policyId, envId=envId)
             print("  Last regrets vector (for all repetitions) is:")
-            # print(last_regrets)  # XXX takes too much printing
             print("Shape of  last regrets R_T =", np.shape(last_regrets))
+            print("Min of    last regrets R_T =", np.min(last_regrets))
             print("Mean of   last regrets R_T =", np.mean(last_regrets))
             print("Median of last regrets R_T =", np.median(last_regrets))
+            print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
     def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=None, savefig=None):
         """Plot histogram of the regrets R_T for all policies."""
-        colors = palette(self.nbPolicies)
+        N = self.nbPolicies
+        if N == 1:
+            subplots = False  # no need for a subplot
+        colors = palette(N)
         if subplots:
             # Use a subplots of the good size
-            N = self.nbPolicies
             nrows = 1 + int(np.sqrt(N))
             ncols = N // nrows
             if N > nrows * ncols:
@@ -468,15 +471,16 @@ class Evaluator(object):
             fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
+                ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId)
-                n, _, _ = axes[i, j].hist(last_regrets, normed=normed, color=colors[policyId], bins=bins)
-                axes[i, j].vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
-                axes[i, j].set_title(str(policy))
+                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins)
+                ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
+                ax.set_title(str(policy))
                 # Add only once the ylabel, xlabel, in the middle
                 if i == (nrows // 2) and j == 0:
-                    axes[i, j].set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                    ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 if i == nrows - 1 and j == (ncols // 2):
-                    axes[i, j].set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                    ax.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
