@@ -19,6 +19,8 @@ About:
 """
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
+__author__ = "Lilian Besson"
+__version__ = "0.1"
 
 from collections import Counter
 from collections import deque
@@ -62,6 +64,26 @@ def choices_from_indexes(indexes):
     """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
     return np.where(indexes == np.max(indexes))[0]
 
+
+def proba2str(proba, html_in_var_names=False):
+    """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
+    if isinstance(proba, float):
+        str_proba = '{:.3g}'.format(proba)
+    elif isinstance(proba, Fraction):
+        str_proba = str(proba)
+    else:  # a bit of str rewriting
+        str_proba = str(proba)
+        if html_in_var_names:
+            str_proba = re.sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
+        else:
+            str_proba = str_proba.replace('**', '^')
+        str_proba = str_proba.replace('*', '')
+        str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
+        if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
+            str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
+        else:
+            str_proba = re.sub(r'mu_', r'µ', str_proba)
+    return str_proba
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
@@ -204,36 +226,44 @@ class State(object):
         # return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]"
         return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
 
-    def to_dot(self, name="", comment="", html_in_var_names=False):
-        """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details."""
+    def to_dot(self, name="", comment="", html_in_var_names=False, onlyleafs=True):
+        """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
+
+        - onlyleafs: only print the root and the leafs, to see a concise representation of the tree.
+        """
         print("Creating a dot graph from the state...")
         dot = Digraph(name=name, comment=comment, format="svg")
         node_number = 0
-        to_explore = deque([self])  # BFS using a deque, DFS using a list/recursive call
-        # convert each state to a node and a list of edge
-        while len(to_explore) > 0:
-            root = to_explore.popleft()
-            root_node = str(node_number)
-            dot.node(root_node, root._to_node())
-            for proba, child in zip(root.probas, root.children):
-                # add a UNIQUE identifier for each node:
-                # easy, just do a breath-first search,
-                # and use numbers from 0 to big-integer-that-is-computed on the fly
+        if onlyleafs:
+            root_name, root = "0", self
+            dot.node(root_name, root._to_node(), color="green")
+            complete_probas, leafs = root.get_unique_leafs()
+            for proba, leaf in zip(complete_probas, leafs):
+                # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
-                dot.node(str(node_number), child._to_node())
-                if isinstance(proba, float):
-                    str_proba = '{:.3g}'.format(proba)
-                elif isinstance(proba, Fraction):
-                    str_proba = str(proba)
+                leaf_name = str(node_number)
+                if leaf.is_absorbing():
+                    dot.node(leaf_name, leaf._to_node(), color="red")
                 else:
-                    str_proba = str(proba).replace('*', ' ')
-                    str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1 - mu_\1', str_proba)
-                    if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
-                        str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
-                    else:
-                        str_proba = re.sub(r'mu_', r'µ', str_proba)
-                dot.edge(root_node, str(node_number), label=str_proba)
-                to_explore.append(child)
+                    dot.node(leaf_name, leaf._to_node())
+                dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+        else:
+            to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
+            # convert each state to a node and a list of edge
+            while len(to_explore) > 0:
+                root_name, root = to_explore.popleft()
+                if root_name == "0":
+                    dot.node(root_name, root._to_node(), color="green")
+                elif root.is_absorbing():
+                    dot.node(root_name, root._to_node(), color="red")
+                else:
+                    dot.node(root_name, root._to_node())
+                for proba, child in zip(root.probas, root.children):
+                    # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
+                    node_number += 1
+                    child_name = str(node_number)
+                    dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                    to_explore.append((child_name, child))
         return dot
 
     def saveto(self, filename, view=True, name="", comment=""):
@@ -394,7 +424,7 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
         players = [default_policy for _ in range(M)]
     M = len(players)
     assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported... and M = {}, K = {} here...".format(M, K)  # FIXME
-    assert 0 <= depth <= 5, "Error: only 0 <= depth <= 5 is supported... and depth = {} here...".format(depth)  # FIXME
+    assert 0 <= depth <= 8, "Error: only 0 <= depth <= 8 is supported... and depth = {} here...".format(depth)  # FIXME
     # Compute starting state
     if S is None:
         S = np.zeros((M, K))
@@ -465,7 +495,7 @@ if __name__ == '__main__':
 
     M, K = 2, 2
     # mus = [0.8, 0.2]
-    mus = [Fraction(4, 5), Fraction(1, 5)]
+    # mus = [Fraction(4, 5), Fraction(1, 5)]
     # for depth in [1, 2, 3]:
     for depth in [1]:
         print("For depth = {} ...".format(depth))
@@ -483,12 +513,14 @@ if __name__ == '__main__':
     # results = test(depth=depth, M=M, K=K, mus=mus)
 
     # M, K = 2, 3
-    # S = np.array([[2, 1, 0], [2, 1, 0]])
-    # N = np.array([[4, 3, 1], [4, 3, 1]])
-    # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
-    # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
-    # for depth in [1]:
-    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    # # S = np.array([[2, 1, 0], [2, 1, 0]])
+    # # N = np.array([[4, 3, 1], [4, 3, 1]])
+    # # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
+    # # for depth in [1]:
+    # for depth in [2, 3]:
+    #     results = test(depth=depth, M=M, K=K, mus=mus)
+    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
 
     # M, K = 3, 3
     # results = test(depth=depth, M=M, K=K, mus=mus)
