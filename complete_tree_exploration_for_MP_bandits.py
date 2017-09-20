@@ -372,7 +372,6 @@ class State(object):
                 assert child.depth == (self.depth - 1)
                 uniq_children[h] = child
                 uniq_probas[h] = proba
-        # print("  we saw {} possible transitions...".format(nb_transitions))
         print("  we saw {} different states...".format(len(uniq_children)))
         self.probas = [simplify(p) for p in uniq_probas.values()]
         self.children = list(uniq_children.values())
@@ -386,10 +385,7 @@ class State(object):
         number_of_decisions = prod(len(decision) for decision in all_decisions)
         for decisions in product(*all_decisions):
             for coin_flips in product([0, 1], repeat=self.K):
-                print("coin_flips =", coin_flips)  # DEBUG
-                print("self.mus =", self.mus)  # DEBUG
                 proba_of_this_coin_flip = prod(mu if b else (1 - mu) for b, mu in zip(coin_flips, self.mus))
-                print("proba_of_this_coin_flip =", proba_of_this_coin_flip)  # DEBUG
                 # Create a function to apply this transition
                 def delta(s):
                     s.t += 1
@@ -397,11 +393,11 @@ class State(object):
                     # collisions = [np.count_nonzero(np.array(decisions) == k) >= 2 for k in range(self.K)]
                     counter = Counter(decisions)
                     collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]  # XXX faster with Counter
-                    for j, Ij, b in zip(range(self.M), decisions, coin_flips):
-                        s.S[j, Ij] += b  # sensing feedback
+                    for j, Ij in enumerate(decisions):
+                        s.S[j, Ij] += coin_flips[Ij]  # sensing feedback
                         s.N[j, Ij] += 1  # number of sensing trials
                         if not collisions[Ij]:  # no collision, receive this feedback for rewards
-                            s.Stilde[j, Ij] += b  # number of succesful transmissions
+                            s.Stilde[j, Ij] += coin_flips[Ij]  # number of succesful transmissions
                             s.Ntilde[j, Ij] += 1  # number of trials without collisions
                     return s
                 # Compute the probability of this transition
