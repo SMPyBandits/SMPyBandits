@@ -239,7 +239,7 @@ class State(object):
     def __str__(self):
         return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
 
-    def _to_node(self, concise=True):
+    def _to_node(self, concise=False):
         """Print the state as a small string to be attached to a GraphViz node."""
         if concise:
             return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
@@ -440,6 +440,18 @@ class State(object):
                 uniq_leafs[h] = leaf
         return [simplify(p) for p in uniq_complete_probas.values()], list(uniq_leafs.values())
 
+    def proba_reaching_absorbing_state(self):
+        """Compute the probability of re    aching a leaf that is an absorbing state."""
+        probas, leafs = self.get_unique_leafs()
+        bad_proba = 0
+        nb_absorbing = 0
+        for proba, leaf in zip(probas, leafs):
+            if leaf.is_absorbing():
+                bad_proba += proba
+                nb_absorbing += 1
+        print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...\n".format(self.depth, nb_absorbing, bad_proba))
+        return nb_absorbing, bad_proba
+
 
 # --- Main function
 
@@ -500,16 +512,16 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
 
 # --- Main script
 
-def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True):
+def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True, policies=None):
     """Test the main exploration function for various policies."""
     results = []
-    # for policy in [FixedArm]:  # FIXME just for testing
-    # for policy in [UniformExploration]:  # FIXME just for testing
-    # for policy in [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]:
-    for policy in [Selfish_UCB_Ubar]:
+    if policies is None:
+        policies = [FixedArm]
+    for policy in policies:
         players = [ policy for _ in range(M) ]
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
-        results.append([root, complete_probas, leafs])
+        nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
+        results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
         if debug:
             root.saveto('/tmp/test', view=True, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
             print(input("\n\n[Enter] to continue..."))
@@ -517,6 +529,11 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
 
 
 if __name__ == '__main__':
+    policies = [FixedArm]  # FIXME just for testing
+    policies = [UniformExploration]  # FIXME just for testing
+    policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
+    policies = [Selfish_UCB_Ubar]
+
     mus = None
     depth = 1
 
@@ -524,28 +541,28 @@ if __name__ == '__main__':
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
 
-    # # XXX default start state
-    # M, K = 2, 2
-    # # mus = [0.8, 0.2]
-    # # mus = [Fraction(4, 5), Fraction(1, 5)]
-    # for depth in [1, 2, 3]:
-    #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus)
-
-    # XXX What if we start from an absorbing state?
+    # XXX default start state
     M, K = 2, 2
-    S = np.array([[1, 0], [1, 0]])
-    Stilde = np.array([[1, 0], [1, 0]])
-    N = np.array([[2, 1], [2, 1]])
-    Ntilde = np.array([[2, 1], [2, 1]])
+    # mus = [0.8, 0.2]
+    # mus = [Fraction(4, 5), Fraction(1, 5)]
     for depth in [1, 2, 3]:
-        results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+        print("For depth = {} ...".format(depth))
+        results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+
+    # # XXX What if we start from an absorbing state?
+    # M, K = 2, 2
+    # S = np.array([[1, 0], [1, 0]])
+    # Stilde = np.array([[1, 0], [1, 0]])
+    # N = np.array([[2, 1], [2, 1]])
+    # Ntilde = np.array([[2, 1], [2, 1]])
+    # for depth in [1, 2, 3]:
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies)
 
     # # XXX default start state
     # M, K = 2, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 3
@@ -555,10 +572,10 @@ if __name__ == '__main__':
     # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # # for depth in [1]:
     # for depth in [2, 3]:
-    #     results = test(depth=depth, M=M, K=K, mus=mus)
-    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies)
 
     # M, K = 3, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
 
 # End of complete-tree-exploration-for-MP-bandits.py
