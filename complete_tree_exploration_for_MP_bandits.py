@@ -4,6 +4,7 @@
 
 - Can use exact formal computations with sympy, or fractions with Fraction, or float number.
 - Support Selfish 0-greedy, UCB, and klUCB in 3 differents variants.
+- Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG/PDF etc.
 - TODO : add rhoRand, TopBestM etc
 
 Requirements:
@@ -20,10 +21,25 @@ About:
 from __future__ import print_function, division  # Python 2 compatibility if needed
 
 from collections import Counter
+from collections import deque
 from fractions import Fraction
 from itertools import product
-import numpy as np
-import sympy
+import re
+
+try:
+    import numpy as np
+except ImportError as e:
+    print("Warning: the 'numpy' module was not found...\nInstall it with 'sudo pip2/pip3 install numpy'")  # XXX
+    raise e
+try:
+    import sympy
+except ImportError:
+    print("Warning: the 'sympy' module was not found...\nInstall it with 'sudo pip2/pip3 install sympy'")  # XXX
+try:
+    from graphviz import Digraph
+except ImportError:
+    print("Warning: the 'graphviz' module was not found...\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
+
 oo = float('+inf')  #: Shortcut for float('+inf').
 
 
@@ -137,16 +153,16 @@ def Selfish_KLUCB_Ubar(j, state):
 
 # --- Generate vector of formal means mu_1,...,mu_K
 
-def symbol_means(K=2):
+def symbol_means(K):
     """Better to work directly with symbols and instantiate the results *after*."""
-    return sympy.var(['mu_{}'.format(i) for i in range(1, K + 1)])
+    return sympy.var(['mu_{}'.format(i) for i in range(1, K + 1)], real=True)
 
-def random_uniform_means(K=2):
+def random_uniform_means(K):
     """If needed, generate an array of K (numerical) uniform means in [0, 1]."""
     return np.random.rand(K)
 
 
-# --- Data representation
+# --- Data representation'
 
 class State(object):
     """Not space-efficient representation of a state in the system we model.
@@ -182,6 +198,48 @@ class State(object):
 
     def __str__(self):
         return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
+
+    def _to_node(self):
+        """Print the state as a small string to be attached to a GraphViz node."""
+        # return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]"
+        return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
+
+    def to_dot(self, name="", comment="", html_in_var_names=False):
+        """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details."""
+        print("Creating a dot graph from the state...")
+        dot = Digraph(name=name, comment=comment, format="svg")
+        node_number = 0
+        to_explore = deque([self])  # BFS using a deque, DFS using a list/recursive call
+        # convert each state to a node and a list of edge
+        while len(to_explore) > 0:
+            root = to_explore.popleft()
+            root_node = str(node_number)
+            dot.node(root_node, root._to_node())
+            for proba, child in zip(root.probas, root.children):
+                # add a UNIQUE identifier for each node:
+                # easy, just do a breath-first search,
+                # and use numbers from 0 to big-integer-that-is-computed on the fly
+                node_number += 1
+                dot.node(str(node_number), child._to_node())
+                if isinstance(proba, float):
+                    str_proba = '{:.3g}'.format(proba)
+                elif isinstance(proba, Fraction):
+                    str_proba = str(proba)
+                else:
+                    str_proba = str(proba).replace('*', ' ')
+                    str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1 - mu_\1', str_proba)
+                    if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
+                        str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
+                    else:
+                        str_proba = re.sub(r'mu_', r'µ', str_proba)
+                dot.edge(root_node, str(node_number), label=str_proba)
+                to_explore.append(child)
+        return dot
+
+    def saveto(self, filename, view=True, name="", comment=""):
+        dot = self.to_dot(name=name, comment=comment)
+        print("Saving the dot graph to '{}'...".format(filename))
+        dot.render(filename, view=view)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
@@ -391,6 +449,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
         results.append([root, complete_probas, leafs])
         if debug:
+            root.saveto('/tmp/test', view=True, name=policy.__name__)
             print(input("\n\n[Enter] to continue..."))
     return results
 
@@ -402,15 +461,15 @@ if __name__ == '__main__':
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
-    #     test(depth=depth, M=M, K=K, mus=mus)
+    #     results = test(depth=depth, M=M, K=K, mus=mus)
 
     M, K = 2, 2
     # mus = [0.8, 0.2]
-    # mus = [Fraction(4, 5), Fraction(1, 5)]
+    mus = [Fraction(4, 5), Fraction(1, 5)]
     # for depth in [1, 2, 3]:
     for depth in [1]:
         print("For depth = {} ...".format(depth))
-        test(depth=depth, M=M, K=K, mus=mus)
+        results = test(depth=depth, M=M, K=K, mus=mus)
 
     # M, K = 2, 2
     # S = np.array([[1, 0], [1, 1]])
@@ -418,10 +477,10 @@ if __name__ == '__main__':
     # Stilde = np.array([[1, 0], [1, 0]])
     # Ntilde = np.array([[1, 1], [1, 1]])
     # for depth in [3]:
-    #     test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
 
     # M, K = 2, 3
-    # test(depth=depth, M=M, K=K, mus=mus)
+    # results = test(depth=depth, M=M, K=K, mus=mus)
 
     # M, K = 2, 3
     # S = np.array([[2, 1, 0], [2, 1, 0]])
@@ -429,9 +488,9 @@ if __name__ == '__main__':
     # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
     # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # for depth in [1]:
-    #     test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
 
     # M, K = 3, 3
-    # test(depth=depth, M=M, K=K, mus=mus)
+    # results = test(depth=depth, M=M, K=K, mus=mus)
 
 # End of complete-tree-exploration-for-MP-bandits.py
