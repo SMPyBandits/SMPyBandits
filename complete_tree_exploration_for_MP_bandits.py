@@ -77,6 +77,41 @@ def simplify(proba):
     else:
         return proba
 
+def uniformMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
+    """Return a list of means of arms, well spaced:
+
+    - in [lower, lower + amplitude],
+    - sorted in increasing order,
+    - starting from lower + amplitude * delta, up to lower + amplitude * (1 - delta),
+    - and there is nbArms arms.
+
+    >>> np.array(uniformMeans(2, 0.1))
+    array([ 0.1,  0.9])
+    >>> np.array(uniformMeans(3, 0.1))
+    array([ 0.1,  0.5,  0.9])
+    >>> np.array(uniformMeans(9, 1 / (1. + 9)))
+    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
+    """
+    assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
+    assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
+    assert 0. < delta < 1., "Error: 'delta' = {:.3g} has to be in (0, 1).".format(delta)  # DEBUG
+    mus = lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+    return sorted(list(mus))
+
+def proba2float(proba, values=None, K=None, names=None):
+    """Replace mu_k by a numerical value and evaluation  the formula."""
+    if hasattr(proba, "evalf"):
+        if values is None and K is not None:
+            values = uniformMeans(nbArms=K)
+        if names is None:
+            K = len(values)
+            names = symbol_means(K)
+        return proba.evalf(subs=dict(zip(names, values)))
+    elif isinstance(proba, Fraction):
+        return float(proba)
+    else:  # a bit of str rewriting
+        return proba
+
 def proba2str(proba, html_in_var_names=False):
     """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
     if isinstance(proba, float):
@@ -98,22 +133,31 @@ def proba2str(proba, html_in_var_names=False):
             str_proba = re.sub(r'mu_', r'µ', str_proba)
     return str_proba
 
-WIDTH = 100  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
+WIDTH = 200  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
 
 def wraptext(text, width=WIDTH):
     """ Wrap the text, using ``textwrap`` module, and ``width``."""
     return '\n'.join(wrap(text, width=width))
 
-ONLYLEAFS = True  #: By default, aim at the most concise graph representation by only showing the leafs.
-ONLYABSORBING = False  #: By default, don't aim at the most concise graph representation by only showing the absorbing leafs.
-CONCISE = True  #: By default, only show :math:`\tilde{S}` and :math:`N` in the graph representations, not all the 4 vectors.
 
-if getenv('NOTONLYLEAFS', False):
-    ONLYLEAFS = False
-if getenv('NOTONLYABSORBING', False):
-    ONLYABSORBING = False
-if getenv('NOTCONCISE', False):
-    CONCISE = False
+def mybool(s):
+    return False if s == 'False' else bool(s)
+
+ONLYLEAFS = True  #: By default, aim at the most concise graph representation by only showing the leafs.
+ONLYLEAFS = mybool(getenv('ONLYLEAFS', ONLYLEAFS))
+
+ONLYABSORBING = False  #: By default, don't aim at the most concise graph representation by only showing the absorbing leafs.
+ONLYABSORBING = mybool(getenv('ONLYABSORBING', ONLYABSORBING))
+
+CONCISE = True  #: By default, only show :math:`\tilde{S}` and :math:`N` in the graph representations, not all the 4 vectors.
+CONCISE = mybool(getenv('CONCISE', CONCISE))
+
+FULLHASH = not CONCISE  #: Use only Stilde, N for hashing the states.
+FULLHASH = mybool(getenv('FULLHASH', FULLHASH))
+
+FORMAT = "svg"  #: Format used to save the graphs.
+FORMAT = "pdf"  #: Format used to save the graphs.
+FORMAT = getenv("FORMAT", FORMAT)
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
@@ -267,7 +311,7 @@ class State(object):
         - onlyabsorbing: only print the absorbing leafs, to see a really concise representation of the tree.
         """
         print("Creating a dot graph from the state...")
-        dot = Digraph(name=name, comment=comment, format="svg")
+        dot = Digraph(name=name, comment=comment, format=FORMAT)
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
         node_number = 0
@@ -306,14 +350,14 @@ class State(object):
 
     def saveto(self, filename, view=True, title="", name="", comment="", concise=CONCISE):
         dot = self.to_dot(title=title, name=name, comment=comment, concise=concise)
-        print("Saving the dot graph to '{}.svg'...".format(filename))
+        print("Saving the dot graph to '{}.{}'...".format(filename, FORMAT))
         dot.render(filename, view=view)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
         return State(S=self.S, Stilde=self.Stilde, N=self.N, Ntilde=self.Ntilde, mus=self.mus, players=self.players, depth=self.depth)
 
-    def __hash__(self, full=True):
+    def __hash__(self, full=FULLHASH):
         """Hash the matrix Stilde and N of the state."""
         if full:
             return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
@@ -537,7 +581,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         # store everything
         results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
         # save the graph and maybe display it
-        root.saveto(os.path.join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
+        root.saveto(os.path.join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
         # ask for Enter to continue
         if debug:
             print(input("\n\n[Enter] to continue..."))
@@ -552,7 +596,7 @@ if __name__ == '__main__':
 
     mus = None
 
-    # Read parameters from the cli env
+    # FIXME Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
     M = int(getenv("M", "2"))
     K = int(getenv("K", "2"))
