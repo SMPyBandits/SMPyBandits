@@ -5,11 +5,12 @@
 - Can use exact formal computations with sympy, or fractions with Fraction, or float number.
 - Support Selfish 0-greedy, UCB, and klUCB in 3 differents variants.
 - Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG/PDF etc.
-- TODO : add rhoRand, TopBestM etc
+- TODO : add rhoRand, TopBestM etc.
+- TODO : implement a parallel loop for what can be parallel.
 
 Requirements:
 
-- sympy and numpy are required.
+- 'sympy', 'numpy' and 'graphviz' are required.
 
 About:
 
@@ -20,13 +21,14 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.2"
 
+import re
 from collections import Counter
 from collections import deque
 from fractions import Fraction
 from itertools import product
-import re
+from textwrap import wrap
 
 try:
     import numpy as np
@@ -65,6 +67,13 @@ def choices_from_indexes(indexes):
     return np.where(indexes == np.max(indexes))[0]
 
 
+def simplify(proba):
+    """Try to simplify the expression of the probability."""
+    if hasattr(proba, "simplify"):
+        return proba.simplify()
+    else:
+        return proba
+
 def proba2str(proba, html_in_var_names=False):
     """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
     if isinstance(proba, float):
@@ -72,7 +81,7 @@ def proba2str(proba, html_in_var_names=False):
     elif isinstance(proba, Fraction):
         str_proba = str(proba)
     else:  # a bit of str rewriting
-        str_proba = str(proba)
+        str_proba = str(simplify(proba))
         if html_in_var_names:
             str_proba = re.sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
         else:
@@ -84,6 +93,15 @@ def proba2str(proba, html_in_var_names=False):
         else:
             str_proba = re.sub(r'mu_', r'µ', str_proba)
     return str_proba
+
+WIDTH = 100  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
+
+def wraptext(text, width=WIDTH):
+    """ Wrap the text, using ``textwrap`` module, and ``width``."""
+    return '\n'.join(wrap(text, width=width))
+
+ONLYLEAFS = True  #: By default, aim at the most concise graph representation by only showing the leafs
+ONLYABSORBING = False  #: By default, don't aim at the most concise graph representation by only showing the absorbing leafs
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
@@ -221,18 +239,25 @@ class State(object):
     def __str__(self):
         return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
 
-    def _to_node(self):
+    def _to_node(self, concise=True):
         """Print the state as a small string to be attached to a GraphViz node."""
-        # return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]"
-        return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
+        if concise:
+            return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
+        else:
+            return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]"
 
-    def to_dot(self, name="", comment="", html_in_var_names=False, onlyleafs=True):
+    def to_dot(self,
+               title="", name="", comment="",
+               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING):
         """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
         - onlyleafs: only print the root and the leafs, to see a concise representation of the tree.
+        - onlyabsorbing: only print the absorbing leafs, to see a really concise representation of the tree.
         """
         print("Creating a dot graph from the state...")
         dot = Digraph(name=name, comment=comment, format="svg")
+        dot.attr(overlap="false")
+        if title: dot.attr(label=wraptext(title))
         node_number = 0
         if onlyleafs:
             root_name, root = "0", self
@@ -244,9 +269,10 @@ class State(object):
                 leaf_name = str(node_number)
                 if leaf.is_absorbing():
                     dot.node(leaf_name, leaf._to_node(), color="red")
-                else:
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                elif not onlyabsorbing:
                     dot.node(leaf_name, leaf._to_node())
-                dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
             # convert each state to a node and a list of edge
@@ -266,17 +292,21 @@ class State(object):
                     to_explore.append((child_name, child))
         return dot
 
-    def saveto(self, filename, view=True, name="", comment=""):
-        dot = self.to_dot(name=name, comment=comment)
-        print("Saving the dot graph to '{}'...".format(filename))
+    def saveto(self, filename, view=True, title="", name="", comment=""):
+        dot = self.to_dot(title=title, name=name, comment=comment)
+        print("Saving the dot graph to '{}.svg'...".format(filename))
         dot.render(filename, view=view)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
         return State(S=self.S, Stilde=self.Stilde, N=self.N, Ntilde=self.Ntilde, mus=self.mus, players=self.players, depth=self.depth)
 
-    def __hash__(self):
-        return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
+    def __hash__(self, full=False):
+        """Hash the matrix Stilde and N of the state."""
+        if full:
+            return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
+        else:
+            return hash(tupleit2(self.Stilde) + tupleit2(self.N))
 
     def is_absorbing(self):
         """Try to detect if this state is absorbing, ie only one transition is possible, and again infinitely for the only child.
@@ -293,9 +323,10 @@ class State(object):
                 are_all_equal = [ tupleit1(a[j1]) == tupleit1(a[j2]) for a in A ]
                 if all(are_all_equal):
                     # bad_line = add([tupleit1(a[j1]) for a in A])
-                    bad_line = tupleit1(self.S[j1])
-                    # and if that line has K different values
-                    if len(set(bad_line)) == self.K:
+                    # bad_line = tupleit1(self.S[j1])
+                    bad_line = tupleit1(self.Stilde[j1])
+                    # and if that line has only different values
+                    if len(set(bad_line)) == len(bad_line):
                         return True
         return False
 
@@ -331,7 +362,7 @@ class State(object):
                 uniq_probas[h] = proba
         # print("  we saw {} possible transitions...".format(nb_transitions))
         print("  we saw {} different states...".format(len(uniq_children)))
-        self.probas = list(uniq_probas.values())
+        self.probas = [simplify(p) for p in uniq_probas.values()]
         self.children = list(uniq_children.values())
         # Done for computing all the children and probability of transitions
 
@@ -351,10 +382,10 @@ class State(object):
                     # collisions = [np.count_nonzero(np.array(decisions) == k) >= 2 for k in range(self.K)]
                     counter = Counter(decisions)
                     collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]  # XXX faster with Counter
-                    for j, Ij, b, c in zip(range(self.M), decisions, coin_flips, collisions):
+                    for j, Ij, b in zip(range(self.M), decisions, coin_flips):
                         s.S[j, Ij] += b  # sensing feedback
                         s.N[j, Ij] += 1  # number of sensing trials
-                        if not c:  # no collision, receive this feedback for rewards
+                        if not collisions[Ij]:  # no collision, receive this feedback for rewards
                             s.Stilde[j, Ij] += b  # number of succesful transmissions
                             s.Ntilde[j, Ij] += 1  # number of trials without collisions
                     return s
@@ -407,7 +438,7 @@ class State(object):
             else:
                 uniq_complete_probas[h] = proba
                 uniq_leafs[h] = leaf
-        return list(uniq_complete_probas.values()), list(uniq_leafs.values())
+        return [simplify(p) for p in uniq_complete_probas.values()], list(uniq_leafs.values())
 
 
 # --- Main function
@@ -472,14 +503,15 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
 def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True):
     """Test the main exploration function for various policies."""
     results = []
-    # for policy in [UniformExploration]:  # FIXME just for testing
     # for policy in [FixedArm]:  # FIXME just for testing
-    for policy in [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]:
+    # for policy in [UniformExploration]:  # FIXME just for testing
+    # for policy in [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]:
+    for policy in [Selfish_UCB_Ubar]:
         players = [ policy for _ in range(M) ]
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
         results.append([root, complete_probas, leafs])
         if debug:
-            root.saveto('/tmp/test', view=True, name=policy.__name__)
+            root.saveto('/tmp/test', view=True, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
             print(input("\n\n[Enter] to continue..."))
     return results
 
@@ -488,34 +520,38 @@ if __name__ == '__main__':
     mus = None
     depth = 1
 
+    # # XXX default start state
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
     #     results = test(depth=depth, M=M, K=K, mus=mus)
 
-    M, K = 2, 2
-    # mus = [0.8, 0.2]
-    # mus = [Fraction(4, 5), Fraction(1, 5)]
-    # for depth in [1, 2, 3]:
-    for depth in [1]:
-        print("For depth = {} ...".format(depth))
-        results = test(depth=depth, M=M, K=K, mus=mus)
-
+    # # XXX default start state
     # M, K = 2, 2
-    # S = np.array([[1, 0], [1, 1]])
-    # N = np.array([[1, 1], [1, 1]])
-    # Stilde = np.array([[1, 0], [1, 0]])
-    # Ntilde = np.array([[1, 1], [1, 1]])
-    # for depth in [3]:
-    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+    # # mus = [0.8, 0.2]
+    # # mus = [Fraction(4, 5), Fraction(1, 5)]
+    # for depth in [1, 2, 3]:
+    #     print("For depth = {} ...".format(depth))
+    #     results = test(depth=depth, M=M, K=K, mus=mus)
 
+    # XXX What if we start from an absorbing state?
+    M, K = 2, 2
+    S = np.array([[1, 0], [1, 0]])
+    Stilde = np.array([[1, 0], [1, 0]])
+    N = np.array([[2, 1], [2, 1]])
+    Ntilde = np.array([[2, 1], [2, 1]])
+    for depth in [1, 2, 3]:
+        results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus)
+
+    # # XXX default start state
     # M, K = 2, 3
     # results = test(depth=depth, M=M, K=K, mus=mus)
 
+    # # XXX What if we start from an absorbing state?
     # M, K = 2, 3
     # # S = np.array([[2, 1, 0], [2, 1, 0]])
-    # # N = np.array([[4, 3, 1], [4, 3, 1]])
     # # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    # # N = np.array([[4, 3, 1], [4, 3, 1]])
     # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # # for depth in [1]:
     # for depth in [2, 3]:
