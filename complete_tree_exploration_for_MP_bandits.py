@@ -155,8 +155,8 @@ CONCISE = mybool(getenv('CONCISE', CONCISE))
 FULLHASH = not CONCISE  #: Use only Stilde, N for hashing the states.
 FULLHASH = mybool(getenv('FULLHASH', FULLHASH))
 
-FORMAT = "svg"  #: Format used to save the graphs.
 FORMAT = "pdf"  #: Format used to save the graphs.
+FORMAT = "svg"  #: Format used to save the graphs.
 FORMAT = getenv("FORMAT", FORMAT)
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
@@ -504,7 +504,9 @@ class State(object):
             if leaf.is_absorbing():
                 bad_proba += proba
                 nb_absorbing += 1
-        print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...\n".format(self.depth, nb_absorbing, bad_proba))
+        print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...".format(self.depth, nb_absorbing, bad_proba))  # DEBUG
+        sample_values = uniformMeans(self.K)
+        print("\n==> Numerically, for uniformly spanned means = {}, this probability is = {:.3g} ...".format(sample_values, proba2float(bad_proba, values=sample_values)))  # DEBUG
         return nb_absorbing, bad_proba
 
 
@@ -595,6 +597,7 @@ if __name__ == '__main__':
     policies = [Selfish_UCB_Ubar]
 
     mus = None
+    # mus = [0.1, 0.9]
 
     # FIXME Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
