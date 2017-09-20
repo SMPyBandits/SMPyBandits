@@ -21,7 +21,7 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.3"
 
 import re
 import os.path
@@ -114,9 +114,6 @@ if getenv('NOTONLYABSORBING', False):
     ONLYABSORBING = False
 if getenv('NOTCONCISE', False):
     CONCISE = False
-
-print("CONCISE =", CONCISE)
-print(input("[Enter to continue]"))
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
@@ -256,7 +253,6 @@ class State(object):
 
     def _to_node(self, concise=CONCISE):
         """Print the state as a small string to be attached to a GraphViz node."""
-        print("concise =", concise)  # DEBUG
         if concise:
             return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
         else:
@@ -317,7 +313,7 @@ class State(object):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
         return State(S=self.S, Stilde=self.Stilde, N=self.N, Ntilde=self.Ntilde, mus=self.mus, players=self.players, depth=self.depth)
 
-    def __hash__(self, full=False):
+    def __hash__(self, full=True):
         """Hash the matrix Stilde and N of the state."""
         if full:
             return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
@@ -390,7 +386,10 @@ class State(object):
         number_of_decisions = prod(len(decision) for decision in all_decisions)
         for decisions in product(*all_decisions):
             for coin_flips in product([0, 1], repeat=self.K):
+                print("coin_flips =", coin_flips)  # DEBUG
+                print("self.mus =", self.mus)  # DEBUG
                 proba_of_this_coin_flip = prod(mu if b else (1 - mu) for b, mu in zip(coin_flips, self.mus))
+                print("proba_of_this_coin_flip =", proba_of_this_coin_flip)  # DEBUG
                 # Create a function to apply this transition
                 def delta(s):
                     s.t += 1
@@ -535,11 +534,15 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         policies = [FixedArm]
     for policy in policies:
         players = [ policy for _ in range(M) ]
+        # get the result
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
+        # computing absorbing states
         nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
+        # store everything
         results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
-        # No, save the graph!
+        # save the graph and maybe display it
         root.saveto(os.path.join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
+        # ask for Enter to continue
         if debug:
             print(input("\n\n[Enter] to continue..."))
     return results
