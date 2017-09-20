@@ -56,15 +56,15 @@ do_comparison_plots = True
 interactive = True  # XXX dont keep it like this
 interactive = False
 
-if str(getenv('DEBUG', False)) == 'True' and __name__ == '__main__':
+if bool(getenv('DEBUG', False)) and __name__ == '__main__':
     print("====> TURNING DEBUG MODE ON <=====")
     saveallfigs, interactive = False, True
 
-if str(getenv('SAVEALL', False)) == 'True' and __name__ == '__main__':
+if bool(getenv('SAVEALL', False)) and __name__ == '__main__':
     print("====> SAVING FIGURES <=====")
     saveallfigs = True
 
-if str(getenv('XKCD', False)) == 'True' and interactive and not saveallfigs:
+if bool(getenv('XKCD', False)) and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 

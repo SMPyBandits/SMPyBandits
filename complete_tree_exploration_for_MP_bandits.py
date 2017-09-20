@@ -24,8 +24,9 @@ __author__ = "Lilian Besson"
 __version__ = "0.2"
 
 import re
-from collections import Counter
-from collections import deque
+import os.path
+from os import getenv
+from collections import Counter, deque
 from fractions import Fraction
 from itertools import product
 from textwrap import wrap
@@ -45,6 +46,8 @@ except ImportError:
     print("Warning: the 'graphviz' module was not found...\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
 
 oo = float('+inf')  #: Shortcut for float('+inf').
+
+PLOT_DIR = os.path.join("plots", "trees")  #: Directory for the plots
 
 
 def tupleit1(anarray):
@@ -70,7 +73,7 @@ def choices_from_indexes(indexes):
 def simplify(proba):
     """Try to simplify the expression of the probability."""
     if hasattr(proba, "simplify"):
-        return proba.simplify()
+        return proba.simplify().factor()
     else:
         return proba
 
@@ -88,6 +91,7 @@ def proba2str(proba, html_in_var_names=False):
             str_proba = str_proba.replace('**', '^')
         str_proba = str_proba.replace('*', '')
         str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
+        str_proba = re.sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
         if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
             str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
         else:
@@ -100,8 +104,19 @@ def wraptext(text, width=WIDTH):
     """ Wrap the text, using ``textwrap`` module, and ``width``."""
     return '\n'.join(wrap(text, width=width))
 
-ONLYLEAFS = True  #: By default, aim at the most concise graph representation by only showing the leafs
-ONLYABSORBING = False  #: By default, don't aim at the most concise graph representation by only showing the absorbing leafs
+ONLYLEAFS = True  #: By default, aim at the most concise graph representation by only showing the leafs.
+ONLYABSORBING = False  #: By default, don't aim at the most concise graph representation by only showing the absorbing leafs.
+CONCISE = True  #: By default, only show :math:`\tilde{S}` and :math:`N` in the graph representations, not all the 4 vectors.
+
+if getenv('NOTONLYLEAFS', False):
+    ONLYLEAFS = False
+if getenv('NOTONLYABSORBING', False):
+    ONLYABSORBING = False
+if getenv('NOTCONCISE', False):
+    CONCISE = False
+
+print("CONCISE =", CONCISE)
+print(input("[Enter to continue]"))
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
@@ -239,8 +254,9 @@ class State(object):
     def __str__(self):
         return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
 
-    def _to_node(self, concise=False):
+    def _to_node(self, concise=CONCISE):
         """Print the state as a small string to be attached to a GraphViz node."""
+        print("concise =", concise)  # DEBUG
         if concise:
             return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
         else:
@@ -248,7 +264,7 @@ class State(object):
 
     def to_dot(self,
                title="", name="", comment="",
-               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING):
+               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
         """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
         - onlyleafs: only print the root and the leafs, to see a concise representation of the tree.
@@ -261,17 +277,17 @@ class State(object):
         node_number = 0
         if onlyleafs:
             root_name, root = "0", self
-            dot.node(root_name, root._to_node(), color="green")
+            dot.node(root_name, root._to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
                 leaf_name = str(node_number)
                 if leaf.is_absorbing():
-                    dot.node(leaf_name, leaf._to_node(), color="red")
+                    dot.node(leaf_name, leaf._to_node(concise=concise), color="red")
                     dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
                 elif not onlyabsorbing:
-                    dot.node(leaf_name, leaf._to_node())
+                    dot.node(leaf_name, leaf._to_node(concise=concise))
                     dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
@@ -279,11 +295,11 @@ class State(object):
             while len(to_explore) > 0:
                 root_name, root = to_explore.popleft()
                 if root_name == "0":
-                    dot.node(root_name, root._to_node(), color="green")
+                    dot.node(root_name, root._to_node(concise=concise), color="green")
                 elif root.is_absorbing():
-                    dot.node(root_name, root._to_node(), color="red")
+                    dot.node(root_name, root._to_node(concise=concise), color="red")
                 else:
-                    dot.node(root_name, root._to_node())
+                    dot.node(root_name, root._to_node(concise=concise))
                 for proba, child in zip(root.probas, root.children):
                     # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                     node_number += 1
@@ -292,8 +308,8 @@ class State(object):
                     to_explore.append((child_name, child))
         return dot
 
-    def saveto(self, filename, view=True, title="", name="", comment=""):
-        dot = self.to_dot(title=title, name=name, comment=comment)
+    def saveto(self, filename, view=True, title="", name="", comment="", concise=CONCISE):
+        dot = self.to_dot(title=title, name=name, comment=comment, concise=concise)
         print("Saving the dot graph to '{}.svg'...".format(filename))
         dot.render(filename, view=view)
 
@@ -522,8 +538,9 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
         nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
         results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
+        # No, save the graph!
+        root.saveto(os.path.join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
         if debug:
-            root.saveto('/tmp/test', view=True, title="Tree exploration for K={} arms and M={} players using {}, for depth={}".format(K, M, policy.__name__, depth))
             print(input("\n\n[Enter] to continue..."))
     return results
 
@@ -535,21 +552,29 @@ if __name__ == '__main__':
     policies = [Selfish_UCB_Ubar]
 
     mus = None
-    depth = 1
+
+    # Read parameters from the cli env
+    depth = int(getenv("DEPTH", "1"))
+    M = int(getenv("M", "2"))
+    K = int(getenv("K", "2"))
+    DEBUG = bool(getenv("DEBUG", False))
+
+    print("For depth = {} ...".format(depth))
+    results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
 
-    # XXX default start state
-    M, K = 2, 2
-    # mus = [0.8, 0.2]
-    # mus = [Fraction(4, 5), Fraction(1, 5)]
-    for depth in [1, 2, 3]:
-        print("For depth = {} ...".format(depth))
-        results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+    # # XXX default start state
+    # M, K = 2, 2
+    # # mus = [0.8, 0.2]
+    # # mus = [Fraction(4, 5), Fraction(1, 5)]
+    # for depth in [1, 2, 3]:
+    #     print("For depth = {} ...".format(depth))
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 2
@@ -558,11 +583,11 @@ if __name__ == '__main__':
     # N = np.array([[2, 1], [2, 1]])
     # Ntilde = np.array([[2, 1], [2, 1]])
     # for depth in [1, 2, 3]:
-    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 2, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 3
@@ -572,10 +597,10 @@ if __name__ == '__main__':
     # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # # for depth in [1]:
     # for depth in [2, 3]:
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
-    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, debug=DEBUG)
 
     # M, K = 3, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
 
 # End of complete-tree-exploration-for-MP-bandits.py

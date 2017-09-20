@@ -26,7 +26,7 @@ monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
 
 from os import getenv
 
-if str(getenv('DEBUG', False)):
+if bool(getenv('DEBUG', False)):
     signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
 else:
     signature = ""
