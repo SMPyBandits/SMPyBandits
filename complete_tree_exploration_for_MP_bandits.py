@@ -21,7 +21,7 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.3"
+__version__ = "0.4"
 
 import re
 import os.path
@@ -69,69 +69,6 @@ def choices_from_indexes(indexes):
     """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
     return np.where(indexes == np.max(indexes))[0]
 
-
-def simplify(proba):
-    """Try to simplify the expression of the probability."""
-    if hasattr(proba, "simplify"):
-        return proba.simplify().factor()
-    else:
-        return proba
-
-def uniformMeans(nbArms=3, delta=0.1, lower=0., amplitude=1.):
-    """Return a list of means of arms, well spaced:
-
-    - in [lower, lower + amplitude],
-    - sorted in increasing order,
-    - starting from lower + amplitude * delta, up to lower + amplitude * (1 - delta),
-    - and there is nbArms arms.
-
-    >>> np.array(uniformMeans(2, 0.1))
-    array([ 0.1,  0.9])
-    >>> np.array(uniformMeans(3, 0.1))
-    array([ 0.1,  0.5,  0.9])
-    >>> np.array(uniformMeans(9, 1 / (1. + 9)))
-    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
-    """
-    assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
-    assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
-    assert 0. < delta < 1., "Error: 'delta' = {:.3g} has to be in (0, 1).".format(delta)  # DEBUG
-    mus = lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
-    return sorted(list(mus))
-
-def proba2float(proba, values=None, K=None, names=None):
-    """Replace mu_k by a numerical value and evaluation  the formula."""
-    if hasattr(proba, "evalf"):
-        if values is None and K is not None:
-            values = uniformMeans(nbArms=K)
-        if names is None:
-            K = len(values)
-            names = symbol_means(K)
-        return proba.evalf(subs=dict(zip(names, values)))
-    elif isinstance(proba, Fraction):
-        return float(proba)
-    else:  # a bit of str rewriting
-        return proba
-
-def proba2str(proba, html_in_var_names=False):
-    """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
-    if isinstance(proba, float):
-        str_proba = '{:.3g}'.format(proba)
-    elif isinstance(proba, Fraction):
-        str_proba = str(proba)
-    else:  # a bit of str rewriting
-        str_proba = str(simplify(proba))
-        if html_in_var_names:
-            str_proba = re.sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
-        else:
-            str_proba = str_proba.replace('**', '^')
-        str_proba = str_proba.replace('*', '')
-        str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
-        str_proba = re.sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
-        if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
-            str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
-        else:
-            str_proba = re.sub(r'mu_', r'µ', str_proba)
-    return str_proba
 
 WIDTH = 200  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
 
@@ -258,6 +195,70 @@ def random_uniform_means(K):
     return np.random.rand(K)
 
 
+
+def uniform_means(nbArms=3, delta=0.1, lower=0., amplitude=1.):
+    """Return a list of means of arms, well spaced:
+
+    - in [lower, lower + amplitude],
+    - sorted in increasing order,
+    - starting from lower + amplitude * delta, up to lower + amplitude * (1 - delta),
+    - and there is nbArms arms.
+
+    >>> np.array(uniform_means(2, 0.1))
+    array([ 0.1,  0.9])
+    >>> np.array(uniform_means(3, 0.1))
+    array([ 0.1,  0.5,  0.9])
+    >>> np.array(uniform_means(9, 1 / (1. + 9)))
+    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
+    """
+    assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
+    assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
+    assert 0. < delta < 1., "Error: 'delta' = {:.3g} has to be in (0, 1).".format(delta)  # DEBUG
+    mus = lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
+    return sorted(list(mus))
+
+def proba2float(proba, values=None, K=None, names=None):
+    """Replace mu_k by a numerical value and evaluation  the formula."""
+    if hasattr(proba, "evalf"):
+        if values is None and K is not None:
+            values = uniform_means(nbArms=K)
+        if names is None:
+            K = len(values)
+            names = symbol_means(K)
+        return proba.evalf(subs=dict(zip(names, values)))
+    elif isinstance(proba, Fraction):
+        return float(proba)
+    else:  # a bit of str rewriting
+        return proba
+
+def simplify(proba):
+    """Try to simplify the expression of the probability."""
+    if hasattr(proba, "simplify"):
+        return proba.simplify().factor()
+    else:
+        return proba
+
+def proba2str(proba, html_in_var_names=False):
+    """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
+    if isinstance(proba, float):
+        str_proba = '{:.3g}'.format(proba)
+    elif isinstance(proba, Fraction):
+        str_proba = str(proba)
+    else:  # a bit of str rewriting
+        str_proba = str(simplify(proba))
+        if html_in_var_names:
+            str_proba = re.sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
+        else:
+            str_proba = str_proba.replace('**', '^')
+        str_proba = str_proba.replace('*', '')
+        str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
+        str_proba = re.sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
+        if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
+            str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
+        else:
+            str_proba = re.sub(r'mu_', r'µ', str_proba)
+    return str_proba
+
 # --- Data representation'
 
 class State(object):
@@ -292,10 +293,13 @@ class State(object):
 
     # --- Utility
 
-    def __str__(self):
-        return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
+    def __str__(self, concise=CONCISE):
+        if concise:
+            return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: Stilde\n{} =: N\n".format(self.M, self.K, self.t, self.depth, self.Stilde, self.N)
+        else:
+            return "    State : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde)
 
-    def _to_node(self, concise=CONCISE):
+    def to_node(self, concise=CONCISE):
         """Print the state as a small string to be attached to a GraphViz node."""
         if concise:
             return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]"
@@ -317,17 +321,17 @@ class State(object):
         node_number = 0
         if onlyleafs:
             root_name, root = "0", self
-            dot.node(root_name, root._to_node(concise=concise), color="green")
+            dot.node(root_name, root.to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
                 leaf_name = str(node_number)
                 if leaf.is_absorbing():
-                    dot.node(leaf_name, leaf._to_node(concise=concise), color="red")
+                    dot.node(leaf_name, leaf.to_node(concise=concise), color="red")
                     dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
                 elif not onlyabsorbing:
-                    dot.node(leaf_name, leaf._to_node(concise=concise))
+                    dot.node(leaf_name, leaf.to_node(concise=concise))
                     dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
@@ -335,11 +339,11 @@ class State(object):
             while len(to_explore) > 0:
                 root_name, root = to_explore.popleft()
                 if root_name == "0":
-                    dot.node(root_name, root._to_node(concise=concise), color="green")
+                    dot.node(root_name, root.to_node(concise=concise), color="green")
                 elif root.is_absorbing():
-                    dot.node(root_name, root._to_node(concise=concise), color="red")
+                    dot.node(root_name, root.to_node(concise=concise), color="red")
                 else:
-                    dot.node(root_name, root._to_node(concise=concise))
+                    dot.node(root_name, root.to_node(concise=concise))
                 for proba, child in zip(root.probas, root.children):
                     # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                     node_number += 1
@@ -505,7 +509,7 @@ class State(object):
                 bad_proba += proba
                 nb_absorbing += 1
         print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...".format(self.depth, nb_absorbing, bad_proba))  # DEBUG
-        sample_values = uniformMeans(self.K)
+        sample_values = uniform_means(self.K)
         print("\n==> Numerically, for uniformly spanned means = {}, this probability is = {:.3g} ...".format(sample_values, proba2float(bad_proba, values=sample_values)))  # DEBUG
         return nb_absorbing, bad_proba
 
@@ -594,10 +598,13 @@ if __name__ == '__main__':
     policies = [FixedArm]  # FIXME just for testing
     policies = [UniformExploration]  # FIXME just for testing
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
+    policies = [Selfish_0Greedy_Ubar]
     policies = [Selfish_UCB_Ubar]
+    policies = [Selfish_KLUCB_Ubar]
 
     mus = None
     # mus = [0.1, 0.9]
+    mus = [0.1, 0.5, 0.9]
 
     # FIXME Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
