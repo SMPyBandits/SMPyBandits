@@ -448,10 +448,10 @@ class State(object):
         self.depth = depth
         if depth > 1:
             for child in self.children:
-                yield from child.all_absorbing_states(depth=depth-1)
+                # yield from child.all_absorbing_states(depth=depth-1)
                 # FIXME 'yield from' works like this?
-                # for abs_state in child.all_absorbing_states(depth=depth-1):
-                #     yield abs_state
+                for abs_state in child.all_absorbing_states(depth=depth-1):
+                    yield abs_state
 
     def absorbing_states_one_depth(self):
         """Use all_deltas to yield all the absorbing one-depth child and their probabilities."""
@@ -618,7 +618,6 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
             print("\n Leaf with probability = {}:\n{}".format(proba, leaf))
             if leaf.is_absorbing():
                 print("  At depth {}, this leaf was found to be absorbing !".format(depth))
-
     # Done
     print("\nDone for exploring transitions up-to depth {} for this root state:\n{}".format(depth, root))
     print("    Using these policies:")
@@ -663,8 +662,8 @@ if __name__ == '__main__':
     policies = [Selfish_KLUCB_Ubar]
 
     mus = None
-    # mus = [0.1, 0.9]
-    mus = [0.1, 0.5, 0.9]
+    mus = [0.1, 0.9]
+    # mus = [0.1, 0.5, 0.9]
 
     # FIXME Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
