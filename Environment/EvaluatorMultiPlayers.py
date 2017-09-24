@@ -677,7 +677,7 @@ class EvaluatorMultiPlayers(object):
                 last_regrets = eva.getLastRegrets(envId=envId)
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
-                ax.set_title(eva.strPlayers(short=True))
+                ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 # Add only once the ylabel, xlabel, in the middle
                 if i == (nrows // 2) and j == 0:
                     ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
