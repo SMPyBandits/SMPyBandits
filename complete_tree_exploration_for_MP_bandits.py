@@ -1,16 +1,25 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8; mode: python -*-
-""" Experimental code to perform complete tree exploration for Multi-Player bandits.
+r""" Experimental code to perform complete tree exploration for Multi-Player bandits.
 
-- Can use exact formal computations with sympy, or fractions with Fraction, or float number.
 - Support Selfish 0-greedy, UCB, and klUCB in 3 differents variants.
 - Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG/PDF etc.
-- TODO : add rhoRand, TopBestM etc.
-- TODO : implement a parallel loop for what can be parallel.
+- For the means of each arm, :math:`\mu_1, \dots, \mu_K`, this script can use exact formal computations with sympy, or fractions with Fraction, or float number.
+- The graph can contain all nodes from root to leafs, or only leafs (with summed probabilities), and possibly only the absorbing nodes are showed.
+- By default, the root is highlighted in green and the absorbing nodes are in red.
 
-Requirements:
+.. warning::
 
-- 'sympy', 'numpy' and 'graphviz' are required.
+   - TODO : add rhoRand, TopBestM etc. that are *not* memory-less... (rhoRand needs a rank for instance). It's harder!
+   - TODO : implement a parallel loop ? for what can be parallelized...?
+   - TODO : right now, it is not so efficient, it could be improved!
+
+
+.. note:: Requirements:
+
+   - 'sympy' module to use formal means :math:`\mu_1, \dots, \mu_K` instead of numbers,
+   - 'numpy' module for computations on indexes (e.g., ``np.where``),
+   - 'graphviz' module to generate the graph and save it.
 
 About:
 
@@ -21,33 +30,33 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.4"
+__version__ = "0.5"
 
-import re
-import os.path
-from os import getenv
 from collections import Counter, deque
 from fractions import Fraction
 from itertools import product
+from os import getenv
+from os.path import join as os_path_join
+from re import sub as re_sub
 from textwrap import wrap
 
 try:
     import numpy as np
 except ImportError as e:
-    print("Warning: the 'numpy' module was not found...\nInstall it with 'sudo pip2/pip3 install numpy'")  # XXX
+    print("Warning: the 'numpy' module was not found...\nInstall it with 'sudo pip2/pip3 install numpy' or your system packet manager (eg. 'sudo apt install python3-numpy')")  # XXX
     raise e
 try:
     import sympy
 except ImportError:
-    print("Warning: the 'sympy' module was not found...\nInstall it with 'sudo pip2/pip3 install sympy'")  # XXX
+    print("Warning: the 'sympy' module was not found...\nSymbolic computations cannot be performed without sympy.\nInstall it with 'sudo pip2/pip3 install sympy' or your system packet manager (eg. 'sudo apt install python3-sympy')")  # XXX
 try:
     from graphviz import Digraph
 except ImportError:
-    print("Warning: the 'graphviz' module was not found...\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
+    print("Warning: the 'graphviz' module was not found...\nTrees cannot be saved or displayed without graphviz.\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
 
 oo = float('+inf')  #: Shortcut for float('+inf').
 
-PLOT_DIR = os.path.join("plots", "trees")  #: Directory for the plots
+PLOT_DIR = os_path_join("plots", "trees")  #: Directory for the plots
 
 
 def tupleit1(anarray):
@@ -241,22 +250,22 @@ def simplify(proba):
 def proba2str(proba, html_in_var_names=False):
     """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
     if isinstance(proba, float):
-        str_proba = '{:.3g}'.format(proba)
+        str_proba = "{:.3g}".format(proba)
     elif isinstance(proba, Fraction):
         str_proba = str(proba)
     else:  # a bit of str rewriting
         str_proba = str(simplify(proba))
         if html_in_var_names:
-            str_proba = re.sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
+            str_proba = re_sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
         else:
             str_proba = str_proba.replace('**', '^')
         str_proba = str_proba.replace('*', '')
-        str_proba = re.sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
-        str_proba = re.sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
+        str_proba = re_sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
+        str_proba = re_sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
         if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
-            str_proba = re.sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
+            str_proba = re_sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
         else:
-            str_proba = re.sub(r'mu_', r'µ', str_proba)
+            str_proba = re_sub(r'mu_', r'µ', str_proba)
     return str_proba
 
 # --- Data representation'
@@ -309,10 +318,12 @@ class State(object):
     def to_dot(self,
                title="", name="", comment="",
                html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
-        """Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
+        r"""Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
         - onlyleafs: only print the root and the leafs, to see a concise representation of the tree.
         - onlyabsorbing: only print the absorbing leafs, to see a really concise representation of the tree.
+        - concise: weather to use the short representation of states (using :math:`\tilde{S}` and :math:`N`) or the long one (using the 4 variables).
+        - html_in_var_names: experimental use of ``<SUB>..</SUB>`` and ``<SUP>..</SUP>`` in the label for the tree.
         """
         print("Creating a dot graph from the state...")
         dot = Digraph(name=name, comment=comment, format=FORMAT)
@@ -425,10 +436,52 @@ class State(object):
         self.children = list(uniq_children.values())
         # Done for computing all the children and probability of transitions
 
+    def all_absorbing_states(self, depth=1):
+        """Generator that yields all the absorbing nodes of the tree, one by one.
+
+        - It might not find any,
+        - It does so without merging common nodes, in order to find the first absorbing node as quick as possible.
+        """
+        if depth == 0:
+            return
+        self.absorbing_states_one_depth()
+        self.depth = depth
+        if depth > 1:
+            for child in self.children:
+                yield from child.all_absorbing_states(depth=depth-1)
+                # FIXME 'yield from' works like this?
+                # for abs_state in child.all_absorbing_states(depth=depth-1):
+                #     yield abs_state
+
+    def absorbing_states_one_depth(self):
+        """Use all_deltas to yield all the absorbing one-depth child and their probabilities."""
+        self.depth += 1
+        for delta, proba in self.all_deltas():
+            # copy the current state, apply decision of algorithms and random branching
+            child = delta(self.copy())
+            if child.is_absorbing():
+                yield proba, child
+
+    def find_N_absorbing_states(self, N=1, maxdepth=10):
+        """Find at least N absorbing states, by considering a large depth."""
+        absorbing_states = []
+        complete_probas, bad_children = [], []
+        for proba, bad_child in self.all_absorbing_states(depth=maxdepth):
+            assert bad_child.is_absorbing(), "Error: a node was returned by all_absorbing_states() method but was not absorbing!"
+            complete_probas.append(proba)
+            bad_children.append(bad_child)
+            if len(bad_children) >= N:
+                return complete_probas, bad_children
+        raise ValueError("Impossible to find N = {} absorbing states from this root (max depth = {})...".format(N, maxdepth))
+
     # --- The hard part is this all_deltas *generator*
 
     def all_deltas(self):
-        """Generator that yield lambda functions transforming state to another state."""
+        """Generator that yield lambda functions transforming state to another state.
+
+        - It is memory efficient as it is a generator.
+        - Do not convert that to a list or it might use all your system memory: each returned value is a lambda function with code and variables inside!
+        """
         all_decisions = [ player(j, self) for j, player in enumerate(self.players) ]
         number_of_decisions = prod(len(decision) for decision in all_decisions)
         for decisions in product(*all_decisions):
@@ -516,7 +569,7 @@ class State(object):
 
 # --- Main function
 
-def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None):
+def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, find_only_N=None):
     """Compute all the transitions, and print them."""
     if S is not None:
         M = min(np.shape(S))
@@ -540,27 +593,34 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
         Ntilde = np.zeros((M, K),  dtype=int)
     # Create the root state
     root = State(S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, players=players)
-    print("\nStarting to explore every transitions up-to depth {} for this root state:\n{}".format(depth, root))
+    # Should we only look for find_only_N absorbing child?
+    print("\nStarting to explore transitions up-to depth {} for this root state:\n{}".format(depth, root))
     print("    Using these policies:")
     for playerId, player in enumerate(players):
         print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, player.__name__, player))
     print("    Using these arms:")
     for muId, mu in enumerate(mus):
         print("  - Arm #{}/{} has mean {} ...".format(muId, K, mu))
-    # Explore from the root
-    root.explore_from_node_to_depth(depth=depth)
-    # Print everything
-    # root.pretty_print_result_recursively()
-    # Get all leafs
-    complete_probas, leafs = root.get_unique_leafs()
-    print("\n\n\nThere are {} unique leafs for depth {}...".format(len(leafs), depth))
-    for proba, leaf in zip(complete_probas, leafs):
-        print("\n Leaf with probability = {}:\n{}".format(proba, leaf))
-        if leaf.is_absorbing():
-            print("  At depth {}, this leaf was found to be absorbing !".format(depth))
+    if find_only_N is not None:
+        complete_probas, leafs = root.find_N_absorbing_states(N=find_only_N, maxdepth=depth)
+        print("\n\n\nAs asked, we found {} absorbing nodes or leafs from this root at max depth = {} ...".format(find_only_N, depth))
+        for proba, bad_child in zip(complete_probas, leafs):
+            print("At depth {}, this node was found to be absorbing with probability {}:\n{}".format(bad_child.t, proba, bad_child))
+    else:
+        # Explore from the root
+        root.explore_from_node_to_depth(depth=depth)
+        # Print everything
+        # root.pretty_print_result_recursively()
+        # Get all leafs
+        complete_probas, leafs = root.get_unique_leafs()
+        print("\n\n\nThere are {} unique leafs for depth {}...".format(len(leafs), depth))
+        for proba, leaf in zip(complete_probas, leafs):
+            print("\n Leaf with probability = {}:\n{}".format(proba, leaf))
+            if leaf.is_absorbing():
+                print("  At depth {}, this leaf was found to be absorbing !".format(depth))
 
     # Done
-    print("\nDone for exploring every transitions up-to depth {} for this root state:\n{}".format(depth, root))
+    print("\nDone for exploring transitions up-to depth {} for this root state:\n{}".format(depth, root))
     print("    Using these policies:")
     for playerId, player in enumerate(players):
         print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, player.__name__, player))
@@ -573,7 +633,7 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
 
 # --- Main script
 
-def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True, policies=None):
+def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True, policies=None, find_only_N=None):
     """Test the main exploration function for various policies."""
     results = []
     if policies is None:
@@ -581,13 +641,13 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
     for policy in policies:
         players = [ policy for _ in range(M) ]
         # get the result
-        root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus)
+        root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus, find_only_N=find_only_N)
         # computing absorbing states
         nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
         # store everything
         results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
         # save the graph and maybe display it
-        root.saveto(os.path.join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
+        root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
         # ask for Enter to continue
         if debug:
             print(input("\n\n[Enter] to continue..."))
@@ -611,15 +671,17 @@ if __name__ == '__main__':
     M = int(getenv("M", "2"))
     K = int(getenv("K", "2"))
     DEBUG = bool(getenv("DEBUG", False))
+    find_only_N = int(getenv("FIND_ONLY_N", "-1"))
+    if find_only_N <= 0: find_only_N = None
 
     print("For depth = {} ...".format(depth))
-    results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 2, 2
@@ -627,7 +689,7 @@ if __name__ == '__main__':
     # # mus = [Fraction(4, 5), Fraction(1, 5)]
     # for depth in [1, 2, 3]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 2
@@ -636,11 +698,11 @@ if __name__ == '__main__':
     # N = np.array([[2, 1], [2, 1]])
     # Ntilde = np.array([[2, 1], [2, 1]])
     # for depth in [1, 2, 3]:
-    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 2, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 3
@@ -650,10 +712,10 @@ if __name__ == '__main__':
     # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # # for depth in [1]:
     # for depth in [2, 3]:
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
-    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
     # M, K = 3, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, debug=DEBUG)
+    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
 
 # End of complete-tree-exploration-for-MP-bandits.py
