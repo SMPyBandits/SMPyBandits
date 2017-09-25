@@ -291,7 +291,7 @@ class State(object):
         self.players = players  # XXX OK memory efficient: only a pointer to the (never modified) list
         # New arguments
         self.depth = depth  #: current depth of the exploration tree
-        self.t = np.sum(N)  #: current time step. Simply = sum(N) but easier to compute it
+        self.t = np.sum(N[0])  #: current time step. Simply = sum(N[0]) = sum(N[i]) for all player i, but easier to compute it once and store it
         assert np.shape(S) == np.shape(Stilde) == np.shape(N) == np.shape(Ntilde), "Error: difference in shapes of S, Stilde, N, Ntilde."
         self.M = min(np.shape(S))  #: number of players
         assert len(players) == self.M, "Error: 'players' list is not of size M ..."  # DEBUG
@@ -334,6 +334,8 @@ class State(object):
             root_name, root = "0", self
             dot.node(root_name, root.to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
+            if len(leafs) > 64:
+                raise ValueError("Useless to save a tree with more than 64 leafs, the resulting image will be too large to be viewed.")  # DEBUG
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
@@ -346,8 +348,10 @@ class State(object):
                     dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
+            nb_node = 1
             # convert each state to a node and a list of edge
             while len(to_explore) > 0:
+                nb_node += 1
                 root_name, root = to_explore.popleft()
                 if root_name == "0":
                     dot.node(root_name, root.to_node(concise=concise), color="green")
@@ -361,6 +365,8 @@ class State(object):
                     child_name = str(node_number)
                     dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
                     to_explore.append((child_name, child))
+                if nb_node > 256:
+                    raise ValueError("Useless to save a tree with more than 256 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
     def saveto(self, filename, view=True, title="", name="", comment="", concise=CONCISE):
@@ -405,7 +411,7 @@ class State(object):
 
     def explore_from_node_to_depth(self, depth=1):
         """Compute recursively the one_depth children of the root and its children."""
-        print("\nFor depth = {}, exploring from this node :\n{}".format(depth, self))
+        print("\nFor depth = {}, exploring from this node :\n{}".format(depth, self))  # DEBUG
         if depth == 0:
             return
         self.compute_one_depth()
@@ -431,7 +437,7 @@ class State(object):
                 assert child.depth == (self.depth - 1)
                 uniq_children[h] = child
                 uniq_probas[h] = proba
-        print("  we saw {} different states...".format(len(uniq_children)))
+        print("   at depth {} we saw {} different unique children states...".format(self.t, len(uniq_children)))
         self.probas = [simplify(p) for p in uniq_probas.values()]
         self.children = list(uniq_children.values())
         # Done for computing all the children and probability of transitions
@@ -444,14 +450,16 @@ class State(object):
         """
         if depth == 0:
             return
-        self.absorbing_states_one_depth()
+        for proba, bad_child in self.absorbing_states_one_depth():
+            # print("all_absorbing_states: yielding proba, child = {}, \n{}".format(proba, bad_child))  # DEBUG
+            yield proba, bad_child
+        self.compute_one_depth()
         self.depth = depth
         if depth > 1:
             for child in self.children:
-                # yield from child.all_absorbing_states(depth=depth-1)
-                # FIXME 'yield from' works like this?
-                for abs_state in child.all_absorbing_states(depth=depth-1):
-                    yield abs_state
+                for proba, bad_child in child.all_absorbing_states(depth=depth-1):
+                    # print("all_absorbing_states: yielding proba, child = {}, \n{}".format(proba, bad_child))  # DEBUG
+                    yield proba, bad_child
 
     def absorbing_states_one_depth(self):
         """Use all_deltas to yield all the absorbing one-depth child and their probabilities."""
@@ -460,11 +468,11 @@ class State(object):
             # copy the current state, apply decision of algorithms and random branching
             child = delta(self.copy())
             if child.is_absorbing():
+                # print("absorbing_states_one_depth: yielding proba, child = {}, \n{}".format(proba, child))  # DEBUG
                 yield proba, child
 
-    def find_N_absorbing_states(self, N=1, maxdepth=10):
+    def find_N_absorbing_states(self, N=1, maxdepth=8):
         """Find at least N absorbing states, by considering a large depth."""
-        absorbing_states = []
         complete_probas, bad_children = [], []
         for proba, bad_child in self.all_absorbing_states(depth=maxdepth):
             assert bad_child.is_absorbing(), "Error: a node was returned by all_absorbing_states() method but was not absorbing!"
@@ -528,7 +536,7 @@ class State(object):
             return self.probas, self.children
         else:
             complete_probas, leafs = [], []
-            assert len(self.probas) > 0
+            # assert len(self.probas) > 0
             for (proba, child) in zip(self.probas, self.children):
                 # assert child.depth == (self.depth - 1)
                 c, l = child.get_all_leafs()
@@ -553,7 +561,7 @@ class State(object):
         return [simplify(p) for p in uniq_complete_probas.values()], list(uniq_leafs.values())
 
     def proba_reaching_absorbing_state(self):
-        """Compute the probability of re    aching a leaf that is an absorbing state."""
+        """Compute the probability of reaching a leaf that is an absorbing state."""
         probas, leafs = self.get_unique_leafs()
         bad_proba = 0
         nb_absorbing = 0
@@ -563,7 +571,7 @@ class State(object):
                 nb_absorbing += 1
         print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...".format(self.depth, nb_absorbing, bad_proba))  # DEBUG
         sample_values = uniform_means(self.K)
-        print("\n==> Numerically, for uniformly spanned means = {}, this probability is = {:.3g} ...".format(sample_values, proba2float(bad_proba, values=sample_values)))  # DEBUG
+        print("\n==> Numerically, for means = {}, this probability is = {:.3g} ...".format(sample_values, proba2float(bad_proba, values=sample_values)))  # DEBUG
         return nb_absorbing, bad_proba
 
 
@@ -584,9 +592,11 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
     assert 0 <= depth <= 8, "Error: only 0 <= depth <= 8 is supported... and depth = {} here...".format(depth)  # FIXME
     # Compute starting state
     if S is None:
-        S = np.zeros((M, K))
+        # S = np.zeros((M, K))
+        S = np.zeros((M, K), dtype=int)  # FIXME in the general case it is not true!
     if Stilde is None:
-        Stilde = np.zeros((M, K))
+        # Stilde = np.zeros((M, K))
+        Stilde = np.zeros((M, K), dtype=int)  # FIXME in the general case it is not true!
     if N is None:
         N = np.zeros((M, K), dtype=int)
     if Ntilde is None:
@@ -641,12 +651,16 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         players = [ policy for _ in range(M) ]
         # get the result
         root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus, find_only_N=find_only_N)
-        # computing absorbing states
-        nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
-        # store everything
-        results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
-        # save the graph and maybe display it
-        root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
+        if find_only_N is None:
+            # computing absorbing states
+            nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
+            # store everything
+            results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
+            # save the graph and maybe display it
+            root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
+        else:
+            # store everything
+            results.append([root, complete_probas, leafs, len(complete_probas), sum(complete_probas)])
         # ask for Enter to continue
         if debug:
             print(input("\n\n[Enter] to continue..."))
@@ -657,20 +671,22 @@ if __name__ == '__main__':
     policies = [FixedArm]  # FIXME just for testing
     policies = [UniformExploration]  # FIXME just for testing
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    policies = [Selfish_0Greedy_Ubar]
-    policies = [Selfish_UCB_Ubar]
-    policies = [Selfish_KLUCB_Ubar]
+    # policies = [Selfish_0Greedy_Ubar]
+    # policies = [Selfish_UCB_Ubar]
+    # policies = [Selfish_KLUCB_Ubar]
 
     mus = None
-    mus = [0.1, 0.9]
+    # mus = [0.1, 0.9]
     # mus = [0.1, 0.5, 0.9]
 
     # FIXME Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
     M = int(getenv("M", "2"))
     K = int(getenv("K", "2"))
-    DEBUG = bool(getenv("DEBUG", False))
-    find_only_N = int(getenv("FIND_ONLY_N", "-1"))
+    DEBUG = mybool(getenv("DEBUG", False))
+
+    # find_only_N = int(getenv("FIND_ONLY_N", "-1"))
+    find_only_N = int(getenv("FIND_ONLY_N", "1"))
     if find_only_N <= 0: find_only_N = None
 
     print("For depth = {} ...".format(depth))
