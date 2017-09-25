@@ -30,7 +30,7 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.6"
 
 from collections import Counter, deque
 from fractions import Fraction
@@ -197,7 +197,7 @@ def Selfish_KLUCB_Ubar(j, state):
 
 def symbol_means(K):
     """Better to work directly with symbols and instantiate the results *after*."""
-    return sympy.var(['mu_{}'.format(i) for i in range(1, K + 1)], real=True)
+    return sympy.var(['mu_{}'.format(i) for i in range(1, K + 1)])
 
 def random_uniform_means(K):
     """If needed, generate an array of K (numerical) uniform means in [0, 1]."""
@@ -260,8 +260,11 @@ def proba2str(proba, html_in_var_names=False):
         else:
             str_proba = str_proba.replace('**', '^')
         str_proba = str_proba.replace('*', '')
+        # for _ in range(10):  # repeat?
+        str_proba = re_sub(r'\(mu_([0-9]+) - 1\)\(mu_([0-9]+) - 1\)', r'(1-mu_\1)(1-mu_\2)', str_proba)
         str_proba = re_sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
-        str_proba = re_sub(r'-\(mu_([0-9]+) - 1\)', r'\(1-mu_\1\)', str_proba)
+        str_proba = re_sub(r'-(.*)\(mu_([0-9]+) - 1\)', r'\1(1-mu_\2)', str_proba)
+        str_proba = re_sub(r'-\(mu_([0-9]+) - 1\)', r'(1-mu_\1)', str_proba)
         if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
             str_proba = re_sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
         else:
@@ -325,7 +328,7 @@ class State(object):
         - concise: weather to use the short representation of states (using :math:`\tilde{S}` and :math:`N`) or the long one (using the 4 variables).
         - html_in_var_names: experimental use of ``<SUB>..</SUB>`` and ``<SUP>..</SUP>`` in the label for the tree.
         """
-        print("Creating a dot graph from the state...")
+        print("Creating a dot graph from the tree...")
         dot = Digraph(name=name, comment=comment, format=FORMAT)
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
@@ -334,18 +337,18 @@ class State(object):
             root_name, root = "0", self
             dot.node(root_name, root.to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
-            if len(leafs) > 64:
-                raise ValueError("Useless to save a tree with more than 64 leafs, the resulting image will be too large to be viewed.")  # DEBUG
+            # if len(leafs) > 64:
+            #     raise ValueError("Useless to save a tree with more than 64 leafs, the resulting image will be too large to be viewed.")  # DEBUG
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
                 leaf_name = str(node_number)
                 if leaf.is_absorbing():
                     dot.node(leaf_name, leaf.to_node(concise=concise), color="red")
-                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                 elif not onlyabsorbing:
                     dot.node(leaf_name, leaf.to_node(concise=concise))
-                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
             nb_node = 1
@@ -357,20 +360,29 @@ class State(object):
                     dot.node(root_name, root.to_node(concise=concise), color="green")
                 elif root.is_absorbing():
                     dot.node(root_name, root.to_node(concise=concise), color="red")
+                elif onlyabsorbing:
+                    if root.has_absorbing_child_whole_subtree():
+                        dot.node(root_name, root.to_node(concise=concise))
                 else:
                     dot.node(root_name, root.to_node(concise=concise))
                 for proba, child in zip(root.probas, root.children):
                     # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                     node_number += 1
                     child_name = str(node_number)
-                    dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names))
+                    # here, if onlyabsorbing, I should only print the *paths* leading to absorbing leafs!
+                    if onlyabsorbing:
+                        if child.has_absorbing_child_whole_subtree():
+                            dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
+                    else:
+                        dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                     to_explore.append((child_name, child))
-                if nb_node > 256:
-                    raise ValueError("Useless to save a tree with more than 256 nodes, the resulting image will be too large to be viewed.")  # DEBUG
+                # if nb_node > 256:
+                #     raise ValueError("Useless to save a tree with more than 256 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
-    def saveto(self, filename, view=True, title="", name="", comment="", concise=CONCISE):
-        dot = self.to_dot(title=title, name=name, comment=comment, concise=concise)
+    def saveto(self, filename, view=True, title="", name="", comment="",
+               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
+        dot = self.to_dot(title=title, name=name, comment=comment, html_in_var_names=html_in_var_names, onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
         print("Saving the dot graph to '{}.{}'...".format(filename, FORMAT))
         dot.render(filename, view=view)
 
@@ -406,6 +418,13 @@ class State(object):
                     if len(set(bad_line)) == len(bad_line):
                         return True
         return False
+
+    def has_absorbing_child_whole_subtree(self):
+        """Try to detect if this state has an absorbing child in the whole subtree. """
+        if self.is_absorbing():
+            return True
+        else:
+            return any(child.has_absorbing_child_whole_subtree() for child in self.children)
 
     # --- High level view of a depth-1 exploration
 
@@ -654,13 +673,16 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         if find_only_N is None:
             # computing absorbing states
             nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
-            # store everything
-            results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
-            # save the graph and maybe display it
-            root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}.gv".format(K, M, depth, policy.__name__)), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing))
+            # XXX save the graph and maybe display it
+            for onlyabsorbing, onlyleafs in product([True, False], repeat=2):
+                try:
+                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs)
+                except ValueError as e:
+                    print("Error when saving:", e)
         else:
-            # store everything
-            results.append([root, complete_probas, leafs, len(complete_probas), sum(complete_probas)])
+            nb_absorbing, bad_proba = len(complete_probas), sum(complete_probas)
+        # store everything
+        results.append([root, complete_probas, leafs, nb_absorbing, bad_proba])
         # ask for Enter to continue
         if debug:
             print(input("\n\n[Enter] to continue..."))
@@ -671,8 +693,8 @@ if __name__ == '__main__':
     policies = [FixedArm]  # FIXME just for testing
     policies = [UniformExploration]  # FIXME just for testing
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    # policies = [Selfish_0Greedy_Ubar]
-    # policies = [Selfish_UCB_Ubar]
+    policies = [Selfish_0Greedy_Ubar]
+    policies = [Selfish_UCB_Ubar]
     # policies = [Selfish_KLUCB_Ubar]
 
     mus = None
