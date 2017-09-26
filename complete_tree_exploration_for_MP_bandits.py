@@ -337,8 +337,8 @@ class State(object):
             root_name, root = "0", self
             dot.node(root_name, root.to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
-            # if len(leafs) > 64:
-            #     raise ValueError("Useless to save a tree with more than 64 leafs, the resulting image will be too large to be viewed.")  # DEBUG
+            if len(leafs) > 128:
+                raise ValueError("Useless to save a tree with more than 128 leafs, the resulting image will be too large to be viewed.")  # DEBUG
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
@@ -376,8 +376,8 @@ class State(object):
                     else:
                         dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                     to_explore.append((child_name, child))
-                # if nb_node > 256:
-                #     raise ValueError("Useless to save a tree with more than 256 nodes, the resulting image will be too large to be viewed.")  # DEBUG
+                if nb_node > 512:
+                    raise ValueError("Useless to save a tree with more than 512 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
     def saveto(self, filename, view=True, title="", name="", comment="",
@@ -678,7 +678,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
                 try:
                     root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs)
                 except ValueError as e:
-                    print("Error when saving:", e)
+                    print("    Error when saving:", e)
         else:
             nb_absorbing, bad_proba = len(complete_probas), sum(complete_probas)
         # store everything
@@ -694,7 +694,7 @@ if __name__ == '__main__':
     policies = [UniformExploration]  # FIXME just for testing
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
     policies = [Selfish_0Greedy_Ubar]
-    policies = [Selfish_UCB_Ubar]
+    policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
     # policies = [Selfish_KLUCB_Ubar]
 
     mus = None
@@ -707,9 +707,10 @@ if __name__ == '__main__':
     K = int(getenv("K", "2"))
     DEBUG = mybool(getenv("DEBUG", False))
 
-    # find_only_N = int(getenv("FIND_ONLY_N", "-1"))
-    find_only_N = int(getenv("FIND_ONLY_N", "1"))
+    find_only_N = int(getenv("FIND_ONLY_N", "0"))
     if find_only_N <= 0: find_only_N = None
+    if find_only_N:
+        mus = uniform_means(nbArms=K)
 
     print("For depth = {} ...".format(depth))
     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
