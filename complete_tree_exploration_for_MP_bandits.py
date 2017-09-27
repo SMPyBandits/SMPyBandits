@@ -35,6 +35,9 @@ __version__ = "0.6"
 from sys import version_info
 if version_info.major < 3:  # Python 2 compatibility if needed
     input = raw_input
+    import codecs
+    def open(filename, mode):  # https://docs.python.org/3/library/codecs.html#standard-encodings
+        return codecs.open(filename, mode=mode, encoding='utf_8')
 
 from collections import Counter, deque
 from fractions import Fraction
@@ -43,6 +46,7 @@ from os import getenv
 from os.path import join as os_path_join
 from re import sub as re_sub
 from textwrap import wrap
+import subprocess
 
 try:
     import numpy as np
@@ -58,7 +62,8 @@ try:
 except ImportError:
     print("Warning: the 'graphviz' module was not found...\nTrees cannot be saved or displayed without graphviz.\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
 try:
-    from dot2tex import dot2tex
+    if version_info.major < 3:
+        from dot2tex import dot2tex
 except ImportError:
     print("Warning: the 'dot2tex' module was not found...\nTrees cannot be saved to LaTeX and PDF formats.\nInstall it with 'sudo pip2 install dot2tex' (require Python 2)")  # XXX
 
@@ -277,11 +282,20 @@ def proba2str(proba, latex=False, html_in_var_names=False):
         if latex:  # replace mu_12 by mu_{12}
             str_proba = re_sub(r'_([0-9]+)', r'_{\1}', str_proba)
             str_proba = re_sub(r'mu_', r'\mu_', str_proba)
+            str_proba = '$' + str_proba + '$'
         elif html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
             str_proba = re_sub(r'_([0-9]+)', r'<SUB>\1</SUB>', str_proba)
+        elif version_info.major < 3:
+            str_proba = re_sub(r'mu_', r'm', str_proba)
         else:
             str_proba = re_sub(r'mu_', r'µ', str_proba)
     return str_proba
+
+
+def tex2pdf(filename):
+    """Naive call to command line pdflatex, twice."""
+    print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}'".format(filename, filename))
+    subprocess.call("cd $(basename {}) && pdflatex {} && pdflatex {}".format(filename, filename))
 
 # --- Data representation'
 
@@ -343,7 +357,7 @@ class State(object):
         - latex: experimental use of ``_{..}`` and ``^{..}`` in the label for the tree, to use with dot2tex.
         """
         dot = Digraph(name=name, comment=comment, format=FORMAT)
-        print("Creating a dot graph from the tree... \n{}".format(dot))
+        print("\nCreating a dot graph from the tree...")
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
         node_number = 0
@@ -351,8 +365,8 @@ class State(object):
             root_name, root = "0", self
             dot.node(root_name, root.to_node(concise=concise), color="green")
             complete_probas, leafs = root.get_unique_leafs()
-            if len(leafs) > 128:
-                raise ValueError("Useless to save a tree with more than 128 leafs, the resulting image will be too large to be viewed.")  # DEBUG
+            if len(leafs) > 256:
+                raise ValueError("Useless to save a tree with more than 256 leafs, the resulting image will be too large to be viewed.")  # DEBUG
             for proba, leaf in zip(complete_probas, leafs):
                 # add a UNIQUE identifier for each node: easy, just do a breath-first search, and use numbers from 0 to big-integer-that-is-computed on the fly
                 node_number += 1
@@ -390,20 +404,29 @@ class State(object):
                     else:
                         dot.edge(root_name, child_name, label=proba2str(proba, latex=latex, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                     to_explore.append((child_name, child))
-                if nb_node > 512:
-                    raise ValueError("Useless to save a tree with more than 512 nodes, the resulting image will be too large to be viewed.")  # DEBUG
+                if nb_node > 1024:
+                    raise ValueError("Useless to save a tree with more than 1024 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
     def saveto(self, filename, view=True, title="", name="", comment="",
                latex=False, html_in_var_names=False, format=FORMAT,
                onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
-        dot = self.to_dot(title=title, name=name, comment=comment, html_in_var_names=html_in_var_names, latex=latex, onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
+        dot = self.to_dot(title=title, name=name, comment=comment,
+                          html_in_var_names=html_in_var_names, latex=latex,
+                          onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
         if latex:
-            # FIXME add support for dot2tex
+            source = dot.source
+            if version_info.major < 3:  source = unicode(source, 'utf_8')
+            print("source =\n", source)  # DEBUG
             filename = filename.replace('.gv', '.gv.tex')
-            dot2tex(dot.source, output=filename, format='tikz', crop=True, figonly=True, textmode='raw')
-            print("Saving the dot graph to '{}.{}'...".format(filename, format))
-            print("Saved to ")
+            print("Saving the dot graph to '{}'...".format(filename))
+            with open(filename, 'w') as f:
+                f.write(dot2tex(source, format='tikz', crop=True, figonly=False, textmode='math'))
+            tex2pdf(filename)
+            filename = filename.replace('.gv.tex', '__onlyfig.gv.tex')
+            print("Saving the dot graph to '{}'...".format(filename))
+            with open(filename, 'w') as f:
+                f.write(dot2tex(source, format='tikz', crop=True, figonly=True, textmode='math'))
         else:
             print("Saving the dot graph to '{}.{}'...".format(filename, format))
             dot.render(filename, view=view)
@@ -696,9 +719,10 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
             # computing absorbing states
             nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
             # XXX save the graph and maybe display it
-            for onlyabsorbing, onlyleafs in product([True, False], repeat=2):
+            # for onlyabsorbing, onlyleafs, latex in product([True, False], [True, False], [False]):
+            for onlyabsorbing, onlyleafs, latex in product([True, False], [True, False], [True, False]):
                 try:
-                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs, latex=True)
+                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs, latex=latex)
                 except ValueError as e:
                     print("    Error when saving:", e)
         else:
@@ -715,8 +739,9 @@ if __name__ == '__main__':
     policies = [FixedArm]  # FIXME just for testing
     policies = [UniformExploration]  # FIXME just for testing
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    policies = [Selfish_0Greedy_Ubar]
-    policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
+    policies = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
+    # policies = [Selfish_0Greedy_Ubar]
+    # policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
     # policies = [Selfish_KLUCB_Ubar]
 
     mus = None
