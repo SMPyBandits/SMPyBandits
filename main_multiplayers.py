@@ -30,7 +30,7 @@ if getenv('SLEEP', False):
     call(["sleep", SLEEP])  # more general
     print("Done Sleeping for", SLEEP, "seconds seconds... Now I can start the simulation...")
 
-USE_PICKLE = True   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
+USE_PICKLE = False   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = "plots"  #: Directory for the plots
