@@ -41,9 +41,9 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -58,9 +58,9 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
+REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
@@ -90,7 +90,7 @@ DECREASE_RATE = None
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 3    # Less that the number of arms
+# NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
@@ -172,12 +172,12 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Arms
     "environment": [
-        # {   # A damn simple problem: 2 arms, one bad, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
-        #     # "params": [0.9, 0.9]
-        #     # "params": [0.85, 0.9]
-        # }
+        {   # A damn simple problem: 2 arms, one bad, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
+            # "params": [0.9, 0.9]
+            # "params": [0.85, 0.9]
+        }
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
@@ -187,10 +187,10 @@ configuration = {
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
         # XXX Default!
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": uniformMeans(9, 1 / (1. + 9))
-        }
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": uniformMeans(9, 1 / (1. + 9))
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -630,20 +630,25 @@ configuration["successive_players"] = [
     # SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms, withChair=True).children,
 
     # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against SmartMusicalChair[klUCB]
-    CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
-    rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
+    Selfish(NB_PLAYERS, UCB, nbArms).children,
+    rhoRand(NB_PLAYERS, UCB, nbArms).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, UCB, nbArms, withChair=True).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
+    Selfish(NB_PLAYERS, klUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=False).children,
     SmartMusicalChair(NB_PLAYERS, klUCB, nbArms, withChair=True).children,
-    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
-    SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
+    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
+    # SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, BayesUCB, nbArms, withChair=True).children,
+    # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
+    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=False).children,
+    # SmartMusicalChair(NB_PLAYERS, Thompson, nbArms, withChair=True).children,
 
     # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against SmartMusicalChair[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
