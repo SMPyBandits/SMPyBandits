@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python2
 # -*- coding: utf-8; mode: python -*-
 r""" Experimental code to perform complete tree exploration for Multi-Player bandits.
 
@@ -17,9 +17,10 @@ r""" Experimental code to perform complete tree exploration for Multi-Player ban
 
 .. note:: Requirements:
 
-   - 'sympy' module to use formal means :math:`\mu_1, \dots, \mu_K` instead of numbers,
-   - 'numpy' module for computations on indexes (e.g., ``np.where``),
-   - 'graphviz' module to generate the graph and save it.
+    - 'sympy' module to use formal means :math:`\mu_1, \dots, \mu_K` instead of numbers,
+    - 'numpy' module for computations on indexes (e.g., ``np.where``),
+    - 'graphviz' module to generate the graph and save it,
+    - 'dot2tex' module to generate nice LaTeX graph and save it to PDF.
 
 About:
 
@@ -31,6 +32,9 @@ About:
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
 __version__ = "0.6"
+from sys import version_info
+if version_info.major < 3:  # Python 2 compatibility if needed
+    input = raw_input
 
 from collections import Counter, deque
 from fractions import Fraction
@@ -53,6 +57,10 @@ try:
     from graphviz import Digraph
 except ImportError:
     print("Warning: the 'graphviz' module was not found...\nTrees cannot be saved or displayed without graphviz.\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
+try:
+    from dot2tex import dot2tex
+except ImportError:
+    print("Warning: the 'dot2tex' module was not found...\nTrees cannot be saved to LaTeX and PDF formats.\nInstall it with 'sudo pip2 install dot2tex' (require Python 2)")  # XXX
 
 oo = float('+inf')  #: Shortcut for float('+inf').
 
@@ -101,7 +109,7 @@ CONCISE = mybool(getenv('CONCISE', CONCISE))
 FULLHASH = not CONCISE  #: Use only Stilde, N for hashing the states.
 FULLHASH = mybool(getenv('FULLHASH', FULLHASH))
 
-FORMAT = "pdf"  #: Format used to save the graphs.
+# FORMAT = "pdf"  #: Format used to save the graphs.
 FORMAT = "svg"  #: Format used to save the graphs.
 FORMAT = getenv("FORMAT", FORMAT)
 
@@ -247,7 +255,7 @@ def simplify(proba):
     else:
         return proba
 
-def proba2str(proba, html_in_var_names=False):
+def proba2str(proba, latex=False, html_in_var_names=False):
     """Pretty print a proba, either a number, a Fraction, or a sympy expression."""
     if isinstance(proba, float):
         str_proba = "{:.3g}".format(proba)
@@ -255,18 +263,22 @@ def proba2str(proba, html_in_var_names=False):
         str_proba = str(proba)
     else:  # a bit of str rewriting
         str_proba = str(simplify(proba))
-        if html_in_var_names:
+        if latex:
+            str_proba = re_sub(r'\*\*([0-9]+)', r'^{\1}', str_proba)
+        elif html_in_var_names:
             str_proba = re_sub(r'\*\*([0-9]+)', r'<SUP>\1</SUP>', str_proba)
         else:
             str_proba = str_proba.replace('**', '^')
         str_proba = str_proba.replace('*', '')
-        # for _ in range(10):  # repeat?
         str_proba = re_sub(r'\(mu_([0-9]+) - 1\)\(mu_([0-9]+) - 1\)', r'(1-mu_\1)(1-mu_\2)', str_proba)
         str_proba = re_sub(r'-mu_([0-9]+) \+ 1', r'1-mu_\1', str_proba)
         str_proba = re_sub(r'-(.*)\(mu_([0-9]+) - 1\)', r'\1(1-mu_\2)', str_proba)
         str_proba = re_sub(r'-\(mu_([0-9]+) - 1\)', r'(1-mu_\1)', str_proba)
-        if html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
-            str_proba = re_sub(r'mu_([0-9]+)', r'mu<SUB>\1</SUB>', str_proba)
+        if latex:  # replace mu_12 by mu_{12}
+            str_proba = re_sub(r'_([0-9]+)', r'_{\1}', str_proba)
+            str_proba = re_sub(r'mu_', r'\mu_', str_proba)
+        elif html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
+            str_proba = re_sub(r'_([0-9]+)', r'<SUB>\1</SUB>', str_proba)
         else:
             str_proba = re_sub(r'mu_', r'µ', str_proba)
     return str_proba
@@ -320,16 +332,18 @@ class State(object):
 
     def to_dot(self,
                title="", name="", comment="",
-               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
+               latex=False, html_in_var_names=False,
+               onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
         r"""Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
         - onlyleafs: only print the root and the leafs, to see a concise representation of the tree.
         - onlyabsorbing: only print the absorbing leafs, to see a really concise representation of the tree.
         - concise: weather to use the short representation of states (using :math:`\tilde{S}` and :math:`N`) or the long one (using the 4 variables).
         - html_in_var_names: experimental use of ``<SUB>..</SUB>`` and ``<SUP>..</SUP>`` in the label for the tree.
+        - latex: experimental use of ``_{..}`` and ``^{..}`` in the label for the tree, to use with dot2tex.
         """
-        print("Creating a dot graph from the tree...")
         dot = Digraph(name=name, comment=comment, format=FORMAT)
+        print("Creating a dot graph from the tree... \n{}".format(dot))
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
         node_number = 0
@@ -345,10 +359,10 @@ class State(object):
                 leaf_name = str(node_number)
                 if leaf.is_absorbing():
                     dot.node(leaf_name, leaf.to_node(concise=concise), color="red")
-                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, latex=latex, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                 elif not onlyabsorbing:
                     dot.node(leaf_name, leaf.to_node(concise=concise))
-                    dot.edge(root_name, leaf_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
+                    dot.edge(root_name, leaf_name, label=proba2str(proba, latex=latex, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
         else:
             to_explore = deque([("0", self)])  # BFS using a deque, DFS using a list/recursive call
             nb_node = 1
@@ -372,19 +386,27 @@ class State(object):
                     # here, if onlyabsorbing, I should only print the *paths* leading to absorbing leafs!
                     if onlyabsorbing:
                         if child.has_absorbing_child_whole_subtree():
-                            dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
+                            dot.edge(root_name, child_name, label=proba2str(proba, latex=latex, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                     else:
-                        dot.edge(root_name, child_name, label=proba2str(proba, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
+                        dot.edge(root_name, child_name, label=proba2str(proba, latex=latex, html_in_var_names=html_in_var_names), color="red" if root.is_absorbing() else "black")
                     to_explore.append((child_name, child))
                 if nb_node > 512:
                     raise ValueError("Useless to save a tree with more than 512 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
     def saveto(self, filename, view=True, title="", name="", comment="",
-               html_in_var_names=False, onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
-        dot = self.to_dot(title=title, name=name, comment=comment, html_in_var_names=html_in_var_names, onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
-        print("Saving the dot graph to '{}.{}'...".format(filename, FORMAT))
-        dot.render(filename, view=view)
+               latex=False, html_in_var_names=False, format=FORMAT,
+               onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
+        dot = self.to_dot(title=title, name=name, comment=comment, html_in_var_names=html_in_var_names, latex=latex, onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
+        if latex:
+            # FIXME add support for dot2tex
+            filename = filename.replace('.gv', '.gv.tex')
+            dot2tex(dot.source, output=filename, format='tikz', crop=True, figonly=True, textmode='raw')
+            print("Saving the dot graph to '{}.{}'...".format(filename, format))
+            print("Saved to ")
+        else:
+            print("Saving the dot graph to '{}.{}'...".format(filename, format))
+            dot.render(filename, view=view)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
@@ -608,7 +630,7 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
         players = [default_policy for _ in range(M)]
     M = len(players)
     assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported... and M = {}, K = {} here...".format(M, K)  # FIXME
-    assert 0 <= depth <= 8, "Error: only 0 <= depth <= 8 is supported... and depth = {} here...".format(depth)  # FIXME
+    assert 0 <= depth <= 20, "Error: only 0 <= depth <= 20 is supported... and depth = {} here...".format(depth)  # FIXME
     # Compute starting state
     if S is None:
         # S = np.zeros((M, K))
@@ -676,7 +698,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
             # XXX save the graph and maybe display it
             for onlyabsorbing, onlyleafs in product([True, False], repeat=2):
                 try:
-                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs)
+                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs, latex=True)
                 except ValueError as e:
                     print("    Error when saving:", e)
         else:

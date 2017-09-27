@@ -58,7 +58,7 @@ moremultiplayers3:
 moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 
-treeexploration: treeexploration3
+treeexploration: treeexploration2
 treeexploration3:
 	time nice -n 19 ipython3 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 treeexploration2:
