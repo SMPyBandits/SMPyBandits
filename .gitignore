@@ -19,9 +19,6 @@ _build/
 # auto generated with 'make apidoc'
 docs/*.rst
 
-# Tests
-*slack*bot*.py
-
 # Notebooks
 notebooks/.ipynb_checkpoints/
 

@@ -1,8 +1,8 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python3
 # -*- coding: utf-8; mode: python -*-
 r""" Experimental code to perform complete tree exploration for Multi-Player bandits.
 
-- Support Selfish 0-greedy, UCB, and klUCB in 3 differents variants.
+- Support Selfish 0-greedy, UCB, and klUCB in 3 different variants.
 - Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG/PDF etc.
 - For the means of each arm, :math:`\mu_1, \dots, \mu_K`, this script can use exact formal computations with sympy, or fractions with Fraction, or float number.
 - The graph can contain all nodes from root to leafs, or only leafs (with summed probabilities), and possibly only the absorbing nodes are showed.
@@ -11,7 +11,6 @@ r""" Experimental code to perform complete tree exploration for Multi-Player ban
 .. warning::
 
    - TODO : add rhoRand, TopBestM etc. that are *not* memory-less... (rhoRand needs a rank for instance). It's harder!
-   - TODO : implement a parallel loop ? for what can be parallelized...?
    - TODO : right now, it is not so efficient, it could be improved!
 
 
@@ -22,6 +21,13 @@ r""" Experimental code to perform complete tree exploration for Multi-Player ban
     - 'graphviz' module to generate the graph and save it,
     - 'dot2tex' module to generate nice LaTeX graph and save it to PDF.
 
+.. note::
+
+   To use the 'dot2tex' module, only Python2 is supported.
+   However, I maintain an unpublished port of 'dot2tex' for Python3, see
+   [here](https://github.com/Naereen/dot2tex), that you can download, and install
+   manually (sudo python3 setup.py install) to have 'dot2tex' for Python3 also.
+
 About:
 
 - *Date:* 16/09/2017.
@@ -31,7 +37,7 @@ About:
 
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 from sys import version_info
 if version_info.major < 3:  # Python 2 compatibility if needed
     input = raw_input
@@ -42,8 +48,9 @@ if version_info.major < 3:  # Python 2 compatibility if needed
 from collections import Counter, deque
 from fractions import Fraction
 from itertools import product
-from os import getenv
+from os import getenv, chdir, getcwd
 from os.path import join as os_path_join
+from os.path import dirname, basename
 from re import sub as re_sub
 from textwrap import wrap
 import subprocess
@@ -62,10 +69,10 @@ try:
 except ImportError:
     print("Warning: the 'graphviz' module was not found...\nTrees cannot be saved or displayed without graphviz.\nInstall it with 'sudo pip2/pip3 install graphviz'")  # XXX
 try:
-    if version_info.major < 3:
-        from dot2tex import dot2tex
+    # if version_info.major < 3:
+    from dot2tex import dot2tex
 except ImportError:
-    print("Warning: the 'dot2tex' module was not found...\nTrees cannot be saved to LaTeX and PDF formats.\nInstall it with 'sudo pip2 install dot2tex' (require Python 2)")  # XXX
+    print("Warning: the 'dot2tex' module was not found...\nTrees cannot be saved to LaTeX and PDF formats.\nInstall it with 'sudo pip2 install dot2tex' (require Python 2)\nOr install it from https://github.com/Naereen/dot2tex for Python 3.")  # XXX
 
 oo = float('+inf')  #: Shortcut for float('+inf').
 
@@ -283,9 +290,10 @@ def proba2str(proba, latex=False, html_in_var_names=False):
             str_proba = re_sub(r'_([0-9]+)', r'_{\1}', str_proba)
             str_proba = re_sub(r'mu_', r'\mu_', str_proba)
             str_proba = '$' + str_proba + '$'
+            str_proba = str_proba.replace('\\', '\\\\')
         elif html_in_var_names:  # replace mu_12 by mu<sub>12</sub>
             str_proba = re_sub(r'_([0-9]+)', r'<SUB>\1</SUB>', str_proba)
-        elif version_info.major < 3:
+        elif version_info.major < 3:  # to avoid dealing with unicode for Python2...
             str_proba = re_sub(r'mu_', r'm', str_proba)
         else:
             str_proba = re_sub(r'mu_', r'µ', str_proba)
@@ -294,8 +302,15 @@ def proba2str(proba, latex=False, html_in_var_names=False):
 
 def tex2pdf(filename):
     """Naive call to command line pdflatex, twice."""
-    print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}'".format(filename, filename))
-    subprocess.call("cd $(basename {}) && pdflatex {} && pdflatex {}".format(filename, filename))
+    dir1 = getcwd()
+    dir2, base = dirname(filename), basename(filename)
+    print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}' ...".format(base, base))
+    log, gz, aux = base.replace('.tex', '.log'), base.replace('.tex', '.synctex.gz'), base.replace('.tex', '.aux')
+    chdir(dir2)  # go in the plots/trees/ subdir
+    subprocess.call(["pdflatex", base, ">/dev/null"])
+    subprocess.call(["pdflatex", base, ">/dev/null"])
+    subprocess.call(["mv", "-f", log, gz, aux, "/tmp/"])
+    chdir(dir1)  # go back
 
 # --- Data representation'
 
@@ -346,7 +361,7 @@ class State(object):
 
     def to_dot(self,
                title="", name="", comment="",
-               latex=False, html_in_var_names=False,
+               latex=False, html_in_var_names=False, format=FORMAT,
                onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
         r"""Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
@@ -356,7 +371,7 @@ class State(object):
         - html_in_var_names: experimental use of ``<SUB>..</SUB>`` and ``<SUP>..</SUP>`` in the label for the tree.
         - latex: experimental use of ``_{..}`` and ``^{..}`` in the label for the tree, to use with dot2tex.
         """
-        dot = Digraph(name=name, comment=comment, format=FORMAT)
+        dot = Digraph(name=name, comment=comment, format=format)
         print("\nCreating a dot graph from the tree...")
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
@@ -408,28 +423,34 @@ class State(object):
                     raise ValueError("Useless to save a tree with more than 1024 nodes, the resulting image will be too large to be viewed.")  # DEBUG
         return dot
 
-    def saveto(self, filename, view=True, title="", name="", comment="",
-               latex=False, html_in_var_names=False, format=FORMAT,
+    def saveto(self, filename, view=True,
+               title="", name="", comment="",
+               latex=False, html_in_var_names=False, ext=FORMAT,
                onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
+        # Hack to fix the LaTeX output
+        title = title.replace('_', ' ')
+        name = name.replace('_', ' ')
+        comment = comment.replace('_', ' ')
         dot = self.to_dot(title=title, name=name, comment=comment,
-                          html_in_var_names=html_in_var_names, latex=latex,
+                          html_in_var_names=html_in_var_names, latex=latex, format=ext,
                           onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
         if latex:
             source = dot.source
             if version_info.major < 3:  source = unicode(source, 'utf_8')
-            print("source =\n", source)  # DEBUG
+            # print("source =\n", source)  # DEBUG
             filename = filename.replace('.gv', '.gv.tex')
             print("Saving the dot graph to '{}'...".format(filename))
             with open(filename, 'w') as f:
-                f.write(dot2tex(source, format='tikz', crop=True, figonly=False, textmode='math'))
+                f.write(dot2tex(source, format='tikz', crop=True, figonly=False, texmode='raw'))
             tex2pdf(filename)
             filename = filename.replace('.gv.tex', '__onlyfig.gv.tex')
             print("Saving the dot graph to '{}'...".format(filename))
             with open(filename, 'w') as f:
-                f.write(dot2tex(source, format='tikz', crop=True, figonly=True, textmode='math'))
+                f.write(dot2tex(source, format='tikz', crop=True, figonly=True, texmode='raw'))
         else:
-            print("Saving the dot graph to '{}.{}'...".format(filename, format))
+            print("Saving the dot graph to '{}.{}'...".format(filename, ext))
             dot.render(filename, view=view)
+        # done for saving the graph
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
@@ -718,13 +739,22 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
         if find_only_N is None:
             # computing absorbing states
             nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
-            # XXX save the graph and maybe display it
-            # for onlyabsorbing, onlyleafs, latex in product([True, False], [True, False], [False]):
-            for onlyabsorbing, onlyleafs, latex in product([True, False], [True, False], [True, False]):
-                try:
-                    root.saveto(os_path_join(PLOT_DIR, "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(K, M, depth, policy.__name__, "__absorbing" if onlyabsorbing else "", "__leafs" if onlyleafs else "")), view=debug, title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing), onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs, latex=latex)
-                except ValueError as e:
-                    print("    Error when saving:", e)
+            # XXX save the graph and maybe display it, in different versions
+            for onlyabsorbing, onlyleafs in product((True, False), (True, False)):
+                for latex, ext in ((True, 'svg'), (False, 'svg'), (False, 'png')):
+                    try:
+                        filename = os_path_join(PLOT_DIR,
+                                                "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(
+                                                    K, M, depth, policy.__name__,
+                                                    "__absorbing" if onlyabsorbing else "",
+                                                    "__leafs" if onlyleafs else "")
+                                                )
+                        root.saveto(filename, view=debug,
+                                     title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing),
+                                     onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs,
+                                     latex=latex, format=ext)
+                    except ValueError as e:
+                        print("    Error when saving:", e)
         else:
             nb_absorbing, bad_proba = len(complete_probas), sum(complete_probas)
         # store everything
@@ -741,7 +771,7 @@ if __name__ == '__main__':
     policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
     policies = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
     # policies = [Selfish_0Greedy_Ubar]
-    # policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
+    policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
     # policies = [Selfish_KLUCB_Ubar]
 
     mus = None
