@@ -307,8 +307,8 @@ def tex2pdf(filename):
     print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}' ...".format(base, base))
     log, gz, aux = base.replace('.tex', '.log'), base.replace('.tex', '.synctex.gz'), base.replace('.tex', '.aux')
     chdir(dir2)  # go in the plots/trees/ subdir
-    subprocess.call(["pdflatex", base, ">/dev/null"])
-    subprocess.call(["pdflatex", base, ">/dev/null"])
+    subprocess.call(["pdflatex", "-halt-on-error", base, ">/dev/null"])
+    subprocess.call(["pdflatex", "-halt-on-error", base, ">/dev/null"])
     subprocess.call(["mv", "-f", log, gz, aux, "/tmp/"])
     chdir(dir1)  # go back
 
@@ -361,7 +361,7 @@ class State(object):
 
     def to_dot(self,
                title="", name="", comment="",
-               latex=False, html_in_var_names=False, format=FORMAT,
+               latex=False, html_in_var_names=False, ext=FORMAT,
                onlyleafs=ONLYLEAFS, onlyabsorbing=ONLYABSORBING, concise=CONCISE):
         r"""Convert the state to a .dot graph, using GraphViz. See http://graphviz.readthedocs.io/ for more details.
 
@@ -371,7 +371,7 @@ class State(object):
         - html_in_var_names: experimental use of ``<SUB>..</SUB>`` and ``<SUP>..</SUP>`` in the label for the tree.
         - latex: experimental use of ``_{..}`` and ``^{..}`` in the label for the tree, to use with dot2tex.
         """
-        dot = Digraph(name=name, comment=comment, format=format)
+        dot = Digraph(name=name, comment=comment, format=ext)
         print("\nCreating a dot graph from the tree...")
         dot.attr(overlap="false")
         if title: dot.attr(label=wraptext(title))
@@ -432,7 +432,7 @@ class State(object):
         name = name.replace('_', ' ')
         comment = comment.replace('_', ' ')
         dot = self.to_dot(title=title, name=name, comment=comment,
-                          html_in_var_names=html_in_var_names, latex=latex, format=ext,
+                          html_in_var_names=html_in_var_names, latex=latex, ext=ext,
                           onlyleafs=onlyleafs, onlyabsorbing=onlyabsorbing, concise=concise)
         if latex:
             source = dot.source
@@ -752,7 +752,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
                         root.saveto(filename, view=debug,
                                      title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing),
                                      onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs,
-                                     latex=latex, format=ext)
+                                     latex=latex, ext=ext)
                     except ValueError as e:
                         print("    Error when saving:", e)
         else:
