@@ -1,0 +1,17 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (320.5bp,11.5bp) node {Tree exploration for K=2 arms and M=2 players using Selfish\_KLUCB\_Ubar, for depth=2 : 16 leafs, 2 absorbing};
+\end{scope}
+  \node (0) at (265.6bp,128.0bp) [draw=green,ellipse] {[[0/0,0/0], [0/0,0/0]]};
+  \node (9) at (152.6bp,41.0bp) [draw=red,ellipse] {[[0/1,1/1], [0/1,1/1]]};
+  \node (15) at (379.6bp,41.0bp) [draw=red,ellipse] {[[1/1,0/1], [1/1,0/1]]};
+  \draw [black,->] (0) ..controls (178.35bp,113.55bp) and (163.5bp,105.2bp)  .. (153.6bp,92.0bp) .. controls (148.81bp,85.627bp) and (147.33bp,77.397bp)  .. (9);
+  \draw (255.6bp,84.5bp) node {\$$\backslash$mu\_\{2\}\^{}\{2\}($\backslash$mu\_\{1\} - 1)\^{}\{2\}/2\$};
+  \draw [black,->] (0) ..controls (333.71bp,109.06bp) and (347.19bp,101.89bp)  .. (357.6bp,92.0bp) .. controls (364.22bp,85.708bp) and (368.97bp,77.073bp)  .. (15);
+  \draw (469.6bp,84.5bp) node {\$$\backslash$mu\_\{1\}\^{}\{2\}($\backslash$mu\_\{2\} - 1)\^{}\{2\}/2\$};
+%
+\end{tikzpicture}

@@ -1,0 +1,23 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (551.6bp,11.5bp) node {Tree exploration for K=2 arms and M=2 players using Selfish UCB Ubar, for depth=4 : 99 leafs, 4 absorbing};
+\end{scope}
+  \node (0) at (537.19bp,128.0bp) [draw=green,ellipse] {[[0/0,0/0], [0/0,0/0]]};
+  \node (76) at (689.19bp,41.0bp) [draw=red,ellipse] {[[0/1,1/3], [0/1,1/3]]};
+  \node (38) at (83.193bp,41.0bp) [draw=red,ellipse] {[[2/2,1/2], [2/2,1/2]]};
+  \node (58) at (386.19bp,41.0bp) [draw=red,ellipse] {[[1/2,2/2], [1/2,2/2]]};
+  \node (90) at (916.19bp,41.0bp) [draw=red,ellipse] {[[1/3,0/1], [1/3,0/1]]};
+  \draw [black,->] (0) ..controls (630.43bp,114.1bp) and (651.23bp,105.71bp)  .. (667.19bp,92.0bp) .. controls (674.23bp,85.96bp) and (679.09bp,77.242bp)  .. (76);
+  \draw (779.19bp,84.5bp) node {$\mu_{2}^{2}(\mu_{1} - 1)^{2}/2$};
+  \draw [black,->] (0) ..controls (432.29bp,113.29bp) and (397.5bp,104.73bp)  .. (387.19bp,92.0bp) .. controls (382.04bp,85.643bp) and (380.55bp,77.193bp)  .. (58);
+  \draw (527.19bp,84.5bp) node {$\mu_{1}^{2}\mu_{2}^{4}(\mu_{1} - 1)^{2}/4$};
+  \draw [black,->] (0) ..controls (709.21bp,125.46bp) and (842.5bp,118.65bp)  .. (885.19bp,92.0bp) .. controls (894.07bp,86.461bp) and (900.8bp,77.351bp)  .. (90);
+  \draw (1001.2bp,84.5bp) node {$\mu_{1}^{2}(\mu_{2} - 1)^{2}/2$};
+  \draw [black,->] (0) ..controls (334.57bp,122.48bp) and (124.08bp,114.13bp)  .. (97.193bp,92.0bp) .. controls (90.364bp,86.38bp) and (86.713bp,77.724bp)  .. (38);
+  \draw (237.19bp,84.5bp) node {$\mu_{1}^{4}\mu_{2}^{2}(\mu_{2} - 1)^{2}/4$};
+%
+\end{tikzpicture}

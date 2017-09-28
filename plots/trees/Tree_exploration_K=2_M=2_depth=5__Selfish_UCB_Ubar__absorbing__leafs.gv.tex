@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage[x11names, svgnames, rgb]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows,shapes}
+\usepackage{amsmath}
+%
+%
+
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{0pt}%
+
+%
+
+\begin{document}
+\pagestyle{empty}
+%
+%
+%
+
+\enlargethispage{100cm}
+% Start of code
+\begin{tikzpicture}[>=latex',line join=bevel,]
+%%
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (1467.1bp,11.5bp) node {Tree exploration for K=2 arms and M=2 players using Selfish UCB Ubar, for depth=5 : 248 leafs, 4 absorbing};
+\end{scope}
+  \node (62) at (83.193bp,41.0bp) [draw=red,ellipse] {[[1/2,2/3], [1/2,2/3]]};
+  \node (210) at (2668.2bp,41.0bp) [draw=red,ellipse] {[[2/3,1/2], [2/3,1/2]]};
+  \node (172) at (386.19bp,41.0bp) [draw=red,ellipse] {[[0/2,1/3], [0/2,1/3]]};
+  \node (0) at (956.19bp,128.0bp) [draw=green,ellipse] {[[0/0,0/0], [0/0,0/0]]};
+  \node (200) at (1527.2bp,41.0bp) [draw=red,ellipse] {[[1/3,0/2], [1/3,0/2]]};
+  \draw [black,->] (0) ..controls (1373.6bp,123.79bp) and (2605.5bp,112.8bp)  .. (2640.2bp,92.0bp) .. controls (2649.1bp,86.68bp) and (2655.3bp,77.442bp)  .. (210);
+  \draw (2794.2bp,84.5bp) node {$\mu_{1}^{4}\mu_{2}^{2}(\mu_{2} - 1)^{2}/4$};
+  \draw [black,->] (0) ..controls (663.88bp,123.96bp) and (127.3bp,115.82bp)  .. (97.193bp,92.0bp) .. controls (90.18bp,86.453bp) and (86.5bp,77.698bp)  .. (62);
+  \draw (237.19bp,84.5bp) node {$\mu_{1}^{2}\mu_{2}^{4}(\mu_{1} - 1)^{2}/4$};
+  \draw [black,->] (0) ..controls (1183.2bp,124.69bp) and (1468.0bp,118.0bp)  .. (1505.2bp,92.0bp) .. controls (1513.0bp,86.553bp) and (1518.1bp,77.703bp)  .. (200);
+  \draw (2077.2bp,84.5bp) node {$5\mu_{1}^{2}(\mu_{2} - 1)^{2}(\mu_{1}^{2}\mu_{2}^{2} - 2\mu_{1}^{2}\mu_{2} + \mu_{1}^{2} - 2\mu_{1}\mu_{2}^{2} + 4\mu_{1}\mu_{2} - 2\mu_{1} + \mu_{2}^{2} - 2\mu_{2} + 2)/8$};
+  \draw [black,->] (0) ..controls (720.78bp,120.45bp) and (403.78bp,109.29bp)  .. (387.19bp,92.0bp) .. controls (381.44bp,86.009bp) and (379.85bp,77.517bp)  .. (172);
+  \draw (946.19bp,84.5bp) node {$5\mu_{2}^{2}(\mu_{1} - 1)^{2}(\mu_{1}^{2}\mu_{2}^{2} - 2\mu_{1}^{2}\mu_{2} + \mu_{1}^{2} - 2\mu_{1}\mu_{2}^{2} + 4\mu_{1}\mu_{2} - 2\mu_{1} + \mu_{2}^{2} - 2\mu_{2} + 2)/8$};
+%
+\end{tikzpicture}
+% End of code
+
+%
+\end{document}
+%
+
+

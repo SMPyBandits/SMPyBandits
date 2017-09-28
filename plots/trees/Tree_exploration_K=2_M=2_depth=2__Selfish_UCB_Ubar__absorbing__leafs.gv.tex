@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[x11names, svgnames, rgb]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows,shapes}
+\usepackage{amsmath}
+%
+%
+
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{0pt}%
+
+%
+
+\begin{document}
+\pagestyle{empty}
+%
+%
+%
+
+\enlargethispage{100cm}
+% Start of code
+\begin{tikzpicture}[>=latex',line join=bevel,]
+%%
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (308.5bp,11.5bp) node {Tree exploration for K=2 arms and M=2 players using Selfish UCB Ubar, for depth=2 : 16 leafs, 2 absorbing};
+\end{scope}
+  \node (0) at (253.6bp,128.0bp) [draw=green,ellipse] {[[0/0,0/0], [0/0,0/0]]};
+  \node (9) at (140.6bp,41.0bp) [draw=red,ellipse] {[[0/1,1/1], [0/1,1/1]]};
+  \node (15) at (367.6bp,41.0bp) [draw=red,ellipse] {[[1/1,0/1], [1/1,0/1]]};
+  \draw [black,->] (0) ..controls (166.35bp,113.55bp) and (151.5bp,105.2bp)  .. (141.6bp,92.0bp) .. controls (136.81bp,85.627bp) and (135.33bp,77.397bp)  .. (9);
+  \draw (243.6bp,84.5bp) node {$\mu_{2}^{2}(\mu_{1} - 1)^{2}/2$};
+  \draw [black,->] (0) ..controls (321.71bp,109.06bp) and (335.19bp,101.89bp)  .. (345.6bp,92.0bp) .. controls (352.22bp,85.708bp) and (356.97bp,77.073bp)  .. (15);
+  \draw (457.6bp,84.5bp) node {$\mu_{1}^{2}(\mu_{2} - 1)^{2}/2$};
+%
+\end{tikzpicture}
+% End of code
+
+%
+\end{document}
+%
+
+
