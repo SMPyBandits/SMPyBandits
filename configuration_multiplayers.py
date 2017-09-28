@@ -44,10 +44,10 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
-# HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 20000
+HORIZON = 30000
+HORIZON = 40000
+HORIZON = 100000
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -90,7 +90,7 @@ DECREASE_RATE = None
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
@@ -182,10 +182,14 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
         },
-        {   # A harder problem: 3 arms, one bad, one average, one good
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
             "arm_type": Bernoulli,
-            "params": [0.49, 0.5, 0.51]  # uniformMeans(3, 0.49)
+            "params": [0.3, 0.5, 0.7]  # uniformMeans(3, 0.3)
         },
+        # {   # A harder problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.49, 0.5, 0.51]  # uniformMeans(3, 0.49)
+        # },
         # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
