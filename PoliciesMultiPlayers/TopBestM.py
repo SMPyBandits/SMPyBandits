@@ -172,7 +172,7 @@ class TopBestMChair(TopBestM):
 
         .. warning:: ``s._players`` is for internal use ONLY!
         """
-        super(TopBestMChair, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=withChair, maxRank=maxRank, lower=lower., amplitude=amplitude., *args, **kwargs)
+        super(TopBestMChair, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=withChair, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "TopBestMChair({} x {})".format(self.nbPlayers, str(self._players[0]))
