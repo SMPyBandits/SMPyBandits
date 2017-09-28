@@ -2,24 +2,30 @@
 # -*- coding: utf-8; mode: python -*-
 r""" Experimental code to perform complete tree exploration for Multi-Player bandits.
 
+Algorithms:
+
 - Support Selfish 0-greedy, UCB, and klUCB in 3 different variants.
-- Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG/PDF etc.
+- Support also RhoRand, even though it is *not* memory-less, by using another state representation (inlining the memory of each player, eg the ranks for RhoRand).
+
+Features:
+
 - For the means of each arm, :math:`\mu_1, \dots, \mu_K`, this script can use exact formal computations with sympy, or fractions with Fraction, or float number.
 - The graph can contain all nodes from root to leafs, or only leafs (with summed probabilities), and possibly only the absorbing nodes are showed.
+- Support export of the tree to a GraphViz dot graph, and can save it to SVG/PNG and LaTeX (with Tikz) and PDF etc.
 - By default, the root is highlighted in green and the absorbing nodes are in red.
 
-.. warning::
+.. warning:: I still have to fix these issues:
 
-   - TODO : add rhoRand, TopBestM etc. that are *not* memory-less... (rhoRand needs a rank for instance). It's harder!
-   - TODO : right now, it is not so efficient, it could be improved!
+   - TODO : add the TopBestM algorithm.
+   - TODO : right now, it is not so efficient, could it be improved? I don't think I can do anything in a smarter way, in pure Python.
 
 
-.. note:: Requirements:
+Requirements:
 
-    - 'sympy' module to use formal means :math:`\mu_1, \dots, \mu_K` instead of numbers,
-    - 'numpy' module for computations on indexes (e.g., ``np.where``),
-    - 'graphviz' module to generate the graph and save it,
-    - 'dot2tex' module to generate nice LaTeX graph and save it to PDF.
+- 'sympy' module to use formal means :math:`\mu_1, \dots, \mu_K` instead of numbers,
+- 'numpy' module for computations on indexes (e.g., ``np.where``),
+- 'graphviz' module to generate the graph and save it,
+- 'dot2tex' module to generate nice LaTeX (with Tikz) graph and save it to PDF.
 
 .. note::
 
@@ -218,11 +224,6 @@ def Selfish_KLUCB_Ubar(j, state):
 
 # default_policy = Selfish_KLUCB_Ubar
 
-# --- TODO write rhoRand, TopBestM, MusicalChair and all variants !
-# XXX It is probably harder... rhoRand is NOT memory less!!
-# So we need tow functions: one takes the decision, one updates the rank after all the decisions are taken
-# XXX TopBestM and MusicalChair also!!
-
 
 # --- RhoRand UCB variants
 alpha = 0.5
@@ -269,16 +270,20 @@ def RhoRand_KLUCB_Ubar(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+# So we need tow functions: one takes the decision, one updates the rank after all the decisions are taken
 
 def RandomNewRank(j, state, collision):
     """RhoRand keep the choose a new uniform rank in {1,..,M} in case of collision, or keep the same."""
     if collision:  # new random rank
-        return list(np.arange(state.M))
+        return list(np.arange(1, 1 + state.M))
     else:  # keep the same rank
         return [state.memories[j]]
 
 default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
 # default_policy, default_update_memory = RhoRand_KLUCB_U, RandomNewRank
+
+
+# --- FIXME write TopBestM, MusicalChair and all variants !
 
 
 # --- Generate vector of formal means mu_1,...,mu_K
@@ -374,7 +379,7 @@ def tex2pdf(filename):
     print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}' ...".format(base, base))
     log, gz, aux = base.replace('.tex', '.log'), base.replace('.tex', '.synctex.gz'), base.replace('.tex', '.aux')
     chdir(dir2)  # go in the plots/trees/ subdir
-    if subprocess.call(["pdflatex", "-halt-on-error", base], stdout=open("/dev/null", 'w')) > 0:
+    if subprocess.call(["pdflatex", "-halt-on-error", base], stdout=open("/dev/null", 'w')) >= 0:
         subprocess.call(["pdflatex", "-halt-on-error", base], stdout=open("/dev/null", 'w'))
         subprocess.call(["mv", "-f", log, gz, aux, "/tmp/"])
     else:
@@ -748,7 +753,7 @@ class StateWithMemory(State):
     def to_node(self, concise=CONCISE):
         """Print the state as a small string to be attached to a GraphViz node."""
         if concise:
-            return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n, r) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]" + " r={}".format(list(self.memories))
+            return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]" + " r={}".format(list(self.memories))
         else:
             return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{} r={}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]" + " ranks = {}".format(self.memories)
 
@@ -822,15 +827,13 @@ def main(depth=1, players=None, update_memories=None, mus=None, M=2, K=2, S=None
     # if update_memories is None:
     #     update_memories = [default_update_memory for _ in range(M)]
     M = len(players)
-    assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported... and M = {}, K = {} here...".format(M, K)  # FIXME
-    assert 0 <= depth <= 20, "Error: only 0 <= depth <= 20 is supported... and depth = {} here...".format(depth)  # FIXME
+    assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported... and M = {}, K = {} here...".format(M, K)  # XXX it is probably impossible to have a code managing larger values...
+    assert 0 <= depth <= 20, "Error: only 0 <= depth <= 20 is supported... and depth = {} here...".format(depth)  # XXX it is probably impossible to have a code managing larger values...
     # Compute starting state
     if S is None:
-        # S = np.zeros((M, K))
-        S = np.zeros((M, K), dtype=int)  # FIXME in the general case it is not true!
+        S = np.zeros((M, K), dtype=int)  # Use only integers, to speed up in this case of Bernoulli arms. XXX in the general case it is not true!
     if Stilde is None:
-        # Stilde = np.zeros((M, K))
-        Stilde = np.zeros((M, K), dtype=int)  # FIXME in the general case it is not true!
+        Stilde = np.zeros((M, K), dtype=int)  # Use only integers, to speed up in this case of Bernoulli arms. XXX in the general case it is not true!
     if N is None:
         N = np.zeros((M, K), dtype=int)
     if Ntilde is None:
@@ -933,25 +936,28 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
 
 if __name__ == '__main__':
     all_update_memories = None
-    all_players = [FixedArm]  # FIXME just for testing
-    all_players = [UniformExploration]  # FIXME just for testing
+    all_players = [FixedArm]  # XXX just for testing
+    all_players = [UniformExploration]  # XXX just for testing
 
+    # --- XXX Test for Selfish Ubar
     all_update_memories = [ConstantRank]
-    # all_players = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    # all_players = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    # # all_players = [Selfish_0Greedy_Ubar]
-    # all_players = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
-    # all_players = [Selfish_KLUCB_Ubar]
+    all_players = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # XXX complete comparison
+    all_players = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # XXX comparison
+    all_players = [Selfish_KLUCB_Ubar]
+    all_players = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
 
-    all_players = [Selfish_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_players = [Selfish_KLUCB_U]
+    # --- XXX Test for RhoRand
+    all_players = [RhoRand_UCB_Ubar, RhoRand_KLUCB_Ubar]  # XXX  comparison
+    all_players = [RhoRand_KLUCB_U]
+    all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
     all_update_memories = [RandomNewRank]
 
+    # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
-    mus = [0.1, 0.9]
+    # mus = [0.1, 0.9]
     # mus = [0.1, 0.5, 0.9]
 
-    # FIXME Read parameters from the cli env
+    # --- XXX Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
     M = int(getenv("M", "2"))
     K = int(getenv("K", "2"))
@@ -962,8 +968,7 @@ if __name__ == '__main__':
     if find_only_N:
         mus = uniform_means(nbArms=K)
 
-    print("For depth = {} ...".format(depth))
-    results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 1, 1
@@ -992,16 +997,16 @@ if __name__ == '__main__':
     # M, K = 2, 3
     # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
-    # # XXX What if we start from an absorbing state?
-    # M, K = 2, 3
-    # # S = np.array([[2, 1, 0], [2, 1, 0]])
-    # # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
-    # # N = np.array([[4, 3, 1], [4, 3, 1]])
-    # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
-    # # for depth in [1]:
-    # for depth in [2, 3]:
-    #     results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
-    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    # XXX What if we start from an absorbing state?
+    M, K = 2, 3
+    S = np.array([[2, 1, 0], [2, 1, 0]])
+    Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    N = np.array([[4, 3, 1], [4, 3, 1]])
+    Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
+    # for depth in [1]:
+    for depth in [2, 3]:
+        # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+        results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # M, K = 3, 3
     # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
