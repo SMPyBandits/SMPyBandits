@@ -1,0 +1,9 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=2 arms and M=2 players using Selfish_UCB_Ubar, for depth=3 : 68 leafs, 2 absorbing"
+	0 [label="[[0/0,0/0], [0/0,0/0]]" color=green]
+	25 [label="[[0/1,1/2], [0/1,1/2]]" color=red]
+	0 -> 25 [label="µ2^2(µ1 - 1)^2/2" color=black]
+	66 [label="[[1/2,0/1], [1/2,0/1]]" color=red]
+	0 -> 66 [label="µ1^2(µ2 - 1)^2/2" color=black]
+}

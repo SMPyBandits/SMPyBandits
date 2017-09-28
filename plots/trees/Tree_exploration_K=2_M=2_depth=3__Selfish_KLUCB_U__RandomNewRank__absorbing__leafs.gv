@@ -1,0 +1,5 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=2 arms and M=2 players using Selfish KLUCB U and RandomNewRank, for depth=3 : 146 leafs, 0 absorbing"
+	0 [label="[[0/0 r=1,0/0 r=1], [0/0 r=1,0/0 r=1]]" color=green]
+}

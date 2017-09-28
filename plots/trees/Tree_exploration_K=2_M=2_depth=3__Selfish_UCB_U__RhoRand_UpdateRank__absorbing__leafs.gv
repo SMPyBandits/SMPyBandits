@@ -1,0 +1,21 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=2 arms and M=2 players using Selfish UCB U and RhoRand UpdateRank, for depth=3 : 146 leafs, 8 absorbing"
+	0 [label="[[0/0 r=1,0/0 r=1], [0/0 r=1,0/0 r=1]]" color=green]
+	8 [label="[[1/2 r=1,0/1 r=1], [1/2 r=0,0/1 r=0]]" color=red]
+	0 -> 8 [label="µ1^2(µ2 - 1)^2/8" color=black]
+	18 [label="[[0/1 r=0,1/2 r=0], [0/1 r=1,1/2 r=1]]" color=red]
+	0 -> 18 [label="µ2^2(µ1 - 1)^2/8" color=black]
+	20 [label="[[1/2 r=0,0/1 r=0], [1/2 r=1,0/1 r=1]]" color=red]
+	0 -> 20 [label="µ1^2(µ2 - 1)^2/8" color=black]
+	38 [label="[[0/1 r=1,1/2 r=1], [0/1 r=1,1/2 r=1]]" color=red]
+	0 -> 38 [label="µ2^2(µ1 - 1)^2/8" color=black]
+	46 [label="[[1/2 r=0,0/1 r=0], [1/2 r=0,0/1 r=0]]" color=red]
+	0 -> 46 [label="µ1^2(µ2 - 1)^2/8" color=black]
+	55 [label="[[0/1 r=1,1/2 r=1], [0/1 r=0,1/2 r=0]]" color=red]
+	0 -> 55 [label="µ2^2(µ1 - 1)^2/8" color=black]
+	106 [label="[[0/1 r=0,1/2 r=0], [0/1 r=0,1/2 r=0]]" color=red]
+	0 -> 106 [label="µ2^2(µ1 - 1)^2/8" color=black]
+	136 [label="[[1/2 r=1,0/1 r=1], [1/2 r=1,0/1 r=1]]" color=red]
+	0 -> 136 [label="µ1^2(µ2 - 1)^2/8" color=black]
+}

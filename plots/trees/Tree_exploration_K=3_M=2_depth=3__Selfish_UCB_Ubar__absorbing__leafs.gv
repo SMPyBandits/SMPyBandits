@@ -1,0 +1,5 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=3 arms and M=2 players using Selfish_UCB_Ubar, for depth=3 : 64 leafs, 0 absorbing"
+	0 [label="[[0/0,0/0,0/0], [0/0,0/0,0/0]]" color=green]
+}
