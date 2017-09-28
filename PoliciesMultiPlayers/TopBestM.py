@@ -50,7 +50,7 @@ class oneTopBestM(ChildPointer):
         # # FIXME it messes up with the display of the titles...
         # str_Mbest = ""
         str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
-        return r"#{}<TopBestM{}[{}{}{}{}]>".format(self.playerId + 1, "Chair" if self._withChair else "", player, str_Mbest, str_chosen_arm)
+        return r"#{}<TopBestM{}[{}{}{}]>".format(self.playerId + 1, "Chair" if self._withChair else "", player, str_Mbest, str_chosen_arm)
 
     def startGame(self):
         """Start game."""
