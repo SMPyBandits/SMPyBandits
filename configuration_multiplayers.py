@@ -41,9 +41,9 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -172,16 +172,16 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Arms
     "environment": [
-        {   # A damn simple problem: 2 arms, one bad, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
-            # "params": [0.9, 0.9]
-            # "params": [0.85, 0.9]
-        }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        # {   # A damn simple problem: 2 arms, one bad, one good
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
+        #     "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
+        #     # "params": [0.9, 0.9]
+        #     # "params": [0.85, 0.9]
         # }
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
+        }
         # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))

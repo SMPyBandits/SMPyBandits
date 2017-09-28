@@ -533,9 +533,9 @@ class State(object):
     def __hash__(self, full=FULLHASH):
         """Hash the matrix Stilde and N of the state."""
         if full:
-            return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ))
+            return hash(tupleit2(self.S)) + hash(tupleit2(self.N)) + hash(tupleit2(self.Stilde)) + hash(tupleit2(self.Ntilde) + (self.t, self.depth, ))
         else:
-            return hash(tupleit2(self.Stilde) + tupleit2(self.N))
+            return hash(tupleit2(self.Stilde)) + hash(tupleit2(self.N))
 
     def is_absorbing(self):
         """Try to detect if this state is absorbing, ie only one transition is possible, and again infinitely for the only child.
@@ -744,7 +744,7 @@ class StateWithMemory(State):
             memories = tuple(1 for _ in range(self.M))
         self.memories = memories  #: Personal memory for all players, can be a rank in {1,..,M} for rhoRand, or anything else.
 
-    def __str__(self, concise=CONCISE):
+    def __str__(self, concise=False):
         if concise:
             return "    StateWithMemory : M = {}, K = {} and t = {}, depth = {}.\n{} =: Stilde\n{} =: N\n{} =: players memory\n".format(self.M, self.K, self.t, self.depth, self.Stilde, self.N, self.memories)
         else:
@@ -753,9 +753,10 @@ class StateWithMemory(State):
     def to_node(self, concise=CONCISE):
         """Print the state as a small string to be attached to a GraphViz node."""
         if concise:
+            # return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.S, self.N)) + "]]" + " r={}".format(list(self.memories))  # if U is used instead of Utilde
             return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]" + " r={}".format(list(self.memories))
         else:
-            return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{} r={}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]" + " ranks = {}".format(self.memories)
+            return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]" + " ranks = {}".format(self.memories)
 
     def copy(self):
         """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
@@ -764,9 +765,10 @@ class StateWithMemory(State):
     def __hash__(self, full=FULLHASH):
         """Hash the matrix Stilde and N of the state and memories of the players (ie. ranks for RhoRand)."""
         if full:
-            return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ) + tupleit1(self.memories))
+            return hash(tupleit2(self.S)) + hash(tupleit2(self.N)) + hash(tupleit2(self.Stilde)) + hash(tupleit2(self.Ntilde) + (self.t, self.depth, )) + hash(tupleit1(self.memories))
         else:
-            return hash(tupleit2(self.Stilde) + tupleit2(self.N) + tupleit1(self.memories))
+            # return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit1(self.memories))  # if U is used instead of Utilde
+            return hash(tupleit2(self.Stilde)) + hash(tupleit2(self.N)) + hash(tupleit1(self.memories))
 
     def is_absorbing(self):
         """Try to detect if this state is absorbing, ie only one transition is possible, and again infinitely for the only child.
@@ -939,15 +941,15 @@ if __name__ == '__main__':
     all_players = [FixedArm]  # XXX just for testing
     all_players = [UniformExploration]  # XXX just for testing
 
-    # --- XXX Test for Selfish Ubar
+    # --- XXX Test for Selfish Utilde
     all_update_memories = [ConstantRank]
-    all_players = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # XXX complete comparison
-    all_players = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # XXX comparison
-    all_players = [Selfish_KLUCB_Ubar]
-    all_players = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
+    all_players = [Selfish_0Greedy_Utilde, Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX complete comparison
+    all_players = [Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX comparison
+    all_players = [Selfish_KLUCB_Utilde]
+    all_players = [Selfish_UCB_Utilde]  # Faster, and probably same error cases as KLUCB
 
     # --- XXX Test for RhoRand
-    all_players = [RhoRand_UCB_Ubar, RhoRand_KLUCB_Ubar]  # XXX  comparison
+    all_players = [RhoRand_UCB_Utilde, RhoRand_KLUCB_Utilde]  # XXX  comparison
     all_players = [RhoRand_KLUCB_U]
     all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
     all_update_memories = [RandomNewRank]
@@ -1004,7 +1006,7 @@ if __name__ == '__main__':
     N = np.array([[4, 3, 1], [4, 3, 1]])
     Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # for depth in [1]:
-    for depth in [2, 3]:
+    for depth in [2, 3, 4]:
         # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
         results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
