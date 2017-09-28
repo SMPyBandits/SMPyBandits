@@ -38,12 +38,6 @@ About:
 from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
 __version__ = "0.7"
-from sys import version_info
-if version_info.major < 3:  # Python 2 compatibility if needed
-    input = raw_input
-    import codecs
-    def open(filename, mode):  # https://docs.python.org/3/library/codecs.html#standard-encodings
-        return codecs.open(filename, mode=mode, encoding='utf_8')
 
 from collections import Counter, deque
 from fractions import Fraction
@@ -76,16 +70,23 @@ except ImportError:
 
 oo = float('+inf')  #: Shortcut for float('+inf').
 
+from sys import version_info
+if version_info.major < 3:  # Python 2 compatibility if needed
+    input = raw_input
+    import codecs
+    def open(filename, mode):  # https://docs.python.org/3/library/codecs.html#standard-encodings
+        return codecs.open(filename, mode=mode, encoding='utf_8')
+
 PLOT_DIR = os_path_join("plots", "trees")  #: Directory for the plots
 
 
 def tupleit1(anarray):
     """Convert a non-hashable 1D numpy array to a hashable tuple."""
-    return tuple(anarray.tolist())
+    return tuple(list(anarray))
 
 def tupleit2(anarray):
     """Convert a non-hashable 2D numpy array to a hashable tuple-of-tuples."""
-    return tuple([tuple(r) for r in anarray.tolist()])
+    return tuple([tuple(r) for r in list(anarray)])
 
 def prod(iterator):
     """Product of the values in this iterator."""
@@ -97,6 +98,11 @@ def prod(iterator):
 def choices_from_indexes(indexes):
     """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
     return np.where(indexes == np.max(indexes))[0]
+
+
+def choices_from_indexes_with_rank(indexes, rank=1):
+    """For deterministic index policies, if more than one index is maximum, return the list of positions attaining the rank-th largest index (with more than one if ties, or only one position)."""
+    return np.where(indexes == np.sort(indexes)[-rank])[0]
 
 
 WIDTH = 200  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
@@ -133,7 +139,11 @@ def FixedArm(j, state):
 
 def UniformExploration(j, state):
     """Fake player j that always targets all arms."""
-    return np.arange(state.K)
+    return list(np.arange(state.K))
+
+def ConstantRank(j, state, collision):
+    """Constant rank no matter what."""
+    return [state.memories[j]]
 
 # --- Selfish 0-greedy variants
 
@@ -163,7 +173,7 @@ alpha = 0.5
 
 def Selfish_UCB_U(j, state):
     """Selfish policy + UCB_0.5 index + U feedback."""
-    indexes = (state[j].S / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
@@ -208,9 +218,67 @@ def Selfish_KLUCB_Ubar(j, state):
 
 # default_policy = Selfish_KLUCB_Ubar
 
-# --- FIXME write rhoRand, TopBestM, MusicalChair and all variants !
+# --- TODO write rhoRand, TopBestM, MusicalChair and all variants !
 # XXX It is probably harder... rhoRand is NOT memory less!!
+# So we need tow functions: one takes the decision, one updates the rank after all the decisions are taken
 # XXX TopBestM and MusicalChair also!!
+
+
+# --- RhoRand UCB variants
+alpha = 0.5
+
+def RhoRand_UCB_U(j, state):
+    """RhoRand policy + UCB_0.5 index + U feedback."""
+    rank = state.memories[j]
+    indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+def RhoRand_UCB_Utilde(j, state):
+    """RhoRand policy + UCB_0.5 index + Utilde feedback."""
+    rank = state.memories[j]
+    indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+def RhoRand_UCB_Ubar(j, state):
+    """RhoRand policy + UCB_0.5 index + Ubar feedback."""
+    rank = state.memories[j]
+    indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+def RhoRand_KLUCB_U(j, state):
+    """RhoRand policy + Bernoulli KL-UCB index + U feedback."""
+    rank = state.memories[j]
+    indexes = klucb(state.S[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+def RhoRand_KLUCB_Utilde(j, state):
+    """RhoRand policy + Bernoulli KL-UCB index + Utilde feedback."""
+    rank = state.memories[j]
+    indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+def RhoRand_KLUCB_Ubar(j, state):
+    """RhoRand policy + Bernoulli KL-UCB index + Ubar feedback."""
+    rank = state.memories[j]
+    indexes = klucb((state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]), c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    return choices_from_indexes_with_rank(indexes, rank=rank)
+
+
+def RandomNewRank(j, state, collision):
+    """RhoRand keep the choose a new uniform rank in {1,..,M} in case of collision, or keep the same."""
+    if collision:  # new random rank
+        return list(np.arange(state.M))
+    else:  # keep the same rank
+        return [state.memories[j]]
+
+default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
+# default_policy, default_update_memory = RhoRand_KLUCB_U, RandomNewRank
 
 
 # --- Generate vector of formal means mu_1,...,mu_K
@@ -222,7 +290,6 @@ def symbol_means(K):
 def random_uniform_means(K):
     """If needed, generate an array of K (numerical) uniform means in [0, 1]."""
     return np.random.rand(K)
-
 
 
 def uniform_means(nbArms=3, delta=0.1, lower=0., amplitude=1.):
@@ -307,9 +374,11 @@ def tex2pdf(filename):
     print("Now compiling it to PDF with 'pdflatex {} && pdflatex {}' ...".format(base, base))
     log, gz, aux = base.replace('.tex', '.log'), base.replace('.tex', '.synctex.gz'), base.replace('.tex', '.aux')
     chdir(dir2)  # go in the plots/trees/ subdir
-    subprocess.call(["pdflatex", "-halt-on-error", base, ">/dev/null"])
-    subprocess.call(["pdflatex", "-halt-on-error", base, ">/dev/null"])
-    subprocess.call(["mv", "-f", log, gz, aux, "/tmp/"])
+    if subprocess.call(["pdflatex", "-halt-on-error", base], stdout=open("/dev/null", 'w')) > 0:
+        subprocess.call(["pdflatex", "-halt-on-error", base], stdout=open("/dev/null", 'w'))
+        subprocess.call(["mv", "-f", log, gz, aux, "/tmp/"])
+    else:
+        subprocess.call(["pdflatex", "-halt-on-error", base])
     chdir(dir1)  # go back
 
 # --- Data representation'
@@ -570,23 +639,23 @@ class State(object):
     # --- The hard part is this all_deltas *generator*
 
     def all_deltas(self):
-        """Generator that yield lambda functions transforming state to another state.
+        """Generator that yields functions transforming state to another state.
 
         - It is memory efficient as it is a generator.
-        - Do not convert that to a list or it might use all your system memory: each returned value is a lambda function with code and variables inside!
+        - Do not convert that to a list or it might use all your system memory: each returned value is a function with code and variables inside!
         """
         all_decisions = [ player(j, self) for j, player in enumerate(self.players) ]
-        number_of_decisions = prod(len(decision) for decision in all_decisions)
+        number_of_decisions = prod(len(decisions) for decisions in all_decisions)
         for decisions in product(*all_decisions):
+            # collisions = [np.count_nonzero(np.array(decisions) == k) >= 2 for k in range(self.K)]
+            counter = Counter(decisions)
+            collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]  # XXX faster with Counter
             for coin_flips in product([0, 1], repeat=self.K):
                 proba_of_this_coin_flip = prod(mu if b else (1 - mu) for b, mu in zip(coin_flips, self.mus))
                 # Create a function to apply this transition
                 def delta(s):
                     s.t += 1
                     s.depth -= 1
-                    # collisions = [np.count_nonzero(np.array(decisions) == k) >= 2 for k in range(self.K)]
-                    counter = Counter(decisions)
-                    collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]  # XXX faster with Counter
                     for j, Ij in enumerate(decisions):
                         s.S[j, Ij] += coin_flips[Ij]  # sensing feedback
                         s.N[j, Ij] += 1  # number of sensing trials
@@ -660,9 +729,87 @@ class State(object):
         return nb_absorbing, bad_proba
 
 
+class StateWithMemory(State):
+    """State with a memory for each player, to represent and play with RhoRand etc."""
+
+    def __init__(self, S, Stilde, N, Ntilde, mus, players, update_memories, memories=None, depth=0):
+        super(StateWithMemory, self).__init__(S, Stilde, N, Ntilde, mus, players, depth=depth)
+        self.update_memories = update_memories
+        if memories is None:
+            memories = tuple(1 for _ in range(self.M))
+        self.memories = memories  #: Personal memory for all players, can be a rank in {1,..,M} for rhoRand, or anything else.
+
+    def __str__(self, concise=CONCISE):
+        if concise:
+            return "    StateWithMemory : M = {}, K = {} and t = {}, depth = {}.\n{} =: Stilde\n{} =: N\n{} =: players memory\n".format(self.M, self.K, self.t, self.depth, self.Stilde, self.N, self.memories)
+        else:
+            return "    StateWithMemory : M = {}, K = {} and t = {}, depth = {}.\n{} =: S\n{} =: Stilde\n{} =: N\n{} =: Ntilde\n{} =: players memory\n".format(self.M, self.K, self.t, self.depth, self.S, self.Stilde, self.N, self.Ntilde, self.memories)
+
+    def to_node(self, concise=CONCISE):
+        """Print the state as a small string to be attached to a GraphViz node."""
+        if concise:
+            return "[[" + "], [".join(",".join("{:.3g}/{}".format(st, n, r) for st, n in zip(st2, n2)) for st2, n2 in zip(self.Stilde, self.N)) + "]]" + " r={}".format(list(self.memories))
+        else:
+            return "[[" + "], [".join(",".join("{:.3g}:{:.3g}/{}:{} r={}".format(s, st, n, nt) for s, st, n, nt in zip(s2, st2, n2, nt2)) for s2, st2, n2, nt2 in zip(self.S, self.Stilde, self.N, self.Ntilde)) + "]]" + " ranks = {}".format(self.memories)
+
+    def copy(self):
+        """Get a new copy of that state with same S, Stilde, N, Ntilde but no probas and no children (and depth=0)."""
+        return StateWithMemory(S=self.S, Stilde=self.Stilde, N=self.N, Ntilde=self.Ntilde, mus=self.mus, players=self.players, update_memories=self.update_memories, depth=self.depth, memories=self.memories)
+
+    def __hash__(self, full=FULLHASH):
+        """Hash the matrix Stilde and N of the state and memories of the players (ie. ranks for RhoRand)."""
+        if full:
+            return hash(tupleit2(self.S) + tupleit2(self.N) + tupleit2(self.Stilde) + tupleit2(self.Ntilde) + (self.t, self.depth, ) + tupleit1(self.memories))
+        else:
+            return hash(tupleit2(self.Stilde) + tupleit2(self.N) + tupleit1(self.memories))
+
+    def is_absorbing(self):
+        """Try to detect if this state is absorbing, ie only one transition is possible, and again infinitely for the only child.
+
+        .. warning:: Still very experimental!
+        """
+        if any('random' in update_memory.__name__.lower() for update_memory in self.update_memories):
+            # eg RandomNewRank gives True, ConstantRank gives False
+            return False
+        else:
+            return super(StateWithMemory, self).is_absorbing()
+
+    def all_deltas(self):
+        """Generator that yields functions transforming state to another state.
+
+        - It is memory efficient as it is a generator.
+        - Do not convert that to a list or it might use all your system memory: each returned value is a function with code and variables inside!
+        """
+        all_decisions = [ player(j, self) for j, player in enumerate(self.players) ]
+        number_of_decisions = prod(len(decisions) for decisions in all_decisions)
+        for decisions in product(*all_decisions):
+            counter = Counter(decisions)
+            collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]
+            all_memories = [ update_memory(j, self, collisions[decisions[j]]) for j, update_memory in enumerate(self.update_memories) ]
+            number_of_memories = prod(len(memories) for memories in all_memories)
+            for memories in product(*all_memories):
+                for coin_flips in product([0, 1], repeat=self.K):
+                    proba_of_this_coin_flip = prod(mu if b else (1 - mu) for b, mu in zip(coin_flips, self.mus))
+                    # Create a function to apply this transition
+                    def delta(s):
+                        s.memories = memories  # Erase internal ranks etc
+                        s.t += 1
+                        s.depth -= 1
+                        for j, Ij in enumerate(decisions):
+                            s.S[j, Ij] += coin_flips[Ij]  # sensing feedback
+                            s.N[j, Ij] += 1  # number of sensing trials
+                            if not collisions[Ij]:  # no collision, receive this feedback for rewards
+                                s.Stilde[j, Ij] += coin_flips[Ij]  # number of succesful transmissions
+                                s.Ntilde[j, Ij] += 1  # number of trials without collisions
+                        return s
+                    # Compute the probability of this transition
+                    proba = proba_of_this_coin_flip / (number_of_decisions * number_of_memories)
+                    yield (delta, proba)
+
+
 # --- Main function
 
-def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, find_only_N=None):
+def main(depth=1, players=None, update_memories=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, find_only_N=None):
     """Compute all the transitions, and print them."""
     if S is not None:
         M = min(np.shape(S))
@@ -672,6 +819,8 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
     K = len(mus)
     if players is None:
         players = [default_policy for _ in range(M)]
+    # if update_memories is None:
+    #     update_memories = [default_update_memory for _ in range(M)]
     M = len(players)
     assert 1 <= M <= K <= 10, "Error: only 1 <= M <= K <= 10 are supported... and M = {}, K = {} here...".format(M, K)  # FIXME
     assert 0 <= depth <= 20, "Error: only 0 <= depth <= 20 is supported... and depth = {} here...".format(depth)  # FIXME
@@ -687,12 +836,19 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
     if Ntilde is None:
         Ntilde = np.zeros((M, K),  dtype=int)
     # Create the root state
-    root = State(S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, players=players)
+    if update_memories is not None:
+        root = StateWithMemory(S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, players=players, update_memories=update_memories)
+    else:
+        root = State(S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, players=players)
     # Should we only look for find_only_N absorbing child?
     print("\nStarting to explore transitions up-to depth {} for this root state:\n{}".format(depth, root))
     print("    Using these policies:")
     for playerId, player in enumerate(players):
         print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, player.__name__, player))
+    if update_memories is not None:
+        print("    Using these update_memories:")
+        for playerId, update_memory in enumerate(update_memories):
+            print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, update_memory.__name__, update_memory))
     print("    Using these arms:")
     for muId, mu in enumerate(mus):
         print("  - Arm #{}/{} has mean {} ...".format(muId, K, mu))
@@ -718,41 +874,51 @@ def main(depth=1, players=None, mus=None, M=2, K=2, S=None, Stilde=None, N=None,
     print("    Using these policies:")
     for playerId, player in enumerate(players):
         print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, player.__name__, player))
+    if update_memories is not None:
+        print("    Using these update_memories:")
+        for playerId, update_memory in enumerate(update_memories):
+            print("  - Player #{}/{} uses {} (which is {})...".format(playerId, M, update_memory.__name__, update_memory))
     print("    Using these arms:")
     for muId, mu in enumerate(mus):
         print("  - Arm #{}/{} has mean {} ...".format(muId, K, mu))
-    print("\nThere were {} unique leafs for depth {}...".format(len(leafs), depth))
+    if find_only_N is None:
+        print("\nThere were {} unique leafs for depth {}...".format(len(leafs), depth))
     return root, complete_probas, leafs
 
 
 # --- Main script
 
-def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True, policies=None, find_only_N=None):
-    """Test the main exploration function for various policies."""
+def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, debug=True, all_players=None, all_update_memories=None, find_only_N=None):
+    """Test the main exploration function for various all_players."""
     results = []
-    if policies is None:
-        policies = [FixedArm]
-    for policy in policies:
+    if all_players is None:
+        all_players = [FixedArm]
+    if all_update_memories is None:
+        all_update_memories = [None]
+    for policy, update_memory in zip(all_players, all_update_memories):
         players = [ policy for _ in range(M) ]
+        update_memories = [ update_memory for _ in range(M) ] if update_memory is not None else None
         # get the result
-        root, complete_probas, leafs = main(depth=depth, players=players, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus, find_only_N=find_only_N)
+        root, complete_probas, leafs = main(depth=depth, players=players, update_memories=update_memories, S=S, N=N, Stilde=Stilde, Ntilde=Ntilde, M=M, K=K, mus=mus, find_only_N=find_only_N)
         if find_only_N is None:
             # computing absorbing states
             nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
             # XXX save the graph and maybe display it, in different versions
             for onlyabsorbing, onlyleafs in product((True, False), (True, False)):
-                for latex, ext in ((True, 'svg'), (False, 'svg'), (False, 'png')):
+                for latex, ext in ((True, 'svg'), (False, 'svg')):  # , (False, 'png')
                     try:
-                        filename = os_path_join(PLOT_DIR,
-                                                "Tree_exploration_K={}_M={}_depth={}__{}{}{}.gv".format(
-                                                    K, M, depth, policy.__name__,
-                                                    "__absorbing" if onlyabsorbing else "",
-                                                    "__leafs" if onlyleafs else "")
-                                                )
-                        root.saveto(filename, view=debug,
-                                     title="Tree exploration for K={} arms and M={} players using {}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__, depth, len(leafs), nb_absorbing),
-                                     onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs,
-                                     latex=latex, ext=ext)
+                        filename = "Tree_exploration_K={}_M={}_depth={}__{}{}{}{}.gv".format(
+                                    K, M, depth, policy.__name__,
+                                    "__{}".format(update_memory.__name__) if update_memory is not None else "",
+                                    "__absorbing" if onlyabsorbing else "",
+                                    "__leafs" if onlyleafs else ""
+                        )
+                        root.saveto(os_path_join(PLOT_DIR, filename), view=debug,
+                                    title="Tree exploration for K={} arms and M={} players using {}{}, for depth={} : {} leafs, {} absorbing".format(K, M, policy.__name__,
+                                                      " and {}".format(update_memory.__name__) if update_memory is not None else "",
+                                                      depth, len(leafs), nb_absorbing),
+                                    onlyabsorbing=onlyabsorbing, onlyleafs=onlyleafs,
+                                    latex=latex, ext=ext)
                     except ValueError as e:
                         print("    Error when saving:", e)
         else:
@@ -766,16 +932,23 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
 
 
 if __name__ == '__main__':
-    policies = [FixedArm]  # FIXME just for testing
-    policies = [UniformExploration]  # FIXME just for testing
-    policies = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    policies = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
-    # policies = [Selfish_0Greedy_Ubar]
-    policies = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
-    # policies = [Selfish_KLUCB_Ubar]
+    all_update_memories = None
+    all_players = [FixedArm]  # FIXME just for testing
+    all_players = [UniformExploration]  # FIXME just for testing
 
-    mus = None
-    # mus = [0.1, 0.9]
+    all_update_memories = [ConstantRank]
+    # all_players = [Selfish_0Greedy_Ubar, Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
+    # all_players = [Selfish_UCB_Ubar, Selfish_KLUCB_Ubar]  # FIXME complete comparison
+    # # all_players = [Selfish_0Greedy_Ubar]
+    # all_players = [Selfish_UCB_Ubar]  # Faster, and probably same error cases as KLUCB
+    # all_players = [Selfish_KLUCB_Ubar]
+
+    all_players = [Selfish_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_players = [Selfish_KLUCB_U]
+    all_update_memories = [RandomNewRank]
+
+    mus = None  # use mu_1, .., mu_K as symbols, by default
+    mus = [0.1, 0.9]
     # mus = [0.1, 0.5, 0.9]
 
     # FIXME Read parameters from the cli env
@@ -790,13 +963,13 @@ if __name__ == '__main__':
         mus = uniform_means(nbArms=K)
 
     print("For depth = {} ...".format(depth))
-    results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 1, 1
     # for depth in [8]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 2, 2
@@ -804,7 +977,7 @@ if __name__ == '__main__':
     # # mus = [Fraction(4, 5), Fraction(1, 5)]
     # for depth in [1, 2, 3]:
     #     print("For depth = {} ...".format(depth))
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 2
@@ -813,11 +986,11 @@ if __name__ == '__main__':
     # N = np.array([[2, 1], [2, 1]])
     # Ntilde = np.array([[2, 1], [2, 1]])
     # for depth in [1, 2, 3]:
-    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 2, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX What if we start from an absorbing state?
     # M, K = 2, 3
@@ -827,10 +1000,10 @@ if __name__ == '__main__':
     # # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
     # # for depth in [1]:
     # for depth in [2, 3]:
-    #     results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
-    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    #     # results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # M, K = 3, 3
-    # results = test(depth=depth, M=M, K=K, mus=mus, policies=policies, find_only_N=find_only_N, debug=DEBUG)
+    # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
 # End of complete-tree-exploration-for-MP-bandits.py
