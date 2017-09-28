@@ -655,7 +655,7 @@ class EvaluatorMultiPlayers(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=None, savefig=None, evaluators=()):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, savefig=None, evaluators=()):
         """Plot histogram of the regrets R_T for all evaluators."""
         if len(evaluators) == 0:  # no need for a subplot
             subplots = False
@@ -675,7 +675,7 @@ class EvaluatorMultiPlayers(object):
                 i, j = evaId % nrows, evaId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = eva.getLastRegrets(envId=envId)
-                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins)
+                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 # Add only once the ylabel, xlabel, in the middle

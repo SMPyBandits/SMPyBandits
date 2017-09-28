@@ -181,7 +181,11 @@ configuration = {
         {   # A very very easy problem: 3 arms, one bad, one average, one good
             "arm_type": Bernoulli,
             "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
-        }
+        },
+        {   # A harder problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.49, 0.5, 0.51]  # uniformMeans(3, 0.49)
+        },
         # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
