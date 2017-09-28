@@ -664,13 +664,13 @@ class EvaluatorMultiPlayers(object):
         colors = palette(N)
         if subplots:
             # Use a subplots of the good size
-            nrows = 1 + int(np.sqrt(N))
+            nrows = int(np.ceil(np.sqrt(N)))
             ncols = N // nrows
             if N > nrows * ncols:
                 ncols += 1
             nrows, ncols = max(nrows, ncols), min(nrows, ncols)
-            fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
-            fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+            fig, axes = plt.subplots(nrows, ncols, sharex=False, sharey=False)  # FIXME
+            fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
             for evaId, eva in enumerate(evaluators):
                 i, j = evaId % nrows, evaId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]

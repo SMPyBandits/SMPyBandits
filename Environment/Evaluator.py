@@ -462,7 +462,7 @@ class Evaluator(object):
         colors = palette(N)
         if subplots:
             # Use a subplots of the good size
-            nrows = 1 + int(np.sqrt(N))
+            nrows = int(np.ceil(np.sqrt(N)))
             ncols = N // nrows
             if N > nrows * ncols:
                 ncols += 1
