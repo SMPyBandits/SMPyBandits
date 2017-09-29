@@ -101,15 +101,6 @@ def prod(iterator):
         p *= v
     return p
 
-def choices_from_indexes(indexes):
-    """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
-    return np.where(indexes == np.max(indexes))[0]
-
-
-def choices_from_indexes_with_rank(indexes, rank=1):
-    """For deterministic index policies, if more than one index is maximum, return the list of positions attaining the rank-th largest index (with more than one if ties, or only one position)."""
-    return np.where(indexes == np.sort(indexes)[-rank])[0]
-
 
 WIDTH = 200  #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
 
@@ -147,9 +138,13 @@ def UniformExploration(j, state):
     """Fake player j that always targets all arms."""
     return list(np.arange(state.K))
 
-def ConstantRank(j, state, collision):
+def ConstantRank(j, state, decision, collision):
     """Constant rank no matter what."""
     return [state.memories[j]]
+
+def choices_from_indexes(indexes):
+    """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
+    return np.where(indexes == np.max(indexes))[0]
 
 # --- Selfish 0-greedy variants
 
@@ -226,6 +221,11 @@ def Selfish_KLUCB_Ubar(j, state):
 
 
 # --- RhoRand UCB variants
+
+def choices_from_indexes_with_rank(indexes, rank=1):
+    """For deterministic index policies, if more than one index is maximum, return the list of positions attaining the rank-th largest index (with more than one if ties, or only one position)."""
+    return np.where(indexes == np.sort(indexes)[-rank])[0]
+
 alpha = 0.5
 
 def RhoRand_UCB_U(j, state):
@@ -272,8 +272,8 @@ def RhoRand_KLUCB_Ubar(j, state):
 
 # So we need tow functions: one takes the decision, one updates the rank after all the decisions are taken
 
-def RandomNewRank(j, state, collision):
-    """RhoRand keep the choose a new uniform rank in {1,..,M} in case of collision, or keep the same."""
+def RandomNewRank(j, state, decision, collision):
+    """RhoRand chooses a new uniform rank in {1,..,M} in case of collision, or keep the same."""
     if collision:  # new random rank
         return list(np.arange(1, 1 + state.M))
     else:  # keep the same rank
@@ -283,7 +283,190 @@ default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
 # default_policy, default_update_memory = RhoRand_KLUCB_U, RandomNewRank
 
 
-# --- FIXME write TopBestM, MusicalChair and all variants !
+# --- TopBestM, TopBestMChair variants
+
+def TopBestM_UCB_U(j, state, collision=False):
+    """TopBestM policy + UCB_0.5 index + U feedback."""
+    chosen_arm = state.memories[j]
+    indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_UCB_Utilde(j, state, collision=False):
+    """TopBestM policy + UCB_0.5 index + Utilde feedback."""
+    chosen_arm = state.memories[j]
+    indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_UCB_Ubar(j, state, collision=False):
+    """TopBestM policy + UCB_0.5 index + Ubar feedback."""
+    chosen_arm = state.memories[j]
+    indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_KLUCB_U(j, state, collision=False):
+    """TopBestM policy + Bernoulli KL-UCB index + U feedback."""
+    chosen_arm = state.memories[j]
+    indexes = klucb(state.S[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_KLUCB_Utilde(j, state, collision=False):
+    """TopBestM policy + Bernoulli KL-UCB index + Utilde feedback."""
+    chosen_arm = state.memories[j]
+    indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_KLUCB_Ubar(j, state, collision=False):
+    """TopBestM policy + Bernoulli KL-UCB index + Ubar feedback."""
+    chosen_arm = state.memories[j]
+    indexes = klucb((state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]), c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestM_RandomNewChosenArm(j, state, decision, collision):
+    """TopBestM chooses a new arm after a collision or if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
+    player = state.players[j]
+    return player(j, state, collision=collision) if player.__defaults__ else player(j, state)
+
+# default_policy, default_update_memory = TopBestM_UCB_U, TopBestM_RandomNewChosenArm
+
+
+
+# --- TopBestMChair variants
+
+def write_to_tuple(this_tuple, index, value):
+    """Tuple cannot be written, this hack fixes that."""
+    this_list = list(this_tuple)
+    this_list[index] = value
+    return tuple(this_list)
+
+def TopBestMChair_UCB_U(j, state, collision=False):
+    """TopBestMChair policy + UCB_0.5 index + U feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_UCB_Utilde(j, state, collision=False):
+    """TopBestMChair policy + UCB_0.5 index + Utilde feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_UCB_Ubar(j, state, collision=False):
+    """TopBestMChair policy + UCB_0.5 index + Ubar feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_KLUCB_U(j, state, collision=False):
+    """TopBestMChair policy + Bernoulli KL-UCB index + U feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = klucb(state.S[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_KLUCB_Utilde(j, state, collision=False):
+    """TopBestMChair policy + Bernoulli KL-UCB index + Utilde feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_KLUCB_Ubar(j, state, collision=False):
+    """TopBestMChair policy + Bernoulli KL-UCB index + Ubar feedback."""
+    if not isinstance(state.memories[j], tuple):  # if no sitted information yet
+        state.memories = write_to_tuple(state.memories, j, (-1, False))
+    assert isinstance(state.memories[j], tuple)
+    chosen_arm, sitted = state.memories[j]
+    indexes = klucb((state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]), c * np.log(state.t) / state.N[j], tolerance)
+    indexes[state.N[j] < 1] = +oo
+    estimatedBestArms = np.argsort(indexes)[-state.M:]
+    if collision or chosen_arm not in estimatedBestArms:
+        return estimatedBestArms
+    else:
+        return [chosen_arm]
+
+def TopBestMChair_RandomNewChosenArm(j, state, decision, collision):
+    """TopBestMC chooses a new arm after if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
+    player = state.players[j]
+    chosen_arm, sitted = state.memories[j]
+    if not sitted:
+        if collision:  # new arm from estimatedBestArms
+            chosen_arms = player(j, state, collision=collision) if player.__defaults__ else player(j, state)
+            return list(zip(chosen_arms, [False] * len(chosen_arms)))
+        else:  # sitted, for now
+            return [(decision, True)]
+    else:
+        # sitted but the chair changed ==> not sitted
+        return [(chosen_arm, chosen_arm == decision)]
+
+# default_policy, default_update_memory = TopBestMChair_UCB_U, TopBestMChair_RandomNewChosenArm
 
 
 # --- Generate vector of formal means mu_1,...,mu_K
@@ -317,6 +500,8 @@ def uniform_means(nbArms=3, delta=0.1, lower=0., amplitude=1.):
     assert 0. < delta < 1., "Error: 'delta' = {:.3g} has to be in (0, 1).".format(delta)  # DEBUG
     mus = lower + amplitude * np.linspace(delta, 1 - delta, nbArms)
     return sorted(list(mus))
+
+# --- Transform probabilities to float, expr, str
 
 def proba2float(proba, values=None, K=None, names=None):
     """Replace mu_k by a numerical value and evaluation  the formula."""
@@ -371,6 +556,8 @@ def proba2str(proba, latex=False, html_in_var_names=False):
             str_proba = re_sub(r'mu_', r'µ', str_proba)
     return str_proba
 
+
+# --- Transform .tex to .pdf
 
 def tex2pdf(filename):
     """Naive call to command line pdflatex, twice."""
@@ -584,9 +771,8 @@ class State(object):
         self.depth += 1
         uniq_children = dict()
         uniq_probas = dict()
-        nb_transitions = 0
         for delta, proba in self.all_deltas():
-            nb_transitions += 1
+            if proba == 0: continue
             # copy the current state, apply decision of algorithms and random branching
             child = delta(self.copy())
             h = hash(child)  # I guess I could use states directly as key, but this would cost more in terms of memory
@@ -624,6 +810,7 @@ class State(object):
         """Use all_deltas to yield all the absorbing one-depth child and their probabilities."""
         self.depth += 1
         for delta, proba in self.all_deltas():
+            if proba == 0: continue
             # copy the current state, apply decision of algorithms and random branching
             child = delta(self.copy())
             if child.is_absorbing():
@@ -652,9 +839,8 @@ class State(object):
         all_decisions = [ player(j, self) for j, player in enumerate(self.players) ]
         number_of_decisions = prod(len(decisions) for decisions in all_decisions)
         for decisions in product(*all_decisions):
-            # collisions = [np.count_nonzero(np.array(decisions) == k) >= 2 for k in range(self.K)]
             counter = Counter(decisions)
-            collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]  # XXX faster with Counter
+            collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]
             for coin_flips in product([0, 1], repeat=self.K):
                 proba_of_this_coin_flip = prod(mu if b else (1 - mu) for b, mu in zip(coin_flips, self.mus))
                 # Create a function to apply this transition
@@ -670,6 +856,7 @@ class State(object):
                     return s
                 # Compute the probability of this transition
                 proba = proba_of_this_coin_flip / number_of_decisions
+                if proba == 0: continue
                 yield (delta, proba)
 
     # --- Main functions, all explorations are depth first search (not the best, it's just easier...)
@@ -730,7 +917,7 @@ class State(object):
                 nb_absorbing += 1
         print("\n\nFor depth {}, {} leafs were found to be absorbing, and the probability of reaching any absorbing leaf is {}...".format(self.depth, nb_absorbing, bad_proba))  # DEBUG
         sample_values = uniform_means(self.K)
-        print("\n==> Numerically, for means = {}, this probability is = {:.3g} ...".format(sample_values, proba2float(bad_proba, values=sample_values)))  # DEBUG
+        print("\n==> Numerically, for means = {}, this probability is = {:.3g} ...".format(np.array(sample_values), proba2float(bad_proba, values=sample_values)))  # DEBUG
         return nb_absorbing, bad_proba
 
 
@@ -792,7 +979,7 @@ class StateWithMemory(State):
         for decisions in product(*all_decisions):
             counter = Counter(decisions)
             collisions = [counter.get(k, 0) >= 2 for k in range(self.K)]
-            all_memories = [ update_memory(j, self, collisions[decisions[j]]) for j, update_memory in enumerate(self.update_memories) ]
+            all_memories = [ update_memory(j, self, decisions[j], collisions[decisions[j]]) for j, update_memory in enumerate(self.update_memories) ]
             number_of_memories = prod(len(memories) for memories in all_memories)
             for memories in product(*all_memories):
                 for coin_flips in product([0, 1], repeat=self.K):
@@ -811,6 +998,7 @@ class StateWithMemory(State):
                         return s
                     # Compute the probability of this transition
                     proba = proba_of_this_coin_flip / (number_of_decisions * number_of_memories)
+                    if proba == 0: continue
                     yield (delta, proba)
 
 
@@ -910,6 +1098,8 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
             nb_absorbing, bad_proba = root.proba_reaching_absorbing_state()
             # XXX save the graph and maybe display it, in different versions
             for onlyabsorbing, onlyleafs in product((True, False), (True, False)):
+                if nb_absorbing == 0 and onlyabsorbing:  continue
+                if depth == 1 and onlyleafs:  continue
                 for latex, ext in ((True, 'svg'), (False, 'svg')):  # , (False, 'png')
                     try:
                         filename = "Tree_exploration_K={}_M={}_depth={}__{}{}{}{}.gv".format(
@@ -954,8 +1144,17 @@ if __name__ == '__main__':
     all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
     all_update_memories = [RandomNewRank]
 
+    # --- XXX Test for TopBestM
+    all_players = [TopBestM_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_update_memories = [TopBestM_RandomNewChosenArm]
+
+    # --- XXX Test for TopBestMC
+    all_players = [TopBestMChair_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_update_memories = [TopBestMChair_RandomNewChosenArm]
+
     # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
+    mus = [0, 1]
     # mus = [0.1, 0.9]
     # mus = [0.1, 0.5, 0.9]
 
@@ -970,7 +1169,7 @@ if __name__ == '__main__':
     if find_only_N:
         mus = uniform_means(nbArms=K)
 
-    # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # # XXX default start state
     # M, K = 1, 1
@@ -1000,17 +1199,17 @@ if __name__ == '__main__':
     # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # XXX What if we start from an absorbing state?
-    M, K = 2, 3
-    S = np.array([[2, 1, 0], [2, 1, 0]])
-    Stilde = np.array([[2, 1, 0], [2, 1, 0]])
-    N = np.array([[4, 3, 1], [4, 3, 1]])
-    Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
-    # for depth in [1]:
-    for depth in [2, 3, 4]:
-        # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
-        results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    # M, K = 2, 3
+    # S = np.array([[2, 1, 0], [2, 1, 0]])
+    # Stilde = np.array([[2, 1, 0], [2, 1, 0]])
+    # N = np.array([[4, 3, 1], [4, 3, 1]])
+    # Ntilde = np.array([[4, 3, 1], [4, 3, 1]])
+    # # for depth in [1]:
+    # for depth in [2, 3, 4]:
+    #     # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
+    #     results = test(depth=depth, M=M, K=K, S=S, Stilde=Stilde, N=N, Ntilde=Ntilde, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
     # M, K = 3, 3
     # results = test(depth=depth, M=M, K=K, mus=mus, all_players=all_players, all_update_memories=all_update_memories, find_only_N=find_only_N, debug=DEBUG)
 
-# End of complete-tree-exploration-for-MP-bandits.py
+# End of complete_tree_exploration_for_MP_bandits.py
