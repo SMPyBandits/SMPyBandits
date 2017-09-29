@@ -454,26 +454,21 @@ class Evaluator(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=None, savefig=None):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, savefig=None):
         """Plot histogram of the regrets R_T for all policies."""
         N = self.nbPolicies
         if N == 1:
             subplots = False  # no need for a subplot
         colors = palette(N)
         if subplots:
-            # Use a subplots of the good size
-            nrows = int(np.ceil(np.sqrt(N)))
-            ncols = N // nrows
-            if N > nrows * ncols:
-                ncols += 1
-            nrows, ncols = max(nrows, ncols), min(nrows, ncols)
+            nrows, ncols = nrows_ncols(N)
             fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
             fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId)
-                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins)
+                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 # Add only once the ylabel, xlabel, in the middle

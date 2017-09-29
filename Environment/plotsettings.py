@@ -16,6 +16,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
+import numpy as np
 import seaborn as sns
 
 # Customize here if you want a signature on the titles or xlabel, of each plot
@@ -230,6 +231,42 @@ def wraptext(text, width=WIDTH):
 def wraplatex(text, width=WIDTH):
     """ Wrap the text, for LaTeX, using ``textwrap`` module, and ``width``."""
     return '$\n$'.join(wrap(text, width=width))
+
+
+def nrows_ncols(N):
+    """Return (nrows, ncols) to create a subplots for N plots of the good size.
+
+    >>> for N in range(1, 22):
+    ...     nrows, ncols = nrows_ncols(N)
+    ...     print("For N = {:>2}, {} rows and {} cols are enough.".format(N, nrows, ncols))
+    For N =  1, 1 rows and 1 cols are enough.
+    For N =  2, 2 rows and 1 cols are enough.
+    For N =  3, 2 rows and 2 cols are enough.
+    For N =  4, 2 rows and 2 cols are enough.
+    For N =  5, 3 rows and 2 cols are enough.
+    For N =  6, 3 rows and 2 cols are enough.
+    For N =  7, 3 rows and 3 cols are enough.
+    For N =  8, 3 rows and 3 cols are enough.
+    For N =  9, 3 rows and 3 cols are enough.
+    For N = 10, 4 rows and 3 cols are enough.
+    For N = 11, 4 rows and 3 cols are enough.
+    For N = 12, 4 rows and 3 cols are enough.
+    For N = 13, 4 rows and 4 cols are enough.
+    For N = 14, 4 rows and 4 cols are enough.
+    For N = 15, 4 rows and 4 cols are enough.
+    For N = 16, 4 rows and 4 cols are enough.
+    For N = 17, 5 rows and 4 cols are enough.
+    For N = 18, 5 rows and 4 cols are enough.
+    For N = 19, 5 rows and 4 cols are enough.
+    For N = 20, 5 rows and 4 cols are enough.
+    For N = 21, 5 rows and 5 cols are enough.
+    """
+    nrows = int(np.ceil(np.sqrt(N)))
+    ncols = N // nrows
+    while N > nrows * ncols:
+        ncols += 1
+    nrows, ncols = max(nrows, ncols), min(nrows, ncols)
+    return nrows, ncols
 
 
 # --- Debugging
