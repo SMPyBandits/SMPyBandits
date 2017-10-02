@@ -44,7 +44,7 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
+# HORIZON = 20000h
 # HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
@@ -612,7 +612,7 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against TopBestM[UCB]
+    # # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against RandTopM[UCB]
     # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
     # Selfish(NB_PLAYERS, UCB, nbArms).children,
     # rhoRand(NB_PLAYERS, UCB, nbArms).children,
@@ -621,11 +621,11 @@ configuration["successive_players"] = [
     # # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
     # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # TopBestM(NB_PLAYERS, UCB, nbArms).children,
-    # TopBestMChair(NB_PLAYERS, UCB, nbArms).children,
+    # RandTopM(NB_PLAYERS, UCB, nbArms).children,
+    # RandTopMChair(NB_PLAYERS, UCB, nbArms).children,
 
-    # # --- 20) TODO Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against TopBestM[BayesUCB]
-    # # FIXME it is *failing* with TopBestM[BayesUCB]
+    # # --- 20) TODO Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against RandTopM[BayesUCB]
+    # # FIXME it is *failing* with RandTopM[BayesUCB]
     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -634,31 +634,31 @@ configuration["successive_players"] = [
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # TopBestM(NB_PLAYERS, BayesUCB, nbArms).children,
-    # TopBestMChair(NB_PLAYERS, BayesUCB, nbArms).children,
+    # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
+    # RandTopMChair(NB_PLAYERS, BayesUCB, nbArms).children,
 
-    # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against TopBestM[klUCB]
+    # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
     CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
     Selfish(NB_PLAYERS, UCB, nbArms).children,
     rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    TopBestM(NB_PLAYERS, UCB, nbArms).children,
-    TopBestMChair(NB_PLAYERS, UCB, nbArms).children,
+    RandTopM(NB_PLAYERS, UCB, nbArms).children,
+    RandTopMChair(NB_PLAYERS, UCB, nbArms).children,
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    TopBestM(NB_PLAYERS, klUCB, nbArms).children,
-    TopBestMChair(NB_PLAYERS, klUCB, nbArms).children,
+    RandTopM(NB_PLAYERS, klUCB, nbArms).children,
+    RandTopMChair(NB_PLAYERS, klUCB, nbArms).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
-    # TopBestM(NB_PLAYERS, BayesUCB, nbArms).children,
-    # TopBestMChair(NB_PLAYERS, BayesUCB, nbArms).children,
+    # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
+    # RandTopMChair(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
-    # TopBestM(NB_PLAYERS, Thompson, nbArms).children,
-    # TopBestMChair(NB_PLAYERS, Thompson, nbArms).children,
+    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
+    # RandTopMChair(NB_PLAYERS, Thompson, nbArms).children,
 
-    # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against TopBestM[Thompson]
+    # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
@@ -667,8 +667,8 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children,
     # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # TopBestM(NB_PLAYERS, Thompson, nbArms).children,
-    # TopBestMChair(NB_PLAYERS, Thompson, nbArms).children,
+    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
+    # RandTopMChair(NB_PLAYERS, Thompson, nbArms).children,
 ]
 
 

@@ -13,7 +13,7 @@
 
 - :class:`rhoRand`, :class:`ALOHA`: implementation of generic collision avoidance algorithms, relying on a single-player bandit policy (eg. :class:`UCB`, :class:`Thompson` etc). And variants, :class:`rhoRandRand`, :class:`rhoRandSticky`, :class:`rhoRandRotating`, :class:`rhoRandEst`, :class:`rhoLearn`, :class:`rhoLearnEst`, :class:`rhoLearnExp3`, :class:`rhoRandALOHA`,
 - :class:`rhoCentralized` is a semi-centralized version where orthogonal ranks 1..M are given to the players, instead of just giving them the value of M, but a decentralized learning policy is still used to learn the best arms.
-- :class:`TopBestM` is another approach, similar to :class:`rhoRandSticky` and :class:`MusicalChair`, but we hope it will be better, and we succeed in analyzing more easily.
+- :class:`RandTopM` is another approach, similar to :class:`rhoRandSticky` and :class:`MusicalChair`, but we hope it will be better, and we succeed in analyzing more easily.
 
 
 All policies have the same interface, as described in :class:`BaseMPPolicy` for decentralized policies,
@@ -69,7 +69,7 @@ from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!
 from .rhoCentralized import rhoCentralized  # New version, still experimental!
 
 
-from .TopBestM import TopBestM, TopBestMChair  # New versions, still experimental!
+from .RandTopM import RandTopM, RandTopMChair  # New versions, still experimental!
 
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" TopBestM: a proposal for an efficient multi-players learning policy.
+""" RandTopM: a proposal for an efficient multi-players learning policy.
 
 - Each child player is selfish, and plays according to an index policy (any index policy, e.g., UCB, Thompson, KL-UCB, BayesUCB etc),
 - But instead of aiming at the best (the 1-st best) arm, player i constantly aims at *one* of the M best arms, according to its index policy (where M is the number of players),
@@ -26,9 +26,9 @@ WITHCHAIR = False
 WITHCHAIR = True
 
 
-# --- Class oneTopBestM, for children
+# --- Class oneRandTopM, for children
 
-class oneTopBestM(ChildPointer):
+class oneRandTopM(ChildPointer):
     """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
     - Except for the handleCollision method: a new random rank is sampled after observing a collision,
@@ -36,7 +36,7 @@ class oneTopBestM(ChildPointer):
     """
 
     def __init__(self, maxRank, withChair, *args, **kwargs):
-        super(oneTopBestM, self).__init__(*args, **kwargs)
+        super(oneRandTopM, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different.
         self.chosen_arm = None  #: Current chosen arm.
         self._withChair = withChair  # Whether to use or not the variant with the "chair".
@@ -50,11 +50,11 @@ class oneTopBestM(ChildPointer):
         # # FIXME it messes up with the display of the titles...
         # str_Mbest = ""
         str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
-        return r"#{}<TopBestM{}[{}{}{}]>".format(self.playerId + 1, "Chair" if self._withChair else "", player, str_Mbest, str_chosen_arm)
+        return r"#{}<RandTopM{}[{}{}{}]>".format(self.playerId + 1, "Chair" if self._withChair else "", player, str_Mbest, str_chosen_arm)
 
     def startGame(self):
         """Start game."""
-        super(oneTopBestM, self).startGame()
+        super(oneRandTopM, self).startGame()
         self.t = 0
         self.sitted = False  # Start not sitted, of course!
         self.chosen_arm = None
@@ -67,33 +67,33 @@ class oneTopBestM(ChildPointer):
 
     def handleCollision(self, arm, reward=None):
         """ Get a new random arm from the current estimate of Mbest, and give reward to the algorithm if not None."""
-        # TopBestM UCB indexes learn on the SENSING, not on the successful transmissions!
+        # RandTopM UCB indexes learn on the SENSING, not on the successful transmissions!
         if reward is not None:
-            # print("Info: TopBestM UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
-            super(oneTopBestM, self).getReward(arm, reward)
+            # print("Info: RandTopM UCB internal indexes DOES get updated by reward, in case of collision, learning is done on SENSING, not successful transmissions!")  # DEBUG
+            super(oneRandTopM, self).getReward(arm, reward)
         if not (self._withChair and self.sitted):
             self.chosen_arm = rn.choice(self.Mbest)  # New random arm
-            # print(" - A oneTopBestM player {} saw a collision on arm {}, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, arm, self.chosen_arm, self.Mbest))  # DEBUG
+            # print(" - A oneRandTopM player {} saw a collision on arm {}, so she had to select a new random arm {} from her estimate of M-best = {} ...".format(self, arm, self.chosen_arm, self.Mbest))  # DEBUG
         # else:
-        #     print(" - A oneTopBestM player {} saw a collision on arm {}, but she ignores it as she plays with a chair and is now sitted ...".format(self, arm))  # DEBUG
+        #     print(" - A oneRandTopM player {} saw a collision on arm {}, but she ignores it as she plays with a chair and is now sitted ...".format(self, arm))  # DEBUG
 
     def getReward(self, arm, reward):
         """ Pass the call to self.mother._getReward_one(playerId, arm, reward) with the player's ID number. """
-        super(oneTopBestM, self).getReward(arm, reward)
+        super(oneRandTopM, self).getReward(arm, reward)
         if self.t >= self.nbArms:
             if self._withChair:
                 if not self.sitted:
-                    # print(" - A oneTopBestM player {} used this arm {} without any collision, so she is now sitted on this rank, and will not change in case of collision (but will change if the arm lies outside her estimate of M-best)...".format(self, self.chosen_arm))  # DEBUG
+                    # print(" - A oneRandTopM player {} used this arm {} without any collision, so she is now sitted on this rank, and will not change in case of collision (but will change if the arm lies outside her estimate of M-best)...".format(self, self.chosen_arm))  # DEBUG
                     self.sitted = True
                 # else:
-                #     print(" - A oneTopBestM player {} is already sitted on this arm {} ...".format(self, self.chosen_arm))  # DEBUG
+                #     print(" - A oneRandTopM player {} is already sitted on this arm {} ...".format(self, self.chosen_arm))  # DEBUG
             # else:
-            #     print(" - A oneTopBestM player {} is not playing with a chair, nothing to do ...".format(self)  # DEBUG
+            #     print(" - A oneRandTopM player {} is not playing with a chair, nothing to do ...".format(self)  # DEBUG
 
     def choice(self):
         """Use the chosen arm."""
         if self.t < self.nbArms:  # Force to sample each arm at least one
-            self.chosen_arm = super(oneTopBestM, self).choice()
+            self.chosen_arm = super(oneRandTopM, self).choice()
         else:  # But now, trust the estimated set Mbest
             current_Mbest = self.Mbest
             if self.chosen_arm not in current_Mbest:
@@ -101,19 +101,19 @@ class oneTopBestM(ChildPointer):
                     self.sitted = False
                 old_arm = self.chosen_arm
                 self.chosen_arm = rn.choice(current_Mbest)  # New random arm
-                # print("\n - A oneTopBestM player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
+                # print("\n - A oneRandTopM player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
         # Done
         self.t += 1
         # FIXME remove: this cost too much time!
-        # XXX It's also making TopBestM[Thompson] fail : its set Mbest is RANDOM
-        # assert self.chosen_arm in self.Mbest, "Error: at time t = {}, a oneTopBestM player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest)  # DEBUG
+        # XXX It's also making RandTopM[Thompson] fail : its set Mbest is RANDOM
+        # assert self.chosen_arm in self.Mbest, "Error: at time t = {}, a oneRandTopM player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest)  # DEBUG
         return self.chosen_arm
 
 
-# --- Class TopBestM
+# --- Class RandTopM
 
-class TopBestM(BaseMPPolicy):
-    """ TopBestM: a proposal for an efficient multi-players learning policy.
+class RandTopM(BaseMPPolicy):
+    """ RandTopM: a proposal for an efficient multi-players learning policy.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
@@ -123,18 +123,18 @@ class TopBestM(BaseMPPolicy):
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - maxRank: maximum rank allowed by the TopBestM child (default to nbPlayers, but for instance if there is 2 × TopBestM[UCB] + 2 × TopBestM[klUCB], maxRank should be 4 not 2).
+        - maxRank: maximum rank allowed by the RandTopM child (default to nbPlayers, but for instance if there is 2 × RandTopM[UCB] + 2 × RandTopM[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
 
-        >>> s = TopBestM(nbPlayers, Thompson, nbArms)
+        >>> s = RandTopM(nbPlayers, Thompson, nbArms)
 
         - To get a list of usable players, use ``s.children``.
 
         .. warning:: ``s._players`` is for internal use ONLY!
         """
-        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for TopBestM class has to be > 0."  # DEBUG
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for RandTopM class has to be > 0."  # DEBUG
         if maxRank is None:
             maxRank = nbPlayers
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
@@ -145,13 +145,13 @@ class TopBestM(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneTopBestM(maxRank, withChair, self, playerId)
+            self.children[playerId] = oneRandTopM(maxRank, withChair, self, playerId)
 
     def __str__(self):
-        return "TopBestM({} x {})".format(self.nbPlayers, str(self._players[0]))
+        return "RandTopM({} x {})".format(self.nbPlayers, str(self._players[0]))
 
-class TopBestMChair(TopBestM):
-    """ TopBestMChair: a proposal for an efficient multi-players learning policy.
+class RandTopMChair(RandTopM):
+    """ RandTopMChair: a proposal for an efficient multi-players learning policy.
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
@@ -161,19 +161,19 @@ class TopBestMChair(TopBestM):
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - maxRank: maximum rank allowed by the TopBestMChair child (default to nbPlayers, but for instance if there is 2 × TopBestMChair[UCB] + 2 × TopBestMChair[klUCB], maxRank should be 4 not 2).
+        - maxRank: maximum rank allowed by the RandTopMChair child (default to nbPlayers, but for instance if there is 2 × RandTopMChair[UCB] + 2 × RandTopMChair[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
 
-        >>> s = TopBestMChair(nbPlayers, Thompson, nbArms)
+        >>> s = RandTopMChair(nbPlayers, Thompson, nbArms)
 
         - To get a list of usable players, use ``s.children``.
 
         .. warning:: ``s._players`` is for internal use ONLY!
         """
-        super(TopBestMChair, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=withChair, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMChair, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=withChair, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
-        return "TopBestMChair({} x {})".format(self.nbPlayers, str(self._players[0]))
+        return "RandTopMChair({} x {})".format(self.nbPlayers, str(self._players[0]))
 

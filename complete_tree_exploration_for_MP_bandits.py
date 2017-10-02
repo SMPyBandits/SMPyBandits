@@ -16,7 +16,7 @@ Features:
 
 .. warning:: I still have to fix these issues:
 
-   - TODO : add the TopBestM algorithm.
+   - TODO : add the RandTopM algorithm.
    - TODO : right now, it is not so efficient, could it be improved? I don't think I can do anything in a smarter way, in pure Python.
 
 
@@ -283,10 +283,10 @@ default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
 # default_policy, default_update_memory = RhoRand_KLUCB_U, RandomNewRank
 
 
-# --- TopBestM, TopBestMChair variants
+# --- RandTopM, RandTopMChair variants
 
-def TopBestM_UCB_U(j, state, collision=False):
-    """TopBestM policy + UCB_0.5 index + U feedback."""
+def RandTopM_UCB_U(j, state, collision=False):
+    """RandTopM policy + UCB_0.5 index + U feedback."""
     chosen_arm = state.memories[j]
     indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
@@ -296,8 +296,8 @@ def TopBestM_UCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_UCB_Utilde(j, state, collision=False):
-    """TopBestM policy + UCB_0.5 index + Utilde feedback."""
+def RandTopM_UCB_Utilde(j, state, collision=False):
+    """RandTopM policy + UCB_0.5 index + Utilde feedback."""
     chosen_arm = state.memories[j]
     indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
@@ -307,8 +307,8 @@ def TopBestM_UCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_UCB_Ubar(j, state, collision=False):
-    """TopBestM policy + UCB_0.5 index + Ubar feedback."""
+def RandTopM_UCB_Ubar(j, state, collision=False):
+    """RandTopM policy + UCB_0.5 index + Ubar feedback."""
     chosen_arm = state.memories[j]
     indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
@@ -318,8 +318,8 @@ def TopBestM_UCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_KLUCB_U(j, state, collision=False):
-    """TopBestM policy + Bernoulli KL-UCB index + U feedback."""
+def RandTopM_KLUCB_U(j, state, collision=False):
+    """RandTopM policy + Bernoulli KL-UCB index + U feedback."""
     chosen_arm = state.memories[j]
     indexes = klucb(state.S[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
@@ -329,8 +329,8 @@ def TopBestM_KLUCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_KLUCB_Utilde(j, state, collision=False):
-    """TopBestM policy + Bernoulli KL-UCB index + Utilde feedback."""
+def RandTopM_KLUCB_Utilde(j, state, collision=False):
+    """RandTopM policy + Bernoulli KL-UCB index + Utilde feedback."""
     chosen_arm = state.memories[j]
     indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
@@ -340,8 +340,8 @@ def TopBestM_KLUCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_KLUCB_Ubar(j, state, collision=False):
-    """TopBestM policy + Bernoulli KL-UCB index + Ubar feedback."""
+def RandTopM_KLUCB_Ubar(j, state, collision=False):
+    """RandTopM policy + Bernoulli KL-UCB index + Ubar feedback."""
     chosen_arm = state.memories[j]
     indexes = klucb((state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]), c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
@@ -351,16 +351,16 @@ def TopBestM_KLUCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestM_RandomNewChosenArm(j, state, decision, collision):
-    """TopBestM chooses a new arm after a collision or if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
+def RandTopM_RandomNewChosenArm(j, state, decision, collision):
+    """RandTopM chooses a new arm after a collision or if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
     player = state.players[j]
     return player(j, state, collision=collision) if player.__defaults__ else player(j, state)
 
-# default_policy, default_update_memory = TopBestM_UCB_U, TopBestM_RandomNewChosenArm
+# default_policy, default_update_memory = RandTopM_UCB_U, RandTopM_RandomNewChosenArm
 
 
 
-# --- TopBestMChair variants
+# --- RandTopMChair variants
 
 def write_to_tuple(this_tuple, index, value):
     """Tuple cannot be written, this hack fixes that."""
@@ -368,8 +368,8 @@ def write_to_tuple(this_tuple, index, value):
     this_list[index] = value
     return tuple(this_list)
 
-def TopBestMChair_UCB_U(j, state, collision=False):
-    """TopBestMChair policy + UCB_0.5 index + U feedback."""
+def RandTopMChair_UCB_U(j, state, collision=False):
+    """RandTopMChair policy + UCB_0.5 index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -382,8 +382,8 @@ def TopBestMChair_UCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_UCB_Utilde(j, state, collision=False):
-    """TopBestMChair policy + UCB_0.5 index + Utilde feedback."""
+def RandTopMChair_UCB_Utilde(j, state, collision=False):
+    """RandTopMChair policy + UCB_0.5 index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -396,8 +396,8 @@ def TopBestMChair_UCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_UCB_Ubar(j, state, collision=False):
-    """TopBestMChair policy + UCB_0.5 index + Ubar feedback."""
+def RandTopMChair_UCB_Ubar(j, state, collision=False):
+    """RandTopMChair policy + UCB_0.5 index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -410,8 +410,8 @@ def TopBestMChair_UCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_KLUCB_U(j, state, collision=False):
-    """TopBestMChair policy + Bernoulli KL-UCB index + U feedback."""
+def RandTopMChair_KLUCB_U(j, state, collision=False):
+    """RandTopMChair policy + Bernoulli KL-UCB index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -424,8 +424,8 @@ def TopBestMChair_KLUCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_KLUCB_Utilde(j, state, collision=False):
-    """TopBestMChair policy + Bernoulli KL-UCB index + Utilde feedback."""
+def RandTopMChair_KLUCB_Utilde(j, state, collision=False):
+    """RandTopMChair policy + Bernoulli KL-UCB index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -438,8 +438,8 @@ def TopBestMChair_KLUCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_KLUCB_Ubar(j, state, collision=False):
-    """TopBestMChair policy + Bernoulli KL-UCB index + Ubar feedback."""
+def RandTopMChair_KLUCB_Ubar(j, state, collision=False):
+    """RandTopMChair policy + Bernoulli KL-UCB index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -452,8 +452,8 @@ def TopBestMChair_KLUCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def TopBestMChair_RandomNewChosenArm(j, state, decision, collision):
-    """TopBestMC chooses a new arm after if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
+def RandTopMChair_RandomNewChosenArm(j, state, decision, collision):
+    """RandTopMC chooses a new arm after if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
     player = state.players[j]
     chosen_arm, sitted = state.memories[j]
     if not sitted:
@@ -466,7 +466,7 @@ def TopBestMChair_RandomNewChosenArm(j, state, decision, collision):
         # sitted but the chair changed ==> not sitted
         return [(chosen_arm, chosen_arm == decision)]
 
-# default_policy, default_update_memory = TopBestMChair_UCB_U, TopBestMChair_RandomNewChosenArm
+# default_policy, default_update_memory = RandTopMChair_UCB_U, RandTopMChair_RandomNewChosenArm
 
 
 # --- Generate vector of formal means mu_1,...,mu_K
@@ -1144,13 +1144,13 @@ if __name__ == '__main__':
     all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
     all_update_memories = [RandomNewRank]
 
-    # --- XXX Test for TopBestM
-    all_players = [TopBestM_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [TopBestM_RandomNewChosenArm]
+    # --- XXX Test for RandTopM
+    all_players = [RandTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_update_memories = [RandTopM_RandomNewChosenArm]
 
-    # --- XXX Test for TopBestMC
-    all_players = [TopBestMChair_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [TopBestMChair_RandomNewChosenArm]
+    # --- XXX Test for RandTopMC
+    all_players = [RandTopMChair_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_update_memories = [RandTopMChair_RandomNewChosenArm]
 
     # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
