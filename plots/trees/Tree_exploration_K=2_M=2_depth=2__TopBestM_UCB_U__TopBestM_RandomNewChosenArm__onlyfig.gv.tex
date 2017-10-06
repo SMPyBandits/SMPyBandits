@@ -1,0 +1,71 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (1943.1bp,11.5bp) node {Tree exploration for K=2 arms and M=2 players using TopBestM UCB U and TopBestM RandomNewChosenArm, for depth=2 : 16 leafs, 0 absorbing};
+\end{scope}
+  \node (19) at (3529.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/1,0/1]] r=[0, 0]};
+  \node (20) at (3773.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/1,0/1]] r=[1, 1]};
+  \node (17) at (3041.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/1,0/1]] r=[0, 1]};
+  \node (10) at (1333.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/0,0/2]] r=[0, 1]};
+  \node (8) at (845.09bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [0/0,0/2]] r=[1, 1]};
+  \node (1) at (601.09bp,128.0bp) [draw,ellipse] {[[0/0,0/1], [0/0,0/1]] r=[1, 1]};
+  \node (14) at (2309.1bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [1/1,0/1]] r=[1, 0]};
+  \node (11) at (1577.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/0,1/2]] r=[0, 1]};
+  \node (9) at (1089.1bp,41.0bp) [draw,ellipse] {[[1/1,0/1], [0/0,1/2]] r=[0, 1]};
+  \node (7) at (601.09bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [0/0,0/2]] r=[0, 0]};
+  \node (3) at (2309.1bp,128.0bp) [draw,ellipse] {[[0/0,0/1], [0/0,0/1]] r=[1, 0]};
+  \node (0) at (1942.1bp,215.0bp) [draw=green,ellipse] {[[0/0,0/0], [0/0,0/0]] r=[1, 1]};
+  \node (6) at (357.09bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [0/0,0/2]] r=[1, 0]};
+  \node (5) at (113.09bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [0/0,0/2]] r=[0, 1]};
+  \node (4) at (3285.1bp,128.0bp) [draw,ellipse] {[[0/0,0/1], [0/0,0/1]] r=[0, 0]};
+  \node (18) at (3285.1bp,41.0bp) [draw,ellipse] {[[0/1,0/1], [0/1,0/1]] r=[1, 0]};
+  \node (15) at (2553.1bp,41.0bp) [draw,ellipse] {[[0/0,1/2], [0/1,0/1]] r=[1, 0]};
+  \node (12) at (1821.1bp,41.0bp) [draw,ellipse] {[[1/1,0/1], [0/0,0/2]] r=[0, 1]};
+  \node (13) at (2065.1bp,41.0bp) [draw,ellipse] {[[0/0,0/2], [0/1,0/1]] r=[1, 0]};
+  \node (2) at (1577.1bp,128.0bp) [draw,ellipse] {[[0/0,0/1], [0/0,0/1]] r=[0, 1]};
+  \node (16) at (2797.1bp,41.0bp) [draw,ellipse] {[[0/0,1/2], [1/1,0/1]] r=[1, 0]};
+  \draw [black,->] (1) ..controls (515.53bp,97.196bp) and (455.15bp,76.16bp)  .. (6);
+  \draw (509.59bp,84.5bp) node {$1/4$};
+  \draw [black,->] (1) ..controls (686.65bp,97.196bp) and (747.03bp,76.16bp)  .. (8);
+  \draw (753.59bp,84.5bp) node {$1/4$};
+  \draw [black,->] (1) ..controls (438.94bp,98.757bp) and (289.65bp,72.754bp)  .. (5);
+  \draw (402.59bp,84.5bp) node {$1/4$};
+  \draw [black,->] (4) ..controls (3199.5bp,97.196bp) and (3139.2bp,76.16bp)  .. (17);
+  \draw (3192.6bp,84.5bp) node {$1/4$};
+  \draw [black,->] (4) ..controls (3285.1bp,98.163bp) and (3285.1bp,82.548bp)  .. (18);
+  \draw (3300.6bp,84.5bp) node {$1/4$};
+  \draw [black,->] (3) ..controls (2396.1bp,107.4bp) and (2422.0bp,100.23bp)  .. (2445.1bp,92.0bp) .. controls (2467.9bp,83.848bp) and (2492.5bp,72.656bp)  .. (15);
+  \draw (2547.1bp,84.5bp) node {$\mu_{2}(1-\mu_{1})$};
+  \draw [black,->] (0) ..controls (1816.7bp,184.8bp) and (1715.6bp,161.24bp)  .. (2);
+  \draw (1797.6bp,171.5bp) node {$1/4$};
+  \draw [black,->] (4) ..controls (3370.6bp,97.196bp) and (3431.0bp,76.16bp)  .. (19);
+  \draw (3436.6bp,84.5bp) node {$1/4$};
+  \draw [black,->] (3) ..controls (2207.0bp,109.15bp) and (2178.3bp,101.75bp)  .. (2153.1bp,92.0bp) .. controls (2134.3bp,84.747bp) and (2114.7bp,73.977bp)  .. (13);
+  \draw (2229.1bp,84.5bp) node {$(1-\mu_{1})(1-\mu_{2})$};
+  \draw [black,->] (0) ..controls (2291.6bp,191.88bp) and (2915.1bp,152.42bp)  .. (4);
+  \draw (2708.6bp,171.5bp) node {$1/4$};
+  \draw [black,->] (2) ..controls (1664.1bp,107.4bp) and (1690.0bp,100.23bp)  .. (1713.1bp,92.0bp) .. controls (1735.9bp,83.848bp) and (1760.5bp,72.656bp)  .. (12);
+  \draw (1816.1bp,84.5bp) node {$\mu_{1}(1-\mu_{2})$};
+  \draw [black,->] (4) ..controls (3447.2bp,98.757bp) and (3596.5bp,72.754bp)  .. (20);
+  \draw (3573.6bp,84.5bp) node {$1/4$};
+  \draw [black,->] (3) ..controls (2309.1bp,98.163bp) and (2309.1bp,82.548bp)  .. (14);
+  \draw (2375.1bp,84.5bp) node {$\mu_{1}(1-\mu_{2})$};
+  \draw [black,->] (0) ..controls (2068.2bp,184.8bp) and (2169.9bp,161.24bp)  .. (3);
+  \draw (2163.6bp,171.5bp) node {$1/4$};
+  \draw [black,->] (2) ..controls (1577.1bp,98.163bp) and (1577.1bp,82.548bp)  .. (11);
+  \draw (1643.1bp,84.5bp) node {$\mu_{2}(1-\mu_{1})$};
+  \draw [black,->] (2) ..controls (1475.0bp,109.15bp) and (1446.3bp,101.75bp)  .. (1421.1bp,92.0bp) .. controls (1402.3bp,84.747bp) and (1382.7bp,73.977bp)  .. (10);
+  \draw (1497.1bp,84.5bp) node {$(1-\mu_{1})(1-\mu_{2})$};
+  \draw [black,->] (3) ..controls (2470.1bp,114.17bp) and (2548.4bp,105.35bp)  .. (2617.1bp,92.0bp) .. controls (2658.7bp,83.908bp) and (2704.7bp,71.045bp)  .. (16);
+  \draw (2733.1bp,84.5bp) node {$\mu_{1}\mu_{2}$};
+  \draw [black,->] (1) ..controls (601.09bp,98.163bp) and (601.09bp,82.548bp)  .. (7);
+  \draw (616.59bp,84.5bp) node {$1/4$};
+  \draw [black,->] (0) ..controls (1592.6bp,191.85bp) and (970.33bp,152.4bp)  .. (1);
+  \draw (1367.6bp,171.5bp) node {$1/4$};
+  \draw [black,->] (2) ..controls (1419.0bp,113.68bp) and (1342.4bp,104.87bp)  .. (1275.1bp,92.0bp) .. controls (1232.0bp,83.76bp) and (1184.2bp,70.838bp)  .. (9);
+  \draw (1331.1bp,84.5bp) node {$\mu_{1}\mu_{2}$};
+%
+\end{tikzpicture}

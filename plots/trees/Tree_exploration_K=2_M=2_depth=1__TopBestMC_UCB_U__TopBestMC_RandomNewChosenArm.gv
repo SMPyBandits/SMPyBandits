@@ -1,0 +1,25 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=2 arms and M=2 players using TopBestMC UCB U and TopBestMC RandomNewChosenArm, for depth=1 : 10 leafs, 0 absorbing"
+	0 [label="[[0/0,0/0], [0/0,0/0]] r=[(-1, False), (-1, False)]" color=green]
+	0 -> 1 [label=0.0625 color=black]
+	0 -> 2 [label=0.0625 color=black]
+	0 -> 3 [label=0.25 color=black]
+	0 -> 4 [label=0.0625 color=black]
+	0 -> 5 [label=0.0625 color=black]
+	0 -> 6 [label=0.0625 color=black]
+	0 -> 7 [label=0.0625 color=black]
+	0 -> 8 [label=0.0625 color=black]
+	0 -> 9 [label=0.25 color=black]
+	0 -> 10 [label=0.0625 color=black]
+	1 [label="[[0/1,0/0], [0/1,0/0]] r=[(1, False), (1, False)]"]
+	2 [label="[[0/0,0/1], [0/0,0/1]] r=[(0, False), (0, False)]"]
+	3 [label="[[0/0,1/1], [0/1,0/0]] r=[(1, True), (0, True)]"]
+	4 [label="[[0/1,0/0], [0/1,0/0]] r=[(0, False), (1, False)]"]
+	5 [label="[[0/1,0/0], [0/1,0/0]] r=[(1, False), (0, False)]"]
+	6 [label="[[0/0,0/1], [0/0,0/1]] r=[(1, False), (1, False)]"]
+	7 [label="[[0/1,0/0], [0/1,0/0]] r=[(0, False), (0, False)]"]
+	8 [label="[[0/0,0/1], [0/0,0/1]] r=[(1, False), (0, False)]"]
+	9 [label="[[0/1,0/0], [0/0,1/1]] r=[(0, True), (1, True)]"]
+	10 [label="[[0/0,0/1], [0/0,0/1]] r=[(0, False), (1, False)]"]
+}

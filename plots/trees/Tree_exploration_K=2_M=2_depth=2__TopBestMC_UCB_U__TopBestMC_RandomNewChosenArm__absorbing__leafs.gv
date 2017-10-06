@@ -1,0 +1,5 @@
+digraph {
+	overlap=false
+	label="Tree exploration for K=2 arms and M=2 players using TopBestMC UCB U and TopBestMC RandomNewChosenArm, for depth=2 : 188 leafs, 0 absorbing"
+	0 [label="[[0/0,0/0], [0/0,0/0]] r=[(-1, False), (-1, False)]" color=green]
+}
