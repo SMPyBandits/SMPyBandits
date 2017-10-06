@@ -655,14 +655,29 @@ class EvaluatorMultiPlayers(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, savefig=None, evaluators=()):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, evaluators=()):
         """Plot histogram of the regrets R_T for all evaluators."""
         if len(evaluators) == 0:  # no need for a subplot
             subplots = False
         evaluators = [self] + list(evaluators)  # Default to only [self]
         N = len(evaluators)
         colors = palette(N)
-        if subplots:
+        if all_on_separate_figures:
+            figs = []
+            if savefig is not None:
+                savefig_ext = savefig.split('.')
+                base, ext = '.'.join(savefig_ext[:-1]), savefig_ext[-1]
+            for evaId, eva in enumerate(evaluators):
+                fig = plt.figure()
+                plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+                plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                plt.hist(eva.getLastRegrets(envId=envId), normed=normed, color=colors[evaId], bins=bins)
+                legend()
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(base, 1 + evaId, 1 + N, ext))
+                figs.append(fig)
+            return figs
+        elif subplots:
             nrows, ncols = nrows_ncols(N)
             fig, axes = plt.subplots(nrows, ncols, sharex=False, sharey=False)  # FIXME
             fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
