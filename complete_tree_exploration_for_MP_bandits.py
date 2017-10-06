@@ -283,7 +283,7 @@ default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
 # default_policy, default_update_memory = RhoRand_KLUCB_U, RandomNewRank
 
 
-# --- RandTopM, RandTopMChair variants
+# --- RandTopM, MCTopM variants
 
 def RandTopM_UCB_U(j, state, collision=False):
     """RandTopM policy + UCB_0.5 index + U feedback."""
@@ -360,7 +360,7 @@ def RandTopM_RandomNewChosenArm(j, state, decision, collision):
 
 
 
-# --- RandTopMChair variants
+# --- MCTopM variants
 
 def write_to_tuple(this_tuple, index, value):
     """Tuple cannot be written, this hack fixes that."""
@@ -368,8 +368,8 @@ def write_to_tuple(this_tuple, index, value):
     this_list[index] = value
     return tuple(this_list)
 
-def RandTopMChair_UCB_U(j, state, collision=False):
-    """RandTopMChair policy + UCB_0.5 index + U feedback."""
+def MCTopM_UCB_U(j, state, collision=False):
+    """MCTopM policy + UCB_0.5 index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -382,8 +382,8 @@ def RandTopMChair_UCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_UCB_Utilde(j, state, collision=False):
-    """RandTopMChair policy + UCB_0.5 index + Utilde feedback."""
+def MCTopM_UCB_Utilde(j, state, collision=False):
+    """MCTopM policy + UCB_0.5 index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -396,8 +396,8 @@ def RandTopMChair_UCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_UCB_Ubar(j, state, collision=False):
-    """RandTopMChair policy + UCB_0.5 index + Ubar feedback."""
+def MCTopM_UCB_Ubar(j, state, collision=False):
+    """MCTopM policy + UCB_0.5 index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -410,8 +410,8 @@ def RandTopMChair_UCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_KLUCB_U(j, state, collision=False):
-    """RandTopMChair policy + Bernoulli KL-UCB index + U feedback."""
+def MCTopM_KLUCB_U(j, state, collision=False):
+    """MCTopM policy + Bernoulli KL-UCB index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -424,8 +424,8 @@ def RandTopMChair_KLUCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_KLUCB_Utilde(j, state, collision=False):
-    """RandTopMChair policy + Bernoulli KL-UCB index + Utilde feedback."""
+def MCTopM_KLUCB_Utilde(j, state, collision=False):
+    """MCTopM policy + Bernoulli KL-UCB index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -438,8 +438,8 @@ def RandTopMChair_KLUCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_KLUCB_Ubar(j, state, collision=False):
-    """RandTopMChair policy + Bernoulli KL-UCB index + Ubar feedback."""
+def MCTopM_KLUCB_Ubar(j, state, collision=False):
+    """MCTopM policy + Bernoulli KL-UCB index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
         state.memories = write_to_tuple(state.memories, j, (-1, False))
     assert isinstance(state.memories[j], tuple)
@@ -452,7 +452,7 @@ def RandTopMChair_KLUCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
-def RandTopMChair_RandomNewChosenArm(j, state, decision, collision):
+def MCTopM_RandomNewChosenArm(j, state, decision, collision):
     """RandTopMC chooses a new arm after if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
     player = state.players[j]
     chosen_arm, sitted = state.memories[j]
@@ -466,7 +466,7 @@ def RandTopMChair_RandomNewChosenArm(j, state, decision, collision):
         # sitted but the chair changed ==> not sitted
         return [(chosen_arm, chosen_arm == decision)]
 
-# default_policy, default_update_memory = RandTopMChair_UCB_U, RandTopMChair_RandomNewChosenArm
+# default_policy, default_update_memory = MCTopM_UCB_U, MCTopM_RandomNewChosenArm
 
 
 # --- Generate vector of formal means mu_1,...,mu_K
@@ -1149,8 +1149,8 @@ if __name__ == '__main__':
     all_update_memories = [RandTopM_RandomNewChosenArm]
 
     # --- XXX Test for RandTopMC
-    all_players = [RandTopMChair_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [RandTopMChair_RandomNewChosenArm]
+    all_players = [MCTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
+    all_update_memories = [MCTopM_RandomNewChosenArm]
 
     # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
