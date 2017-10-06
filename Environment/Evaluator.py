@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 # Local imports, tools and config
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 # Local imports, objects and functions
 from .MAB import MAB, MarkovianMAB, DynamicMAB
@@ -454,13 +454,28 @@ class Evaluator(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, savefig=None):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None):
         """Plot histogram of the regrets R_T for all policies."""
         N = self.nbPolicies
         if N == 1:
             subplots = False  # no need for a subplot
         colors = palette(N)
-        if subplots:
+        if all_on_separate_figures:
+            figs = []
+            if savefig is not None:
+                savefig_ext = savefig.split('.')
+                base, ext = '.'.join(savefig_ext[:-1]), savefig_ext[-1]
+            for policyId, policy in enumerate(self.policies):
+                fig = plt.figure()
+                plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(str(policy), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+                plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                plt.hist(self.getLastRegrets(policyId, envId=envId), normed=normed, color=colors[policyId], bins=bins)
+                legend()
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(base, 1 + policyId, 1 + N, ext))
+                figs.append(fig)
+            return figs
+        elif subplots:
             nrows, ncols = nrows_ncols(N)
             fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
             fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
