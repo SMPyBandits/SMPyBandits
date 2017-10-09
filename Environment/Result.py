@@ -14,9 +14,9 @@ class Result(object):
     def __init__(self, nbArms, horizon, indexes_bestarm=-1):
         """ Create ResultMultiPlayers."""
         # self.delta_t_save = delta_t_save  #: Sample rate for saving
-        self.choices = np.zeros(horizon, dtype=int)  #: Store all the choices of all the players
-        self.rewards = np.zeros(horizon)  #: Store all the rewards of all the players, to compute the mean
-        self.pulls = np.zeros(nbArms, dtype=int)  #: Store the pulls of all the players
+        self.choices = np.zeros(horizon, dtype=int)  #: Store all the choices
+        self.rewards = np.zeros(horizon)  #: Store all the rewards, to compute the mean
+        self.pulls = np.zeros(nbArms, dtype=int)  #: Store the pulls
         indexes_bestarm = np.asarray(indexes_bestarm)
         if np.size(indexes_bestarm) == 1:
             indexes_bestarm = np.asarray([indexes_bestarm])
