@@ -413,7 +413,7 @@ if __name__ == '__main__':
             print("  and saving the plot to {} ...".format(savefig))
             savefig = mainfig.replace('all', 'all_HistogramsRegret')
             e0.plotLastRegrets(envId, savefig=savefig, evaluators=eothers)
-            print("\n - Plotting the histograms of regrets for each algorithm separately, and saving the plots to {} ...".format(savefig))
+            print("\n - Plotting the histograms of regrets for each algorithm separately, and saving the plots...")
             e0.plotLastRegrets(envId, all_on_separate_figures=True, savefig=savefig, evaluators=eothers)  # XXX To save the figure
         else:
             if eothers: e0.plotLastRegrets(envId, subplots=False, evaluators=eothers)  # XXX To plot without saving

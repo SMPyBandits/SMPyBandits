@@ -664,9 +664,6 @@ class EvaluatorMultiPlayers(object):
         colors = palette(N)
         if all_on_separate_figures:
             figs = []
-            if savefig is not None:
-                savefig_ext = savefig.split('.')
-                base, ext = '.'.join(savefig_ext[:-1]), savefig_ext[-1]
             for evaId, eva in enumerate(evaluators):
                 fig = plt.figure()
                 plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -674,7 +671,7 @@ class EvaluatorMultiPlayers(object):
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 plt.hist(eva.getLastRegrets(envId=envId), normed=normed, color=colors[evaId], bins=bins)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(base, 1 + evaId, 1 + N, ext))
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(savefig, 1 + evaId, 1 + N))
                 figs.append(fig)
             return figs
         elif subplots:
