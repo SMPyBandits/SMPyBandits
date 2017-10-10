@@ -31,6 +31,10 @@ REPETITIONS = 1  #: Default nb of repetitions
 DELTA_T_SAVE = 1  #: Default sampling rate for saving
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 COUNT_RANKS_MARKOV_CHAIN = False  #: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
+MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+FINAL_RANKS_ON_AVERAGE = True
+USE_JOBLIB_FOR_POLICIES = False
 
 
 # --- Class EvaluatorMultiPlayers
@@ -39,7 +43,8 @@ class EvaluatorMultiPlayers(object):
     """ Evaluator class to run the simulations, for the multi-players case.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration,
+                 moreAccurate=MORE_ACCURATE):
         # Configuration
         self.cfg = configuration  #: Configuration dictionnary
         # Attributes
@@ -60,7 +65,8 @@ class EvaluatorMultiPlayers(object):
         print("Using collision model {} (function {}).\nMore details:\n{}".format(self.collisionModel.__name__, self.collisionModel, self.collisionModel.__doc__))
         self.signature = signature
         # Flags
-        self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', True)  #: Final display of ranks are done on average rewards?
+        self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+        self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', FINAL_RANKS_ON_AVERAGE)  #: Final display of ranks are done on average rewards?
         self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
@@ -72,9 +78,11 @@ class EvaluatorMultiPlayers(object):
         # Internal vectorial memory
         self.rewards = dict()  #: For each env, history of rewards
         # self.rewardsSquared = dict()
+        self.choices = dict()  #: For each env, keep the history of all arm pulls for each repetitions
         self.pulls = dict()  #: For each env, keep the history of best arm pulls
         self.allPulls = dict()  #: For each env, keep the full history of best arm pulls
         self.collisions = dict()  #: For each env, keep the history of collisions on all arms
+        self.last_cum_collisions = dict()  #: For each env, last count of collisions on all arms
         self.NbSwitchs = dict()  #: For each env, keep the history of switches (change of configuration of players)
         self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.FreeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
@@ -84,9 +92,11 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.duration))
             self.last_cum_rewards[envId] = np.zeros(self.repetitions)
+            self.choices[envId] = np.zeros((self.nbPlayers, self.duration, self.repetitions))
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
             self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.duration))
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.duration))
+            self.last_cum_collisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions))
             self.NbSwitchs[envId] = np.zeros((self.nbPlayers, self.duration))
             self.BestArmPulls[envId] = np.zeros((self.nbPlayers, self.duration))
             self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
@@ -150,8 +160,10 @@ class EvaluatorMultiPlayers(object):
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
             self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards)
             self.pulls[envId] += r.pulls
+            self.choices[envId][:, :, repeatId] = r.choices
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions
+            self.last_cum_collisions[envId][:, repeatId] = np.sum(r.collisions, axis=1)
             for playerId in range(self.nbPlayers):
                 self.NbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
                 self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
@@ -215,8 +227,8 @@ class EvaluatorMultiPlayers(object):
         """
         return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
-    def getCentralizedRegret(self, envId=0):
-        """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players."""
+    def getCentralizedRegret_LessAccurate(self, envId=0):
+        """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players, based on accumulated rewards."""
         meansArms = np.sort(self.envs[envId].means)
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
@@ -231,8 +243,21 @@ class EvaluatorMultiPlayers(object):
         actualRewards = sum(self.getRewards(playerId, envId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
 
-    def getLastRegrets(self, envId=0):
-        """Extract last regrets."""
+    def getCentralizedRegret_MoreAccurate(self, envId=0):
+        """Compute the empirical centralized regret, based on counts of selections and not actual rewards."""
+        return self.getFirstRegretTerm(envId=envId) + self.getSecondRegretTerm(envId=envId) + self.getThirdRegretTerm(envId=envId)
+
+    def getCentralizedRegret(self, envId=0, moreAccurate=None):
+        """Using either the more accurate or the less accurate regret count."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
+        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        if moreAccurate:
+            return self.getCentralizedRegret_MoreAccurate(envId=envId)
+        else:
+            return self.getCentralizedRegret_LessAccurate(envId=envId)
+
+    def getLastRegrets_LessAccurate(self, envId=0):
+        """Extract last regrets, based on accumulated rewards."""
         meansArms = np.sort(self.envs[envId].means)
         meansBestArms = meansArms[-self.nbPlayers:]
         sumBestMeans = np.sum(meansBestArms)
@@ -243,6 +268,38 @@ class EvaluatorMultiPlayers(object):
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
         return self.horizon * sumBestMeans - self.last_cum_rewards[envId]
+
+    def getAllLastWeightedSelections(self, envId=0):
+        """Extract weighted count of selections."""
+        all_last_weighted_selections = np.zeros(self.repetitions)
+        last_cum_collisions = self.last_cum_collisions[envId]
+        for armId, mean in enumerate(self.envs[envId].means):
+            all_last_selections = np.sum(self.choices[envId][:, :, :] == armId, axis=1)  # sum on horizon
+            last_selections = np.sum(all_last_selections, axis=0)  # sum on players
+            all_last_weighted_selections += mean * (last_selections - last_cum_collisions[armId, :])
+        return all_last_weighted_selections
+
+    def getLastRegrets_MoreAccurate(self, envId=0):
+        """Extract last regrets, based on counts of selections and not actual rewards."""
+        meansArms = np.sort(self.envs[envId].means)
+        meansBestArms = meansArms[-self.nbPlayers:]
+        sumBestMeans = np.sum(meansBestArms)
+        # FIXED how to count it when there is more players than arms ?
+        # FIXME it depends on the collision model !
+        if self.envs[envId].nbArms < self.nbPlayers:
+            # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
+            worseArm = np.min(meansArms)
+            sumBestMeans -= worseArm  # This count the collisions
+        return self.horizon * self.envs[envId].maxArm - self.getAllLastWeightedSelections(envId=envId)
+
+    def getLastRegrets(self, envId=0, moreAccurate=None):
+        """Using either the more accurate or the less accurate regret count."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
+        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        if moreAccurate:
+            return self.getLastRegrets_MoreAccurate(envId=envId)
+        else:
+            return self.getLastRegrets_LessAccurate(envId=envId)
 
     # --- Three terms in the regret
 
@@ -344,7 +401,7 @@ class EvaluatorMultiPlayers(object):
 
     def plotRegretCentralized(self, envId=0, savefig=None,
                               semilogx=False, semilogy=False, loglog=False,
-                              normalized=False, evaluators=(), subTerms=False):
+                              normalized=False, evaluators=(), subTerms=False, moreAccurate=None):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments).
 
         - The lower bounds are also plotted (Besson & Kaufmann, and Anandkumar et al).
@@ -369,7 +426,7 @@ class EvaluatorMultiPlayers(object):
                 labels[1] = " 2nd term: Non-pulls of {} optimal arms".format(self.nbPlayers)
                 Ys[2] = eva.getThirdRegretTerm(envId)
                 labels[2] = " 3rd term: Weighted count of collisions"
-            Y = eva.getCentralizedRegret(envId)
+            Y = eva.getCentralizedRegret(envId, moreAccurate=moreAccurate)
             label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
             if semilogx or loglog:  # FIXED for semilogx plots, truncate to only show t >= 100
                 X, Y = X0[X0 >= 100], Y[X0 >= 100]
@@ -641,12 +698,12 @@ class EvaluatorMultiPlayers(object):
             print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
-    def printLastRegrets(self, envId=0, evaluators=()):
+    def printLastRegrets(self, envId=0, evaluators=(), moreAccurate=None):
         """Print the last regrets of the different evaluators."""
         evaluators = [self] + list(evaluators)  # Default to only [self]
         for evaId, eva in enumerate(evaluators):
             print("\nFor evaluator #{}/{} : {} ...".format(1 + evaId, len(evaluators), evaluators))
-            last_regrets = eva.getLastRegrets(envId=envId)
+            last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
             print("  Last regrets vector (for all repetitions) is:")
             print("Shape of  last regrets R_T =", np.shape(last_regrets))
             print("Min of    last regrets R_T =", np.min(last_regrets))
@@ -655,7 +712,7 @@ class EvaluatorMultiPlayers(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, evaluators=()):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, evaluators=(), moreAccurate=None):
         """Plot histogram of the regrets R_T for all evaluators."""
         if len(evaluators) == 0:  # no need for a subplot
             subplots = False
@@ -669,9 +726,9 @@ class EvaluatorMultiPlayers(object):
                 plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                plt.hist(eva.getLastRegrets(envId=envId), normed=normed, color=colors[evaId], bins=bins)
+                plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(savefig, 1 + evaId, 1 + N))
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N))
                 figs.append(fig)
             return figs
         elif subplots:
@@ -681,7 +738,7 @@ class EvaluatorMultiPlayers(object):
             for evaId, eva in enumerate(evaluators):
                 i, j = evaId % nrows, evaId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
-                last_regrets = eva.getLastRegrets(envId=envId)
+                last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
@@ -698,7 +755,7 @@ class EvaluatorMultiPlayers(object):
             all_last_regrets = []
             labels = []
             for evaId, eva in enumerate(evaluators):
-                all_last_regrets.append(eva.getLastRegrets(envId=envId))
+                all_last_regrets.append(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate))
                 labels.append(eva.strPlayers(short=True))
             plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
             legend()
