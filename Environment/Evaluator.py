@@ -39,14 +39,19 @@ STORE_ALL_REWARDS = True       #: Store all rewards?
 STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
+MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+FINAL_RANKS_ON_AVERAGE = True
+USE_JOBLIB_FOR_POLICIES = False
 
 
 class Evaluator(object):
     """ Evaluator class to run the simulations."""
 
     def __init__(self, configuration,
-                 finalRanksOnAverage=True, averageOn=5e-3,
-                 useJoblibForPolicies=False):
+                 finalRanksOnAverage=FINAL_RANKS_ON_AVERAGE, averageOn=5e-3,
+                 useJoblibForPolicies=USE_JOBLIB_FOR_POLICIES,
+                 moreAccurate=MORE_ACCURATE):
         self.cfg = configuration  #: Configuration dictionnary
         # Attributes
         self.nbPolicies = len(self.cfg['policies'])  #: Number of policies
@@ -72,6 +77,7 @@ class Evaluator(object):
             elif self.random_invert:
                 self.signature = (r", $\Upsilon={}$ arms inversion".format(self.nb_random_events - 1)) + self.signature
         # Flags
+        self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
         self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
         self.averageOn = averageOn  #: How many last steps for final rank average rewards
         self.useJoblibForPolicies = useJoblibForPolicies  #: Use joblib to parallelize for loop on policies (useless)
@@ -95,9 +101,11 @@ class Evaluator(object):
         if STORE_ALL_REWARDS:
             self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
 
+        self.choices = dict()  #: For each env, keep the history of all arm pulls for each repetitions
         self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
-        self.pulls = dict()  #: For each env, keep the history of best arm pulls
+        self.pulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         for env in range(len(self.envs)):
+            self.choices[env] = np.zeros((self.nbPolicies, self.duration, self.repetitions))
             self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
         print("Number of environments to try:", len(self.envs))
@@ -176,6 +184,7 @@ class Evaluator(object):
             if hasattr(self, 'maxCumRewards'):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
+            self.choices[envId][policyId, :, repeatId] = r.choices
             self.pulls[envId][policyId, :] += r.pulls
 
         # Start for all policies
@@ -266,18 +275,60 @@ class Evaluator(object):
         """Extract mean rewards."""
         return self.rewards[policyId, envId, :] / float(self.repetitions)
 
+    def getAverageWeightedSelections(self, policyId, envId=0):
+        """Extract weighted count of selections."""
+        weighted_selections = np.zeros(self.horizon)
+        for armId, mean in enumerate(self.envs[envId].means):
+            mean_selections = np.mean(self.choices[envId][policyId, :, :] == armId, axis=1)  # mean on repetitions
+            weighted_selections += mean * mean_selections
+        return weighted_selections
+
     def getMaxRewards(self, envId=0):
         """Extract max mean rewards."""
         return np.max(self.rewards[:, envId, :] / float(self.repetitions))
 
-    def getCumulatedRegret(self, policyId, envId=0):
-        """Compute cumulative regret."""
+    def getCumulatedRegret_LessAccurate(self, policyId, envId=0):
+        """Compute cumulative regret, based on accumulated rewards."""
         # return self.times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
         return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
 
-    def getLastRegrets(self, policyId, envId=0):
-        """Extract last regrets."""
+    def getCumulatedRegret_MoreAccurate(self, policyId, envId=0):
+        """Compute cumulative regret, based on counts of selections and not actual rewards."""
+        return np.cumsum(self.envs[envId].maxArm - self.getAverageWeightedSelections(policyId, envId))
+
+    def getCumulatedRegret(self, policyId, envId=0, moreAccurate=None):
+        """Using either the more accurate or the less accurate regret count."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
+        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        if moreAccurate:
+            return self.getCumulatedRegret_MoreAccurate(policyId, envId=envId)
+        else:
+            return self.getCumulatedRegret_LessAccurate(policyId, envId=envId)
+
+    def getLastRegrets_LessAccurate(self, policyId, envId=0):
+        """Extract last regrets, based on accumulated rewards."""
         return self.horizon * self.envs[envId].maxArm - self.last_cum_rewards[policyId, envId, :]
+
+    def getAllLastWeightedSelections(self, policyId, envId=0):
+        """Extract weighted count of selections."""
+        all_last_weighted_selections = np.zeros(self.repetitions)
+        for armId, mean in enumerate(self.envs[envId].means):
+            last_selections = np.sum(self.choices[envId][policyId, :, :] == armId, axis=0)  # sum on horizon
+            all_last_weighted_selections += mean * last_selections
+        return all_last_weighted_selections
+
+    def getLastRegrets_MoreAccurate(self, policyId, envId=0):
+        """Extract last regrets, based on counts of selections and not actual rewards."""
+        return self.horizon * self.envs[envId].maxArm - self.getAllLastWeightedSelections(policyId, envId=envId)
+
+    def getLastRegrets(self, policyId, envId=0, moreAccurate=None):
+        """Using either the more accurate or the less accurate regret count."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
+        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        if moreAccurate:
+            return self.getLastRegrets_MoreAccurate(policyId, envId=envId)
+        else:
+            return self.getLastRegrets_LessAccurate(policyId, envId=envId)
 
     def getAverageRewards(self, policyId, envId=0):
         """Extract mean rewards (not `rewards` but `cumsum(rewards)/cumsum(1)`."""
@@ -323,6 +374,7 @@ class Evaluator(object):
                     plotSTD=False, plotMaxMin=False,
                     semilogx=False, semilogy=False, loglog=False,
                     normalizedRegret=False, drawUpperBound=False,
+                    moreAccurate=None
                     ):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
         fig = plt.figure()
@@ -337,7 +389,7 @@ class Evaluator(object):
             if meanRegret:
                 Y = self.getAverageRewards(i, envId)
             else:
-                Y = self.getCumulatedRegret(i, envId)
+                Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
@@ -422,14 +474,14 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig)
         return fig
 
-    def printFinalRanking(self, envId=0):
+    def printFinalRanking(self, envId=0, moreAccurate=None):
         """Print the final ranking of the different policies."""
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
         print("\nFinal ranking for this environment #{} :".format(envId))
         nbPolicies = self.nbPolicies
         lastY = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
-            Y = self.getCumulatedRegret(i, envId)
+            Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
             if self.finalRanksOnAverage:
                 lastY[i] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last 0.5% of the iterations
             else:
@@ -441,11 +493,11 @@ class Evaluator(object):
             print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
 
-    def printLastRegrets(self, envId=0):
+    def printLastRegrets(self, envId=0, moreAccurate=None):
         """Print the last regrets of the different policies."""
         for policyId, policy in enumerate(self.policies):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
-            last_regrets = self.getLastRegrets(policyId, envId=envId)
+            last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
             print("  Last regrets vector (for all repetitions) is:")
             print("Shape of  last regrets R_T =", np.shape(last_regrets))
             print("Min of    last regrets R_T =", np.min(last_regrets))
@@ -454,7 +506,7 @@ class Evaluator(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None):
+    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, moreAccurate=None):
         """Plot histogram of the regrets R_T for all policies."""
         N = self.nbPolicies
         if N == 1:
@@ -462,17 +514,14 @@ class Evaluator(object):
         colors = palette(N)
         if all_on_separate_figures:
             figs = []
-            if savefig is not None:
-                savefig_ext = savefig.split('.')
-                base, ext = '.'.join(savefig_ext[:-1]), savefig_ext[-1]
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(str(policy), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                plt.hist(self.getLastRegrets(policyId, envId=envId), normed=normed, color=colors[policyId], bins=bins)
+                plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=bins)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}.{}".format(base, 1 + policyId, 1 + N, ext))
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N))
                 figs.append(fig)
             return figs
         elif subplots:
@@ -482,7 +531,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
-                last_regrets = self.getLastRegrets(policyId, envId=envId)
+                last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
@@ -499,7 +548,7 @@ class Evaluator(object):
             all_last_regrets = []
             labels = []
             for policyId, policy in enumerate(self.policies):
-                all_last_regrets.append(self.getLastRegrets(policyId, envId=envId))
+                all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(str(policy))
             plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
             legend()
