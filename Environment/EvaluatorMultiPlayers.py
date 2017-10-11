@@ -155,15 +155,15 @@ class EvaluatorMultiPlayers(object):
 
         def store(r, repeatId):
             """Store the result of the experiment r."""
-            self.rewards[envId] += np.cumsum(r.rewards, axis=1)
-            # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)
-            # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)
-            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards)
+            self.rewards[envId] += np.cumsum(r.rewards, axis=1)  # cumsum on time
+            # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)  # cumsum on time
+            # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)  # cumsum on time
+            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards)  # sum on time and sum on policies
             self.pulls[envId] += r.pulls
             self.choices[envId][:, :, repeatId] = r.choices
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions
-            self.last_cum_collisions[envId][:, repeatId] = np.sum(r.collisions, axis=1)
+            self.last_cum_collisions[envId][:, repeatId] = np.sum(r.collisions, axis=1)  # sum on time
             for playerId in range(self.nbPlayers):
                 self.NbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
                 self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
@@ -250,7 +250,7 @@ class EvaluatorMultiPlayers(object):
     def getCentralizedRegret(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        # print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getCentralizedRegret_MoreAccurate(envId=envId)
         else:
@@ -276,6 +276,7 @@ class EvaluatorMultiPlayers(object):
         for armId, mean in enumerate(self.envs[envId].means):
             all_last_selections = np.sum(self.choices[envId][:, :, :] == armId, axis=1)  # sum on horizon
             last_selections = np.sum(all_last_selections, axis=0)  # sum on players
+            # FIXME there is an issue right here, the "more accurate" regret is computed to be ... negative!
             all_last_weighted_selections += mean * (last_selections - last_cum_collisions[armId, :])
         return all_last_weighted_selections
 
@@ -290,12 +291,12 @@ class EvaluatorMultiPlayers(object):
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
-        return self.horizon * self.envs[envId].maxArm - self.getAllLastWeightedSelections(envId=envId)
+        return self.horizon * sumBestMeans - self.getAllLastWeightedSelections(envId=envId)
 
     def getLastRegrets(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        # print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getLastRegrets_MoreAccurate(envId=envId)
         else:
@@ -342,8 +343,9 @@ class EvaluatorMultiPlayers(object):
 
     # --- Plotting methods
 
-    def plotRewards(self, envId=0, savefig=None, semilogx=False):
+    def plotRewards(self, envId=0, savefig=None, semilogx=False, moreAccurate=None):
         """Plot the decentralized (vectorial) rewards, for each player."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
@@ -361,7 +363,7 @@ class EvaluatorMultiPlayers(object):
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
-        plt.ylabel(r"Cumulative personal reward $\mathbb{E}_{%d}[r_t]$" % self.repetitions)
+        plt.ylabel("Cumulative personal reward {}".format(r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
@@ -376,7 +378,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogx if semilogx else plt.plot
         # Decide which fairness function to use
         fairnessFunction = fairness_mapping[fairness] if isinstance(fairness, str) else fairness
-        fairnessName = fairness if isinstance(fairness, str) else fairness.__name__
+        fairnessName = fairness if isinstance(fairness, str) else getattr(fairness, '__name__', "std_fairness")
         for evaId, eva in enumerate(evaluators):
             label = eva.strPlayers(short=True)
             cumRewards = np.zeros((eva.nbPlayers, eva.duration))
@@ -407,8 +409,11 @@ class EvaluatorMultiPlayers(object):
         - The lower bounds are also plotted (Besson & Kaufmann, and Anandkumar et al).
         - The three terms of the regret are also plotting if evaluators = () (that's the default).
         """
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         X0 = X = self.times - 1
         fig = plt.figure()
+        if len(list(evaluators)) == 0:  # XXX
+            moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         markers = makemarkers(5 if len(evaluators) == 1 and subTerms else len(evaluators))
@@ -467,7 +472,7 @@ class EvaluatorMultiPlayers(object):
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
-        plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
+        plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
@@ -712,8 +717,13 @@ class EvaluatorMultiPlayers(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, evaluators=(), moreAccurate=None):
+    def plotLastRegrets(self, envId=0,
+                        normed=False, subplots=True, bins=30, log=False,
+                        all_on_separate_figures=False, sharex=False, sharey=False,
+                        savefig=None, moreAccurate=None,
+                        evaluators=()):
         """Plot histogram of the regrets R_T for all evaluators."""
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         if len(evaluators) == 0:  # no need for a subplot
             subplots = False
         evaluators = [self] + list(evaluators)  # Default to only [self]
@@ -733,7 +743,7 @@ class EvaluatorMultiPlayers(object):
             return figs
         elif subplots:
             nrows, ncols = nrows_ncols(N)
-            fig, axes = plt.subplots(nrows, ncols, sharex=False, sharey=False)  # FIXME
+            fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)  # FIXME
             fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
             for evaId, eva in enumerate(evaluators):
                 i, j = evaId % nrows, evaId // nrows

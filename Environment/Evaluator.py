@@ -299,7 +299,7 @@ class Evaluator(object):
     def getCumulatedRegret(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        # print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getCumulatedRegret_MoreAccurate(policyId, envId=envId)
         else:
@@ -324,7 +324,7 @@ class Evaluator(object):
     def getLastRegrets(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))
+        # print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getLastRegrets_MoreAccurate(policyId, envId=envId)
         else:
@@ -377,6 +377,7 @@ class Evaluator(object):
                     moreAccurate=None
                     ):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
@@ -422,7 +423,7 @@ class Evaluator(object):
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
-            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
+            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 1}^{t}$ %s%s" % (r"\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isDynamic:
                 plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
@@ -430,7 +431,7 @@ class Evaluator(object):
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
             legend()
-            plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
+            plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         else:
             if drawUpperBound and not semilogx:
@@ -447,7 +448,7 @@ class Evaluator(object):
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(T)$".format(lowerbound), lw=3)
             legend()
-            plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t} \mathbb{E}_{%d}[r_s]$%s" % (self.repetitions, ylabel2))
+            plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
@@ -506,7 +507,10 @@ class Evaluator(object):
             print("Max of    last regrets R_T =", np.max(last_regrets))
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
-    def plotLastRegrets(self, envId=0, normed=False, subplots=True, bins=30, log=False, all_on_separate_figures=False, savefig=None, moreAccurate=None):
+    def plotLastRegrets(self, envId=0,
+                        normed=False, subplots=True, bins=30, log=False,
+                        all_on_separate_figures=False, sharex=False, sharey=False,
+                        savefig=None, moreAccurate=None):
         """Plot histogram of the regrets R_T for all policies."""
         N = self.nbPolicies
         if N == 1:
@@ -526,7 +530,7 @@ class Evaluator(object):
             return figs
         elif subplots:
             nrows, ncols = nrows_ncols(N)
-            fig, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True)
+            fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)
             fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
