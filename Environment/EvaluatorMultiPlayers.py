@@ -466,7 +466,7 @@ class EvaluatorMultiPlayers(object):
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
         T = np.ones_like(X) if normalized else np.log(2 + X)
-        plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Kaufmann & Besson lower bound = ${:.3g}$".format(lowerbound), lw=3)
+        plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower bound = ${:.3g}$".format(lowerbound), lw=3)
         plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=2)
         plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=1)
         # Labels and legends

@@ -110,12 +110,13 @@ class MAB(object):
         if nbPlayers is None:
             text = repr(self.arms)
         else:
-            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."  # DEBUG
+            assert nbPlayers >= 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a non-negative integer."  # DEBUG
             means = self.means
             bestmean = np.max(means)
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
+            if nbPlayers == 0: bestArms = []
             text = '[{}]'.format(', '.join(
-                openTag + repr(arm) + endTag if (armId in bestArms or np.isclose(arm.mean, bestmean)) else repr(arm)
+                openTag + repr(arm) + endTag if (nbPlayers > 0 and (armId in bestArms or np.isclose(arm.mean, bestmean))) else repr(arm)
                 for armId, arm in enumerate(self.arms))
             )
         return wraplatex('$' + text + '$') if latex else wraptext(text)
@@ -237,17 +238,17 @@ class MAB(object):
     def plotComparison_our_anandkumar(self, savefig=None):
         """Plot a comparison of our lowerbound and their lowerbound."""
         nbPlayers = self.nbArms
-        lowerbounds = np.zeros((2, nbPlayers))
+        lowerbounds = np.zeros((3, nbPlayers))
         for i in range(nbPlayers):
             lowerbounds[:, i] = self.lowerbound_multiplayers(i + 1)
         plt.figure()
         X = np.arange(1, 1 + nbPlayers)
-        plt.plot(X, lowerbounds[0, :], 'ro-', label="Kaufmann & Besson lowerbound")
+        plt.plot(X, lowerbounds[0, :], 'ro-', label="Besson & Kaufmann lowerbound")
         plt.plot(X, lowerbounds[1, :], 'bd-', label="Anandkumar et al. lowerbound")
         legend()
-        plt.xlabel("Number of players in the multi-players game.{}".format(signature))
-        plt.ylabel("Lowerbound on the centralized cumulative normalized regret.")
-        plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: ${}$".format(self.nbArms, self.reprarms()))
+        plt.xlabel("Number $M$ of players in the multi-players game{}".format(signature))
+        plt.ylabel("Lowerbound on the centralized cumulative normalized regret")
+        plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: {}".format(self.nbArms, self.reprarms(0, latex=True)))
         show_and_save(showplot=True, savefig=savefig)
 
     def plotHistogram(self, horizon=10000, savefig=None):
@@ -408,9 +409,10 @@ class MarkovianMAB(MAB):
         if nbPlayers is None:
             text = repr(self.matrix_transitions)
         else:
-            assert nbPlayers > 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a positive integer."  # DEBUG
+            assert nbPlayers >= 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a non-negative integer."  # DEBUG
             means = self.means
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
+            if nbPlayers == 0: bestArms = []
             dollar = '$' if latex else ''
             text = r'{} Markovian rewards, {}[{}]{}'.format(
                 "Rested" if self.rested else "Restless",
