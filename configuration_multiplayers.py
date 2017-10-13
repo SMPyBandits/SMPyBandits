@@ -41,9 +41,9 @@ from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better fo
 HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
+# HORIZON = 3000
+# HORIZON = 5000
+# HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -60,7 +60,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
@@ -90,13 +90,13 @@ DECREASE_RATE = None
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-NB_PLAYERS = 3    # Less that the number of arms
+# NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 7    # Less that the number of arms
 # NB_PLAYERS = 8    # Less that the number of arms
-NB_PLAYERS = 9    # Less that the number of arms
+# NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
@@ -195,10 +195,10 @@ configuration = {
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
         # XXX Default!
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(9, 1 / (1. + 9))
-        # }
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": uniformMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -207,10 +207,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(19, 1 / (1. + 19))
         # }
-        {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
-            "arm_type": Bernoulli,
-            "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        }
+        # {   # An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and 6 very good arms (0.78, 0.85)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
+        # }
         # {   # XXX to test with 1 suboptimal arm only
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
@@ -355,7 +355,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
-    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
+    "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
@@ -371,7 +371,7 @@ configuration.update({
     # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
 
     # --- DONE Using single-player rhoLearn policy, with same MAB learning algorithm for selecting the ranks
-    "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
+    # "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
     # "players": rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children
     # "players": rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children
     # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=True).children

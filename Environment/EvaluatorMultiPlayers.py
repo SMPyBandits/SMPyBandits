@@ -364,7 +364,7 @@ class EvaluatorMultiPlayers(object):
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("Cumulative personal reward {}".format(r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_t]$" % self.repetitions))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\nPersonal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : Personal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -393,11 +393,11 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized measure of fairness, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : Centralized measure of fairness, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -426,11 +426,11 @@ class EvaluatorMultiPlayers(object):
                 Ys = [None] * 3
                 labels = [""] * 3
                 Ys[0] = eva.getFirstRegretTerm(envId)
-                labels[0] = " 1st term: Pulls of {} suboptimal arms (lower-bounded)".format(self.envs[envId].nbArms - self.nbPlayers)
+                labels[0] = "$(a)$ term: Pulls of {} suboptimal arms (lower-bounded)".format(self.envs[envId].nbArms - self.nbPlayers)
                 Ys[1] = eva.getSecondRegretTerm(envId)
-                labels[1] = " 2nd term: Non-pulls of {} optimal arms".format(self.nbPlayers)
+                labels[1] = "$(b)$ term: Non-pulls of {} optimal arms".format(self.nbPlayers)
                 Ys[2] = eva.getThirdRegretTerm(envId)
-                labels[2] = " 3rd term: Weighted count of collisions"
+                labels[2] = "$(c)$ term: Weighted count of collisions"
             Y = eva.getCentralizedRegret(envId, moreAccurate=moreAccurate)
             label = "{}umulated centralized regret".format("Normalized c" if normalized else "C") if len(evaluators) == 1 else eva.strPlayers(short=True)
             if semilogx or loglog:  # FIXED for semilogx plots, truncate to only show t >= 100
@@ -447,13 +447,13 @@ class EvaluatorMultiPlayers(object):
             # Now plot
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
             if len(evaluators) == 1:
-                if not semilogx and not loglog and not semilogy:
-                    # We plot a horizontal line ----- at the mean regret
-                    plot_method(X[::self.delta_t_plot], meanY * np.ones_like(X)[::self.delta_t_plot], '--', label="Mean cumulated centralized regret", color=colors[evaId])
+                # if not semilogx and not loglog and not semilogy:
+                #     # We plot a horizontal line ----- at the mean regret
+                #     plot_method(X[::self.delta_t_plot], meanY * np.ones_like(X)[::self.delta_t_plot], '--', label="Mean cumulated centralized regret", color=colors[evaId])
                 # " = ${:.3g}$".format(meanY)
                 if subTerms:
                     Ys.append(Ys[0] + Ys[1] + Ys[2])
-                    labels.append("Sum of 3 terms ($= R_t$)")
+                    labels.append("Sum of 3 terms (= regret)")
                     # print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
@@ -471,9 +471,9 @@ class EvaluatorMultiPlayers(object):
         plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=1)
         # Labels and legends
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : {}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -499,7 +499,7 @@ class EvaluatorMultiPlayers(object):
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}umber of switches for each player, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated n" if cumulated else "N", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : {}umber of switches for each player, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated n" if cumulated else "N", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -521,11 +521,11 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, "\n" + self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\nCentralized {}number of switches, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, "cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : Centralized {}number of switches, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -546,7 +546,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
-        plt.title("Multi-players $M = {}$ (collision model: {}):\nBest arm pulls frequency for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : Best arm pulls frequency for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -570,7 +570,7 @@ class EvaluatorMultiPlayers(object):
             plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
-            plt.title("Multi-players $M = {}$ (collision model: {}):\n{} of pulls of the arm #{} for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+            plt.title("Multi-players $M = {}$ : {} of pulls of the arm #{} for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
             maximizeWindow()
             if savefig is not None:
                 savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
@@ -594,7 +594,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}free transmission for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : {}free transmission for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -635,7 +635,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         legend()
-        plt.title("Multi-players $M = {}$ (collision model: {}):\n{}of collisions, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : {}of collisions, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -681,7 +681,7 @@ class EvaluatorMultiPlayers(object):
             if not semilogy:
                 add_percent_formatter("yaxis", 1.0)
         legend()
-        plt.title("Multi-players $M = {}$ (collision model: {}):\nFrequency of collision for each arm, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.collisionModel.__name__, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+        plt.title("Multi-players $M = {}$ : Frequency of collision for each arm, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
         return fig
 
@@ -733,7 +733,7 @@ class EvaluatorMultiPlayers(object):
             figs = []
             for evaId, eva in enumerate(evaluators):
                 fig = plt.figure()
-                plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+                plt.title("Multi-players $M = {}$ : Histogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
@@ -751,15 +751,17 @@ class EvaluatorMultiPlayers(object):
                 last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
-                ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
+                ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 # Add only once the ylabel, xlabel, in the middle
                 if i == (nrows // 2) and j == 0:
                     ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 if i == nrows - 1 and j == (ncols // 2):
                     axes[i, j].set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                plt.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
+                ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
-            plt.title("Multi-players $M = {}$ (collision model: {}):\nHistogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.nbPlayers, self.collisionModel.__name__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
+            plt.title("Multi-players $M = {}$ : Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.nbPlayers, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
             plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
             plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
             all_last_regrets = []

@@ -175,14 +175,14 @@ if __name__ == '__main__':
         else:
             evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-        # # Plotting the centralized regret in loglog
-        # print("\n\n- Plotting the centralized regret")
-        # if saveallfigs:
-        #     savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
-        #     print("  and saving the plot to {} ...".format(savefig))
-        #     evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
-        # else:
-        #     evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+        # Plotting the centralized regret in loglog
+        print("\n\n- Plotting the centralized regret")
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
+            print("  and saving the plot to {} ...".format(savefig))
+            evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
+        else:
+            evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
         # # Plotting the normalized centralized rewards
         # print("\n\n- Plotting the normalized centralized regret")
