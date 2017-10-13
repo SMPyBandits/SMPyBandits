@@ -102,6 +102,9 @@ NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
 
+# DEBUG be sure that this works!
+NB_PLAYERS = int(getenv('M', NB_PLAYERS))
+NB_PLAYERS = int(getenv('NB_PLAYERS', NB_PLAYERS))
 
 # #: Different Collision models
 # collisionModel = noCollision  #: Like single player.

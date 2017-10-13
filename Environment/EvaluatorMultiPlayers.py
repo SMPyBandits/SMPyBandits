@@ -276,7 +276,6 @@ class EvaluatorMultiPlayers(object):
         for armId, mean in enumerate(self.envs[envId].means):
             all_last_selections = np.sum(self.choices[envId][:, :, :] == armId, axis=1)  # sum on horizon
             last_selections = np.sum(all_last_selections, axis=0)  # sum on players
-            # FIXME there is an issue right here, the "more accurate" regret is computed to be ... negative!
             all_last_weighted_selections += mean * (last_selections - last_cum_collisions[armId, :])
         return all_last_weighted_selections
 
@@ -412,7 +411,7 @@ class EvaluatorMultiPlayers(object):
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         X0 = X = self.times - 1
         fig = plt.figure()
-        if len(list(evaluators)) == 0:  # XXX
+        if subTerms or len(list(evaluators)) == 0:  # XXX
             moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
@@ -670,7 +669,7 @@ class EvaluatorMultiPlayers(object):
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
         else:
-            if semilogy:  # FIXME is it perfectly working?
+            if semilogy:  # XXX is it perfectly working?
                 Y = np.log10(Y)  # use semilogy scale!
                 Y -= np.min(Y)   # project back to [0, oo)
                 Y /= np.sum(Y)   # project back to [0, 1)
@@ -743,7 +742,7 @@ class EvaluatorMultiPlayers(object):
             return figs
         elif subplots:
             nrows, ncols = nrows_ncols(N)
-            fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)  # FIXME
+            fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)
             fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
             for evaId, eva in enumerate(evaluators):
                 i, j = evaId % nrows, evaId // nrows
