@@ -149,23 +149,23 @@ if __name__ == '__main__':
             if not do_simple_plots:
                 break
 
-            # --- Also plotting the decentralized rewards
-            print("\n\n- Plotting the decentralized rewards")
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRewards(envId, savefig=savefig)
-            else:
-                evaluation.plotRewards(envId)  # XXX To plot without saving
+            # # --- Also plotting the decentralized rewards
+            # print("\n\n- Plotting the decentralized rewards")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotRewards(envId, savefig=savefig)
+            # else:
+            #     evaluation.plotRewards(envId)  # XXX To plot without saving
 
-            # --- Also plotting the centralized fairness
-            for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
-                print("\n\n- Plotting the centralized fairness (%s)" % fairness)
-                if saveallfigs:
-                    savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
-                    print("  and saving the plot to {} ...".format(savefig))
-                    evaluation.plotFairness(envId, savefig=savefig, fairness=fairness)
-                else:
-                    evaluation.plotFairness(envId, fairness=fairness)  # XXX To plot without saving
+            # # --- Also plotting the centralized fairness
+            # for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+            #     print("\n\n- Plotting the centralized fairness (%s)" % fairness)
+            #     if saveallfigs:
+            #         savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
+            #         print("  and saving the plot to {} ...".format(savefig))
+            #         evaluation.plotFairness(envId, savefig=savefig, fairness=fairness)
+            #     else:
+            #         evaluation.plotFairness(envId, fairness=fairness)  # XXX To plot without saving
 
             # --- Also plotting the centralized regret
             print("\n\n- Plotting the centralized regret")
@@ -194,14 +194,14 @@ if __name__ == '__main__':
             else:
                 evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-            # # --- Also plotting the centralized regret in loglog
-            # print("\n\n- Plotting the centralized regret")
-            # if saveallfigs:
-            #     print("  and saving the plot to {} ...".format(savefig))
-            #     savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
-            #     evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
-            # else:
-            #     evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            # --- Also plotting the centralized regret in loglog
+            print("\n\n- Plotting the centralized regret")
+            if saveallfigs:
+                print("  and saving the plot to {} ...".format(savefig))
+                savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
+                evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
+            else:
+                evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
             # # --- Also plotting the normalized centralized rewards
             # print("\n\n- Plotting the normalized centralized regret")
@@ -221,23 +221,23 @@ if __name__ == '__main__':
             # else:
             #     evaluation.plotNbSwitchs(envId, cumulated=False)  # XXX To plot without saving
 
-            # --- Also plotting the cumulative number of switches
-            print("\n\n- Plotting the cumulative number of switches")
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_CumNbSwitchs')
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=True)
-            else:
-                evaluation.plotNbSwitchs(envId, cumulated=True)  # XXX To plot without saving
+            # # --- Also plotting the cumulative number of switches
+            # print("\n\n- Plotting the cumulative number of switches")
+            # if saveallfigs:
+            #     savefig = mainfig.replace('main', 'main_CumNbSwitchs')
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotNbSwitchs(envId, savefig=savefig, cumulated=True)
+            # else:
+            #     evaluation.plotNbSwitchs(envId, cumulated=True)  # XXX To plot without saving
 
-            # --- Also plotting the probability of picking the best arm
-            print("\n- Plotting the probability of picking the best arm")
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_BestArmPulls')
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotBestArmPulls(envId, savefig=savefig)
-            else:
-                evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
+            # # --- Also plotting the probability of picking the best arm
+            # print("\n- Plotting the probability of picking the best arm")
+            # if saveallfigs:
+            #     savefig = mainfig.replace('main', 'main_BestArmPulls')
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotBestArmPulls(envId, savefig=savefig)
+            # else:
+            #     evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
 
             # --- Also plotting the histograms of regrets
             print("\n- Plotting the histograms of regrets")
