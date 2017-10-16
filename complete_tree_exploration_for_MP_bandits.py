@@ -84,6 +84,7 @@ if version_info.major < 3:  # Python 2 compatibility if needed
 
 PLOT_DIR = os_path_join("plots", "trees")  #: Directory for the plots
 
+from Arms.usenumba import jit
 
 def tupleit1(anarray):
     """Convert a non-hashable 1D numpy array to a hashable tuple."""
@@ -129,36 +130,43 @@ FORMAT = getenv("FORMAT", FORMAT)
 
 # --- Implement the bandit algorithms in a purely functional and memory-less flavor
 
+@jit
 def FixedArm(j, state):
     """Fake player j that always targets at arm j."""
     return [j]
 
+@jit
 def UniformExploration(j, state):
     """Fake player j that always targets all arms."""
     return list(np.arange(state.K))
 
+@jit
 def ConstantRank(j, state, decision, collision):
     """Constant rank no matter what."""
     return [state.memories[j]]
 
+@jit
 def choices_from_indexes(indexes):
     """For deterministic index policies, if more than one index is maximum, return the list of positions attaining this maximum (ties), or only one position."""
     return np.where(indexes == np.max(indexes))[0]
 
 # --- Selfish 0-greedy variants
 
+@jit
 def Selfish_0Greedy_U(j, state):
     """Selfish policy + 0-Greedy index + U feedback."""
     indexes = state.S[j] / state.N[j]
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_0Greedy_Utilde(j, state):
     """Selfish policy + 0-Greedy index + Utilde feedback."""
     indexes = state.Stilde[j] / state.N[j]
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_0Greedy_Ubar(j, state):
     """Selfish policy + 0-Greedy index + Ubar feedback."""
     indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j])
@@ -171,18 +179,21 @@ default_policy = Selfish_0Greedy_Ubar
 # --- Selfish UCB variants
 alpha = 0.5
 
+@jit
 def Selfish_UCB_U(j, state):
     """Selfish policy + UCB_0.5 index + U feedback."""
     indexes = (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_UCB_Utilde(j, state):
     """Selfish policy + UCB_0.5 index + Utilde feedback."""
     indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_UCB_Ubar(j, state):
     """Selfish policy + UCB_0.5 index + Ubar feedback."""
     indexes = (state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
@@ -198,18 +209,21 @@ tolerance = 1e-6
 klucb = np.vectorize(klucbBern)
 c = 1
 
+@jit
 def Selfish_KLUCB_U(j, state):
     """Selfish policy + Bernoulli KL-UCB index + U feedback."""
     indexes = klucb(state.S[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_KLUCB_Utilde(j, state):
     """Selfish policy + Bernoulli KL-UCB index + Utilde feedback."""
     indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
 
+@jit
 def Selfish_KLUCB_Ubar(j, state):
     """Selfish policy + Bernoulli KL-UCB index + Ubar feedback."""
     indexes = klucb((state.Ntilde[j] / state.N[j]) * (state.S[j] / state.N[j]), c * np.log(state.t) / state.N[j], tolerance)
@@ -221,12 +235,14 @@ def Selfish_KLUCB_Ubar(j, state):
 
 # --- RhoRand UCB variants
 
+@jit
 def choices_from_indexes_with_rank(indexes, rank=1):
     """For deterministic index policies, if more than one index is maximum, return the list of positions attaining the rank-th largest index (with more than one if ties, or only one position)."""
     return np.where(indexes == np.sort(indexes)[-rank])[0]
 
 alpha = 0.5
 
+@jit
 def RhoRand_UCB_U(j, state):
     """RhoRand policy + UCB_0.5 index + U feedback."""
     rank = state.memories[j]
@@ -234,6 +250,7 @@ def RhoRand_UCB_U(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+@jit
 def RhoRand_UCB_Utilde(j, state):
     """RhoRand policy + UCB_0.5 index + Utilde feedback."""
     rank = state.memories[j]
@@ -241,6 +258,7 @@ def RhoRand_UCB_Utilde(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+@jit
 def RhoRand_UCB_Ubar(j, state):
     """RhoRand policy + UCB_0.5 index + Ubar feedback."""
     rank = state.memories[j]
@@ -248,6 +266,7 @@ def RhoRand_UCB_Ubar(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+@jit
 def RhoRand_KLUCB_U(j, state):
     """RhoRand policy + Bernoulli KL-UCB index + U feedback."""
     rank = state.memories[j]
@@ -255,6 +274,7 @@ def RhoRand_KLUCB_U(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+@jit
 def RhoRand_KLUCB_Utilde(j, state):
     """RhoRand policy + Bernoulli KL-UCB index + Utilde feedback."""
     rank = state.memories[j]
@@ -262,6 +282,7 @@ def RhoRand_KLUCB_Utilde(j, state):
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes_with_rank(indexes, rank=rank)
 
+@jit
 def RhoRand_KLUCB_Ubar(j, state):
     """RhoRand policy + Bernoulli KL-UCB index + Ubar feedback."""
     rank = state.memories[j]
@@ -271,6 +292,7 @@ def RhoRand_KLUCB_Ubar(j, state):
 
 # So we need tow functions: one takes the decision, one updates the rank after all the decisions are taken
 
+@jit
 def RandomNewRank(j, state, decision, collision):
     """RhoRand chooses a new uniform rank in {1,..,M} in case of collision, or keep the same."""
     if collision:  # new random rank
@@ -284,6 +306,7 @@ default_policy, default_update_memory = RhoRand_UCB_U, RandomNewRank
 
 # --- RandTopM, MCTopM variants
 
+@jit
 def RandTopM_UCB_U(j, state, collision=False):
     """RandTopM policy + UCB_0.5 index + U feedback."""
     chosen_arm = state.memories[j]
@@ -295,6 +318,7 @@ def RandTopM_UCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_UCB_Utilde(j, state, collision=False):
     """RandTopM policy + UCB_0.5 index + Utilde feedback."""
     chosen_arm = state.memories[j]
@@ -306,6 +330,7 @@ def RandTopM_UCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_UCB_Ubar(j, state, collision=False):
     """RandTopM policy + UCB_0.5 index + Ubar feedback."""
     chosen_arm = state.memories[j]
@@ -317,6 +342,7 @@ def RandTopM_UCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_KLUCB_U(j, state, collision=False):
     """RandTopM policy + Bernoulli KL-UCB index + U feedback."""
     chosen_arm = state.memories[j]
@@ -328,6 +354,7 @@ def RandTopM_KLUCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_KLUCB_Utilde(j, state, collision=False):
     """RandTopM policy + Bernoulli KL-UCB index + Utilde feedback."""
     chosen_arm = state.memories[j]
@@ -339,6 +366,7 @@ def RandTopM_KLUCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_KLUCB_Ubar(j, state, collision=False):
     """RandTopM policy + Bernoulli KL-UCB index + Ubar feedback."""
     chosen_arm = state.memories[j]
@@ -350,6 +378,7 @@ def RandTopM_KLUCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def RandTopM_RandomNewChosenArm(j, state, decision, collision):
     """RandTopM chooses a new arm after a collision or if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
     player = state.players[j]
@@ -361,12 +390,14 @@ def RandTopM_RandomNewChosenArm(j, state, decision, collision):
 
 # --- MCTopM variants
 
+@jit
 def write_to_tuple(this_tuple, index, value):
     """Tuple cannot be written, this hack fixes that."""
     this_list = list(this_tuple)
     this_list[index] = value
     return tuple(this_list)
 
+@jit
 def MCTopM_UCB_U(j, state, collision=False):
     """MCTopM policy + UCB_0.5 index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -381,6 +412,7 @@ def MCTopM_UCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_UCB_Utilde(j, state, collision=False):
     """MCTopM policy + UCB_0.5 index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -395,6 +427,7 @@ def MCTopM_UCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_UCB_Ubar(j, state, collision=False):
     """MCTopM policy + UCB_0.5 index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -409,6 +442,7 @@ def MCTopM_UCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_KLUCB_U(j, state, collision=False):
     """MCTopM policy + Bernoulli KL-UCB index + U feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -423,6 +457,7 @@ def MCTopM_KLUCB_U(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_KLUCB_Utilde(j, state, collision=False):
     """MCTopM policy + Bernoulli KL-UCB index + Utilde feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -437,6 +472,7 @@ def MCTopM_KLUCB_Utilde(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_KLUCB_Ubar(j, state, collision=False):
     """MCTopM policy + Bernoulli KL-UCB index + Ubar feedback."""
     if not isinstance(state.memories[j], tuple):  # if no sitted information yet
@@ -451,6 +487,7 @@ def MCTopM_KLUCB_Ubar(j, state, collision=False):
     else:
         return [chosen_arm]
 
+@jit
 def MCTopM_RandomNewChosenArm(j, state, decision, collision):
     """RandTopMC chooses a new arm after if the chosen arm lies outside of its estimatedBestArms set, uniformly from the set of estimated M best arms, or keep the same."""
     player = state.players[j]
@@ -1086,7 +1123,7 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
     if all_players is None:
         all_players = [FixedArm]
     if all_update_memories is None:
-        all_update_memories = [None]
+        all_update_memories = [None] * len(all_players)
     for policy, update_memory in zip(all_players, all_update_memories):
         players = [ policy for _ in range(M) ]
         update_memories = [ update_memory for _ in range(M) ] if update_memory is not None else None
@@ -1131,31 +1168,31 @@ if __name__ == '__main__':
     all_players = [UniformExploration]  # XXX just for testing
 
     # --- XXX Test for Selfish Utilde
-    all_update_memories = [ConstantRank]
+    # all_update_memories = [ConstantRank]
     all_players = [Selfish_0Greedy_Utilde, Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX complete comparison
     all_players = [Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX comparison
-    all_players = [Selfish_KLUCB_Utilde]
-    all_players = [Selfish_UCB_Utilde]  # Faster, and probably same error cases as KLUCB
+    # all_players = [Selfish_KLUCB_Utilde]
+    # all_players = [Selfish_UCB_Utilde]  # Faster, and probably same error cases as KLUCB
 
-    # --- XXX Test for RhoRand
-    all_players = [RhoRand_UCB_Utilde, RhoRand_KLUCB_Utilde]  # XXX  comparison
-    all_players = [RhoRand_KLUCB_U]
-    all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [RandomNewRank]
+    # # --- XXX Test for RhoRand
+    # all_players = [RhoRand_UCB_Utilde, RhoRand_KLUCB_Utilde]  # XXX  comparison
+    # all_players = [RhoRand_KLUCB_U]
+    # all_players = [RhoRand_UCB_U]  # Faster, and probably same error cases as KLUCB
+    # all_update_memories = [RandomNewRank]
 
-    # --- XXX Test for RandTopM
-    all_players = [RandTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [RandTopM_RandomNewChosenArm]
+    # # --- XXX Test for RandTopM
+    # all_players = [RandTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
+    # all_update_memories = [RandTopM_RandomNewChosenArm]
 
-    # --- XXX Test for RandTopMC
-    all_players = [MCTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
-    all_update_memories = [MCTopM_RandomNewChosenArm]
+    # # --- XXX Test for RandTopMC
+    # all_players = [MCTopM_UCB_U]  # Faster, and probably same error cases as KLUCB
+    # all_update_memories = [MCTopM_RandomNewChosenArm]
 
     # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
     mus = [0, 1]
     # mus = [0.1, 0.9]
-    # mus = [0.1, 0.5, 0.9]
+    mus = [0.1, 0.5, 0.9]
 
     # --- XXX Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))
