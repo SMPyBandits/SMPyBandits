@@ -5,7 +5,7 @@ r""" Experimental code to perform complete tree exploration for Multi-Player ban
 Algorithms:
 
 - Support Selfish 0-greedy, UCB, and klUCB in 3 different variants.
-- Support also RhoRand, even though it is *not* memory-less, by using another state representation (inlining the memory of each player, eg the ranks for RhoRand).
+- Support also RhoRand, RandTopM and MCTopM, even though they are *not* memory-less, by using another state representation (inlining the memory of each player, eg the ranks for RhoRand).
 
 Features:
 
@@ -16,7 +16,6 @@ Features:
 
 .. warning:: I still have to fix these issues:
 
-   - TODO : add the RandTopM algorithm.
    - TODO : right now, it is not so efficient, could it be improved? I don't think I can do anything in a smarter way, in pure Python.
 
 
