@@ -392,7 +392,7 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
@@ -470,7 +470,7 @@ class EvaluatorMultiPlayers(object):
         plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=1)
         # Labels and legends
         legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : {}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig)
@@ -520,7 +520,7 @@ class EvaluatorMultiPlayers(object):
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
         if len(evaluators) > 1:
             legend()
-        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
+        plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         if not cumulated:
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))

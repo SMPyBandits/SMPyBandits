@@ -23,7 +23,7 @@ from configuration_multiplayers import configuration
 
 # Solving https://github.com/Naereen/AlgoBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
-if getenv('SLEEP', False):
+if getenv('SLEEP', 'False') != 'False':
     from subprocess import call
     SLEEP = str(getenv('SLEEP'))
     print("\nSleeping for", SLEEP, "seconds before starting the simulation...")  # DEBUG
@@ -239,16 +239,16 @@ if __name__ == '__main__':
             # else:
             #     evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
 
-            # --- Also plotting the histograms of regrets
-            print("\n- Plotting the histograms of regrets")
-            if saveallfigs:
-                evaluation.plotLastRegrets(envId, subplots=False)
-                print("  and saving the plot to {} ...".format(savefig))
-                savefig = mainfig.replace('main', 'main_HistogramsRegret')
-                evaluation.plotLastRegrets(envId, subplots=True, savefig=savefig)
-            else:
-                evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
-                evaluation.plotLastRegrets(envId, subplots=True)  # XXX To plot without saving
+            # # --- Also plotting the histograms of regrets
+            # print("\n- Plotting the histograms of regrets")
+            # if saveallfigs:
+            #     evaluation.plotLastRegrets(envId, subplots=False)
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     savefig = mainfig.replace('main', 'main_HistogramsRegret')
+            #     evaluation.plotLastRegrets(envId, subplots=True, savefig=savefig)
+            # else:
+            #     evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
+            #     evaluation.plotLastRegrets(envId, subplots=True)  # XXX To plot without saving
 
             # # --- Also plotting the probability of transmission on a free channel
             # print("\n- Plotting the probability of transmission on a free channel")

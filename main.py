@@ -33,7 +33,7 @@ else:
 
 # Solving https://github.com/Naereen/AlgoBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
-if getenv('SLEEP', False):
+if getenv('SLEEP', 'False') != 'False':
     from subprocess import call
     SLEEP = str(getenv('SLEEP'))
     print("\nSleeping for", SLEEP, "seconds secondsbefore starting the simulation...")  # DEBUG
