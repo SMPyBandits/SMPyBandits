@@ -12,6 +12,7 @@ __version__ = "0.7"
 from os import mkdir
 import os.path
 from os import getenv
+from itertools import product
 
 # Backup evaluation object
 import pickle
@@ -226,10 +227,8 @@ if __name__ == '__main__':
             savefig = mainfig.replace('main', 'main_HistogramsRegret')
             print("  and saving the plot to {} ...".format(savefig))
             evaluation.plotLastRegrets(envId, subplots=False, savefig=savefig)
-            evaluation.plotLastRegrets(envId, subplots=True, savefig=savefig)
         else:
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
-            evaluation.plotLastRegrets(envId, subplots=True)  # XXX To plot without saving
 
         # # --- Also plotting the probability of transmission on a free channel
         # print("\n- Plotting the probability of transmission on a free channel")

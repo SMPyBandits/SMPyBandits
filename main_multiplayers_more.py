@@ -12,6 +12,7 @@ __version__ = "0.6"
 from os import mkdir
 import os.path
 from os import getenv
+from itertools import product
 
 # Backup evaluation object
 import pickle
@@ -45,8 +46,8 @@ saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots for single experiments or not
-do_simple_plots = False
 do_simple_plots = True
+do_simple_plots = False
 
 #: Whether to do the plots for comparison experiments or not
 do_comparison_plots = False
@@ -410,14 +411,24 @@ if __name__ == '__main__':
         print("\n- Plotting the histograms of regrets")
         if saveallfigs:
             if eothers: e0.plotLastRegrets(envId, subplots=False, evaluators=eothers)
-            print("  and saving the plot to {} ...".format(savefig))
-            savefig = mainfig.replace('all', 'all_HistogramsRegret')
-            e0.plotLastRegrets(envId, savefig=savefig, evaluators=eothers)
+            for sharex, sharey in product([True, False], repeat=2):
+                print("  and saving the plot to {} ...".format(savefig))
+                savefig = mainfig.replace('all', 'all_HistogramsRegret{}{}'.format(
+                    "_shareX" if sharex else "",
+                    "_shareY" if sharey else "",
+                ))
+                print("  and saving the plot to {} ...".format(savefig))
+                e0.plotLastRegrets(envId, savefig=savefig, sharex=sharex, sharey=sharey, evaluators=eothers)  # XXX To save the figure
             print("\n - Plotting the histograms of regrets for each algorithm separately, and saving the plots...")
             e0.plotLastRegrets(envId, all_on_separate_figures=True, savefig=savefig, evaluators=eothers)  # XXX To save the figure
         else:
             if eothers: e0.plotLastRegrets(envId, subplots=False, evaluators=eothers)  # XXX To plot without saving
-            e0.plotLastRegrets(envId, evaluators=eothers)  # XXX To plot without saving
+            for sharex, sharey in product([True, False], repeat=2):
+                savefig = mainfig.replace('all', 'all_HistogramsRegret{}{}'.format(
+                    "_shareX" if sharex else "",
+                    "_shareY" if sharey else "",
+                ))
+                e0.plotLastRegrets(envId, sharex=sharex, sharey=sharey, evaluators=eothers)  # XXX To plot without saving
             e0.plotLastRegrets(envId, all_on_separate_figures=True, evaluators=eothers)  # XXX To plot without saving
 
         if saveallfigs:
