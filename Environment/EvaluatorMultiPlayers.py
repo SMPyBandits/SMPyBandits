@@ -402,7 +402,8 @@ class EvaluatorMultiPlayers(object):
 
     def plotRegretCentralized(self, envId=0, savefig=None,
                               semilogx=False, semilogy=False, loglog=False,
-                              normalized=False, evaluators=(), subTerms=False, moreAccurate=None):
+                              normalized=False, evaluators=(),
+                              subTerms=False, sumofthreeterms=False, moreAccurate=None):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments).
 
         - The lower bounds are also plotted (Besson & Kaufmann, and Anandkumar et al).
@@ -451,8 +452,9 @@ class EvaluatorMultiPlayers(object):
                 #     plot_method(X[::self.delta_t_plot], meanY * np.ones_like(X)[::self.delta_t_plot], '--', label="Mean cumulated centralized regret", color=colors[evaId])
                 # " = ${:.3g}$".format(meanY)
                 if subTerms:
-                    Ys.append(Ys[0] + Ys[1] + Ys[2])
-                    labels.append("Sum of 3 terms (= regret)")
+                    if sumofthreeterms:
+                        Ys.append(Ys[0] + Ys[1] + Ys[2])
+                        labels.append("Sum of 3 terms (= regret)")
                     # print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
@@ -465,9 +467,9 @@ class EvaluatorMultiPlayers(object):
         print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
         T = np.ones_like(X) if normalized else np.log(2 + X)
-        plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower bound = ${:.3g}$".format(lowerbound), lw=3)
-        plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al lower bound = ${:.3g}$".format(anandkumar_lowerbound), lw=2)
-        plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower bound = ${:.3g}$".format(centralized_lowerbound), lw=1)
+        plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Our lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
+        plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
+        plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
@@ -743,7 +745,16 @@ class EvaluatorMultiPlayers(object):
         elif subplots:
             nrows, ncols = nrows_ncols(N)
             fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)
+            # now for the figure
             fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
+            # XXX See https://stackoverflow.com/a/36542971/
+            ax0 = fig.add_subplot(111, frame_on=False)  # add a big axes, hide frame
+            ax0.grid(False)
+            ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
+            # Add only once the ylabel, xlabel, in the middle
+            ax0.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            # now for the subplots
             for evaId, eva in enumerate(evaluators):
                 i, j = evaId % nrows, evaId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
@@ -751,13 +762,13 @@ class EvaluatorMultiPlayers(object):
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
-                # Add only once the ylabel, xlabel, in the middle
-                if i == (nrows // 2) and j == 0:
-                    ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                if i == nrows - 1 and j == (ncols // 2):
-                    axes[i, j].set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
-                plt.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
-                ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
+                # # Add only once the ylabel, xlabel, in the middle
+                # if i == (nrows // 2) and j == 0:
+                #     ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                # if i == nrows - 1 and j == (ncols // 2):
+                #     ax.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                # plt.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
+                ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
             plt.title("Multi-players $M = {}$ : Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.nbPlayers, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -797,10 +808,7 @@ def delayed_play(env, players, horizon, collisionModel,
             random.seed(seed)
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
-    # We have to deepcopy because this function is Parallel-ized
-    # XXX this uses a LOT of RAM memory!!!
-    # env = deepcopy(env)
-    if env.isDynamic:  # FIXME
+    if env.isDynamic:  # FIXME compute the correct regret!
         env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms
@@ -834,7 +842,7 @@ def delayed_play(env, players, horizon, collisionModel,
         collisions.fill(0)
         # Every player decides which arm to pull
         for playerId, player in enumerate(players):
-            # FIXME here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
+            # XXX here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
             # choices[i] = random_arm_orders[i][player.choice()]
             choices[playerId] = player.choice()
             # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
