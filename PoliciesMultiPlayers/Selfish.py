@@ -18,7 +18,7 @@ class SelfishChildPointer(ChildPointer):
     """ Selfish version of the ChildPointer class (just pretty printed)."""
 
     def __str__(self):
-        return "#{}<{}[{}]>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother._players[self.playerId])
+        return "#{}<{}-{}>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother._players[self.playerId])
 
 
 # PENALTY = -1
