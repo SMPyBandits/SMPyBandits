@@ -749,7 +749,7 @@ class EvaluatorMultiPlayers(object):
             fig.suptitle("Histogram of regrets for different multi-players bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(nbPlayers=self.nbPlayers, latex=True)))
             # XXX See https://stackoverflow.com/a/36542971/
             ax0 = fig.add_subplot(111, frame_on=False)  # add a big axes, hide frame
-            ax0.grid(False)
+            ax0.grid(False)  # hide grid
             ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
             ax0.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
@@ -762,12 +762,6 @@ class EvaluatorMultiPlayers(object):
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
-                # # Add only once the ylabel, xlabel, in the middle
-                # if i == (nrows // 2) and j == 0:
-                #     ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                # if i == nrows - 1 and j == (ncols // 2):
-                #     ax.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
-                # plt.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
                 ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
