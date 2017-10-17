@@ -58,7 +58,8 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
+REPETITIONS = 10000
+# REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
@@ -93,16 +94,15 @@ NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
-NB_PLAYERS = 6    # Less that the number of arms
+# NB_PLAYERS = 6    # Less that the number of arms
 # NB_PLAYERS = 7    # Less that the number of arms
 # NB_PLAYERS = 8    # Less that the number of arms
-NB_PLAYERS = 9    # Less that the number of arms
+# NB_PLAYERS = 9    # Less that the number of arms
 # NB_PLAYERS = 12   # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
 
-# DEBUG be sure that this works!
 NB_PLAYERS = int(getenv('M', NB_PLAYERS))
 NB_PLAYERS = int(getenv('NB_PLAYERS', NB_PLAYERS))
 
@@ -181,10 +181,10 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
-        # },
+        {   # A very very easy problem: 3 arms, one bad, one average, one good
+            "arm_type": Bernoulli,
+            "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
+        },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.3, 0.5, 0.7]  # uniformMeans(3, 0.3)
@@ -197,11 +197,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
-        # XXX Default!
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": uniformMeans(9, 1 / (1. + 9))
-        }
+        # # XXX Default!
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": uniformMeans(9, 1 / (1. + 9))
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -250,10 +250,11 @@ configuration = {
         #     "params": {
         #         "function": randomMeans,
         #         "args": {
-        #             "nbArms": NB_PLAYERS,
+        #             "nbArms": 6,  # NB_PLAYERS,
+        #             "mingap": None,  # 0.01,  # 1. / (NB_PLAYERS * 2 + 1),
         #             "lower": 0.,
         #             "amplitude": 1.,
-        #             "mingap": 1. / (NB_PLAYERS * 2 + 1),
+        #             "isSorted": False
         #         }
         #     }
         # },
@@ -316,7 +317,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).children
     # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children
     # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children
-    # "players": Selfish(NB_PLAYERS, UCB, nbArms).children
+    "players": Selfish(NB_PLAYERS, UCB, nbArms).children
     # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children  # This one is efficient!
     # "players": Selfish(NB_PLAYERS, MOSS, nbArms).children
     # "players": Selfish(NB_PLAYERS, klUCB, nbArms).children
@@ -324,7 +325,7 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
     # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
     # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
-    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children  # FIXME I am working on this line right now!
+    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
     # "players": Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
     #          + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children \
     #          + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children
@@ -358,7 +359,7 @@ configuration.update({
     # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
-    "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
+    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
     # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
     # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
     # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
@@ -641,16 +642,16 @@ configuration["successive_players"] = [
     # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
 
     # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
-    CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
-    Selfish(NB_PLAYERS, UCB, nbArms).children,
-    rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    RandTopM(NB_PLAYERS, UCB, nbArms).children,
-    MCTopM(NB_PLAYERS, UCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
+    # RandTopM(NB_PLAYERS, UCB, nbArms).children,
+    # MCTopM(NB_PLAYERS, UCB, nbArms).children,
+    # rhoRand(NB_PLAYERS, UCB, nbArms).children,
+    # Selfish(NB_PLAYERS, UCB, nbArms).children,
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
-    Selfish(NB_PLAYERS, klUCB, nbArms).children,
-    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
     RandTopM(NB_PLAYERS, klUCB, nbArms).children,
     MCTopM(NB_PLAYERS, klUCB, nbArms).children,
+    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+    Selfish(NB_PLAYERS, klUCB, nbArms).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
