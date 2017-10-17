@@ -147,7 +147,7 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
     if isSorted:
         return sorted(list(lower + (amplitude * mus)))
     else:
-        np.random.shuffle(mus)
+        # np.random.shuffle(mus)  # Useless
         return list(lower + (amplitude * mus))
 
 

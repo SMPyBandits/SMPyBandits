@@ -454,12 +454,10 @@ class MarkovianMAB(MAB):
         return float(nextState)
 
 
-# XXX experimental, it works, but the regret plots in Evaluator* object has no meaning!
 class DynamicMAB(MAB):
-    """Like a static MAB problem, but the arms are (randomly) regenerated everytime they are accessed.
+    """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the newRandomArms() method.
 
-    - Warning: this is still HIGHLY experimental!
-    - It can be weird: M.arms is always different everytime it is accessed, but not nbArm, means, minArm, maxArm...
+    - M.arms and M.means is changed after each call to ``newRandomArms()``, but not nbArm.
     """
 
     def __init__(self, configuration):
@@ -499,7 +497,11 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        return r"\mathrm{%s}(K=%i$, %s on $[%.3g, %.3g], \delta_{\min}=%.3g)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], self.args["mingap"])
+        if latex:
+            text = r"\mathrm{%s}(K=%i$, %s on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", \delta_{\min}=%.3g" % self.args["mingap"])
+        else:
+            text = r"%s(K=%i, %s on [%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", gap=%.3g" % self.args["mingap"])
+        return wraplatex('$' + text + '$') if latex else wraptext(text)
 
     #
     # --- Dynamic arms and means
@@ -507,10 +509,9 @@ class DynamicMAB(MAB):
     def newRandomArms(self, verbose=True):
         """Generate a new list of arms, from ``arm_type(params['function](*params['args']))``."""
         self._arms = [self.arm_type(mean) for mean in self.function(**self.args)]
-        self.nbArms = len(self._arms)
+        self.nbArms = len(self._arms)  # useless
         if verbose:
             print("\n  - Creating a new dynamic set of means for arms: DynamicMAB = {} ...".format(repr(self)))  # DEBUG
-        return self._arms
 
     # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
 
