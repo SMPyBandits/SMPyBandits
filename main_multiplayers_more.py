@@ -371,7 +371,7 @@ if __name__ == '__main__':
 
         # --- Also plotting the fairness
         for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
-            savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
+            savefig = mainfig.replace('all', 'all_Fairness%s' % fairness)
             print("\n\n- Plotting the centralized fairness (%s)" % fairness)
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
