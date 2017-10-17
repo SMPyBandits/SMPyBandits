@@ -364,7 +364,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("Cumulative personal reward {}".format(r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : Personal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotFairness(self, envId=0, savefig=None, semilogx=False, fairness="default", evaluators=()):
@@ -397,7 +397,7 @@ class EvaluatorMultiPlayers(object):
         # plt.ylim(0, 1)
         plt.ylabel("Centralized measure of fairness for cumulative rewards ({})".format(fairnessName.title()))
         plt.title("Multi-players $M = {}$ : Centralized measure of fairness, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotRegretCentralized(self, envId=0, savefig=None,
@@ -475,7 +475,7 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : {}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotNbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
@@ -501,7 +501,7 @@ class EvaluatorMultiPlayers(object):
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ : {}umber of switches for each player, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated n" if cumulated else "N", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
@@ -527,7 +527,7 @@ class EvaluatorMultiPlayers(object):
             add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches by player".format("Cumulated number" if cumulated else "Frequency"))
         plt.title("Multi-players $M = {}$ : Centralized {}number of switches, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "cumulated " if cumulated else "", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotBestArmPulls(self, envId=0, savefig=None):
@@ -548,7 +548,7 @@ class EvaluatorMultiPlayers(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ : Best arm pulls frequency for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotAllPulls(self, envId=0, savefig=None, cumulated=True, normalized=False):
@@ -596,7 +596,7 @@ class EvaluatorMultiPlayers(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
         plt.title("Multi-players $M = {}$ : {}free transmission for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     # TODO I should plot the evolution of the occupation ratio of each channel, as a function of time
@@ -637,7 +637,7 @@ class EvaluatorMultiPlayers(object):
         plt.ylabel("{} of collisions".format("Cumulated number" if cumulated else "Frequency"))
         legend()
         plt.title("Multi-players $M = {}$ : {}of collisions, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotFrequencyCollisions(self, envId=0, savefig=None, piechart=True, semilogy=False):
@@ -683,7 +683,7 @@ class EvaluatorMultiPlayers(object):
                 add_percent_formatter("yaxis", 1.0)
         legend()
         plt.title("Multi-players $M = {}$ : Frequency of collision for each arm, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def printFinalRanking(self, envId=0):
@@ -739,7 +739,7 @@ class EvaluatorMultiPlayers(object):
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N))
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N), fig=fig, pickleit=True)
                 figs.append(fig)
             return figs
         elif subplots:
@@ -776,7 +776,7 @@ class EvaluatorMultiPlayers(object):
             plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
             legend()
         # Common part
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def strPlayers(self, short=False):

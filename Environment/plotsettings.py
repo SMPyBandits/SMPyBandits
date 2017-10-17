@@ -27,6 +27,9 @@ monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
 
 from os import getenv
 
+# Backup figure objects, XXX experimental
+import pickle
+
 if getenv('DEBUG', 'False') == 'True':
     signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits)".format(monthyear)  #: A small string to use as a signature
 else:
@@ -172,17 +175,24 @@ def maximizeWindow():
 
 #: List of formats to use for saving the figures, by default.
 #: It is a smart idea to save in both a raster and vectorial formats
-FORMATS = ('png', 'pdf')
-# FORMATS = ('png', 'pdf', 'svg')
+FORMATS = ('png', 'pdf', 'eps')
+# FORMATS = ('png', 'pdf', 'eps', 'svg')
 
 
-def show_and_save(showplot=True, savefig=None, formats=FORMATS):
+def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, fig=None):
     """ Maximize the window, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
     """
     maximizeWindow()
     if savefig is not None:
+        if pickleit and fig is not None:
+            form = "pickle"
+            path = "{}.{}".format(savefig, form)
+            print("Saving raw figure with format {}, to file '{}'...".format(form, path))  # DEBUG
+            with open(path, "bw") as f:
+                pickle.dump(fig, f)
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
         for form in formats:
             path = "{}.{}".format(savefig, form)
             print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG

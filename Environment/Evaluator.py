@@ -450,7 +450,7 @@ class Evaluator(object):
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -472,7 +472,7 @@ class Evaluator(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def printFinalRanking(self, envId=0, moreAccurate=None):
@@ -525,7 +525,7 @@ class Evaluator(object):
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=bins)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N))
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=True)
                 figs.append(fig)
             return figs
         elif subplots:
@@ -557,7 +557,7 @@ class Evaluator(object):
             plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
             legend()
         # Common part
-        show_and_save(self.showplot, savefig)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
 

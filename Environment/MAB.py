@@ -241,7 +241,7 @@ class MAB(object):
         lowerbounds = np.zeros((3, nbPlayers))
         for i in range(nbPlayers):
             lowerbounds[:, i] = self.lowerbound_multiplayers(i + 1)
-        plt.figure()
+        fig = plt.figure()
         X = np.arange(1, 1 + nbPlayers)
         plt.plot(X, lowerbounds[0, :], 'ro-', label="Besson & Kaufmann lowerbound")
         plt.plot(X, lowerbounds[1, :], 'bd-', label="Anandkumar et al. lowerbound")
@@ -249,7 +249,8 @@ class MAB(object):
         plt.xlabel("Number $M$ of players in the multi-players game{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret")
         plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: {}".format(self.nbArms, self.reprarms(0, latex=True)))
-        show_and_save(showplot=True, savefig=savefig)
+        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=True)
+        return fig
 
     def plotHistogram(self, horizon=10000, savefig=None):
         """Plot a horizon=10000 draws of each arms."""
@@ -263,14 +264,15 @@ class MAB(object):
                 for t in range(horizon):
                     rewards[armId, t] = arm.draw(t)
         # Now plot
-        plt.figure()
+        fig = plt.figure()
         for armId, arm in enumerate(arms):
             plt.hist(rewards[armId, :], bins=200, normed=True, color=colors[armId], label='$%s$' % repr(arm), alpha=0.7)
         legend()
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: {}{}".format(horizon, self.nbArms, self.reprarms(latex=True), signature))
-        show_and_save(showplot=True, savefig=savefig)
+        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=True)
+        return fig
 
 
 RESTED = True  #: Default is rested Markovian.
