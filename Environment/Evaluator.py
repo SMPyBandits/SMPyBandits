@@ -92,7 +92,7 @@ class Evaluator(object):
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards, ie accumulated rewards
-        self.last_cum_rewards = np.zeros((self.nbPolicies, len(self.envs), self.repetitions))  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
+        self.lastCumRewards = np.zeros((self.nbPolicies, len(self.envs), self.repetitions))  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
         self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
         self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
 
@@ -101,16 +101,19 @@ class Evaluator(object):
         if STORE_ALL_REWARDS:
             self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
 
-        self.choices = dict()  #: For each env, keep the history of all arm pulls for each repetitions
-        self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
+        self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.pulls = dict()  #: For each env, keep cumulative counts of all arm pulls
+        self.allPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
+        self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
+        # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for env in range(len(self.envs)):
-            self.choices[env] = np.zeros((self.nbPolicies, self.duration, self.repetitions))
-            self.BestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
+            self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
+            self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.duration))
+            self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
-        self.times = np.arange(1, 1 + self.horizon, self.delta_t_save)
+        self._times = np.arange(1, 1 + self.horizon, self.delta_t_save)
 
     # --- Init methods
 
@@ -174,7 +177,7 @@ class Evaluator(object):
         def store(r, policyId, repeatId):
             """ Store the result of the #repeatId experiment, for the #policyId policy."""
             self.rewards[policyId, envId, :] += r.rewards
-            self.last_cum_rewards[policyId, envId, repeatId] = np.sum(r.rewards)
+            self.lastCumRewards[policyId, envId, repeatId] = np.sum(r.rewards)
             if hasattr(self, 'rewardsSquared'):
                 self.rewardsSquared[policyId, envId, :] += (r.rewards ** 2)
             if hasattr(self, 'allRewards'):
@@ -183,9 +186,10 @@ class Evaluator(object):
                 self.minCumRewards[policyId, envId, :] = np.minimum(self.minCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             if hasattr(self, 'maxCumRewards'):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
-            self.BestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
-            self.choices[envId][policyId, :, repeatId] = r.choices
+            self.bestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
+            self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
+            self.lastPulls[envId][policyId, :, repeatId] = r.pulls
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
@@ -230,7 +234,7 @@ class Evaluator(object):
                 hdf.allRewards = self.allRewards
             except (TypeError, AttributeError, KeyError):
                 pass
-            hdf.BestArmPulls = self.BestArmPulls
+            hdf.bestArmPulls = self.bestArmPulls
             hdf.pulls = self.pulls
         raise ValueError("FIXME finish to write this function saveondisk() for Evaluator!")
 
@@ -258,7 +262,7 @@ class Evaluator(object):
             self.allRewards = hdf.allRewards
         except (TypeError, AttributeError, KeyError):
             pass
-        self.BestArmPulls = hdf.BestArmPulls
+        self.bestArmPulls = hdf.BestArmPulls
         self.pulls = hdf.pulls
         raise ValueError("FIXME finish to write this function loadfromdisk() for Evaluator!")
 
@@ -269,7 +273,7 @@ class Evaluator(object):
     def getBestArmPulls(self, policyId, envId=0):
         """Extract mean best arm pulls."""
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[envId][policyId, :] / (float(self.repetitions) * self.times)
+        return self.bestArmPulls[envId][policyId, :] / (float(self.repetitions) * self._times)
 
     def getRewards(self, policyId, envId=0):
         """Extract mean rewards."""
@@ -279,7 +283,7 @@ class Evaluator(object):
         """Extract weighted count of selections."""
         weighted_selections = np.zeros(self.horizon)
         for armId, mean in enumerate(self.envs[envId].means):
-            mean_selections = np.mean(self.choices[envId][policyId, :, :] == armId, axis=1)  # mean on repetitions
+            mean_selections = self.allPulls[envId][policyId, armId, :] / float(self.repetitions)
             weighted_selections += mean * mean_selections
         return weighted_selections
 
@@ -289,7 +293,7 @@ class Evaluator(object):
 
     def getCumulatedRegret_LessAccurate(self, policyId, envId=0):
         """Compute cumulative regret, based on accumulated rewards."""
-        # return self.times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
+        # return self._times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
         return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
 
     def getCumulatedRegret_MoreAccurate(self, policyId, envId=0):
@@ -307,13 +311,13 @@ class Evaluator(object):
 
     def getLastRegrets_LessAccurate(self, policyId, envId=0):
         """Extract last regrets, based on accumulated rewards."""
-        return self.horizon * self.envs[envId].maxArm - self.last_cum_rewards[policyId, envId, :]
+        return self.horizon * self.envs[envId].maxArm - self.lastCumRewards[policyId, envId, :]
 
     def getAllLastWeightedSelections(self, policyId, envId=0):
         """Extract weighted count of selections."""
         all_last_weighted_selections = np.zeros(self.repetitions)
         for armId, mean in enumerate(self.envs[envId].means):
-            last_selections = np.sum(self.choices[envId][policyId, :, :] == armId, axis=0)  # sum on horizon
+            last_selections = self.lastPulls[envId][policyId, armId, :]
             all_last_weighted_selections += mean * last_selections
         return all_last_weighted_selections
 
@@ -332,7 +336,7 @@ class Evaluator(object):
 
     def getAverageRewards(self, policyId, envId=0):
         """Extract mean rewards (not `rewards` but `cumsum(rewards)/cumsum(1)`."""
-        return np.cumsum(self.getRewards(policyId, envId)) / self.times
+        return np.cumsum(self.getRewards(policyId, envId)) / self._times
 
     def getRewardsSquared(self, policyId, envId=0):
         """Extract rewards squared."""
@@ -340,7 +344,7 @@ class Evaluator(object):
 
     def getSTDRegret(self, policyId, envId=0, meanRegret=False):
         """Extract standard deviation of rewards. FIXME experimental! """
-        # X = self.times
+        # X = self._times
         # YMAX = self.getMaxRewards(envId=envId)
         # Y = self.getRewards(policyId, envId)
         # Y2 = self.getRewardsSquared(policyId, envId)
@@ -382,7 +386,7 @@ class Evaluator(object):
         ymin = 0
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        X = self.times - 1
+        X = self._times - 1
         plot_method = plt.loglog if loglog else plt.plot
         plot_method = plt.semilogy if semilogy else plot_method
         plot_method = plt.semilogx if semilogx else plot_method
@@ -461,7 +465,7 @@ class Evaluator(object):
         fig = plt.figure()
         colors = palette(self.nbPolicies)
         markers = makemarkers(self.nbPolicies)
-        X = self.times[2:]
+        X = self._times[2:]
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
             lw = 4 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy) or 'LearnExp' in str(policy) or 'Exp4' in str(policy)) else 2
@@ -532,6 +536,13 @@ class Evaluator(object):
             nrows, ncols = nrows_ncols(N)
             fig, axes = plt.subplots(nrows, ncols, sharex=sharex, sharey=sharey)
             fig.suptitle("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+            # XXX See https://stackoverflow.com/a/36542971/
+            ax0 = fig.add_subplot(111, frame_on=False)  # add a big axes, hide frame
+            ax0.grid(False)  # hide grid
+            ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
+            # Add only once the ylabel, xlabel, in the middle
+            ax0.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
@@ -539,11 +550,7 @@ class Evaluator(object):
                 n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins, log=log)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
-                # Add only once the ylabel, xlabel, in the middle
-                if i == (nrows // 2) and j == 0:
-                    ax.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                if i == nrows - 1 and j == (ncols // 2):
-                    ax.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))

@@ -78,30 +78,31 @@ class EvaluatorMultiPlayers(object):
         # Internal vectorial memory
         self.rewards = dict()  #: For each env, history of rewards
         # self.rewardsSquared = dict()
-        self.choices = dict()  #: For each env, keep the history of all arm pulls for each repetitions
-        self.pulls = dict()  #: For each env, keep the history of best arm pulls
-        self.allPulls = dict()  #: For each env, keep the full history of best arm pulls
+        self.pulls = dict()  #: For each env, keep the history of arm pulls (mean)
+        self.lastPulls = dict()  #: For each env, keep the distribution of arm pulls
+        self.allPulls = dict()  #: For each env, keep the full history of arm pulls
         self.collisions = dict()  #: For each env, keep the history of collisions on all arms
-        self.last_cum_collisions = dict()  #: For each env, last count of collisions on all arms
-        self.NbSwitchs = dict()  #: For each env, keep the history of switches (change of configuration of players)
-        self.BestArmPulls = dict()  #: For each env, keep the history of best arm pulls
-        self.FreeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
-        self.last_cum_rewards = dict()  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
+        self.lastCumCollisions = dict()  #: For each env, last count of collisions on all arms
+        self.nbSwitchs = dict()  #: For each env, keep the history of switches (change of configuration of players)
+        self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
+        self.freeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
+        self.lastCumRewards = dict()  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
         print("Number of environments to try:", len(self.envs))  # DEBUG
+        # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):  # Zeros everywhere
             self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.duration))
-            self.last_cum_rewards[envId] = np.zeros(self.repetitions)
-            self.choices[envId] = np.zeros((self.nbPlayers, self.duration, self.repetitions))
+            self.lastCumRewards[envId] = np.zeros(self.repetitions)
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
+            self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions))
             self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.duration))
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.duration))
-            self.last_cum_collisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions))
-            self.NbSwitchs[envId] = np.zeros((self.nbPlayers, self.duration))
-            self.BestArmPulls[envId] = np.zeros((self.nbPlayers, self.duration))
-            self.FreeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions))
+            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
         # To speed up plotting
-        self.times = np.arange(1, 1 + self.horizon, self.delta_t_save)
+        self._times = np.arange(1, 1 + self.horizon, self.delta_t_save)
 
     # --- Init methods
 
@@ -158,17 +159,17 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)  # cumsum on time
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)  # cumsum on time
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)  # cumsum on time
-            self.last_cum_rewards[envId][repeatId] = np.sum(r.rewards)  # sum on time and sum on policies
+            self.lastCumRewards[envId][repeatId] = np.sum(r.rewards)  # sum on time and sum on policies
             self.pulls[envId] += r.pulls
-            self.choices[envId][:, :, repeatId] = r.choices
+            self.lastPulls[envId][:, :, repeatId] = r.pulls
             self.allPulls[envId] += r.allPulls
             self.collisions[envId] += r.collisions
-            self.last_cum_collisions[envId][:, repeatId] = np.sum(r.collisions, axis=1)  # sum on time
+            self.lastCumCollisions[envId][:, repeatId] = np.sum(r.collisions, axis=1)  # sum on time
             for playerId in range(self.nbPlayers):
-                self.NbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
-                self.BestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
+                self.nbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
+                self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
                 # FIXME there is probably a bug in this computation
-                self.FreeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.duration)])
+                self.freeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.duration)])
 
         # Start now
         if self.useJoblib:
@@ -195,22 +196,22 @@ class EvaluatorMultiPlayers(object):
         """Extract mean of all pulls."""
         return self.allPulls[envId][playerId, armId, :] / float(self.repetitions)
 
-    def getNbSwitchs(self, playerId, envId=0):
+    def getnbSwitchs(self, playerId, envId=0):
         """Extract mean nb of switches."""
-        return self.NbSwitchs[envId][playerId, :] / float(self.repetitions)
+        return self.nbSwitchs[envId][playerId, :] / float(self.repetitions)
 
-    def getCentralizedNbSwitchs(self, envId=0):
+    def getCentralizednbSwitchs(self, envId=0):
         """Extract average of mean nb of switches."""
-        return np.sum(self.NbSwitchs[envId], axis=0) / (float(self.repetitions) * self.nbPlayers)
+        return np.sum(self.nbSwitchs[envId], axis=0) / (float(self.repetitions) * self.nbPlayers)
 
-    def getBestArmPulls(self, playerId, envId=0):
+    def getbestArmPulls(self, playerId, envId=0):
         """Extract mean of best arms pulls."""
         # We have to divide by a arange() = cumsum(ones) to get a frequency
-        return self.BestArmPulls[envId][playerId, :] / (float(self.repetitions) * self.times)
+        return self.bestArmPulls[envId][playerId, :] / (float(self.repetitions) * self._times)
 
-    def getFreeTransmissions(self, playerId, envId=0):
+    def getfreeTransmissions(self, playerId, envId=0):
         """Extract mean of successful transmission."""
-        return self.FreeTransmissions[envId][playerId, :] / float(self.repetitions)
+        return self.freeTransmissions[envId][playerId, :] / float(self.repetitions)
 
     def getCollisions(self, armId, envId=0):
         """Extract mean of number of collisions."""
@@ -225,7 +226,7 @@ class EvaluatorMultiPlayers(object):
 
         - Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
         """
-        return (self.times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
+        return (self._times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
     def getCentralizedRegret_LessAccurate(self, envId=0):
         """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players, based on accumulated rewards."""
@@ -238,7 +239,7 @@ class EvaluatorMultiPlayers(object):
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
-        averageBestRewards = self.times * sumBestMeans
+        averageBestRewards = self._times * sumBestMeans
         # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
         actualRewards = sum(self.getRewards(playerId, envId) for playerId in range(self.nbPlayers))
         return averageBestRewards - actualRewards
@@ -267,16 +268,15 @@ class EvaluatorMultiPlayers(object):
             # sure to have collisions, then the best strategy is to put all the collisions in the worse arm
             worseArm = np.min(meansArms)
             sumBestMeans -= worseArm  # This count the collisions
-        return self.horizon * sumBestMeans - self.last_cum_rewards[envId]
+        return self.horizon * sumBestMeans - self.lastCumRewards[envId]
 
     def getAllLastWeightedSelections(self, envId=0):
         """Extract weighted count of selections."""
         all_last_weighted_selections = np.zeros(self.repetitions)
-        last_cum_collisions = self.last_cum_collisions[envId]
+        lastCumCollisions = self.lastCumCollisions[envId]
         for armId, mean in enumerate(self.envs[envId].means):
-            all_last_selections = np.sum(self.choices[envId][:, :, :] == armId, axis=1)  # sum on horizon
-            last_selections = np.sum(all_last_selections, axis=0)  # sum on players
-            all_last_weighted_selections += mean * (last_selections - last_cum_collisions[armId, :])
+            last_selections = np.sum(self.lastPulls[envId][:, armId, :], axis=0)  # sum on players
+            all_last_weighted_selections += mean * (last_selections - lastCumCollisions[armId, :])
         return all_last_weighted_selections
 
     def getLastRegrets_MoreAccurate(self, envId=0):
@@ -349,7 +349,7 @@ class EvaluatorMultiPlayers(object):
         ymin = 0
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
-        X = self.times - 1
+        X = self._times - 1
         cumRewards = np.zeros((self.nbPlayers, self.duration))
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
@@ -370,7 +370,7 @@ class EvaluatorMultiPlayers(object):
     def plotFairness(self, envId=0, savefig=None, semilogx=False, fairness="default", evaluators=()):
         """Plot a certain measure of "fairness", from these personal rewards, support more than one environments (use evaluators to give a list of other environments)."""
         fig = plt.figure()
-        X = self.times - 1
+        X = self._times - 1
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))
         markers = makemarkers(len(evaluators))
@@ -410,7 +410,7 @@ class EvaluatorMultiPlayers(object):
         - The three terms of the regret are also plotting if evaluators = () (that's the default).
         """
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        X0 = X = self.times - 1
+        X0 = X = self._times - 1
         fig = plt.figure()
         if subTerms or len(list(evaluators)) == 0:  # XXX
             moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
@@ -478,9 +478,9 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotNbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
+    def plotnbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
         """Plot cumulated number of switchs (to evaluate the switching costs), comparing each player."""
-        X = self.times - 1
+        X = self._times - 1
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPlayers)
@@ -488,7 +488,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogx if semilogx else plt.plot
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
-            Y = self.getNbSwitchs(playerId, envId)
+            Y = self.getnbSwitchs(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -504,9 +504,9 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
+    def plotnbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
         """Plot the centralized cumulated number of switchs (to evaluate the switching costs), support more than one environments (use evaluators to give a list of other environments)."""
-        X = self.times - 1
+        X = self._times - 1
         fig = plt.figure()
         ymin = 0
         evaluators = [self] + list(evaluators)  # Default to only [self]
@@ -515,7 +515,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogx if semilogx else plt.plot
         for evaId, eva in enumerate(evaluators):
             label = "" if len(evaluators) == 1 else eva.strPlayers(short=True)
-            Y = eva.getCentralizedNbSwitchs(envId)
+            Y = eva.getCentralizednbSwitchs(envId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -530,18 +530,18 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotBestArmPulls(self, envId=0, savefig=None):
+    def plotbestArmPulls(self, envId=0, savefig=None):
         """Plot the frequency of pulls of the best channel.
 
         - Warning: does not adapt to dynamic settings!
         """
-        X = self.times - 1
+        X = self._times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
-            Y = self.getBestArmPulls(playerId, envId)
+            Y = self.getbestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -553,7 +553,7 @@ class EvaluatorMultiPlayers(object):
 
     def plotAllPulls(self, envId=0, savefig=None, cumulated=True, normalized=False):
         """Plot the frequency of use of every channels, one figure for each channel. Not so useful."""
-        X = self.times - 1
+        X = self._times - 1
         mainfig = savefig
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
@@ -574,19 +574,19 @@ class EvaluatorMultiPlayers(object):
             plt.title("Multi-players $M = {}$ : {} of pulls of the arm #{} for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, s.lower(), armId + 1, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
             maximizeWindow()
             if savefig is not None:
-                savefig = mainfig.replace("AllPulls", "AllPulls_Arm{}".format(armId + 1))
+                savefig = mainfig.replace("allPulls", "allPulls_Arm{}".format(armId + 1))
                 print("Saving to", savefig, "...")  # DEBUG
                 plt.savefig(savefig, bbox_inches=BBOX_INCHES)
             plt.show() if self.showplot else plt.close()
         return figs
 
-    def plotFreeTransmissions(self, envId=0, savefig=None, cumulated=False):
+    def plotfreeTransmissions(self, envId=0, savefig=None, cumulated=False):
         """Plot the frequency free transmission."""
-        X = self.times - 1
+        X = self._times - 1
         fig = plt.figure()
         colors = palette(self.nbPlayers)
         for playerId, player in enumerate(self.players):
-            Y = self.getFreeTransmissions(playerId, envId)
+            Y = self.getfreeTransmissions(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], linewidth=1, markersize=1)
@@ -607,7 +607,7 @@ class EvaluatorMultiPlayers(object):
                          semilogx=False, semilogy=False, loglog=False,
                          cumulated=False, upperbound=False, evaluators=()):
         """Plot the frequency or cum number of collisions, support more than one environments (use evaluators to give a list of other environments)."""
-        X = self.times - 1
+        X = self._times - 1
         fig = plt.figure()
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(len(evaluators))

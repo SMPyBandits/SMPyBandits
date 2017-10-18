@@ -13,6 +13,7 @@ import sys
 from os import mkdir
 import os.path
 from os import getenv
+from itertools import product
 
 # Backup evaluation object
 import pickle
@@ -224,12 +225,21 @@ if __name__ == '__main__':
             evaluation.plotLastRegrets(envId, subplots=False)
             savefig = mainfig.replace('main', 'main_HistogramsRegret')
             print(" - Plotting the histograms of regrets, and saving the plot to {} ...".format(savefig))
-            evaluation.plotLastRegrets(envId, savefig=savefig)  # XXX To save the figure
+            for sharex, sharey in product([True, False], repeat=2):
+                savefig = mainfig.replace('main', 'main_HistogramsRegret{}{}'.format(
+                    "_shareX" if sharex else "",
+                    "_shareY" if sharey else "",
+                ))
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotLastRegrets(envId, savefig=savefig, sharex=sharex, sharey=sharey)  # XXX To save the figure
             print(" - Plotting the histograms of regrets for each algorithm separately, and saving the plots ...")
+            savefig = mainfig.replace('main', 'main_HistogramsRegret')
+            print("  and saving the plot to {} ...".format(savefig))
             evaluation.plotLastRegrets(envId, all_on_separate_figures=True, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
-            evaluation.plotLastRegrets(envId)  # XXX To plot without saving
+            for sharex, sharey in product([True, False], repeat=2):
+                evaluation.plotLastRegrets(envId, sharex=sharex, sharey=sharey)  # XXX To plot without saving
             evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
 
         if saveallfigs:
