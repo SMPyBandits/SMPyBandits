@@ -99,7 +99,7 @@ if __name__ == '__main__':
         evaluation.printLastRegrets(envId)
 
         # Sub folder with a useful name
-        subfolder = "MP__M{}_T{}_N{}".format(len(configuration['players']), configuration['horizon'], configuration['repetitions'])
+        subfolder = "MP__K{}_M{}_T{}_N{}".format(env.nbArms, len(configuration['players']), configuration['horizon'], configuration['repetitions'])
         # Get the name of the output file
         imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         plot_dir = os.path.join(PLOT_DIR, subfolder)

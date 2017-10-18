@@ -117,7 +117,7 @@ if __name__ == '__main__':
         evaluation.printLastRegrets(envId)
 
         # Sub folder with a useful name
-        subfolder = "T{}_N{}__{}_algos".format(configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
 
         # Get the name of the output file

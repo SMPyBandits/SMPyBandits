@@ -119,7 +119,7 @@ if __name__ == '__main__':
             evaluation.printLastRegrets(envId)
 
             # Sub folder with a useful name
-            subfolder = "MP__M{}_T{}_N{}__{}_algos".format(M, configuration['horizon'], configuration['repetitions'], N_players)
+            subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
             # Get the name of the output file
             imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             # Create the sub folder
