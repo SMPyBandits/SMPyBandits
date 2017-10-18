@@ -196,11 +196,11 @@ class EvaluatorMultiPlayers(object):
         """Extract mean of all pulls."""
         return self.allPulls[envId][playerId, armId, :] / float(self.repetitions)
 
-    def getnbSwitchs(self, playerId, envId=0):
+    def getNbSwitchs(self, playerId, envId=0):
         """Extract mean nb of switches."""
         return self.nbSwitchs[envId][playerId, :] / float(self.repetitions)
 
-    def getCentralizednbSwitchs(self, envId=0):
+    def getCentralizedNbSwitchs(self, envId=0):
         """Extract average of mean nb of switches."""
         return np.sum(self.nbSwitchs[envId], axis=0) / (float(self.repetitions) * self.nbPlayers)
 
@@ -478,7 +478,7 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotnbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
+    def plotNbSwitchs(self, envId=0, savefig=None, semilogx=False, cumulated=False):
         """Plot cumulated number of switchs (to evaluate the switching costs), comparing each player."""
         X = self._times - 1
         fig = plt.figure()
@@ -488,7 +488,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogx if semilogx else plt.plot
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
-            Y = self.getnbSwitchs(playerId, envId)
+            Y = self.getNbSwitchs(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -504,7 +504,7 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotnbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
+    def plotNbSwitchsCentralized(self, envId=0, savefig=None, semilogx=False, cumulated=False, evaluators=()):
         """Plot the centralized cumulated number of switchs (to evaluate the switching costs), support more than one environments (use evaluators to give a list of other environments)."""
         X = self._times - 1
         fig = plt.figure()
@@ -515,7 +515,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogx if semilogx else plt.plot
         for evaId, eva in enumerate(evaluators):
             label = "" if len(evaluators) == 1 else eva.strPlayers(short=True)
-            Y = eva.getCentralizednbSwitchs(envId)
+            Y = eva.getCentralizedNbSwitchs(envId)
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -530,7 +530,7 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotbestArmPulls(self, envId=0, savefig=None):
+    def plotBestArmPulls(self, envId=0, savefig=None):
         """Plot the frequency of pulls of the best channel.
 
         - Warning: does not adapt to dynamic settings!
@@ -580,7 +580,7 @@ class EvaluatorMultiPlayers(object):
             plt.show() if self.showplot else plt.close()
         return figs
 
-    def plotfreeTransmissions(self, envId=0, savefig=None, cumulated=False):
+    def plotFreeTransmissions(self, envId=0, savefig=None, cumulated=False):
         """Plot the frequency free transmission."""
         X = self._times - 1
         fig = plt.figure()
