@@ -66,6 +66,7 @@ class EvaluatorMultiPlayers(object):
         self.signature = signature
         # Flags
         self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+        print("Using accurate regrets and last regrets ? {}".format(moreAccurate))
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', FINAL_RANKS_ON_AVERAGE)  #: Final display of ranks are done on average rewards?
         self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
@@ -175,12 +176,17 @@ class EvaluatorMultiPlayers(object):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             repeatIdout = 0
+            historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                 delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
+                historyOfMeans.append(r._means)
                 store(r, repeatIdout)
                 repeatIdout += 1
+            # FIXME experimental!
+            env._t += self.repetitions  # new self.repetitions draw!
+            env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
@@ -243,10 +249,6 @@ class EvaluatorMultiPlayers(object):
         actualRewards = np.sum(self.rewards[envId][:, :], axis=0) / float(self.repetitions)
         return averageBestRewards - actualRewards
 
-    def getCentralizedRegret_MoreAccurate(self, envId=0):
-        """Compute the empirical centralized regret, based on counts of selections and not actual rewards."""
-        return self.getFirstRegretTerm(envId=envId) + self.getSecondRegretTerm(envId=envId) + self.getThirdRegretTerm(envId=envId)
-
     # --- Three terms in the regret
 
     def getFirstRegretTerm(self, envId=0):
@@ -286,15 +288,18 @@ class EvaluatorMultiPlayers(object):
         thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
         return thirdRegretTerm
 
+    def getCentralizedRegret_MoreAccurate(self, envId=0):
+        """Compute the empirical centralized regret, based on counts of selections and not actual rewards."""
+        return self.getFirstRegretTerm(envId=envId) + self.getSecondRegretTerm(envId=envId) + self.getThirdRegretTerm(envId=envId)
+
     def getCentralizedRegret(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        # print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
+        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getCentralizedRegret_MoreAccurate(envId=envId)
         else:
             return self.getCentralizedRegret_LessAccurate(envId=envId)
-    
     # --- Last regrets
 
     def getLastRegrets_LessAccurate(self, envId=0):
@@ -333,7 +338,7 @@ class EvaluatorMultiPlayers(object):
     def getLastRegrets(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        # print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
+        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getLastRegrets_MoreAccurate(envId=envId)
         else:
@@ -411,8 +416,8 @@ class EvaluatorMultiPlayers(object):
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         X0 = X = self._times - 1
         fig = plt.figure()
-        if subTerms or len(list(evaluators)) == 0:  # XXX
-            moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
+        # if subTerms or len(list(evaluators)) == 0:  # XXX
+        #     moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         markers = makemarkers(5 if len(evaluators) == 1 and subTerms else len(evaluators))
@@ -801,8 +806,9 @@ def delayed_play(env, players, horizon, collisionModel,
             random.seed(seed)
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
+    means = env.means
     if env.isDynamic:  # FIXME compute the correct regret!
-        env.newRandomArms()
+        means = env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms
     nbPlayers = len(players)
@@ -811,7 +817,7 @@ def delayed_play(env, players, horizon, collisionModel,
     for player in players:
         player.startGame()
     # Store results
-    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers)
+    result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers, means=means)
     # , delta_t_save=delta_t_save
     rewards = np.zeros(nbPlayers)
     choices = np.zeros(nbPlayers, dtype=int)

@@ -524,9 +524,9 @@ class DynamicMAB(MAB):
         print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         print("  It has self.means =\n{}".format(self.means))  # DEBUG
         if latex:
-            text = r"\mathrm{%s}(K=%i$, %s on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", \delta_{\min}=%.3g" % self.args["mingap"])
+            text = r"\mathrm{%s}(K=%i$, %s with means on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", $min gap$=%.3g" % self.args["mingap"])
         else:
-            text = r"%s(K=%i, %s on [%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", gap=%.3g" % self.args["mingap"])
+            text = r"%s(K=%i, %s with means on [%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
         return wraplatex('$' + text + '$') if latex else wraptext(text)
 
     #
@@ -534,14 +534,15 @@ class DynamicMAB(MAB):
 
     def newRandomArms(self, verbose=True):
         """Generate a new list of arms, from ``arm_type(params['function](*params['args']))``."""
-        self._t += 1  # new draw!
         one_draw_of_means = self.function(**self.args)
         self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless
+        self._t += 1  # new draw!
         self._historyOfMeans.append(one_draw_of_means)
         if verbose:
             print("\n  - Creating a new dynamic set of means = {} for arms: DynamicMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
             print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
+        return one_draw_of_means
 
     # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
 
