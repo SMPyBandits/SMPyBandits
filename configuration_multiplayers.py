@@ -251,15 +251,16 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        {   # TODO A Bayesian problem: every repetition use a different mean vectors!
+        {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": Bernoulli,
             "params": {
                 "function": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
-                    # "mingap": 0.5 / NB_ARMS,
-                    "mingap": None,
+                    # "mingap": None,
+                    # "mingap": 0.01,
                     # "mingap": 0.1,
+                    "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
                     "amplitude": 1.,
                     # "isSorted": False,

@@ -194,15 +194,16 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        {   # TODO A Bayesian problem: every repetition use a different mean vectors!
+        {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": Bernoulli,
             "params": {
                 "function": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
                     # "mingap": None,
-                    "mingap": 0.1,
                     # "mingap": 0.01,
+                    # "mingap": 0.1,
+                    "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
                     "amplitude": 1.,
                     # "isSorted": False,

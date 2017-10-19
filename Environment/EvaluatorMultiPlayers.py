@@ -723,7 +723,7 @@ class EvaluatorMultiPlayers(object):
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
     def plotLastRegrets(self, envId=0,
-                        normed=False, subplots=True, bins=30, log=False,
+                        normed=True, subplots=True, bins=25, log=False,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=None,
                         evaluators=()):
@@ -740,7 +740,7 @@ class EvaluatorMultiPlayers(object):
                 fig = plt.figure()
                 plt.title("Multi-players $M = {}$ : Histogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
-                plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+                plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 n, bins, patches = plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
@@ -757,7 +757,7 @@ class EvaluatorMultiPlayers(object):
             ax0.grid(False)  # hide grid
             ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
-            ax0.set_ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            ax0.set_ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
             # now for the subplots
             for evaId, eva in enumerate(evaluators):
@@ -773,7 +773,7 @@ class EvaluatorMultiPlayers(object):
             fig = plt.figure()
             plt.title("Multi-players $M = {}$ : Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.nbPlayers, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
             plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
-            plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
+            plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             all_last_regrets = []
             labels = []
             for evaId, eva in enumerate(evaluators):

@@ -478,7 +478,11 @@ VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic M
 class DynamicMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the newRandomArms() method.
 
-    - M.arms and M.means is changed after each call to ``newRandomArms()``, but not nbArm.
+    - M.arms and M.means is changed after each call to ``newRandomArms()``, but not nbArm. All the other methods are carefully written to still make sense (Mbest, Mworst, minArm, maxArm).
+
+    .. warning:: It works but it is still experimental, be careful when using this feature.
+
+    .. note:: When testing bandit algorithms against randomly generated problems at each repetitions is usually referred to as *"Bayesian problems"* in the literature: a prior is set on problems (eg. uniform on :math:`[0,1]^K` or less obvious for instance if a ``mingap`` is set), and the performance is assessed against this prior. It differes from the frequentist point of view of having one fixed problem and doing eg. 1000 repetitions on the same problem.
     """
 
     def __init__(self, configuration, verbose=VERBOSE):

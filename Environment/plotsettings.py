@@ -288,7 +288,7 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0., normed=False, fontsize=8
         >>> addTextForWorstCases(ax, n, bins, patches, rate=0.65)
     """
     # DONE add an automatic detection of the cases where a regret was found to not be O(log(T)) to display on the histogram the count of bad cases
-    assert 0 < rate < 1, "Error: 'rate' = {:.3g} should be in (0, 1).".format(rate)  # DEBUG
+    assert 0 <= rate <= 1, "Error: 'rate' = {:.3g} should be in [0, 1].".format(rate)  # DEBUG
     max_x = max(p.xy[0] for p in patches)
     for nx, b, p in zip(n, bins[1:], patches):
         text = "{:.3%}".format(nx) if normed else "{:.3g}".format(nx)
