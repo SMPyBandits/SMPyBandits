@@ -473,13 +473,15 @@ class MarkovianMAB(MAB):
         return float(nextState)
 
 
+VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic MAB
+
 class DynamicMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the newRandomArms() method.
 
     - M.arms and M.means is changed after each call to ``newRandomArms()``, but not nbArm.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, verbose=VERBOSE):
         """New dynamic MAB."""
         self.isDynamic = True  #: Flag to know if the problem is static or not.
 
@@ -487,6 +489,7 @@ class DynamicMAB(MAB):
             and "arm_type" in configuration and "params" in configuration \
             and "function" in configuration["params"] and "args" in configuration["params"], \
             "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"  # DEBUG
+        self._verbose = verbose
 
         print("  Special MAB problem, changing at every repetitions, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
 
@@ -520,9 +523,9 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        print("reprarms of a DynamicMAB object...")  # DEBUG
-        print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
-        print("  It has self.means =\n{}".format(self.means))  # DEBUG
+        # print("reprarms of a DynamicMAB object...")  # DEBUG
+        # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
+        # print("  It has self.means =\n{}".format(self.means))  # DEBUG
         if latex:
             text = r"\mathrm{%s}(K=%i$, %s with means on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", $min gap$=%.3g" % self.args["mingap"])
         else:
@@ -532,16 +535,16 @@ class DynamicMAB(MAB):
     #
     # --- Dynamic arms and means
 
-    def newRandomArms(self, verbose=True):
+    def newRandomArms(self, verbose=VERBOSE):
         """Generate a new list of arms, from ``arm_type(params['function](*params['args']))``."""
         one_draw_of_means = self.function(**self.args)
         self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless
         self._t += 1  # new draw!
         self._historyOfMeans.append(one_draw_of_means)
-        if verbose:
+        if verbose or self._verbose:
             print("\n  - Creating a new dynamic set of means = {} for arms: DynamicMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
-            print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
+            # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
         return one_draw_of_means
 
     # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
@@ -565,24 +568,28 @@ class DynamicMAB(MAB):
     # --- Helper to compute sets Mbest and Mworst
 
     def Mbest(self, M=1):
-        """ Set of M best means."""
+        """ Set of M best means (averaged on all the draws of new means)."""
         sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans), axis=1), axis=0)
         return sortedMeans[-M:]
 
     def Mworst(self, M=1):
-        """ Set of M worst means."""
+        """ Set of M worst means (averaged on all the draws of new means)."""
         sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans), axis=1), axis=0)
         return sortedMeans[:-M]
 
     @property
     def minArm(self):
-        """Return the *current* smallest mean of the arms, for a dynamic MAB."""
-        return np.min(self.means)
+        """Return the smallest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
+        # XXX equivalent to np.mean(np.min(means) for means in ...) ? NOPE
+        # return np.min(self.means)
+        return np.mean(np.min(np.array(self._historyOfMeans)))
 
     @property
     def maxArm(self):
-        """Return the *current* largest mean of the arms, for a dynamic MAB."""
-        return np.max(self.means)
+        """Return the largest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
+        # XXX equivalent to np.mean(np.max(means) for means in ...) ? NOPE
+        # return np.max(self.means)
+        return np.mean(np.max(np.array(self._historyOfMeans)))
 
 
 # --- Utility functions

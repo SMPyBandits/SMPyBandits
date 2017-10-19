@@ -48,6 +48,7 @@ HORIZON = 10000
 # HORIZON = 30000
 # HORIZON = 40000
 # HORIZON = 100000
+HORIZON = int(getenv('T', HORIZON))
 
 #: DELTA_T_SAVE : save only 1 / DELTA_T_SAVE points, to speed up computations, use less RAM, speed up plotting etc.
 #: Warning: not perfectly finished right now.
@@ -57,14 +58,15 @@ DELTA_T_SAVE = 1  # XXX to disable this optimization
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to h    ave exactly one repetition process by cores
 # REPETITIONS = 10000
-REPETITIONS = 1000
+# REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
-# REPETITIONS = 50
+REPETITIONS = 50
 # REPETITIONS = 20
 # REPETITIONS = 10
+REPETITIONS = int(getenv('N', REPETITIONS))
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -91,7 +93,7 @@ DECREASE_RATE = None
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
 NB_PLAYERS = 1    # Less that the number of arms
 NB_PLAYERS = 2    # Less that the number of arms
-# NB_PLAYERS = 3    # Less that the number of arms
+NB_PLAYERS = 3    # Less that the number of arms
 # NB_PLAYERS = 4    # Less that the number of arms
 # NB_PLAYERS = 5    # Less that the number of arms
 # NB_PLAYERS = 6    # Less that the number of arms
@@ -102,7 +104,6 @@ NB_PLAYERS = 2    # Less that the number of arms
 # NB_PLAYERS = 17   # Just the number of arms
 # NB_PLAYERS = 25   # XXX More than the number of arms !!
 # NB_PLAYERS = 30   # XXX More than the number of arms !!
-
 NB_PLAYERS = int(getenv('M', NB_PLAYERS))
 NB_PLAYERS = int(getenv('NB_PLAYERS', NB_PLAYERS))
 
@@ -181,10 +182,10 @@ configuration = {
         #     # "params": [0.9, 0.9]
         #     # "params": [0.85, 0.9]
         # }
-        {   # A very very easy problem: 3 arms, one bad, one average, one good
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
-        },
+        # {   # A very very easy problem: 3 arms, one bad, one average, one good
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.5, 0.9]  # uniformMeans(3, 0.1)
+        # },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
         #     "arm_type": Bernoulli,
         #     "params": [0.3, 0.5, 0.7]  # uniformMeans(3, 0.3)
@@ -245,19 +246,23 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        # {   # A random problem: every repetition use a different mean vectors!
-        #     "arm_type": Bernoulli,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": 6,  # NB_PLAYERS,
-        #             "mingap": None,  # 0.01,  # 1. / (NB_PLAYERS * 2 + 1),
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             "isSorted": False
-        #         }
-        #     }
-        # },
+        {   # TODO A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": Bernoulli,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    # "nbArms": 3 + NB_PLAYERS,
+                    # "nbArms": 2 + NB_PLAYERS,
+                    "nbArms": 1 + NB_PLAYERS,
+                    # "mingap": 1. / (NB_PLAYERS * 2 + 1),
+                    "mingap": None,
+                    # "mingap": 0.1,
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    "isSorted": True
+                }
+            }
+        },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
