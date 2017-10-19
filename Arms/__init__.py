@@ -142,6 +142,7 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
     mus = np.sort(np.random.rand(nbArms))
     if mingap is not None and mingap > 0:
+        assert nbArms * 2 * mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
         while len(set(mus)) == nbArms and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(nbArms))
     if isSorted:

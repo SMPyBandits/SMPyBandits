@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """ plotsettings: use it like this, in the Evaluator folder:
 
->>> from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers
+>>> from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols
 """
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 from textwrap import wrap
 from os.path import getsize, getatime
@@ -27,7 +27,7 @@ monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
 
 from os import getenv
 
-# Backup figure objects, XXX experimental
+# Backup figure objects
 import pickle
 
 if getenv('DEBUG', 'False') == 'True':
