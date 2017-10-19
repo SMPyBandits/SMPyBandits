@@ -279,6 +279,20 @@ def nrows_ncols(N):
     return nrows, ncols
 
 
+def addTextForWorstCases(ax, n, bins, patches, rate=0.8, normed=False):
+    """Add some text labels to the patches of an histogram, for the last 'rate'%."""
+    # DONE?? add an automatic detection of the cases where a regret was found to not be O(log(T)) to display on the histogram the count of bad cases
+    assert 0 < rate < 1, "Error: 'rate' = {:.3g} should be in (0, 1).".format(rate)  # DEBUG
+    max_x = max(p.xy[0] for p in patches)
+    for nx, b, p in zip(n, bins[1:], patches):
+        text = "{:.3%}".format(nx) if normed else "{:.3g}".format(nx)
+        x, y = p.xy[0], 1.015 * nx  # 1.5% higher than the top of the patch rectangle
+        # Simple detection can be if a box is for a regret larger than some fraction of T
+        if nx > 0 and x > rate * max_x:
+            # print("Writing text =", text, "at x =", x, "and y =", y)  # DEBUG
+            ax.text(x, y, text, fontsize=8)
+
+
 # --- Debugging
 
 if __name__ == "__main__":

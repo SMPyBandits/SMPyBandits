@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from .usejoblib import USE_JOBLIB, Parallel, delayed
 from .usetqdm import USE_TQDM, tqdm
 # Local imports, tools and config
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols
+from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
 # Local imports, objects and functions
@@ -741,7 +741,8 @@ class EvaluatorMultiPlayers(object):
                 plt.title("Multi-players $M = {}$ : Histogram of regrets for {}\n${}$ arms{}: {}".format(self.nbPlayers, eva.strPlayers(short=True), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
-                plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
+                n, bins, patches = plt.hist(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[evaId], bins=bins)
+                addTextForWorstCases(plt, n, bins, patches, 0.9, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N), fig=fig, pickleit=True)
                 figs.append(fig)
@@ -763,7 +764,8 @@ class EvaluatorMultiPlayers(object):
                 i, j = evaId % nrows, evaId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
-                n, _, _ = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
+                n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=bins, log=log)
+                addTextForWorstCases(ax, n, bins, patches, 0.9, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
@@ -777,7 +779,9 @@ class EvaluatorMultiPlayers(object):
             for evaId, eva in enumerate(evaluators):
                 all_last_regrets.append(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate))
                 labels.append(eva.strPlayers(short=True))
-            plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
+            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
+            for n, patches in zip(ns, patchess):
+                addTextForWorstCases(plt, n, bins, patches, 0.9, normed=normed)
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
