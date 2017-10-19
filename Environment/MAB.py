@@ -140,6 +140,23 @@ class MAB(object):
         return np.array([self.draw_nparray(armId, shape) for armId in range(self.nbArms)])
 
     #
+    # --- Helper to compute sets Mbest and Mworst
+
+    def Mbest(self, M=1):
+        """ Set of M best means."""
+        sortedMeans = np.sort(self.means)
+        return sortedMeans[-M:]
+
+    def Mworst(self, M=1):
+        """ Set of M worst means."""
+        sortedMeans = np.sort(self.means)
+        return sortedMeans[:-M]
+
+    def sumBestMeans(self, M=1):
+        """ Sum of the M best means."""
+        return np.sum(self.Mbest(M=M))
+
+    #
     # --- Estimate sparsity
 
     def sparsity(self):
@@ -482,6 +499,10 @@ class DynamicMAB(MAB):
         self.args = params["args"]  #: Args to give to function
         print(" - with 'args' =", self.args)  # DEBUG
         print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
+        # Keep track of the successive mean vectors
+        self._historyOfMeans = []  # Historic of the means vectors
+        self._t = 0  # nb of calls to
+        # Generate a first mean vector
         self.newRandomArms()
         print("   - drawing a random set of arms")
         self.nbArms = len(self.arms)  #: Means of arms
@@ -499,6 +520,9 @@ class DynamicMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the DynamicMAB object"""
+        print("reprarms of a DynamicMAB object...")  # DEBUG
+        print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
+        print("  It has self.means =\n{}".format(self.means))  # DEBUG
         if latex:
             text = r"\mathrm{%s}(K=%i$, %s on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", \delta_{\min}=%.3g" % self.args["mingap"])
         else:
@@ -510,10 +534,14 @@ class DynamicMAB(MAB):
 
     def newRandomArms(self, verbose=True):
         """Generate a new list of arms, from ``arm_type(params['function](*params['args']))``."""
-        self._arms = [self.arm_type(mean) for mean in self.function(**self.args)]
+        self._t += 1  # new draw!
+        one_draw_of_means = self.function(**self.args)
+        self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless
+        self._historyOfMeans.append(one_draw_of_means)
         if verbose:
-            print("\n  - Creating a new dynamic set of means for arms: DynamicMAB = {} ...".format(repr(self)))  # DEBUG
+            print("\n  - Creating a new dynamic set of means = {} for arms: DynamicMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
+            print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
 
     # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
 
@@ -524,8 +552,26 @@ class DynamicMAB(MAB):
 
     @property
     def means(self):
-        """Return the *current* list of means."""
-        return np.array([arm.mean for arm in self._arms])
+        # """Return the *current* list of means."""
+        """ Return the list of means of arms for this DynamicMAB: after :math:`x` calls to :method:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
+
+        .. warning:: Highly experimental!
+        """
+        # return np.array([arm.mean for arm in self._arms])
+        return np.mean(np.array(self._historyOfMeans), axis=0)
+
+    #
+    # --- Helper to compute sets Mbest and Mworst
+
+    def Mbest(self, M=1):
+        """ Set of M best means."""
+        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans), axis=1), axis=0)
+        return sortedMeans[-M:]
+
+    def Mworst(self, M=1):
+        """ Set of M worst means."""
+        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans), axis=1), axis=0)
+        return sortedMeans[:-M]
 
     @property
     def minArm(self):

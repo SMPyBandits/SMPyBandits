@@ -5,7 +5,7 @@ Lots of plotting methods, to have various visualizations.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.7"
 
 # Generic imports
 from copy import deepcopy
@@ -204,7 +204,7 @@ class EvaluatorMultiPlayers(object):
         """Extract average of mean nb of switches."""
         return np.sum(self.nbSwitchs[envId], axis=0) / (float(self.repetitions) * self.nbPlayers)
 
-    def getbestArmPulls(self, playerId, envId=0):
+    def getBestArmPulls(self, playerId, envId=0):
         """Extract mean of best arms pulls."""
         # We have to divide by a arange() = cumsum(ones) to get a frequency
         return self.bestArmPulls[envId][playerId, :] / (float(self.repetitions) * self._times)
@@ -224,15 +224,14 @@ class EvaluatorMultiPlayers(object):
     def getRegretMean(self, playerId, envId=0):
         """Extract mean of regret
 
-        - Warning: this is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
+        .. warning:: This is the centralized regret, for one arm, it does not make much sense in the multi-players setting!
         """
         return (self._times - 1) * self.envs[envId].maxArm - self.getRewards(playerId, envId)
 
     def getCentralizedRegret_LessAccurate(self, envId=0):
         """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players, based on accumulated rewards."""
         meansArms = np.sort(self.envs[envId].means)
-        meansBestArms = meansArms[-self.nbPlayers:]
-        sumBestMeans = np.sum(meansBestArms)
+        sumBestMeans = self.envs[envId].sumBestMeans(self.nbPlayers)
         # FIXED how to count it when there is more players than arms ?
         # FIXME it depends on the collision model !
         if self.envs[envId].nbArms < self.nbPlayers:
@@ -241,12 +240,51 @@ class EvaluatorMultiPlayers(object):
             sumBestMeans -= worseArm  # This count the collisions
         averageBestRewards = self._times * sumBestMeans
         # And for the actual rewards, the collisions are counted in the rewards logged in self.getRewards
-        actualRewards = sum(self.getRewards(playerId, envId) for playerId in range(self.nbPlayers))
+        actualRewards = np.sum(self.rewards[envId][:, :], axis=0) / float(self.repetitions)
         return averageBestRewards - actualRewards
 
     def getCentralizedRegret_MoreAccurate(self, envId=0):
         """Compute the empirical centralized regret, based on counts of selections and not actual rewards."""
         return self.getFirstRegretTerm(envId=envId) + self.getSecondRegretTerm(envId=envId) + self.getThirdRegretTerm(envId=envId)
+
+    # --- Three terms in the regret
+
+    def getFirstRegretTerm(self, envId=0):
+        """Extract and compute the first term :math:`(a)` in the centralized regret: losses due to pulling suboptimal arms."""
+        means = self.envs[envId].means
+        sortingIndex = np.argsort(means)
+        means = np.sort(means)
+        deltaMeansWorstArms = means[-self.nbPlayers] - means[:-self.nbPlayers]
+        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
+        allWorstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
+        worstPulls = np.sum(allWorstPulls, axis=0)  # sum for all players
+        losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
+        firstRegretTerm = np.cumsum(losses)  # Accumulate losses
+        return firstRegretTerm
+
+    def getSecondRegretTerm(self, envId=0):
+        """Extract and compute the second term :math:`(b)` in the centralized regret: losses due to not pulling optimal arms."""
+        means = self.envs[envId].means
+        sortingIndex = np.argsort(means)
+        means = np.sort(means)
+        deltaMeansBestArms = means[-self.nbPlayers:] - means[-self.nbPlayers]
+        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
+        allBestPulls = allPulls[:, sortingIndex[-self.nbPlayers:], :]
+        bestMisses = 1 - np.sum(allBestPulls, axis=0)  # sum for all players
+        losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mbest
+        secondRegretTerm = np.cumsum(losses)  # Accumulate losses
+        return secondRegretTerm
+
+    def getThirdRegretTerm(self, envId=0):
+        """Extract and compute the third term :math:`(c)` in the centralized regret: losses due to collisions."""
+        means = self.envs[envId].means
+        countCollisions = self.collisions[envId]   # Shape: (nbArms, duration)
+        if not self.full_lost_if_collision:
+            print("Warning: the collision model ({}) does *not* yield a loss in communication when colliding (one user can communicate, or in average one user can communicate), so countCollisions -= 1 for the 3rd regret term ...".format(self.collisionModel.__name__))  # DEBUG
+            countCollisions = np.maximum(0, countCollisions - 1)
+        losses = np.dot(means, countCollisions / float(self.repetitions))  # Count and sum on k in 1...K
+        thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
+        return thirdRegretTerm
 
     def getCentralizedRegret(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
@@ -256,12 +294,13 @@ class EvaluatorMultiPlayers(object):
             return self.getCentralizedRegret_MoreAccurate(envId=envId)
         else:
             return self.getCentralizedRegret_LessAccurate(envId=envId)
+    
+    # --- Last regrets
 
     def getLastRegrets_LessAccurate(self, envId=0):
         """Extract last regrets, based on accumulated rewards."""
         meansArms = np.sort(self.envs[envId].means)
-        meansBestArms = meansArms[-self.nbPlayers:]
-        sumBestMeans = np.sum(meansBestArms)
+        sumBestMeans = self.envs[envId].sumBestMeans(self.nbPlayers)
         # FIXED how to count it when there is more players than arms ?
         # FIXME it depends on the collision model !
         if self.envs[envId].nbArms < self.nbPlayers:
@@ -282,8 +321,7 @@ class EvaluatorMultiPlayers(object):
     def getLastRegrets_MoreAccurate(self, envId=0):
         """Extract last regrets, based on counts of selections and not actual rewards."""
         meansArms = np.sort(self.envs[envId].means)
-        meansBestArms = meansArms[-self.nbPlayers:]
-        sumBestMeans = np.sum(meansBestArms)
+        sumBestMeans = self.envs[envId].sumBestMeans(self.nbPlayers)
         # FIXED how to count it when there is more players than arms ?
         # FIXME it depends on the collision model !
         if self.envs[envId].nbArms < self.nbPlayers:
@@ -300,45 +338,6 @@ class EvaluatorMultiPlayers(object):
             return self.getLastRegrets_MoreAccurate(envId=envId)
         else:
             return self.getLastRegrets_LessAccurate(envId=envId)
-
-    # --- Three terms in the regret
-
-    def getFirstRegretTerm(self, envId=0):
-        """Extract and compute the first term in the centralized regret: losses due to pulling suboptimal arms."""
-        means = self.envs[envId].means
-        sortingIndex = np.argsort(means)
-        means = np.sort(means)
-        deltaMeansWorstArms = means[-self.nbPlayers] - means[:-self.nbPlayers]
-        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        allWorstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
-        worstPulls = np.sum(allWorstPulls, axis=0)  # sum for all players
-        losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
-        firstRegretTerm = np.cumsum(losses)  # Accumulate losses
-        return firstRegretTerm
-
-    def getSecondRegretTerm(self, envId=0):
-        """Extract and compute the second term in the centralized regret: losses due to not pulling optimal arms."""
-        means = self.envs[envId].means
-        sortingIndex = np.argsort(means)
-        means = np.sort(means)
-        deltaMeansBestArms = means[-self.nbPlayers:] - means[-self.nbPlayers]
-        allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        allBestPulls = allPulls[:, sortingIndex[-self.nbPlayers:], :]
-        bestMisses = 1 - np.sum(allBestPulls, axis=0)  # sum for all players
-        losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mbest
-        secondRegretTerm = np.cumsum(losses)  # Accumulate losses
-        return secondRegretTerm
-
-    def getThirdRegretTerm(self, envId=0):
-        """Extract and compute the third term in the centralized regret: losses due to collisions."""
-        means = self.envs[envId].means
-        countCollisions = self.collisions[envId]   # Shape: (nbArms, duration)
-        if not self.full_lost_if_collision:
-            print("Warning: the collision model ({}) does *not* yield a loss in communication when colliding (one user can communicate, or in average one user can communicate), so countCollisions -= 1 for the 3rd regret term ...".format(self.collisionModel.__name__))  # DEBUG
-            countCollisions = np.maximum(0, countCollisions - 1)
-        losses = np.dot(means, countCollisions / float(self.repetitions))  # Count and sum on k in 1...K
-        thirdRegretTerm = np.cumsum(losses)  # Accumulate losses
-        return thirdRegretTerm
 
     # --- Plotting methods
 
@@ -541,7 +540,7 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(self.nbPlayers)
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
-            Y = self.getbestArmPulls(playerId, envId)
+            Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -903,7 +902,7 @@ def delayed_play(env, players, horizon, collisionModel,
                 print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
                 print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=nbPlayers)))
                 print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-                print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+                # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
                 print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
                 print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
                 print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
