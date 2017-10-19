@@ -200,7 +200,8 @@ configuration = {
                 "function": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
-                    "mingap": None,
+                    # "mingap": None,
+                    "mingap": 0.1,
                     # "mingap": 0.01,
                     "lower": 0.,
                     "amplitude": 1.,

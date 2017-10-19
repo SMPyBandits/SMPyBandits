@@ -584,15 +584,16 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     # We have to deepcopy because this function is Parallel-ized
     if random_shuffle or random_invert:
         env = deepcopy(env)    # XXX this uses a LOT of RAM memory!!!
-    if env.isDynamic:  # FIXME
-        env.newRandomArms()
+    means = env.means
+    if env.isDynamic:
+        means = env.newRandomArms()
     policy = deepcopy(policy)  # XXX this uses a LOT of RAM memory!!!
 
     indexes_bestarm = np.nonzero(np.isclose(env.means, env.maxArm))[0]
 
     # Start game
     policy.startGame()
-    result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm)  # One Result object, for every policy
+    result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm, means=means)  # One Result object, for every policy
     # , delta_t_save=delta_t_save
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps

@@ -35,7 +35,7 @@ class DMED(BasePolicy):
         self.nextActions = list(range(nbArms))  #: List of next actions to play, every next step is playing ``nextActions.pop(0)``
 
     def __str__(self):
-        return r"DMED{}({})".format("+" if self.genuine else "", self.kl.__name__[2:])
+        return r"DMED{}({})".format("$^+$" if self.genuine else "", self.kl.__name__[2:])
 
     def startGame(self):
         """ Initialize the policy for a new game."""

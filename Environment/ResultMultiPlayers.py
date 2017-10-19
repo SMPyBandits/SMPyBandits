@@ -2,7 +2,7 @@
 """ ResultMultiPlayers.ResultMultiPlayers class to wrap the simulation results, for the multi-players case."""
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.7"
 
 import numpy as np
 
@@ -33,7 +33,6 @@ class ResultMultiPlayers(object):
 
     # def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
     #     """ Save the content of the result files into a HDF5 file on the disk."""
-    #     # FIXME write it !
     #     if delta_t_save is None:
     #         delta_t_save = self.delta_t_save
     #     raise ValueError("FIXME finish to write this function saveondisk() for ResultMultiPlayers!")
