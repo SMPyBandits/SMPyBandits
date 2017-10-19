@@ -66,7 +66,7 @@ def server(policy, host, port):
     sock.listen(1)
 
     chosen_arm = None
-    
+
     try:
         while True:
             # Wait for a connection

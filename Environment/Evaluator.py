@@ -512,7 +512,7 @@ class Evaluator(object):
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
     def plotLastRegrets(self, envId=0,
-                        normed=True, subplots=True, bins=25, log=False,
+                        normed=False, subplots=True, bins=25, log=False,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=None):
         """Plot histogram of the regrets R_T for all policies."""

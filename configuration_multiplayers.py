@@ -594,7 +594,7 @@ configuration["successive_players"] = [
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
     # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # should be bad!
 
-    # # --- 17) DONE Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
+    # # --- 17) Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     # # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
@@ -611,7 +611,7 @@ configuration["successive_players"] = [
     # # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
     # # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
 
-    # # --- 18) TODO Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with klUCB for arm selection
+    # # --- 18) Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with klUCB for arm selection
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     # Selfish(NB_PLAYERS, klUCB, nbArms).children,
     # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
@@ -626,7 +626,7 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # # --- 19) DONE Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against RandTopM[UCB]
+    # # --- 19) Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against RandTopM[UCB]
     # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
     # Selfish(NB_PLAYERS, UCB, nbArms).children,
     # rhoRand(NB_PLAYERS, UCB, nbArms).children,
@@ -638,7 +638,7 @@ configuration["successive_players"] = [
     # RandTopM(NB_PLAYERS, UCB, nbArms).children,
     # MCTopM(NB_PLAYERS, UCB, nbArms).children,
 
-    # # --- 20) TODO Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against RandTopM[BayesUCB]
+    # # --- 20) Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against RandTopM[BayesUCB]
     # # FIXME it is *failing* with RandTopM[BayesUCB]
     # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
@@ -651,7 +651,7 @@ configuration["successive_players"] = [
     # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
     # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
 
-    # --- 21) DONE Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
+    # --- 21) Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
     # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
     # RandTopM(NB_PLAYERS, UCB, nbArms).children,
     # MCTopM(NB_PLAYERS, UCB, nbArms).children,
@@ -672,7 +672,7 @@ configuration["successive_players"] = [
     # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
     # MCTopM(NB_PLAYERS, Thompson, nbArms).children,
 
-    # # --- 22) TODO Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
+    # # --- 22) Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
     # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
