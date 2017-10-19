@@ -528,7 +528,7 @@ class Evaluator(object):
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("Number of observations, ${}$ repetitions".format(self.repetitions))
                 n, bins, patches = plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=bins)
-                addTextForWorstCases(plt, n, bins, patches, 0.9, normed=normed)
+                addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=True)
                 figs.append(fig)
@@ -549,7 +549,7 @@ class Evaluator(object):
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins, log=log)
-                addTextForWorstCases(ax, n, bins, patches, 0.9, normed=normed)
+                addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
@@ -565,7 +565,7 @@ class Evaluator(object):
                 labels.append(str(policy))
             ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
             for n, patches in zip(ns, patchess):
-                addTextForWorstCases(plt, n, bins, patches, 0.9, normed=normed)
+                addTextForWorstCases(plt, n, bins, patches, normed=normed)
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)

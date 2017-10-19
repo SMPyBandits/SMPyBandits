@@ -205,8 +205,8 @@ configuration = {
                     # "mingap": 0.01,
                     "lower": 0.,
                     "amplitude": 1.,
-                    "isSorted": False,
-                    # "isSorted": True,
+                    # "isSorted": False,
+                    "isSorted": True,
                 }
             }
         },

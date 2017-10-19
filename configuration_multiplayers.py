@@ -157,6 +157,11 @@ UNBIASED = False
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
+# Parameter for non-hard-coded problems
+NB_ARMS = NB_PLAYERS
+NB_ARMS = int(getenv('K', NB_ARMS))
+NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -251,15 +256,14 @@ configuration = {
             "params": {
                 "function": randomMeans,
                 "args": {
-                    # "nbArms": 3 + NB_PLAYERS,
-                    # "nbArms": 2 + NB_PLAYERS,
-                    "nbArms": 1 + NB_PLAYERS,
-                    # "mingap": 1. / (NB_PLAYERS * 2 + 1),
+                    "nbArms": NB_ARMS,
+                    # "mingap": 0.5 / NB_ARMS,
                     "mingap": None,
                     # "mingap": 0.1,
                     "lower": 0.,
                     "amplitude": 1.,
-                    "isSorted": True
+                    # "isSorted": False,
+                    "isSorted": True,
                 }
             }
         },
