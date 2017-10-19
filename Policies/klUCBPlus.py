@@ -19,7 +19,11 @@ class klUCBPlus(klUCB):
     """
 
     def __str__(self):
-        return r"KL-UCB+({}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), self.klucb.__name__[5:])
+        name = self.klucb.__name__[5:]
+        if name == "Bern": name = ""
+        complement = "{}{}".format(name, "" if self.c == 1 else r"$c={:.3g}$".format(self.c))
+        if complement != "": complement = "({})".format(complement)
+        return r"KLUCB$^+${}".format(complement)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

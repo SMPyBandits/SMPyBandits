@@ -31,7 +31,7 @@ class ApproximatedFHGittins(IndexPolicy):
         self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
-        return r"ApproximatedFHGittins($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
+        return r"ApprFHG($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
 
     @property
     def m(self):
