@@ -184,7 +184,6 @@ class EvaluatorMultiPlayers(object):
                 historyOfMeans.append(r._means)
                 store(r, repeatIdout)
                 repeatIdout += 1
-            # FIXME experimental!
             env._t += self.repetitions  # new self.repetitions draw!
             env._historyOfMeans = historyOfMeans
         else:
@@ -295,7 +294,7 @@ class EvaluatorMultiPlayers(object):
     def getCentralizedRegret(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
+        # print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getCentralizedRegret_MoreAccurate(envId=envId)
         else:
@@ -338,7 +337,7 @@ class EvaluatorMultiPlayers(object):
     def getLastRegrets(self, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
-        print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
+        # print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
         if moreAccurate:
             return self.getLastRegrets_MoreAccurate(envId=envId)
         else:
@@ -467,13 +466,14 @@ class EvaluatorMultiPlayers(object):
                         if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
                             plt.yscale('log')
         # We also plot our lower bound
-        lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
-        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-        print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
-        T = np.ones_like(X) if normalized else np.log(2 + X)
-        plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Our lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
-        plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
-        plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
+        if not self.envs[envId].isDynamic:
+            lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
+            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
+            print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
+            T = np.ones_like(X) if normalized else np.log(2 + X)
+            plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Our lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
+            plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
+            plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
@@ -807,7 +807,7 @@ def delayed_play(env, players, horizon, collisionModel,
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     means = env.means
-    if env.isDynamic:  # FIXME compute the correct regret!
+    if env.isDynamic:
         means = env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms
