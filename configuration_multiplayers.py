@@ -660,6 +660,7 @@ configuration["successive_players"] = [
     # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     RandTopM(NB_PLAYERS, klUCB, nbArms).children,
     MCTopM(NB_PLAYERS, klUCB, nbArms).children,
+    MCTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,

@@ -26,6 +26,11 @@ WITHCHAIR = False
 WITHCHAIR = True
 
 
+#: FIXME Experimental idea
+OPTIM_PICK_WORST_FIRST = True
+OPTIM_PICK_WORST_FIRST = False
+
+
 # --- Class oneRandTopM, for children
 
 class oneRandTopM(ChildPointer):
@@ -35,11 +40,12 @@ class oneRandTopM(ChildPointer):
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, withChair, *args, **kwargs):
+    def __init__(self, maxRank, withChair, optimPickWorstFirst, *args, **kwargs):
         super(oneRandTopM, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different.
         self.chosen_arm = None  #: Current chosen arm.
         self._withChair = withChair  # Whether to use or not the variant with the "chair".
+        self._optimPickWorstFirst = optimPickWorstFirst  # Whether to use or not the variant with the "cautious choice".
         self.sitted = False  #: Not yet sitted. After 1 step without collision, don't react to collision (but still react when the chosen arm lies outside M-best).
         self.t = -1  #: Internal time
 
@@ -47,10 +53,8 @@ class oneRandTopM(ChildPointer):
         player = self.mother._players[self.playerId]
         Mbest_is_incorrect = self.t < self.nbArms or np.any(np.isinf(player.index)) or np.any(np.isnan(player.index))
         str_Mbest = "" if Mbest_is_incorrect else r", $M$-best: ${}$".format(list(self.Mbest))
-        # # FIXME it messes up with the display of the titles...
-        # str_Mbest = ""
         str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
-        return r"#{}<{}TopM-{}{}{}>".format(self.playerId + 1, "MC" if self._withChair else "Rand", player, str_Mbest, str_chosen_arm)
+        return r"#{}<{}TopM{}-{}{}{}>".format(self.playerId + 1, "MC" if self._withChair else "Rand", "Cautious" if self._optimPickWorstFirst else "", player, str_Mbest, str_chosen_arm)
 
     def startGame(self):
         """Start game."""
@@ -91,7 +95,13 @@ class oneRandTopM(ChildPointer):
             #     print(" - A oneRandTopM player {} is not playing with a chair, nothing to do ...".format(self)  # DEBUG
 
     def choice(self):
-        """Use the chosen arm."""
+        """Reconsider the choice of arm, and then use the chosen arm.
+
+        - For all variants, if the chosen arm is no longer in the current estimate of the Mbest set, a new one is selected,
+        - The basic RandTopM selects uniformly an arm in estimate Mbest,
+        - MCTopM starts by being *"non sitted"* on its new chosen arm,
+        - MCTopMCautious is forced to first try the arm with *lowest* UCB indexes (or whatever index policy is used).
+        """
         if self.t < self.nbArms:  # Force to sample each arm at least one
             self.chosen_arm = super(oneRandTopM, self).choice()
         else:  # But now, trust the estimated set Mbest
@@ -99,8 +109,14 @@ class oneRandTopM(ChildPointer):
             if self.chosen_arm not in current_Mbest:
                 if self._withChair:
                     self.sitted = False
-                old_arm = self.chosen_arm
+                # old_arm = self.chosen_arm
                 self.chosen_arm = rn.choice(current_Mbest)  # New random arm
+                # FIXME optimization
+                if self._optimPickWorstFirst:
+                    # aim at the worst of the current estimated arms
+                    order = super(oneRandTopM, self).estimatedOrder()
+                    worst_M_best = order[-self.maxRank]
+                    self.chosen_arm = worst_M_best
                 # print("\n - A oneRandTopM player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
         # Done
         self.t += 1
@@ -117,12 +133,15 @@ class RandTopM(BaseMPPolicy):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
-                 withChair=False, maxRank=None, lower=0., amplitude=1.,
+                 withChair=False, optimPickWorstFirst=False,
+                 maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
+        - withChair: see WITHCHAIR,
+        - optimPickWorstFirst: see OPTIM_PICK_WORST_FIRST,
         - maxRank: maximum rank allowed by the RandTopM child (default to nbPlayers, but for instance if there is 2 × RandTopM[UCB] + 2 × RandTopM[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
@@ -145,7 +164,7 @@ class RandTopM(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRandTopM(maxRank, withChair, self, playerId)
+            self.children[playerId] = oneRandTopM(maxRank, withChair, optimPickWorstFirst, self, playerId)
 
     def __str__(self):
         return "RandTopM({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -155,7 +174,7 @@ class MCTopM(RandTopM):
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
-                 withChair=True, maxRank=None, lower=0., amplitude=1.,
+                 maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -172,8 +191,34 @@ class MCTopM(RandTopM):
 
         .. warning:: ``s._players`` is for internal use ONLY!
         """
-        super(MCTopM, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=withChair, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopM, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopM({} x {})".format(self.nbPlayers, str(self._players[0]))
 
+class MCTopMCautious(RandTopM):
+    """ MCTopMCautious: another proposal for an efficient multi-players learning policy, more "stationary" than RandTopM.
+    """
+
+    def __init__(self, nbPlayers, playerAlgo, nbArms,
+                 maxRank=None, lower=0., amplitude=1.,
+                 *args, **kwargs):
+        """
+        - nbPlayers: number of players to create (in self._players).
+        - playerAlgo: class to use for every players.
+        - nbArms: number of arms, given as first argument to playerAlgo.
+        - maxRank: maximum rank allowed by the MCTopMCautious child (default to nbPlayers, but for instance if there is 2 × MCTopMCautious[UCB] + 2 × MCTopMCautious[klUCB], maxRank should be 4 not 2).
+        - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> s = MCTopMCautious(nbPlayers, Thompson, nbArms)
+
+        - To get a list of usable players, use ``s.children``.
+
+        .. warning:: ``s._players`` is for internal use ONLY!
+        """
+        super(MCTopMCautious, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, optimPickWorstFirst=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return "MCTopMCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
