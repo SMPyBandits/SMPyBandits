@@ -69,7 +69,7 @@ from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!
 from .rhoCentralized import rhoCentralized  # New version, still experimental!
 
 
-from .RandTopM import RandTopM, MCTopM, MCTopMCautious  # New versions, still experimental!
+from .RandTopM import RandTopM, MCTopM, MCTopMCautious, MCTopMExtraCautious  # New versions, still experimental!
 
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log
