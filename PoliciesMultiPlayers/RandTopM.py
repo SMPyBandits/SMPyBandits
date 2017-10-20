@@ -12,7 +12,7 @@
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.8"
 
 import numpy as np
 import numpy.random as rn
@@ -188,6 +188,8 @@ class RandTopM(BaseMPPolicy):
 
 class MCTopM(RandTopM):
     """ MCTopM: another proposal for an efficient multi-players learning policy, more "stationary" than RandTopM.
+
+    .. warning:: Still very experimental! But it seems to be one of the most efficient decentralized MP algorithm we have so far... The two other variants of MCTopM seem even better!
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
@@ -216,6 +218,8 @@ class MCTopM(RandTopM):
 
 class MCTopMCautious(RandTopM):
     """ MCTopMCautious: another proposal for an efficient multi-players learning policy, more "stationary" than RandTopM.
+
+    .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,
@@ -244,6 +248,8 @@ class MCTopMCautious(RandTopM):
 
 class MCTopMExtraCautious(RandTopM):
     """ MCTopMExtraCautious: another proposal for an efficient multi-players learning policy, more "stationary" than RandTopM.
+
+    .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
     def __init__(self, nbPlayers, playerAlgo, nbArms,

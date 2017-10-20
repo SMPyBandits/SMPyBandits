@@ -3,14 +3,14 @@
 
 Such class has to have *at least* these methods:
 
-- `draw(armId, t)` to draw *one* sample from that `armId` at time `t`,
-- and `reprarms()` to pretty print the arms (for titles of a plot),
+- ``draw(armId, t)`` to draw *one* sample from that ``armId`` at time ``t``,
+- and ``reprarms()`` to pretty print the arms (for titles of a plot),
 - and more, see below.
 """
 from __future__ import print_function
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.8"
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ try:
     from .pykov import Chain
 except ImportError:
     print("Warning: 'pykov' module seems to not be available. Have you installed it from https://github.com/riccardoscalco/Pykov ?")
-    print("Warning: the 'MarkovianMAB' class won't work...")
+    print("Warning: the 'MarkovianMAB' class will not work...")
 
 # Local imports
 from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
@@ -166,6 +166,7 @@ class MAB(object):
     def str_sparsity(self):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
         s, K = self.sparsity(), self.nbArms
+        assert 0 <= s <= K, "Error: sparsity s = {} has to be 0 <= s <= K = {}...".format(s, K)
         return "" if s == K else ", $s={}$".format(s)
 
     #
@@ -183,7 +184,7 @@ class MAB(object):
         """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
         sortedMeans = sorted(self.means)
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))  # DEBUG
-        # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms
+        # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms ! We have to finish the theoretical analysis!
         bestMeans = sortedMeans[-nbPlayers:]
         worstMeans = sortedMeans[:-nbPlayers]
         worstOfBestMean = bestMeans[0]
@@ -560,12 +561,10 @@ class DynamicMAB(MAB):
 
     @property
     def means(self):
-        # """Return the *current* list of means."""
         """ Return the list of means of arms for this DynamicMAB: after :math:`x` calls to :method:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
 
         .. warning:: Highly experimental!
         """
-        # return np.array([arm.mean for arm in self._arms])
         return np.mean(np.array(self._historyOfMeans), axis=0)
 
     #
@@ -602,7 +601,7 @@ def binomialCoefficient(k, n):
     r""" Compute a binomial coefficient :math:`C^n_k` by a direct multiplicative method: :math:`C^n_k = {k \choose n}`.
 
     - Exact, using integers, not like https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.binom.html#scipy.special.binom which uses float numbers.
-    - Complexity: O(1) in memory, O(n) in time.
+    - Complexity: :math`\mathcal{O}(1)` in memory, :math`\mathcal{O}(n)` in time.
     - From https://en.wikipedia.org/wiki/Binomial_coefficient#Binomial_coefficient_in_programming_languages
     - From: http://userpages.umbc.edu/~rcampbel/Computers/Python/probstat.html#ProbStat-Combin-Combinations
 
