@@ -186,8 +186,9 @@ class EvaluatorMultiPlayers(object):
                 historyOfMeans.append(r._means)
                 store(r, repeatIdout)
                 repeatIdout += 1
-            env._t += self.repetitions  # new self.repetitions draw!
-            env._historyOfMeans = historyOfMeans
+            if env.isDynamic:
+                env._t += self.repetitions  # new self.repetitions draw!
+                env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
@@ -468,7 +469,7 @@ class EvaluatorMultiPlayers(object):
                         if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
                             plt.yscale('log')
         # We also plot our lower bound
-        if not self.envs[envId].isDynamic:  # FIXME the lower-bound is wrong for Bayesian policies?
+        if True or not self.envs[envId].isDynamic:  # FIXME the lower-bound is wrong for Bayesian policies?
             lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
             print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
             print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
@@ -721,7 +722,7 @@ class EvaluatorMultiPlayers(object):
             print("STD of    last regrets R_T =", np.std(last_regrets))
 
     def plotLastRegrets(self, envId=0,
-                        normed=False, subplots=True, bins=25, log=False,
+                        normed=False, subplots=True, bins=20, log=False,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=None,
                         evaluators=()):

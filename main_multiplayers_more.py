@@ -46,8 +46,8 @@ saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots for single experiments or not
-do_simple_plots = False
 do_simple_plots = True
+do_simple_plots = False
 
 #: Whether to do the plots for comparison experiments or not
 do_comparison_plots = False

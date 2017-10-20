@@ -483,7 +483,7 @@ class DynamicMAB(MAB):
 
     .. warning:: It works but it is still experimental, be careful when using this feature.
 
-    .. note:: When testing bandit algorithms against randomly generated problems at each repetitions is usually referred to as *"Bayesian problems"* in the literature: a prior is set on problems (eg. uniform on :math:`[0,1]^K` or less obvious for instance if a ``mingap`` is set), and the performance is assessed against this prior. It differes from the frequentist point of view of having one fixed problem and doing eg. 1000 repetitions on the same problem.
+    .. note:: When testing bandit algorithms against randomly generated problems at each repetitions is usually referred to as *"Bayesian problems"* in the literature: a prior is set on problems (eg. uniform on :math:`[0,1]^K` or less obvious for instance if a ``mingap`` is set), and the performance is assessed against this prior. It differs from the *frequentist* point of view of having one fixed problem and doing eg. 1000 repetitions on the same problem.
     """
 
     def __init__(self, configuration, verbose=VERBOSE):
@@ -532,10 +532,10 @@ class DynamicMAB(MAB):
         # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         # print("  It has self.means =\n{}".format(self.means))  # DEBUG
         if latex:
-            text = r"\mathrm{%s}(K=%i$, %s with means on $[%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", $min gap$=%.3g" % self.args["mingap"])
+            text = r"%s, %s with means on $[%.3g, %.3g]$%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap$=%.3g$" % self.args["mingap"])
         else:
-            text = r"%s(K=%i, %s with means on [%.3g, %.3g]%s)" % (self.__class__.__name__, self.nbArms, str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
-        return wraplatex('$' + text + '$') if latex else wraptext(text)
+            text = r"%s, %s with means on [%.3g, %.3g]%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
+        return wraptext(text)
 
     #
     # --- Dynamic arms and means
