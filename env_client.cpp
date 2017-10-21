@@ -206,7 +206,7 @@ int loop(string address, int port, vector<float> means,
 /**
     Convert a string, read from the cli, to a vector of float number.
     In Python, that would be map(float, arr.split(',')), but it takes 15 lines
-   here. Yay!
+    here. Yay! Finally debugged, OK.
 */
 vector<float> array_from_str(string arr) {
   // cout << "arr = " << arr << endl;  // DEBUG
@@ -217,9 +217,9 @@ vector<float> array_from_str(string arr) {
   uint index = 0;
   uint found;
   while (true) {
-    // cout << "found = " <<found << endl;  // DEBUG
-    // cout << "index = " << index << endl;  // DEBUG
     found = arr.find(',', index);
+    // cout << "\nfound = " << found << endl;  // DEBUG
+    // cout << "index = " << index << endl;  // DEBUG
     if ((found == string::npos) || (found >= size_arr)) {
       break;
     } else {
@@ -238,16 +238,17 @@ vector<float> array_from_str(string arr) {
   index = 0;
   while (true) {
     found = arr.find(',', index);
-    // cout << "found = " << found << endl;  // DEBUG
-    if ((found == string::npos) || (found >= size_arr)) {
+    // cout << "\nfound = " << found << endl;  // DEBUG
+    // cout << "index = " << index << endl;  // DEBUG
+    if (i > nb) {
       break;
     } else {
-      index = found + 1;
-      // cout << "index = " << index << endl;  // DEBUG
-      i += 1;
-      // cout << "i = " << i << endl;  // DEBUG
+      // cout << "reading = " << stof(arr.substr(index, found)) << endl;  // DEBUG
       means.push_back(stof(arr.substr(index, found)));
       // cout << "means[i] = " << means[i] << endl;  // DEBUG
+      index = found + 1;
+      i += 1;
+      // cout << "i = " << i << endl;  // DEBUG
     }
   }
   return means;
