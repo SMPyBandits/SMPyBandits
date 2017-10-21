@@ -119,7 +119,7 @@ def uniformMeansWithSparsity(nbArms=10, sparsity=3, delta=0.1, lower=0., lowerNo
         return shuffled(list(mus))
 
 
-def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
+def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
     """Return a list of means of arms, randomly sampled uniformly in [lower, lower + amplitude], with a min gap >= mingap.
 
     - All means will be different, except if ``mingap=None``, with a min gap > 0.
@@ -140,15 +140,15 @@ def randomMeans(nbArms=3, mingap=0.05, lower=0., amplitude=1., isSorted=True):
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
-    mus = np.sort(np.random.rand(nbArms))
+    mus = np.random.rand(nbArms)
     if mingap is not None and mingap > 0:
         assert nbArms * 2 * mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
         while len(set(mus)) == nbArms and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
-            mus = np.sort(np.random.rand(nbArms))
+            mus = np.random.rand(nbArms)
     if isSorted:
         return sorted(list(lower + (amplitude * mus)))
     else:
-        # np.random.shuffle(mus)  # Useless
+        np.random.shuffle(mus)  # Useless
         return list(lower + (amplitude * mus))
 
 

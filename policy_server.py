@@ -114,11 +114,13 @@ def server(policy, host, port):
 
 
 def transform_str(params):
-    """Like a safe exec() on a dictionary that can contain special values:
+    """Like a safe :func:`exec()` on a dictionary that can contain special values:
 
     - strings are interpreted as variables names (e.g., policy names) from the current ``globals()`` scope,
     - list are transformed to tuples to be constant and hashable,
     - dictionary are recursively transformed.
+
+    .. warning:: It is still as unsafe as :func:`exec` : only use it with trusted inputs!
     """
     for (key, value) in params.items():
         try:

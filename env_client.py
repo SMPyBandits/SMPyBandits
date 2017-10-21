@@ -2,15 +2,18 @@
 # -*- coding: utf-8 -*-
 """
 Client to play multi-armed bandits problem against.
+Many distribution of arms are supported, default to Bernoulli.
 
 Usage:
-    env_client.py [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] <json_configuration>
+    env_client.py [markovian | dynamic] [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] <json_configuration>
     env_client.py (-h|--help)
     env_client.py --version
 
 Options:
     -h --help   Show this screen.
     --version   Show version.
+    markovian   Whether to use a Markovian MAB problem (default is simple MAB problems).
+    dynamic     Whether to use a Dynamic MAB problem (default is simple MAB problems).
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
     --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
@@ -26,25 +29,24 @@ import socket
 import time
 from docopt import docopt
 
-from Environment import MAB
+from Environment import MAB, MarkovianMAB, DynamicMAB
 from Arms import *
 
 
 #: Example of configuration to pass from the command line.
-#: ``'{"arm_type": "Bernoulli", "params": (0.1, 0.5, 0.9), "speed": 1}'``
+#: ``'{"arm_type": "Bernoulli", "params": (0.1, 0.5, 0.9)}'``
 default_configuration = {
         "arm_type": "Bernoulli",
         "params": {
             (0.1, 0.5, 0.9)
-        },
-        "speed": 1
+        }
     }
 
 
 def read_configuration_env(a_string):
     """ Return a valid configuration dictionary to initialize a MAB environment, from the input string."""
     obj = json.loads(a_string)
-    assert isinstance(obj, dict) and "arm_type" in obj and "params" in obj and "speed" in obj, "Error: invalid string to be converted to a configuration object for a MAB environment."
+    assert isinstance(obj, dict) and "arm_type" in obj and "params" in obj, "Error: invalid string to be converted to a configuration object for a MAB environment."
     return obj
 
 
@@ -124,11 +126,18 @@ def main(arguments):
     """
     host = arguments['--host']
     port = int(arguments['--port'])
-    speed = int(int(arguments['--speed']) / 1000)
+    speed = float(arguments['--speed']) / 1000.0
+    is_markovian = arguments['markovian']
+    is_dynamic = arguments['dynamic']
     json_configuration = arguments['<json_configuration>']
     configuration = read_configuration_env(json_configuration)
     transform_str(configuration)
-    env = MAB(configuration)
+    if is_dynamic:
+        env = DynamicMAB(configuration)
+    elif is_markovian:
+        env = MarkovianMAB(configuration)
+    else:
+        env = MAB(configuration)
     print("Using the environment: ", env)  # DEBUG
     print("Emitting regularly every", speed, "seconds.")  # DEBUG
     return client(env, host, port, speed)

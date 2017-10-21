@@ -66,16 +66,18 @@ treeexploration2:
 
 policy_server_py:
 	clear
-	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
 	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
 	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 3, "archtype": "DoublingTrickWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" }}'
 	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "policy": "ApproximatedFHGittins", "sparsity": 3, "horizon": 10000, "alpha": 0.5 }}'
 	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "SparseWrapper", "params": { "policy": "DoublingTrickWrapper", "sparsity": 3, "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" } }}'
-	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "DoublingTrickWrapper", "params": { "policy": "SparseWrapper", "next_horizon": "next_horizon__exponential_slow", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3 } }}'
+	@#time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 10, "archtype": "DoublingTrickWrapper", "params": { "policy": "SparseWrapper", "next_horizon": "next_horizon__exponential_slow", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3 } }}'
 
 env_client_py:
 	clear
-	time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9], "speed": 0.1}'
+	# time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9]}'
+	# A Bayesian problem: every repetition use a different mean vectors!
+	time ./env_client.py dynamic --speed=10 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": {"function": "randomMeans", "args": {"nbArms": 3, "isSorted": false}}}'
 
 env_client.exe:
 	g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
