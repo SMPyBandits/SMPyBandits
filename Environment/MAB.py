@@ -594,6 +594,76 @@ class DynamicMAB(MAB):
         # return np.max(self.means)
         return np.mean(np.max(np.array(self._historyOfMeans)))
 
+    #
+    # --- Compute lower bounds
+
+    def lowerbound(self):
+        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from kullback.py or kullback.so (averaged on all the draws of new means)."""
+        oneLR = self.arms[0].oneLR
+        return np.mean([
+                        sum(
+                            oneLR(np.max(means), m)
+                            for m in means
+                            if m != np.max(means)
+                        )
+                        for means in self._historyOfMeans
+                        ])
+
+    def hoifactor(self):
+        """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
+        oneHOI = self.arms[0].oneHOI
+        return np.mean([
+                        sum(
+                            oneHOI(np.max(means), m)
+                            for m in means
+                            if m != np.max(means)
+                        ) / float(len(means))
+                        for means in self._historyOfMeans
+                        ])
+
+    def lowerbound_multiplayers(self, nbPlayers=1):
+        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        oneLR = self.arms[0].oneLR
+        kl = self.arms[0].kl
+
+        avg_our_lowerbound, avg_anandkumar_lowerbound, avg_centralized_lowerbound = 0.0, 0.0, 0.0
+
+        for means in self._historyOfMeans:
+            sortedMeans = sorted(self.means)
+            assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))  # DEBUG
+            # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms ! We have to finish the theoretical analysis!
+            bestMeans = sortedMeans[-nbPlayers:]
+            worstMeans = sortedMeans[:-nbPlayers]
+            worstOfBestMean = bestMeans[0]
+
+            # Our lower bound is this:
+            centralized_lowerbound = sum(oneLR(worstOfBestMean, oneOfWorstMean) for oneOfWorstMean in worstMeans)
+
+            our_lowerbound = nbPlayers * centralized_lowerbound
+
+            # The initial lower bound in Theorem 6 from [Anandkumar et al., 2010]
+            anandkumar_lowerbound = sum(sum((worstOfBestMean - oneOfWorstMean) / kl(oneOfWorstMean, oneOfBestMean) for oneOfWorstMean in worstMeans) for oneOfBestMean in bestMeans)
+
+            # Store them
+            avg_our_lowerbound += our_lowerbound
+            avg_anandkumar_lowerbound += anandkumar_lowerbound
+            avg_centralized_lowerbound += centralized_lowerbound
+
+        # Done, compute the averages of the lower-bounds
+        avg_our_lowerbound /= float(len(self._historyOfMeans))
+        avg_anandkumar_lowerbound /= float(len(self._historyOfMeans))
+        avg_centralized_lowerbound /= float(len(self._historyOfMeans))
+
+        print(" -  For {} players, Anandtharam et al. centralized lower-bound gave = {:.3g} ...".format(nbPlayers, avg_centralized_lowerbound))  # DEBUG
+        print(" -  For {} players, our lower bound gave = {:.3g} ...".format(nbPlayers, avg_our_lowerbound))  # DEBUG
+        print(" -  For {} players, the initial lower bound in Theorem 6 from [Anandkumar et al., 2010] gave = {:.3g} ...".format(nbPlayers, avg_anandkumar_lowerbound))  # DEBUG
+
+        # Check that our bound is better (ie bigger)
+        if avg_anandkumar_lowerbound > avg_our_lowerbound:
+            print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
+
+        return avg_our_lowerbound, avg_anandkumar_lowerbound, avg_centralized_lowerbound
+
 
 # --- Utility functions
 

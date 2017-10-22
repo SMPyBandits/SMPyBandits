@@ -257,10 +257,10 @@ configuration = {
                 "function": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
-                    "mingap": None,
+                    # "mingap": None,
                     # "mingap": 0.01,
                     # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
+                    "mingap": 1. / (3. * NB_ARMS),
                     "lower": 0.,
                     "amplitude": 1.,
                     # "isSorted": False,
