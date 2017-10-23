@@ -2,7 +2,13 @@
 > For others things to do, and issues to solve, see [the issue tracker on GitHub](https://github.com/Naereen/AlgoBandits/issues).
 
 - [x] Add support to save my figures in SVG, EPS, PDF
-# Clean up things (recently) - FIXME
+
+## C++ library
+- [ ] Finish to write a perfectly clean CLI client to my Python server
+- [ ] Write a small library that can be included in any other C++ program to do : 1. start the socket connexion to the server, 2. then play one step at a time,
+- [ ] Check that the library can be used within a GNU Radio block !
+
+## Clean up things (recently) - FIXME
 
 - [ ] remove the `delta_t_save` "feature"
 - [ ] remove the `delta_t_plot` "feature"

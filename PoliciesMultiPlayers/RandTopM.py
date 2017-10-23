@@ -133,9 +133,6 @@ class oneRandTopM(ChildPointer):
                 # print("\n - A oneRandTopM player {} had chosen arm = {}, but it lied outside of M-best = {}, so she selected a new one = {} {}...".format(self, old_arm, current_Mbest, self.chosen_arm, "and is no longer sitted" if self._withChair else "but is not playing with a chair"))  # DEBUG
         # Done
         self.t += 1
-        # FIXME remove: this cost too much time!
-        # XXX It's also making RandTopM[Thompson] fail : its set Mbest is RANDOM
-        # assert self.chosen_arm in self.Mbest(), "Error: at time t = {}, a oneRandTopM player {} chose an arm = {} which was NOT on its set Mbest(t) = {} ...".format(self.t, self, self.chosen_arm, self.Mbest())  # DEBUG
         return self.chosen_arm
 
 
