@@ -279,7 +279,7 @@ def nrows_ncols(N):
     return nrows, ncols
 
 
-def addTextForWorstCases(ax, n, bins, patches, rate=0., normed=False, fontsize=8):
+def addTextForWorstCases(ax, n, bins, patches, rate=0.85, normed=False, fontsize=8):
     """Add some text labels to the patches of an histogram, for the last 'rate'%.
 
     Use it like this, to add labels for the bins in the 65% largest values n::
@@ -294,7 +294,7 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0., normed=False, fontsize=8
         text = "{:.3%}".format(nx) if normed else "{:.3g}".format(nx)
         x, y = p.xy[0], 1.015 * nx  # 1.5% higher than the top of the patch rectangle
         # Simple detection can be if a box is for a regret larger than some fraction of T
-        if nx > 0 and x > rate * max_x:
+        if nx > 0 and x > (rate * max_x):
             # print("Writing text =", text, "at x =", x, "and y =", y)  # DEBUG
             ax.text(x, y, text, fontsize=fontsize)
 
