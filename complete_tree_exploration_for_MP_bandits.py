@@ -187,11 +187,13 @@ def Selfish_UCB_U(j, state):
     return choices_from_indexes(indexes)
 
 @jit
-def Selfish_UCB_Utilde(j, state):
+def Selfish_UCB(j, state):
     """Selfish policy + UCB_0.5 index + Utilde feedback."""
     indexes = (state.Stilde[j] / state.N[j]) + np.sqrt(alpha * np.log(state.t) / state.N[j])
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
+
+Selfish_UCB_Utilde = Selfish_UCB
 
 @jit
 def Selfish_UCB_Ubar(j, state):
@@ -217,11 +219,13 @@ def Selfish_KLUCB_U(j, state):
     return choices_from_indexes(indexes)
 
 @jit
-def Selfish_KLUCB_Utilde(j, state):
+def Selfish_KLUCB(j, state):
     """Selfish policy + Bernoulli KL-UCB index + Utilde feedback."""
     indexes = klucb(state.Stilde[j] / state.N[j], c * np.log(state.t) / state.N[j], tolerance)
     indexes[state.N[j] < 1] = +oo
     return choices_from_indexes(indexes)
+
+Selfish_KLUCB_Utilde = Selfish_KLUCB
 
 @jit
 def Selfish_KLUCB_Ubar(j, state):
@@ -1170,7 +1174,9 @@ if __name__ == '__main__':
     # --- XXX Test for Selfish Utilde
     # all_update_memories = [ConstantRank]
     all_players = [Selfish_0Greedy_Utilde, Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX complete comparison
-    all_players = [Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX comparison
+    # all_players = [Selfish_UCB_Utilde, Selfish_KLUCB_Utilde]  # XXX comparison
+
+    all_players = [Selfish_UCB, Selfish_KLUCB]  # XXX comparison
     # all_players = [Selfish_KLUCB_Utilde]
     # all_players = [Selfish_UCB_Utilde]  # Faster, and probably same error cases as KLUCB
 
@@ -1190,9 +1196,9 @@ if __name__ == '__main__':
 
     # --- XXX Faster or symbolic computations?
     mus = None  # use mu_1, .., mu_K as symbols, by default
-    mus = [0, 1]
+    # mus = [0, 1]
     # mus = [0.1, 0.9]
-    mus = [0.1, 0.5, 0.9]
+    # mus = [0.1, 0.5, 0.9]
 
     # --- XXX Read parameters from the cli env
     depth = int(getenv("DEPTH", "1"))

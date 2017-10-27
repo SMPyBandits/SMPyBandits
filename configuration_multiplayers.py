@@ -203,11 +203,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
-        # # XXX Default!
-        # {   # A very easy problem (9 arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(9, 1 / (1. + 9))
-        # }
+        # XXX Default!
+        {   # A very easy problem (9 arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": uniformMeans(9, 1 / (1. + 9))
+        }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -251,23 +251,23 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": Bernoulli,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.01,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3. * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
-                    # "isSorted": False,
-                    "isSorted": True,
-                }
-            }
-        },
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": Bernoulli,
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.01,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3. * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             # "isSorted": False,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
