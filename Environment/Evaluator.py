@@ -5,7 +5,7 @@ Lots of plotting methods, to have various visualizations.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.8"
 
 # Generic imports
 from copy import deepcopy

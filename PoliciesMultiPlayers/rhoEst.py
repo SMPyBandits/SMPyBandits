@@ -8,7 +8,7 @@ r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Alg
 
 - My choice for the threshold function, see :func:`threshold_on_t`, does not need the horizon either, and uses :math:`t` instead.
 
-.. note:: This is fully decentralized: each child player does NOT need to know the number of players, but require the horizon :math:`T` (in the proposed algorithm).
+.. note:: This is fully decentralized: each child player does NOT need to know the number of players and does NOT require the horizon :math:`T`.
 """
 from __future__ import print_function
 
@@ -73,11 +73,11 @@ class oneRhoEst(oneRhoRand):
     - The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
     """
 
-    def __init__(self, horizon, threshold, *args, **kwargs):
+    def __init__(self, threshold, *args, **kwargs):
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
-        del self.maxRank  # <-- make SURE that maxRank is NOT used by the policy!
-        self.horizon = horizon  #: Horizon of the experiment. FIXME Not used anymore.
+        if hasattr(self, 'maxRank'):
+            del self.maxRank  # <-- make SURE that maxRank is NOT used by the policy!
         self.threshold = threshold  #: Threshold function
         # Internal variables
         self.nbPlayersEstimate = 1  #: Number of players. Optimistic: start by assuming it is alone!
@@ -92,7 +92,7 @@ class oneRhoEst(oneRhoRand):
     def startGame(self):
         """Start game."""
         super(oneRhoEst, self).startGame()
-        self.nbPlayersEstimate = 1  # Osptimistic: start by assuming it is alone!
+        self.nbPlayersEstimate = 1  # Optimistic: start by assuming it is alone!
         self.collisionCount = 0
         self.timeSinceLastCollision = 0
         self.t = 0
@@ -118,14 +118,13 @@ class oneRhoEst(oneRhoRand):
             # print("This arm {} was estimated as one of the Uhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
 
         # And finally, compare the collision count with the current threshold
-        # threshold = self.threshold(self.horizon, self.nbPlayersEstimate)
         threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate)
 
         if self.collisionCount > threshold:
             self.nbPlayersEstimate += 1
-            # print("The collision count {} was larger than the threshold {:.3g} se we reinitiliaze the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
+            # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
-        # Finally, reinitiliaze timeSinceLastCollision
+        # Finally, restart timeSinceLastCollision
         self.timeSinceLastCollision = 0
 
     def getReward(self, arm, reward):
@@ -151,20 +150,19 @@ class rhoEst(rhoRand):
     """ rhoEst: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+    def __init__(self, nbPlayers, playerAlgo, nbArms,
                  threshold=threshold_on_t, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - horizon: needed for the estimate of nb of users.
         - threshold: the threshold function to use, see :func:`default_threshold` or :func:`threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
 
-        >>> s = rhoEst(nbPlayers, UCB, nbArms, horizon, threshold=threshold_on_t)
+        >>> s = rhoEst(nbPlayers, UCB, nbArms, threshold=threshold_on_t)
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
@@ -177,7 +175,7 @@ class rhoEst(rhoRand):
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             fakemaxRank = None
-            self.children[playerId] = oneRhoEst(horizon, threshold, fakemaxRank, self, playerId)
+            self.children[playerId] = oneRhoEst(threshold, fakemaxRank, self, playerId)
 
     def __str__(self):
         return "rhoEst({} x {})".format(self.nbPlayers, str(self._players[0]))

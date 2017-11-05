@@ -111,7 +111,7 @@ class SparseUCB(UCBalpha):
         else:
             self.update_j()
             j = self.force_to_see
-            # FIXME small checks, to remove soon
+            # DEBUG small checks, to remove soon
             # assert np.all(j[k]), "Error: set k = {} was not found include in set j = {} but it should be...".format(k, j)  # DEBUG
             # set_j = set(np.nonzero(j)[0])
             # set_k = set(np.nonzero(k)[0])

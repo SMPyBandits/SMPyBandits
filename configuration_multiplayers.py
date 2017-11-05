@@ -372,10 +372,10 @@ configuration.update({
     # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
-    # "players": rhoEst(NB_PLAYERS, UCB, nbArms, HORIZON).children
-    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children
-    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children
-    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children
+    # "players": rhoEst(NB_PLAYERS, UCB, nbArms).children
+    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children
+    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms).children
+    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms).children
 
     # --- DONE Using single-player rhoLearn policy, with same MAB learning algorithm for selecting the ranks
     # "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
@@ -448,34 +448,34 @@ configuration["successive_players"] = [
 
     # --- 3) EmpiricalMeans
     # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
-    # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms, HORIZON).children,
+    # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms).children,
 
     # --- 4) UCBalpha
     # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
     # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
     # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, HORIZON, alpha=1).children,
+    # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
     # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
 
     # --- 5) klUCBPlus
     # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
     # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    # rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
     # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
     # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
-    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms, HORIZON).children,
+    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children,
 
     # --- 6) Thompson
     # Selfish(NB_PLAYERS, Thompson, nbArms).children,
     # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoEst(NB_PLAYERS, Thompson, nbArms, HORIZON).children,
+    # # rhoEst(NB_PLAYERS, Thompson, nbArms).children,
 
     # # --- 7) rhoLearn with BayesUCB
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms, HORIZON).children,
+    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms).children,
     # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
     # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
@@ -485,7 +485,7 @@ configuration["successive_players"] = [
     # --- 8) Aggregator
     # Selfish(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
     # rhoRand(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # # rhoEst(NB_PLAYERS, Aggregator, nbArms, HORIZON, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # # rhoEst(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
     # # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
     # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
