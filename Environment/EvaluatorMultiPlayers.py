@@ -28,7 +28,6 @@ from .MAB import MAB, MarkovianMAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
 
 REPETITIONS = 1  #: Default nb of repetitions
-DELTA_T_SAVE = 1  #: Default sampling rate for saving
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 COUNT_RANKS_MARKOV_CHAIN = False  #: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
 
@@ -56,11 +55,9 @@ class EvaluatorMultiPlayers(object):
         print("Time horizon:", self.horizon)
         self.repetitions = self.cfg.get('repetitions', REPETITIONS)  #: Number of repetitions
         print("Number of repetitions:", self.repetitions)
-        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)
-        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)  #: Sampling rate for saving
         self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)
         print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)  #: Sampling rate for plotting
-        self.duration = int(self.horizon / self.delta_t_save)
+        self.horizon = int(self.horizon)
         print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         self.collisionModel = self.cfg.get('collisionModel', defaultCollisionModel)  #: Which collision model should be used
         self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)  #: Is there a full loss of rewards if collision ? To compute the correct decomposition of regret
@@ -93,19 +90,19 @@ class EvaluatorMultiPlayers(object):
         print("Number of environments to try:", len(self.envs))  # DEBUG
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):  # Zeros everywhere
-            self.rewards[envId] = np.zeros((self.nbPlayers, self.duration))
-            # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.rewards[envId] = np.zeros((self.nbPlayers, self.horizon))
+            # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.lastCumRewards[envId] = np.zeros(self.repetitions)
             self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
             self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions))
-            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.duration))
-            self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.duration))
+            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon))
+            self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
             self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions))
-            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.duration))
-            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.duration))
-            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.duration))
+            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
         # To speed up plotting
-        self._times = np.arange(1, 1 + self.horizon, self.delta_t_save)
+        self._times = np.arange(1, 1 + self.horizon)
 
     # --- Init methods
 
@@ -172,7 +169,7 @@ class EvaluatorMultiPlayers(object):
                 self.nbSwitchs[envId][playerId, 1:] += (np.diff(r.choices[playerId, :]) != 0)
                 self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
                 # FIXME there is probably a bug in this computation
-                self.freeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.duration)])
+                self.freeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.horizon)])
 
         # Start now
         if self.useJoblib:
@@ -180,7 +177,7 @@ class EvaluatorMultiPlayers(object):
             repeatIdout = 0
             historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
                 historyOfMeans.append(r._means)
@@ -191,7 +188,7 @@ class EvaluatorMultiPlayers(object):
                 env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, delta_t_save=self.delta_t_save, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
                 store(r, repeatId)
 
     # --- Getter methods
@@ -356,7 +353,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         X = self._times - 1
-        cumRewards = np.zeros((self.nbPlayers, self.duration))
+        cumRewards = np.zeros((self.nbPlayers, self.horizon))
         for playerId, player in enumerate(self.players):
             label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getRewards(playerId, envId)
@@ -700,7 +697,7 @@ class EvaluatorMultiPlayers(object):
         for playerId, player in enumerate(self.players):
             Y = self.getRewards(playerId, envId)
             if self.finalRanksOnAverage:
-                lastY[playerId] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last averageOn% of the iterations
+                lastY[playerId] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last averageOn% of the iterations
             else:
                 lastY[playerId] = Y[-1]  # get the last value
         # Sort lastY and give ranking
@@ -804,7 +801,7 @@ class EvaluatorMultiPlayers(object):
 
 
 def delayed_play(env, players, horizon, collisionModel,
-                 delta_t_save=1, seed=None, repeatId=0, count_ranks_markov_chain=False):
+                 seed=None, repeatId=0, count_ranks_markov_chain=False):
     """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
     try:
@@ -825,7 +822,6 @@ def delayed_play(env, players, horizon, collisionModel,
         player.startGame()
     # Store results
     result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers, means=means)
-    # , delta_t_save=delta_t_save
     rewards = np.zeros(nbPlayers)
     choices = np.zeros(nbPlayers, dtype=int)
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
@@ -857,8 +853,6 @@ def delayed_play(env, players, horizon, collisionModel,
         # XXX It is here that the player may receive a reward, if there is no collisions
         collisionModel(t, env.arms, players, choices, rewards, pulls, collisions)
 
-        # if t % delta_t_save == 0:  # XXX inefficient and does not work yet
-        #     if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
 

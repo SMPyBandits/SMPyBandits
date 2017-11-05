@@ -26,7 +26,6 @@ from .Result import Result
 
 
 REPETITIONS = 1    #: Default nb of repetitions
-DELTA_T_SAVE = 1   #: Default sampling rate for saving
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 # Parameters for the random events
@@ -60,11 +59,8 @@ class Evaluator(object):
         print("Time horizon:", self.horizon)
         self.repetitions = self.cfg.get('repetitions', REPETITIONS)  #: Number of repetitions
         print("Number of repetitions:", self.repetitions)
-        self.delta_t_save = self.cfg.get('delta_t_save', DELTA_T_SAVE)  #: Sampling rate for saving
-        print("Sampling rate for saving, delta_t_save:", self.delta_t_save)
         self.delta_t_plot = 1 if self.horizon <= 10000 else self.cfg.get('delta_t_plot', DELTA_T_PLOT)  #: Sampling rate for plotting
         print("Sampling rate for plotting, delta_t_plot:", self.delta_t_plot)
-        self.duration = int(self.horizon / self.delta_t_save)
         print("Number of jobs for parallelization:", self.cfg['n_jobs'])
         # Parameters for the random events
         self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)  #: Random shuffling of arms?
@@ -91,15 +87,15 @@ class Evaluator(object):
         self.__initEnvironments__()
 
         # Internal vectorial memory
-        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards, ie accumulated rewards
+        self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
         self.lastCumRewards = np.zeros((self.nbPolicies, len(self.envs), self.repetitions))  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
-        self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
-        self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
+        self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
+        self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
 
         if STORE_REWARDS_SQUARED:
-            self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.duration))  #: For each env, history of rewards squared
+            self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards squared
         if STORE_ALL_REWARDS:
-            self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.duration, self.repetitions))  #: For each env, full history of rewards
+            self.allRewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon, self.repetitions))  #: For each env, full history of rewards
 
         self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.pulls = dict()  #: For each env, keep cumulative counts of all arm pulls
@@ -107,13 +103,13 @@ class Evaluator(object):
         self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for env in range(len(self.envs)):
-            self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.duration))
+            self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
-            self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.duration))
+            self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
             self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
-        self._times = np.arange(1, 1 + self.horizon, self.delta_t_save)
+        self._times = np.arange(1, 1 + self.horizon)
 
     # --- Init methods
 
@@ -198,14 +194,14 @@ class Evaluator(object):
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 repeatIdout = 0
                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
+                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
                     store(r, policyId, repeatIdout)
                     repeatIdout += 1
             else:
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, delta_t_save=self.delta_t_save, allrewards=allrewards, repeatId=repeatId)
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, repeatId=repeatId)
                     store(r, policyId, repeatId)
 
     # --- Save to disk methods
@@ -238,7 +234,7 @@ class Evaluator(object):
             hdf.pulls = self.pulls
         raise ValueError("FIXME finish to write this function saveondisk() for Evaluator!")
 
-    def loadfromdisk(self, hdf, delta_t_save=None, useConfig=False):
+    def loadfromdisk(self, hdf, useConfig=False):
         """ Update internal memory of the Evaluator object by loading data the opened HDF5 file."""
         # FIXME I just have to fill all the internal matrices from the HDF5 file ?
         # 1) load configuration
@@ -359,7 +355,7 @@ class Evaluator(object):
         #     # std(Y) = sqrt( E[Y**2] - E[Y]**2 )
         #     # stdY = np.cumsum(np.sqrt(Y2 - Y**2))
         #     stdY = np.sqrt(Y2 - Y**2)
-        #     YMAX *= np.log(2 + self.duration)  # Normalize the std variation
+        #     YMAX *= np.log(2 + self.horizon)  # Normalize the std variation
         #     YMAX *= 50  # XXX make it look larger, for the plots
         # # Renormalize this standard deviation
         # # stdY /= YMAX
@@ -488,7 +484,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.duration)])   # get average value during the last 0.5% of the iterations
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
             else:
                 lastY[i] = Y[-1]  # get the last value
         # Sort lastY and give ranking
@@ -574,7 +570,7 @@ class Evaluator(object):
 
 # Helper function for the parallelization
 
-def delayed_play(env, policy, horizon, delta_t_save=1,
+def delayed_play(env, policy, horizon,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
                  seed=None, allrewards=None, repeatId=0):
     """Helper function for the parallelization."""
@@ -598,7 +594,6 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
     # Start game
     policy.startGame()
     result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm, means=means)  # One Result object, for every policy
-    # , delta_t_save=delta_t_save
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
@@ -618,9 +613,7 @@ def delayed_play(env, policy, horizon, delta_t_save=1,
 
         policy.getReward(choice, reward)
 
-        # if t % delta_t_save == 0:  # XXX inefficient and does not work yet
-        #     # if delta_t_save > 1: print("t =", t, "delta_t_save =", delta_t_save, " : saving ...")  # DEBUG
-        #     result.store(t, choice, reward)
+        # Finally we store the results
         result.store(t, choice, reward)
 
         # XXX Experimental : shuffle the arms at the middle of the simulation
