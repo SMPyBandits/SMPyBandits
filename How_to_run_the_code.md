@@ -1,54 +1,72 @@
 # How to run the code ?
+
+> This short page explains quickly how to install the requirements for this project, and then how to use the code to run simulations.
+
 ## Required modules
 *First*, install the requirements, globally (or with a virtualenv, [see below](#In-a-virtualenv-?)):
 ```bash
 pip install -r requirements.txt
 ```
 
+> Some requirements are only needed for one policy (mostly the experimental ones), and for the documentation.
+
 ## Running some simulations
 *Then*, it should be very straight forward to run some experiment.
 This will run the simulation, average them (by `repetitions`) and plot the results.
 
-### [Single player](main.py)
+### Single player
+#### [Single player](main.py)
 ```bash
 python main.py
 # or
 make main
 ```
 
-### [Single player, aggregating algorithms](configuration_comparing_aggregation_algorithms.py)
+#### [Single player, aggregating algorithms](configuration_comparing_aggregation_algorithms.py)
 ```bash
 python main.py configuration_comparing_aggregation_algorithms
 # or
 make comparing_aggregation_algorithms
 ```
 
-### [Single player, with Sparse Stochastic Bandit](configuration_sparse.py)
+#### [Single player, with Sparse Stochastic Bandit](configuration_sparse.py)
 ```bash
 python main.py configuration_sparse
 # or
 make sparse
 ```
 
-### [Single player, with Markovian problem](configuration_markovian.py)
+#### [Single player, with Markovian problem](configuration_markovian.py)
 ```bash
 python main.py configuration_markovian
 # or
 make markovian
 ```
 
-### [Multi-Player, one algorithm](main_multiplayers.py)
+### Multi-Player
+#### [Multi-Player, one algorithm](main_multiplayers.py)
 ```bash
 python main_multiplayers.py
 # or
 make multi
 ```
 
-### [Multi-Player, comparing different algorithms](main_multiplayers_more.py)
+#### [Multi-Player, comparing different algorithms](main_multiplayers_more.py)
 ```bash
 python main_multiplayers_more.py
 # or
 make moremulti
+```
+
+### Using `env` variables ?
+
+For all simulations, I recently added the support for *environment variable*, to ease the customization of the main parameters of every simulations.
+
+For instance, if the [`configuration_multiplayers_more.py`](configuration_multiplayers_more.py) file is correct,
+then you can customize to use `N=4` repetitions, for horizon `T=1000` and `M=3` players, parallelized with `N_JOBS=4` jobs (use the number of cores of your CPU for optimal performance):
+
+```bash
+N=4 T=1000 M=3 DEBUG=True SAVEALL=False N_JOBS=4 make moremulti
 ```
 
 ----
@@ -88,7 +106,7 @@ It can be used to check [the quality of the code](logs/main_pylint_log.txt) with
 make lint lint3  # check the code with pylint
 ```
 
-It is also used to clean the code, build the doc, send the doc, etc.
+It is also used to clean the code, build the doc, send the doc, etc. (This should not be used by others)
 
 ---
 

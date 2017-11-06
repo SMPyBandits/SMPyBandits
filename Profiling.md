@@ -3,4 +3,8 @@
 - See also [`pyreverse`](https://www.logilab.org/blogentry/6883) to get nice UML-like diagrams illustrating the relationships of packages and classes between each-other.
 
 ## *A better approach?*
-Now, I use the [PyCharm](https://www.jetbrains.com/pycharm/download/) Python IDE, and it has an awesome profiler included!
+In January, I tried to use the [PyCharm](https://www.jetbrains.com/pycharm/download/) Python IDE, and it has an awesome profiler included!
+But it was too cumbersome to use...
+
+## *An even better approach?*
+Well now... I know my codebase, and I know how costly or efficient every new piece of code should be, if I find empirically something odd, I explore with one of the above-mentionned module...

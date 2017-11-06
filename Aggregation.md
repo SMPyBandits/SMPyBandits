@@ -1,10 +1,19 @@
-## 1st contribution: The **policy aggregation algorithm**
+# **Policy aggregation algorithms**
 
-- FIXME change the plot, and add more up-to-date explanations!
+- Remark: I wrote a small research article on that topic, it will be a better introduction as a small self-contained document to explain this idea and the algorithms. Reference: [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](XXX), to appear soon.
 
-- Remark: I am finishing an article on that topic, it will be a better introduction as a small self-contained document to explain this idea and the algorithms.
+## Idea
 
-### More mathematical explanations
+The basic idea of a policy aggregation algorithm is to run in parallel some online learning algorithms, denoted `A_1`,...,`A_N` (`A_i`), and make them all vote at each step, and use some probabilistic scheme to select a decision from their votes.
+
+Hopefully, if all the algorithms `A_i` are not too bad and at least one of them is efficient for the problem at hand, the aggregation algorithm will learn to mainly trust the efficient one(s) and discard the votes from the others.
+An efficient aggregation algorithm should have performances similar to the best child algorithm `A_i`, in any problem.
+
+The [Exp4 algorithm](http://sbubeck.com/SurveyBCB12.pdf) by [Auer et al, 2002] is the first aggregation algorithm for online bandit algorithms, and recently other algorithms include [LearnExp](Policies/LearnExp.py) ([[Singla et al, 2017](https://arxiv.org/abs/1702.04825)]) and [CORRAL](Policies/CORRAL.py) ([[Agarwal et al, 2017](https://arxiv.org/abs/1612.06246v2)]).
+
+---
+
+### Mathematical explanations
 Initially, every child algorithms `A_i` has the same "trust" probability `p_i`, and at every step, the aggregated bandit first listen to the decision from all its children `A_i` (`a_{i,t}` in `1 .. K`), and then decide which arm to select by a probabilistic vote: the probability of selecting arm `k` is the sum of the trust probability of the children who voted for arm `k`.
 It could also be done the other way: the aggregated bandit could first decide which children to listen to, then trust him.
 
@@ -18,12 +27,18 @@ This algorithm can be seen as the Multi-Armed Bandits (i.e., sequential reinforc
 
 Another approach could be to do some sort of [grid search](http://scikit-learn.org/stable/modules/grid_search.html).
 
+### My algorithm: [Aggregator](Policies/Aggregator.py)
+
+It is based on a modification of Exp4, and the details are given in its documentation, see [Aggregator](Policies/Aggregator.py).
+
+All the mathematical details can be found in my paper, [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](XXX), to appear soon.
+
 ----
 
 ## Configuration:
 A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-For example, this will compare the classical MAB algorithms [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py), and the less classical [`AdBandit`](Policies/AdBandit.py) algorithms.
+For example, this will compare the classical MAB algorithms [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py) algorithms.
 
 ```python
 configuration = {
@@ -41,17 +56,9 @@ configuration = {
     # Policies that should be simulated, and their parameters.
     "policies": [
         {"archtype": UCB, "params": {} },
-        {"archtype": UCBV, "params": {} },
-        {"archtype": UCBTuned, "params": {} },
-        {"archtype": MOSS, "params": {} },
         {"archtype": Thompson, "params": {} },
         {"archtype": klUCB, "params": {} },
-        {"archtype": klUCBPlus, "params": {} },
-        {"archtype": klUCBHPlus, "params": {} },
         {"archtype": BayesUCB, "params": {} },
-        {"archtype": AdBandit, "params": {
-                "alpha": 0.5, "horizon": 10000  # AdBandit require to know the horizon
-        } }
     ]
 }
 ```
@@ -70,116 +77,47 @@ configuration["policies"] = current_policies +
     }]
 ```
 
+The learning rate can be tuned automatically, by using the heuristic proposed by [[Bubeck and Cesa-Bianchi](http://sbubeck.com/SurveyBCB12.pdf), Theorem 4.2], without knowledge of the horizon, a decreasing learning rate `\eta_t = sqrt(log(N) / (t * K))`.
+
 ----
 
 ## [How to run the experiments ?](How_to_run_the_code.md)
-*First*, install the requirements:
+
+You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
-pip install -r requirements.txt
+make install  # install the requirements ONLY ONCE
+make comparing_aggregation_algorithms   # run and log the main.py script
 ```
-
-*Then*, it should be very straight forward to run some experiment.
-This will run the simulation, average them (by `repetitions`) and plot the results:
-```bash
-python main.py
-```
-
-### In a [`virtualenv`](https://virtualenv.pypa.io/en/stable/) ?
-If you prefer to not install the requirements globally on your system-wide Python setup, you can (and should) use [`virtualenv`](https://virtualenv.pypa.io/en/stable/).
-
-```bash
-$ virtualenv .
-Using base prefix '/usr'
-New python executable in /your/path/to/AlgoBandits/bin/python3
-Also creating executable in /your/path/to/AlgoBandits/bin/python
-Installing setuptools, pip, wheel...done.
-$ source bin/activate  # in bash, use activate.csh or activate.fish if needed
-$ type pip  # just to check
-pip is /your/path/to/AlgoBandits/bin/pip
-$ pip install -r requirements.txt
-Collecting numpy (from -r requirements.txt (line 5))
-...
-Installing collected packages: numpy, scipy, cycler, pytz, python-dateutil, matplotlib, joblib, pandas, seaborn, tqdm, sphinx-rtd-theme, commonmark, docutils, recommonmark
-Successfully installed commonmark-0.5.4 cycler-0.10.0 docutils-0.13.1 joblib-0.11 matplotlib-2.0.0 numpy-1.12.1 pandas-0.19.2 python-dateutil-2.6.0 pytz-2016.10 recommonmark-0.4.0 scipy-0.19.0 seaborn-0.7.1 sphinx-rtd-theme-0.2.4 tqdm-4.11.2
-```
-
-And then be sure to use the virtualenv binary for Python, `bin/python`, instead of the system-wide one, to launch the experiments (the Makefile should use it by default, if `source bin/activate` was executed).
-
-### Or with a [`Makefile`](Makefile) ?
-You can also use the provided [`Makefile`](Makefile) file to do this simply:
-```bash
-make install  # install the requirements
-make single   # run and log the main.py script
-```
-
-### Or within a [Jupyter notebook](https://jupyter.org/) ?
-> I am writing some [Jupyter notebooks](https://jupyter.org/), in [this folder (`notebooks/`)](notebooks/), so if you want to do the same for your small experiments, you can be inspired by the few notebooks already written.
 
 ----
 
 ## Some illustrations
 Here are some plots illustrating the performances of the different [policies](Policies/) implemented in this project, against various problems (with [`Bernoulli`](Arms/Bernoulli.py) arms only):
 
-### Small tests
-[![5 tests - AdBandit and Aggregator](plots/5_tests_AdBandit__et_Aggr.png)](plots/5_tests_AdBandit__et_Aggr.png)
-[![2000 steps - 100 repetition](plots/2000_steps__100_average.png)](plots/2000_steps__100_average.png)
+### On a "simple" Bernoulli problem (semi-log-y scale)
+![On a "simple" Bernoulli problem (semi-log-y scale).](plots/main_semilogy____env1-4_932221613383548446.png)
 
-### Larger tests
-- 4 different [`Aggregator`](Policies/Aggregator.py) on 6 policies:
-[![10000 steps - 50 repetition - 6 policies - With 4 Aggregator](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)](plots/10000_steps__50_repetition_6_policies_4_Aggr.png)
-- 1 [`Aggregator`](Policies/Aggregator.py) performing very well:
-[![10000 steps - 50 repetition - 6 policies - With Softmax and 1 Aggregator](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)](plots/10000_steps__50_repetition_6_policies_with_Softmax_1_Aggr.png)
-- 3 different UCB, with alpha values lower than 0.5 (nothing is known theoretically for alpha < 1/2).
-[![10000 steps - 50 repetition - 3 UCB and Aggregator](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)](plots/10000_steps__50_repetition_3_UCB_and_Aggr.png)
+Aggregator is the most efficient, and very similar to Exp4 here.
 
-### Some examples where [`Aggregator`](Policies/Aggregator.py) performs well
-- [`Aggregator`](Policies/Aggregator.py) is the best on this example:
-[![Aggregator is the best here](plots/Aggr_is_the_best_here.png)](plots/Aggr_is_the_best_here.png)
-- And it performed well here also:
-[![one Aggregator does very well](plots/one_Aggr_does_very_well.png)](plots/one_Aggr_does_very_well.png)
+### On a "harder" Bernoulli problem
+![On a "harder" Bernoulli problem, they all have similar performances, except LearnExp.](plots/main____env2-4_932221613383548446.png)
 
-### Another example
-The [`Aggregator`](Policies/Aggregator.py) can have a fixed learning rate, whose value has a great effect on its performance, as illustrated here:
-[![20000 steps - 100 repetition - 6 policies - With 5 Aggregator](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)](plots/20000_steps__100_repetition_6_policies_5_Aggr.png)
+They all have similar performances, except LearnExp, which performs badly.
+We can check that the problem is indeed harder as the lower-bound (in black) is much larger.
 
-### One a harder problem
-[![example harder problem](plots/example_harder_problem.png)](plots/example_harder_problem.png)
+### On an "easy" Gaussian problem
+![On an "easy" Gaussian problem, only Aggregator shows reasonable performances, thanks to BayesUCB and Thompson sampling.](plots/main____env3-4_932221613383548446.png)
 
-### Aggregation of order-optimal policies
-This last example shows the aggregation of various policies, all being order-optimal and performing similarly
-[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - cumulative regret](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned.png)
-[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - frequency of best arm pull](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__freqBestArm.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__freqBestArm.png)
-[![20000 steps - 20 repetition 7 policies klVariants MOSS UCBTuned - normalized cumulative regret](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__normalized.png)](plots/20000_steps__20_repetition_7_policies_klVariants_MOSS_UCBTuned__normalized.png)
+Only Aggregator shows reasonable performances, thanks to BayesUCB and Thompson sampling.
+CORRAL and LearnExp clearly appears sub-efficient.
 
-----
+### On a harder problem, mixing Bernoulli, Gaussian, Exponential arms
+![On a harder problem, mixing Bernoulli, Gaussian, Exponential arms, with 3 arms of each types with the *same mean*.](plots/main_semilogy____env4-4_932221613383548446.png)
 
-## Code organization
-### Layout of the code:
-- Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](Arms/Bernoulli.py)
-- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](Policies/BayesUCB.py), [`Policies.klUCB`](Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggregator`](Policies/Aggregator.py) for my *aggregated bandits* algorithms.
-- Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](Environment/MAB.py), simulation results are stored in a [`Environment.Result`](Environment/Result.py), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluator`](Environment/Evaluator.py).
-- [`configuration.py`](configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
-- [`main.py`](main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
+This problem is much harder as it has 3 arms of each types with the *same mean*.
 
-### UML diagrams
-For more details, see [these UML diagrams](uml_diagrams/):
+![The semi-log-x scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal Aggregator, even in a hard "mixed" problem.](plots/main_semilogx____env4-4_932221613383548446.png)
 
-- Packages: organization of the different files:
-  [![UML Diagram - Packages of AlgoBandits.git](uml_diagrams/packages_AlgoBandits.png)](uml_diagrams/packages_AlgoBandits.svg)
-- Classes: inheritance diagrams of the different classes:
-  [![UML Diagram - Classes of AlgoBandits.git](uml_diagrams/classes_AlgoBandits.png)](uml_diagrams/classes_AlgoBandits.svg)
+The semi-log-x scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal Aggregator, even in a hard "mixed" problem.
 
-----
-
-## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
-[MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
-
-© 2012 [Olivier Cappé](http://perso.telecom-paristech.fr/%7Ecappe/), [Aurélien Garivier](https://www.math.univ-toulouse.fr/%7Eagarivie/), [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/) and for the initial [pymaBandits v1.0](http://mloss.org/software/view/415/) project, and © 2016-2017 [Lilian Besson](https://GitHub.com/Naereen) for the rest.
-
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
-[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
-[![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/Naereen/AlgoBandits/README.md?pixel)](https://GitHub.com/Naereen/AlgoBandits/)
-![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
-![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
-[![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
-[![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
+> These illustrations come from my article.

@@ -8,7 +8,7 @@ matplotlib        # Required for the plots in Environment/Evaluator*.py
 
 # --- Optionnal, improve performance
 joblib            # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).
-numba       # Not yet required, but soon
+numba       # Not required, but can help to speed up some functions
 # h5py      # TODO: add support to h5py in order to constantly save the numerical values computed in the simulations?
 
 # --- Better plots
@@ -18,6 +18,9 @@ tqdm              # Nice progress bars
 # --- For the documentation
 sphinx_rtd_theme  # better sphinx theme
 recommonmark      # parser to read Markdown files
+nbsphinx          # to include the notebooks as Sphinx pages
+# sphinxcontrib.googleanalytics  # used for the documentation, but not pip installable...
+# sphinxcontrib.autorun          # used for the documentation, but not pip installable...
 
 # --- For only one policy
 scikit-learn           # for UnsupervisedLearning
