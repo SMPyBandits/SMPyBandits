@@ -23,8 +23,9 @@ from .rhoRand import oneRhoRand, rhoRand
 
 # --- threshold function xi(n, k)
 
-def default_threshold(horizon, nbPlayersEstimate):
-    r""" Function :math:`\xi(T, k)` used as a threshold in :class:`rhoEst`.
+
+def threshold_on_t_with_horizon(horizon, t, nbPlayersEstimate):
+    r""" Function :math:`\xi(T, k)` used as a threshold in :class:`rhoEstPlus`.
 
     - `0` if `nbPlayersEstimate` is `0`,
     - `1` if `nbPlayersEstimate` is `1`,
@@ -32,14 +33,21 @@ def default_threshold(horizon, nbPlayersEstimate):
 
     .. warning:: It requires the horizon :math:`T`.
     """
-    if nbPlayersEstimate == 0:
-        return 0
-    elif nbPlayersEstimate == 1:
-        return 1
+    if nbPlayersEstimate <= 1:
+        return nbPlayersEstimate
     else:
-        # return horizon ** 0.5  # XXX not efficient enough!
-        # return horizon ** 0.1  # XXX not efficient enough!
-        return horizon
+        return log(1 + horizon) ** 2
+        # return float(horizon) ** 0.7
+        # return float(horizon) ** 0.5
+        # return float(horizon) ** 0.1
+        # return horizon
+
+
+def make_threshold_on_t_from_horizon(horizon):
+    """Use the horizon to create ONCE a function of t and nbPlayersEstimate, for :class:`rhoEstPlus."""
+    def threshold_on_t(t, nbPlayersEstimate):
+        return threshold_on_t_with_horizon(horizon, t, nbPlayersEstimate)
+    return threshold_on_t
 
 
 def threshold_on_t(t, nbPlayersEstimate):
@@ -50,16 +58,14 @@ def threshold_on_t(t, nbPlayersEstimate):
     - My heuristic is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
     - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = t`.
     """
-    if nbPlayersEstimate == 0:
-        return 0
-    elif nbPlayersEstimate == 1:
-        return 1
+    if nbPlayersEstimate <= 1:
+        return nbPlayersEstimate
     else:
-        # return log(t)
+        return log(1 + t) ** 2
         # return float(t) ** 0.7
         # return float(t) ** 0.5
         # return float(t) ** 0.1
-        return t
+        # return t
 
 
 # --- Class oneRhoEst, for children
@@ -77,7 +83,7 @@ class oneRhoEst(oneRhoRand):
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
         if hasattr(self, 'maxRank'):
-            del self.maxRank  # <-- make SURE that maxRank is NOT used by the policy!
+            self.maxRank = 1  # <-- make SURE that maxRank is NOT used by the policy!
         self.threshold = threshold  #: Threshold function
         # Internal variables
         self.nbPlayersEstimate = 1  #: Number of players. Optimistic: start by assuming it is alone!
@@ -87,7 +93,7 @@ class oneRhoEst(oneRhoRand):
         self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
+        return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}%s$" % ("" if self.threshold.__name__ == 'threshold_on_t' else "Plus"), self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
 
     def startGame(self):
         """Start game."""
@@ -172,10 +178,48 @@ class rhoEst(rhoRand):
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
+        fake_maxRank = None
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            fakemaxRank = None
-            self.children[playerId] = oneRhoEst(threshold, fakemaxRank, self, playerId)
+            self.children[playerId] = oneRhoEst(threshold, fake_maxRank, self, playerId)
 
     def __str__(self):
         return "rhoEst({} x {})".format(self.nbPlayers, str(self._players[0]))
+
+
+# --- Class rhoEstPlus
+
+class rhoEstPlus(rhoRand):
+    """ rhoEstPlus: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
+    """
+
+    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+                 lower=0., amplitude=1.,
+                 *args, **kwargs):
+        """
+        - nbPlayers: number of players to create (in self._players).
+        - playerAlgo: class to use for every players.
+        - nbArms: number of arms, given as first argument to playerAlgo.
+        - horizon: need to know the horizon :math:`T`.
+        - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> s = rhoEstPlus(nbPlayers, UCB, nbArms, horizon)
+
+        - To get a list of usable players, use ``s.children``.
+        - Warning: ``s._players`` is for internal use ONLY!
+        """
+        assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
+        self.nbPlayers = nbPlayers  #: Number of players
+        self._players = [None] * nbPlayers
+        self.children = [None] * nbPlayers  #: List of children, fake algorithms
+        self.nbArms = nbArms  #: Number of arms
+        fake_maxRank = None
+        threshold = make_threshold_on_t_from_horizon(horizon)
+        for playerId in range(nbPlayers):
+            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self.children[playerId] = oneRhoEst(threshold, fake_maxRank, self, playerId)
+
+    def __str__(self):
+        return "rhoEstPlus({} x {})".format(self.nbPlayers, str(self._players[0]))

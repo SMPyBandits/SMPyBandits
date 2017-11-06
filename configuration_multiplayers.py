@@ -5,7 +5,7 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.8"
 
 # Tries to know number of CPU
 try:
@@ -650,21 +650,25 @@ configuration["successive_players"] = [
     # MCTopM(NB_PLAYERS, UCB, nbArms).children,
     # rhoRand(NB_PLAYERS, UCB, nbArms).children,
     # Selfish(NB_PLAYERS, UCB, nbArms).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
+    CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
     RandTopM(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMOld(NB_PLAYERS, klUCB, nbArms).children,
+    RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
     MCTopM(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMOld(NB_PLAYERS, klUCB, nbArms).children,
+    MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+    rhoEst(NB_PLAYERS, klUCB, nbArms).children,
+    rhoEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
+    rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
     # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
     # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
     # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
