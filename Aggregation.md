@@ -120,4 +120,4 @@ This problem is much harder as it has 3 arms of each types with the *same mean*.
 
 The semi-log-x scale clearly shows the logarithmic growth of the regret for the best algorithms and our proposal Aggregator, even in a hard "mixed" problem.
 
-> These illustrations come from my article.
+> These illustrations come from my article, [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](XXX).

@@ -10,21 +10,21 @@ This repository contains the code of [my](http://perso.crans.org/besson/) numeri
 
 ----
 
-## 1st contribution: The [**policy aggregation algorithm**](Aggregation.md)
+## The [**policy aggregation algorithm**](Aggregation.md)
 I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
 
-> **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md).
+> **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md) and [this article](https://hal.inria.fr/hal-XXX).
 
 ----
 
-## 2nd contribution: [**Multi-players simulation environment**](MultiPlayers.md)
+## [**Multi-players simulation environment**](MultiPlayers.md)
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
-> **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md).
+> **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md) and [this article](https://hal.inria.fr/hal-01629733).
 
 ----
 
