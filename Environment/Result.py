@@ -13,7 +13,7 @@ class Result(object):
     # , delta_t_save=1):
     def __init__(self, nbArms, horizon, indexes_bestarm=-1, means=None):
         """ Create ResultMultiPlayers."""
-        self._means = means  #: Keep the means for DynamicMAB cases
+        self._means = means  # Keep the means for DynamicMAB cases
         # self.delta_t_save = delta_t_save  #: Sample rate for saving
         self.choices = np.zeros(horizon, dtype=int)  #: Store all the choices
         self.rewards = np.zeros(horizon)  #: Store all the rewards, to compute the mean
