@@ -75,14 +75,14 @@ class oneRandTopMEst(oneRandTopM):
         # And try to see if the arm on which we are encountering a collision is one of the Mhat best
         if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
             self.collisionCount += 1
-            print("This arm {} was estimated as one of the Mhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
+            # print("This arm {} was estimated as one of the Mhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
 
         # And finally, compare the collision count with the current threshold
         threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate, self.horizon)
 
         if self.collisionCount > threshold:
             self.nbPlayersEstimate = self.maxRank = min(1 + self.nbPlayersEstimate, self.nbArms)
-            print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
+            # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
         # Finally, restart timeSinceLastCollision
         self.timeSinceLastCollision = 0

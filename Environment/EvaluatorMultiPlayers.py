@@ -383,7 +383,7 @@ class EvaluatorMultiPlayers(object):
         fairnessName = fairness if isinstance(fairness, str) else getattr(fairness, '__name__', "std_fairness")
         for evaId, eva in enumerate(evaluators):
             label = eva.strPlayers(short=True)
-            cumRewards = np.zeros((eva.nbPlayers, eva.duration))
+            cumRewards = np.zeros((eva.nbPlayers, eva.horizon))
             for playerId, player in enumerate(eva.players):
                 cumRewards[playerId, :] = eva.getRewards(playerId, envId)
             # # Print each fairness measure  # DEBUG
@@ -620,7 +620,7 @@ class EvaluatorMultiPlayers(object):
         plot_method = plt.semilogy if semilogy else plot_method
         plot_method = plt.semilogx if semilogx else plot_method
         for evaId, eva in enumerate(evaluators):
-            Y = np.zeros(eva.duration)
+            Y = np.zeros(eva.horizon)
             for armId in range(eva.envs[envId].nbArms):
                 Y += eva.getCollisions(armId, envId)
             if cumulated:

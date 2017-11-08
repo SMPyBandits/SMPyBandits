@@ -29,9 +29,9 @@ def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
 
     - `0` if `nbPlayersEstimate` is `0`,
     - `1` if `nbPlayersEstimate` is `1`,
-    - any function such that: :math:`\xi(T, k) = \omega(\log T)` for all `k > 1`. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose :math:`T`, as :math:`\sqrt(T)` and :math:`T^{0.1}` were too small (the `nbPlayersEstimate` was always growing too fast).
+    - any function such that: :math:`\xi(T, k) = \omega(\log T)` for all `k > 1`. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I chose :math:`\log(1 + T)^2`, as it seems to work just fine.
 
-    .. warning:: It requires the horizon :math:`T`.
+    .. warning:: It requires the horizon :math:`T`, and does not use the current time :math:`t`.
     """
     # print("Calling threshold function 'threshold_on_t_with_horizon' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
@@ -39,11 +39,11 @@ def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
     else:
         if horizon is None:
             horizon = t
-        # return log(1 + horizon) ** 2
+        return log(1 + horizon) ** 2
         # return float(horizon) ** 0.7
         # return float(horizon) ** 0.5
         # return float(horizon) ** 0.1
-        return float(horizon)
+        # return float(horizon)
 
 
 def threshold_on_t(t, nbPlayersEstimate, horizon=None):
@@ -51,8 +51,8 @@ def threshold_on_t(t, nbPlayersEstimate, horizon=None):
 
     - `0` if `nbPlayersEstimate` is `0`,
     - `1` if `nbPlayersEstimate` is `1`,
-    - My heuristic is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
-    - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = t`.
+    - My heuristic to be any-time (ie, without needing to know the horizon) is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
+    - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = c t` for a small constant :math:`c` (like 5 or 10).
     """
     # print("Calling threshold function 'threshold_on_t' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
@@ -61,8 +61,9 @@ def threshold_on_t(t, nbPlayersEstimate, horizon=None):
         # return log(1 + t) ** 2
         # return float(t) ** 0.7
         # return float(t) ** 0.5
-        # return float(t) ** 0.1
-        return float(t)
+        return float(t) ** 0.1
+        # return float(t)
+        # return 10 * float(t)
 
 
 # --- Class oneRhoEst, for children
