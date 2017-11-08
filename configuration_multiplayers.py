@@ -196,11 +196,15 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
-        # XXX Default!
-        {   # A very easy problem (9 arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": uniformMeans(9, 1 / (1. + 9))
-        }
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # }
+        # # XXX Default!
+        # {   # A very easy problem (9 arms), but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": uniformMeans(9, 1 / (1. + 9))
+        # }
         # {   # An easy problem (14 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(14, 1 / (1. + 14))
@@ -225,6 +229,14 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [1] * NB_PLAYERS
         # }
+        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        #     "arm_type": Bernoulli,
+        #     "params": [1] * NB_ARMS
+        # }
+        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        #     "arm_type": Bernoulli,
+        #     "params": ([0] * (NB_ARMS - NB_PLAYERS)) + ([1] * NB_PLAYERS)
+        # }
         # {   # An easy problem, but with a LOT of arms! (50 arms)
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(50, 1 / (1. + 50))
@@ -244,23 +256,23 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
-        #     "arm_type": Bernoulli,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": NB_ARMS,
-        #             "mingap": None,
-        #             # "mingap": 0.01,
-        #             # "mingap": 0.1,
-        #             # "mingap": 1. / (3. * NB_ARMS),
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             # "isSorted": False,
-        #             "isSorted": True,
-        #         }
-        #     }
-        # },
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": Bernoulli,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.01,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3. * NB_ARMS),
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    # "isSorted": False,
+                    "isSorted": True,
+                }
+            }
+        },
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -644,7 +656,19 @@ configuration["successive_players"] = [
     # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
     # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
 
-    # --- 21) Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
+    # # --- 21) Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
+    # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
+    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
+    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
+    # MCTopM(NB_PLAYERS, Thompson, nbArms).children,
+
+    # --- 22) Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
     # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
     # RandTopM(NB_PLAYERS, UCB, nbArms).children,
     # MCTopM(NB_PLAYERS, UCB, nbArms).children,
@@ -656,36 +680,21 @@ configuration["successive_players"] = [
     # RandTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMOld(NB_PLAYERS, klUCB, nbArms).children,
     RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
+    RandTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
     MCTopM(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMOld(NB_PLAYERS, klUCB, nbArms).children,
     MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
+    MCTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
     rhoEst(NB_PLAYERS, klUCB, nbArms).children,
     rhoEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
-    rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
-    # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
-    # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
-    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
-    # MCTopM(NB_PLAYERS, Thompson, nbArms).children,
-
-    # # --- 22) Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
-    # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, BayesUCB).children,
-    # rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
-    # MCTopM(NB_PLAYERS, Thompson, nbArms).children,
 ]
 
 

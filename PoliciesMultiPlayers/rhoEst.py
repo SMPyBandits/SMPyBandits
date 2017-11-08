@@ -39,11 +39,11 @@ def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
     else:
         if horizon is None:
             horizon = t
-        return log(1 + horizon) ** 2
+        # return log(1 + horizon) ** 2
         # return float(horizon) ** 0.7
         # return float(horizon) ** 0.5
         # return float(horizon) ** 0.1
-        # return float(horizon)
+        return float(horizon)
 
 
 def threshold_on_t(t, nbPlayersEstimate, horizon=None):
@@ -58,11 +58,11 @@ def threshold_on_t(t, nbPlayersEstimate, horizon=None):
     if nbPlayersEstimate <= 1:
         return nbPlayersEstimate
     else:
-        return log(1 + t) ** 2
+        # return log(1 + t) ** 2
         # return float(t) ** 0.7
         # return float(t) ** 0.5
         # return float(t) ** 0.1
-        # return float(t)
+        return float(t)
 
 
 # --- Class oneRhoEst, for children

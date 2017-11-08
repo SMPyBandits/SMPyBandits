@@ -54,7 +54,7 @@ class oneRandTopMEst(oneRandTopM):
         str_Mbest = "" if Mbest_is_incorrect else r", $M$-best: ${}$".format(list(self.Mbest()))
         str_chosen_arm = r", arm: ${}$".format(self.chosen_arm) if self.chosen_arm is not None else ""
         # WARNING remember to change here when defining a new variant of RandTopM
-        return r"#{}<{}TopM{}{}Est{}-{}{}{}{}>".format(self.playerId + 1, "MC" if self._withChair else "Rand", ("ExtraCautious" if self._exitIfWorstWasPicked else "Cautious") if self._pickWorstFirst else "", "" if self._pickPrevWorstFirst else "Old", "Plus" if self.horizon else "", player, str_Mbest, str_chosen_arm, "[$T={}$]".format(self.horizon) if self.horizon else "")
+        return r"#{}<{}TopM{}{}-Est{}-{}{}{}{}>".format(self.playerId + 1, "MC" if self._withChair else "Rand", ("ExtraCautious" if self._exitIfWorstWasPicked else "Cautious") if self._pickWorstFirst else "", "" if self._pickPrevWorstFirst else "Old", "Plus" if self.horizon else "", player, str_Mbest, str_chosen_arm, "[$T={}$]".format(self.horizon) if self.horizon else "")
 
     def startGame(self):
         """Start game."""
