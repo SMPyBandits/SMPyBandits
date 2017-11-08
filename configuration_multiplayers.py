@@ -273,6 +273,11 @@ configuration = {
                 }
             }
         },
+        # {   # What happens if arms in Mbest are non unique
+        #     "arm_type": Bernoulli,
+        #     "params": [0.05, 0.1, 0.2, 0.3, 0.7, 0.8, 0.8, 0.9, 0.9]
+        #     # nbPlayers = 5
+        # }
     ],
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms

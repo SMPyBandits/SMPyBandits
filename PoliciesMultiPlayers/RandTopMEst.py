@@ -8,9 +8,9 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 
 .. note:: This is **fully decentralized**: player do not need to know the (fixed) number of players!
 
-- Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](XXX)
+- Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
 
-.. warning:: This is on-going work! Not finished yet!
+.. warning:: FIXME This is on-going work! Not finished yet!
 """
 from __future__ import print_function
 
@@ -23,7 +23,7 @@ from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 from .RandTopM import oneRandTopM
 # from .EstimateM import oneEstimateM  # FIXME generic wrapper is not ready to be used
-from .rhoEst import threshold_on_t_with_horizon, threshold_on_t
+from .rhoEst import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
 
 
 class oneRandTopMEst(oneRandTopM):
@@ -129,7 +129,7 @@ class RandTopMEst(BaseMPPolicy):
                  pickWorstFirst=OPTIM_PICK_WORST_FIRST,
                  exitIfWorstWasPicked=OPTIM_EXIT_IF_WORST_WAS_PICKED,
                  pickPrevWorstFirst=OPTIM_PICK_PREV_WORST_FIRST,
-                 threshold=threshold_on_t, lower=0., amplitude=1.,
+                 threshold=threshold_on_t_doubling_trick, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
@@ -139,7 +139,7 @@ class RandTopMEst(BaseMPPolicy):
         - pickWorstFirst: see ``OPTIM_PICK_WORST_FIRST``,
         - exitIfWorstWasPicked: see ``EXIT_IF_WORST_WAS_PICKED``,
         - pickPrevWorstFirst: see ``OPTIM_PICK_PREV_WORST_FIRST``,
-        - threshold: the threshold function to use, see :func:`threshold_on_t_with_horizon` or :func:`threshold_on_t` above.
+        - threshold: the threshold function to use, see :func:`rhoRand.threshold_on_t_with_horizon`, :func:`rhoRand.threshold_on_t_doubling_trick` or :func:`rhoRand.threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:

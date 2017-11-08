@@ -3,20 +3,20 @@
 
 Collision models are generic functions, taking:
 
- - the time: 't'
- - the arms of the current environment: 'arms'
- - the list of players: 'players'
- - the numpy array of their choices: 'choices'
- - the numpy array to store their rewards: 'rewards'
- - the numpy array to store their pulls: 'pulls'
- - the numpy array to store their collisions: 'collisions'
+- the time: 't'
+- the arms of the current environment: 'arms'
+- the list of players: 'players'
+- the numpy array of their choices: 'choices'
+- the numpy array to store their rewards: 'rewards'
+- the numpy array to store their pulls: 'pulls'
+- the numpy array to store their collisions: 'collisions'
 
 As far as now, there is 4 different collision models implemented:
 
- - noCollision: simple collision model where all players sample it and receive the reward.
- - onlyUniqUserGetsReward: simple collision model, where only the players alone on one arm sample it and receive the reward (default).
- - rewardIsSharedUniformly: in case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward.
- - closerUserGetsReward: in case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a random distance of each player to the base station (random number in [0, 1]).
+- :func:`noCollision`: simple collision model where all players sample it and receive the reward.
+- :func:`onlyUniqUserGetsReward`: simple collision model, where only the players alone on one arm sample it and receive the reward (default).
+- :func:`rewardIsSharedUniformly`: in case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward.
+- :func:`closerUserGetsReward`: in case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a random distance of each player to the base station (random number in [0, 1]).
 """
 from __future__ import print_function
 
@@ -53,7 +53,7 @@ def handleCollision_or_getZeroReward(player, arm, lower=0):
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions):
     """ Simple collision model where only the players alone on one arm samples it and receives the reward.
 
-    - This is the default collision model, cf. [Liu & Zhao, 2009](https://arxiv.org/abs/0910.2065v3) collision model 1.
+    - This is the default collision model, cf. [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     # First, sense in all the arms
