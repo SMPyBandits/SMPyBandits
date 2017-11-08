@@ -189,7 +189,7 @@ class Aggregator(BasePolicy):
                 loss = 1 - reward
                 # Update estimated cumulated rewards for each player
                 self.children_cumulated_losses[self.choices == arm] += loss
-                trusts = np.exp(- rate * self.children_cumulated_losses)
+                trusts = np.exp((-rate) * self.children_cumulated_losses)
             else:
                 # Update estimated cumulated rewards for each player
                 self.children_cumulated_losses[self.choices == arm] += reward

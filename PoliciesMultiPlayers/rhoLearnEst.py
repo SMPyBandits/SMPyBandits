@@ -23,7 +23,7 @@ from .rhoLearn import rhoLearn, Uniform, oneRhoLearn, CHANGE_RANK_EACH_STEP
 class oneRhoLearnEst(oneRhoLearn):
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}\mathrm{Est}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
+        return r"#{}<RhoLearnEst[{}, rank{} ~ {}]>".format(self.playerId + 1, self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
 
 
 # --- Class rhoRand

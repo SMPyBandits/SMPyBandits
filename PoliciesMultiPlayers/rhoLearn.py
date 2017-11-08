@@ -67,7 +67,7 @@ class oneRhoLearn(oneRhoRand):
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}, rank{} ~ {}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
+        return r"#{}<RhoLearn[{}, rank{} ~ {}]>".format(self.playerId + 1, self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection)
 
     def startGame(self):
         """Initialize both rank and arm selection algorithms."""

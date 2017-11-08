@@ -164,7 +164,7 @@ class oneRhoLearnExp3(oneRhoRand):
         self.feedback_function_label = ", feedback:{}".format(NAME_OF_FEEDBACKS[feedback_name]) if feedback_name in NAME_OF_FEEDBACKS else ""
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}, rank{} ~ {}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Learn}}$", self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection, self.feedback_function_label)
+        return r"#{}<RhoLearn[{}, rank{} ~ {}{}]>".format(self.playerId + 1, self.mother._players[self.playerId], "" if self.rank is None else (": %i" % self.rank), self.rankSelection, self.feedback_function_label)
 
     def startGame(self):
         """Initialize both rank and arm selection algorithms."""
