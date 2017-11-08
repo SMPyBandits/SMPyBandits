@@ -87,7 +87,7 @@ class oneRandTopM(ChildPointer):
 
     def worst_Mbest(self):
         """ Index of the worst of the current estimate of the M-best arms. M is the maxRank given to the algorithm."""
-        order = super(oneRandTopM, self).estimatedOrder()
+        order = self.estimatedOrder()
         return order[-self.maxRank]
 
     def worst_previous__and__current_Mbest(self, current_arm):

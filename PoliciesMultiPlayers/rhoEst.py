@@ -15,7 +15,7 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from math import log, sqrt
+from math import log
 import numpy.random as rn
 
 from .rhoRand import oneRhoRand, rhoRand
@@ -24,7 +24,7 @@ from .rhoRand import oneRhoRand, rhoRand
 # --- threshold function xi(n, k)
 
 
-def threshold_on_t_with_horizon(horizon, t, nbPlayersEstimate):
+def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
     r""" Function :math:`\xi(T, k)` used as a threshold in :class:`rhoEstPlus`.
 
     - `0` if `nbPlayersEstimate` is `0`,
@@ -33,24 +33,20 @@ def threshold_on_t_with_horizon(horizon, t, nbPlayersEstimate):
 
     .. warning:: It requires the horizon :math:`T`.
     """
+    # print("Calling threshold function 'threshold_on_t_with_horizon' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
         return nbPlayersEstimate
     else:
+        if horizon is None:
+            horizon = t
         return log(1 + horizon) ** 2
         # return float(horizon) ** 0.7
         # return float(horizon) ** 0.5
         # return float(horizon) ** 0.1
-        # return horizon
+        # return float(horizon)
 
 
-def make_threshold_on_t_from_horizon(horizon):
-    """Use the horizon to create ONCE a function of t and nbPlayersEstimate, for :class:`rhoEstPlus."""
-    def threshold_on_t(t, nbPlayersEstimate):
-        return threshold_on_t_with_horizon(horizon, t, nbPlayersEstimate)
-    return threshold_on_t
-
-
-def threshold_on_t(t, nbPlayersEstimate):
+def threshold_on_t(t, nbPlayersEstimate, horizon=None):
     r""" Function :math:`\xi(t, k)` used as a threshold in :class:`rhoEst`.
 
     - `0` if `nbPlayersEstimate` is `0`,
@@ -58,6 +54,7 @@ def threshold_on_t(t, nbPlayersEstimate):
     - My heuristic is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
     - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = t`.
     """
+    # print("Calling threshold function 'threshold_on_t' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
         return nbPlayersEstimate
     else:
@@ -65,13 +62,13 @@ def threshold_on_t(t, nbPlayersEstimate):
         # return float(t) ** 0.7
         # return float(t) ** 0.5
         # return float(t) ** 0.1
-        # return t
+        # return float(t)
 
 
 # --- Class oneRhoEst, for children
 
 class oneRhoEst(oneRhoRand):
-    """ Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
+    r""" Class that acts as a child policy, but in fact it pass all its method calls to the mother class, who passes it to its i-th player.
 
     - Except for the handleCollision method: a new random rank is sampled after observing a collision,
     - And the player does not aim at the best arm, but at the rank-th best arm, based on her index policy,
@@ -80,6 +77,11 @@ class oneRhoEst(oneRhoRand):
     """
 
     def __init__(self, threshold, *args, **kwargs):
+        if 'horizon' in kwargs:
+            self.horizon = kwargs['horizon']
+            del kwargs['horizon']
+        else:
+            self.horizon = None
         super(oneRhoEst, self).__init__(*args, **kwargs)
         # Parameters
         if hasattr(self, 'maxRank'):
@@ -90,19 +92,18 @@ class oneRhoEst(oneRhoRand):
         self.rank = None  #: Current rank, starting to 1
         self.collisionCount = 0  #: Count collision since last increase of nbPlayersEstimate
         self.timeSinceLastCollision = 0  #: Time since last collision
-        self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Est}%s$" % ("" if self.threshold.__name__ == 'threshold_on_t' else "Plus"), self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
+        return r"#{}<RhoEst{}[{}{}{}]>".format(self.playerId + 1, "Plus" if self.horizon else "", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "", ", $T={}$".format(self.horizon) if self.horizon else "")
 
     def startGame(self):
         """Start game."""
         super(oneRhoEst, self).startGame()
+        self.rank = 1  # Start with a rank = 1: assume she is alone.
+        # Est part
         self.nbPlayersEstimate = 1  # Optimistic: start by assuming it is alone!
         self.collisionCount = 0
         self.timeSinceLastCollision = 0
-        self.t = 0
-        self.rank = 1  # Start with a rank = 1: assume she is alone.
 
     def handleCollision(self, arm, reward=None):
         """Select a new rank, and maybe update nbPlayersEstimate."""
@@ -118,16 +119,16 @@ class oneRhoEst(oneRhoRand):
         # Then, estimate the current ranking of the arms
         order = self.estimatedOrder()
 
-        # And try to see if the arm on which we are encountering a collision is one of the Uhat best
+        # And try to see if the arm on which we are encountering a collision is one of the Mhat best
         if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
             self.collisionCount += 1
-            # print("This arm {} was estimated as one of the Uhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
+            # print("This arm {} was estimated as one of the Mhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
 
         # And finally, compare the collision count with the current threshold
-        threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate)
+        threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate, self.horizon)
 
         if self.collisionCount > threshold:
-            self.nbPlayersEstimate += 1
+            self.nbPlayersEstimate = min(1 + self.nbPlayersEstimate, self.nbArms)
             # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
             self.collisionCount = 0
         # Finally, restart timeSinceLastCollision
@@ -140,14 +141,6 @@ class oneRhoEst(oneRhoRand):
         self.timeSinceLastCollision += 1
         # Then use the reward for the arm learning algorithm
         return super(oneRhoEst, self).getReward(arm, reward)
-
-    def choice(self):
-        """Chose with the actual rank."""
-        self.t += 1
-        # Note: here we could do another randomization step, but it would just weaken the algorithm, cf. rhoRandRand
-        chosenArm = super(oneRhoEst, self).choiceWithRank(self.rank)
-        # print(" - A oneRhoEst player {} chose {} among the bests from rank {}...".format(self, chosenArm, self.rank))  # DEBUG
-        return chosenArm
 
 
 # --- Class rhoEst
@@ -163,7 +156,7 @@ class rhoEst(rhoRand):
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - threshold: the threshold function to use, see :func:`default_threshold` or :func:`threshold_on_t` above.
+        - threshold: the threshold function to use, see :func:`threshold_on_t_with_horizon` or :func:`threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -216,10 +209,9 @@ class rhoEstPlus(rhoRand):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         fake_maxRank = None
-        threshold = make_threshold_on_t_from_horizon(horizon)
         for playerId in range(nbPlayers):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
-            self.children[playerId] = oneRhoEst(threshold, fake_maxRank, self, playerId)
+            self.children[playerId] = oneRhoEst(threshold_on_t_with_horizon, fake_maxRank, self, playerId, horizon=horizon)
 
     def __str__(self):
         return "rhoEstPlus({} x {})".format(self.nbPlayers, str(self._players[0]))
