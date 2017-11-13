@@ -129,7 +129,7 @@ class EvaluatorMultiPlayers(object):
     def __initPlayers__(self, env):
         """ Create or initialize policies."""
         for playerId, player in enumerate(self.cfg['players']):
-            print("- Adding player #{} = {} ...".format(playerId + 1, player))  # DEBUG
+            print("- Adding player #{:>2} = {} ...".format(playerId + 1, player))  # DEBUG
             if isinstance(player, dict):  # Either the 'player' is a config dict
                 print("  Creating this player from a dictionnary 'player' = {} ...".format(player))  # DEBUG
                 self.players.append(player['archtype'](env.nbArms, **player['params']))
@@ -355,7 +355,7 @@ class EvaluatorMultiPlayers(object):
         X = self._times - 1
         cumRewards = np.zeros((self.nbPlayers, self.horizon))
         for playerId, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getRewards(playerId, envId)
             cumRewards[playerId, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -494,7 +494,7 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(self.nbPlayers)
         plot_method = plt.semilogx if semilogx else plt.plot
         for playerId, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getNbSwitchs(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
@@ -544,7 +544,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for playerId, player in enumerate(self.players):
-            label = 'Player #{}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
         legend()
@@ -689,10 +689,10 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
 
-    def printFinalRanking(self, envId=0):
+    def printFinalRanking(self, envId=0, verb=True):
         """Compute and print the ranking of the different players."""
-        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
-        print("\nFinal ranking for this environment #{} :".format(envId))  # DEBUG
+        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers class has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
+        if verb: print("\nFinal ranking for this environment #{:>2} : {} ...".format(envId, self.strPlayers(latex=False, short=True)))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
         for playerId, player in enumerate(self.players):
             Y = self.getRewards(playerId, envId)
@@ -702,16 +702,31 @@ class EvaluatorMultiPlayers(object):
                 lastY[playerId] = Y[-1]  # get the last value
         # Sort lastY and give ranking
         index_of_sorting = np.argsort(-lastY)  # Get them by INCREASING rewards, not decreasing regrets
-        for i, k in enumerate(index_of_sorting):
-            player = self.players[k]
-            print("- Player #{}, '{}'\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, str(player), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
+        if verb:
+            for i, k in enumerate(index_of_sorting):
+                player = self.players[k]
+                print("- Player #{:>2} / {}, {}\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, self.nbPlayers, _extract(str(player)), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
+
+    def printFinalRankingAll(self, envId=0, evaluators=()):
+        """Compute and print the ranking of the different players."""
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        allLastY = np.zeros(len(evaluators))
+        for evaId, eva in enumerate(evaluators):
+            lastY, _ = eva.printFinalRanking(envId=envId, verb=False)
+            allLastY[evaId] = np.mean(lastY)
+        # Sort lastY and give ranking
+        index_of_sorting = np.argsort(-allLastY)  # Get them by INCREASING rewards, not decreasing regrets
+        for k, i in enumerate(index_of_sorting):
+            player = evaluators[k].players[0]
+            print("- Group of players #{:>2} / {}, {}\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, len(evaluators), evaluators[k].strPlayers(latex=False, short=True), i + 1, len(evaluators), allLastY[k]))  # DEBUG
+        return allLastY, index_of_sorting
 
     def printLastRegrets(self, envId=0, evaluators=(), moreAccurate=None):
         """Print the last regrets of the different evaluators."""
         evaluators = [self] + list(evaluators)  # Default to only [self]
         for evaId, eva in enumerate(evaluators):
-            print("\nFor evaluator #{}/{} : {} ...".format(1 + evaId, len(evaluators), evaluators))
+            print("\nFor evaluator #{:>2}/{} : {} (players {}) ...".format(1 + evaId, len(evaluators), eva, eva.strPlayers(latex=False, short=True)))
             last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
             print("  Last regrets vector (for all repetitions) is:")
             print("Shape of  last regrets R_T =", np.shape(last_regrets))
@@ -787,11 +802,14 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
 
-    def strPlayers(self, short=False):
+    def strPlayers(self, short=False, latex=True):
         """Get a string of the players for this environment."""
         listStrPlayers = [_extract(str(player)) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
-            text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
+            if latex:
+                text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
+            else:
+                text = r'{} x {}'.format(self.nbPlayers, listStrPlayers[0])
         else:
             text = ', '.join(listStrPlayers)
         text = wraptext(text)
@@ -847,7 +865,7 @@ def delayed_play(env, players, horizon, collisionModel,
             # XXX here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
             # choices[i] = random_arm_orders[i][player.choice()]
             choices[playerId] = player.choice()
-            # print(" Round t = \t{}, player \t#{}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
+            # print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
 
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions

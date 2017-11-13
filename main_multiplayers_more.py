@@ -329,6 +329,12 @@ if __name__ == '__main__':
         e0, eothers = evaluators[envId][0], evaluators[envId][1:]
         M = e0.nbPlayers
 
+        print("\n\nGiving all the vector of final regrets ...")
+        e0.printLastRegrets(envId, evaluators=eothers)
+
+        print("\n\nGiving the final ranking ...")
+        e0.printFinalRankingAll(envId, evaluators=eothers)
+
         # Get the name of the output file
         imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
