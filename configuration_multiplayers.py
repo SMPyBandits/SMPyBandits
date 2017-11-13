@@ -196,11 +196,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
+        # # XXX Default!
         # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
         # }
-        # # XXX Default!
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(9, 1 / (1. + 9))
@@ -680,20 +680,43 @@ configuration["successive_players"] = [
     # rhoRand(NB_PLAYERS, UCB, nbArms).children,
     # Selfish(NB_PLAYERS, UCB, nbArms).children,
     CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, Aggregator, nbArms, children=[UCB, MOSS, klUCB ]).children,
+    # ---- RandTopM
     RandTopM(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # RandTopMOld(NB_PLAYERS, klUCB, nbArms).children,
+    [ Aggregator(nbArms, children=[  # FIXME experimental!
+            lambda: RandTopM(1 + x, klUCB, nbArms).children[0]
+            for x in range(NB_PLAYERS)
+        ]) for _ in range(NB_PLAYERS)
+    ],
     RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
     RandTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
+    # ---- MCTopM
     MCTopM(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
     # MCTopMOld(NB_PLAYERS, klUCB, nbArms).children,
+    [ Aggregator(nbArms, children=[  # FIXME experimental!
+            lambda: MCTopM(1 + x, klUCB, nbArms).children[0]
+            for x in range(NB_PLAYERS)
+        ]) for _ in range(NB_PLAYERS)
+    ],
     MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
     MCTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
+    # ---- Selfish
     Selfish(NB_PLAYERS, klUCB, nbArms).children,
+    # [ klUCB(nbArms) for _ in range(NB_PLAYERS)],  # exactly like Selfish(NB_PLAYERS, klUCB, nbArms)
+    # Selfish(NB_PLAYERS, Aggregator, nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,
+    [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, Aggregator, nbArms, children=[...])
+    # ---- rhoRand etc
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
+    [ Aggregator(nbArms, children=[  # FIXME experimental!
+            lambda: rhoRand(1 + x, klUCB, nbArms).children[0]
+            for x in range(NB_PLAYERS)
+        ]) for _ in range(NB_PLAYERS)
+    ],
     rhoEst(NB_PLAYERS, klUCB, nbArms).children,
     rhoEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
     # # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,

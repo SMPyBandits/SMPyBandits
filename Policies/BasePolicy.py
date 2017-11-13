@@ -50,11 +50,18 @@ class BasePolicy(object):
         reward = (reward - self.lower) / self.amplitude
         self.rewards[arm] += reward
 
-    # --- Basic choice() method
+    # --- Basic choice() and handleCollision() method
 
     def choice(self):
         """ Not defined."""
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BasePolicy.")
+
+    def handleCollision(self, arm, reward=None):
+        """ Default to give a 0 reward (or ``self.lower``)."""
+        # print("DEBUG BasePolicy.handleCollision({}, {}) was called...".format(arm, reward))  # DEBUG
+        # self.getReward(arm, self.lower if reward is None else reward)
+        self.getReward(arm, self.lower)
+        # raise NotImplementedError("This method handleCollision() has to be implemented in the child class inheriting from BasePolicy.")
 
     # --- Others choice...() methods, partly implemented
 

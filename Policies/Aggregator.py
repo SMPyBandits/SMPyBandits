@@ -108,6 +108,9 @@ class Aggregator(BasePolicy):
             elif isinstance(child, type):
                 print("  Using this not-yet created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child(nbArms, lower=lower, amplitude=amplitude))  # Create it here!
+            elif callable(child):
+                print("  Using this delayed function to create player 'children[{}]' = {} ...".format(i, child))  # DEBUG
+                self.children.append(child())
             else:
                 print("  Using this already created player 'children[{}]' = {} ...".format(i, child))  # DEBUG
                 self.children.append(child)
@@ -121,6 +124,7 @@ class Aggregator(BasePolicy):
         self.choices = np.full(self.nbChildren, -10000, dtype=int)  #: Keep track of the last choices of each slave, to know whom to update if update_all_children is false.
         if self.update_like_exp4:
             self.children_cumulated_losses = np.zeros(self.nbChildren)  #: Keep track of the cumulated loss (empirical mean)
+        self.index = np.zeros(nbArms)  #: Numerical index for each arms
 
     # Print, different output according to the parameters
     def __str__(self):
@@ -167,6 +171,7 @@ class Aggregator(BasePolicy):
         for i in range(self.nbChildren):
             self.children[i].startGame()
         self.choices.fill(-1)
+        self.index.fill(0)
 
     def getReward(self, arm, reward):
         """ Give reward for each child, and then update the trust probabilities."""
@@ -204,10 +209,6 @@ class Aggregator(BasePolicy):
         # 4. renormalize self.trusts to make it a proba dist
         # In practice, it also decreases the self.trusts for the children who were wrong
         self.trusts = trusts / np.sum(trusts)
-        # FIXME experiment dynamic resetting of proba, put this as a parameter
-        # if self.t % 2000 == 0:
-        #     print("   => t % 2000 == 0 : reinitializing the trust proba ...")  # DEBUG
-        #     self.trusts = np.full(self.nbChildren, 1. / self.nbChildren)
         # print("  The most trusted child policy is the {}th with confidence {}.".format(1 + np.argmax(self.trusts), np.max(self.trusts)))  # DEBUG
         # print("self.trusts =", self.trusts)  # DEBUG
 
@@ -253,18 +254,24 @@ class Aggregator(BasePolicy):
         if nb == 1:
             return self.choice()
         else:
+            choices = [None] * self.nbChildren
             for i, child in enumerate(self.children):
-                self.choices[i] = child.choiceMultiple(nb)
-            return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
+                choices[i] = child.choiceMultiple(nb)
+                self.choices[i] = choices[i][0]
+            this_choices = choices[rn.choice(self.nbChildren, replace=False, p=self.trusts)]
+            return this_choices
 
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Make each child vote, multiple times (with IMP scheme), then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if nb == 1:
             return self.choice()
         else:
+            choices = [None] * self.nbChildren
             for i, child in enumerate(self.children):
-                self.choices[i] = child.choiceIMP(nb)
-            return rn.choice(self.choices, size=nb, replace=False, p=self.trusts)
+                choices[i] = child.choiceIMP(nb)
+                self.choices[i] = choices[i][0]
+            this_choices = choices[rn.choice(self.nbChildren, replace=False, p=self.trusts)]
+            return this_choices
 
     def estimatedOrder(self):
         """ Make each child vote for their estimate order of the arms, then randomly select an ordering by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ with the trust probabilities.
@@ -286,3 +293,22 @@ class Aggregator(BasePolicy):
         assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
         order = self.estimatedOrder()
         return order[-M:]
+
+    def computeIndex(self, arm):
+        """ Compute the current index of arm 'arm', by computing all the indexes of the children policies, and computing a convex combination using the trusts probabilities."""
+        indexes = [None] * self.nbChildren
+        for i, child in enumerate(self.children):
+            indexes[i] = child.computeIndex(arm)
+        index = np.dot(indexes, self.trusts)
+        return index
+
+    def computeAllIndex(self):
+        """ Compute the current indexes for all arms. Possibly vectorized, by default it can *not* be vectorized automatically."""
+        for arm in range(self.nbArms):
+            self.index[arm] = self.computeIndex(arm)
+
+    def handleCollision(self, arm, reward=None):
+        """ Default to give a 0 reward (or ``self.lower``)."""
+        super(Aggregator, self).handleCollision(arm, reward=reward)
+        for child in self.children:
+            child.handleCollision(arm, reward=reward)
