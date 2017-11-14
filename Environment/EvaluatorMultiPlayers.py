@@ -714,11 +714,10 @@ class EvaluatorMultiPlayers(object):
         allLastY = np.zeros(len(evaluators))
         for evaId, eva in enumerate(evaluators):
             lastY, _ = eva.printFinalRanking(envId=envId, verb=False)
-            allLastY[evaId] = np.mean(lastY)
-        # Sort lastY and give ranking
+            allLastY[evaId] = np.sum(lastY)
+        # Sort allLastY and give ranking
         index_of_sorting = np.argsort(-allLastY)  # Get them by INCREASING rewards, not decreasing regrets
-        for k, i in enumerate(index_of_sorting):
-            player = evaluators[k].players[0]
+        for i, k in enumerate(index_of_sorting):
             print("- Group of players #{:>2} / {}, {}\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, len(evaluators), evaluators[k].strPlayers(latex=False, short=True), i + 1, len(evaluators), allLastY[k]))  # DEBUG
         return allLastY, index_of_sorting
 

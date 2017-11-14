@@ -309,6 +309,8 @@ class Aggregator(BasePolicy):
 
     def handleCollision(self, arm, reward=None):
         """ Default to give a 0 reward (or ``self.lower``)."""
+        # FIXME not clear why it should be like giving a zero reward to the master policy,
         super(Aggregator, self).handleCollision(arm, reward=reward)
+        # FIXME maybe giving the collision information to all children players is enough...
         for child in self.children:
             child.handleCollision(arm, reward=reward)

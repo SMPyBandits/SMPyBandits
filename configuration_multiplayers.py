@@ -688,7 +688,7 @@ configuration["successive_players"] = [
     # RandTopMOld(NB_PLAYERS, klUCB, nbArms).children,
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: RandTopM(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_PLAYERS)
+            for x in range(NB_ARMS)
         ]) for _ in range(NB_PLAYERS)
     ],
     RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
@@ -700,7 +700,7 @@ configuration["successive_players"] = [
     # MCTopMOld(NB_PLAYERS, klUCB, nbArms).children,
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: MCTopM(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_PLAYERS)
+            for x in range(NB_ARMS)
         ]) for _ in range(NB_PLAYERS)
     ],
     MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
@@ -714,7 +714,7 @@ configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: rhoRand(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_PLAYERS)
+            for x in range(NB_ARMS)
         ]) for _ in range(NB_PLAYERS)
     ],
     rhoEst(NB_PLAYERS, klUCB, nbArms).children,
