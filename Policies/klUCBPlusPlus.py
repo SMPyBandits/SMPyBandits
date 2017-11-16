@@ -43,9 +43,8 @@ class klUCBPlusPlus(klUCB):
         self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
-        name = self.klucb.__name__[5:]
-        if name == "Bern": name = ""
-        complement = "$T={}$, {}{}".format(self.horizon, name, "" if self.c == 1 else r"$c={:.3g}$".format(self.c))
+        name = "" if self.klucb.__name__[5:] == "Bern" else ", " + self.klucb.__name__[5:]
+        complement = "$T={}${}{}".format(self.horizon, name, "" if self.c == 1 else r", $c={:.3g}$".format(self.c))
         return r"KL-UCB{}({})".format("$^{++}$", complement)
 
     def computeIndex(self, arm):

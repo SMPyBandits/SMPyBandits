@@ -64,6 +64,7 @@ DEFAULT_FIRST_HORIZON = 1000
 #: Default stepsize for the arithmetic horizon progression.
 ARITHMETIC_STEP = DEFAULT_FIRST_HORIZON
 
+
 def next_horizon__arithmetic(horizon):
     r""" The arithmetic horizon progression function:
 
@@ -76,6 +77,7 @@ next_horizon__arithmetic.__latex_name__ = "arithmetic"
 
 #: Default multiplicative constant for the geometric horizon progression.
 GEOMETRIC_STEP = 10
+
 
 def next_horizon__geometric(horizon):
     r""" The geometric horizon progression function:
@@ -90,6 +92,7 @@ next_horizon__geometric.__latex_name__ = "geometric"
 #: Default exponential constant for the exponential horizon progression.
 EXPONENTIAL_STEP = 1.5
 
+
 def next_horizon__exponential(horizon):
     r""" The exponential horizon progression function:
 
@@ -99,6 +102,7 @@ def next_horizon__exponential(horizon):
 
 next_horizon__exponential.__latex_name__ = "exponential"
 
+
 def next_horizon__exponential_slow(horizon):
     r""" The exponential horizon progression function:
 
@@ -107,6 +111,7 @@ def next_horizon__exponential_slow(horizon):
     return int(horizon ** 1.1)
 
 next_horizon__exponential_slow.__latex_name__ = "slow exp"
+
 
 def next_horizon__exponential_fast(horizon):
     r""" The exponential horizon progression function:
@@ -121,9 +126,9 @@ next_horizon__exponential_fast.__latex_name__ = "fast exp"
 #: Chose the default horizon growth function.
 # default_next_horizon = next_horizon__arithmetic
 # default_next_horizon = next_horizon__geometric
-default_next_horizon = next_horizon__exponential
+# default_next_horizon = next_horizon__exponential
+# default_next_horizon = next_horizon__exponential_fast
 default_next_horizon = next_horizon__exponential_slow
-default_next_horizon = next_horizon__exponential_fast
 
 
 # --- Utility function
@@ -230,7 +235,7 @@ class DoublingTrickWrapper(BasePolicy):
     # --- pretty printing
 
     def __str__(self):
-        return r"DoublingTrick($T_1={}$, steps: {}{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
+        return r"DoublingTrick($T_1={}$, {} growth{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
 
     # --- Start game by creating new underlying policy
 
