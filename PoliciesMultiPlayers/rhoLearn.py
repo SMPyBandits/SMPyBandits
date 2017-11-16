@@ -115,7 +115,7 @@ class rhoLearn(rhoRand):
     """ rhoLearn: implementation of the multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/), using a learning algorithm instead of a random exploration for choosing the rank.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, rankSelectionAlgo=Uniform,
+    def __init__(self, nbPlayers, nbArms, playerAlgo, rankSelectionAlgo=Uniform,
                  lower=0., amplitude=1., maxRank=None, change_rank_each_step=CHANGE_RANK_EACH_STEP,
                  *args, **kwargs):
         """

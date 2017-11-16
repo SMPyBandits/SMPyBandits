@@ -35,7 +35,7 @@ class Selfish(BaseMPPolicy):
     - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receives a 0 reward for the chosen arm (can be changed with penalty= argument).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, nbPlayers, nbArms, playerAlgo, penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.

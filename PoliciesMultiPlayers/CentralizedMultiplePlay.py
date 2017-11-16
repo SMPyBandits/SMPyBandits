@@ -29,7 +29,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     """ CentralizedMultiplePlay: a multi-player policy where ONE policy is used by a centralized agent; asking the policy to select nbPlayers arms at each step.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, uniformAllocation=False, *args, **kwargs):
+    def __init__(self, nbPlayers, nbArms, playerAlgo, uniformAllocation=False, *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.

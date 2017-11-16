@@ -175,7 +175,7 @@ class RandTopM(BaseMPPolicy):
     """ RandTopM: a proposal for an efficient multi-players learning policy.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  withChair=WITH_CHAIR,
                  pickWorstFirst=OPTIM_PICK_WORST_FIRST,
                  exitIfWorstWasPicked=OPTIM_EXIT_IF_WORST_WAS_PICKED,
@@ -227,7 +227,7 @@ class RandTopMCautious(RandTopM):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -237,7 +237,7 @@ class RandTopMCautious(RandTopM):
         - maxRank: maximum rank allowed by the RandTopMCautious child (default to nbPlayers, but for instance if there is 2 × RandTopMCautious[UCB] + 2 × RandTopMCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(RandTopMCautious, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -249,7 +249,7 @@ class RandTopMExtraCautious(RandTopM):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -259,7 +259,7 @@ class RandTopMExtraCautious(RandTopM):
         - maxRank: maximum rank allowed by the RandTopMExtraCautious child (default to nbPlayers, but for instance if there is 2 × RandTopMExtraCautious[UCB] + 2 × RandTopMExtraCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(RandTopMExtraCautious, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMExtraCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -269,7 +269,7 @@ class RandTopMOld(RandTopM):
     """ RandTopMOld: another proposal for an efficient multi-players learning policy, more "stationary" than RandTopM.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -279,7 +279,7 @@ class RandTopMOld(RandTopM):
         - maxRank: maximum rank allowed by the RandTopMOld child (default to nbPlayers, but for instance if there is 2 × RandTopMOld[UCB] + 2 × RandTopMOld[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(RandTopMOld, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=False, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMOld({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -291,7 +291,7 @@ class MCTopM(RandTopM):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -301,7 +301,7 @@ class MCTopM(RandTopM):
         - maxRank: maximum rank allowed by the MCTopM child (default to nbPlayers, but for instance if there is 2 × MCTopM[UCB] + 2 × MCTopM[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopM, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopM, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopM({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -313,7 +313,7 @@ class MCTopMCautious(RandTopM):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -323,7 +323,7 @@ class MCTopMCautious(RandTopM):
         - maxRank: maximum rank allowed by the MCTopMCautious child (default to nbPlayers, but for instance if there is 2 × MCTopMCautious[UCB] + 2 × MCTopMCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMCautious, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -335,7 +335,7 @@ class MCTopMExtraCautious(RandTopM):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -345,7 +345,7 @@ class MCTopMExtraCautious(RandTopM):
         - maxRank: maximum rank allowed by the MCTopMExtraCautious child (default to nbPlayers, but for instance if there is 2 × MCTopMExtraCautious[UCB] + 2 × MCTopMExtraCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMExtraCautious, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMExtraCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -357,7 +357,7 @@ class MCTopMOld(RandTopM):
     .. warning:: Still very experimental! But it seems to be one of the most efficient decentralized MP algorithm we have so far... The two other variants of MCTopM seem even better!
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -367,7 +367,7 @@ class MCTopMOld(RandTopM):
         - maxRank: maximum rank allowed by the MCTopMOld child (default to nbPlayers, but for instance if there is 2 × MCTopMOld[UCB] + 2 × MCTopMOld[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMOld, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMOld({} x {})".format(self.nbPlayers, str(self._players[0]))

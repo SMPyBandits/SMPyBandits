@@ -326,35 +326,35 @@ configuration.update({
     # "players": CentralizedFixed(NB_PLAYERS, nbArms).children
     # "players": CentralizedCycling(NB_PLAYERS, nbArms).children
     # --- DONE Using a smart Centralized policy, based on choiceMultiple()
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
-    # "players": CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB, uniformAllocation=True).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms, Thompson, uniformAllocation=False).children
+    # "players": CentralizedMultiplePlay(NB_PLAYERS, nbArms, Thompson, uniformAllocation=True).children
 
     # --- DONE Using a smart Centralized policy, based on choiceIMP() -- It's not better, in fact
-    # "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=False).children
-    # "players": CentralizedIMP(NB_PLAYERS, UCB, nbArms, uniformAllocation=True).children
-    # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=False).children
-    # "players": CentralizedIMP(NB_PLAYERS, Thompson, nbArms, uniformAllocation=True).children
+    # "players": CentralizedIMP(NB_PLAYERS, nbArms, UCB, uniformAllocation=False).children
+    # "players": CentralizedIMP(NB_PLAYERS, nbArms, UCB, uniformAllocation=True).children
+    # "players": CentralizedIMP(NB_PLAYERS, nbArms, Thompson, uniformAllocation=False).children
+    # "players": CentralizedIMP(NB_PLAYERS, nbArms, Thompson, uniformAllocation=True).children
 
     # --- DONE Using multi-player Selfish policy
-    # "players": Selfish(NB_PLAYERS, Uniform, nbArms).children
-    # "players": Selfish(NB_PLAYERS, TakeRandomFixedArm, nbArms).children
-    # "players": Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children
-    # "players": Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children
-    "players": Selfish(NB_PLAYERS, UCB, nbArms).children
-    # "players": Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children  # This one is efficient!
-    # "players": Selfish(NB_PLAYERS, MOSS, nbArms).children
-    # "players": Selfish(NB_PLAYERS, klUCB, nbArms).children
-    # "players": Selfish(NB_PLAYERS, klUCBPlus, nbArms).children
-    # "players": Selfish(NB_PLAYERS, klUCBHPlus, nbArms, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
-    # "players": Selfish(NB_PLAYERS, Thompson, nbArms).children
-    # "players": Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children
-    # "players": Selfish(NB_PLAYERS, BayesUCB, nbArms).children
-    # "players": Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
-    #          + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children \
-    #          + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children
-    # "players": Selfish(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, nbArms, Uniform).children
+    # "players": Selfish(NB_PLAYERS, nbArms, TakeRandomFixedArm).children
+    # "players": Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children
+    # "players": Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children
+    "players": Selfish(NB_PLAYERS, nbArms, UCB).children
+    # "players": Selfish(NB_PLAYERS, nbArms, UCBalpha, alpha=0.25).children  # This one is efficient!
+    # "players": Selfish(NB_PLAYERS, nbArms, MOSS).children
+    # "players": Selfish(NB_PLAYERS, nbArms, klUCB).children
+    # "players": Selfish(NB_PLAYERS, nbArms, klUCBPlus).children
+    # "players": Selfish(NB_PLAYERS, nbArms, klUCBHPlus, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
+    # "players": Selfish(NB_PLAYERS, nbArms, Thompson).children
+    # "players": Selfish(NB_PLAYERS, nbArms, SoftmaxDecreasing).children
+    # "players": Selfish(NB_PLAYERS, nbArms, BayesUCB).children
+    # "players": Selfish(int(NB_PLAYERS / 3), nbArms, BayesUCB).children \
+    #          + Selfish(int(NB_PLAYERS / 3), nbArms, Thompson).children \
+    #          + Selfish(int(NB_PLAYERS / 3), nbArms, klUCBPlus).children
+    # "players": Selfish(NB_PLAYERS, nbArms, AdBandits, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using multi-player Oracle policy
     # XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all
@@ -363,72 +363,72 @@ configuration.update({
 
     # --- DONE Using single-player Musical Chair policy
     # OK Estimate nbPlayers in Time0 initial rounds
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.2, Time1=HORIZON).children
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children
-    # "players": Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.2, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.1, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.05, Time1=HORIZON).children
+    # "players": Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.005, Time1=HORIZON).children
 
     # --- DONE Using single-player MEGA policy
     # FIXME how to chose the 5 parameters ??
-    # "players": Selfish(NB_PLAYERS, MEGA, nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).children
+    # "players": Selfish(NB_PLAYERS, nbArms, MEGA, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=D).children
 
     # --- DONE Using single-player ALOHA policy
     # FIXME how to chose the 2 parameters p0 and alpha_p0 ?
-    # "players": ALOHA(NB_PLAYERS, EpsilonDecreasingMEGA, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).children  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
-    # "players": ALOHA(NB_PLAYERS, UCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, MOSS, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, klUCBPlus, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=1. / NB_PLAYERS, alpha_p0=0.01, beta=0.2).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, Thompson, nbArms, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
-    # "players": ALOHA(NB_PLAYERS, SoftmaxDecreasing, nbArms, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, EpsilonDecreasingMEGA, p0=0.6, alpha_p0=0.5, beta=0.8, c=0.1, d=D).children  # Example to prove that Selfish[MEGA] = ALOHA[EpsilonGreedy]
+    # "players": ALOHA(NB_PLAYERS, nbArms, UCB, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, MOSS, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, klUCBPlus, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, Thompson, p0=1. / NB_PLAYERS, alpha_p0=0.01, beta=0.2).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, Thompson, p0=0.6, alpha_p0=0.99, ftnext=tnext_log).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, BayesUCB, p0=0.6, alpha_p0=0.5, beta=0.8).children  # TODO try this one!
+    # "players": ALOHA(NB_PLAYERS, nbArms, SoftmaxDecreasing, p0=0.6, alpha_p0=0.5).children  # TODO try this one!
 
     # --- DONE Using single-player rhoRand policy
-    # "players": rhoRand(NB_PLAYERS, UCB, nbArms).children
-    # "players": rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children
-    # "players": rhoRand(NB_PLAYERS, Thompson, nbArms).children
-    # "players": rhoRand(NB_PLAYERS, BayesUCB, nbArms).children
-    # "players": rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
-    #          + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children \
-    #          + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children
-    # "players": rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children
+    # "players": rhoRand(NB_PLAYERS, nbArms, UCB).children
+    # "players": rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children
+    # "players": rhoRand(NB_PLAYERS, nbArms, Thompson).children
+    # "players": rhoRand(NB_PLAYERS, nbArms, BayesUCB).children
+    # "players": rhoRand(int(NB_PLAYERS / 3), nbArms, BayesUCB, maxRank=NB_PLAYERS).children \
+    #          + rhoRand(int(NB_PLAYERS / 3), nbArms, Thompson, maxRank=NB_PLAYERS).children \
+    #          + rhoRand(int(NB_PLAYERS / 3), nbArms, klUCBPlus, maxRank=NB_PLAYERS).children
+    # "players": rhoRand(NB_PLAYERS, nbArms, AdBandits, alpha=0.5, horizon=HORIZON).children
 
     # --- DONE Using single-player rhoEst policy
-    # "players": rhoEst(NB_PLAYERS, UCB, nbArms).children
-    # "players": rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children
-    # "players": rhoEst(NB_PLAYERS, Thompson, nbArms).children
-    # "players": rhoEst(NB_PLAYERS, BayesUCB, nbArms).children
+    # "players": rhoEst(NB_PLAYERS, nbArms, UCB).children
+    # "players": rhoEst(NB_PLAYERS, nbArms, klUCBPlus).children
+    # "players": rhoEst(NB_PLAYERS, nbArms, Thompson).children
+    # "players": rhoEst(NB_PLAYERS, nbArms, BayesUCB).children
 
     # --- DONE Using single-player rhoLearn policy, with same MAB learning algorithm for selecting the ranks
-    # "players": rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children
-    # "players": rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children
-    # "players": rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children
-    # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=True).children
-    # "players": rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB, change_rank_each_step=False).children
+    # "players": rhoLearn(NB_PLAYERS, nbArms, UCB, UCB).children
+    # "players": rhoLearn(NB_PLAYERS, nbArms, klUCBPlus, klUCBPlus).children
+    # "players": rhoLearn(NB_PLAYERS, nbArms, Thompson, Thompson).children
+    # "players": rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB, change_rank_each_step=True).children
+    # "players": rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB, change_rank_each_step=False).children
 
     # --- DONE Using single-player stupid rhoRandRand policy
-    # "players": rhoRandRand(NB_PLAYERS, UCB, nbArms).children
+    # "players": rhoRandRand(NB_PLAYERS, nbArms, UCB).children
 
     # --- DONE Using single-player rhoRandSticky policy
-    # "players": rhoRandSticky(NB_PLAYERS, UCB, nbArms, stickyTime=10).children
-    # "players": rhoRandSticky(NB_PLAYERS, klUCBPlus, nbArms, stickyTime=10).children
-    # "players": rhoRandSticky(NB_PLAYERS, Thompson, nbArms, stickyTime=10).children
-    # "players": rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, nbArms, UCB, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, nbArms, klUCBPlus, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, nbArms, Thompson, stickyTime=10).children
+    # "players": rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=10).children
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 
 # XXX Comparing different rhoRand approaches
 # configuration["successive_players"] = [
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=0.25).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, MOSS, nbArms).children,
-#     rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-#     rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-#     rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-#     rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-#     rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-#     rhoRand(NB_PLAYERS, AdBandits, nbArms, alpha=0.5, horizon=HORIZON).children,
+#     rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=0.25).children,  # This one is efficient!
+#     rhoRand(NB_PLAYERS, nbArms, MOSS).children,
+#     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
+#     rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
+#     rhoRand(NB_PLAYERS, nbArms, Thompson).children,
+#     rhoRand(NB_PLAYERS, nbArms, SoftmaxDecreasing).children,
+#     rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+#     rhoRand(NB_PLAYERS, nbArms, AdBandits, alpha=0.5, horizon=HORIZON).children,
 # ]
 
 
@@ -437,300 +437,302 @@ configuration.update({
 # p0 = 1. / NB_PLAYERS
 # p0 = 0.75
 # configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, BayesUCB, nbArms).children,  # This one is efficient!
+#     Selfish(NB_PLAYERS, nbArms, BayesUCB).children,  # This one is efficient!
 # ] + [
-#     ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=p0, alpha_p0=alpha_p0, beta=beta).children
-#     # ALOHA(NB_PLAYERS, BayesUCB, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
+#     ALOHA(NB_PLAYERS, nbArms, BayesUCB, p0=p0, alpha_p0=alpha_p0, beta=beta).children
+#     # ALOHA(NB_PLAYERS, nbArms, BayesUCB, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
 #     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
 #     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
 # ]
 
 # # XXX Comparing different centralized approaches
 # configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms).children,
-#     CentralizedIMP(NB_PLAYERS, UCBalpha, nbArms).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-#     CentralizedIMP(NB_PLAYERS, Thompson, nbArms).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, klUCBPlus, nbArms).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha).children,
+#     CentralizedIMP(NB_PLAYERS, nbArms, UCBalpha).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, Thompson).children,
+#     CentralizedIMP(NB_PLAYERS, nbArms, Thompson).children,
+#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCBPlus).children,
 # ]
 
 
 configuration["successive_players"] = [
 
     # --- 1) CentralizedMultiplePlay
-    # CentralizedMultiplePlay(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
 
     # --- 2) Musical Chair
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.1, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.05, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.005, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, MusicalChair, nbArms, Time0=0.001, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.1, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.05, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.005, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.001, Time1=HORIZON).children,
+    # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
 
     # --- 3) EmpiricalMeans
-    # # rhoRand(NB_PLAYERS, EmpiricalMeans, nbArms).children,
-    # rhoEst(NB_PLAYERS, EmpiricalMeans, nbArms).children,
+    # # rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # rhoEst(NB_PLAYERS, nbArms, EmpiricalMeans).children,
 
     # --- 4) UCBalpha
-    # # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, Uniform, alpha=1).children,  # OK, == rhoRand
-    # rhoLearn(NB_PLAYERS, UCBalpha, nbArms, UCB, alpha=1).children,  # OK, == rhoRand
-    # rhoRand(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # # rhoEst(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
-    # Selfish(NB_PLAYERS, UCBalpha, nbArms, alpha=1).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, UCBalpha, Uniform, alpha=1).children,  # OK, == rhoRand
+    # rhoLearn(NB_PLAYERS, nbArms, UCBalpha, UCB, alpha=1).children,  # OK, == rhoRand
+    # rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
+    # # rhoEst(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
+    # Selfish(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
 
     # --- 5) klUCBPlus
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, UCB).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, EpsilonDecreasing).children,
-    # # rhoLearn(NB_PLAYERS, klUCBPlus, nbArms, SoftmaxDecreasing).children,
-    # # rhoEst(NB_PLAYERS, klUCBPlus, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoEst(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, klUCBPlus, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, nbArms, klUCBPlus, UCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, klUCBPlus, EpsilonDecreasing).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, klUCBPlus, SoftmaxDecreasing).children,
+    # # rhoEst(NB_PLAYERS, nbArms, klUCBPlus).children,
 
     # --- 6) Thompson
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoEst(NB_PLAYERS, Thompson, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoRand(NB_PLAYERS, nbArms, Thompson).children,
+    # # rhoEst(NB_PLAYERS, nbArms, Thompson).children,
 
     # # --- 7) rhoLearn with BayesUCB
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoEst(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, SoftmaxDecreasing).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, UCBalpha).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoEst(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, SoftmaxDecreasing).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, UCBalpha).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, Thompson).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, klUCBPlus).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB).children,
 
     # --- 8) Aggregator
-    # Selfish(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # rhoRand(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
-    # # rhoEst(NB_PLAYERS, Aggregator, nbArms, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
+    # Selfish(NB_PLAYERS, nbArms, Aggregator, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # rhoRand(NB_PLAYERS, nbArms, Aggregator, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[UCBalpha, Thompson, klUCBPlus, BayesUCB]).children,
+    # # rhoEst(NB_PLAYERS, nbArms, Aggregator, unbiased=UNBIASED, update_all_children=UPDATE_ALL_CHILDREN, decreaseRate="auto", update_like_exp4=UPDATE_LIKE_EXP4, children=[Thompson, klUCBPlus, BayesUCB]).children,
 
     # # --- 9) Comparing Selfish, rhoRand (and variants) with different learning algorithms
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoRandRotating(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoRandALOHA(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoRandRotating(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # # rhoRandALOHA(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoRandRotating(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoRandALOHA(NB_PLAYERS, Thompson, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoRandRotating(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoRandALOHA(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # # rhoRandRotating(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # # rhoRandALOHA(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoRand(NB_PLAYERS, nbArms, Thompson).children,
+    # # rhoRandRotating(NB_PLAYERS, nbArms, Thompson).children,
+    # # rhoRandALOHA(NB_PLAYERS, nbArms, Thompson).children,
 
     # --- 10) Mixing rhoRand or Selfish with different learning algorithms
-    # rhoRand(int(NB_PLAYERS / 3), BayesUCB, nbArms, maxRank=NB_PLAYERS).children \
-    # + rhoRand(int(NB_PLAYERS / 3), klUCBPlus, nbArms, maxRank=NB_PLAYERS).children \
-    # + rhoRand(int(NB_PLAYERS / 3), Thompson, nbArms, maxRank=NB_PLAYERS).children,
-    # Selfish(int(NB_PLAYERS / 3), BayesUCB, nbArms).children \
-    # + Selfish(int(NB_PLAYERS / 3), klUCBPlus, nbArms).children \
-    # + Selfish(int(NB_PLAYERS / 3), Thompson, nbArms).children,
+    # rhoRand(int(NB_PLAYERS / 3), nbArms, BayesUCB, maxRank=NB_PLAYERS).children \
+    # + rhoRand(int(NB_PLAYERS / 3), nbArms, klUCBPlus, maxRank=NB_PLAYERS).children \
+    # + rhoRand(int(NB_PLAYERS / 3), nbArms, Thompson, maxRank=NB_PLAYERS).children,
+    # Selfish(int(NB_PLAYERS / 3), nbArms, BayesUCB).children \
+    # + Selfish(int(NB_PLAYERS / 3), nbArms, klUCBPlus).children \
+    # + Selfish(int(NB_PLAYERS / 3), nbArms, Thompson).children,
 
     # --- 11) Comparing different "robust" ThompsonSampling algorithms
-    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
-    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=1).children,
-    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
-    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=2).children,
-    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
-    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=5).children,
-    # Selfish(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
-    # rhoRand(NB_PLAYERS, ThompsonRobust, nbArms, averageOn=10).children,
+    # Selfish(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=1).children,
+    # rhoRand(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=1).children,
+    # Selfish(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=2).children,
+    # rhoRand(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=2).children,
+    # Selfish(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=5).children,
+    # rhoRand(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=5).children,
+    # Selfish(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=10).children,
+    # rhoRand(NB_PLAYERS, nbArms, ThompsonRobust, averageOn=10).children,
 
     # --- 12) Comparing different rhoRandSticky algorithms
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=1).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=2).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=5).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=10).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=50).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=100).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=200).children,
-    # rhoRandSticky(NB_PLAYERS, BayesUCB, nbArms, stickyTime=np.inf).children,  # should be = classic rhoRand
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=1).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=2).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=5).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=10).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=50).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=100).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=200).children,
+    # rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=np.inf).children,  # should be = classic rhoRand
 
     # # --- 13) Comparing Selfish, and rhoRand with or without initial orthogonal ranks
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoCentralized(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoCentralized(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoCentralized(NB_PLAYERS, Thompson, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoCentralized(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoCentralized(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoRand(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoCentralized(NB_PLAYERS, nbArms, Thompson).children,
 
     # # --- 14) Comparing rhoRand or Selfish for ApproximatedFHGittins, different alpha. The smaller alpha, the better
-    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-    # CentralizedIMP(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
-    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
-    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
-    # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
-    # # Selfish(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=2).children,
-    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=1).children,
-    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.5).children,
-    # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.25).children,
-    # # rhoRand(NB_PLAYERS, ApproximatedFHGittins, nbArms, horizon=1.1 * HORIZON, alpha=0.05).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
+    # CentralizedIMP(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # Selfish(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=2).children,
+    # Selfish(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=1).children,
+    # Selfish(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.5).children,
+    # Selfish(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.25).children,
+    # # Selfish(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.05).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoRand(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=2).children,
+    # rhoRand(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=1).children,
+    # rhoRand(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.5).children,
+    # rhoRand(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.25).children,
+    # # rhoRand(NB_PLAYERS, nbArms, ApproximatedFHGittins, horizon=1.1 * HORIZON, alpha=0.05).children,
 
     # # --- 15) Comparing Selfish, rhoRand (and variants) with different learning algorithms
-    # Selfish(NB_PLAYERS, SoftMix, nbArms).children,
-    # rhoRand(NB_PLAYERS, SoftMix, nbArms).children,
-    # # Selfish(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    # # rhoRand(NB_PLAYERS, SoftmaxDecreasing, nbArms).children,
-    # # Selfish(NB_PLAYERS, Exp3, nbArms).children,
-    # # rhoRand(NB_PLAYERS, Exp3, nbArms).children,
-    # # Selfish(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
-    # # rhoRand(NB_PLAYERS, Exp3WithHorizon, nbArms, horizon=HORIZON).children,
-    # Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    # rhoRand(NB_PLAYERS, Exp3SoftMix, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, SoftMix).children,
+    # rhoRand(NB_PLAYERS, nbArms, SoftMix).children,
+    # # Selfish(NB_PLAYERS, nbArms, SoftmaxDecreasing).children,
+    # # rhoRand(NB_PLAYERS, nbArms, SoftmaxDecreasing).children,
+    # # Selfish(NB_PLAYERS, nbArms, Exp3).children,
+    # # rhoRand(NB_PLAYERS, nbArms, Exp3).children,
+    # # Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children,
+    # # rhoRand(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children,
+    # Selfish(NB_PLAYERS, nbArms, Exp3SoftMix).children,
+    # rhoRand(NB_PLAYERS, nbArms, Exp3SoftMix).children,
     # # XXX against stochastic algorithms
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # rhoRand(NB_PLAYERS, klUCBPlus, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
+    # Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoRand(NB_PLAYERS, nbArms, Thompson).children,
 
     # # --- 16) Comparing rhoLearn and rhoLearnEst (doesn't know M)
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
-    # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so ~= bad rhoRand
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,  # should be bad!
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,
-    # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, klUCBPlus).children,  # should be bad!
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearnEst(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,  # should be bad!
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB).children,  # use Uniform, so = rhoRand
+    # rhoLearnEst(NB_PLAYERS, nbArms, BayesUCB).children,  # use Uniform, so ~= bad rhoRand
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB).children,
+    # rhoLearnEst(NB_PLAYERS, nbArms, BayesUCB, BayesUCB).children,  # should be bad!
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, klUCBPlus).children,
+    # rhoLearnEst(NB_PLAYERS, nbArms, BayesUCB, klUCBPlus).children,  # should be bad!
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, Thompson).children,
+    # rhoLearnEst(NB_PLAYERS, nbArms, BayesUCB, Thompson).children,  # should be bad!
 
     # # --- 17) Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with BayesUCB for arm selection
-    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
-    # # Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms).children,  # use Uniform, so = rhoRand
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
-    # # # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # # Selfish(NB_PLAYERS, nbArms, Exp3SoftMix).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB).children,  # use Uniform, so = rhoRand
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, Thompson).children,
+    # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=binary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
+    # # # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=ternary_feedback, rankSelectionAlgo=lambda nbArms: Exp3WithHorizon(nbArms, HORIZON)).children,
 
     # # --- 18) Comparing rhoRand, rhoLearn[BayesUCB], rhoLearn[klUCBPlus] and rhoLearn[Thompson], against rhoLearnExp3, all with klUCB for arm selection
-    # CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, klUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, Exp3Decreasing, nbArms).children,
-    # Selfish(NB_PLAYERS, Exp3SoftMix, nbArms).children,
-    # # rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms).children,  # use Uniform, so = rhoRand
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # Selfish(NB_PLAYERS, nbArms, Exp3SoftMix).children,
+    # # rhoRand(NB_PLAYERS, nbArms, klUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, klUCB).children,  # use Uniform, so = rhoRand
+    # rhoLearn(NB_PLAYERS, nbArms, klUCB, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, klUCB, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3SoftMix).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
     # # --- 19) Comparing Selfish[UCB], rhoRand[UCB], rhoLearn[UCB], rhoLearnExp3[UCB] against RandTopM[UCB]
-    # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
-    # Selfish(NB_PLAYERS, UCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, UCB, nbArms, UCB).children,
-    # # rhoLearn(NB_PLAYERS, UCB, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, UCB, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, UCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # RandTopM(NB_PLAYERS, UCB, nbArms).children,
-    # MCTopM(NB_PLAYERS, UCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
+    # Selfish(NB_PLAYERS, nbArms, UCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, UCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, UCB, UCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, UCB, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, UCB, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, UCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, UCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # RandTopM(NB_PLAYERS, nbArms, UCB).children,
+    # MCTopM(NB_PLAYERS, nbArms, UCB).children,
 
     # # --- 20) Comparing Selfish[BayesUCB], rhoRand[BayesUCB], rhoLearn[BayesUCB], rhoLearnExp3[BayesUCB] against RandTopM[BayesUCB]
     # # FIXME it is *failing* with RandTopM[BayesUCB]
-    # CentralizedMultiplePlay(NB_PLAYERS, BayesUCB, nbArms).children,
-    # Selfish(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, BayesUCB, nbArms).children,
-    # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, BayesUCB).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, BayesUCB, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, BayesUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # RandTopM(NB_PLAYERS, BayesUCB, nbArms).children,
-    # MCTopM(NB_PLAYERS, BayesUCB, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, BayesUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, BayesUCB, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, BayesUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # RandTopM(NB_PLAYERS, nbArms, BayesUCB).children,
+    # MCTopM(NB_PLAYERS, nbArms, BayesUCB).children,
 
     # # --- 21) Comparing Selfish[Thompson], rhoRand[Thompson], rhoLearn[Thompson], rhoLearnExp3[Thompson] against RandTopM[Thompson]
-    # CentralizedMultiplePlay(NB_PLAYERS, Thompson, nbArms).children,
-    # Selfish(NB_PLAYERS, Thompson, nbArms).children,
-    # rhoRand(NB_PLAYERS, Thompson, nbArms).children,
-    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, klUCB).children,
-    # # rhoLearn(NB_PLAYERS, Thompson, nbArms, BayesUCB).children,
-    # rhoLearn(NB_PLAYERS, Thompson, nbArms, Thompson).children,
-    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, Thompson, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # RandTopM(NB_PLAYERS, Thompson, nbArms).children,
-    # MCTopM(NB_PLAYERS, Thompson, nbArms).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Thompson).children,
+    # Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    # rhoRand(NB_PLAYERS, nbArms, Thompson).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, Thompson, klUCB).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, Thompson, BayesUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, Thompson, Thompson).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, Thompson, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, Thompson, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # RandTopM(NB_PLAYERS, nbArms, Thompson).children,
+    # MCTopM(NB_PLAYERS, nbArms, Thompson).children,
 
     # --- 22) Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
-    # CentralizedMultiplePlay(NB_PLAYERS, UCB, nbArms).children,
-    # RandTopM(NB_PLAYERS, UCB, nbArms).children,
-    # MCTopM(NB_PLAYERS, UCB, nbArms).children,
-    # rhoRand(NB_PLAYERS, UCB, nbArms).children,
-    # Selfish(NB_PLAYERS, UCB, nbArms).children,
-    CentralizedMultiplePlay(NB_PLAYERS, klUCB, nbArms).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, Aggregator, nbArms, children=[UCB, MOSS, klUCB ]).children,
+    # FIXME this generic wrapper should be easy to use, like this
+    EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, c=1).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
+    # RandTopM(NB_PLAYERS, nbArms, UCB).children,
+    # MCTopM(NB_PLAYERS, nbArms, UCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, UCB).children,
+    # Selfish(NB_PLAYERS, nbArms, UCB).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB ]).children,
     # ---- RandTopM
-    RandTopM(NB_PLAYERS, klUCB, nbArms).children,
-    # RandTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
-    # RandTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
-    # RandTopMOld(NB_PLAYERS, klUCB, nbArms).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: RandTopM(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_ARMS)
-            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-        ]) for _ in range(NB_PLAYERS)
-    ],
-    RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
-    RandTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
+    RandTopM(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
+    # [ Aggregator(nbArms, children=[  # FIXME experimental!
+    #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
+    RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!
+    RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
     # ---- MCTopM
-    MCTopM(NB_PLAYERS, klUCB, nbArms).children,
-    # MCTopMCautious(NB_PLAYERS, klUCB, nbArms).children,
-    # MCTopMExtraCautious(NB_PLAYERS, klUCB, nbArms).children,
-    # MCTopMOld(NB_PLAYERS, klUCB, nbArms).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: MCTopM(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_ARMS)
-            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-        ]) for _ in range(NB_PLAYERS)
-    ],
-    MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
-    MCTopMEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,  # FIXME experimental!
+    MCTopM(NB_PLAYERS, nbArms, klUCB).children,
+    # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
+    # [ Aggregator(nbArms, children=[  # FIXME experimental!
+    #         lambda: MCTopM(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
+    MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!
+    MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
     # ---- Selfish
-    Selfish(NB_PLAYERS, klUCB, nbArms).children,
-    # [ klUCB(nbArms) for _ in range(NB_PLAYERS)],  # exactly like Selfish(NB_PLAYERS, klUCB, nbArms)
-    # Selfish(NB_PLAYERS, Aggregator, nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,
-    [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, Aggregator, nbArms, children=[...])
+    Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    # [ klUCB(nbArms) for _ in range(NB_PLAYERS)],  # exactly like Selfish(NB_PLAYERS, nbArms, klUCB)
+    # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,
+    [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
     # ---- rhoRand etc
-    rhoRand(NB_PLAYERS, klUCB, nbArms).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: rhoRand(1 + x, klUCB, nbArms).children[0]
-            for x in range(NB_ARMS)
-            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 2, NB_PLAYERS - 1, NB_PLAYERS])
-        ]) for _ in range(NB_PLAYERS)
-    ],
-    rhoEst(NB_PLAYERS, klUCB, nbArms).children,
-    rhoEstPlus(NB_PLAYERS, klUCB, nbArms, HORIZON).children,
-    # # rhoLearn(NB_PLAYERS, klUCB, nbArms, klUCB).children,
-    # rhoLearn(NB_PLAYERS, klUCB, nbArms, BayesUCB).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # rhoLearnExp3(NB_PLAYERS, klUCB, nbArms, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoRand(NB_PLAYERS, nbArms, klUCB).children,
+    # [ Aggregator(nbArms, children=[  # FIXME experimental!
+    #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 2, NB_PLAYERS - 1, NB_PLAYERS])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
+    rhoEst(NB_PLAYERS, nbArms, klUCB).children,
+    rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
+    # # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
+    # rhoLearn(NB_PLAYERS, nbArms, klUCB, BayesUCB).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 ]
 
 

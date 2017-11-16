@@ -152,7 +152,7 @@ class ALOHA(BaseMPPolicy):
     """ ALOHA: implementation of the multi-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421), for a generic single-player policy.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None,
                  lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
         """

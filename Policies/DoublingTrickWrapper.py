@@ -273,7 +273,7 @@ class DoublingTrickWrapper(BasePolicy):
                 try:
                     self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
                 except Exception as e:
-                    print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
+                    print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it...".format(e, self.horizon))  # DEBUG
                     self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
                 # now also start game for the underlying policy
                 self.policy.startGame()

@@ -143,7 +143,7 @@ class rhoRandALOHA(rhoRand):
     """ rhoRandALOHA: implementation of a variant of the multi-player policy rhoRand from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  p0=None, alpha_p0=ALPHA_P0, forceChange=FORCE_CHANGE,
                  maxRank=None, lower=0., amplitude=1.,
                  *args, **kwargs):
