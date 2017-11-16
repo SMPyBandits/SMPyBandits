@@ -82,22 +82,30 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 # Parameters for the arms
 TRUNC = 1  #: Trunc parameter, ie amplitude, for Exponential arms
 
-VARIANCE = 0.01   #: Variance of Gaussian arms
-# VARIANCE = 0.25   #: Variance of Gaussian arms
+VARIANCE = 0.05   #: Variance of Gaussian arms
 MINI = 0  #: lower bound on rewards from Gaussian arms
 MAXI = 1  #: upper bound on rewards from Gaussian arms, ie amplitude = 1
 
 SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
+
+#: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 10
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
+#: Sparsity for non-hard-coded problems (Bayesian problems)
 SPARSITY = 4
 SPARSITY = int(getenv('S', SPARSITY))
 SPARSITY = int(getenv('SPARSITY', SPARSITY))
 
+#: Type of arms for non-hard-coded problems (Bayesian problems)
+ARM_TYPE = "Gaussian"
+ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
+ARM_TYPE = Bernoulli if ARM_TYPE == "Bernoulli" else Gaussian
+
+#: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.5, amplitude=1.)
 
 
@@ -129,31 +137,33 @@ configuration = {
         #     "params": MEANS
         # },
         # "environment": [  # 2)  Gaussian arms
-        {   # An example problem with 3 or 9 arms
-            "arm_type": Gaussian,
-            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            "params": [(mean, VARIANCE) for mean in MEANS]
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-        },
-        # FIXME I need to do Bayesian problems for Gaussian arms also!
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        # {   # An example problem with 3 or 9 arms
         #     "arm_type": Gaussian,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": NB_ARMS,
-        #             "mingap": None,
-        #             # "mingap": 0.01,
-        #             # "mingap": 0.1,
-        #             # "mingap": 1. / (3 * NB_ARMS),
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             # "isSorted": False,
-        #             "isSorted": True,
-        #         }
-        #     }
+        #     # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+        #     "params": [(mean, VARIANCE) for mean in MEANS]
+        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
         # },
+        # FIXME I need to do Bayesian problems for Gaussian arms also!
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            # # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
+            "params": {
+                "function": randomMeansWithSparsity,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.01,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    # "isSorted": False,
+                    "isSorted": True,
+                    "sparsity": SPARSITY,
+                }
+            }
+        },
     ],
 }
 
@@ -187,6 +197,7 @@ except Exception as e:
 
 # Custom klucb function
 _klucbGauss = klucbGauss
+# del klucbGauss
 
 
 def klucbGauss(x, d, precision=0.):
@@ -196,6 +207,7 @@ def klucbGauss(x, d, precision=0.):
 
 
 _klucbGamma = klucbGamma
+# del klucbGamma
 
 
 def klucbGamma(x, d, precision=0.):
@@ -205,7 +217,7 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
-        # --- FIXME SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
             "archtype": SparseWrapper,
             "params": {
@@ -293,58 +305,35 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # # --- SparseUCB algorithm with a too small value for s
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 4,
-        #         "sparsity": max(SPARSITY - 2, 1),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 1,
-        #         "sparsity": max(SPARSITY - 2, 1),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "sparsity": max(SPARSITY - 2, 1),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- DONE SparseUCB algorithm with a larger value for s
-        # # XXX It fails completely!
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 4,
-        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 1,
-        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # --- SparseklUCB algorithm, using KL-UCB for sets J(t) and K(t)
+        # --- DONE SparseUCB algorithm with a too small value for s
+        # XXX It fails completely!
         {
-            "archtype": SparseklUCB,
+            "archtype": SparseUCB,
             "params": {
-                "sparsity": SPARSITY,
-                "use_ucb_for_sets": False,
+                "alpha": 1,
+                "sparsity": max(SPARSITY - 1, 1),
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
+        # --- DONE SparseUCB algorithm with a larger value for s
+        # XXX It fails completely!
+        {
+            "archtype": SparseUCB,
+            "params": {
+                "alpha": 1,
+                "sparsity": min(SPARSITY + 1, NB_ARMS),
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- SparseklUCB algorithm, using KL-UCB for sets J(t) and K(t)
+        # {
+        #     "archtype": SparseklUCB,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "use_ucb_for_sets": False,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # # --- SparseklUCB algorithm with a too small value for s, using KL-UCB for sets J(t) and K(t)
         # {
         #     "archtype": SparseklUCB,
@@ -355,14 +344,14 @@ configuration.update({
         #     }
         # },
         # --- SparseklUCB algorithm, using old UCB for sets J(t) and K(t)
-        {
-            "archtype": SparseklUCB,
-            "params": {
-                "sparsity": SPARSITY,
-                "use_ucb_for_sets": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": SparseklUCB,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "use_ucb_for_sets": True,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # # --- SparseklUCB algorithm with a too small value for s, using old UCB for sets J(t) and K(t)
         # {
         #     "archtype": SparseklUCB,
@@ -385,6 +374,14 @@ configuration.update({
         {
             "archtype": Thompson,
             "params": {
+                "posterior": Beta,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": Thompson,
+            "params": {
+                "posterior": Gauss,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
@@ -392,36 +389,36 @@ configuration.update({
         {
             "archtype": klUCB,
             "params": {
+                "klucb": klucbBern,
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
         {
             "archtype": klUCBPlus,
             "params": {
+                "klucb": klucbBern,
                 "lower": LOWER, "amplitude": AMPLITUDE,
-                "klucb": klucbBern,  # "horizon": HORIZON,
             }
         },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbExp,  # "horizon": HORIZON,
+        #         "klucb": klucbExp,
         #     }
         # },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGauss,  # "horizon": HORIZON,
+        #         "klucb": klucbGauss,
         #     }
         # },
         # {
         #     "archtype": klUCBPlus,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGamma,  # "horizon": HORIZON,
+        #         "klucb": klucbGamma,
         #     }
         # },
         # --- BayesUCB algorithm
@@ -437,6 +434,7 @@ configuration.update({
         #     "params": {
         #         "horizon": 1.1 * HORIZON,
         #         "alpha": 2,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
         {
@@ -444,6 +442,7 @@ configuration.update({
             "params": {
                 "horizon": 1.1 * HORIZON,
                 "alpha": 1,
+                "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
         # {
@@ -451,6 +450,7 @@ configuration.update({
         #     "params": {
         #         "horizon": 1.1 * HORIZON,
         #         "alpha": 0.5,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
     ]

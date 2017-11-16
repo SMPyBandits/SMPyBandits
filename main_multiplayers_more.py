@@ -29,7 +29,7 @@ if getenv('SLEEP', 'False') != 'False':
     SLEEP = str(getenv('SLEEP'))
     print("\nSleeping for", SLEEP, "seconds before starting the simulation...")  # DEBUG
     call(["sleep", SLEEP])  # more general
-    print("Done Sleeping for", SLEEP, "seconds ... Now I can start the simulation...")
+    print("Done Sleeping for", SLEEP, "seconds... Now I can start the simulation...")
 
 USE_PICKLE = False   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
@@ -46,8 +46,8 @@ saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots for single experiments or not
-do_simple_plots = False
 do_simple_plots = True
+do_simple_plots = False
 
 #: Whether to do the plots for comparison experiments or not
 do_comparison_plots = False

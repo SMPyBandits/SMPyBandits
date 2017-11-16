@@ -152,10 +152,15 @@ UNBIASED = False
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
-# Parameter for non-hard-coded problems
+#: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = NB_PLAYERS
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
+
+#: Type of arms for non-hard-coded problems (Bayesian problems)
+ARM_TYPE = "Bernoulli"
+ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
+ARM_TYPE = Gaussian if ARM_TYPE == "Gaussian" else Bernoulli
 
 
 #: This dictionary configures the experiments
@@ -257,7 +262,7 @@ configuration = {
         #     # nbPlayers = 3
         # }
         {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": Bernoulli,
+            "arm_type": ARM_TYPE,
             "params": {
                 "function": randomMeans,
                 "args": {

@@ -128,10 +128,15 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 VARIANCE = 10   #: Variance of Gaussian arms
 VARIANCE = 0.05   #: Variance of Gaussian arms
 
-# Parameter for non-hard-coded problems
+#: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 9
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
+
+#: Type of arms for non-hard-coded problems (Bayesian problems)
+ARM_TYPE = "Bernoulli"
+ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
+ARM_TYPE = Gaussian if ARM_TYPE == "Gaussian" else Bernoulli
 
 
 #: This dictionary configures the experiments
@@ -188,7 +193,7 @@ configuration = {
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
         {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": Bernoulli,
+            "arm_type": ARM_TYPE,
             "params": {
                 "function": randomMeans,
                 "args": {

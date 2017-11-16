@@ -35,6 +35,11 @@ class MAB(object):
             'params':   [0.1, 0.5, 0.9]
         }
 
+        configuration = {  # for fixed variance Gaussian
+            'arm_type': Gaussian,
+            'params':   [0.1, 0.5, 0.9]
+        }
+
     - But it can also accept a list of already created arms::
 
         configuration = [
