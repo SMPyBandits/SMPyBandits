@@ -11,6 +11,8 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 - Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
 
 .. warning:: This is still very experimental!
+
+.. note:: For a more generic approach, see the wrapper defined in :mod:`EstimateM`.
 """
 from __future__ import print_function
 

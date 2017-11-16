@@ -8,6 +8,8 @@ r""" EstimateM: generic wrapper on a multi-player decentralized learning policy,
 .. note:: This is fully decentralized: each child player does NOT need to know the number of players and does NOT require the horizon :math:`T`.
 
 .. warning:: This is still very experimental!
+
+.. note:: For a less generic approach, see the policies defined in :mod:`rhoEst` (generalizing :mod:`rhoRand`) and :mod:`RandTopMEst` (generalizing :mod:`RandTopM`).
 """
 from __future__ import print_function
 

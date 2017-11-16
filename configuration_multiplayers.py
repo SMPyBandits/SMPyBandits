@@ -201,11 +201,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
-        # # XXX Default!
-        # {   # A very easy problem (X arms), but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        # }
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": Bernoulli,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(9, 1 / (1. + 9))
@@ -261,23 +261,23 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.01,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3. * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
-                    # "isSorted": False,
-                    "isSorted": True,
-                }
-            }
-        },
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": ARM_TYPE,
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.01,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3. * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             # "isSorted": False,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
         # {   # What happens if arms in Mbest are non unique
         #     "arm_type": Bernoulli,
         #     "params": [0.05, 0.1, 0.2, 0.3, 0.7, 0.8, 0.8, 0.9, 0.9]
@@ -679,8 +679,6 @@ configuration["successive_players"] = [
     # MCTopM(NB_PLAYERS, nbArms, Thompson).children,
 
     # --- 22) Comparing Selfish[klUCB], rhoRand[klUCB], rhoLearn[klUCB], rhoLearnExp3[klUCB] against RandTopM[klUCB]
-    # FIXME this generic wrapper should be easy to use, like this
-    EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, c=1).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
     # RandTopM(NB_PLAYERS, nbArms, UCB).children,
     # MCTopM(NB_PLAYERS, nbArms, UCB).children,
@@ -699,6 +697,7 @@ configuration["successive_players"] = [
     #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
     #     ]) for _ in range(NB_PLAYERS)
     # ],
+    EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,
     RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!
     RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
     # ---- MCTopM
@@ -712,6 +711,7 @@ configuration["successive_players"] = [
     #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
     #     ]) for _ in range(NB_PLAYERS)
     # ],
+    EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,
     MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
     # ---- Selfish
@@ -727,6 +727,7 @@ configuration["successive_players"] = [
     #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 2, NB_PLAYERS - 1, NB_PLAYERS])
     #     ]) for _ in range(NB_PLAYERS)
     # ],
+    EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     rhoEst(NB_PLAYERS, nbArms, klUCB).children,
     rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
     # # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,

@@ -8,7 +8,9 @@ r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Alg
 
 - My choice for the threshold function, see :func:`threshold_on_t`, does not need the horizon either, and uses :math:`t` instead.
 
-.. note:: This is fully decentralized: each child player does NOT need to know the number of players and does NOT require the horizon :math:`T`.
+.. note:: This is **fully decentralized**: each child player does NOT need to know the number of players and does NOT require the horizon :math:`T`.
+
+.. note:: For a more generic approach, see the wrapper defined in :mod:`EstimateM`.
 """
 from __future__ import print_function
 
