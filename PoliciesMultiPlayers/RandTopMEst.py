@@ -10,7 +10,7 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 
 - Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
 
-.. warning:: FIXME This is on-going work! Not finished yet!
+.. warning:: This is still very experimental!
 """
 from __future__ import print_function
 
@@ -22,8 +22,7 @@ import numpy as np
 from .BaseMPPolicy import BaseMPPolicy
 from .ChildPointer import ChildPointer
 from .RandTopM import oneRandTopM
-# from .EstimateM import oneEstimateM  # FIXME generic wrapper is not ready to be used
-from .rhoEst import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
+from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
 
 
 class oneRandTopMEst(oneRandTopM):
@@ -124,7 +123,7 @@ class RandTopMEst(BaseMPPolicy):
     """ RandTopMEst: a proposal for an efficient multi-players learning policy, with no prior knowledge of the number of player.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  withChair=WITH_CHAIR,
                  pickWorstFirst=OPTIM_PICK_WORST_FIRST,
                  exitIfWorstWasPicked=OPTIM_EXIT_IF_WORST_WAS_PICKED,
@@ -139,7 +138,7 @@ class RandTopMEst(BaseMPPolicy):
         - pickWorstFirst: see ``OPTIM_PICK_WORST_FIRST``,
         - exitIfWorstWasPicked: see ``EXIT_IF_WORST_WAS_PICKED``,
         - pickPrevWorstFirst: see ``OPTIM_PICK_PREV_WORST_FIRST``,
-        - threshold: the threshold function to use, see :func:`rhoRand.threshold_on_t_with_horizon`, :func:`rhoRand.threshold_on_t_doubling_trick` or :func:`rhoRand.threshold_on_t` above.
+        - threshold: the threshold function to use, see :func:`EstimateM.threshold_on_t_with_horizon`, :func:`EstimateM.threshold_on_t_doubling_trick` or :func:`EstimateM.threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -171,7 +170,7 @@ class RandTopMEstPlus(BaseMPPolicy):
     """ RandTopMEstPlus: a proposal for an efficient multi-players learning policy, with no prior knowledge of the number of player.
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+    def __init__(self, nbPlayers, nbArms, playerAlgo, horizon,
                  withChair=WITH_CHAIR,
                  pickWorstFirst=OPTIM_PICK_WORST_FIRST,
                  exitIfWorstWasPicked=OPTIM_EXIT_IF_WORST_WAS_PICKED,
@@ -222,7 +221,7 @@ class MCTopMEst(RandTopMEst):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -231,7 +230,7 @@ class MCTopMEst(RandTopMEst):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMEst, self).__init__(nbPlayers, playerAlgo, nbArms, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMEst, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMEst({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -243,7 +242,7 @@ class MCTopMEstPlus(RandTopMEstPlus):
     .. warning:: Still very experimental! But it seems to be the most efficient decentralized MP algorithm we have so far...
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+    def __init__(self, nbPlayers, nbArms, playerAlgo, horizon,
                  lower=0., amplitude=1.,
                  *args, **kwargs):
         """
@@ -252,7 +251,7 @@ class MCTopMEstPlus(RandTopMEstPlus):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMEstPlus, self).__init__(nbPlayers, playerAlgo, nbArms, horizon, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMEstPlus, self).__init__(nbPlayers, nbArms, playerAlgo, horizon, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMEstPlus({} x {})".format(self.nbPlayers, str(self._players[0]))

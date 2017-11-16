@@ -60,17 +60,20 @@ from .rhoRandRand import rhoRandRand  # Cf. [Anandkumar et al., 2009](http://iee
 from .rhoEst import rhoEst, rhoEstPlus  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearn import rhoLearn  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
 from .rhoLearnEst import rhoLearnEst  # Cf. [Anandkumar et al., 2009](http://ieeexplore.ieee.org/document/5462144/)
-from .rhoLearnExp3 import rhoLearnExp3  # New version, still experimental!
+from .rhoLearnExp3 import rhoLearnExp3
 from .rhoLearnExp3 import binary_feedback, ternary_feedback, generic_ternary_feedback, make_generic_ternary_feedback, generic_continuous_feedback, make_generic_continuous_feedback  # Useful functions
-from .rhoRandSticky import rhoRandSticky  # New version, still experimental!
-from .rhoRandRotating import rhoRandRotating  # New version, still experimental!
-from .rhoRandALOHA import rhoRandALOHA  # New version, still experimental!
+from .rhoRandSticky import rhoRandSticky
+from .rhoRandRotating import rhoRandRotating
+from .rhoRandALOHA import rhoRandALOHA
 
-from .rhoCentralized import rhoCentralized  # New version, still experimental!
+from .rhoCentralized import rhoCentralized
 
 
-from .RandTopM import RandTopM, RandTopMCautious, RandTopMExtraCautious, RandTopMOld, MCTopM, MCTopMCautious, MCTopMExtraCautious, MCTopMOld  # New versions, still experimental!
+from .RandTopM import RandTopM, RandTopMCautious, RandTopMExtraCautious, RandTopMOld, MCTopM, MCTopMCautious, MCTopMExtraCautious, MCTopMOld
 from .RandTopMEst import RandTopMEst, RandTopMEstPlus, MCTopMEst, MCTopMEstPlus  # New versions, still experimental!
+
+from .EstimateM import EstimateM  # FIXME experimental!
+from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
 
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log

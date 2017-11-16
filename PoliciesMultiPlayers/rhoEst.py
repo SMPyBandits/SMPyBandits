@@ -15,68 +15,10 @@ from __future__ import print_function
 __author__ = "Lilian Besson"
 __version__ = "0.8"
 
-import numpy as np
 import numpy.random as rn
 
 from .rhoRand import oneRhoRand, rhoRand
-
-
-# --- threshold function xi(n, k)
-
-
-def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
-    r""" Function :math:`\xi(T, k)` used as a threshold in :class:`rhoEstPlus`.
-
-    - `0` if `nbPlayersEstimate` is `0`,
-    - `1` if `nbPlayersEstimate` is `1`,
-    - any function such that: :math:`\xi(T, k) = \omega(\log T)` for all `k > 1`. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I choose :math:`\log(1 + T)^2` or :math:`\log(1 + T) \log(1 + \log(1 + T))`, as it seems to work just fine and satisfies the condition (25) from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
-
-    .. warning:: It requires the horizon :math:`T`, and does not use the current time :math:`t`.
-    """
-    # print("Calling threshold function 'threshold_on_t_with_horizon' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
-    if nbPlayersEstimate <= 1:
-        return nbPlayersEstimate
-    else:
-        if horizon is None:
-            horizon = t
-        return np.log(1 + horizon) * np.log(1 + np.log(1 + horizon))
-        # return float(horizon) ** 0.7
-        # return float(horizon) ** 0.5
-        # return float(horizon) ** 0.1
-        # return float(horizon)
-
-
-def threshold_on_t_doubling_trick(t, nbPlayersEstimate, horizon=None, base=2, min_fake_horizon=100, T0=10):
-    r""" A trick to have a threshold depending on a growing horizon (doubling-trick).
-
-    - Instead of using :math:`t` or :math:`T`, a fake horizon :math:`T_t` is used, corresponding to the horizon a doubling-trick algorithm would be using at time :math:`t`.
-    - :math:`T_t = T_0 b^{\lceil \log_b(t) \rceil}` is the default choice, for :math:`b=2` :math:`T_0 = 10`.
-    - If :math:`T_t` is too small, ``min_fake_horizon`` is used instead.
-
-    .. warning:: This is ongoing research!
-    """
-    fake_horizon_now = max(T0 * (base ** (np.ceil(np.log(1 + t) / np.log(base)))), min_fake_horizon)
-    return threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=fake_horizon_now)
-
-
-def threshold_on_t(t, nbPlayersEstimate, horizon=None):
-    r""" Function :math:`\xi(t, k)` used as a threshold in :class:`rhoEst`.
-
-    - `0` if `nbPlayersEstimate` is `0`,
-    - `1` if `nbPlayersEstimate` is `1`,
-    - My heuristic to be any-time (ie, without needing to know the horizon) is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
-    - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = c t` for a small constant :math:`c` (like 5 or 10).
-    """
-    # print("Calling threshold function 'threshold_on_t' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
-    if nbPlayersEstimate <= 1:
-        return nbPlayersEstimate
-    else:
-        # return np.log(1 + t) ** 2
-        # return float(t) ** 0.7
-        # return float(t) ** 0.5
-        # return float(t) ** 0.1
-        # return float(t)
-        return 10 * float(t)
+from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
 
 
 # --- Class oneRhoEst, for children
@@ -163,14 +105,14 @@ class rhoEst(rhoRand):
     """ rhoEst: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms,
+    def __init__(self, nbPlayers, nbArms, playerAlgo,
                  threshold=threshold_on_t_doubling_trick, lower=0., amplitude=1.,
                  *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
         - nbArms: number of arms, given as first argument to playerAlgo.
-        - threshold: the threshold function to use, see :func:`threshold_on_t_with_horizon`, :func:`threshold_on_t_doubling_trick` or :func:`threshold_on_t` above.
+        - threshold: the threshold function to use, see :func:`EstimateM.threshold_on_t_with_horizon`, :func:`EstimateM.threshold_on_t_doubling_trick` or :func:`EstimateM.threshold_on_t` above.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
 
         Example:
@@ -200,7 +142,7 @@ class rhoEstPlus(rhoRand):
     """ rhoEstPlus: implementation of the 2nd multi-player policy from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
     """
 
-    def __init__(self, nbPlayers, playerAlgo, nbArms, horizon,
+    def __init__(self, nbPlayers, nbArms, playerAlgo, horizon,
                  lower=0., amplitude=1.,
                  *args, **kwargs):
         """
