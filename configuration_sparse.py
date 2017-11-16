@@ -5,7 +5,7 @@ Configuration for the simulations, for the single-player case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.8"
 
 # Tries to know number of CPU
 try:
@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration_comparing_KLUCB_aggregation.py' is NOT executable. Use 'main.py configuration_comparing_KLUCB_aggregation' or 'make comparing_KLUCB_aggregation' ...")  # DEBUG
+    print("Warning: this script 'configuration_sparse.py' is NOT executable. Use 'main.py configuration_sparse' or 'make configuration_sparse' ...")  # DEBUG
     exit(0)
 
 # Import arms
@@ -33,10 +33,11 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
-HORIZON = 30000
+# HORIZON = 20000
+# HORIZON = 30000
 # # # HORIZON = 40000
 # HORIZON = 100000
+HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
@@ -44,9 +45,10 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-REPETITIONS = 100
+# REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
+REPETITIONS = int(getenv('N', REPETITIONS))
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -89,7 +91,13 @@ SCALE = 1   #: Scale of Gamma arms
 
 # --- Parameters for the sparsity
 NB_ARMS = 10
+NB_ARMS = int(getenv('K', NB_ARMS))
+NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
+
 SPARSITY = 4
+SPARSITY = int(getenv('S', SPARSITY))
+SPARSITY = int(getenv('SPARSITY', SPARSITY))
+
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.5, amplitude=1.)
 
 
@@ -128,6 +136,24 @@ configuration = {
             "params": [(mean, VARIANCE) for mean in MEANS]
             # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
         },
+        # FIXME I need to do Bayesian problems for Gaussian arms also!
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": Gaussian,
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.01,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3 * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             # "isSorted": False,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
     ],
 }
 

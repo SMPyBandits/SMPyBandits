@@ -689,6 +689,7 @@ configuration["successive_players"] = [
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: RandTopM(1 + x, klUCB, nbArms).children[0]
             for x in range(NB_ARMS)
+            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
         ]) for _ in range(NB_PLAYERS)
     ],
     RandTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
@@ -701,6 +702,7 @@ configuration["successive_players"] = [
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: MCTopM(1 + x, klUCB, nbArms).children[0]
             for x in range(NB_ARMS)
+            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
         ]) for _ in range(NB_PLAYERS)
     ],
     MCTopMEst(NB_PLAYERS, klUCB, nbArms).children,  # FIXME experimental!
@@ -715,6 +717,7 @@ configuration["successive_players"] = [
     [ Aggregator(nbArms, children=[  # FIXME experimental!
             lambda: rhoRand(1 + x, klUCB, nbArms).children[0]
             for x in range(NB_ARMS)
+            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 2, NB_PLAYERS - 1, NB_PLAYERS])
         ]) for _ in range(NB_PLAYERS)
     ],
     rhoEst(NB_PLAYERS, klUCB, nbArms).children,

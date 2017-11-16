@@ -5,7 +5,7 @@ Configuration for the simulations, for the single-player case.
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.8"
 
 # Tries to know number of CPU
 try:
@@ -31,9 +31,9 @@ from Policies import *
 HORIZON = 100
 HORIZON = 500
 HORIZON = 2000
-# HORIZON = 3000
-# HORIZON = 5000
-# HORIZON = 10000
+HORIZON = 3000
+HORIZON = 5000
+HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # HORIZON = 40000
@@ -490,12 +490,12 @@ configuration.update({
         #     "archtype": UCBVtuned,   # UCB with variance term and one trick
         #     "params": {}
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 4,         # Below the alpha=4 like old classic UCB
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 4,         # Below the alpha=4 like old classic UCB
+        #     }
+        # },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
@@ -538,12 +538,12 @@ configuration.update({
         #         "alpha": 0.1,       # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+            }
+        },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -744,39 +744,39 @@ configuration.update({
                 "horizon": 1.1 * HORIZON,
             }
         },
-        # # --- Doubling trick algorithm
-        # # {
-        # #     "archtype": DoublingTrickWrapper,
-        # #     "params": {
-        # #         "next_horizon": next_horizon__arithmetic,
-        # #         "policy": ApproximatedFHGittins,
-        # #         "alpha": 0.5,
-        # #     }
-        # # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__geometric,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__exponential,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "next_horizon": next_horizon__exponential_fast,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
+        # --- Doubling trick algorithm
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__arithmetic,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__geometric,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_fast,
+                "policy": ApproximatedFHGittins,
+                "alpha": 0.5,
+            }
+        },
         {
             "archtype": DoublingTrickWrapper,
             "params": {
@@ -790,7 +790,6 @@ configuration.update({
         #     "archtype": BlackBoxOpt,
         #     "params": {
         #     }
-        # },
         # },
     ]
 })
