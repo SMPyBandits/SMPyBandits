@@ -104,8 +104,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Aggregator = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -136,7 +136,16 @@ NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-ARM_TYPE = Gaussian if ARM_TYPE == "Gaussian" else Bernoulli
+mapping_ARM_TYPE = {
+    "Constant": Constant,
+    "Uniform": Uniform,
+    "Bernoulli": Bernoulli, "B": Bernoulli,
+    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Poisson": Poisson, "P": Poisson,
+    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
+    "Gamma": GammaFromMean,
+}
+ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 
 #: This dictionary configures the experiments
@@ -176,6 +185,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -537,18 +551,18 @@ configuration.update({
         #         "alpha": 0.25,      # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 0.1,       # XXX Below the theoretically acceptable value!
-        #     }
-        # },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
-                "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+                "alpha": 0.1,       # XXX Below the theoretically acceptable value!
             }
         },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -943,32 +957,78 @@ configuration.update({
 # })
 
 
+NON_AGGR_POLICIES_1 = [
+    # --- Doubling trick algorithm
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon__arithmetic,
+            "policy": ApproximatedFHGittins,
+            "alpha": 0.5,
+        }
+    },
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon__geometric,
+            "policy": ApproximatedFHGittins,
+            "alpha": 0.5,
+        }
+    },
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon__exponential,
+            "policy": ApproximatedFHGittins,
+            "alpha": 0.5,
+        }
+    },
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon__exponential_fast,
+            "policy": ApproximatedFHGittins,
+            "alpha": 0.5,
+        }
+    },
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon__exponential_slow,
+            "policy": ApproximatedFHGittins,
+            "alpha": 0.5,
+        }
+    }
+]
+
 # from itertools import product  # XXX If needed!
 
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:
     # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
-    NON_AGGR_POLICIES = configuration["policies"]
-    # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
-    # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
-    # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-    # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
-    for UPDATE_LIKE_EXP4 in [False, True]:
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one Aggregator policy
-        configuration["policies"] = [{
-            "archtype": Aggregator,
-            "params": {
-                "unbiased": UNBIASED,
-                "update_all_children": UPDATE_ALL_CHILDREN,
-                "decreaseRate": DECREASE_RATE,
-                "learningRate": LEARNING_RATE,
-                "children": NON_AGGR_POLICIES,
-                "update_like_exp4": UPDATE_LIKE_EXP4,
-                # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-            },
-        }] + CURRENT_POLICIES
+    NON_AGGR_POLICIES_0 = configuration["policies"]
 
+    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1]:
+
+        # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
+        # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
+        # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+        # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
+        for UPDATE_LIKE_EXP4 in [False, True]:
+            CURRENT_POLICIES = configuration["policies"]
+            # Add one Aggregator policy
+            configuration["policies"] = CURRENT_POLICIES + [{
+                "archtype": Aggregator,
+                "params": {
+                    "unbiased": UNBIASED,
+                    "update_all_children": UPDATE_ALL_CHILDREN,
+                    "decreaseRate": DECREASE_RATE,
+                    "learningRate": LEARNING_RATE,
+                    "children": NON_AGGR_POLICIES,
+                    "update_like_exp4": UPDATE_LIKE_EXP4,
+                    # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+                },
+            }]
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

@@ -164,8 +164,8 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogy')
             evaluation.plotRegrets(envId, savefig=savefig, semilogy=True)  # XXX To save the figure
-            # savefig = mainfig.replace('main', 'main_loglog')
-            # evaluation.plotRegrets(envId, savefig=savefig, loglog=True)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_loglog')
+            evaluation.plotRegrets(envId, savefig=savefig, loglog=True)  # XXX To save the figure
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     savefig = savefig.replace('main', 'main_STD')
@@ -177,7 +177,7 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogy=True)  # XXX To plot without saving
-            # evaluation.plotRegrets(envId, loglog=True)
+            evaluation.plotRegrets(envId, loglog=True)
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotSTD=True)  # XXX To plot without saving
