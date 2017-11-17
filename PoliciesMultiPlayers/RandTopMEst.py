@@ -12,7 +12,7 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 
 .. warning:: This is still very experimental!
 
-.. note:: For a more generic approach, see the wrapper defined in :mod:`EstimateM`.
+.. note:: For a more generic approach, see the wrapper defined in :class:`EstimateM.EstimateM`.
 """
 from __future__ import print_function
 

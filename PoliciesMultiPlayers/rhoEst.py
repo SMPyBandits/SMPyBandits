@@ -10,7 +10,7 @@ r""" rhoEst: implementation of the 2nd multi-player policy from [Distributed Alg
 
 .. note:: This is **fully decentralized**: each child player does NOT need to know the number of players and does NOT require the horizon :math:`T`.
 
-.. note:: For a more generic approach, see the wrapper defined in :mod:`EstimateM`.
+.. note:: For a more generic approach, see the wrapper defined in :class:`EstimateM.EstimateM`.
 """
 from __future__ import print_function
 

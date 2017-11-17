@@ -9,7 +9,7 @@ r""" EstimateM: generic wrapper on a multi-player decentralized learning policy,
 
 .. warning:: This is still very experimental!
 
-.. note:: For a less generic approach, see the policies defined in :mod:`rhoEst` (generalizing :mod:`rhoRand`) and :mod:`RandTopMEst` (generalizing :mod:`RandTopM`).
+.. note:: For a less generic approach, see the policies defined in :class:`rhoEst.rhoEst` (generalizing :class:`rhoRand.rhoRand`) and :class:`RandTopMEst.RandTopMEst` (generalizing :class:`RandTopM.RandTopM`).
 """
 from __future__ import print_function
 
