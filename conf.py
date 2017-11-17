@@ -79,9 +79,9 @@ author = 'Lilian Besson'
 # built documents.
 #
 # The short X.Y version.
-version = '0.7'
+version = '0.8'
 # The full version, including alpha/beta/rc tags.
-release = '0.7'
+release = '0.8'
 
 # http://pypi.python.org/pypi/sphinxcontrib-googleanalytics
 # https://bitbucket.org/birkenfeld/sphinx-contrib/src/default/googleanalytics/

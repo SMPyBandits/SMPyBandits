@@ -126,14 +126,18 @@ class oneEstimateM(ChildPointer):
         # #1<EstimateM-RhoRand-KLUCB, rank:2>
 
     def updateNbPlayers(self, nbPlayers=None):
+        """Change the value of ``nbPlayersEstimate``, and propagate the change to the underlying policy, for parameters called ``maxRank`` or ``nbPlayers``."""
+        # print("DEBUG calling updateNbPlayers for self = {} and nbPlayers = {} and self.nbPlayersEstimate = {} ...".format(self, nbPlayers, self.nbPlayersEstimate))  # DEBUG
         if nbPlayers is None:
             nbPlayers = self.nbPlayersEstimate
         else:
             self.nbPlayersEstimate = nbPlayers
         if hasattr(self._policy, 'maxRank'):
             self._policy.maxRank = nbPlayers
+            # print("DEBUG in updateNbPlayers, propagating the value {} as new maxRank for self._policy = {} ...".format(nbPlayers, self._policy))  # DEBUG
         if hasattr(self._policy, 'nbPlayers'):
             self._policy.nbPlayers = nbPlayers
+            # print("DEBUG in updateNbPlayers, propagating the value {} as new nbPlayers for self._policy = {} ...".format(nbPlayers, self._policy))  # DEBUG
 
     def startGame(self):
         """Start game."""
@@ -239,19 +243,6 @@ class EstimateM(BaseMPPolicy):
         args_decentralizedPolicy = args
         kwargs_decentralizedPolicy = kwargs
         for playerId in range(nbPlayers):
-            # DEBUG
-            print("nbArms =", nbArms)  # DEBUG
-            print("playerAlgo =", playerAlgo)  # DEBUG
-            print("threshold =", threshold)  # DEBUG
-            print("decentralizedPolicy =", decentralizedPolicy)  # DEBUG
-            print("self =", self)  # DEBUG
-            print("playerId =", playerId)  # DEBUG
-            print("lower =", lower)  # DEBUG
-            print("amplitude =", amplitude)  # DEBUG
-            print("args_decentralizedPolicy =", args_decentralizedPolicy)  # DEBUG
-            print("kwargs_decentralizedPolicy =", kwargs_decentralizedPolicy)  # DEBUG
-            print("policyArgs =", policyArgs)  # DEBUG
-            # DEBUG
             self.children[playerId] = oneEstimateM(nbArms, playerAlgo, threshold, decentralizedPolicy, self, playerId, lower=lower, amplitude=amplitude, args_decentralizedPolicy=args_decentralizedPolicy, kwargs_decentralizedPolicy=kwargs_decentralizedPolicy, **policyArgs)
             self._players[playerId] = self.children[playerId]._policy
 
