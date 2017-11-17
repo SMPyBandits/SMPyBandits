@@ -24,7 +24,7 @@ class klUCBH(klUCB):
         self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
-        return r"KL-UCB-H($T={}$, {}{})".format(self.horizon, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
+        return r"KLUCB-H($T={}$, {}{})".format(self.horizon, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
