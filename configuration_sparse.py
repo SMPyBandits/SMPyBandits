@@ -70,6 +70,15 @@ NB_RANDOM_EVENTS = 5  #: Number of random events. They are uniformly spaced in t
 UPDATE_ALL_CHILDREN = True
 UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
 
+#: Learning rate for my aggregated bandit (it can be autotuned)
+LEARNING_RATE = 0.01
+
+#: Constant time tau for the decreasing rate for my aggregated bandit.
+# FIXED I tried to make self.learningRate decrease when self.t increase, it was not better
+DECREASE_RATE = None
+DECREASE_RATE = HORIZON / 2.0
+DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
+
 #: Should the rewards for Aggregator policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
 UNBIASED = True
 UNBIASED = False
@@ -77,6 +86,14 @@ UNBIASED = False
 #: Should we update the trusts proba like in Exp4 or like in my initial Aggregator proposal
 UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
+
+#: To know if my Aggregator policy is tried.
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Aggregator = True
+
+#: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
+CACHE_REWARDS = TEST_Aggregator
+CACHE_REWARDS = False  # XXX to disable manually this feature
 
 
 # Parameters for the arms
@@ -103,7 +120,16 @@ SPARSITY = int(getenv('SPARSITY', SPARSITY))
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Gaussian"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-ARM_TYPE = Bernoulli if ARM_TYPE == "Bernoulli" else Gaussian
+mapping_ARM_TYPE = {
+    "Constant": Constant,
+    "Uniform": Uniform,
+    "Bernoulli": Bernoulli, "B": Bernoulli,
+    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Poisson": Poisson, "P": Poisson,
+    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
+    "Gamma": GammaFromMean,
+}
+ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.5, amplitude=1.)
@@ -144,7 +170,12 @@ configuration = {
         #     "params": [(mean, VARIANCE) for mean in MEANS]
         #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
         # },
-        # FIXME I need to do Bayesian problems for Gaussian arms also!
+        # {   # A non-Bayesian random problem
+        #     "arm_type": ARM_TYPE,
+        #     # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
+        #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True)
+        # },
+        # FIXED I need to do Bayesian problems for Gaussian arms also!
         {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": ARM_TYPE,
             # # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
@@ -153,12 +184,11 @@ configuration = {
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
-                    # "mingap": 0.01,
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
+                    "lowerNonZero": 0.2,
                     "amplitude": 1.,
-                    # "isSorted": False,
                     "isSorted": True,
                     "sparsity": SPARSITY,
                 }
@@ -258,73 +288,73 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- UCBalpha algorithm
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": 4,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": 1,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": UCBalpha,
-            "params": {
-                "alpha": 0.5,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # --- SparseUCB algorithm
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 4,
-                "sparsity": SPARSITY,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 1,
-                "sparsity": SPARSITY,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 0.5,
-                "sparsity": SPARSITY,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # --- DONE SparseUCB algorithm with a too small value for s
-        # XXX It fails completely!
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 1,
-                "sparsity": max(SPARSITY - 1, 1),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # --- DONE SparseUCB algorithm with a larger value for s
-        # XXX It fails completely!
-        {
-            "archtype": SparseUCB,
-            "params": {
-                "alpha": 1,
-                "sparsity": min(SPARSITY + 1, NB_ARMS),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- UCBalpha algorithm
+        # {
+        #     "archtype": UCBalpha,
+        #     "params": {
+        #         "alpha": 4,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,
+        #     "params": {
+        #         "alpha": 1,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBalpha,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- SparseUCB algorithm
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 4,
+        #         "sparsity": SPARSITY,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": SPARSITY,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "sparsity": SPARSITY,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- DONE SparseUCB algorithm with a too small value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": max(SPARSITY - 1, 1),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- DONE SparseUCB algorithm with a larger value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- SparseklUCB algorithm, using KL-UCB for sets J(t) and K(t)
         # {
         #     "archtype": SparseklUCB,
@@ -425,6 +455,14 @@ configuration.update({
         {
             "archtype": BayesUCB,
             "params": {
+                "posterior": Beta,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "posterior": Gauss,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
@@ -455,6 +493,43 @@ configuration.update({
         # },
     ]
 })
+
+
+NON_AGGR_POLICIES_1 = [
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "policy": klUCBPlus,
+                "sparsity": s,
+                "use_ucb_for_set_J": False, "use_ucb_for_set_K": False,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        }
+        for s in range(1, 1 + NB_ARMS)
+]
+
+
+# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
+if TEST_Aggregator:
+    NON_AGGR_POLICIES_0 = configuration["policies"]
+
+    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1]:
+        for UPDATE_LIKE_EXP4 in [False, True]:
+            CURRENT_POLICIES = configuration["policies"]
+            print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
+            # Add one Aggregator policy
+            configuration["policies"] = CURRENT_POLICIES + [{
+                "archtype": Aggregator,
+                "params": {
+                    "unbiased": UNBIASED,
+                    "update_all_children": UPDATE_ALL_CHILDREN,
+                    "decreaseRate": DECREASE_RATE,
+                    "learningRate": LEARNING_RATE,
+                    "children": NON_AGGR_POLICIES,
+                    "update_like_exp4": UPDATE_LIKE_EXP4,
+                    # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+                },
+            }]
 
 
 print("Loaded experiments configuration from 'configuration.py' :")

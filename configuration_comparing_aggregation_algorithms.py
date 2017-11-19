@@ -33,20 +33,22 @@ HORIZON = 2000
 HORIZON = 3000
 HORIZON = 5000
 HORIZON = 10000
-HORIZON = 20000
+# HORIZON = 20000
 # HORIZON = 30000
 # # # HORIZON = 40000
 # HORIZON = 100000
+HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be stastically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-REPETITIONS = 1000
+# REPETITIONS = 1000
 # REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
+REPETITIONS = int(getenv('N', REPETITIONS))
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False  # To profile the code, turn down parallel computing
@@ -58,6 +60,11 @@ N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = min(CPU_COUNT, max(int(CPU_COUNT / 3), CPU_COUNT - 8))
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
+
+#: Number of arms for non-hard-coded problems (Bayesian problems)
+NB_ARMS = 9
+NB_ARMS = int(getenv('K', NB_ARMS))
+NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms are shuffled (``shuffle(arms)``).
@@ -103,6 +110,20 @@ MAXI = 1  #: upper bound on rewards from Gaussian arms, ie amplitude = 1
 
 SCALE = 1   #: Scale of Gamma arms
 
+#: Type of arms for non-hard-coded problems (Bayesian problems)
+ARM_TYPE = "Bernoulli"
+ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
+mapping_ARM_TYPE = {
+    "Constant": Constant,
+    "Uniform": Uniform,
+    "Bernoulli": Bernoulli, "B": Bernoulli,
+    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Poisson": Poisson, "P": Poisson,
+    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
+    "Gamma": GammaFromMean,
+}
+ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -125,18 +146,23 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.5, 0.9]
         # },
-        {   # A easy problem, but it is used in a lot of articles
-            "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-        },
-        {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-            "arm_type": Bernoulli,
-            "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
-        },
+        # {   # A easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
+        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
+        #     "arm_type": Bernoulli,
+        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.795, 0.8, 0.805]
+        # },
         # {   # A very hard problem, as used in [Cappé et al, 2012]
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.1]
         # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        }
     # ],
     # # "environment": [  # 2)  Exponential arms
     #     {   # An example problem with 9 arms
@@ -144,19 +170,19 @@ configuration = {
     #         "params": [(2, TRUNC), (3, TRUNC), (4, TRUNC), (5, TRUNC), (6, TRUNC), (7, TRUNC), (8, TRUNC), (9, TRUNC), (10, TRUNC)]
     #     },
     # # ],
-    # "environment": [  # 3)  Gaussian arms
-        {   # An example problem with 3 or 9 arms
-            "arm_type": Gaussian,
-            # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-            "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-            # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
-        },
-    # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
-        [
-            arm_type(mean)
-            for mean in [0.1, 0.5, 0.9]
-            for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
-        ],
+    # # "environment": [  # 3)  Gaussian arms
+    #     {   # An example problem with 3 or 9 arms
+    #         "arm_type": Gaussian,
+    #         # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
+    #         "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
+    #         # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+    #     },
+    # # # "environment": [  # 4)  Mix between Bernoulli and Gaussian and Exponential arms
+    #     [
+    #         arm_type(mean)
+    #         for mean in [0.1, 0.5, 0.9]
+    #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
+    #     ],
     # # "environment": [  # 5)  Mix between Bernoulli and Gaussian and Exponential arms
     #     [
     #         arm_type(mean)

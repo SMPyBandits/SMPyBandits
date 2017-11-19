@@ -160,7 +160,16 @@ NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-ARM_TYPE = Gaussian if ARM_TYPE == "Gaussian" else Bernoulli
+mapping_ARM_TYPE = {
+    "Constant": Constant,
+    "Uniform": Uniform,
+    "Bernoulli": Bernoulli, "B": Bernoulli,
+    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Poisson": Poisson, "P": Poisson,
+    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
+    "Gamma": GammaFromMean,
+}
+ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 
 #: This dictionary configures the experiments
@@ -203,7 +212,7 @@ configuration = {
         # }
         # XXX Default!
         {   # A very easy problem (X arms), but it is used in a lot of articles
-            "arm_type": Bernoulli,
+            "arm_type": ARM_TYPE,
             "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
         }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles

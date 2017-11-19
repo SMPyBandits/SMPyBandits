@@ -104,8 +104,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Aggregator = True
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -185,11 +185,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # XXX Default!
-        {   # A very easy problem (X arms), but it is used in a lot of articles
-            "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        },
+        # # XXX Default!
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": ARM_TYPE,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -551,18 +551,18 @@ configuration.update({
         #         "alpha": 0.25,      # XXX Below the theoretically acceptable value!
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.1,       # XXX Below the theoretically acceptable value!
-            }
-        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+        #         "alpha": 0.1,       # XXX Below the theoretically acceptable value!
         #     }
         # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+            }
+        },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -705,6 +705,47 @@ configuration.update({
             "params": {
                 "horizon": HORIZON,
                 "klucb": klucb
+            }
+        },
+        # --- Doubling trick algorithm
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__arithmetic,
+                "policy": klUCBPlusPlus,
+                "klucb": klucb,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__geometric,
+                "policy": klUCBPlusPlus,
+                "klucb": klucb,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential,
+                "policy": klUCBPlusPlus,
+                "klucb": klucb,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_fast,
+                "policy": klUCBPlusPlus,
+                "klucb": klucb,
+            }
+        },
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon__exponential_slow,
+                "policy": klUCBPlusPlus,
+                "klucb": klucb,
             }
         },
         # # --- Empirical KL-UCB algorithm
@@ -1005,17 +1046,16 @@ NON_AGGR_POLICIES_1 = [
 
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:
-    # print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
     NON_AGGR_POLICIES_0 = configuration["policies"]
 
     for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1]:
-
         # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
         # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
         # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
         # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
         for UPDATE_LIKE_EXP4 in [False, True]:
             CURRENT_POLICIES = configuration["policies"]
+            print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
             # Add one Aggregator policy
             configuration["policies"] = CURRENT_POLICIES + [{
                 "archtype": Aggregator,
