@@ -71,10 +71,12 @@ class SparseUCB(UCBalpha):
 
         .. math:: \mathcal{J}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(N_k(t))}{N_k(t)}} \right\}.
         """
-        assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
+        # assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.force_to_see.fill(False)  # faster than sets
         means = self.rewards / self.pulls
+        means[self.pulls < 1] = float('+inf')
         UCB_J = np.sqrt((self.alpha * np.log(self.pulls)) / self.pulls)
+        UCB_J[self.pulls < 1] = float('+inf')
         self.force_to_see[means >= UCB_J] = True
 
     def update_k(self):
@@ -82,10 +84,12 @@ class SparseUCB(UCBalpha):
 
         .. math:: \mathcal{K}(t) = \left\{ k \in [1,...,K]\;, \frac{X_k(t)}{N_k(t)} \geq \sqrt{\frac{\alpha \log(t)}{N_k(t)}} \right\}.
         """
-        assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
+        # assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.goods.fill(False)  # faster than sets
         means = self.rewards / self.pulls
+        means[self.pulls < 1] = float('+inf')
         UCB_K = np.sqrt((self.alpha * np.log(self.t)) / self.pulls)
+        UCB_K[self.pulls < 1] = float('+inf')
         self.goods[means >= UCB_K] = True
 
     # --- SparseUCB choice() method

@@ -46,9 +46,10 @@ USE_UCB_FOR_SET_K = False
 
 
 #: Default value for the flag controlling whether the usual UCB indexes are used for the set :math:`\mathcal{J}(t)`.
-#: Default it to use the UCB indexes as there is no generic formula to obtain the indexes for :math:`\mathcal{J}(t)` from the indexes of the underlying policy.
-USE_UCB_FOR_SET_J = False
+#: Default it to use the UCB indexes as there is no clean and generic formula to obtain the indexes for :math:`\mathcal{J}(t)` from the indexes of the underlying policy.
+#: Note that I found a formula, it's just durty. See below.
 USE_UCB_FOR_SET_J = True
+USE_UCB_FOR_SET_J = False
 
 #: Default parameter for :math:`\alpha` for the UCB indexes.
 ALPHA = 1
@@ -146,16 +147,19 @@ class SparseWrapper(BasePolicy):
         - Yes, this is a nothing but a *hack*, as there is no generic formula to retrieve the indexes used in the set :math:`\mathcal{J}(t)` from the indexes :math:`I_k^{P}(t)` of the underlying index policy :math:`P`.
         - If ``use_ucb_for_set_J`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
-        assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
+        # assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.force_to_see.fill(False)  # faster than sets
         means = self.rewards / self.pulls
+        means[self.pulls < 1] = float('+inf')
         if self.use_ucb_for_set_J:
             UCB_J = np.sqrt((self.alpha * np.log(self.pulls)) / self.pulls)
+            UCB_J[self.pulls < 1] = float('+inf')
         else:
             self.computeAllIndex()
             UCB_K = self.index - means
             # FIXME hack to convert it to the UCB_J
             UCB_J = np.sqrt( np.log(self.pulls) / np.log(self.t) ) * UCB_K
+            UCB_J[self.pulls < 1] = float('+inf')
         self.force_to_see[means >= UCB_J] = True
 
     def update_k(self):
@@ -169,11 +173,13 @@ class SparseWrapper(BasePolicy):
 
         - If ``use_ucb_for_set_K`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
-        assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
+        # assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.goods.fill(False)  # faster than sets
         means = self.rewards / self.pulls
+        means[self.pulls < 1] = float('+inf')
         if self.use_ucb_for_set_K:
             UCB_K = np.sqrt((self.alpha * np.log(self.t)) / self.pulls)
+            UCB_K[self.pulls < 1] = float('+inf')
         else:
             self.computeAllIndex()
             UCB_K = self.index - means
