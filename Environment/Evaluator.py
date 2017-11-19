@@ -395,11 +395,15 @@ class Evaluator(object):
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
             lw = 4 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy) or 'LearnExp' in str(policy) or 'Exp4' in str(policy)) else 2
-            if semilogx:
+            if semilogx or loglog:
                 # FIXED for semilogx plots, truncate to only show t >= 100
                 plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
                 plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+            if semilogx or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                plt.xscale('log')
+            if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                plt.yscale('log')
             # Print standard deviation of regret
             if plotSTD and self.repetitions > 1:
                 stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
@@ -414,7 +418,8 @@ class Evaluator(object):
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
-        print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
+        if not (semilogx or semilogy or loglog):
+            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
         if not meanRegret:
             plt.ylim(ymin, plt.ylim()[1])
         # Get a small string to add to ylabel

@@ -469,7 +469,8 @@ class EvaluatorMultiPlayers(object):
         if not self.envs[envId].isDynamic:
             # XXX In fact, the lower-bound is also true for Bayesian policies! Finite means ARE ALWAYS linear! I should write the proof, but I convinced myself that the lower-bound is still correct (in a certain sense) and at least it gives an overview of the (average) complexity of the problem (randomly drawn and) used for the experiments.
             lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
-            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
+            if not (semilogx or semilogy or loglog):
+                print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
             if self.envs[envId].isDynamic:
                 print("WARNING this env is in fact dynamic, this complexity term and H_OI factor do not have much sense... (they are computed from the average of the complexity for all mean vectors drawn in the repeted experiments...)")  # DEBUG
             print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
