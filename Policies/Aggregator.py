@@ -76,6 +76,7 @@ class Aggregator(BasePolicy):
                  update_all_children=UPDATE_ALL_CHILDREN, update_like_exp4=UPDATE_LIKE_EXP4,
                  unbiased=UNBIASED, prior='uniform',
                  lower=0., amplitude=1.,
+                 extra_str=''
                 ):
         # Attributes
         self.nbArms = nbArms  #: Number of arms
@@ -87,6 +88,7 @@ class Aggregator(BasePolicy):
         # XXX If we use the Exp4 update rule, it's better to be unbiased
         # XXX If we use my update rule, it seems to be better to be "biased"
         self.horizon = int(horizon) if horizon is not None else None  #: Horizon T, if given and not None, can be used to compute a "good" constant learning rate, :math:`\sqrt{\frac{2 \log(N)}{T K}}` for N slaves, K arms (heuristic).
+        self.extra_str = extra_str  #: A string to add at the end of the ``str(self)``, to specify which algorithms are aggregated for instance.
         self.update_all_children = update_all_children  #: Flag, see above.
         self.nbChildren = len(children)  #: Number N of slave algorithms.
         self.t = -1  #: Internal time
@@ -133,13 +135,14 @@ class Aggregator(BasePolicy):
         all_children = ", update all" if self.update_all_children else ""
         if self.decreaseRate == 'auto':
             if self.horizon:
-                return r"{}($T={}$, $N={}${})".format(name, self.horizon, self.nbChildren, all_children)
+                s = r"{}($T={}$, $N={}${})".format(name, self.horizon, self.nbChildren, all_children)
             else:
-                return r"{}($N={}${})".format(name, self.nbChildren, all_children)
+                s = r"{}($N={}${})".format(name, self.nbChildren, all_children)
         elif self.decreaseRate is not None:
-            return r"{}($N={}${}, $\eta={:.3g}$, $dRate={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate, self.decreaseRate)
+            s = r"{}($N={}${}, $\eta={:.3g}$, $dRate={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate, self.decreaseRate)
         else:
-            return r"{}($N={}${}, $\eta={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate)
+            s = r"{}($N={}${}, $\eta={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate)
+        return s + self.extra_str
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

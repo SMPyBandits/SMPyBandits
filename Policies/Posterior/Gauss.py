@@ -11,6 +11,7 @@ No need for tricks to handle non-binary rewards.
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
+from warnings import warn
 import numpy as np
 
 try:
@@ -20,6 +21,10 @@ except ImportError:
 
 
 from scipy.stats import invgamma, norm
+
+
+#: Default value for the variance of a [0, 1] Gaussian arm
+VARIANCE = 0.05
 
 
 def inverse_gamma(alpha=1., beta=1.):
@@ -68,8 +73,8 @@ class Gauss(Posterior):
     Cf. https://en.wikipedia.org/wiki/Normal-inverse-gamma_distribution
     """
 
-    def __init__(self, mu=0., nu=1., alpha=1., beta=1.):
-        r"""Create a posterior assuming the default is :math:`\mathcal{N}(\mu, \sigma)` with `loc = mu` and `scale**2 = sigma`."""
+    def __init__(self, mu=0., nu=VARIANCE, alpha=1., beta=1.):
+        r"""Create a posterior assuming the default is :math:`\mathcal{N}(\mu, \nu)` with `loc = mu` and `scale**2 = nu`."""
         self._mu = float(mu)
         self.mu = float(mu)  #: Parameter :math:`\mu` of the posterior
         assert nu > 0, "Error: parameter 'nu' for Gauss posterior has to be > 0."
@@ -107,15 +112,16 @@ class Gauss(Posterior):
     def quantile(self, p):
         """ Return the p-quantile of the Gauss posterior.
 
-        .. warning:: Very experiment, I am not sure of what I did here...
+        .. warning:: Very experimental, I am not sure of what I did here...
 
         .. note:: I recommend to NOT use :class:`BayesUCB` with Gauss posteriors...
         """
+        # warn("Gauss.quantile() : Not implemented for a 2 dimensional distribution!", RuntimeWarning)
         quantile_on_sigma2 = invgamma.ppf(p, self.alpha, scale=self.beta)
-        scale = self.beta / (self.alpha)  # mean of the Inverse-gamma
-        quantile_on_x = norm.ppf(p, loc=self.mu, scale=scale / self.nu)
+        scale = self.beta / float(self.alpha)  # mean of the Inverse-gamma
+        quantile_on_x = norm.ppf(p, loc=self.mu, scale=scale / float(self.nu))
         return quantile_on_x * quantile_on_sigma2
-        # raise ValueError("Gauss.quantile() : Not implemented for a 2 dimensional distribution!")
+        raise ValueError("Gauss.quantile() : Not implemented for a 2 dimensional distribution!")
 
     def mean(self):
         """Compute the mean of the Gauss posterior (should be useless)."""

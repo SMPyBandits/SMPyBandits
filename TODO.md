@@ -8,10 +8,9 @@
 - [ ] Write a small library that can be included in any other C++ program to do : 1. start the socket connexion to the server, 2. then play one step at a time,
 - [ ] Check that the library can be used within a GNU Radio block !
 
-## Clean up things (recently) - FIXME
+## Clean up things (recently)
 
-- [ ] remove the `delta_t_save` "feature"
-- [ ] remove the `delta_t_plot` "feature"
+- [x] remove the `delta_t_save` "feature"
 
 ## Initial things to do! - OK
 - [x] Clean up initial code, keep it clean and commented, OK.
@@ -56,13 +55,13 @@
 
 ### State-of-the-art algorithms
 - [x] I implemented the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/1512.02866), in [`MusicalChair`](Policies/MusicalChair.py). FIXME the ["Dynamic Musical Chair"](https://arxiv.org/abs/1512.02866) that regularly reinitialize "Musical Chair"...
-- [x] I implemented the ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/), in [`rhoRand`](PoliciesMultiPlayers/rhoRand.py). It consists of the rho_rand collision avoidance protocol, and *any* single-player policy. FIXME the `rhoEst` policy that estimate the number of users from collision.
+- [x] I implemented the ["rho_rand"](http://ieeexplore.ieee.org/document/5462144/) from [[Anandkumar et al., 2009]](http://ieeexplore.ieee.org/document/5462144/), in [`rhoRand`](PoliciesMultiPlayers/rhoRand.py). It consists of the rho_rand collision avoidance protocol, and *any* single-player policy. And the [`rhoEst`](PoliciesMultiPlayers/rhoEst.py) policy that estimate the number of users from collision.
 - [x] I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) multi-player policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](Policies/MEGA.py). It consists of the ALOHA collision avoidance protocol and a Epsilon-greedy arm selection algorithm.
 - [x] I also generalized it by implementing the ALOHA collision avoidance protocol for *any* single-player policy, in [`ALOHA`](PoliciesMultiPlayers/ALOHA.py). FIXME it has too much parameter, how to chose them??
 - [ ] TODO ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
 
 ### Dynamic settings
-- [ ] add the possibility to have a varying number of dynamic users for multi-users simulations in AlgoBandits.git
+- [ ] add the possibility to have a varying number of dynamic users for multi-users simulations
 - [ ] implement the experiments from [Musical Chair], [rhoRand] articles, and Navik Modi's experiments
 
 ---

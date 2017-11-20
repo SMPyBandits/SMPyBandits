@@ -93,8 +93,7 @@ class SparseWrapper(BasePolicy):
         self.force_to_see = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{J}(t)`.
         self.goods = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{K}(t)`.
         self.offset = -1  #: Next arm to sample, for the Round-Robin phase
-        # FIXME Force it, for pretty printing...
-        self.startGame()
+        self.startGame()  # XXX Force it, for pretty printing...
 
     # --- pretty printing
 
@@ -108,7 +107,7 @@ class SparseWrapper(BasePolicy):
             ucb_for += "K"
         elif self.use_ucb_for_set_J and not self.use_ucb_for_set_K:
             ucb_for += "J"
-        return r"SparseWrapper($s={}$)[{}{}]".format(self.sparsity, self.policy, ucb_for)
+        return r"SparseWrapper(s={})[{}{}]".format(self.sparsity, self.policy, ucb_for)
 
     # --- Start game by creating new underlying policy
 

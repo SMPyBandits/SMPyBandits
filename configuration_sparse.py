@@ -459,13 +459,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": BayesUCB,
-            "params": {
-                "posterior": Gauss,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {
+        #         "posterior": Gauss,  # XXX does not work yet!
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- Finite-Horizon Gittins index
         # {
         #     "archtype": ApproximatedFHGittins,
@@ -512,8 +512,13 @@ NON_AGGR_POLICIES_1 = [
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:
     NON_AGGR_POLICIES_0 = configuration["policies"]
+    # XXX Very simulation-specific settings!
+    EXTRA_STRS = ["[all non Aggr]", "Sparse-KLUCB for s={}..{}".format(1, NB_ARMS)]
 
-    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1]:
+    for NON_AGGR_POLICIES, EXTRA_STR in zip(
+            [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1],
+            EXTRA_STRS
+        ):
         for UPDATE_LIKE_EXP4 in [False, True]:
             CURRENT_POLICIES = configuration["policies"]
             print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
@@ -527,6 +532,7 @@ if TEST_Aggregator:
                     "learningRate": LEARNING_RATE,
                     "children": NON_AGGR_POLICIES,
                     "update_like_exp4": UPDATE_LIKE_EXP4,
+                    "extra_str": EXTRA_STR,
                     # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
                 },
             }]

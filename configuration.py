@@ -760,6 +760,12 @@ configuration.update({
                 "posterior": Beta,
             }
         },
+        # {
+        #     "archtype": BayesUCB,
+        #     "params": {
+        #         "posterior": Gauss,  # XXX does not work yet!
+        #     }
+        # },
         # --- AdBandits with different alpha paramters
         # {
         #     "archtype": AdBandits,

@@ -110,12 +110,12 @@ if __name__ == '__main__':
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 
-        # Display the final rankings for that env
-        print("\n\nGiving the final ranks ...")
-        evaluation.printFinalRanking(envId)
-
+        # Display the final regrets and rankings for that env
         print("\n\nGiving the vector of final regrets ...")
         evaluation.printLastRegrets(envId)
+
+        print("\n\nGiving the final ranks ...")
+        evaluation.printFinalRanking(envId)
 
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
