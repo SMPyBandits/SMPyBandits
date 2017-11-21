@@ -1048,13 +1048,25 @@ NON_AGGR_POLICIES_1 = [
     }
 ]
 
+
+NON_AGGR_POLICIES_2 = [
+    {
+        "archtype": ApproximatedFHGittins,
+        "params": {
+            "alpha": 0.5,
+            "horizon": 1.01 * T,
+        }
+    }
+    for T in breakpoints(next_horizon__exponential_slow, 10, HORIZON)
+]
+
 # from itertools import product  # XXX If needed!
 
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:
     NON_AGGR_POLICIES_0 = configuration["policies"]
 
-    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1]:
+    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1, NON_AGGR_POLICIES_2]:
         # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
         # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
         # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!

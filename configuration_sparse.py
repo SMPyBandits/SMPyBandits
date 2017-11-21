@@ -132,7 +132,7 @@ mapping_ARM_TYPE = {
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
-MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=0.05, lower=0., lowerNonZero=0.5, amplitude=1.)
+MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=None, lower=0., lowerNonZero=0.1, amplitude=1.)
 
 
 #: This dictionary configures the experiments
@@ -187,7 +187,7 @@ configuration = {
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
-                    "lowerNonZero": 0.2,
+                    "lowerNonZero": 0.1,
                     "amplitude": 1.,
                     "isSorted": True,
                     "sparsity": SPARSITY,
@@ -513,7 +513,7 @@ NON_AGGR_POLICIES_1 = [
 if TEST_Aggregator:
     NON_AGGR_POLICIES_0 = configuration["policies"]
     # XXX Very simulation-specific settings!
-    EXTRA_STRS = ["[all non Aggr]", "Sparse-KLUCB for s={}..{}".format(1, NB_ARMS)]
+    EXTRA_STRS = ["[all non Aggr]", "[Sparse-KLUCB for s={}..{}]".format(1, NB_ARMS)]
 
     for NON_AGGR_POLICIES, EXTRA_STR in zip(
             [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1],
