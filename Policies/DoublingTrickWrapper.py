@@ -187,17 +187,15 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     i = 0
     t = first_horizon
     times = [t]
-    if debug:
-        print("\n\nFor the growth function {}, named '{}', first guess of the horizon = {} and true horizon = {} ...\n ==> The times will be:".format(next_horizon, getattr(next_horizon, '__latex_name__', '?'), first_horizon, horizon))
+    if debug: print("\n\nFor the growth function {}, named '{}', first guess of the horizon = {} and true horizon = {} ...\n ==> The times will be:".format(next_horizon, getattr(next_horizon, '__latex_name__', '?'), first_horizon, horizon))
     while t < horizon:
         t = next_horizon(t)
         i += 1
         times.append(t)
-        if debug:
-            print("    The {}th breakpoint is {} ...".format(i, t))  # DEBUG
+        if debug: print("    The {}th breakpoint is {} ...".format(i, t))  # DEBUG
     assert horizon <= t, "Error: the last guess for horizon = {} was found smaller than the true horizon = {}...".format(t, horizon)  # DEBUG
     gap = t - horizon
-    print("This last guess for horizon = {} gives a gap = {} against the true horizon {}. Relative difference = {:.3%}...".format(t, gap, horizon, gap / float(horizon)))  # DEBUG
+    if debug: print("This last guess for horizon = {} gives a gap = {} against the true horizon {}. Relative difference = {:.3%}...".format(t, gap, horizon, gap / float(horizon)))  # DEBUG
     return times, gap
 
 

@@ -152,6 +152,28 @@ def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
         return list(lower + (amplitude * mus))
 
 
+def randomMeansWithGapBetweenMbestMworst(nbArms=3, mingap=None, nbPlayers=2, lower=0., amplitude=1., isSorted=True):
+    """Return a list of means of arms, randomly sampled uniformly in [lower, lower + amplitude], with a min gap >= mingap between the set Mbest and Mworst.
+    """
+    assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
+    assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
+    mus = np.random.rand(nbArms)
+    if mingap is not None and mingap > 0 and nbPlayers < nbArms:
+        assert mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        def gap(mus):
+            sorted_mus = sorted(mus)
+            mu_Mbest = sorted_mus[-nbPlayers]
+            mu_Mworst = sorted_mus[-nbPlayers-1]
+            return mu_Mbest - mu_Mworst
+        while len(set(mus)) == nbArms and gap(mus) <= mingap:  # Ensure a min gap > mingap
+            mus = np.random.rand(nbArms)
+    if isSorted:
+        return sorted(list(lower + (amplitude * mus)))
+    else:
+        np.random.shuffle(mus)  # Useless
+        return list(lower + (amplitude * mus))
+
+
 def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerNonZero=0.5, amplitude=1., isSorted=True):
     """Return a list of means of arms, in [lower, lower + amplitude], with a min gap >= mingap.
 

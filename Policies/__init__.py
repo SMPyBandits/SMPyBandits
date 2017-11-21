@@ -161,7 +161,7 @@ from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 
-from .MusicalChair import MusicalChair  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
+from .MusicalChair import MusicalChair, optimalT0  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
 # from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
 
 from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)

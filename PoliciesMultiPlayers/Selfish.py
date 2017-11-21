@@ -18,7 +18,12 @@ class SelfishChildPointer(ChildPointer):
     """ Selfish version of the ChildPointer class (just pretty printed)."""
 
     def __str__(self):
-        return "#{}<{}-{}>".format(self.playerId + 1, self.mother.__class__.__name__, self.mother._players[self.playerId])
+        m, p = str(self.mother.__class__.__name__), str(self.mother._players[self.playerId])
+        # XXX Small hack to give a better name to MEGA or MusicalChair
+        if p.startswith("MEGA") or p.startswith("MusicalChair"):
+            return "#{}<{}>".format(self.playerId + 1, p)
+        else:
+            return "#{}<{}-{}>".format(self.playerId + 1, m, p)
 
 
 # PENALTY = -1

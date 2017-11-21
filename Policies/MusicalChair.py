@@ -16,7 +16,7 @@ r""" MusicalChair: implementation of the single-player policy from [A Musical Ch
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.8"
 
 from enum import Enum  # For the different states
 import numpy as np
@@ -25,7 +25,7 @@ from .BasePolicy import BasePolicy
 
 # --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]
 
-def optimalT0(nbArms, epsilon, delta=0.05):
+def optimalT0(nbArms=10, epsilon=0.1, delta=0.05):
     r""" Compute the lower-bound suggesting "large-enough" values for :math:`T_0` that should guarantee constant regret with probability at least :math:`1 - \varepsilon`, if the gap :math:`\Delta` is larger than ``delta``.
 
     - Cf. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
@@ -100,8 +100,8 @@ class MusicalChair(BasePolicy):
         """
         - nbArms: number of arms,
         - Time0: required, number of step, or portion of the horizon Time1 (optional), for the first step (pure random exploration by each players),
-        - N: optionnal, exact or upper bound on the number of players,
-        - Time1: optionnal, only used to compute Time0 if Time0 is fractional (eg. 0.2).
+        - N: optional, exact or upper bound on the number of players,
+        - Time1: optional, only used to compute Time0 if Time0 is fractional (eg. 0.2).
 
         Example:
 
