@@ -41,6 +41,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 
+import numpy as np
 from .BasePolicy import BasePolicy
 
 from .UCBH import UCBH
@@ -70,7 +71,7 @@ def next_horizon__arithmetic(horizon):
 
     .. math:: T \mapsto T + 1000.
     """
-    return int(horizon + ARITHMETIC_STEP)
+    return int(np.ceil(horizon + ARITHMETIC_STEP))
 
 next_horizon__arithmetic.__latex_name__ = "arithmetic"
 
@@ -84,7 +85,7 @@ def next_horizon__geometric(horizon):
 
     .. math:: T \mapsto T \times 10.
     """
-    return int(horizon * GEOMETRIC_STEP)
+    return int(np.ceil(horizon * GEOMETRIC_STEP))
 
 next_horizon__geometric.__latex_name__ = "geometric"
 
@@ -98,7 +99,7 @@ def next_horizon__exponential(horizon):
 
     .. math:: T \mapsto \lfloor T^{1.5} \rfloor.
     """
-    return int(horizon ** EXPONENTIAL_STEP)
+    return int(np.ceil(horizon ** EXPONENTIAL_STEP))
 
 next_horizon__exponential.__latex_name__ = "exponential"
 
@@ -108,7 +109,7 @@ def next_horizon__exponential_slow(horizon):
 
     .. math:: T \mapsto \lfloor T^{1.1} \rfloor.
     """
-    return int(horizon ** 1.1)
+    return int(np.ceil(horizon ** 1.1))
 
 next_horizon__exponential_slow.__latex_name__ = "slow exp"
 
@@ -118,7 +119,7 @@ def next_horizon__exponential_fast(horizon):
 
     .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
-    return int(horizon ** 2)
+    return int(np.ceil(horizon ** 2))
 
 next_horizon__exponential_fast.__latex_name__ = "fast exp"
 
@@ -185,7 +186,7 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     ([10, 100, 10000, 100000000], 98876544)
     """
     i = 0
-    t = first_horizon
+    t = max(first_horizon, 2)
     times = [t]
     if debug: print("\n\nFor the growth function {}, named '{}', first guess of the horizon = {} and true horizon = {} ...\n ==> The times will be:".format(next_horizon, getattr(next_horizon, '__latex_name__', '?'), first_horizon, horizon))
     while t < horizon:
@@ -225,8 +226,8 @@ class DoublingTrickWrapper(BasePolicy):
         # --- Horizon
         self._next_horizon = next_horizon  # Function for the growing horizon
         self.next_horizon_name = getattr(next_horizon, '__latex_name__', '?')  #: Pretty string of the name of this growing function
-        self._first_horizon = first_horizon  # First guess for the horizon
-        self.horizon = first_horizon  #: Last guess for the horizon
+        self._first_horizon = max(2, first_horizon)  # First guess for the horizon
+        self.horizon = max(2, first_horizon)  #: Last guess for the horizon
         # FIXME Force it, for pretty printing...
         self.startGame()
 

@@ -104,8 +104,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Aggregator = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -218,7 +218,6 @@ configuration = {
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
                     "amplitude": 1.,
-                    # "isSorted": False,
                     "isSorted": True,
                 }
             }
@@ -611,15 +610,13 @@ configuration.update({
         # },
         # --- DMED algorithm, similar to klUCB
         {
-            "archtype": DMED,
+            "archtype": DMEDPlus,
             "params": {
-                "genuine": True,
             }
         },
         # {
         #     "archtype": DMED,
         #     "params": {
-        #         "genuine": False,
         #     }
         # },
         # --- Thompson algorithms
@@ -793,72 +790,131 @@ configuration.update({
         #     "archtype": ApproximatedFHGittins,
         #     "params": {
         #         "alpha": 4,
-        #         "horizon": 1.1 * HORIZON,
+        #         "horizon": int(1.05 * HORIZON),
         #     }
         # },
         # {
         #     "archtype": ApproximatedFHGittins,
         #     "params": {
         #         "alpha": 1,
-        #         "horizon": 1.1 * HORIZON,
+        #         "horizon": int(1.05 * HORIZON),
         #     }
         # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
                 "alpha": 0.5,
-                "horizon": 1.1 * HORIZON,
+                "horizon": int(1.05 * HORIZON),
             }
         },
-        # --- Doubling trick algorithm
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__arithmetic,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__geometric,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_fast,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_slow,
-                "policy": ApproximatedFHGittins,
-                "alpha": 0.5,
-            }
-        },
+        # # --- Doubling trick algorithm
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__arithmetic,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__geometric,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_fast,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_slow,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,
-        #     "params": {
-        #     }
+        #     "params": {}
         # },
     ]
 })
+
+
+# Smart way of adding list of Aggregated versions
+LIST_NON_AGGR_POLICIES = []
+
+LIST_NON_AGGR_POLICIES += [[
+    # --- Doubling trick algorithm
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon,
+            "policy": klUCBPlusPlus,
+            # "alpha": 0.5,
+        }
+    }
+    for next_horizon in [next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow]
+]]
+
+
+LIST_NON_AGGR_POLICIES += [[
+    {
+        "archtype": klUCBPlusPlus,
+        "params": {
+            # "alpha": 0.5,
+            "horizon": int(1.05 * T),
+        }
+    }
+    for T in breakpoints(next_horizon__geometric, 1, HORIZON, debug=True)[0]
+    # for T in breakpoints(next_horizon__exponential, 1, HORIZON, debug=True)[0]
+    # for T in breakpoints(next_horizon__exponential_fast, 1, HORIZON, debug=True)[0]
+    # for T in breakpoints(next_horizon__exponential_slow, 1, HORIZON, debug=True)[0]
+]]
+
+# from itertools import product  # XXX If needed!
+
+# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
+if TEST_Aggregator:
+    # LIST_NON_AGGR_POLICIES += configuration["policies"]
+
+    for NON_AGGR_POLICIES in LIST_NON_AGGR_POLICIES:
+        # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
+        # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
+        # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
+        # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
+        for UPDATE_LIKE_EXP4 in [False, True]:
+            CURRENT_POLICIES = configuration["policies"]
+            print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
+            # Add one Aggregator policy
+            configuration["policies"] = CURRENT_POLICIES + [{
+                "archtype": Aggregator,
+                "params": {
+                    "unbiased": UNBIASED,
+                    "update_all_children": UPDATE_ALL_CHILDREN,
+                    "decreaseRate": DECREASE_RATE,
+                    "learningRate": LEARNING_RATE,
+                    "children": NON_AGGR_POLICIES,
+                    "update_like_exp4": UPDATE_LIKE_EXP4,
+                    # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+                },
+            }]
 
 # # XXX Only test with fixed arms
 # configuration.update({
@@ -1002,91 +1058,6 @@ configuration.update({
 # configuration.update({
 #     "policies": Scenario1(NB_PLAYERS, nbArms).children
 # })
-
-
-NON_AGGR_POLICIES_1 = [
-    # --- Doubling trick algorithm
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon__arithmetic,
-            "policy": ApproximatedFHGittins,
-            "alpha": 0.5,
-        }
-    },
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon__geometric,
-            "policy": ApproximatedFHGittins,
-            "alpha": 0.5,
-        }
-    },
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon__exponential,
-            "policy": ApproximatedFHGittins,
-            "alpha": 0.5,
-        }
-    },
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon__exponential_fast,
-            "policy": ApproximatedFHGittins,
-            "alpha": 0.5,
-        }
-    },
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon__exponential_slow,
-            "policy": ApproximatedFHGittins,
-            "alpha": 0.5,
-        }
-    }
-]
-
-
-NON_AGGR_POLICIES_2 = [
-    {
-        "archtype": ApproximatedFHGittins,
-        "params": {
-            "alpha": 0.5,
-            "horizon": 1.01 * T,
-        }
-    }
-    for T in breakpoints(next_horizon__exponential_slow, 10, HORIZON)
-]
-
-# from itertools import product  # XXX If needed!
-
-# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
-if TEST_Aggregator:
-    NON_AGGR_POLICIES_0 = configuration["policies"]
-
-    for NON_AGGR_POLICIES in [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1, NON_AGGR_POLICIES_2]:
-        # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
-        # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
-        # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-        # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
-        for UPDATE_LIKE_EXP4 in [False, True]:
-            CURRENT_POLICIES = configuration["policies"]
-            print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
-            # Add one Aggregator policy
-            configuration["policies"] = CURRENT_POLICIES + [{
-                "archtype": Aggregator,
-                "params": {
-                    "unbiased": UNBIASED,
-                    "update_all_children": UPDATE_ALL_CHILDREN,
-                    "decreaseRate": DECREASE_RATE,
-                    "learningRate": LEARNING_RATE,
-                    "children": NON_AGGR_POLICIES,
-                    "update_like_exp4": UPDATE_LIKE_EXP4,
-                    # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-                },
-            }]
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
