@@ -26,7 +26,7 @@ from .BasePolicy import BasePolicy
 # --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]
 
 def optimalT0(nbArms=10, epsilon=0.1, delta=0.05):
-    r""" Compute the lower-bound suggesting "large-enough" values for :math:`T_0` that should guarantee constant regret with probability at least :math:`1 - \varepsilon`, if the gap :math:`\Delta` is larger than ``delta``.
+    r""" Compute the lower-bound suggesting "large-enough" values for :math:`T_0` that should guarantee constant regret with probability at least :math:`1 - \delta`, if the gap :math:`\Delta` is larger than :math:`\epsilon`.
 
     - Cf. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
 
@@ -54,7 +54,7 @@ def optimalT0(nbArms=10, epsilon=0.1, delta=0.05):
     K = nbArms
     T0_1 = (K / 2.) * np.log(2 * K**2 / delta)
     T0_2 = ((16 * K) / (epsilon**2)) * np.log(4 * K**2 / delta)
-    T0_3 = (K**2 * np.log10(2 / delta**2)) / 0.02   # delta**2 or delta_2 ? Typing mistake in their paper
+    T0_3 = (K**2 * np.log(2 / delta**2)) / 0.02   # delta**2 or delta_2 ? Typing mistake in their paper
     T0 = max(T0_1, T0_2, T0_3)
     return int(np.ceil(T0))
 
@@ -66,7 +66,7 @@ def boundOnFinalRegret(T0, nbPlayers):
 
         .. math:: \forall T \geq T_0, \;\; R_T \leq T_0 K + 2 \mathrm{exp}(2) K.
 
-    .. warning:: this bound is not a deterministic result, it is only value with a certain probability (at least :math:`1 - \varepsilon`, if :math:`T_0` is chosen as given by :func:`optimalT0`).
+    .. warning:: this bound is not a deterministic result, it is only value with a certain probability (at least :math:`1 - \delta`, if :math:`T_0` is chosen as given by :func:`optimalT0`).
 
 
     - Cf. Theorem 1 of [Shamir et al., 2015](https://arxiv.org/abs/1512.02866).

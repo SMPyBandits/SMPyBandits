@@ -6,7 +6,7 @@
 from __future__ import print_function, division
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.8"
 
 from textwrap import wrap
 from os.path import getsize, getatime
@@ -137,9 +137,20 @@ def makemarkers(nb):
     return longlist[:nb]  # Truncate
 
 
-def legend():
+def legend(putatright=False):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends."""
-    plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+    if putatright:
+        try:
+            # XXX See https://stackoverflow.com/a/4701285/
+            # Shrink current axis by 20%
+            plt.tight_layout(rect=[0, 0, 0.75, 1])
+            # FIXME
+            # Put a legend to the right of the current axis
+            plt.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
+        except:
+            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+    else:
+        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
 
 
 def maximizeWindow():
