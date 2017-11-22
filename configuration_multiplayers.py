@@ -337,61 +337,72 @@ if len(configuration['environment']) > 1:
 
 configuration["successive_players"] = [
     # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
+
     # ---- RandTopM
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
     # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
-            for x in range(NB_ARMS)
-            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-        ]) for _ in range(NB_PLAYERS)
-    ],
+    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
+    #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
     EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
-    # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!  # = EstimateM(... RandTopM, klUCB)
+    # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
     RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: MCTopM(1 + x, nbArms, klUCB).children[0]
-            for x in range(NB_ARMS)
-            # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-        ]) for _ in range(NB_PLAYERS)
-    ],
-    # EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
-    MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # FIXME experimental!  # = EstimateM(... MCTopM, klUCB)
+    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
+    #         lambda: MCTopM(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
+    EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
+    # MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+
     # ---- Selfish
+    Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
     [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
+
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-    [ Aggregator(nbArms, children=[  # FIXME experimental!
-            lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
-            for x in range(NB_ARMS)
-        ]) for _ in range(NB_PLAYERS)
-    ],
+    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
+    #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
     EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     # rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
     rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
     # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # FIXME how to chose the 5 parameters for MEGA policy ?
-    # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
-    [ MEGA(nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.2) for _ in range(NB_PLAYERS) ],
-    # XXX stupid version with fixed T0 : cannot adapt to any problem
-    [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
-    # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
-    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=0.05)) for _ in range(NB_PLAYERS) ],
-    # XXX cheated version, with known gap and known horizon (proba of success delta = 1 / T) !
-    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=np.ceil(1. / HORIZON))) for _ in range(NB_PLAYERS) ],
+
+    # # FIXME how to chose the 5 parameters for MEGA policy ?
+    # # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
+    # [ MEGA(nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.2) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
+
+    # # XXX stupid version with fixed T0 : cannot adapt to any problem
+    # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
+    # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
+    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=0.05)) for _ in range(NB_PLAYERS) ],
+    # # XXX cheated version, with known gap and known horizon (proba of success delta = 1 / T) !
+    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=np.ceil(1. / HORIZON))) for _ in range(NB_PLAYERS) ],
 
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,

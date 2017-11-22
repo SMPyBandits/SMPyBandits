@@ -177,10 +177,7 @@ class Exp3PlusPlus(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         """Multiple (nb >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`."""
-        if (self.t < self.nbArms) or (nb == 1):
-            return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
-        else:
-            return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+        return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
     # --- Other methods
 

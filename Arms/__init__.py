@@ -142,8 +142,9 @@ def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
     mus = np.random.rand(nbArms)
     if mingap is not None and mingap > 0:
-        assert nbArms * 2 * mingap < amplitude, "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
-        while len(set(mus)) == nbArms and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
+        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+        # while len(set(mus)) == nbArms and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
+        while np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.random.rand(nbArms)
     if isSorted:
         return sorted(list(lower + (amplitude * mus)))
@@ -165,7 +166,8 @@ def randomMeansWithGapBetweenMbestMworst(nbArms=3, mingap=None, nbPlayers=2, low
             mu_Mbest = sorted_mus[-nbPlayers]
             mu_Mworst = sorted_mus[-nbPlayers-1]
             return mu_Mbest - mu_Mworst
-        while len(set(mus)) == nbArms and gap(mus) <= mingap:  # Ensure a min gap > mingap
+        # while len(set(mus)) == nbArms and gap(mus) <= mingap:  # Ensure a min gap > mingap
+        while gap(mus) <= mingap:  # Ensure a min gap > mingap
             mus = np.random.rand(nbArms)
     if isSorted:
         return sorted(list(lower + (amplitude * mus)))
@@ -200,7 +202,7 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerN
     assert lower < lowerNonZero, "Error: 'lower' = {:.3g} has to be < 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
     mus = np.sort(np.random.rand(sparsity))
     if mingap is not None and mingap > 0:
-        while len(set(mus)) == sparsity and np.min(np.diff(mus)) <= mingap:  # Ensure a min gap > mingap
+        while len(set(mus)) == sparsity and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(sparsity))
     bad_mus = [lower] * (nbArms - sparsity)
     good_mus = lowerNonZero + ((lower + amplitude - lowerNonZero) * mus)

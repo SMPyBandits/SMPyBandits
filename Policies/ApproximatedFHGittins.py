@@ -6,9 +6,8 @@ r""" The approximated Finite-Horizon Gittins index policy for bounded bandits.
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.8"
 
-from math import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
@@ -56,8 +55,8 @@ class ApproximatedFHGittins(IndexPolicy):
             return float('+inf')
         else:
             m_by_Nk = float(self.m) / self.pulls[arm]
-            loghalf = sqrt(max(0, log(m_by_Nk)))
-            return (self.rewards[arm] / self.pulls[arm]) + sqrt(self.alpha / (2. * self.pulls[arm]) * log(m_by_Nk / loghalf))
+            loghalf = np.sqrt(max(0, np.log(m_by_Nk)))
+            return (self.rewards[arm] / self.pulls[arm]) + sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / loghalf))
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""

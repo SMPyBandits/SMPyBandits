@@ -104,8 +104,8 @@ DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Aggregator = True
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -213,7 +213,7 @@ configuration = {
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
-                    # "mingap": 0.01,
+                    # "mingap": 0.0000001,
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": 0.,
@@ -422,11 +422,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # # --- Exp3PlusPlus algorithm
-        # {
-        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-        #     "params": {}
-        # },
+        # --- Exp3PlusPlus algorithm
+        {
+            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+            "params": {}
+        },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -704,47 +704,47 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        # --- Doubling trick algorithm
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__arithmetic,
-                "policy": klUCBPlusPlus,
-                "klucb": klucb,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__geometric,
-                "policy": klUCBPlusPlus,
-                "klucb": klucb,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential,
-                "policy": klUCBPlusPlus,
-                "klucb": klucb,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_fast,
-                "policy": klUCBPlusPlus,
-                "klucb": klucb,
-            }
-        },
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon__exponential_slow,
-                "policy": klUCBPlusPlus,
-                "klucb": klucb,
-            }
-        },
+        # # --- Doubling trick algorithm
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__arithmetic,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__geometric,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_fast,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "next_horizon": next_horizon__exponential_slow,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -856,43 +856,41 @@ configuration.update({
     ]
 })
 
-
-# Smart way of adding list of Aggregated versions
-LIST_NON_AGGR_POLICIES = []
-
-LIST_NON_AGGR_POLICIES += [[
-    # --- Doubling trick algorithm
-    {
-        "archtype": DoublingTrickWrapper,
-        "params": {
-            "next_horizon": next_horizon,
-            "policy": klUCBPlusPlus,
-            # "alpha": 0.5,
-        }
-    }
-    for next_horizon in [next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow]
-]]
-
-
-LIST_NON_AGGR_POLICIES += [[
-    {
-        "archtype": klUCBPlusPlus,
-        "params": {
-            # "alpha": 0.5,
-            "horizon": int(1.05 * T),
-        }
-    }
-    for T in breakpoints(next_horizon__geometric, 1, HORIZON, debug=True)[0]
-    # for T in breakpoints(next_horizon__exponential, 1, HORIZON, debug=True)[0]
-    # for T in breakpoints(next_horizon__exponential_fast, 1, HORIZON, debug=True)[0]
-    # for T in breakpoints(next_horizon__exponential_slow, 1, HORIZON, debug=True)[0]
-]]
-
 # from itertools import product  # XXX If needed!
 
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:
-    # LIST_NON_AGGR_POLICIES += configuration["policies"]
+    # Smart way of adding list of Aggregated versions
+    LIST_NON_AGGR_POLICIES = []
+
+    LIST_NON_AGGR_POLICIES += [[
+        # --- Doubling trick algorithm
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon,
+                "policy": klUCBPlusPlus,
+                # "alpha": 0.5,
+            }
+        }
+        for next_horizon in [next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow]
+    ]]
+
+
+    LIST_NON_AGGR_POLICIES += [[
+        {
+            "archtype": klUCBPlusPlus,
+            "params": {
+                # "alpha": 0.5,
+                "horizon": int(1.05 * T),
+            }
+        }
+        for T in breakpoints(next_horizon__geometric, 1, HORIZON, debug=True)[0]
+        # for T in breakpoints(next_horizon__exponential, 1, HORIZON, debug=True)[0]
+        # for T in breakpoints(next_horizon__exponential_fast, 1, HORIZON, debug=True)[0]
+        # for T in breakpoints(next_horizon__exponential_slow, 1, HORIZON, debug=True)[0]
+    ]]
+    # LIST_NON_AGGR_POLICIES += [configuration["policies"]]
 
     for NON_AGGR_POLICIES in LIST_NON_AGGR_POLICIES:
         # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
