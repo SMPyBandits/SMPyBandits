@@ -13,11 +13,6 @@ import numpy as np
 import numpy.random as rn
 from .BasePolicy import BasePolicy
 
-#: self.unbiased is a flag to know if the rewards are used as biased estimator,
-#: i.e., just :math:`r_t`, or unbiased estimators, :math:`r_t / trusts_t`.
-UNBIASED = False
-UNBIASED = True
-
 
 #: Value for the :math:`\alpha` parameter.
 ALPHA = 3
@@ -35,15 +30,15 @@ class Exp3PlusPlus(BasePolicy):
     See also [[An Improved Parametrization and Analysis of the EXP3++ Algorithm for Stochastic and Adversarial Bandits, by Y.Seldin & G.Lugosi, COLT, 2017](https://arxiv.org/pdf/1702.06103)].
     """
 
-    def __init__(self, nbArms, unbiased=UNBIASED, alpha=ALPHA, beta=BETA,
+    def __init__(self, nbArms, alpha=ALPHA, beta=BETA,
                  lower=0., amplitude=1.):
         super(Exp3PlusPlus, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.unbiased = unbiased  #: Unbiased estimators ?
         self.alpha = alpha  #: :math:`\alpha` parameter for computations of :math:`\xi_t(a)`.
         self.beta = beta  #: :math:`\beta` parameter for computations of :math:`\xi_t(a)`.
         # Internal memory
         self.weights = np.full(nbArms, 1. / nbArms)  #: Weights on the arms
         self.losses = np.zeros(nbArms)  #: Cumulative sum of losses estimates for each arm
+        self.unweighted_losses = np.zeros(nbArms)  #: Cumulative sum of unweighted losses for each arm
         # trying to randomize the order of the initial visit to each arm; as this determinism breaks its habitility to play efficiently in multi-players games
         # XXX do even more randomized, take a random permutation of the arm ?
         self._initial_exploration = rn.permutation(nbArms)
@@ -56,35 +51,36 @@ class Exp3PlusPlus(BasePolicy):
         self.losses.fill(0)
 
     def __str__(self):
-        return r"Exp3++"
+        s = "{}{}".format("" if self.alpha == ALPHA else r"$\alpha={}$".format(self.alpha), "" if self.beta == BETA else r"$\beta={}$".format(self.beta))
+        return r"Exp3++{}".format("({})".format(s) if s else "")
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def eta(self):
         r"""Decreasing sequence of learning rates, given by :math:`\eta_t = \frac{1}{2} \sqrt{\frac{\log K}{t K}}`."""
-        return 0.5 * np.sqrt(np.log(self.nbArms) / (self.t * self.nbArms))
+        return 0.5 * np.sqrt(np.log(self.nbArms) / float(self.t * self.nbArms))
 
     @property
     def gap_estimate(self):
-        r"""Compute the gap estimate :math:`\hat{\Delta}^{\mathrm{LCB}}_t(a)` from :
+        r"""Compute the gap estimate :math:`\widehat{\Delta}^{\mathrm{LCB}}_t(a)` from :
 
-        - Compute the UCB: :math:`\mathrm{UCB}_t(a) = \min\left( 1, \frac{\hat{L}_{t-1}(a)}{N_{t-1}(a)} + \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
-        - Compute the LCB: :math:`\mathrm{LCB}_t(a) = \max\left( 0, \frac{\hat{L}_{t-1}(a)}{N_{t-1}(a)} - \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
-        - Then the gap: :math:`\hat{\Delta}^{\mathrm{LCB}}_t(a) = \max\left( 0, \mathrm{LCB}_t(a) - \min_{a'} \mathrm{UCB}_t(a') \right)`.
+        - Compute the UCB: :math:`\mathrm{UCB}_t(a) = \min\left( 1, \frac{wide\hat{L}_{t-1}(a)}{N_{t-1}(a)} + \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
+        - Compute the LCB: :math:`\mathrm{LCB}_t(a) = \max\left( 0, \frac{wide\hat{L}_{t-1}(a)}{N_{t-1}(a)} - \sqrt{\frac{a \log(t K^{1/\alpha})}{2 N_{t-1}(a)}} \right)`,
+        - Then the gap: :math:`\widehat{\Delta}^{\mathrm{LCB}}_t(a) = \max\left( 0, \mathrm{LCB}_t(a) - \min_{a'} \mathrm{UCB}_t(a') \right)`.
         - The gap should be in :math:`[0, 1]`.
         """
-        average_losses = self.losses / self.pulls
+        average_losses = self.unweighted_losses / self.pulls
         exploration_term = np.sqrt((self.alpha * np.log(self.t * self.nbArms**(1./self.alpha))) / (2 * self.pulls))
         UCB = np.minimum(1, average_losses + exploration_term)
         min_UCB = np.min(UCB)
         LCB = np.maximum(0, average_losses - exploration_term)
         Delta = np.maximum(0, LCB - min_UCB)
-        assert np.min(Delta) >= 0 and np.max(Delta) <= 1, "Error: a gap estimate Delta was found to be outside of [0, 1]."
+        assert np.min(Delta) >= 0 and np.max(Delta) <= 1, "Error: a gap estimate of Delta = {} was found to be outside of [0, 1].".format(Delta)  # DEBUG
         return Delta
 
     @property
     def xi(self):
-        r"""Compute the :math:`\xi_t(a) = \frac{\beta \log t}{t \hat{\Delta}^{\mathrm{LCB}}_t(a)^2}` vector of indexes."""
+        r"""Compute the :math:`\xi_t(a) = \frac{\beta \log t}{t \widehat{\Delta}^{\mathrm{LCB}}_t(a)^2}` vector of indexes."""
         return self.beta * np.log(self.t) / (self.t * (self.gap_estimate ** 2))
 
     @property
@@ -111,6 +107,7 @@ class Exp3PlusPlus(BasePolicy):
         trusts = ((1 - np.sum(self.eta)) * self.weights) + self.eta
         # XXX Handle weird cases, slow down everything but safer!
         if not np.all(np.isfinite(trusts)):
+            print("WARNING: Exp3PlusPlus.trusts : a trust was infinite...")  # DEBUG
             # XXX some value has non-finite trust, probably on the first steps
             # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
             if np.all(~np.isfinite(trusts)):
@@ -120,31 +117,33 @@ class Exp3PlusPlus(BasePolicy):
                 trusts[~np.isfinite(trusts)] = 0
         # Bad case, where the sum is so small that it's only rounding errors
         if np.isclose(np.sum(trusts), 0):
-                trusts = np.full(self.nbArms, 1. / self.nbArms)
+            print("WARNING: Exp3PlusPlus.trusts : the sum of trusts was too close to zero, reinitializing!")  # DEBUG
+            trusts = np.full(self.nbArms, 1. / self.nbArms)
         # Normalize it and return it
         return trusts / np.sum(trusts)
 
     def getReward(self, arm, reward):
         r"""Give a reward: accumulate losses on that arm a, then update the weight :math:`\rho_t(a)` and renormalize the weights.
 
-        - With unbiased estimators, divide by the trust on that arm a, i.e., the probability of observing arm a: :math:`\tilde{l}_t(a) = \frac{l_t(a)}{\tilde{\rho}_t(a)}`.
-        - But with a biased estimators, :math:`\tilde{l}_t(a) = l_t(a)`.
+        - Divide by the trust on that arm a, i.e., the probability of observing arm a: :math:`\tilde{l}_t(a) = \frac{l_t(a)}{\tilde{\rho}_t(a)} 1(A_t = a)`.
         - Add this loss to the cumulative loss: :math:`\tilde{L}_t(a) := \tilde{L}_{t-1}(a) + \tilde{l}_t(a)`.
+        - But the un-weighted loss is added to the other cumulative loss: :math:`\widehat{L}_t(a) := \widehat{L}_{t-1}(a) + l_t(a) 1(A_t = a)`.
 
         .. math::
 
            \rho'_{t+1}(a) &= \exp\left( - \tilde{L}_t(a) \eta_t \right) \\
            \rho_{t+1} &= \rho'_{t+1} / \sum_{a=1}^{K} \rho'_{t+1}(a).
         """
-        super(Exp3PlusPlus, self).getReward(arm, reward)  # XXX Call to BasePolicy
+        super(Exp3PlusPlus, self).getReward(arm, reward)  # XXX Call to IndexPolicy
         # Compute loss estimate
         reward = (reward - self.lower) / self.amplitude
         loss = 1 - reward
-        if self.unbiased:
-            loss = loss / self.trusts[arm]
+        self.unweighted_losses[arm] += loss
+        loss = loss / self.trusts[arm]
         self.losses[arm] += loss
-        # Update weight of THIS arm, with this biased or unbiased loss estimate
-        self.weights[arm] = np.exp(- self.eta * self.losses[arm])
+        # Update weight of THIS arm, with this biased or unbiased loss estimate, but we need to compute again ALL losses!
+        # self.weights[arm] = np.exp(- self.eta * self.losses[arm])
+        self.weights = np.exp(- self.eta * self.losses)
         # Renormalize weights at each step
         self.weights /= np.sum(self.weights)
 
