@@ -10,7 +10,7 @@ Dependent rounding developed by [Gandhi et al.] is a kind of technique that rand
 - It runs in :math:`\mathcal{O}(K)` space complexity, and at most :math:`\mathcal{O}(K^2)` time complexity (note that the article [Uchiya et al., 2010] wrongly claim it is in :math:`\mathcal{O}(K)`).
 - References: see also https://www.cs.umd.edu/~samir/grant/jacm06.pdf
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

@@ -2,6 +2,7 @@
 """ The improved kl-UCB++ policy, for one-parameter exponential distributions.
 Reference: [Menard & Garivier, 2017](https://arxiv.org/abs/1702.07211)
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

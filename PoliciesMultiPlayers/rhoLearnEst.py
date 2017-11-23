@@ -12,7 +12,7 @@ r""" rhoLearnEst: implementation of the multi-player policy from [Distributed Al
 
 .. warning:: This policy does not work very well!
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

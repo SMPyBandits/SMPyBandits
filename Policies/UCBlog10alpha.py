@@ -3,6 +3,7 @@ r""" The UCB1 (UCB-alpha) index policy, modified to take a random permutation or
 Note: :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
 Reference: [Auer et al. 02].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

@@ -5,6 +5,7 @@ r""" The Discounted-UCB index policy, with a discount factor of :math:`\gamma\in
 - :math:`\gamma` should not be 1, otherwise you should rather use :class:`Policies.UCBalpha.UCBalpha` instead.
 - The smaller the :math:`\gamma`, the shorter the *"memory"* of the algorithm is.
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

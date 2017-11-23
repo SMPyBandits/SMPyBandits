@@ -6,7 +6,7 @@ Defines one useful function :func:`notify()` to (try to) send a desktop notifica
 - Only tested on Ubuntu and Debian desktops.
 - Should work on any FreeDesktop compatible desktop, see https://wiki.ubuntu.com/NotifyOSD.
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

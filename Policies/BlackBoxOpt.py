@@ -6,6 +6,7 @@ r""" An experimental "on-line" policy, using algorithms from black-box Bayesian 
 
 .. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and **highly** NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

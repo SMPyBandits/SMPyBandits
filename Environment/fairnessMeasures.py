@@ -4,7 +4,7 @@ r""" Define some function to measure fairness of a vector of cumulated rewards, 
 - All functions are valued in :math:`[0, 1]`: :math:`100\%` means fully unfair (one player has :math:`0` rewards, another one has :math:`>0` rewards), and :math:`0\%` means fully fair (they all have exactly the same rewards).
 - Reference: https://en.wikipedia.org/wiki/Fairness_measure and http://ica1www.epfl.ch/PS_files/LEB3132.pdf#search=%22max-min%20fairness%22.
 """
-from __future__ import division, print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

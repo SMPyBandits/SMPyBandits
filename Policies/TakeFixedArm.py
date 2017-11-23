@@ -2,6 +2,7 @@
 """ TakeFixedArm: always select a fixed arm.
 This is the perfect static policy if armIndex = bestArmIndex (not realistic, for test only).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

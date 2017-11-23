@@ -2,6 +2,7 @@
 """ The Bayes-UCB policy. By default, it uses a Beta posterior.
 Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
 __version__ = "0.5"

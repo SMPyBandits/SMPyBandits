@@ -36,6 +36,7 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
    change the internal value used by the policy. Some policy use T only once to compute others parameters,
    which should be updated as well. A manual implementation of the `__setattr__` method can help.
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

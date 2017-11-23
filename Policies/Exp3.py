@@ -5,6 +5,7 @@ Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit P
 
 See also [Evaluation and Analysis of the Performance of the EXP3 Algorithm in Stochastic Environments, Y. Seldin & C. Szepasvari & P. Auer & Y. Abbasi-Adkori, 2012](http://proceedings.mlr.press/v24/seldin12a/seldin12a.pdf).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"
@@ -137,10 +138,7 @@ class Exp3(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         """Multiple (nb >= 1) random selection, with probabilities = trusts, thank to :func:`numpy.random.choice`."""
-        if (self.t < self.nbArms) or (nb == 1):
-            return np.array([self.choice() for _ in range(nb)])  # good size if nb > 1 but t < nbArms
-        else:
-            return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
+        return rn.choice(self.nbArms, size=nb, replace=False, p=self.trusts)
 
     # --- Other methods
 

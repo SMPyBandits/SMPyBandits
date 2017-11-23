@@ -19,6 +19,7 @@ Examples of sampling from an arm:
 array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
         1.,  0.,  0.,  0.,  1.,  1.,  1.])
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

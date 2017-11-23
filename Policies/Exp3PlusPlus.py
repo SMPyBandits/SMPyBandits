@@ -5,6 +5,7 @@ Reference: [[One practical algorithm for both stochastic and adversarial bandits
 
 See also [[An Improved Parametrization and Analysis of the EXP3++ Algorithm for Stochastic and Adversarial Bandits, by Y.Seldin & G.Lugosi, COLT, 2017](https://arxiv.org/pdf/1702.06103)].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

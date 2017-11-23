@@ -13,7 +13,7 @@ r""" MusicalChair: implementation of the single-player policy from [A Musical Ch
     + :math:`\implies` constant regret if :math:`N^*` is well estimated and if the estimated N* best arms were correct
     + :math:`\implies` linear regret otherwise
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility, division
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

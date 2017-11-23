@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ ChildPointer: Class that acts as a child policy, but in fact it passes all its method calls to the mother class (that can pass it to its internal i-th player, or use any centralized computation).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.3"

@@ -2,7 +2,7 @@
 """
 Configuration for the simulations, for the multi-players case.
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"
@@ -337,8 +337,9 @@ if len(configuration['environment']) > 1:
 
 configuration["successive_players"] = [
     # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
@@ -373,9 +374,10 @@ configuration["successive_players"] = [
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
     # ---- Selfish
-    Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
+    # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
     [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
 
     # ---- rhoRand etc

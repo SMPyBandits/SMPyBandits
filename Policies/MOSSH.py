@@ -2,6 +2,7 @@
 """ The MOSS-H policy for bounded bandits, with knowing the horizon.
 Reference: [Audibert & Bubeck, 2010](http://www.jmlr.org/papers/volume11/audibert10a/audibert10a.pdf).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

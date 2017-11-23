@@ -12,7 +12,7 @@ The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..
 
 .. note:: Reference: [["Corralling a Band of Bandit Algorithms", by A. Agarwal, H. Luo, B. Neyshabur, R.E. Schapire, 01.2017](https://arxiv.org/abs/1612.06246v2)].
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

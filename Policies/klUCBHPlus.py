@@ -2,6 +2,7 @@
 """ The improved kl-UCB-H+ policy, for one-parameter exponential distributions.
 Reference: [Lai 87](https://projecteuclid.org/download/pdf_1/euclid.aos/1176350495)
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

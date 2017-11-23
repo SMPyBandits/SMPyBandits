@@ -2,6 +2,7 @@
 """ The Clopper-Pearson UCB policy for bounded bandits.
 Reference: [Garivier & Cappé, COLT 2011](https://arxiv.org/pdf/1102.2490.pdf).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"

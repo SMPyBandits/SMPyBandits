@@ -4,6 +4,7 @@ r""" The epsilon-greedy random policy.
 - At every time step, a fully uniform random exploration has probability :math:`\varepsilon(t)` to happen, otherwise an exploitation is done on accumulated rewards (not means).
 - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

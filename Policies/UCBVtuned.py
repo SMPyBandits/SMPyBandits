@@ -2,6 +2,7 @@
 """ The UCBV-Tuned policy for bounded bandits, with a tuned variance correction term.
 Reference: [Auer et al. 02].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.5"

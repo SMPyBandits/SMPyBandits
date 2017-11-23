@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Base class for a posterior. Cf. http://chercheurs.lille.inria.fr/ekaufman/NIPS13 Fig.1 for a list of posteriors. """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

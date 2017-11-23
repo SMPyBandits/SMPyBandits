@@ -4,7 +4,7 @@
 The Multi-user epsilon-Greedy collision Avoiding (MEGA) algorithm is based on the epsilon-greedy algorithm introduced in [2], augmented by a collision avoidance mechanism that is inspired by the classical ALOHA protocol.
 [2]: Finite-time analysis of the multiarmed bandit problem, P.Auer & N.Cesa-Bianchi & P.Fischer, 2002
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

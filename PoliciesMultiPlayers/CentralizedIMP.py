@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ CentralizedIMP: a multi-player policy where ONE policy is used by a centralized agent; asking the policy to select nbPlayers arms at each step, using an hybrid strategy: choose nb-1 arms with maximal empirical averages, then 1 arm with maximal index. Cf. algorithm IMP-TS [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

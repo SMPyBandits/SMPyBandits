@@ -4,6 +4,7 @@
 - Reference: Section 4 of [Boltzmann Exploration Done Right, N.Cesa-Bianchi & C.Gentile & G.Lugosi & G.Neu, arXiv 2017](https://arxiv.org/pdf/1705.10257.pdf).
 - It is an index policy with indexes computed from the empirical mean estimators and a random sample from a Gumbel distribution.
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

@@ -35,6 +35,7 @@ in order to use them in any experiment with the following approach: ::
             for i in players_who_played_k:
                 children[i].getReward(k, reward)
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

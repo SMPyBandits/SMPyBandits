@@ -3,7 +3,7 @@
 
 - Reference: Beygelzimer, A., Langford, J., Li, L., Reyzin, L., & Schapire, R. E. (2011, April). Contextual Bandit Algorithms with Supervised Learning Guarantees. In AISTATS (pp. 19-26).
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

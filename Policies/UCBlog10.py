@@ -2,6 +2,7 @@
 r""" The UCB policy for bounded bandits, using :math:`\log10(t)` and not :math:`\log(t)` for UCB index.
 Reference: [Lai & Robbins, 1985].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

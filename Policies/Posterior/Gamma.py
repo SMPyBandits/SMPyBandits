@@ -4,6 +4,7 @@
 - See https://en.wikipedia.org/wiki/Gamma_distribution#Conjugate_prior
 - And https://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Emilie Kaufmann, Lilian Besson"
 __version__ = "0.6"

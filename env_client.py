@@ -18,7 +18,7 @@ Options:
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
     --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

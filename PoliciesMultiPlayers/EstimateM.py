@@ -11,7 +11,7 @@ r""" EstimateM: generic wrapper on a multi-player decentralized learning policy,
 
 .. note:: For a less generic approach, see the policies defined in :class:`rhoEst.rhoEst` (generalizing :class:`rhoRand.rhoRand`) and :class:`RandTopMEst.RandTopMEst` (generalizing :class:`RandTopM.RandTopM`).
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

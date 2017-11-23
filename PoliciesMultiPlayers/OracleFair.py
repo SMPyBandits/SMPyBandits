@@ -7,7 +7,7 @@
 
 - Note that they need a perfect knowledge on the arms, even this is not physically plausible.
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

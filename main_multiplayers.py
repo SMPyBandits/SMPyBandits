@@ -3,7 +3,7 @@
 """
 Script to load the config, run the simulations, and plot them, for the multi-players case.
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

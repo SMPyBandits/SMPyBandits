@@ -15,6 +15,7 @@ And useful constants and functions for the plotting and stuff:
 - :func:`tqdm`: pretty range() loops
 - :func:`sortedDistance`, :func:`fairnessMeasures`: science related
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

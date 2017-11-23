@@ -10,7 +10,7 @@
 
 .. warning:: This policy is NOT efficient at ALL! Don't use it! It seems a smart idea, but it's not.
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"
@@ -29,7 +29,7 @@ class oneRhoCentralized(ChildPointer):
     - The player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, *args, rank=None, **kwargs):
+    def __init__(self, maxRank, rank=None, *args, **kwargs):
         super(oneRhoCentralized, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         assert rank is None or 1 <= rank <= maxRank, "Error: the 'rank' parameter = {} for oneRhoCentralized was not correct: only possible values are None or an integer 1 <= rank <= maxRank = {}.".format(rank, maxRank)  # DEBUG

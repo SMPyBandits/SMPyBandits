@@ -5,7 +5,7 @@
 - And it is perfectly fair on every run: each chosen arm is played successively by each player.
 - Note that it is NOT affecting players on the best arms: it has no knowledge of the means of the arms, only of the number of arms nbArms.
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

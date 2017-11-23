@@ -22,6 +22,7 @@ Also contains:
 - :func:`randomMeansWithSparsity`, generate randomly spaced means of arms, with sparsity constraints.
 - :func:`shuffled`, to return a shuffled version of a list.
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

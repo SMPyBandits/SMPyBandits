@@ -7,6 +7,7 @@ One paper of W.Jouini, C.Moy and J.Palicot from 2009 contained this typo, I reim
 - its performance is worse than simple UCB,
 - but not that bad...
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.1"

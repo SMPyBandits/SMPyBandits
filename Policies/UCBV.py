@@ -2,6 +2,7 @@
 """ The UCB-V policy for bounded bandits, with a variance correction term.
 Reference: [Audibert, Munos, & Szepesvári - Theoret. Comput. Sci., 2009].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.5"

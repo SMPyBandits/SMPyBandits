@@ -18,7 +18,7 @@ As far as now, there is 4 different collision models implemented:
 - :func:`rewardIsSharedUniformly`: in case of more than one player on one arm, only one player (uniform choice) can sample it and receive the reward.
 - :func:`closerUserGetsReward`: in case of more than one player on one arm, only the closer player can sample it and receive the reward. It can take, or create if not given, a random distance of each player to the base station (random number in [0, 1]).
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

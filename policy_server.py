@@ -14,7 +14,7 @@ Options:
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

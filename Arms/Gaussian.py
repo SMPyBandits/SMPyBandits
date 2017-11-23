@@ -21,6 +21,7 @@ array([ 0.3882...,  0.3200...,  0.3489... ,  0.4120...,  0.3933... ,
         0.3072...,  0.3727...,  0.3380...,  0.3060...,  0.3221...,
         0.3166...,  0.3747...,  0.2897...,  0.3156...,  0.2572...])
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"

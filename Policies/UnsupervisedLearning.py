@@ -16,6 +16,7 @@ Basically, it works like this:
 
 This module provides also two simple Unsupervised Learning algorithm, :class:`SimpleGaussianKernel` and :class:`SimpleBernoulliKernel`, see below.
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

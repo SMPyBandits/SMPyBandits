@@ -4,6 +4,7 @@ r""" The approximated Finite-Horizon Gittins index policy for bounded bandits.
 - This is not the computationally costly Gittins index, but a simple approximation, using the knowledge of the horizon T.
 - Reference: [Lattimore - COLT, 2016](http://www.jmlr.org/proceedings/papers/v49/lattimore16.pdf), and [his COLT presentation](https://youtu.be/p8AwKiudhZ4?t=276)
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

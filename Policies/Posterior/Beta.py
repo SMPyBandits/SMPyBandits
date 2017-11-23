@@ -9,6 +9,7 @@ When reward :math:`r_t \in [0, 1]` is observed, the player receives the result o
 
 .. [Agrawal12] http://jmlr.org/proceedings/papers/v23/agrawal12/agrawal12.pdf
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
 __version__ = "0.6"

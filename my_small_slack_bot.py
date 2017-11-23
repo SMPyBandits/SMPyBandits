@@ -14,7 +14,7 @@ About:
 - *Licence:* MIT Licence (http://lbesson.mit-license.org).
 """
 
-from __future__ import print_function, division  # Python 2 compatibility if needed
+from __future__ import division, print_function  # Python 2 compatibility
 
 import sys
 import os

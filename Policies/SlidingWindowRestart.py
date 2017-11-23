@@ -13,6 +13,7 @@ r""" An experimental policy, using a sliding window (of for instance :math:`\tau
 .. warning:: This is very experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history) !
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Rémi Bonnefoi and Lilian Besson"
 __version__ = "0.6"

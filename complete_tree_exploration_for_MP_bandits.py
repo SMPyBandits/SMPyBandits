@@ -39,8 +39,8 @@ About:
 - *Author:* Lilian Besson, (C) 2017
 - *Licence:* MIT Licence (http://lbesson.mit-license.org).
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
-from __future__ import print_function, division  # Python 2 compatibility if needed
 __author__ = "Lilian Besson"
 __version__ = "0.7"
 

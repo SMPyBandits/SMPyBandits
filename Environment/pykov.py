@@ -28,6 +28,8 @@
    Riccardo Scalco <riccardo.scalco@gmail.com>
 
 """
+from __future__ import division, print_function  # Python 2 compatibility
+
 import random
 import math
 import six

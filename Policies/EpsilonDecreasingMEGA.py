@@ -5,6 +5,7 @@ r""" The epsilon-decreasing random policy, using MEGA's heuristic for a good cho
 - :math:`\varepsilon_0 = \frac{c K^2}{d^2 (K - 1)}`
 - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

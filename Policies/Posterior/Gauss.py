@@ -7,6 +7,7 @@ No need for tricks to handle non-binary rewards.
 - See https://en.wikipedia.org/wiki/Normal_distribution#With_unknown_mean_and_unknown_variance
 - And https://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

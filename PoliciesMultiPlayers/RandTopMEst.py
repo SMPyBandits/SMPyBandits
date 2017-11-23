@@ -14,7 +14,7 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 
 .. note:: For a more generic approach, see the wrapper defined in :class:`EstimateM.EstimateM`.
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

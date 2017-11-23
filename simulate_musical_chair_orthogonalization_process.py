@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ Small script to simulate musical chair plays.
 """
-from __future__ import print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

@@ -4,6 +4,7 @@ By default, it assumes Bernoulli arms.
 Note: using :math:`\log10(t)` and not :math:`\log(t)` for the KL-UCB index.
 Reference: [Garivier & Cappé - COLT, 2011].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.5"

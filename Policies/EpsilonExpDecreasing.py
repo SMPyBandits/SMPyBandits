@@ -4,6 +4,7 @@ r""" The epsilon exp-decreasing random policy.
 - :math:`\varepsilon(t) = \varepsilon_0 \exp(-t \mathrm{decreasingRate})`.
 - Ref: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

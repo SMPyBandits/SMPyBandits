@@ -2,6 +2,7 @@
 """The Thompson (Bayesian) index policy, using an average of 20 index. By default, it uses a Beta posterior.
 Reference: [Thompson - Biometrika, 1933].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.6"

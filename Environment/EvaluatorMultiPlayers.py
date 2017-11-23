@@ -2,7 +2,7 @@
 """ EvaluatorMultiPlayers class to wrap and run the simulations, for the multi-players case.
 Lots of plotting methods, to have various visualizations. See documentation.
 """
-from __future__ import print_function, division
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.8"

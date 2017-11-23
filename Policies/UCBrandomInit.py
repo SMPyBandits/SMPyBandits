@@ -2,6 +2,7 @@
 """ The UCB index policy, modified to take a random permutation order for the initial exploration of each arm (could reduce collisions in the multi-players setting).
 Reference: [Lai & Robbins, 1985].
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.2"

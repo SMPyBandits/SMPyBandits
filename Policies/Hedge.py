@@ -3,6 +3,7 @@
 
 Reference: [Regret Analysis of Stochastic and Nonstochastic Multi-armed Bandit Problems, S.Bubeck & N.Cesa-Bianchi](http://research.microsoft.com/en-us/um/people/sebubeck/SurveyBCB12.pdf)
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

@@ -51,6 +51,7 @@ in order to use them in any experiment with the following approach: ::
         reward_t     = sampled from an arm k_t   # sample a reward
         my_policy.getReward(k_t, reward_t)       # give it the the policy
 """
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.7"

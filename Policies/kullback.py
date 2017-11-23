@@ -21,7 +21,7 @@
    >>> klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
    array([ 0.036...,  0.087...,  0.550...])
 """
-from __future__ import division, print_function
+from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"
