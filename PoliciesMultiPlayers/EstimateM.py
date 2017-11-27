@@ -42,13 +42,14 @@ def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
         if horizon is None:
             horizon = t
         return np.log(1 + horizon) * np.log(1 + np.log(1 + horizon))
+        # return np.log(1 + horizon) ** 2
         # return float(horizon) ** 0.7
         # return float(horizon) ** 0.5
         # return float(horizon) ** 0.1
         # return float(horizon)
 
 
-def threshold_on_t_doubling_trick(t, nbPlayersEstimate, horizon=None, base=2, min_fake_horizon=100, T0=10):
+def threshold_on_t_doubling_trick(t, nbPlayersEstimate, horizon=None, base=2, min_fake_horizon=1000, T0=1):
     r""" A trick to have a threshold depending on a growing horizon (doubling-trick).
 
     - Instead of using :math:`t` or :math:`T`, a fake horizon :math:`T_t` is used, corresponding to the horizon a doubling-trick algorithm would be using at time :math:`t`.
@@ -73,12 +74,12 @@ def threshold_on_t(t, nbPlayersEstimate, horizon=None):
     if nbPlayersEstimate <= 1:
         return nbPlayersEstimate
     else:
-        # return np.log(1 + t) ** 2
+        return np.log(1 + t) ** 2
         # return float(t) ** 0.7
         # return float(t) ** 0.5
         # return float(t) ** 0.1
         # return float(t)
-        return 10 * float(t)
+        # return 10 * float(t)
 
 
 # --- Class oneEstimateM, for children
@@ -90,9 +91,10 @@ class oneEstimateM(ChildPointer):
     """
 
     def __init__(self, nbArms, playerAlgo, threshold, decentralizedPolicy, *args,
-                 lower=0., amplitude=1.,
+                 lower=0., amplitude=1., horizon=None,
                  args_decentralizedPolicy=None, kwargs_decentralizedPolicy=None,
                  **kwargs):
+        self.horizon = horizon
         super(oneEstimateM, self).__init__(*args, **kwargs)
         # Creating of the underlying policy (e.g., oneRhoRand, oneRandTopM etc)
         if args_decentralizedPolicy is None:
@@ -113,7 +115,6 @@ class oneEstimateM(ChildPointer):
         self.updateNbPlayers()
         self.collisionCount = 0  #: Count collision since last increase of nbPlayersEstimate
         self.timeSinceLastCollision = 0  #: Time since last collision
-        self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
         parts = self._policy.__str__().split('<')
@@ -146,30 +147,38 @@ class oneEstimateM(ChildPointer):
         self.updateNbPlayers()
         self.collisionCount = 0
         self.timeSinceLastCollision = 0
-        self.t = 0
 
     def handleCollision(self, arm, reward=None):
         """Select a new rank, and maybe update nbPlayersEstimate."""
         self._policy.handleCollision(arm, reward=reward)
 
-        # Then, estimate the current ranking of the arms
-        order = self.estimatedOrder()
+        # we can be smart, and stop all this as soon as M = K !
+        if self.nbPlayersEstimate < self.nbArms:
 
-        # And try to see if the arm on which we are encountering a collision is one of the Uhat best
-        if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
-            self.collisionCount += 1
-            # print("This arm {} was estimated as one of the Uhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
+            # Then, estimate the current ranking of the arms
+            order = self.estimatedOrder()
 
-        # And finally, compare the collision count with the current threshold
-        threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate)
+            # And try to see if the arm on which we are encountering a collision is one of the Mhat best
+            if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
+                self.collisionCount += 1
+                # print("This arm {} was estimated as one of the Mhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
 
-        if self.collisionCount > threshold:
-            self.nbPlayersEstimate = min(1 + self.nbPlayersEstimate, self.nbArms)
-            self.updateNbPlayers()
-            # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
-            self.collisionCount = 0
-        # Finally, restart timeSinceLastCollision
-        self.timeSinceLastCollision = 0
+            # And finally, compare the collision count with the current threshold
+            threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate, self.horizon)
+            # threshold = self.threshold(self.t, self.nbPlayersEstimate, self.horizon)
+
+            if self.collisionCount > threshold:
+                self.nbPlayersEstimate = min(1 + self.nbPlayersEstimate, self.nbArms)
+                self.updateNbPlayers()
+                # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
+                self.collisionCount = 0
+            # Finally, restart timeSinceLastCollision
+            self.timeSinceLastCollision = 0
+
+    @property
+    def t(self):
+        """Internal time."""
+        return self._policy.t
 
     def getReward(self, arm, reward):
         """One transmission without collision"""
@@ -213,7 +222,7 @@ class EstimateM(BaseMPPolicy):
     """
 
     def __init__(self, nbPlayers, nbArms, decentralizedPolicy, playerAlgo,
-                 policyArgs=None,
+                 policyArgs=None, horizon=None,
                  threshold=threshold_on_t_doubling_trick,
                  lower=0., amplitude=1.,
                  *args, **kwargs):
@@ -243,7 +252,7 @@ class EstimateM(BaseMPPolicy):
         args_decentralizedPolicy = args
         kwargs_decentralizedPolicy = kwargs
         for playerId in range(nbPlayers):
-            self.children[playerId] = oneEstimateM(nbArms, playerAlgo, threshold, decentralizedPolicy, self, playerId, lower=lower, amplitude=amplitude, args_decentralizedPolicy=args_decentralizedPolicy, kwargs_decentralizedPolicy=kwargs_decentralizedPolicy, **policyArgs)
+            self.children[playerId] = oneEstimateM(nbArms, playerAlgo, threshold, decentralizedPolicy, self, playerId, lower=lower, amplitude=amplitude, horizon=horizon, args_decentralizedPolicy=args_decentralizedPolicy, kwargs_decentralizedPolicy=kwargs_decentralizedPolicy, **policyArgs)
             self._players[playerId] = self.children[playerId]._policy
 
     def __str__(self):
