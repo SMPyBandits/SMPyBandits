@@ -41,7 +41,7 @@ HORIZON = 10000
 HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
-#: Warning: Should be >= 10 to be stastically trustworthy.
+#: Warning: Should be >= 10 to be statistically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 10000
