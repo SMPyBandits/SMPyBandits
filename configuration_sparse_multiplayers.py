@@ -41,7 +41,7 @@ HORIZON = 10000
 HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
-#: Warning: Should be >= 10 to be stastically trustworthy.
+#: Warning: Should be >= 10 to be statistically trustworthy.
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = int(getenv('N', REPETITIONS))
 
@@ -57,13 +57,21 @@ if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
-NB_PLAYERS = 4    # Less that the number of arms
+NB_PLAYERS = 2    # Less that the number of arms
 NB_PLAYERS = int(getenv('M', NB_PLAYERS))
 NB_PLAYERS = int(getenv('NB_PLAYERS', NB_PLAYERS))
 
-#: ACTIVATION : probability of activation of each player.
-ACTIVATION = 0.5
+#: ACTIVATION : common probability of activation.
+ACTIVATION = 1.
 ACTIVATION = float(getenv('P', ACTIVATION))
+
+#: ACTIVATIONS : probability of activation of each player.
+ACTIVATIONS = [ACTIVATION] * NB_PLAYERS
+
+ACTIVATIONS = tuple_from_str(getenv('PS', ACTIVATIONS))
+ACTIVATIONS = tuple_from_str(getenv('ACTIVATIONS', ACTIVATIONS))
+if ACTIVATIONS is None:
+    ACTIVATIONS = [ACTIVATION] * NB_PLAYERS
 
 
 # Parameters for the arms
@@ -88,6 +96,17 @@ mapping_ARM_TYPE = {
 }
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
+#: Means of the arms
+MEANS = None
+MEANS = tuple_from_str(getenv("MUS", None))
+MEAN = str(getenv("MU", "None"))
+MEAN = float(MEAN) if MEAN != 'None' else None
+if MEANS is None:
+    if MEAN is not None:
+        MEANS = [MEAN] * NB_ARMS
+    else:
+        MEANS = uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -96,7 +115,7 @@ configuration = {
     # --- Number of repetition of the experiment (to have an average)
     "repetitions": REPETITIONS,
     # --- Probability of activation of each player
-    "activation": ACTIVATION,
+    "activations": ACTIVATIONS,
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 6,      # Max joblib verbosity
@@ -123,7 +142,7 @@ configuration = {
         # XXX Default!
         {   # A very easy problem (X arms), but it is used in a lot of articles
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+            "params": MEANS
         }
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
@@ -146,7 +165,7 @@ configuration = {
 try:
     #: Number of arms *in the first environment*
     nbArms = int(configuration['environment'][0]['params']['args']['nbArms'])
-except (TypeError, KeyError):
+except (TypeError, KeyError, IndexError):
     nbArms = len(configuration['environment'][0]['params'])
 
 if len(configuration['environment']) > 1:
@@ -172,7 +191,6 @@ configuration["successive_players"] = [
     # # MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
 
     # ---- Selfish
-    Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     Selfish(NB_PLAYERS, nbArms, UCB).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
@@ -190,19 +208,7 @@ configuration["successive_players"] = [
 
 configuration.update({
     # --- DONE Using multi-player Selfish policy
-    "players": Selfish(NB_PLAYERS, nbArms, Uniform).children
-    # "players": Selfish(NB_PLAYERS, nbArms, TakeRandomFixedArm).children
-    # "players": Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children
-    # "players": Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children
-    # "players": Selfish(NB_PLAYERS, nbArms, UCB).children
-    # "players": Selfish(NB_PLAYERS, nbArms, UCBalpha, alpha=0.25).children  # This one is efficient!
-    # "players": Selfish(NB_PLAYERS, nbArms, MOSS).children
-    # "players": Selfish(NB_PLAYERS, nbArms, klUCB).children
-    # "players": Selfish(NB_PLAYERS, nbArms, klUCBPlus).children
-    # "players": Selfish(NB_PLAYERS, nbArms, klUCBHPlus, horizon=HORIZON).children  # Worse than simple klUCB and klUCBPlus
-    # "players": Selfish(NB_PLAYERS, nbArms, Thompson).children
-    # "players": Selfish(NB_PLAYERS, nbArms, SoftmaxDecreasing).children
-    # "players": Selfish(NB_PLAYERS, nbArms, BayesUCB).children
+    "players": Selfish(NB_PLAYERS, nbArms, UCB).children
 })
 
 # DONE

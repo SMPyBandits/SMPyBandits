@@ -225,14 +225,43 @@ def array_from_str(my_str):
     >>> array_from_str("0.9")
     array(0.9)
     """
+    # print("array_from_str called with my_str =", my_str)  # DEBUG
+    if my_str is None or isinstance(my_str, np.ndarray):
+        return my_str
     try:
         if not ('[' in my_str and ']' in my_str):
             my_str = '[%s]' % my_str
-        dict_str = '{"mus": %s}' % my_str
+        dict_str = '{"XXX": %s}' % my_str
         fake_dict = json.loads(dict_str)
-        return np.asarray(fake_dict["mus"])
+        return np.array(fake_dict["XXX"])
     except:
-        print("Error while interpreting the strings {} as an array...".format(my_str))
+        print("Error while interpreting the string {} as an array...".format(my_str))  # DEBUG
+        return None
+
+
+def list_from_str(my_str):
+    """Convert a string like "[0.1, 0.2, 0.3]" to a list `(0.1, 0.2, 0.3)`, using safe `json.loads` instead of `exec`.
+
+    >>> list_from_str("[0.1, 0.2, 0.3]")
+    [0.1, 0.2, 0.3]
+    >>> list_from_str("0.1, 0.2, 0.3")
+    [0.1, 0.2, 0.3]
+    >>> list_from_str("0.9")
+    [0.9]
+    """
+    # print("list_from_str called with my_str =", my_str)  # DEBUG
+    if my_str is None:
+        return my_str
+    if isinstance(my_str, (tuple, list)):
+        return list(my_str)
+    try:
+        if not ('[' in my_str and ']' in my_str):
+            my_str = '[%s]' % my_str
+        dict_str = '{"XXX": %s}' % my_str
+        fake_dict = json.loads(dict_str)
+        return np.array(fake_dict["XXX"]).tolist()
+    except:
+        print("Error while interpreting the string {} as a list...".format(my_str))  # DEBUG
         return None
 
 
@@ -246,14 +275,19 @@ def tuple_from_str(my_str):
     >>> tuple_from_str("0.9")
     (0.9,)
     """
+    # print("tuple_from_str called with my_str =", my_str)  # DEBUG
+    if my_str is None:
+        return my_str
+    if isinstance(my_str, (tuple, list)):
+        return tuple(my_str)
     try:
         if not ('[' in my_str and ']' in my_str):
             my_str = '[%s]' % my_str
-        dict_str = '{"mus": %s}' % my_str
+        dict_str = '{"XXX": %s}' % my_str
         fake_dict = json.loads(dict_str)
-        return tuple(np.asarray(fake_dict["mus"]).tolist())
+        return tuple(np.array(fake_dict["XXX"]).tolist())
     except:
-        print("Error while interpreting the strings {} as an array...".format(my_str))
+        print("Error while interpreting the string {} as a tuple...".format(my_str))  # DEBUG
         return None
 
 

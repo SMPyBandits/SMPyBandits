@@ -468,17 +468,20 @@ class EvaluatorMultiPlayers(object):
                             plt.yscale('log')
         # We also plot our lower bound
         if not self.envs[envId].isDynamic:
-            # XXX In fact, the lower-bound is also true for Bayesian policies! Finite means ARE ALWAYS linear! I should write the proof, but I convinced myself that the lower-bound is still correct (in a certain sense) and at least it gives an overview of the (average) complexity of the problem (randomly drawn and) used for the experiments.
-            lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
-            if not (semilogx or semilogy or loglog):
-                print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-            if self.envs[envId].isDynamic:
-                print("WARNING this env is in fact dynamic, this complexity term and H_OI factor do not have much sense... (they are computed from the average of the complexity for all mean vectors drawn in the repeted experiments...)")  # DEBUG
-            print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
-            T = np.ones_like(X) if normalized else np.log(2 + X)
-            plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
-            plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
-            plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
+            try:
+                # XXX In fact, the lower-bound is also true for Bayesian policies! Finite means ARE ALWAYS linear! I should write the proof, but I convinced myself that the lower-bound is still correct (in a certain sense) and at least it gives an overview of the (average) complexity of the problem (randomly drawn and) used for the experiments.
+                lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
+                if not (semilogx or semilogy or loglog):
+                    print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
+                if self.envs[envId].isDynamic:
+                    print("WARNING this env is in fact dynamic, this complexity term and H_OI factor do not have much sense... (they are computed from the average of the complexity for all mean vectors drawn in the repeted experiments...)")  # DEBUG
+                print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
+                T = np.ones_like(X) if normalized else np.log(2 + X)
+                plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
+                plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
+                plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
+            except AssertionError:
+                print("Error: Unable to compute and display the lower-bound...")  # DEBUG
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1 .. T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))

@@ -24,7 +24,7 @@ from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makem
 from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
 from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
 # Local imports, objects and functions
-from .CollisionModels import onlyUniqUserGetsRewardSparse
+from .CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
 from .MAB import MAB, MarkovianMAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
 
@@ -50,8 +50,8 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
     def __init__(self, configuration,
                  moreAccurate=MORE_ACCURATE):
         super(EvaluatorSparseMultiPlayers, self).__init__(configuration, moreAccurate=moreAccurate)
-        self.activation = self.cfg.get('activation', ACTIVATION)  #: Probability of activation
-        assert 0 < self.activation <= 1, "Error: probability of activation = {:.3g}"  # DEBUG
+        self.activations = self.cfg.get('activations', ACTIVATION)  #: Probability of activations
+        assert np.min(self.activations) > 0 and np.max(self.activations) <= 1, "Error: probability of activations = {} were not all in (0, 1] ...".format(self.activations)  # DEBUG
         self.collisionModel = self.cfg.get('collisionModel', onlyUniqUserGetsRewardSparse)  #: Which collision model should be used
         self.full_lost_if_collision = full_lost_if_collision.get(self.collisionModel.__name__, True)  #: Is there a full loss of rewards if collision ? To compute the correct decomposition of regret
         print("Using collision model {} (function {}).\nMore details:\n{}".format(self.collisionModel.__name__, self.collisionModel, self.collisionModel.__doc__))
@@ -89,7 +89,7 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
             repeatIdout = 0
             historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, self.activation, seed=seeds[repeatId], repeatId=repeatId)
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, self.activations, seed=seeds[repeatId], repeatId=repeatId)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
                 historyOfMeans.append(r._means)
@@ -100,7 +100,7 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
                 env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, self.activation, repeatId=repeatId)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, self.activations, repeatId=repeatId)
                 store(r, repeatId)
 
     # --- Getter methods
@@ -108,7 +108,7 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
     def getCentralizedRegret_LessAccurate(self, envId=0):
         """Compute the empirical centralized regret: cumsum on time of the mean rewards of the M best arms - cumsum on time of the empirical rewards obtained by the players, based on accumulated rewards."""
         meansArms = np.sort(self.envs[envId].means)
-        sumBestMeans = self.envs[envId].sumBestMeans(self.nbPlayers)
+        sumBestMeans = self.envs[envId].sumBestMeans(min(self.envs[envId].nbArms, self.nbPlayers))
         # FIXED how to count it when there is more players than arms ?
         # FIXME it depends on the collision model !
         if self.envs[envId].nbArms < self.nbPlayers:
@@ -127,9 +127,9 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
         means = self.envs[envId].means
         sortingIndex = np.argsort(means)
         means = np.sort(means)
-        deltaMeansWorstArms = means[-self.nbPlayers] - means[:-self.nbPlayers]
+        deltaMeansWorstArms = means[-min(self.envs[envId].nbArms, self.nbPlayers)] - means[:-min(self.envs[envId].nbArms, self.nbPlayers)]
         allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        allWorstPulls = allPulls[:, sortingIndex[:-self.nbPlayers], :]
+        allWorstPulls = allPulls[:, sortingIndex[:-min(self.envs[envId].nbArms, self.nbPlayers)], :]
         worstPulls = np.sum(allWorstPulls, axis=0)  # sum for all players
         losses = np.dot(deltaMeansWorstArms, worstPulls)  # Count and sum on k in Mworst
         firstRegretTerm = np.cumsum(losses)  # Accumulate losses
@@ -140,9 +140,9 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
         means = self.envs[envId].means
         sortingIndex = np.argsort(means)
         means = np.sort(means)
-        deltaMeansBestArms = means[-self.nbPlayers:] - means[-self.nbPlayers]
+        deltaMeansBestArms = means[-min(self.envs[envId].nbArms, self.nbPlayers):] - means[-min(self.envs[envId].nbArms, self.nbPlayers)]
         allPulls = self.allPulls[envId] / float(self.repetitions)  # Shape: (nbPlayers, nbArms, duration)
-        allBestPulls = allPulls[:, sortingIndex[-self.nbPlayers:], :]
+        allBestPulls = allPulls[:, sortingIndex[-min(self.envs[envId].nbArms, self.nbPlayers):], :]
         bestMisses = 1 - np.sum(allBestPulls, axis=0)  # sum for all players
         losses = np.dot(deltaMeansBestArms, bestMisses)  # Count and sum on k in Mbest
         secondRegretTerm = np.cumsum(losses)  # Accumulate losses
@@ -216,8 +216,23 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
         else:
             return self.getLastRegrets_LessAccurate(envId=envId)
 
+    def strPlayers(self, short=False, latex=True):
+        """Get a string of the players and their activations probability for this environment."""
+        listStrPlayersActivations = [("%s, $p=%s$" if latex else "%s, p=%s") % (_extract(str(player)), str(activation)) for (player, activation) in zip(self.players, self.activations)]
+        if len(set(listStrPlayersActivations)) == 1:  # Unique user and unique activation
+            if latex:
+                text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayersActivations[0])
+            else:
+                text = r'{} x {}'.format(self.nbPlayers, listStrPlayersActivations[0])
+        else:
+            text = ', '.join(listStrPlayersActivations)
+        text = wraptext(text)
+        if not short:
+            text = '{} players: {}'.format(self.nbPlayers, text)
+        return text
 
-def delayed_play(env, players, horizon, collisionModel, activation,
+
+def delayed_play(env, players, horizon, collisionModel, activations,
                  seed=None, repeatId=0):
     """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
@@ -233,7 +248,6 @@ def delayed_play(env, players, horizon, collisionModel, activation,
     players = deepcopy(players)
     nbArms = env.nbArms
     nbPlayers = len(players)
-    # random_arm_orders = [np.random.permutation(nbArms) for i in range(nbPlayers)]
     # Start game
     for player in players:
         player.startGame()
@@ -248,16 +262,16 @@ def delayed_play(env, players, horizon, collisionModel, activation,
     for t in prettyRange:
         # Reset the array, faster than reallocating them!
         rewards.fill(0)
-        choices.fill(-100000)  # FIXME??
+        choices.fill(-100000)
         pulls.fill(0)
         collisions.fill(0)
         # Every player decides which arm to pull
         for playerId, player in enumerate(players):
-            if with_proba(activation):
+            if with_proba(activations[playerId]):
                 choices[playerId] = player.choice()
-                print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tgot activated and chose : {} ...".format(t, playerId + 1, len(players), player, choices[playerId]))  # DEBUG
-            else:
-                print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tdid not get activated ...".format(t, playerId + 1, len(players), player))  # DEBUG
+                # print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tgot activated and chose : {} ...".format(t, playerId + 1, len(players), player, choices[playerId]))  # DEBUG
+            # else:
+            #     print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tdid not get activated ...".format(t, playerId + 1, len(players), player))  # DEBUG
 
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions

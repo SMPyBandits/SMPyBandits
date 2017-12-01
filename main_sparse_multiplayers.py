@@ -13,6 +13,7 @@ from os import mkdir
 import os.path
 from os import getenv
 from itertools import product
+import numpy as np
 
 # Backup evaluation object
 import pickle
@@ -72,9 +73,10 @@ if getenv('XKCD', 'False') == 'True' and interactive and not saveallfigs:
 if __name__ == '__main__':
     # Update configuration
     configuration['showplot'] = interactive
-    del configuration['players']  # Be sure to only use "successive_players" value
+    if "players" in configuration:
+        del configuration['players']  # Be sure to only use "successive_players" value
 
-    _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
+    _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list, np.ndarray)) else k) for k in configuration.values()]))))
 
     if os.path.isdir(PLOT_DIR):
         print("{}/ is already a directory here...".format(PLOT_DIR))
@@ -93,7 +95,7 @@ if __name__ == '__main__':
         configuration['players'] = players
 
         # (almost) unique hash from the configuration
-        hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
+        hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list, np.ndarray)) else k) for k in configuration.values()]))))
         evaluation = EvaluatorSparseMultiPlayers(configuration)
 
         # Start the evaluation and then print final ranking and plot, for each environment
