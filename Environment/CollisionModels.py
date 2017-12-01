@@ -68,7 +68,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
-        # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
         pulls[i, choices[i]] += 1
         if nbCollisions[choices[i]] < 1:  # No collision
             player.getReward(choices[i], sensing[choices[i]])  # Observing *sensing*
@@ -86,6 +86,37 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
 defaultCollisionModel = onlyUniqUserGetsReward
 
 
+def onlyUniqUserGetsRewardSparse(t, arms, players, choices, rewards, pulls, collisions):
+    """ Simple collision model where only the players alone on one arm samples it and receives the reward.
+
+    - This is the default collision model, cf. [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+    - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
+    - Support for player non activated, by choosing a negative index.
+    """
+    # First, sense in all the arms
+    sensing = [a.draw(t) for a in arms]
+
+    nbCollisions = np.bincount(choices[choices >= 0], minlength=len(arms)) - 1
+    # print("onlyUniqUserGetsRewardSparse() at time t = {}, nbCollisions = {}.".format(t, nbCollisions))  # DEBUG
+
+    # if np.max(nbCollisions) >= 1:  # DEBUG
+    #     print("- onlyUniqUserGetsRewardSparse: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
+    for i, player in enumerate(players):  # Loop is needed because player is needed
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        if choices[i] >= 0:
+            pulls[i, choices[i]] += 1
+            if nbCollisions[choices[i]] < 1:  # No collision
+                player.getReward(choices[i], sensing[choices[i]])  # Observing *sensing*
+                rewards[i] = sensing[choices[i]]  # Storing actual rewards
+            else:
+                # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
+                collisions[choices[i]] += 1  # Should be counted here, onlyUniqUserGetsRewardSparse
+                # handleCollision_or_getZeroReward(player, choices[i])  # NOPE
+                player.handleCollision(choices[i], sensing[choices[i]])  # Observing *sensing* but collision
+                # If learning is done on sensing, handleCollision uses this reward
+                # But if learning is done on ACK, handleCollision does not use this reward
+
+
 def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, collisions):
     """ A variant of the first simple collision model where all players sample their arm, receive their rewards, and are informed of the collisions.
 
@@ -100,7 +131,7 @@ def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, coll
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- allGetRewardsAndUseCollision: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
-        # FIXED pulls counts the number of selection, not the number of succesful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
         pulls[i, choices[i]] += 1
 
         rewards[i] = arms[choices[i]].draw(t)
@@ -207,6 +238,7 @@ def closerUserGetsReward(t, arms, players, choices, rewards, pulls, collisions, 
 #: List of possible collision models
 collision_models = [
     onlyUniqUserGetsReward,
+    onlyUniqUserGetsRewardSparse,
     allGetRewardsAndUseCollision,
     noCollision,
     rewardIsSharedUniformly,
@@ -225,6 +257,7 @@ full_lost_if_collision = {
     "rewardIsSharedUniformly": False,
     # Lost communication in case of collision
     "onlyUniqUserGetsReward": True,
+    "onlyUniqUserGetsRewardSparse": True,
     "allGetRewardsAndUseCollision": True,
 }
 
@@ -232,6 +265,7 @@ full_lost_if_collision = {
 #: Only export and expose the useful functions and constants defined here
 __all__ = [
     "onlyUniqUserGetsReward",
+    "onlyUniqUserGetsRewardSparse",
     "allGetRewardsAndUseCollision",
     "noCollision",
     "closerUserGetsReward",

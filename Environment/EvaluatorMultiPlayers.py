@@ -299,6 +299,7 @@ class EvaluatorMultiPlayers(object):
             return self.getCentralizedRegret_MoreAccurate(envId=envId)
         else:
             return self.getCentralizedRegret_LessAccurate(envId=envId)
+
     # --- Last regrets
 
     def getLastRegrets_LessAccurate(self, envId=0):
@@ -865,7 +866,7 @@ def delayed_play(env, players, horizon, collisionModel,
             # XXX here, the environment should apply ONCE a random permutation to each player, in order for the non-modified UCB-like algorithms to work fine in case of collisions (their initial exploration phase is non-random hence leading to only collisions in the first steps, and ruining the performance)
             # choices[i] = random_arm_orders[i][player.choice()]
             choices[playerId] = player.choice()
-            # print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tchose : {} ...".format(t, i + 1, len(players), player, choices[i]))  # DEBUG
+            # # print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tchose : {} ...".format(t, playerId + 1, len(players), player, choices[playerId]))  # DEBUG
 
         # Then we decide if there is collisions and what to do why them
         # XXX It is here that the player may receive a reward, if there is no collisions
