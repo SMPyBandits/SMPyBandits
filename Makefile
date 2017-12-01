@@ -60,7 +60,7 @@ moremultiplayers3:
 moremultiplayers2:
 	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
 
-sparsemultiplayers3: sparsemultiplayers3
+sparsemultiplayers: sparsemultiplayers3
 sparsemultiplayers3:
 	time nice -n 19 ipython3 ./main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py3_log.txt
 sparsemultiplayers2:

@@ -73,7 +73,8 @@ if getenv('XKCD', 'False') == 'True' and interactive and not saveallfigs:
 if __name__ == '__main__':
     # Update configuration
     configuration['showplot'] = interactive
-    del configuration['players']  # Be sure to only use "successive_players" value
+    if "players" in configuration:
+        del configuration['players']  # Be sure to only use "successive_players" value
 
     _hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
 

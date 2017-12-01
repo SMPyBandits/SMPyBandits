@@ -29,6 +29,7 @@ __version__ = "0.6"
 
 from random import shuffle
 from copy import copy
+import json
 import numpy as np
 
 if __name__ != "__main__":
@@ -212,6 +213,48 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerN
         return sorted(list(mus))
     else:
         return shuffled(list(mus))
+
+
+def array_from_str(my_str):
+    """Convert a string like "[0.1, 0.2, 0.3]" to a numpy array `[0.1, 0.2, 0.3]`, using safe `json.loads` instead of `exec`.
+
+    >>> array_from_str("[0.1, 0.2, 0.3]")
+    array([ 0.1,  0.2,  0.3])
+    >>> array_from_str("0.1, 0.2, 0.3")
+    array([ 0.1,  0.2,  0.3])
+    >>> array_from_str("0.9")
+    array(0.9)
+    """
+    try:
+        if not ('[' in my_str and ']' in my_str):
+            my_str = '[%s]' % my_str
+        dict_str = '{"mus": %s}' % my_str
+        fake_dict = json.loads(dict_str)
+        return np.asarray(fake_dict["mus"])
+    except:
+        print("Error while interpreting the strings {} as an array...".format(my_str))
+        return None
+
+
+def tuple_from_str(my_str):
+    """Convert a string like "[0.1, 0.2, 0.3]" to a tuple `(0.1, 0.2, 0.3)`, using safe `json.loads` instead of `exec`.
+
+    >>> tuple_from_str("[0.1, 0.2, 0.3]")
+    (0.1, 0.2, 0.3)
+    >>> tuple_from_str("0.1, 0.2, 0.3")
+    (0.1, 0.2, 0.3)
+    >>> tuple_from_str("0.9")
+    (0.9,)
+    """
+    try:
+        if not ('[' in my_str and ']' in my_str):
+            my_str = '[%s]' % my_str
+        dict_str = '{"mus": %s}' % my_str
+        fake_dict = json.loads(dict_str)
+        return tuple(np.asarray(fake_dict["mus"]).tolist())
+    except:
+        print("Error while interpreting the strings {} as an array...".format(my_str))
+        return None
 
 
 # --- Debugging
