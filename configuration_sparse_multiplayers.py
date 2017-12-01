@@ -191,10 +191,11 @@ configuration["successive_players"] = [
     # # MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
 
     # ---- Selfish
-    Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
+    Selfish(NB_PLAYERS, nbArms, TakeRandomFixedArm, nbArmIndexes=1).children,
     Selfish(NB_PLAYERS, nbArms, UCB).children,
-    Selfish(NB_PLAYERS, nbArms, klUCB).children,
     Selfish(NB_PLAYERS, nbArms, Thompson).children,
+    Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
 
     # # ---- rhoRand etc
     # rhoRand(NB_PLAYERS, nbArms, klUCB).children,

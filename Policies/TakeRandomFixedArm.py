@@ -5,7 +5,7 @@ This is the perfect static policy if armIndex = bestArmIndex (not realistic, for
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.9"
 
 import numpy as np
 import numpy.random as rn
@@ -15,10 +15,11 @@ from .TakeFixedArm import TakeFixedArm
 class TakeRandomFixedArm(TakeFixedArm):
     """ TakeRandomFixedArm: first selects a random sub-set of arms, then always select from it. """
 
-    def __init__(self, nbArms, lower=0., amplitude=1.):
+    def __init__(self, nbArms, lower=0., amplitude=1., nbArmIndexes=None):
         self.nbArms = nbArms  #: Number of arms
         #: Get the number of arms, randomly!
-        nbArmIndexes = rn.randint(low=1, high=1 + int(nbArms / 2.))
+        if nbArmIndexes is None:
+            nbArmIndexes = rn.randint(low=1, high=1 + int(nbArms / 2.))
         #: Fix the set of arms
         self.armIndexes = list(rn.choice(np.arange(nbArms), size=nbArmIndexes, replace=False))
 
