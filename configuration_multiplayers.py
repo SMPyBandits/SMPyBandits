@@ -348,20 +348,20 @@ configuration["successive_players"] = [
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
-    # ---- RandTopM
-    RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-    # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
-    #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
-    #         for x in range(NB_ARMS)
-    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-    #     ]) for _ in range(NB_PLAYERS)
-    # ],
-    EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
-    RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
-    RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+    # # ---- RandTopM
+    # RandTopM(NB_PLAYERS, nbArms, klUCB).children,
+    # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
+    # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
+    # #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
+    # #         for x in range(NB_ARMS)
+    # #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    # #     ]) for _ in range(NB_PLAYERS)
+    # # ],
+    # EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
+    # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
+    # RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
@@ -374,7 +374,7 @@ configuration["successive_players"] = [
     #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
     #     ]) for _ in range(NB_PLAYERS)
     # ],
-    EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
+    # EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
     MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
@@ -393,7 +393,7 @@ configuration["successive_players"] = [
     #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
     #     ]) for _ in range(NB_PLAYERS)
     # ],
-    EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
+    # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
     # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)

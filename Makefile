@@ -16,6 +16,8 @@ multi:
 	make clean ; clear ; make multiplayers3
 moremulti:
 	make clean ; clear ; make moremultiplayers3
+sparsemulti:
+	make clean ; clear ; make sparsemultiplayers3
 
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc
@@ -50,19 +52,25 @@ multiplayers:	multiplayers3
 multiplayers3:
 	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 multiplayers2:
-	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py2_log.txt
 
 moremultiplayers: moremultiplayers3
 moremultiplayers3:
 	time nice -n 19 ipython3 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 moremultiplayers2:
-	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
+	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
+
+sparsemultiplayers3: sparsemultiplayers3
+sparsemultiplayers3:
+	time nice -n 19 ipython3 ./main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py3_log.txt
+sparsemultiplayers2:
+	time nice -n 19 python2 ./main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py2_log.txt
 
 treeexploration: treeexploration3
 treeexploration3:
 	time nice -n 19 ipython3 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 treeexploration2:
-	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
+	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
 
 policy_server_py:
 	clear
@@ -92,7 +100,8 @@ env_client_cpp:	env_client.exe
 # 	./test_sub.exe
 
 # Time profilers
-profile:
+profile: profile3
+profile2:
 	time nice -n 19 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
 profile3:
 	time nice -n 19 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
@@ -130,8 +139,8 @@ install3:
 send_ws3:	clean
 	CP ~/AlgoBandits.git/ lilian_besson@ws3:~/These/src/AlgoBandits.git/
 
-receive_plots_ws3:
-	CP lilian_besson@ws3:~/These/src/AlgoBandits.git/plots ./
+# receive_plots_ws3:
+# 	CP lilian_besson@ws3:~/These/src/AlgoBandits.git/plots ./
 
 # Cleaner
 clean:
