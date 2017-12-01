@@ -113,8 +113,9 @@ class oneEstimateM(ChildPointer):
         # Internal variables
         self.nbPlayersEstimate = 1  #: Number of players. Optimistic: start by assuming it is alone!
         self.updateNbPlayers()
-        self.collisionCount = 0  #: Count collision since last increase of nbPlayersEstimate
-        self.timeSinceLastCollision = 0  #: Time since last collision
+        self.collisionCount = np.zeros(self.nbArms, dtype=int)  #: Count collisions on each arm, since last increase of nbPlayersEstimate
+        self.timeSinceLastCollision = 0  #: Time since last collision. Don't remember why I thought using this could be useful... But it's not!
+        self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
         parts = self._policy.__str__().split('<')
@@ -122,9 +123,7 @@ class oneEstimateM(ChildPointer):
             return "EstimateM-{}".format(parts[0])
         else:
             return parts[0] + '<EstimateM-' + '<'.join(parts[1:])
-        # EstimateM-#1<RhoRand-KLUCB, rank:2>
-        # -->
-        # #1<EstimateM-RhoRand-KLUCB, rank:2>
+        # EstimateM-#1<RhoRand-KLUCB, rank:2> --> #1<EstimateM-RhoRand-KLUCB, rank:2>
 
     def updateNbPlayers(self, nbPlayers=None):
         """Change the value of ``nbPlayersEstimate``, and propagate the change to the underlying policy, for parameters called ``maxRank`` or ``nbPlayers``."""
@@ -145,8 +144,9 @@ class oneEstimateM(ChildPointer):
         self._policy.startGame()
         self.nbPlayersEstimate = 1  # Optimistic: start by assuming it is alone!
         self.updateNbPlayers()
-        self.collisionCount = 0
+        self.collisionCount.fill(0)
         self.timeSinceLastCollision = 0
+        self.t = 0
 
     def handleCollision(self, arm, reward=None):
         """Select a new rank, and maybe update nbPlayersEstimate."""
@@ -154,34 +154,31 @@ class oneEstimateM(ChildPointer):
 
         # we can be smart, and stop all this as soon as M = K !
         if self.nbPlayersEstimate < self.nbArms:
+            self.collisionCount[arm] += 1
+            # print("\n - A oneRhoEst player {} saw a collision on {}, since last update of nbPlayersEstimate = {} it is the {} th collision on that arm {}...".format(self, arm, self.nbPlayersEstimate, self.collisionCount[arm], arm))  # DEBUG
 
-            # Then, estimate the current ranking of the arms
-            order = self.estimatedOrder()
+            # Then, estimate the current ranking of the arms and the set of the M best arms
+            currentBest = self.estimatedBestArms(self.nbPlayersEstimate)
+            # print("Current estimation of the {} best arms is {} ...".format(self.nbPlayersEstimate, currentBest))  # DEBUG
 
-            # And try to see if the arm on which we are encountering a collision is one of the Mhat best
-            if order[arm] >= self.nbPlayersEstimate:  # if arm is one of the best nbPlayersEstimate arms:
-                self.collisionCount += 1
-                # print("This arm {} was estimated as one of the Mhat = {} best arm, so we increase the collision count to {}.".format(arm, self.nbPlayersEstimate, self.collisionCount))  # DEBUG
+            collisionCount_on_currentBest = np.sum(self.collisionCount[currentBest])
+            # print("Current count of collision on the {} best arms is {} ...".format(self.nbPlayersEstimate, collisionCount_on_currentBest))  # DEBUG
 
             # And finally, compare the collision count with the current threshold
-            threshold = self.threshold(self.timeSinceLastCollision, self.nbPlayersEstimate, self.horizon)
-            # threshold = self.threshold(self.t, self.nbPlayersEstimate, self.horizon)
+            threshold = self.threshold(self.t, self.nbPlayersEstimate, self.horizon)
+            # print("Using timeSinceLastCollision = {}, and t = {}, threshold = {:.3g} ...".format(self.timeSinceLastCollision, self.t, threshold))
 
-            if self.collisionCount > threshold:
+            if collisionCount_on_currentBest > threshold:
                 self.nbPlayersEstimate = min(1 + self.nbPlayersEstimate, self.nbArms)
                 self.updateNbPlayers()
-                # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(self.collisionCount, threshold, self.nbPlayersEstimate))  # DEBUG
-                self.collisionCount = 0
+                # print("The collision count {} was larger than the threshold {:.3g} se we restart the collision count, and increase the nbPlayersEstimate to {}.".format(collisionCount_on_currentBest, threshold, self.nbPlayersEstimate))  # DEBUG
+                self.collisionCount.fill(0)
             # Finally, restart timeSinceLastCollision
             self.timeSinceLastCollision = 0
 
-    @property
-    def t(self):
-        """Internal time."""
-        return self._policy.t
-
     def getReward(self, arm, reward):
-        """One transmission without collision"""
+        """One transmission without collision."""
+        self.t += 1
         # Obtaining a reward, even 0, means no collision on that arm for this time
         # So, first, we count one more step without collision
         self.timeSinceLastCollision += 1

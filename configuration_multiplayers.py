@@ -225,11 +225,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(NB_PLAYERS, 1 / (1. + NB_PLAYERS))
         # }
-        # XXX Default!
-        {   # A very easy problem (X arms), but it is used in a lot of articles
-            "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        }
+        # # XXX Default!
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": ARM_TYPE,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # }
         # {   # A very easy problem (9 arms), but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": uniformMeans(9, 1 / (1. + 9))
@@ -300,6 +300,11 @@ configuration = {
         #         }
         #     }
         # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        }
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
         #     "params": {
@@ -307,7 +312,7 @@ configuration = {
         #         "args": {
         #             "nbArms": NB_ARMS,
         #             "nbPlayers": NB_PLAYERS,
-        #             "mingap": 0.2,
+        #             "mingap": 0.1,
         #             "lower": 0.,
         #             "amplitude": 1.,
         #             "isSorted": True,
@@ -343,20 +348,20 @@ configuration["successive_players"] = [
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
-    # # ---- RandTopM
-    # RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-    # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
-    # #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
-    # #         for x in range(NB_ARMS)
-    # #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-    # #     ]) for _ in range(NB_PLAYERS)
-    # # ],
-    # EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
-    # # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
-    # RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+    # ---- RandTopM
+    RandTopM(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
+    # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
+    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
+    #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
+    #         for x in range(NB_ARMS)
+    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
+    #     ]) for _ in range(NB_PLAYERS)
+    # ],
+    EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
+    RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
+    RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
@@ -370,7 +375,7 @@ configuration["successive_players"] = [
     #     ]) for _ in range(NB_PLAYERS)
     # ],
     EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
-    # MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
+    MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
     # ---- Selfish
@@ -391,7 +396,7 @@ configuration["successive_players"] = [
     EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
     # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
-    EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,
+    # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)
     rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
     # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
