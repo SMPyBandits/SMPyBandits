@@ -430,9 +430,9 @@ class EvaluatorMultiPlayers(object):
                 Ys = [None] * 3
                 labels = [""] * 3
                 Ys[0] = eva.getFirstRegretTerm(envId)
-                labels[0] = "$(a)$ term: Pulls of {} suboptimal arms (lower-bounded)".format(self.envs[envId].nbArms - self.nbPlayers)
+                labels[0] = "$(a)$ term: Pulls of {} suboptimal arms (lower-bounded)".format(max(0, self.envs[envId].nbArms - self.nbPlayers))
                 Ys[1] = eva.getSecondRegretTerm(envId)
-                labels[1] = "$(b)$ term: Non-pulls of {} optimal arms".format(self.nbPlayers)
+                labels[1] = "$(b)$ term: Non-pulls of {} optimal arms".format(min(self.nbPlayers, self.envs[envId].nbArms))
                 Ys[2] = eva.getThirdRegretTerm(envId)
                 labels[2] = "$(c)$ term: Weighted count of collisions"
             Y = eva.getCentralizedRegret(envId, moreAccurate=moreAccurate)

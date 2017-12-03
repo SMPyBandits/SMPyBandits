@@ -11,7 +11,7 @@ __version__ = "0.9"
 from copy import deepcopy
 from re import search
 import random
-from random import random as random_zero_one
+from random import random as uniform_in_zero_one
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,8 +27,9 @@ from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness
 from .CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
 from .MAB import MAB, MarkovianMAB, DynamicMAB
 from .ResultMultiPlayers import ResultMultiPlayers
-
+# Inheritance
 from .EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
+
 
 REPETITIONS = 1  #: Default nb of repetitions
 ACTIVATION = 1  #: Default probability of activation
@@ -258,6 +259,8 @@ def delayed_play(env, players, horizon, collisionModel, activations,
     pulls = np.zeros((nbPlayers, nbArms), dtype=int)
     collisions = np.zeros(nbArms, dtype=int)
 
+    nbActivations = np.zeros(nbPlayers, dtype=int)
+
     prettyRange = tqdm(range(horizon), desc="Time t") if repeatId == 0 else range(horizon)
     for t in prettyRange:
         # Reset the array, faster than reallocating them!
@@ -265,9 +268,21 @@ def delayed_play(env, players, horizon, collisionModel, activations,
         choices.fill(-100000)
         pulls.fill(0)
         collisions.fill(0)
+        # Decide who gets activated
+        # # 1. pure iid Bernoulli activations, so sum(random_activations) == np.random.binomial(nbPlayers, activation) if activations are all the same
+        # random_activations = np.random.random_sample(nbPlayers) <= activations
+        # FIXME finish these experiments
+        # 2. maybe first decide how many players from [0, nbArms] or [0, nbPlayers] are activated, then who
+        # nb_activated_players = np.random.binomial(nbArms, np.mean(activations))
+        nb_activated_players = np.random.binomial(nbPlayers, np.mean(activations))
+        # who_is_activated = np.random.choice(nbPlayers, size=nb_activated_players, replace=False)
+        who_is_activated = np.random.choice(nbPlayers, size=nb_activated_players, replace=False, p=np.asarray(activations)/np.sum(activations))
+        random_activations = np.in1d(np.arange(nbPlayers), who_is_activated)
         # Every player decides which arm to pull
         for playerId, player in enumerate(players):
-            if with_proba(activations[playerId]):
+            # if with_proba(activations[playerId]):
+            if random_activations[playerId]:
+                nbActivations[playerId] += 1
                 choices[playerId] = player.choice()
                 # print(" Round t = \t{}, player \t#{:>2}/{} ({}) \tgot activated and chose : {} ...".format(t, playerId + 1, len(players), player, choices[playerId]))  # DEBUG
             # else:
@@ -282,14 +297,16 @@ def delayed_play(env, players, horizon, collisionModel, activations,
 
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0:
+        print("\nNumber of activations by players:")
         for playerId, player in enumerate(players):
             try:
+                print("\nThe policy {} was activated {} times after {} steps...".format(player, nbActivations[playerId], horizon))
                 order = player.estimatedOrder()
-                print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
+                print("Estimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
                 print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=nbPlayers)))
-                print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-                print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
-                print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+                # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+                # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+                # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
                 print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
             except AttributeError:
                 print("Unable to print the estimated ordering, no method estimatedOrder was found!")
@@ -307,4 +324,4 @@ def with_proba(proba):
     >>> tosses = [with_proba(0.111) for _ in range(100000)]; sum(tosses)
     11162
     """
-    return random_zero_one() <= proba
+    return uniform_in_zero_one() <= proba

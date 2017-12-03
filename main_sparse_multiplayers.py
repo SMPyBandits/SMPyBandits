@@ -174,32 +174,32 @@ if __name__ == '__main__':
             else:
                 evaluation.plotRegretCentralized(envId, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-            # --- Also plotting the centralized regret in semilogx
-            print("\n\n- Plotting the centralized regret")
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False, subTerms=subTerms)
-            else:
-                evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            # # --- Also plotting the centralized regret in semilogx
+            # print("\n\n- Plotting the centralized regret")
+            # if saveallfigs:
+            #     savefig = mainfig.replace('main', 'main_RegretCentralized_semilogx')
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogx=True, normalized=False, subTerms=subTerms)
+            # else:
+            #     evaluation.plotRegretCentralized(envId, semilogx=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-            # --- Also plotting the centralized regret in semilogy
-            print("\n\n- Plotting the centralized regret")
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
-                print("  and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
-            else:
-                evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            # # --- Also plotting the centralized regret in semilogy
+            # print("\n\n- Plotting the centralized regret")
+            # if saveallfigs:
+            #     savefig = mainfig.replace('main', 'main_RegretCentralized_semilogy')
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, semilogy=True, normalized=False, subTerms=subTerms)
+            # else:
+            #     evaluation.plotRegretCentralized(envId, semilogy=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
-            # --- Also plotting the centralized regret in loglog
-            print("\n\n- Plotting the centralized regret")
-            if saveallfigs:
-                print("  and saving the plot to {} ...".format(savefig))
-                savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
-                evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
-            else:
-                evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
+            # # --- Also plotting the centralized regret in loglog
+            # print("\n\n- Plotting the centralized regret")
+            # if saveallfigs:
+            #     print("  and saving the plot to {} ...".format(savefig))
+            #     savefig = mainfig.replace('main', 'main_RegretCentralized_loglog')
+            #     evaluation.plotRegretCentralized(envId, savefig=savefig, loglog=True, normalized=False, subTerms=subTerms)
+            # else:
+            #     evaluation.plotRegretCentralized(envId, loglog=True, normalized=False, subTerms=subTerms)  # XXX To plot without saving
 
             # # --- Also plotting the normalized centralized rewards
             # print("\n\n- Plotting the normalized centralized regret")
@@ -302,15 +302,15 @@ if __name__ == '__main__':
             else:
                 evaluation.plotNbCollisions(envId, cumulated=True, upperbound=False)  # XXX To plot without saving
 
-            # --- Also plotting the frequency of collision in each arm
-            for piechart in [False, True]:
-                print("\n- Plotting the frequency of collision in each arm")
-                if saveallfigs:
-                    savefig = mainfig.replace('main', 'main_FrequencyCollisions%s' % ('' if piechart else 'Hist'))
-                    print("  and saving the plot to {} ...".format(savefig))
-                    evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
-                else:
-                    evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
+            # # --- Also plotting the frequency of collision in each arm
+            # for piechart in [False, True]:
+            #     print("\n- Plotting the frequency of collision in each arm")
+            #     if saveallfigs:
+            #         savefig = mainfig.replace('main', 'main_FrequencyCollisions%s' % ('' if piechart else 'Hist'))
+            #         print("  and saving the plot to {} ...".format(savefig))
+            #         evaluation.plotFrequencyCollisions(envId, savefig=savefig, piechart=piechart)
+            #     else:
+            #         evaluation.plotFrequencyCollisions(envId, piechart=piechart)  # XXX To plot without saving
 
             if saveallfigs:
                 print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
