@@ -5,7 +5,7 @@ Example of creating an arm:
 
 >>> import random; import numpy as np
 >>> random.seed(0); np.random.seed(0)
->>> Unif01 = Uniform(0, 1)
+>>> Unif01 = UniformArm(0, 1)
 >>> Unif01
 U(0, 1)
 >>> Unif01.mean
@@ -33,16 +33,16 @@ from .Arm import Arm
 from .kullback import klBern
 
 
-class Uniform(Arm):
+class UniformArm(Arm):
     """ Uniformly distributed arm, default in [0, 1],
 
     - default to (mini, maxi),
     - or [lower, lower + amplitude], if (lower=lower, amplitude=amplitude) is given.
 
-    >>> arm_0_1 = Uniform()
-    >>> arm_0_10 = Uniform(0, 10)  # maxi = 10
-    >>> arm_2_4 = Uniform(2, 4)
-    >>> arm_m10_10 = Uniform(-10, 10)  # also Uniform(lower=-10, amplitude=20)
+    >>> arm_0_1 = UniformArm()
+    >>> arm_0_10 = UniformArm(0, 10)  # maxi = 10
+    >>> arm_2_4 = UniformArm(2, 4)
+    >>> arm_m10_10 = UniformArm(-10, 10)  # also UniformArm(lower=-10, amplitude=20)
     """
 
     def __init__(self, mini=0., maxi=1., lower=0., amplitude=1.):
@@ -52,7 +52,7 @@ class Uniform(Arm):
         self.max = max(maxi, amplitude - lower)  #: Higher value of rewards
         self.amplitude = maxi - mini  #: Amplitude of rewards
         # self.mean = self.min + (self.max - self.min) / 2.0  # Other formula
-        self.mean = self.lower + (self.amplitude / 2.0)  #: Mean for this Uniform arm
+        self.mean = self.lower + (self.amplitude / 2.0)  #: Mean for this UniformArm arm
 
     # --- Random samples
 
@@ -67,7 +67,7 @@ class Uniform(Arm):
     # --- Printing
 
     def __str__(self):
-        return "Uniform"
+        return "UniformArm"
 
     def __repr__(self):
         return "U({:.3g}, {:.3g})".format(self.lower, self.amplitude)
@@ -81,8 +81,8 @@ class Uniform(Arm):
 
     @staticmethod
     def oneLR(mumax, mu):
-        """ One term of the Lai & Robbins lower bound for Uniform arms: (mumax - mu) / KL(mu, mumax). """
+        """ One term of the Lai & Robbins lower bound for UniformArm arms: (mumax - mu) / KL(mu, mumax). """
         return (mumax - mu) / klBern(mu, mumax)
 
 
-__all__ = ["Uniform"]
+__all__ = ["UniformArm"]

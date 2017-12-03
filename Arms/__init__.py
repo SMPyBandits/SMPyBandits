@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Arms : contains different types of bandit arms:
-:class:`Constant`, :class:`Uniform`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`.
+:class:`Constant`, :class:`UniformArm`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`.
 
 Each arm class follows the same interface:
 
@@ -34,7 +34,7 @@ import numpy as np
 
 if __name__ != "__main__":
     from .Constant import Constant
-    from .Uniform import Uniform
+    from .UniformArm import UniformArm
     from .Bernoulli import Bernoulli
     from .Binomial import Binomial
     from .Poisson import Poisson, UnboundedPoisson
