@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ The improved kl-UCB++ policy, for one-parameter exponential distributions.
-Reference: [Menard & Garivier, 2017](https://arxiv.org/abs/1702.07211)
+Reference: [Menard & Garivier, ALT 2017](https://hal.inria.fr/hal-01475078)
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -13,7 +13,6 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 from .kullback import klucbBern
 from .klUCB import klUCB, c
-
 
 # --- Numerical functions required for the function g(n) for kl-UCB++
 
@@ -36,7 +35,7 @@ def np_g(n, T, K):
 
 class klUCBPlusPlus(klUCB):
     """ The improved kl-UCB++ policy, for one-parameter exponential distributions.
-    Reference: [Menard & Garivier, 2017](https://arxiv.org/abs/1702.07211)
+    Reference: [Menard & Garivier, ALT 2017](https://hal.inria.fr/hal-01475078)
     """
 
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
