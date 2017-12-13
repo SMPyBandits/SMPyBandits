@@ -294,19 +294,23 @@ def tuple_from_str(my_str):
 def optimal_selection_probabilities(M, mu):
     r""" Compute the optimal selection probabilities of K arms of means :math:`\mu_i` by :math:`1 \leq M \leq K` players, if they all observe each other pulls and rewards, as derived in (15) p3 of [[The Effect of Communication on Noncooperative Multiplayer Multi-Armed Bandit Problems, by Noyan Evirgen, Alper Kose, IEEE ICMLA 2017]](https://arxiv.org/abs/1711.01628v1).
 
+    .. warning:: They consider a different collision model than I usually do, when two (or more) players ask for the same resource at same time t, I usually consider than all the colliding players receive a zero reward (see :func:`Environment.CollisionModels.onlyUniqUserGetsReward`), but they consider than exactly one of the colliding players gets the reward, and all the others get a zero reward (see :func:`Environment.CollisionModels.rewardIsSharedUniformly`).
+
+    Example:
+
     >>> optimal_selection_probabilities(3, [0.1,0.1,0.1])
     array([ 0.33333333,  0.33333333,  0.33333333])
 
-    >>> optimal_selection_probabilities(3, [0.1,0.2,0.3])
+    >>> optimal_selection_probabilities(3, [0.1,0.2,0.3])  # weird ? not really...
     array([ 0.        ,  0.43055556,  0.56944444])
 
-    >>> optimal_selection_probabilities(3, [0.1,0.3,0.9])
+    >>> optimal_selection_probabilities(3, [0.1,0.3,0.9])  # weird ? not really...
     array([ 0.        ,  0.45061728,  0.54938272])
 
-    >>> optimal_selection_probabilities(3, [0.7,0.3,0.9])
+    >>> optimal_selection_probabilities(3, [0.7,0.8,0.9])
     array([ 0.15631866,  0.35405647,  0.48962487])
 
-    .. note:: I am not at all convinced by these results, it makes no sense to drop an arm when K=M=3, no matter the probabilities :math:`\mu_i`.
+    .. note:: These results may sound counter-intuitive, but again they use a different collision models: in my usual collision model, it makes no sense to completely drop an arm when K=M=3, no matter the probabilities :math:`\mu_i`, but in their collision model, a player wins more (in average) if she has a :math:`50\%` chance of being alone on an arm with mean :math:`0.3` than if she is sure to be alone on an arm with mean :math:`0.1` (see examples 3 and 4).
     """
     K = len(mu)
     assert 1 <= M <= K, "Error: number of arm M must be 1 <= M <= K but M = {} and K = {}.".format(M, K)  # DEBUG
