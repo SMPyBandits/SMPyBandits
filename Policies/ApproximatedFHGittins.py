@@ -7,7 +7,7 @@ r""" The approximated Finite-Horizon Gittins index policy for bounded bandits.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.8"
+__version__ = "0.9"
 
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
@@ -35,8 +35,11 @@ class ApproximatedFHGittins(IndexPolicy):
 
     @property
     def m(self):
-        r""":math:`m = T - t + 1` is the number of steps to be played until end of the game."""
-        return self.horizon - self.t + 1
+        r""":math:`m = T - t + 1` is the number of steps to be played until end of the game.
+
+        .. note:: The article does not explain how to deal with unknown horizon, but eventually if :math:`T` is wrong, this `m` becomes negative. Empirically, I force it to be :math:`\geq 1`, to not mess up with the :math:`\log(m)` used below.
+        """
+        return max(self.horizon - self.t + 1, 1)
 
     # --- Computation
 
@@ -56,8 +59,8 @@ class ApproximatedFHGittins(IndexPolicy):
             return float('+inf')
         else:
             m_by_Nk = float(self.m) / self.pulls[arm]
-            loghalf = np.sqrt(max(0, np.log(m_by_Nk)))
-            return (self.rewards[arm] / self.pulls[arm]) + sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / loghalf))
+            loghalf = np.sqrt(np.log(m_by_Nk))
+            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / loghalf))
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
