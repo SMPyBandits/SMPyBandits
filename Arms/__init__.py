@@ -16,16 +16,19 @@ array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
 
 Also contains:
 
-- :func:`uniformMeans`, a small function to generate uniformly spaced means of arms.
-- :func:`uniformMeansWithSparsity`, a small function to generate uniformly spaced means of arms, with sparsity constraints.
-- :func:`randomMeans`, generate randomly spaced means of arms.
-- :func:`randomMeansWithSparsity`, generate randomly spaced means of arms, with sparsity constraints.
+- :func:`uniformMeans`, to generate uniformly spaced means of arms.
+- :func:`uniformMeansWithSparsity`, to generate uniformly spaced means of arms, with sparsity constraints.
+- :func:`randomMeans`, to generate randomly spaced means of arms.
+- :func:`randomMeansWithGapBetweenMbestMworst`, to generate randomly spaced means of arms, with a constraint on the gap between the M-best arms and the (K-M)-worst arms.
+- :func:`randomMeans`, to generate randomly spaced means of arms.
 - :func:`shuffled`, to return a shuffled version of a list.
+- Utility functions :func:`array_from_str` :func:`list_from_str` and :func:`tuple_from_str` to obtain a `numpy.ndarray`, a `list` or a `tuple` from a string (used for the CLI env variables interface).
+- :func:`optimal_selection_probabilities`.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from random import shuffle
 from copy import copy
