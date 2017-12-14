@@ -158,7 +158,7 @@ from .SlidingWindowUCB import SWUCB, SWUCBPlus
 
 from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
-from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, breakpoints
+from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints
 
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 

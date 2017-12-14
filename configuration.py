@@ -107,6 +107,10 @@ DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck 
 TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
+#: To know if my Doubling Trick policy is tried.
+TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Doubling_Trick = True
+
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
 CACHE_REWARDS = False  # XXX to disable manually this feature
@@ -422,11 +426,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # --- Exp3PlusPlus algorithm
-        {
-            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-            "params": {}
-        },
+        # # --- Exp3PlusPlus algorithm
+        # {
+        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+        #     "params": {}
+        # },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -532,12 +536,12 @@ configuration.update({
                 "alpha": 1,
             }
         },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5,       # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.5,       # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # {
         #     "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
         #     "params": {
@@ -556,12 +560,12 @@ configuration.update({
         #         "alpha": 0.1,       # XXX Below the theoretically acceptable value!
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.05,      # XXX Below the theoretically acceptable value!
-            }
-        },
+        # {
+        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
+        #     "params": {
+        #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
+        #     }
+        # },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -708,6 +712,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__arithmetic,
         #         "policy": klUCBPlusPlus,
         #         "klucb": klucb,
@@ -716,6 +721,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__geometric,
         #         "policy": klUCBPlusPlus,
         #         "klucb": klucb,
@@ -724,6 +730,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential,
         #         "policy": klUCBPlusPlus,
         #         "klucb": klucb,
@@ -732,6 +739,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential_fast,
         #         "policy": klUCBPlusPlus,
         #         "klucb": klucb,
@@ -740,7 +748,17 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential_slow,
+        #         "policy": klUCBPlusPlus,
+        #         "klucb": klucb,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "full_restart": True,
+        #         "next_horizon": next_horizon__exponential_generic,
         #         "policy": klUCBPlusPlus,
         #         "klucb": klucb,
         #     }
@@ -811,6 +829,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__arithmetic,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
@@ -819,6 +838,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__geometric,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
@@ -827,6 +847,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
@@ -835,6 +856,7 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential_fast,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
@@ -843,7 +865,17 @@ configuration.update({
         # {
         #     "archtype": DoublingTrickWrapper,
         #     "params": {
+        #         "full_restart": True,
         #         "next_horizon": next_horizon__exponential_slow,
+        #         "policy": ApproximatedFHGittins,
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # {
+        #     "archtype": DoublingTrickWrapper,
+        #     "params": {
+        #         "full_restart": True,
+        #         "next_horizon": next_horizon__exponential_generic,
         #         "policy": ApproximatedFHGittins,
         #         "alpha": 0.5,
         #     }
@@ -855,6 +887,40 @@ configuration.update({
         # },
     ]
 })
+
+# Dynamic hack
+if TEST_Doubling_Trick:
+    # Smart way of adding list of Aggregated versions
+    configuration["policies"] += [
+        # --- Doubling trick algorithm
+        {
+            "archtype": DoublingTrickWrapper,
+            "params": {
+                "next_horizon": next_horizon,
+                "full_restart": full_restart,
+                "policy": policy,
+                # "alpha": 0.5,  # only for ApproximatedFHGittins
+            }
+        }
+        for next_horizon in [
+            # next_horizon__arithmetic,
+            next_horizon__geometric,
+            next_horizon__exponential,
+            # next_horizon__exponential_fast,
+            next_horizon__exponential_slow,
+            next_horizon__exponential_generic
+        ]
+        for full_restart in [
+            True,
+            False,
+        ]
+        for policy in [
+            UCBH,
+            klUCBPlusPlus,
+            ApproximatedFHGittins,
+        ]
+    ]
+
 
 # from itertools import product  # XXX If needed!
 

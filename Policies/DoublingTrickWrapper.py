@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick":
 
-- starts to assume that :math:`T=T_1=1000`, and run the policy :math:`P(T_1)`, from :math:`t=1` to :math:`t=T_1`,
-- if :math:`t > T_1`, then the "doubling trick" is performed, by either reinitializing or just changing the parameter `horizon` of the policy P, for instance with :math:`T_2 = 10 \times T_1`,
+- starts to assume that :math:`T=T_0=1000`, and run the policy :math:`P(T_0)`, from :math:`t=1` to :math:`t=T_0`,
+- if :math:`t > T_0`, then the "doubling trick" is performed, by either reinitializing or just changing the parameter `horizon` of the policy P, for instance with :math:`T_2 = 10 \times T_0`,
 - and keep doing this until :math:`t = T`.
 
 .. note::
@@ -60,7 +60,7 @@ FULL_RESTART = False
 
 
 #: Default horizon, used for the first step.
-DEFAULT_FIRST_HORIZON = 1000
+DEFAULT_FIRST_HORIZON = 100
 
 
 #: Default stepsize for the arithmetic horizon progression.
@@ -123,6 +123,19 @@ def next_horizon__exponential_fast(horizon):
     return int(np.ceil(horizon ** 2))
 
 next_horizon__exponential_fast.__latex_name__ = "fast exp"
+
+
+ALPHA = 1
+BETA = 2
+
+def next_horizon__exponential_generic(horizon):
+    r""" The generic exponential horizon progression function:
+
+    .. math:: T \mapsto \lfloor T^{2} \rfloor.
+    """
+    return int(ALPHA * np.ceil(horizon ** BETA))
+
+next_horizon__exponential_generic.__latex_name__ = r"exp($\alpha={:.3g}$, $\beta={:.3g}$)".format(ALPHA, BETA)
 
 
 #: Chose the default horizon growth function.
@@ -235,7 +248,7 @@ class DoublingTrickWrapper(BasePolicy):
     # --- pretty printing
 
     def __str__(self):
-        return r"DoublingTrick($T_1={}$, {} growth{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
+        return r"DoublingTrick($T_0={}$, {} growth{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
 
     # --- Start game by creating new underlying policy
 
