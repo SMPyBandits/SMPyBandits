@@ -74,7 +74,7 @@ def next_horizon__arithmetic(horizon):
     """
     return int(np.ceil(horizon + ARITHMETIC_STEP))
 
-next_horizon__arithmetic.__latex_name__ = "arithmetic"
+next_horizon__arithmetic.__latex_name__ = "arithm"
 
 
 #: Default multiplicative constant for the geometric horizon progression.
@@ -88,7 +88,7 @@ def next_horizon__geometric(horizon):
     """
     return int(np.ceil(horizon * GEOMETRIC_STEP))
 
-next_horizon__geometric.__latex_name__ = "geometric"
+next_horizon__geometric.__latex_name__ = "geom"
 
 
 #: Default exponential constant for the exponential horizon progression.
@@ -102,7 +102,7 @@ def next_horizon__exponential(horizon):
     """
     return int(np.ceil(horizon ** EXPONENTIAL_STEP))
 
-next_horizon__exponential.__latex_name__ = "exponential"
+next_horizon__exponential.__latex_name__ = "exp"
 
 
 def next_horizon__exponential_slow(horizon):
@@ -135,7 +135,7 @@ def next_horizon__exponential_generic(horizon):
     """
     return int(ALPHA * np.ceil(horizon ** BETA))
 
-next_horizon__exponential_generic.__latex_name__ = r"exp($\alpha={:.3g}$, $\beta={:.3g}$)".format(ALPHA, BETA)
+next_horizon__exponential_generic.__latex_name__ = r"exp $\alpha={:.3g}$, $\beta={:.3g}$".format(ALPHA, BETA)
 
 
 #: Chose the default horizon growth function.
@@ -242,13 +242,13 @@ class DoublingTrickWrapper(BasePolicy):
         self.next_horizon_name = getattr(next_horizon, '__latex_name__', '?')  #: Pretty string of the name of this growing function
         self._first_horizon = max(2, first_horizon)  # First guess for the horizon
         self.horizon = max(2, first_horizon)  #: Last guess for the horizon
-        # FIXME Force it, for pretty printing...
+        # XXX Force it, just for pretty printing...
         self.startGame()
 
     # --- pretty printing
 
     def __str__(self):
-        return r"DoublingTrick($T_0={}$, {} growth{})[{}]".format(self._first_horizon, self.next_horizon_name, ", full restart" if self.full_restart else "", self.policy)
+        return r"DT($T_0={}$, {} seq{})[{}]".format(self._first_horizon, self.next_horizon_name, ", restart" if self.full_restart else "", self.policy)
 
     # --- Start game by creating new underlying policy
 

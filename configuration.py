@@ -823,6 +823,7 @@ configuration.update({
             "params": {
                 "alpha": 0.5,
                 "horizon": int(1.05 * HORIZON),
+                # "horizon": HORIZON + 1,
             }
         },
         # # --- Doubling trick algorithm
@@ -902,6 +903,15 @@ if TEST_Doubling_Trick:
                 # "alpha": 0.5,  # only for ApproximatedFHGittins
             }
         }
+        for policy in [
+            # UCBH,
+            klUCBPlusPlus,
+            ApproximatedFHGittins,
+        ]
+        for full_restart in [
+            True,
+            False,
+        ]
         for next_horizon in [
             # next_horizon__arithmetic,
             next_horizon__geometric,
@@ -909,15 +919,6 @@ if TEST_Doubling_Trick:
             # next_horizon__exponential_fast,
             next_horizon__exponential_slow,
             next_horizon__exponential_generic
-        ]
-        for full_restart in [
-            True,
-            False,
-        ]
-        for policy in [
-            UCBH,
-            klUCBPlusPlus,
-            ApproximatedFHGittins,
         ]
     ]
 
