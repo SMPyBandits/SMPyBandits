@@ -137,14 +137,13 @@ def makemarkers(nb):
     return longlist[:nb]  # Truncate
 
 
-def legend(putatright=False):
+def legend(putatright=False, shrinkfactor=0.55):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends."""
     if putatright:
         try:
             # XXX See https://stackoverflow.com/a/4701285/
             # Shrink current axis by 20%
-            plt.tight_layout(rect=[0, 0, 0.75, 1])
-            # FIXME
+            plt.tight_layout(rect=[0, 0, shrinkfactor, 1])
             # Put a legend to the right of the current axis
             plt.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
         except:

@@ -513,7 +513,7 @@ class Evaluator(object):
             print("VAR of    last regrets R_T =", np.var(last_regrets))
 
     def plotLastRegrets(self, envId=0,
-                        normed=False, subplots=True, bins=25, log=False,
+                        normed=False, subplots=True, nbbins=25, log=False,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=None):
         """Plot histogram of the regrets R_T for all policies."""
@@ -528,7 +528,7 @@ class Evaluator(object):
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(str(policy), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
-                n, bins, patches = plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=bins)
+                n, bins, patches = plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=nbbins)
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=True)
@@ -549,7 +549,7 @@ class Evaluator(object):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=bins, log=log)
+                n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=nbbins, log=log)
                 addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
@@ -564,7 +564,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(str(policy))
-            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=bins)
+            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
             legend()
