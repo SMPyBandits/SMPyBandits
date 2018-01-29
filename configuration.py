@@ -108,8 +108,8 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tried.
-TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Doubling_Trick = True
+TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -267,6 +267,28 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
+        # --- FIXME OSSB algorithm
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.0,
+            }
+        },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.001,
+                "gamma": 0.0,
+            }
+        },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+            }
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform

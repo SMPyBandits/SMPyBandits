@@ -38,6 +38,8 @@
 
 - **New!** An experimental policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
 
+- **New!** The Optimal Sampling for Structured Bandits (OSSB) policy: :class:`OSSB`,
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -54,7 +56,7 @@ in order to use them in any experiment with the following approach: ::
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.9"
 
 from .Posterior import Beta, Gamma, Gauss
 
@@ -139,6 +141,9 @@ from .DMED import DMED, DMEDPlus
 
 # From [Lattimore, 2016]
 from .OCUCB import OCUCB
+
+# From [Combes et al, 2017]
+from .OSSB import OSSB
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
