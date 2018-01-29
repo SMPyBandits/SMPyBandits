@@ -18,6 +18,7 @@ from .BasePolicy import BasePolicy
 
 
 from .kullback import klBern
+klBern_vect = np.vectorize(klBern)
 
 
 #: Different phases during the OSSB algorithm
@@ -37,12 +38,13 @@ def solve_optimization_problem(thetas):
 
     - No need to solve anything, as they give the solution for classical bandits.
     """
-    values = np.zeros_like(thetas)
-    theta_max = np.max(thetas)
-    for i, theta in enumerate(thetas):
-        if theta < theta_max:
-            values[i] = 1 / klBern(theta, theta_max)
-    return values
+    # values = np.zeros_like(thetas)
+    # theta_max = np.max(thetas)
+    # for i, theta in enumerate(thetas):
+    #     if theta < theta_max:
+    #         values[i] = 1 / klBern(theta, theta_max)
+    # return values
+    return 1. / klBern_vect(thetas, np.max(thetas))
 
 
 class OSSB(BasePolicy):
