@@ -122,7 +122,7 @@ ARM_TYPE = "Gaussian"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
 mapping_ARM_TYPE = {
     "Constant": Constant,
-    "Uniform": Uniform,
+    "Uniform": UniformArm,
     "Bernoulli": Bernoulli, "B": Bernoulli,
     "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
     "Poisson": Poisson, "P": Poisson,
