@@ -45,13 +45,21 @@ class UniformArm(Arm):
     >>> arm_m10_10 = UniformArm(-10, 10)  # also UniformArm(lower=-10, amplitude=20)
     """
 
-    def __init__(self, mini=0., maxi=1., lower=0., amplitude=1.):
+    def __init__(self, mean=None, mini=0., maxi=1., lower=0., amplitude=1.):
         """New arm."""
-        self.min = min(mini, lower)  #: Lower value of rewards
+        mini = max(mini, lower)
+        maxi = min(maxi, lower + amplitude)
+        if mean is not None:
+            assert mini <= mean <= maxi, "Error: 'mean' = {} argument for UniformArm has to be between 'mini' = {} and 'maxi' = {}...".format(mean, mini, maxi)  # DEBUG
+            gap = min(mean - mini, maxi - mean)
+            assert mini <= mean - gap <= mean + gap <= maxi, "Error: computing 'gap' = {} was wrong...".format(gap)  # DEBUG
+            mini = mean - gap
+            maxi = mean + gap
+        assert mini >= lower, "Error: 'mini' = {} argument for UniformArm has to be >= 'lower' = {}...".format(mini, lower)  # DEBUG
         self.lower = mini  #: Lower value of rewards
-        self.max = max(maxi, amplitude - lower)  #: Higher value of rewards
+        assert maxi <= lower + amplitude, "Error: 'maxi' = {} argument for UniformArm has to be >= 'lower + amplitude' = {}...".format(maxi, lower + amplitude)
         self.amplitude = maxi - mini  #: Amplitude of rewards
-        # self.mean = self.min + (self.max - self.min) / 2.0  # Other formula
+        # self.mean = (mini + maxi) / 2.0
         self.mean = self.lower + (self.amplitude / 2.0)  #: Mean for this UniformArm arm
 
     # --- Random samples
@@ -70,7 +78,7 @@ class UniformArm(Arm):
         return "UniformArm"
 
     def __repr__(self):
-        return "U({:.3g}, {:.3g})".format(self.lower, self.amplitude)
+        return "U({:.3g}, {:.3g})".format(self.lower, self.lower + self.amplitude)
 
     # --- Lower bound
 
