@@ -267,6 +267,13 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
+        # --- FIXME BESA algorithm
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -886,7 +893,7 @@ configuration.update({
         #     "archtype": BlackBoxOpt,
         #     "params": {}
         # },
-        # --- FIXME OSSB algorithm
+        # --- The new OSSB algorithm
         {
             "archtype": OSSB,
             "params": {

@@ -40,6 +40,8 @@
 
 - **New!** The Optimal Sampling for Structured Bandits (OSSB) policy: :class:`OSSB`,
 
+- **New!** The Best Empirical Sampled Average (BESA) policy: :class:`BESA`,
+
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
 
@@ -144,6 +146,9 @@ from .OCUCB import OCUCB
 
 # From [Combes et al, 2017]
 from .OSSB import OSSB
+
+# From [Baransi et al, 2014]
+from .BESA import BESA
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
