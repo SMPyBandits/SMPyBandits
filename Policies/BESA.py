@@ -20,7 +20,7 @@ from .BasePolicy import BasePolicy
 
 
 def subsample_deterministic(n, m):
-    r"""Returns :math:`\{1,dots,n\}` if :math:`n < m` or :math:`\{1,\dots,m\}` if :math:`n \geq m` (*ie*, it is :math:`\{1,\dots,\min(n,m)\}`).
+    r"""Returns :math:`\{1,\dots,n\}` if :math:`n < m` or :math:`\{1,\dots,m\}` if :math:`n \geq m` (*ie*, it is :math:`\{1,\dots,\min(n,m)\}`).
 
     .. warning:: The BESA algorithm is efficient only with the random sub-sampling, don't use this one except for comparing.
     """
@@ -126,7 +126,7 @@ class BESA(BasePolicy):
         assert nbArms >= 2, "Error: BESA algorithm can only work for at least 2 arms."
         self._left = 0  # just keep them in memory to increase readability
         self._right = nbArms - 1  # just keep them in memory to increase readability
-        self.all_rewards = np.zeros((nbArms, horizon))  #: Keep **all** rewards of each arms
+        self.all_rewards = np.zeros((nbArms, horizon))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
 
     def __str__(self):
         """ -> str"""
