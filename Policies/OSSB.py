@@ -4,7 +4,7 @@
 - Reference: [[Minimal Exploration in Structured Stochastic Bandits, Combes et al, arXiv:1711.00400 [stat.ML]]](https://arxiv.org/abs/1711.00400)
 - See also: https://github.com/Naereen/AlgoBandits/issues/101
 
-.. warning:: Still a work in progress, I need to conclude this.
+.. warning:: This is the simplified OSSB algorithm for classical bandits. It can be applied to more general bandit problems, see the original paper.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
