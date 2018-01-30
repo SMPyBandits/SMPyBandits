@@ -175,6 +175,10 @@ configuration = {
         # },
         # {   # A very very easy problem: 2 arms, one better than the other
         #     "arm_type": Bernoulli,
+        #     "params": [0.8, 0.9]
+        # },
+        # {   # A very very easy problem: 2 arms, one better than the other
+        #     "arm_type": Bernoulli,
         #     "params": [0.375, 0.571]
         # },
         # {   # A very very easy problem: 3 arms, one bad, one average, one good
@@ -189,11 +193,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # # XXX Default!
-        # {   # A very easy problem (X arms), but it is used in a lot of articles
-        #     "arm_type": ARM_TYPE,
-        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -210,22 +214,22 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
-                    "isSorted": True,
-                }
-            }
-        },
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": ARM_TYPE,
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.0000001,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3 * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
     ],
     # "environment": [  # XXX Exponential arms
     #     {   # An example problem with 9 arms
@@ -267,13 +271,6 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # --- FIXME BESA algorithm
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -913,6 +910,21 @@ configuration.update({
             "params": {
                 "epsilon": 0.0,
                 "gamma": 0.0,
+            }
+        },
+        # --- FIXME BESA algorithm
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "random_subsample": False,  # XXX Very inefficient!
+        #     }
+        # },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "random_subsample": True,
             }
         },
     ]
