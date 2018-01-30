@@ -52,34 +52,22 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     - Else if m_a < m_b, choose b,
     - And in case of a tie, break by choosing i such that Ni is minimal (or random [a, b] if Na=Nb).
     """
-    # print("")  # DEBUG
     # assert a != b, "Error: now need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b)  # DEBUG
-    # print("rewards =", rewards)  # DEBUG
-    # print("np.shape(rewards) =", np.shape(rewards))  # DEBUG
     Na, Nb = pulls[a], pulls[b]
     N = min(Na, Nb)
-    # print("N =", N, "Na =", Na, "Nb =", Nb)  # DEBUG
     Ia = subsample_function(N, Na)
     # assert all(0 <= i <= Na for i in Ia), "Error: indexes in Ia should be between 0 and Na = {}".format(Na)  # DEBUG
     Ib = subsample_function(N, Nb)
     # assert all(0 <= i <= Nb for i in Ib), "Error: indexes in Ib should be between 0 and Nb = {}".format(Nb)  # DEBUG
     # assert len(Ia) == len(Ib) == N, "Error in subsample_function, Ia of size = {} and Ib of size = {} should have size N = {} ...".format(len(Ia), len(Ib), N)  # DEBUG
-    # print("Ia =", repr(Ia))  # DEBUG
-    # print("Ib =", repr(Ib))  # DEBUG
-    # print("sub samples for a =", rewards[a, Ia])  # DEBUG
     sub_mean_a = np.mean(rewards[a, Ia])
-    # print("sub_mean_a =", sub_mean_a)  # DEBUG
-    # print("sub samples for b =", rewards[b, Ib])  # DEBUG
     sub_mean_b = np.mean(rewards[b, Ib])
-    # print("sub_mean_b =", sub_mean_b)  # DEBUG
-    # XXX I tested and these manual branching steps are the most efficient solution
-    # it is faster than using np.argmax()
+    # XXX I tested and these manual branching steps are the most efficient solution it is faster than using np.argmax()
     if sub_mean_a > (sub_mean_b + TOLERANCE):
         return a
     elif sub_mean_a < (sub_mean_b - TOLERANCE):
         return b
-    else:
-        # sub_mean_a == sub_mean_b
+    else:  # 0 <= abs(sub_mean_a - sub_mean_b) <= TOLERANCE
         # WARNING warning about the numerical errors with float number...
         if Na < Nb:
             return a
@@ -87,9 +75,10 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
             return b
         else:  # if no way of breaking the tie, choose uniformly at random
             # FIXME this happens a lot! It's weird!
-            chosen_arm = np.random.choice([a, b])
+            return np.random.choice([a, b])
+            # chosen_arm = np.random.choice([a, b])
             # print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
-            return chosen_arm
+            # return chosen_arm
 
 
 def besa_K_actions(rewards, pulls, left, right, subsample_function=subsample_uniform, depth=0):
@@ -126,8 +115,7 @@ class BESA(BasePolicy):
     - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://arxiv.org/abs/1711.00400)
     """
 
-    def __init__(self, nbArms, horizon, random_subsample=True,
-                 lower=0., amplitude=1.):
+    def __init__(self, nbArms, horizon, random_subsample=True, lower=0., amplitude=1.):
         super(BESA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # --- Arguments
         # XXX find a solution to not need to horizon?
@@ -160,9 +148,7 @@ class BESA(BasePolicy):
         if np.any(self.pulls < 1):
             return np.random.choice(np.arange(self.nbArms)[self.pulls < 1])
         else:
-            chosen_arm = besa_K_actions(self.all_rewards, self.pulls, self._left, self._right, subsample_function=self._subsample_function, depth=0)
-            if self.t >= 990: print("- rewards =", self.rewards, "pulls =", self.pulls, "chosen_arm =", chosen_arm)
-            return chosen_arm
+            return besa_K_actions(self.all_rewards, self.pulls, self._left, self._right, subsample_function=self._subsample_function, depth=0)
 
     # --- Others choice...() methods, partly implemented
     # FIXME write choiceWithRank, choiceFromSubSet, choiceMultiple also
