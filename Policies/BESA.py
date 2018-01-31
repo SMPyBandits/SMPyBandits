@@ -193,12 +193,13 @@ class BESA(BasePolicy):
     """
 
     def __init__(self, nbArms, horizon,
-                 randomized_tournament=True, random_subsample=True,
+                 minPullsOfEachArm=1, randomized_tournament=True, random_subsample=True,
                  lower=0., amplitude=1.):
         super(BESA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # --- Arguments
         # XXX find a solution to not need to horizon?
         self.horizon = horizon  #: Just to know the memory to allocate for rewards. It could be implemented without knowing the horizon, by using lists to keep all the reward history, but this would be way slower!
+        self.minPullsOfEachArm = max(1, int(minPullsOfEachArm))  #: Minimum number of pulls of each arm before using the BESA algorithm. Using 1 might not be the best choice
         self.randomized_tournament = randomized_tournament  #: Whether to use a deterministic or random tournament.
         self.random_subsample = random_subsample  #: Whether to use a deterministic or random sub-sampling procedure.
         self._subsample_function = subsample_uniform if random_subsample else subsample_deterministic
@@ -209,16 +210,19 @@ class BESA(BasePolicy):
         self._actions = np.arange(nbArms)  # just keep them in memory to increase readability
 
         self.all_rewards = np.zeros((nbArms, horizon + 1))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
-        self.all_rewards.fill(-1e10)  # Just security, to be sure they don't count as zero in some computation
+        self.all_rewards.fill(-1e5)  # Just security, to be sure they don't count as zero in some computation
 
     def __str__(self):
         """ -> str"""
-        b1, b2 = not self.random_subsample, not self.randomized_tournament
-        return "BESA{}{}{}{}".format(
-                "(" if (b1 or b2) else "",
-                "non-random tournament" if b2 else "",
-                "non-random subsample" if b1 else "",
-                ")" if (b1 or b2) else "",
+        b1, b2, b3 = not self.random_subsample, not self.randomized_tournament, self.minPullsOfEachArm > 1
+        return "BESA{}{}{}{}{}{}{}".format(
+            "(" if (b1 or b2 or b3) else "",
+            "non-random subsample" if b1 else "",
+            ", " if b1 and (b2 or b3) else "",
+            "non-random tournament" if b2 else "",
+            ", " if b2 and b3 else "",
+            r"$T_0={}$".format(self.minPullsOfEachArm) if b3 else "",
+            ")" if (b1 or b2 or b3) else "",
         )
 
     def getReward(self, arm, reward):
@@ -234,8 +238,8 @@ class BESA(BasePolicy):
     def choice(self):
         """ Applies the BESA procedure with the current data history."""
         # if some arm has never been selected, force to explore it!
-        if self.t <= self.nbArms and np.any(self.pulls < 1):
-            return np.random.choice(np.where(self.pulls < 1)[0])
+        if self.t <= (self.nbArms * self.minPullsOfEachArm) and np.any(self.pulls < self.minPullsOfEachArm):
+            return np.random.choice(np.where(self.pulls < self.minPullsOfEachArm)[0])
         else:
             if self.randomized_tournament:
                 np.random.shuffle(self._actions)

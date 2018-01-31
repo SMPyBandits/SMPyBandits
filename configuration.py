@@ -917,6 +917,7 @@ configuration.update({
             "archtype": BESA,
             "params": {
                 "horizon": HORIZON,
+                "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
                 "randomized_tournament": True,
                 # "randomized_tournament": False,  # XXX Very inefficient!
                 "random_subsample": True,
