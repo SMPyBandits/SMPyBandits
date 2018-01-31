@@ -30,6 +30,8 @@ def subsample_deterministic(n, m):
 def subsample_uniform(n, m):
     r"""Returns a uniform sub-set of size :math:`n`, from :math:`\{1,dots, m\}`.
 
+    - Fails if n > m.
+
     .. note:: The BESA algorithm is efficient only with the random sub-sampling.
     """
     return np.random.choice(m + 1, size=n, replace=False)
@@ -50,7 +52,7 @@ def inverse_permutation(permutation, j):
     raise ValueError("inverse_permutation({}, {}) failed.".format(permutation, j))
 
 
-def besa_two_actions(rewards, pulls, a, b, random_permutation_of_arm=None, subsample_function=subsample_uniform):
+def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform):
     """ Core algorithm for the BESA selection, for two actions a and b:
 
     - N = min(Na, Nb),
@@ -60,8 +62,6 @@ def besa_two_actions(rewards, pulls, a, b, random_permutation_of_arm=None, subsa
     - Else if m_a < m_b, choose b,
     - And in case of a tie, break by choosing i such that Ni is minimal (or random [a, b] if Na=Nb).
     """
-    if random_permutation_of_arm is not None:
-        a, b = random_permutation_of_arm[a], random_permutation_of_arm[b]
     # assert a != b, "Error: now need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b)  # DEBUG
     Na, Nb = pulls[a], pulls[b]
     N = min(Na, Nb)
@@ -118,31 +118,65 @@ def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_functi
     return chosen_arm
 
 
-def besa_K_actions(rewards, pulls, left, right, random_permutation_of_arm, subsample_function=subsample_uniform, depth=0):
+def besa_K_actions__smart_divideandconquer(rewards, pulls, left, right, random_permutation_of_arm, subsample_function=subsample_uniform, depth=0):
     r""" BESA recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
 
     - I prefer to implement for a discrete action set :math:`\{\text{left}, \dots, \text{right}\}` (end *included*) instead of a generic ``actions`` vector, to speed up the code, but it is less readable.
     - The depth argument is just for pretty printing debugging information (useless).
 
-    .. warning:: The binary tournament is RANDOMIZED here, as it should be.
+    .. note:: The binary tournament is RANDOMIZED here, as it should be.
     """
-    # assert left <= right, "Error: in 'besa_K_actions' function, left = {} was not <= right = {}...".format(left, right)  # DEBUG
-    # print("In 'besa_K_actions', left = {} and right = {} for this call.".format(left, right))  # DEBUG
+    # assert left <= right, "Error: in 'besa_K_actions__smart_divideandconquer' function, left = {} was not <= right = {}...".format(left, right)  # DEBUG
+    # print("In 'besa_K_actions__smart_divideandconquer', left = {} and right = {} for this call.".format(left, right))  # DEBUG
     if left == right:
         chosen_arm = left
     elif right == left + 1:
-        chosen_arm = besa_two_actions(rewards, pulls, left, right, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function)
+        chosen_arm = besa_two_actions(rewards, pulls, left, right, subsample_function=subsample_function)
     else:
         pivot = (left + right) // 2
         # print("Using pivot = {}, left = {} and right = {}...".format(pivot, left, right))  # DEBUG
-        chosen_left = besa_K_actions(rewards, pulls, left, pivot, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function, depth=depth+1)
+        chosen_left = besa_K_actions__smart_divideandconquer(rewards, pulls, left, pivot, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function, depth=depth+1)
+        # chosen_left = inverse_permutation(random_permutation_of_arm, chosen_left)
         # assert left <= chosen_left <= pivot, "Error: the output chosen_left = {} from tournament from left = {} to pivot = {} should be between the two...".format(chosen_left, left, pivot)  # DEBUG
-        chosen_right = besa_K_actions(rewards, pulls, pivot + 1, right, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function, depth=depth+1)
+        chosen_right = besa_K_actions__smart_divideandconquer(rewards, pulls, pivot + 1, right, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function, depth=depth+1)
+        # chosen_right = inverse_permutation(random_permutation_of_arm, chosen_right)
         # assert pivot + 1 <= chosen_right <= right, "Error: the output chosen_right = {} from tournament from pivot + 1 = {} to right = {} should be between the two...".format(chosen_right, pivot + 1, right)  # DEBUG
         # print("The two recursive calls gave chosen_left = {}, chosen_right = {}...".format(chosen_left, chosen_right))  # DEBUG
-        chosen_arm = besa_two_actions(rewards, pulls, chosen_left, chosen_right, random_permutation_of_arm=random_permutation_of_arm, subsample_function=subsample_function)
-    # print("{}In 'besa_K_actions', left = {} and right = {} gave chosen_arm = {}.".format("\t" * depth, left, right, chosen_arm))  # DEBUG
-    return inverse_permutation(random_permutation_of_arm, chosen_arm)
+        if random_permutation_of_arm is not None:
+            chosen_left, chosen_right = random_permutation_of_arm[chosen_left], random_permutation_of_arm[chosen_right]
+        chosen_arm = besa_two_actions(rewards, pulls, chosen_left, chosen_right, subsample_function=subsample_function)
+    # print("{}In 'besa_K_actions__smart_divideandconquer', left = {} and right = {} gave chosen_arm = {}.".format("\t" * depth, left, right, chosen_arm))  # DEBUG
+    if random_permutation_of_arm is not None:
+        return inverse_permutation(random_permutation_of_arm, chosen_arm)
+    else:
+        return chosen_arm
+
+
+def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform, depth=0):
+    r""" BESA recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
+
+    - The divide and conquer is implemented for a generic set of actions, it's slower but simpler!
+    - Actions is assumed to be shuffled *before* calling this function!
+    - The depth argument is just for pretty printing debugging information (useless).
+
+    .. note:: The binary tournament is RANDOMIZED here, *as it should be*.
+    """
+    # print("In 'besa_K_actions', actions = {} for this call.".format(actions))  # DEBUG
+    if len(actions) <= 1:
+        chosen_arm = actions[0]
+    elif len(actions) == 2:
+        chosen_arm = besa_two_actions(rewards, pulls, actions[0], actions[1], subsample_function=subsample_function)
+    else:
+        # actions is already shuffled!
+        actions_left = actions[:len(actions)//2]
+        actions_right = actions[len(actions)//2:]
+        # print("Using actions_left = {} and actions_right = {}...".format(actions_left, actions_right))  # DEBUG
+        chosen_left = besa_K_actions(rewards, pulls, actions_left, subsample_function=subsample_function, depth=depth+1)
+        chosen_right = besa_K_actions(rewards, pulls, actions_right, subsample_function=subsample_function, depth=depth+1)
+        # print("The two recursive calls gave chosen_left = {}, chosen_right = {}...".format(chosen_left, chosen_right))  # DEBUG
+        chosen_arm = besa_two_actions(rewards, pulls, chosen_left, chosen_right, subsample_function=subsample_function)
+    # print("{}In 'besa_K_actions', actions = {} gave chosen_arm = {}.".format("\t" * depth, actions, chosen_arm))  # DEBUG
+    return chosen_arm
 
 
 # --- The BESA policy
@@ -165,6 +199,7 @@ class BESA(BasePolicy):
         assert nbArms >= 2, "Error: BESA algorithm can only work for at least 2 arms."
         self._left = 0  # just keep them in memory to increase readability
         self._right = nbArms - 1  # just keep them in memory to increase readability
+        self._actions = np.arange(nbArms)  # just keep them in memory to increase readability
         self.all_rewards = np.zeros((nbArms, horizon))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
 
     def __str__(self):
@@ -184,11 +219,14 @@ class BESA(BasePolicy):
     def choice(self):
         """ Applies the BESA procedure with the current data history."""
         # if some arm has never been selected, force to explore it!
-        if np.any(self.pulls < 1):
-            return np.random.choice(np.arange(self.nbArms)[self.pulls < 1])
+        if self.t <= self.nbArms and np.any(self.pulls < 1):
+            return np.random.choice(np.where(self.pulls < 1)[0])
         else:
-            random_permutation_of_arm = np.random.permutation(self.nbArms)
-            return besa_K_actions(self.all_rewards, self.pulls, self._left, self._right, random_permutation_of_arm, subsample_function=self._subsample_function, depth=0)
+            # random_permutation_of_arm = np.random.permutation(self.nbArms)
+            # return besa_K_actions(self.all_rewards, self.pulls, self._left, self._right, random_permutation_of_arm, subsample_function=self._subsample_function, depth=0)
+            np.random.shuffle(self._actions)
+            # print("Calling 'besa_K_actions' with actions list = {}...".format(self._actions))  # DEBUG
+            return besa_K_actions(self.all_rewards, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
 
     # --- Others choice...() methods, partly implemented
     # FIXME write choiceWithRank, choiceFromSubSet, choiceMultiple also

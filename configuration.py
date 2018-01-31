@@ -890,41 +890,35 @@ configuration.update({
         #     "archtype": BlackBoxOpt,
         #     "params": {}
         # },
-        # --- The new OSSB algorithm
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.0,
-            }
-        },
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.001,
-                "gamma": 0.0,
-            }
-        },
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-            }
-        },
-        # --- FIXME BESA algorithm
+        # # --- The new OSSB algorithm
         # {
-        #     "archtype": BESA,
+        #     "archtype": OSSB,
         #     "params": {
-        #         "horizon": HORIZON,
-        #         "random_subsample": False,  # XXX Very inefficient!
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
         #     }
         # },
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.001,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        # --- FIXME BESA algorithm
         {
             "archtype": BESA,
             "params": {
                 "horizon": HORIZON,
                 "random_subsample": True,
+                # "random_subsample": False,  # XXX Very inefficient!
             }
         },
     ]

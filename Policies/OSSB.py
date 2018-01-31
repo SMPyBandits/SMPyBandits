@@ -109,6 +109,9 @@ class OSSB(BasePolicy):
                 self.phase = Phase.exploration
                 return least_probable
 
+    # --- Others choice...() methods, partly implemented
+    # FIXME write choiceWithRank, choiceFromSubSet, choiceMultiple also
+
     def handleCollision(self, arm, reward=None):
         """ Nothing special to do."""
         pass
