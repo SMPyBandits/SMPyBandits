@@ -87,10 +87,10 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
             return b
         else:  # if no way of breaking the tie, choose uniformly at random
             # FIXME this happens a lot! It's weird!
-            # return np.random.choice([a, b])
-            chosen_arm = np.random.choice([a, b])
-            print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
-            return chosen_arm
+            return np.random.choice([a, b])
+            # chosen_arm = np.random.choice([a, b])
+            # print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
+            # return chosen_arm
 
 
 def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_function=subsample_uniform, depth=0):
