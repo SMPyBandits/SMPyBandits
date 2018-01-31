@@ -71,12 +71,12 @@ def kendalltau(permutation, comp=None):
     >>> kendalltau(perm)  # almost sorted!  # doctest: +ELLIPSIS
     0.90...
 
-    >>> perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]  # doctest: +ELLIPSIS
-    >>> kendalltau(perm)
+    >>> perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]
+    >>> kendalltau(perm)  # doctest: +ELLIPSIS
     0.211...
 
-    >>> perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!  # doctest: +ELLIPSIS
-    >>> kendalltau(perm)
+    >>> perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!
+    >>> kendalltau(perm)  # doctest: +ELLIPSIS
     0.984...
     """
     if comp is None:
@@ -98,12 +98,12 @@ def spearmanr(permutation, comp=None):
     >>> spearmanr(perm)  # almost sorted!  # doctest: +ELLIPSIS
     0.92...
 
-    >>> perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]  # doctest: +ELLIPSIS
-    >>> spearmanr(perm)
+    >>> perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]
+    >>> spearmanr(perm)  # doctest: +ELLIPSIS
     0.248...
 
-    >>> perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!  # doctest: +ELLIPSIS
-    >>> spearmanr(perm)
+    >>> perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!
+    >>> spearmanr(perm)  # doctest: +ELLIPSIS
     0.986...
     """
     if comp is None:
@@ -144,24 +144,26 @@ def gestalt(permutation, comp=None):
     return SequenceMatcher(None, permutation, comp).ratio()
 
 
-def meanDistance(permutation, comp=None, methods=(manhattan, kendalltau, spearmanr, gestalt)):
-    """A certain measure of sortedness for the list A, based on mean of the 4 distances: manhattan, kendalltau, spearmanr, gestalt.
+def meanDistance(permutation, comp=None, methods=(manhattan, gestalt)):
+    """A certain measure of sortedness for the list A, based on mean of the 2 distances: manhattan and gestalt.
 
     >>> perm = [0, 1, 2, 3, 4]
     >>> meanDistance(perm)  # sorted  # doctest: +ELLIPSIS
-    0.996...
+    1.0
 
     >>> perm = [0, 1, 2, 5, 4, 3]
     >>> meanDistance(perm)  # almost sorted!  # doctest: +ELLIPSIS
-    0.820...
+    0.722...
 
     >>> perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]  # doctest: +ELLIPSIS
     >>> meanDistance(perm)
-    0.315...
+    0.4
 
     >>> perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!  # doctest: +ELLIPSIS
     >>> meanDistance(perm)
-    0.797...
+    0.61
+
+    .. warning:: I removed kendalltau and spearmanr as they were giving 100% for many cases where clearly there were no reason to give 100%...
     """
     distances = []
     for method in methods:
