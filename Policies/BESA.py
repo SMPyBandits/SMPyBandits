@@ -34,7 +34,7 @@ def subsample_uniform(n, m):
 
     .. note:: The BESA algorithm is efficient only with the random sub-sampling.
     """
-    return np.random.choice(m + 1, size=n, replace=False)
+    return np.random.choice(m, size=n, replace=False)
 
 
 # --- BESA core function, base case and recursive case
@@ -52,7 +52,7 @@ def inverse_permutation(permutation, j):
     raise ValueError("inverse_permutation({}, {}) failed.".format(permutation, j))
 
 
-def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform):
+def besa_two_actions(rewards, rewards_dyn, pulls, a, b, subsample_function=subsample_uniform):
     """ Core algorithm for the BESA selection, for two actions a and b:
 
     - N = min(Na, Nb),
@@ -68,12 +68,30 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     Na, Nb = pulls[a], pulls[b]
     N = min(Na, Nb)
     Ia = subsample_function(N, Na)
-    # assert all(0 <= i <= Na for i in Ia), "Error: indexes in Ia should be between 0 and Na = {}".format(Na)  # DEBUG
+    # assert all(0 <= i < Na for i in Ia), "Error: indexes in Ia should be between 0 and Na = {}".format(Na)  # DEBUG
     Ib = subsample_function(N, Nb)
-    # assert all(0 <= i <= Nb for i in Ib), "Error: indexes in Ib should be between 0 and Nb = {}".format(Nb)  # DEBUG
+    # assert all(0 <= i < Nb for i in Ib), "Error: indexes in Ib should be between 0 and Nb = {}".format(Nb)  # DEBUG
     # assert len(Ia) == len(Ib) == N, "Error in subsample_function, Ia of size = {} and Ib of size = {} should have size N = {} ...".format(len(Ia), len(Ib), N)  # DEBUG
+
     sub_mean_a = np.sum(rewards[a, Ia]) / N
+    print("\n\nsub_mean_a first method =", sub_mean_a)
+    sub_mean_a = sum(rewards[a][i] for i in Ia) / N
+    print("sub_mean_a second method =", sub_mean_a)
+    sub_mean_a = sum(rewards_dyn[a][i] for i in Ia) / N
+    print("sub_mean_a third method =", sub_mean_a)
+    for i in Ia:
+        print("i =", i, "rewards[a, i] =", rewards[a, i], "and rewards_dyn[a][i] =", rewards_dyn[a][i])
+
     sub_mean_b = np.sum(rewards[b, Ib]) / N
+    print("\nsub_mean_b first method =", sub_mean_b)
+    sub_mean_b = sum(rewards[b][i] for i in Ib) / N
+    print("sub_mean_b second method =", sub_mean_b)
+    sub_mean_b = sum(rewards_dyn[b][i] for i in Ib) / N
+    print("sub_mean_b third method =", sub_mean_b)
+    for i in Ib:
+        print("i =", i, "rewards[b, i] =", rewards[b, i], "and rewards_dyn[b][i] =", rewards_dyn[b][i])
+
+    assert 0 <= min(sub_mean_a, sub_mean_b) <= max(sub_mean_a, sub_mean_b) <= 1
     # XXX I tested and these manual branching steps are the most efficient solution it is faster than using np.argmax()
     if sub_mean_a > (sub_mean_b + TOLERANCE):
         return a
@@ -154,7 +172,7 @@ def besa_K_actions__smart_divideandconquer(rewards, pulls, left, right, random_p
         return chosen_arm
 
 
-def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform, depth=0):
+def besa_K_actions(rewards, rewards_dyn, pulls, actions, subsample_function=subsample_uniform, depth=0):
     r""" BESA recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
 
     - The divide and conquer is implemented for a generic set of actions, it's slower but simpler!
@@ -167,16 +185,16 @@ def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform
     if len(actions) <= 1:
         chosen_arm = actions[0]
     elif len(actions) == 2:
-        chosen_arm = besa_two_actions(rewards, pulls, actions[0], actions[1], subsample_function=subsample_function)
+        chosen_arm = besa_two_actions(rewards, rewards_dyn, pulls, actions[0], actions[1], subsample_function=subsample_function)
     else:
         # actions is already shuffled!
         actions_left = actions[:len(actions)//2]
         actions_right = actions[len(actions)//2:]
         # print("Using actions_left = {} and actions_right = {}...".format(actions_left, actions_right))  # DEBUG
-        chosen_left = besa_K_actions(rewards, pulls, actions_left, subsample_function=subsample_function, depth=depth+1)
-        chosen_right = besa_K_actions(rewards, pulls, actions_right, subsample_function=subsample_function, depth=depth+1)
+        chosen_left = besa_K_actions(rewards, rewards_dyn, pulls, actions_left, subsample_function=subsample_function, depth=depth+1)
+        chosen_right = besa_K_actions(rewards, rewards_dyn, pulls, actions_right, subsample_function=subsample_function, depth=depth+1)
         # print("The two recursive calls gave chosen_left = {}, chosen_right = {}...".format(chosen_left, chosen_right))  # DEBUG
-        chosen_arm = besa_two_actions(rewards, pulls, chosen_left, chosen_right, subsample_function=subsample_function)
+        chosen_arm = besa_two_actions(rewards, rewards_dyn, pulls, chosen_left, chosen_right, subsample_function=subsample_function)
     # print("{}In 'besa_K_actions', actions = {} gave chosen_arm = {}.".format("\t" * depth, actions, chosen_arm))  # DEBUG
     return chosen_arm
 
@@ -202,7 +220,11 @@ class BESA(BasePolicy):
         self._left = 0  # just keep them in memory to increase readability
         self._right = nbArms - 1  # just keep them in memory to increase readability
         self._actions = np.arange(nbArms)  # just keep them in memory to increase readability
-        self.all_rewards = np.zeros((nbArms, horizon))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
+
+        # XXX DEBUG this!
+        self.all_rewards = np.zeros((nbArms, horizon + 1))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
+        self.all_rewards.fill(-1e10)  # Just security, to be sure they don't count as zero in some computation
+        self.all_rewards_dynamic = { k: [] for k in range(nbArms) }
 
     def __str__(self):
         """ -> str"""
@@ -213,7 +235,8 @@ class BESA(BasePolicy):
 
         .. note:: There is no need to normalize the reward in [0,1], that's one of the strong point of the BESA algorithm."""
         # XXX find a solution to not need to horizon?
-        self.all_rewards[arm, self.t] = reward
+        self.all_rewards[arm, self.pulls[arm]] = reward
+        self.all_rewards_dynamic[arm].append(reward)
         super(BESA, self).getReward(arm, reward)
 
     # --- Basic choice() and handleCollision() method
@@ -228,7 +251,7 @@ class BESA(BasePolicy):
             # return besa_K_actions(self.all_rewards, self.pulls, self._left, self._right, random_permutation_of_arm, subsample_function=self._subsample_function, depth=0)
             np.random.shuffle(self._actions)
             # print("Calling 'besa_K_actions' with actions list = {}...".format(self._actions))  # DEBUG
-            return besa_K_actions(self.all_rewards, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
+            return besa_K_actions(self.all_rewards, self.all_rewards_dynamic, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
 
     # --- Others choice...() methods, partly implemented
     # FIXME write choiceWithRank, choiceFromSubSet, choiceMultiple also

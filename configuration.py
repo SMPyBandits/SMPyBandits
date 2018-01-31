@@ -173,10 +173,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0, 1]
         # },
-        # {   # A very very easy problem: 2 arms, one better than the other
-        #     "arm_type": Bernoulli,
-        #     "params": [0.8, 0.9]
-        # },
+        {   # A very very easy problem: 2 arms, one better than the other
+            "arm_type": Bernoulli,
+            "params": [0.8, 0.9]
+        },
         # {   # A very very easy problem: 2 arms, one better than the other
         #     "arm_type": Bernoulli,
         #     "params": [0.375, 0.571]
@@ -193,11 +193,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # XXX Default!
-        {   # A very easy problem (X arms), but it is used in a lot of articles
-            "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        },
+        # # XXX Default!
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": ARM_TYPE,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
