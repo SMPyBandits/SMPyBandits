@@ -41,7 +41,7 @@ def subsample_uniform(n, m):
 
 
 #: Numerical tolerance when comparing two means. Should not be zero!
-TOLERANCE = 1e-4
+TOLERANCE = 1e-5
 
 
 def inverse_permutation(permutation, j):
@@ -62,7 +62,9 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     - Else if m_a < m_b, choose b,
     - And in case of a tie, break by choosing i such that Ni is minimal (or random [a, b] if Na=Nb).
     """
-    # assert a != b, "Error: now need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b)  # DEBUG
+    if a == b:
+        print("Error: no need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b))  # DEBUG
+        return a
     Na, Nb = pulls[a], pulls[b]
     N = min(Na, Nb)
     Ia = subsample_function(N, Na)
@@ -70,12 +72,12 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     Ib = subsample_function(N, Nb)
     # assert all(0 <= i <= Nb for i in Ib), "Error: indexes in Ib should be between 0 and Nb = {}".format(Nb)  # DEBUG
     # assert len(Ia) == len(Ib) == N, "Error in subsample_function, Ia of size = {} and Ib of size = {} should have size N = {} ...".format(len(Ia), len(Ib), N)  # DEBUG
-    sub_mean_a = np.mean(rewards[a, Ia])
-    sub_mean_b = np.mean(rewards[b, Ib])
+    sub_mean_a = np.sum(rewards[a, Ia]) / N
+    sub_mean_b = np.sum(rewards[b, Ib]) / N
     # XXX I tested and these manual branching steps are the most efficient solution it is faster than using np.argmax()
     if sub_mean_a > (sub_mean_b + TOLERANCE):
         return a
-    elif sub_mean_a < (sub_mean_b - TOLERANCE):
+    elif sub_mean_b > (sub_mean_a + TOLERANCE):
         return b
     else:  # 0 <= abs(sub_mean_a - sub_mean_b) <= TOLERANCE
         # WARNING warning about the numerical errors with float number...
@@ -85,10 +87,10 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
             return b
         else:  # if no way of breaking the tie, choose uniformly at random
             # FIXME this happens a lot! It's weird!
-            return np.random.choice([a, b])
-            # chosen_arm = np.random.choice([a, b])
-            # print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
-            # return chosen_arm
+            # return np.random.choice([a, b])
+            chosen_arm = np.random.choice([a, b])
+            print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
+            return chosen_arm
 
 
 def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_function=subsample_uniform, depth=0):
