@@ -173,10 +173,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0, 1]
         # },
-        {   # A very very easy problem: 2 arms, one better than the other
-            "arm_type": Bernoulli,
-            "params": [0.8, 0.9]
-        },
+        # {   # A very very easy problem: 2 arms, one better than the other
+        #     "arm_type": Bernoulli,
+        #     "params": [0.8, 0.9]
+        # },
         # {   # A very very easy problem: 2 arms, one better than the other
         #     "arm_type": Bernoulli,
         #     "params": [0.375, 0.571]
@@ -214,22 +214,22 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
-        #     "arm_type": ARM_TYPE,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": NB_ARMS,
-        #             "mingap": None,
-        #             # "mingap": 0.0000001,
-        #             # "mingap": 0.1,
-        #             # "mingap": 1. / (3 * NB_ARMS),
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             "isSorted": True,
-        #         }
-        #     }
-        # },
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    "isSorted": True,
+                }
+            }
+        },
     ],
     # "environment": [  # XXX Exponential arms
     #     {   # An example problem with 9 arms
@@ -912,11 +912,13 @@ configuration.update({
         #         "gamma": 0.0,
         #     }
         # },
-        # --- FIXME BESA algorithm
+        # --- The awesome BESA algorithm
         {
             "archtype": BESA,
             "params": {
                 "horizon": HORIZON,
+                "randomized_tournament": True,
+                # "randomized_tournament": False,  # XXX Very inefficient!
                 "random_subsample": True,
                 # "random_subsample": False,  # XXX Very inefficient!
             }
