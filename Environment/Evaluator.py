@@ -419,7 +419,7 @@ class Evaluator(object):
         plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
         if not (semilogx or semilogy or loglog):
-            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
+            print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(lowerbound, self.envs[envId].hoifactor()))  # DEBUG
         if not meanRegret:
             plt.ylim(ymin, plt.ylim()[1])
         # Get a small string to add to ylabel
@@ -448,7 +448,7 @@ class Evaluator(object):
                 upperbound = 76 * np.sqrt(maxVariance * K * X) + amplitude * K
                 plt.plot(X[::self.delta_t_plot], upperbound[::self.delta_t_plot], 'r-', label=r"Minimax upper-bound for kl-UCB++", lw=3)
             # FIXED for semilogx plots, truncate to only show t >= 100
-            if semilogx:
+            if semilogx or loglog:
                 X = X[X >= 100]
             # We also plot the Lai & Robbins lower bound
             plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)

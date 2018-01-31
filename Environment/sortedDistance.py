@@ -163,7 +163,7 @@ def meanDistance(permutation, comp=None, methods=(manhattan, gestalt)):
     >>> meanDistance(perm)
     0.61
 
-    .. warning:: I removed kendalltau and spearmanr as they were giving 100% for many cases where clearly there were no reason to give 100%...
+    .. warning:: I removed :func:`kendalltau` and :func:`spearmanr` as they were giving 100% for many cases where clearly there were no reason to give 100%...
     """
     distances = []
     for method in methods:
