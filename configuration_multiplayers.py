@@ -285,26 +285,26 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
-        #     "arm_type": ARM_TYPE,
-        #     "params": {
-        #         "function": randomMeans,
-        #         "args": {
-        #             "nbArms": NB_ARMS,
-        #             "mingap": None,
-        #             # "mingap": 0.05,
-        #             # "mingap": 1. / (3. * NB_ARMS),
-        #             "lower": 0.,
-        #             "amplitude": 1.,
-        #             "isSorted": True,
-        #         }
-        #     }
-        # },
-        # XXX Default!
-        {   # A very easy problem (X arms), but it is used in a lot of articles
+        {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        }
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.05,
+                    # "mingap": 1. / (3. * NB_ARMS),
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    "isSorted": True,
+                }
+            }
+        },
+        # # XXX Default!
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": ARM_TYPE,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # }
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
         #     "params": {

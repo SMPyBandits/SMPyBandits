@@ -5,6 +5,8 @@
 - See also: https://github.com/Naereen/AlgoBandits/issues/103
 
 .. warning:: This algorithm works VERY well but it is looks weird at first sight. It sounds "too easy", so take a look to the article before wondering why it should work.
+
+.. note:: Right now, it is between 10 and 25 times slower than :class:`Policies.klUCB` and other single-player policies.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -254,7 +256,7 @@ class BESA(IndexPolicy):
     def choice(self):
         """ Applies the BESA procedure with the current data history."""
         # if some arm has never been selected, force to explore it!
-        if self.t <= (self.nbArms * self.minPullsOfEachArm) and np.any(self.pulls < self.minPullsOfEachArm):
+        if np.any(self.pulls < self.minPullsOfEachArm):
             return np.random.choice(np.where(self.pulls < self.minPullsOfEachArm)[0])
         else:
             if self.randomized_tournament:
