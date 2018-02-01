@@ -102,7 +102,7 @@ class IndexPolicy(BasePolicy):
     def choiceMultiple(self, nb=1):
         """ In an index policy, choose nb arms with maximal indexes (uniformly at random)."""
         if nb == 1:
-            return self.choice()
+            return np.array([self.choice()])
         else:
             self.computeAllIndex()
             sortedIndexes = np.sort(self.index)
@@ -113,7 +113,7 @@ class IndexPolicy(BasePolicy):
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ In an index policy, the IMP strategy is hybrid: choose nb-1 arms with maximal empirical averages, then 1 arm with maximal index. Cf. algorithm IMP-TS [Komiyama, Honda, Nakagawa, 2016, arXiv 1506.00779]."""
         if nb == 1:
-            return self.choice()
+            return np.array([self.choice()])
         else:
             # For first exploration steps, do pure exploration
             if startWithChoiceMultiple:

@@ -5,7 +5,7 @@ Configuration for the simulations, for the multi-players case.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.8"
+__version__ = "0.9"
 
 # Tries to know number of CPU
 try:
@@ -346,6 +346,7 @@ configuration["successive_players"] = [
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
     # # ---- RandTopM
@@ -365,6 +366,7 @@ configuration["successive_players"] = [
 
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
+    MCTopM(NB_PLAYERS, nbArms, BESA).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -376,17 +378,22 @@ configuration["successive_players"] = [
     # ],
     # EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
     MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
+    MCTopMEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... MCTopM, klUCB)
     MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+    MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
 
     # ---- Selfish
     # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    # FIXME experiment!
+    Selfish(NB_PLAYERS, nbArms, BESA).children,
     # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
     # [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
 
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
+    rhoRand(NB_PLAYERS, nbArms, BESA).children,
     # [ Aggregator(nbArms, children=[  # XXX Not efficient!
     #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
     #         for x in range(NB_ARMS)
@@ -395,9 +402,10 @@ configuration["successive_players"] = [
     # ],
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
+    rhoEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... rhoRand, klUCB)
     # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)
-    rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
+    # rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
     # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,

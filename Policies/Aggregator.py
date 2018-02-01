@@ -255,7 +255,7 @@ class Aggregator(BasePolicy):
     def choiceMultiple(self, nb=1):
         """ Make each child vote, multiple times, then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if nb == 1:
-            return self.choice()
+            return np.array([self.choice()])
         else:
             choices = [None] * self.nbChildren
             for i, child in enumerate(self.children):
@@ -267,7 +267,7 @@ class Aggregator(BasePolicy):
     def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
         """ Make each child vote, multiple times (with IMP scheme), then sample the decision by `importance sampling <https://en.wikipedia.org/wiki/Importance_sampling>`_ on their votes with the trust probabilities."""
         if nb == 1:
-            return self.choice()
+            return np.array([self.choice()])
         else:
             choices = [None] * self.nbChildren
             for i, child in enumerate(self.children):

@@ -78,7 +78,7 @@ class EpsilonGreedy(BasePolicy):
 
     def choiceMultiple(self, nb=1):
         if nb == 1:
-            return self.choice()
+            return np.array([self.choice()])
         else:
             # FIXME the explore/exploit balancy should be for each choice, right?
             if random() < self.epsilon:  # Proba epsilon : Explore

@@ -5,7 +5,7 @@ Configuration for the simulations, for the single-player case.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.8"
+__version__ = "0.9"
 
 # Tries to know number of CPU
 try:

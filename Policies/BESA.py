@@ -13,7 +13,7 @@ __version__ = "0.9"
 
 
 import numpy as np
-from .BasePolicy import BasePolicy
+from .IndexPolicy import IndexPolicy
 
 
 # --- Utility functions
@@ -61,6 +61,8 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     - If m_a > m_b, choose a,
     - Else if m_a < m_b, choose b,
     - And in case of a tie, break by choosing i such that Ni is minimal (or random [a, b] if Na=Nb).
+
+    .. note:: ``rewards`` can be a numpy array of shape (at least) ``(nbArms, max(Na, Nb))`` or a dictionary maping ``a,b`` to lists (or iterators) of lengths ``>= max(Na, Nb)``.
     """
     if a == b:
         print("Error: no need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b))  # DEBUG
@@ -73,8 +75,12 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     # assert all(0 <= i < Nb for i in Ib), "Error: indexes in Ib should be between 0 and Nb = {}".format(Nb)  # DEBUG
     # assert len(Ia) == len(Ib) == N, "Error in subsample_function, Ia of size = {} and Ib of size = {} should have size N = {} ...".format(len(Ia), len(Ib), N)  # DEBUG
     # Compute sub means
-    sub_mean_a = np.sum(rewards[a, Ia]) / N
-    sub_mean_b = np.sum(rewards[b, Ib]) / N
+    if isinstance(rewards, np.ndarray):  # faster to compute this
+        sub_mean_a = np.sum(rewards[a, Ia]) / N
+        sub_mean_b = np.sum(rewards[b, Ib]) / N
+    else:  # than this for other data type (eg. dict mapping int to list)
+        sub_mean_a = sum(rewards[a][i] for i in Ia) / N
+        sub_mean_b = sum(rewards[b][i] for i in Ib) / N
     # assert 0 <= min(sub_mean_a, sub_mean_b) <= max(sub_mean_a, sub_mean_b) <= 1
     # XXX I tested and these manual branching steps are the most efficient solution it is faster than using np.argmax()
     if sub_mean_a > (sub_mean_b + TOLERANCE):
@@ -82,13 +88,11 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     elif sub_mean_b > (sub_mean_a + TOLERANCE):
         return b
     else:  # 0 <= abs(sub_mean_a - sub_mean_b) <= TOLERANCE
-        # WARNING warning about the numerical errors with float number...
         if Na < Nb:
             return a
         elif Na > Nb:
             return b
         else:  # if no way of breaking the tie, choose uniformly at random
-            # FIXME this happens a lot! It's weird!
             return np.random.choice([a, b])
             # chosen_arm = np.random.choice([a, b])
             # print("Warning: arms a = {} and b = {} had same sub-samples means = {:.3g} = {:.3g} and nb selections = {} = {}... so choosing uniformly at random {}!".format(a, b, sub_mean_a, sub_mean_b, Na, Nb, chosen_arm))  # WARNING
@@ -186,13 +190,15 @@ def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform
 # --- The BESA policy
 
 
-class BESA(BasePolicy):
+class BESA(IndexPolicy):
     r""" The Best Empirical Sampled Average (BESA) algorithm.
 
     - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://arxiv.org/abs/1711.00400)
+
+    .. warning:: The BESA algorithm requires to store all the history of rewards, so its memory usage for :math:`T` rounds with :math:`K` arms is :math:`\mathcal{O}(K T)`, which is huge for large :math:`T`, be careful! Aggregating different BESA instances is probably a bad idea because of this limitation!
     """
 
-    def __init__(self, nbArms, horizon,
+    def __init__(self, nbArms, horizon=None,
                  minPullsOfEachArm=1, randomized_tournament=True, random_subsample=True,
                  lower=0., amplitude=1.):
         super(BESA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
@@ -209,20 +215,27 @@ class BESA(BasePolicy):
         self._right = nbArms - 1  # just keep them in memory to increase readability
         self._actions = np.arange(nbArms)  # just keep them in memory to increase readability
 
-        self.all_rewards = np.zeros((nbArms, horizon + 1))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
-        self.all_rewards.fill(-1e5)  # Just security, to be sure they don't count as zero in some computation
+        # Memory to store all the rewards
+        self._has_horizon = (self.horizon is not None) and (self.horizon > 1)
+        if self._has_horizon:
+            self.all_rewards = np.zeros((nbArms, horizon + 1))  #: Keep **all** rewards of each arms. It consumes a :math:`\mathcal{O}(K T)` memory, that's really bad!!
+            self.all_rewards.fill(-1e5)  # Just security, to be sure they don't count as zero in some computation
+        else:
+            self.all_rewards = { k : [] for k in range(nbArms) }
 
     def __str__(self):
         """ -> str"""
-        b1, b2, b3 = not self.random_subsample, not self.randomized_tournament, self.minPullsOfEachArm > 1
-        return "BESA{}{}{}{}{}{}{}".format(
-            "(" if (b1 or b2 or b3) else "",
+        b1, b2, b3, b4 = not self.random_subsample, not self.randomized_tournament, self.minPullsOfEachArm > 1, not self._has_horizon
+        return "BESA{}{}{}{}{}{}{}{}{}".format(
+            "(" if (b1 or b2 or b3 or b4) else "",
             "non-random subsample" if b1 else "",
-            ", " if b1 and (b2 or b3) else "",
+            ", " if b1 and (b2 or b3 or b4) else "",
             "non-random tournament" if b2 else "",
-            ", " if b2 and b3 else "",
+            ", " if b2 and (b3 or b4) else "",
             r"$T_0={}$".format(self.minPullsOfEachArm) if b3 else "",
-            ")" if (b1 or b2 or b3) else "",
+            ", " if b3 and b4 else "",
+            "anytime" if b4 else "",
+            ")" if (b1 or b2 or b3 or b4) else "",
         )
 
     def getReward(self, arm, reward):
@@ -230,7 +243,10 @@ class BESA(BasePolicy):
 
         .. note:: There is no need to normalize the reward in [0,1], that's one of the strong point of the BESA algorithm."""
         # XXX find a solution to not need to horizon?
-        self.all_rewards[arm, self.pulls[arm]] = reward
+        if self._has_horizon:
+            self.all_rewards[arm, self.pulls[arm]] = reward
+        else:
+            self.all_rewards[arm].append(reward)
         super(BESA, self).getReward(arm, reward)
 
     # --- Basic choice() and handleCollision() method
@@ -247,16 +263,82 @@ class BESA(BasePolicy):
             return besa_K_actions(self.all_rewards, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
 
     # --- Others choice...() methods, partly implemented
-    # FIXME write choiceWithRank, choiceFromSubSet, choiceMultiple also
 
-    def estimatedOrder(self):
-        """ Return the estimate order of the arms, as a permutation on [0..K-1] that would order the arms by increasing means.
+    def choiceFromSubSet(self, availableArms='all'):
+        """ Applies the BESA procedure with the current data history, to the restricted set of arm."""
+        if availableArms == 'all':
+            return self.choice()
+        else:
+            # if some arm has never been selected, force to explore it!
+            if any(self.pulls[k] < self.minPullsOfEachArm for k in availableArms):
+                return np.random.choice([k for k in availableArms if self.pulls[k] < self.minPullsOfEachArm])
+            else:
+                actions = list(availableArms)
+                if self.randomized_tournament:
+                    np.random.shuffle(actions)
+                # print("Calling 'besa_K_actions' with actions list = {}...".format(actions))  # DEBUG
+                return besa_K_actions(self.all_rewards, self.pulls, actions, subsample_function=self._subsample_function, depth=0)
 
-        - For a base policy, it is completely random.
+    def choiceMultiple(self, nb=1):
+        """ Applies the multiple-choice BESA procedure with the current data history:
+
+        1. select a first arm with basic BESA procedure with full action set,
+        2. remove it from the set of actions,
+        3. restart step 1 with new smaller set of actions, until ``nb`` arm where chosen by basic BESA.
+
+        .. note:: This was not studied or published before, and there is no theoretical results about it!
+
+        .. warning:: This is very inefficient! The BESA procedure is already quite slow (with my current naive implementation), this is crazily slow!
         """
-        means = self.rewards / self.pulls
-        means[self.pulls < 1] = float('+inf')
-        return np.argsort(means)
+        if nb == 1:
+            return np.array([self.choice()])
+        else:
+            actions = list(range(self.nbArms))
+            choices = []
+            for _ in range(nb):
+                # if some arm has never been selected, force to explore it!
+                if np.any(self.pulls[actions] < self.minPullsOfEachArm):
+                    choice_n = actions[np.random.choice(np.where(self.pulls[actions] < self.minPullsOfEachArm)[0])]
+                else:
+                    if self.randomized_tournament:
+                        np.random.shuffle(actions)
+                    # print("Calling 'besa_K_actions' with actions list = {}...".format(actions))  # DEBUG
+                    choice_n = besa_K_actions(self.all_rewards, self.pulls, actions, subsample_function=self._subsample_function, depth=0)
+                # now, store it, remove it from action set
+                choices.append(choice_n)
+                actions.remove(choice_n)
+            return np.array(choices)
+
+    def choiceWithRank(self, rank=1):
+        """ Applies the ranked BESA procedure with the current data history:
+
+        1. use :meth:`choiceMultiplie` to select ``rank`` actions,
+        2. then take the ``rank``-th chosen action (the last one).
+
+        .. note:: This was not studied or published before, and there is no theoretical results about it!
+
+        .. warning:: This is very inefficient! The BESA procedure is already quite slow (with my current naive implementation), this is crazily slow!
+        """
+        choices = self.choiceMultiple(nb=rank)
+        return choices[-1]
+
+    def computeIndex(self, arm):
+        """ Compute the current index of arm 'arm'.
+
+        .. warning:: This index **is not** the one used for the choice of arm (which use sub sampling). It's just the empirical mean of the arm.
+        """
+        if self.pulls[arm] < 1:
+            return float('+inf')
+        else:
+            return self.rewards[arm] / self.pulls[arm]
+
+    def computeAllIndex(self):
+        """ Compute the current index of arm 'arm' (vectorized).
+
+        .. warning:: This index **is not** the one used for the choice of arm (which use sub sampling). It's just the empirical mean of the arm.
+        """
+        self.index = self.rewards / self.pulls
+        self.index[self.pulls < 1] = float('+inf')
 
     def handleCollision(self, arm, reward=None):
         """ Nothing special to do."""

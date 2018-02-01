@@ -55,6 +55,8 @@ class Selfish(BaseMPPolicy):
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
+
+        .. warning:: I want my code to stay compatible with Python 2, so I cannot use the `new syntax of keyword-only argument <https://www.python.org/dev/peps/pep-3102/>`_. It would make more sense to have ``*args, penalty=PENALTY, lower=0., amplitude=1., **kwargs`` instead of ``penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs`` but I can't.
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players
