@@ -139,26 +139,29 @@ def makemarkers(nb):
 
 #: Default parameter for legend(): if True, the legend is placed at the right side of the figure, not on it.
 #: This is almost mandatory for plots with more than 10 algorithms (good for experimenting, bad for publications).
-PUTATRIGHT = False
 PUTATRIGHT = True
+PUTATRIGHT = False
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=0.75):
+def legend(putatright=PUTATRIGHT, shrinkfactor=0.75, fig=None):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.
     """
+    if fig is None:
+        hack_fig = plt.gcf()
+        fig = plt  # HACK XXX WARNING
     if putatright:
         try:
             # Shrink current axis by 20% on xaxis and 10% on yaxis
-            plt.tight_layout(rect=[0.035, 0, shrinkfactor, 1. - (1. - shrinkfactor)/3.])
+            fig.tight_layout(rect=[0.035, 0, shrinkfactor, 1. - (1. - shrinkfactor)/3.])
             # Put a legend to the right of the current axis
-            plt.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
+            fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
         except:
-            plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+            fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
     else:
-        plt.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+        fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
 
 
 def maximizeWindow():
