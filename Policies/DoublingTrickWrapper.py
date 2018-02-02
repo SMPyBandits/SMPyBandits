@@ -20,8 +20,7 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 .. seealso::
 
    Reference? Not yet, this is my own idea and it is *active* research.
-   I will try to experiment on it, prove some things, and if it turns out to be an interesting idea, we will publish something about it.
-   Stay posted! I will work on that as soon as possible!
+   I experimented on it, and I already proved some things, and if it turns out to be an interesting idea, we will publish something about it.
 
 .. warning::
 
@@ -39,7 +38,7 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 
 import numpy as np
@@ -67,73 +66,74 @@ DEFAULT_FIRST_HORIZON = 100
 ARITHMETIC_STEP = DEFAULT_FIRST_HORIZON
 
 
-def next_horizon__arithmetic(horizon):
+def next_horizon__arithmetic(i, horizon):
     r""" The arithmetic horizon progression function:
 
-    .. math:: T \mapsto T + 1000.
+    .. math:: T \mapsto T + 100.
     """
-    return int(np.ceil(horizon + ARITHMETIC_STEP))
+    return horizon + ARITHMETIC_STEP
 
 next_horizon__arithmetic.__latex_name__ = "arithm"
 
 
 #: Default multiplicative constant for the geometric horizon progression.
-GEOMETRIC_STEP = 10
+GEOMETRIC_STEP = 2
 
 
-def next_horizon__geometric(horizon):
+def next_horizon__geometric(i, horizon):
     r""" The geometric horizon progression function:
 
-    .. math:: T \mapsto T \times 10.
+    .. math:: T \mapsto T \times 2.
     """
-    return int(np.ceil(horizon * GEOMETRIC_STEP))
+    return horizon * GEOMETRIC_STEP
 
 next_horizon__geometric.__latex_name__ = "geom"
 
 
 #: Default exponential constant for the exponential horizon progression.
-EXPONENTIAL_STEP = 1.5
+EXPONENTIAL_STEP = 2
 
 
-def next_horizon__exponential(horizon):
+def next_horizon__exponential(i, horizon):
     r""" The exponential horizon progression function:
 
-    .. math:: T \mapsto \lfloor T^{1.5} \rfloor.
+    .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
-    return int(np.ceil(horizon ** EXPONENTIAL_STEP))
+    return int(np.floor(horizon ** EXPONENTIAL_STEP))
 
 next_horizon__exponential.__latex_name__ = "exp"
 
 
-def next_horizon__exponential_slow(horizon):
+def next_horizon__exponential_slow(i, horizon):
     r""" The exponential horizon progression function:
 
     .. math:: T \mapsto \lfloor T^{1.1} \rfloor.
     """
-    return int(np.ceil(horizon ** 1.1))
+    return int(np.floor(horizon ** 1.1))
 
 next_horizon__exponential_slow.__latex_name__ = "slow exp"
 
 
-def next_horizon__exponential_fast(horizon):
+def next_horizon__exponential_fast(i, horizon):
     r""" The exponential horizon progression function:
 
     .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
-    return int(np.ceil(horizon ** 2))
+    return int(np.floor(horizon ** 2))
 
 next_horizon__exponential_fast.__latex_name__ = "fast exp"
 
 
-ALPHA = 1
+ALPHA = 2
 BETA = 2
 
-def next_horizon__exponential_generic(horizon):
+def next_horizon__exponential_generic(i, horizon):
     r""" The generic exponential horizon progression function:
 
     .. math:: T \mapsto \lfloor T^{2} \rfloor.
     """
-    return int(ALPHA * np.ceil(horizon ** BETA))
+    return int((DEFAULT_FIRST_HORIZON / ALPHA) * ALPHA ** (BETA ** i))
+    # return int(ALPHA * np.floor(horizon ** BETA))
 
 next_horizon__exponential_generic.__latex_name__ = r"exp $\alpha={:.3g}$, $\beta={:.3g}$".format(ALPHA, BETA)
 
@@ -204,7 +204,7 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     times = [t]
     if debug: print("\n\nFor the growth function {}, named '{}', first guess of the horizon = {} and true horizon = {} ...\n ==> The times will be:".format(next_horizon, getattr(next_horizon, '__latex_name__', '?'), first_horizon, horizon))
     while t < horizon:
-        t = next_horizon(t)
+        t = next_horizon(i, t)
         i += 1
         times.append(t)
         if debug: print("    The {}th breakpoint is {} ...".format(i, t))  # DEBUG
@@ -238,6 +238,7 @@ class DoublingTrickWrapper(BasePolicy):
         self._kwargs = kwargs  # To keep them
         self.policy = None  #: Underlying policy
         # --- Horizon
+        self._i = 0
         self._next_horizon = next_horizon  # Function for the growing horizon
         self.next_horizon_name = getattr(next_horizon, '__latex_name__', '?')  #: Pretty string of the name of this growing function
         self._first_horizon = max(2, first_horizon)  # First guess for the horizon
@@ -248,18 +249,23 @@ class DoublingTrickWrapper(BasePolicy):
     # --- pretty printing
 
     def __str__(self):
-        return r"DT($T_0={}$, {} seq{})[{}]".format(self._first_horizon, self.next_horizon_name, ", restart" if self.full_restart else "", self.policy)
+        # remove the T0 part from string representation of the policy
+        str_policy = str(self.policy)
+        str_policy = str_policy.replace(r"($T={}$)".format(self._first_horizon), "")
+        str_policy = str_policy.replace(r"$T={}$, ".format(self._first_horizon), "")
+        return r"DT($T_0={}$, {} seq{})[{}]".format(self._first_horizon, self.next_horizon_name, ", restart" if self.full_restart else "", str_policy)
 
     # --- Start game by creating new underlying policy
 
     def startGame(self):
         """ Initialize the policy for a new game."""
         super(DoublingTrickWrapper, self).startGame()
+        self._i = 0  # reinitialize this
         self.horizon = self._first_horizon  #: Last guess for the horizon
         try:
             self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         except Exception as e:
-            print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
+            print("WARNING: Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
@@ -277,7 +283,8 @@ class DoublingTrickWrapper(BasePolicy):
 
         # Maybe we have to update the horizon?
         if self.t > self.horizon:
-            new_horizon = self._next_horizon(self.horizon)
+            self._i += 1
+            new_horizon = self._next_horizon(self._i, self.horizon)
             assert new_horizon > self.horizon, "Error: the new_horizon = {} is not > the current horizon = {} ...".format(new_horizon, self.horizon)  # DEBUG
             # print("  - At time t = {}, a DoublingTrickWrapper class was running with current horizon T_i = {} and decided to use {} as a new horizon...".format(self.t, self.horizon, new_horizon))  # DEBUG
             self.horizon = new_horizon

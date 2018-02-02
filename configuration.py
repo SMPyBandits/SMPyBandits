@@ -108,8 +108,8 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tried.
-TEST_Doubling_Trick = True
 TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
+TEST_Doubling_Trick = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -534,18 +534,18 @@ configuration.update({
         #         "alpha": 2,
         #     }
         # },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 1,
-            }
-        },
         # {
         #     "archtype": UCBalpha,   # UCB with custom alpha parameter
         #     "params": {
-        #         "alpha": 0.5,       # XXX Below the theoretically acceptable value!
+        #         "alpha": 1,
         #     }
         # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 0.5,       # XXX Below the theoretically acceptable value!
+            }
+        },
         # {
         #     "archtype": SWR_UCBalpha,   # XXX experimental sliding window algorithm
         #     "params": {
@@ -574,6 +574,27 @@ configuration.update({
         {
             "archtype": MOSS,
             "params": {}
+        },
+        # --- MOSS-H algorithm, like UCB-H
+        {
+            "archtype": MOSSH,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
+        # --- FIXME MOSS-Anytime algorithm, extension of MOSS
+        {
+            "archtype": MOSSAnytime,
+            "params": {
+                "alpha": 1.35,
+            }
+        },
+        # --- FIXME MOSS-Experimental algorithm, extension of MOSS
+        {
+            "archtype": MOSSExperimental,
+            "params": {
+                "alpha": 1.35,
+            }
         },
         # # --- Optimally-Confident UCB algorithm
         # {
@@ -616,16 +637,14 @@ configuration.update({
         #     "archtype": CPUCB,
         #     "params": {}
         # },
-        # --- DMED algorithm, similar to klUCB
-        {
-            "archtype": DMEDPlus,
-            "params": {
-            }
-        },
+        # # --- DMED algorithm, similar to klUCB
+        # {
+        #     "archtype": DMEDPlus,
+        #     "params": {}
+        # },
         # {
         #     "archtype": DMED,
-        #     "params": {
-        #     }
+        #     "params": {}
         # },
         # --- Thompson algorithms
         {
@@ -826,7 +845,8 @@ configuration.update({
             "archtype": ApproximatedFHGittins,
             "params": {
                 "alpha": 0.5,
-                "horizon": int(1.05 * HORIZON),
+                # "horizon": int(1.05 * HORIZON),
+                "horizon": HORIZON,
                 # "horizon": HORIZON + 1,
             }
         },
@@ -912,18 +932,18 @@ configuration.update({
         #         "gamma": 0.0,
         #     }
         # },
-        # --- The awesome BESA algorithm
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-                "randomized_tournament": True,
-                # "randomized_tournament": False,  # XXX Very inefficient!
-                "random_subsample": True,
-                # "random_subsample": False,  # XXX Very inefficient!
-            }
-        },
+        # # --- The awesome BESA algorithm
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+        #         "randomized_tournament": True,
+        #         # "randomized_tournament": False,  # XXX Very inefficient!
+        #         "random_subsample": True,
+        #         # "random_subsample": False,  # XXX Very inefficient!
+        #     }
+        # },
     ]
 })
 
@@ -943,6 +963,7 @@ if TEST_Doubling_Trick:
         }
         for policy in [
             # UCBH,
+            # MOSSH,
             klUCBPlusPlus,
             ApproximatedFHGittins,
         ]
