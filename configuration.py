@@ -108,8 +108,8 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tried.
-TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
 TEST_Doubling_Trick = True
+TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -534,12 +534,12 @@ configuration.update({
         #         "alpha": 2,
         #     }
         # },
-        # {
-        #     "archtype": UCBalpha,   # UCB with custom alpha parameter
-        #     "params": {
-        #         "alpha": 1,
-        #     }
-        # },
+        {
+            "archtype": UCBalpha,   # UCB with custom alpha parameter
+            "params": {
+                "alpha": 1,
+            }
+        },
         {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
@@ -589,12 +589,10 @@ configuration.update({
                 "alpha": 1.35,
             }
         },
-        # --- FIXME MOSS-Experimental algorithm, extension of MOSS
+        # --- FIXME MOSS-Experimental algorithm, extension of MOSSAnytime
         {
             "archtype": MOSSExperimental,
-            "params": {
-                "alpha": 1.35,
-            }
+            "params": {}
         },
         # # --- Optimally-Confident UCB algorithm
         # {
@@ -831,22 +829,22 @@ configuration.update({
         #     "archtype": ApproximatedFHGittins,
         #     "params": {
         #         "alpha": 4,
-        #         "horizon": int(1.05 * HORIZON),
+        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
         #     }
         # },
         # {
         #     "archtype": ApproximatedFHGittins,
         #     "params": {
         #         "alpha": 1,
-        #         "horizon": int(1.05 * HORIZON),
+        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
         #     }
         # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
                 "alpha": 0.5,
-                # "horizon": int(1.05 * HORIZON),
-                "horizon": HORIZON,
+                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+                # "horizon": HORIZON,
                 # "horizon": HORIZON + 1,
             }
         },

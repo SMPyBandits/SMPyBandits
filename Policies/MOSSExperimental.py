@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ The MOSS-Experimental policy for bounded bandits, without knowing the horizon (and no doubling trick).
 Reference: [Degenne & Perchet, 2016](http://proceedings.mlr.press/v48/degenne16.pdf).
+
+.. warning:: Nothing was proved for this heuristic!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -28,7 +30,7 @@ class MOSSExperimental(MOSS):
         .. math::
 
             I_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{ \max\left(0, \frac{\log\left(\frac{t}{\hat{H}(t)}\right)}{N_k(t)}\right)},\\
-            \text{where}\;\; \hat{H}(t) := \begin{cases}
+            \text{where}\;\; \hat{H}(t) &:= \begin{cases}
                 \sum\limits_{j=1, N_j(t) < \sqrt{t}}^{K} N_j(t) & \;\text{if it is}\; > 0,\\
                 K N_k(t) & \;\text{otherwise}\;
             \end{cases}

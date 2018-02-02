@@ -137,7 +137,13 @@ def makemarkers(nb):
     return longlist[:nb]  # Truncate
 
 
-def legend(putatright=False, shrinkfactor=0.55):
+#: Default parameter for legend(): if True, the legend is put at the right side of the figure, not on it.
+#: This is almost mandatory for plots with more than 10 algorithms (good for experimenting, bad for publications).
+PUTATRIGHT = False
+PUTATRIGHT = True
+
+
+def legend(putatright=PUTATRIGHT, shrinkfactor=0.80):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends."""
     if putatright:
         try:

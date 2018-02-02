@@ -28,7 +28,7 @@ class MOSSH(MOSS):
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k, if there is K arms:
 
-        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log(\frac{T}{K N_k(t)})}{N_k(t)}\right)}.
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}\right)}.
         """
         if self.pulls[arm] < 1:
             return float('+inf')
