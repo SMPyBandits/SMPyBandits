@@ -7,7 +7,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from numpy import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
@@ -27,7 +26,7 @@ class MOSS(IndexPolicy):
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
-            return (self.rewards[arm] / self.pulls[arm]) + sqrt(max(0, log(self.t / (self.nbArms * self.pulls[arm]))) / self.pulls[arm])
+            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt(max(0, np.log(self.t / (self.nbArms * self.pulls[arm]))) / self.pulls[arm])
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
