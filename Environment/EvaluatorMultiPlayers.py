@@ -443,10 +443,10 @@ class EvaluatorMultiPlayers(object):
                     for i in range(len(Ys)):
                             Ys[i] = Ys[i][X0 >= 100]
             if normalized:
-                Y /= np.log(2 + X)   # XXX prevent /0
+                Y = Y[X >= 1] / np.log(X[X >= 1])   # XXX prevent /0
                 if subTerms:
                     for i in range(len(Ys)):
-                        Ys[i] /= np.log(2 + X)  # XXX prevent /0
+                        Ys[i] = Ys[i][X >= 1] / np.log(X[X >= 1])  # XXX prevent /0
             meanY = np.mean(Y)
             # Now plot
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
@@ -476,7 +476,11 @@ class EvaluatorMultiPlayers(object):
                 if self.envs[envId].isDynamic:
                     print("WARNING this env is in fact dynamic, this complexity term and H_OI factor do not have much sense... (they are computed from the average of the complexity for all mean vectors drawn in the repeted experiments...)")  # DEBUG
                 print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
-                T = np.ones_like(X) if normalized else np.log(2 + X)
+                if normalized:
+                    T = np.ones_like(X)
+                else:
+                    X = X[X >= 1]
+                    T = np.log(X)
                 plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
                 plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
                 plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)

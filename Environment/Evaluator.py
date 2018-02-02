@@ -450,8 +450,10 @@ class Evaluator(object):
             # FIXED for semilogx plots, truncate to only show t >= 100
             if semilogx or loglog:
                 X = X[X >= 100]
+            else:
+                X = X[X >= 1]
             # We also plot the Lai & Robbins lower bound
-            plt.plot(X[::self.delta_t_plot], lowerbound * np.log(1 + X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)
+            plt.plot(X[::self.delta_t_plot], lowerbound * np.log(X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))

@@ -24,7 +24,7 @@ class MOSSAnytime(MOSS):
 
     def __init__(self, nbArms, alpha=ALPHA, lower=0., amplitude=1.):
         super(MOSSAnytime, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.alpha = alpha  #: Parameter alpha
+        self.alpha = alpha  #: Parameter :math:`\alpha \geq 0` for the computations of the index. Optimal value seems to be :math:`1.35`.
 
     def __str__(self):
         return r"MOSS-Anytime($\alpha={}$)".format(self.alpha)
