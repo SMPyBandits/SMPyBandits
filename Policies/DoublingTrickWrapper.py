@@ -46,6 +46,12 @@ from .BasePolicy import BasePolicy
 
 from .UCBH import UCBH
 
+try:
+    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+except (ValueError, SystemError):
+    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+
+
 #: Default horizon-dependent policy
 default_horizonDependent_policy = UCBH
 
@@ -63,85 +69,122 @@ DEFAULT_FIRST_HORIZON = 100
 
 
 #: Default stepsize for the arithmetic horizon progression.
-ARITHMETIC_STEP = DEFAULT_FIRST_HORIZON
+ARITHMETIC_STEP = 10 * DEFAULT_FIRST_HORIZON
+ARITHMETIC_STEP = 1 * DEFAULT_FIRST_HORIZON
 
 
+@jit
 def next_horizon__arithmetic(i, horizon):
     r""" The arithmetic horizon progression function:
 
-    .. math:: T \mapsto T + 100.
+    .. math::
+
+        T &\mapsto T + 100.
+        T_i &:= T_0 + 100 \times i.
     """
     return horizon + ARITHMETIC_STEP
 
 next_horizon__arithmetic.__latex_name__ = "arithm"
+next_horizon__arithmetic.__latex_name__ = r"$T_i = {}+{}\timesi$".format(DEFAULT_FIRST_HORIZON, ARITHMETIC_STEP)
 
 
 #: Default multiplicative constant for the geometric horizon progression.
 GEOMETRIC_STEP = 2
 
 
+@jit
 def next_horizon__geometric(i, horizon):
     r""" The geometric horizon progression function:
 
-    .. math:: T \mapsto T \times 2.
+    .. math::
+
+        T &\mapsto T \times 2.
+        T_i &:= T_0 2^i.
     """
     return horizon * GEOMETRIC_STEP
 
 next_horizon__geometric.__latex_name__ = "geom"
+next_horizon__geometric.__latex_name__ = r"$T_i = {}\times{}^i$".format(DEFAULT_FIRST_HORIZON, GEOMETRIC_STEP)
 
 
 #: Default exponential constant for the exponential horizon progression.
-EXPONENTIAL_STEP = 2
+EXPONENTIAL_STEP = 1.5
 
 
+@jit
 def next_horizon__exponential(i, horizon):
     r""" The exponential horizon progression function:
 
-    .. math:: T \mapsto \lfloor T^{2} \rfloor.
+    .. math::
+
+        T &\mapsto \lfloor T^{1.5} \rfloor.
+        T_i &:= \lfloor T_0^{1.5^i} \rfloor.
     """
     return int(np.floor(horizon ** EXPONENTIAL_STEP))
 
 next_horizon__exponential.__latex_name__ = "exp"
+next_horizon__exponential.__latex_name__ = r"$T_i = {}^{}$".format(DEFAULT_FIRST_HORIZON, r"{%.3g^i}" % EXPONENTIAL_STEP)
 
 
+#: Default exponential constant for the slow exponential horizon progression.
+SLOW_EXPONENTIAL_STEP = 1.1
+
+
+@jit
 def next_horizon__exponential_slow(i, horizon):
     r""" The exponential horizon progression function:
 
-    .. math:: T \mapsto \lfloor T^{1.1} \rfloor.
+    .. math::
+
+        T &\mapsto \lfloor T^{1.1} \rfloor.
+        T_i &:= \lfloor T_0^{1.1^i} \rfloor.
     """
-    return int(np.floor(horizon ** 1.1))
+    return int(np.floor(horizon ** SLOW_EXPONENTIAL_STEP))
 
 next_horizon__exponential_slow.__latex_name__ = "slow exp"
+next_horizon__exponential_slow.__latex_name__ = r"$T_i = {}^{}$".format(DEFAULT_FIRST_HORIZON, r"{%.3g^i}" % SLOW_EXPONENTIAL_STEP)
 
 
+#: Default exponential constant for the fast exponential horizon progression.
+FAST_EXPONENTIAL_STEP = 2
+
+
+@jit
 def next_horizon__exponential_fast(i, horizon):
     r""" The exponential horizon progression function:
 
-    .. math:: T \mapsto \lfloor T^{2} \rfloor.
+    .. math::
+
+        T &\mapsto \lfloor T^{2} \rfloor.
+        T_i &:= \lfloor T_0^{2^i} \rfloor.
     """
     return int(np.floor(horizon ** 2))
 
 next_horizon__exponential_fast.__latex_name__ = "fast exp"
+next_horizon__exponential_fast.__latex_name__ = r"$T_i = {}^{}$".format(DEFAULT_FIRST_HORIZON, r"{%.3g^i}" % FAST_EXPONENTIAL_STEP)
 
 
+#: Default constant :math:`\alpha` for the generic exponential sequence.
 ALPHA = 2
+#: Default constant :math:`\beta` for the generic exponential sequence.
 BETA = 2
 
 def next_horizon__exponential_generic(i, horizon):
     r""" The generic exponential horizon progression function:
 
-    .. math:: T \mapsto \lfloor T^{2} \rfloor.
+    .. math:: T_i := \lfloor \frac{T_0}{a} a^{b^i} \rfloor.
     """
     return int((DEFAULT_FIRST_HORIZON / ALPHA) * ALPHA ** (BETA ** i))
     # return int(ALPHA * np.floor(horizon ** BETA))
 
-next_horizon__exponential_generic.__latex_name__ = r"exp $\alpha={:.3g}$, $\beta={:.3g}$".format(ALPHA, BETA)
+next_horizon__exponential_generic.__latex_name__ = r"exp $a={:.3g}$, $b={:.3g}$".format(ALPHA, BETA)
+next_horizon__exponential_generic.__latex_name__ = r"$T_i = ({}/{}) {}^{}$".format(DEFAULT_FIRST_HORIZON, ALPHA, ALPHA, r"{%.3g^i}" % BETA)
 
 
 #: Chose the default horizon growth function.
 # default_next_horizon = next_horizon__arithmetic
 # default_next_horizon = next_horizon__geometric
-# default_next_horizon = next_horizon__exponential
+# default_next_horizon = next_horizon__geometric
 # default_next_horizon = next_horizon__exponential_fast
 default_next_horizon = next_horizon__exponential_slow
 
@@ -253,7 +296,8 @@ class DoublingTrickWrapper(BasePolicy):
         str_policy = str(self.policy)
         str_policy = str_policy.replace(r"($T={}$)".format(self._first_horizon), "")
         str_policy = str_policy.replace(r"$T={}$, ".format(self._first_horizon), "")
-        return r"DT($T_0={}$, {} seq{})[{}]".format(self._first_horizon, self.next_horizon_name, ", restart" if self.full_restart else "", str_policy)
+        # return r"{}($T_0={}$, {} seq)[{}]".format("DTr" if self.full_restart else "DTnr", self._first_horizon, self.next_horizon_name, str_policy)
+        return r"{}({})[{}]".format("DTr" if self.full_restart else "DTnr", self.next_horizon_name, str_policy)
 
     # --- Start game by creating new underlying policy
 
@@ -265,7 +309,7 @@ class DoublingTrickWrapper(BasePolicy):
         try:
             self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         except Exception as e:
-            print("WARNING: Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it".format(e, self.horizon))  # DEBUG
+            print("WARNING: Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it...".format(e, self.horizon))  # DEBUG
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
@@ -293,7 +337,7 @@ class DoublingTrickWrapper(BasePolicy):
                 try:
                     self.policy = self._policy(self.nbArms, horizon=self.horizon, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
                 except Exception as e:
-                    print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it...".format(e, self.horizon))  # DEBUG
+                    # print("Received exception {} when trying to create the underlying policy... maybe the 'horizon={}' keyword argument was not understood correctly? Retrying without it...".format(e, self.horizon))  # DEBUG
                     self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
                 # now also start game for the underlying policy
                 self.policy.startGame()
