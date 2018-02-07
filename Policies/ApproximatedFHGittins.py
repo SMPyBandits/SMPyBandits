@@ -31,7 +31,10 @@ class ApproximatedFHGittins(IndexPolicy):
         self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
-        return r"ApprFHG($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
+        if self.alpha == ALPHA:
+            return r"ApprFHG($T={}$)".format(self.horizon)
+        else:
+            return r"ApprFHG($T={}$, $\alpha={:.3g}$)".format(self.horizon, self.alpha)
 
     @property
     def m(self):
@@ -59,13 +62,11 @@ class ApproximatedFHGittins(IndexPolicy):
             return float('+inf')
         else:
             m_by_Nk = float(self.m) / self.pulls[arm]
-            loghalf = np.sqrt(np.log(m_by_Nk))
-            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / loghalf))
+            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / np.sqrt(np.log(m_by_Nk))))
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         m_by_Nk = float(self.m) / self.pulls
-        loghalf = np.sqrt(np.maximum(0, np.log(m_by_Nk)))
-        indexes = (self.rewards / self.pulls) + np.sqrt(self.alpha / (2. * self.pulls) * np.log(m_by_Nk / loghalf))
+        indexes = (self.rewards / self.pulls) + np.sqrt(self.alpha / (2. * self.pulls) * np.log(m_by_Nk / np.sqrt(np.maximum(0, np.log(m_by_Nk)))))
         indexes[self.pulls < 1] = float('+inf')
         self.index[:] = indexes
