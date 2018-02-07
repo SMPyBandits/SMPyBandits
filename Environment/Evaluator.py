@@ -512,7 +512,7 @@ class Evaluator(object):
             print("Mean of   last regrets R_T =", np.mean(last_regrets))
             print("Median of last regrets R_T =", np.median(last_regrets))
             print("Max of    last regrets R_T =", np.max(last_regrets))
-            print("VAR of    last regrets R_T =", np.var(last_regrets))
+            print("STD of    last regrets R_T =", np.std(last_regrets))
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=25, log=False,
