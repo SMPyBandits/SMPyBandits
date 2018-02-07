@@ -55,13 +55,15 @@ REPETITIONS = int(getenv('N', REPETITIONS))
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False
 DO_PARALLEL = True
-DO_PARALLEL = (REPETITIONS > 1) and DO_PARALLEL
+DO_PARALLEL = (REPETITIONS > 1 or REPETITIONS == -1) and DO_PARALLEL
 
 #: Number of jobs to use for the parallel computations. -1 means all the CPU cores, 1 means no parallelization.
 N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = min(CPU_COUNT, max(int(CPU_COUNT / 3), CPU_COUNT - 8))
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
+if REPETITIONS == -1:
+    REPETITIONS = max(N_JOBS, CPU_COUNT)
 
 # Random events
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
@@ -151,6 +153,10 @@ mapping_ARM_TYPE = {
 }
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
+#: True to use bayesian problem
+ENVIRONMENT_BAYESIAN = False
+ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -193,11 +199,11 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # # XXX Default!
-        # {   # A very easy problem (X arms), but it is used in a lot of articles
-        #     "arm_type": ARM_TYPE,
-        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
         #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
@@ -214,22 +220,22 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
-                    "isSorted": True,
-                }
-            }
-        },
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": ARM_TYPE,
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.0000001,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3 * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
     ],
     # "environment": [  # XXX Exponential arms
     #     {   # An example problem with 9 arms
@@ -254,6 +260,26 @@ configuration = {
     #     },
     # ],
 }
+
+if ENVIRONMENT_BAYESIAN:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": 0.,
+                    "amplitude": 1.,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -589,11 +615,11 @@ configuration.update({
                 "alpha": 1.35,
             }
         },
-        # --- FIXME MOSS-Experimental algorithm, extension of MOSSAnytime
-        {
-            "archtype": MOSSExperimental,
-            "params": {}
-        },
+        # # --- FIXME MOSS-Experimental algorithm, extension of MOSSAnytime
+        # {
+        #     "archtype": MOSSExperimental,
+        #     "params": {}
+        # },
         # # --- Optimally-Confident UCB algorithm
         # {
         #     "archtype": OCUCB,
@@ -709,12 +735,12 @@ configuration.update({
         #         "klucb": klucb,
         #     }
         # },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "klucb": klucb,
-            }
-        },
+        # {
+        #     "archtype": klUCBPlus,
+        #     "params": {
+        #         "klucb": klucb,
+        #     }
+        # },
         # {
         #     "archtype": klUCBHPlus,
         #     "params": {
@@ -848,61 +874,6 @@ configuration.update({
                 # "horizon": HORIZON + 1,
             }
         },
-        # # --- Doubling trick algorithm
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__arithmetic,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__geometric,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_fast,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_slow,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_generic,
-        #         "policy": ApproximatedFHGittins,
-        #         "alpha": 0.5,
-        #     }
-        # },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,
@@ -947,40 +918,58 @@ configuration.update({
 
 # Dynamic hack
 if TEST_Doubling_Trick:
-    # Smart way of adding list of Aggregated versions
-    # # XXX use following line if you dont want to keep the previously defined policies
-    # configuration["policies"] = [
-    # XXX use following line if you want to keep the previously defined policies
-    configuration["policies"] += [
-        # --- Doubling trick algorithm
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon,
-                "full_restart": full_restart,
-                "policy": policy,
-                # "alpha": 0.5,  # only for ApproximatedFHGittins
-            }
-        }
-        for policy in [
+    POLICIES_FOR_DOUBLING_TRICK = [
+            klUCB,  # XXX Don't need the horizon, but suffer the restart (to compare)
             # UCBH,
             # MOSSH,
             klUCBPlusPlus,
             ApproximatedFHGittins,
         ]
-        for full_restart in [
-            # True,
-            False,
+    configuration["policies"] = []
+    # Smart way of adding list of Doubling Trick versions
+    for policy in POLICIES_FOR_DOUBLING_TRICK:
+        accept_horizon = True
+        try:
+            _ = policy(NB_ARMS, horizon=HORIZON)
+        except TypeError:
+            accept_horizon = False  # don't use horizon
+        configuration["policies"] += [
+            # --- Doubling trick algorithm
+            {
+                "archtype": policy,
+                "params": {
+                    "horizon": HORIZON,
+                    # "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+                    # "alpha": 0.5,  # only for ApproximatedFHGittins
+                } if accept_horizon else {
+                    # "alpha": 0.5,  # only for ApproximatedFHGittins
+                }
+            }
         ]
-        for next_horizon in [
-            # next_horizon__arithmetic,
-            next_horizon__geometric,
-            next_horizon__exponential,
-            # next_horizon__exponential_fast,
-            next_horizon__exponential_slow,
-            next_horizon__exponential_generic
+        configuration["policies"] += [
+            # --- Doubling trick algorithm
+            {
+                "archtype": DoublingTrickWrapper,
+                "params": {
+                    "next_horizon": next_horizon,
+                    "full_restart": full_restart,
+                    "policy": policy,
+                    # "alpha": 0.5,  # only for ApproximatedFHGittins
+                }
+            }
+            for full_restart in [
+                True,
+                # False,
+            ]
+            for next_horizon in [
+                next_horizon__arithmetic,
+                next_horizon__geometric,
+                # next_horizon__exponential,
+                # next_horizon__exponential_fast,
+                # next_horizon__exponential_slow,
+                next_horizon__exponential_generic
+            ]
         ]
-    ]
 
 
 # from itertools import product  # XXX If needed!

@@ -85,7 +85,7 @@ def next_horizon__arithmetic(i, horizon):
     return horizon + ARITHMETIC_STEP
 
 next_horizon__arithmetic.__latex_name__ = "arithm"
-next_horizon__arithmetic.__latex_name__ = r"$T_i = {}+{}\timesi$".format(DEFAULT_FIRST_HORIZON, ARITHMETIC_STEP)
+next_horizon__arithmetic.__latex_name__ = r"$T_i = {} + {} \times i$".format(DEFAULT_FIRST_HORIZON, ARITHMETIC_STEP)
 
 
 #: Default multiplicative constant for the geometric horizon progression.
@@ -104,7 +104,7 @@ def next_horizon__geometric(i, horizon):
     return horizon * GEOMETRIC_STEP
 
 next_horizon__geometric.__latex_name__ = "geom"
-next_horizon__geometric.__latex_name__ = r"$T_i = {}\times{}^i$".format(DEFAULT_FIRST_HORIZON, GEOMETRIC_STEP)
+next_horizon__geometric.__latex_name__ = r"$T_i = {} \times {}^i$".format(DEFAULT_FIRST_HORIZON, GEOMETRIC_STEP)
 
 
 #: Default exponential constant for the exponential horizon progression.

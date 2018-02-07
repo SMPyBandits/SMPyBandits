@@ -139,8 +139,8 @@ def makemarkers(nb):
 
 #: Default parameter for legend(): if True, the legend is placed at the right side of the figure, not on it.
 #: This is almost mandatory for plots with more than 10 algorithms (good for experimenting, bad for publications).
-PUTATRIGHT = True
 PUTATRIGHT = False
+PUTATRIGHT = True
 
 
 def legend(putatright=PUTATRIGHT, shrinkfactor=0.75, fig=None):
@@ -220,7 +220,10 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
             print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
             plt.savefig(path, bbox_inches=BBOX_INCHES)
             print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
-    plt.show() if showplot else plt.close()
+    try:
+        plt.show() if showplot else plt.close()
+    except (TypeError, AttributeError):
+        print("Failed to show the figure for some unknown reason...")  # DEBUG
 
 
 def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):

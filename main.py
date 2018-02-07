@@ -240,7 +240,7 @@ if __name__ == '__main__':
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
             for sharex, sharey in product([True, False], repeat=2):
                 evaluation.plotLastRegrets(envId, sharex=sharex, sharey=sharey)  # XXX To plot without saving
-            evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
+            # evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
 
         if saveallfigs:
             print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
