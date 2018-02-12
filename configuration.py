@@ -755,61 +755,6 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        # # --- Doubling trick algorithm
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__arithmetic,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__geometric,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_fast,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_slow,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # {
-        #     "archtype": DoublingTrickWrapper,
-        #     "params": {
-        #         "full_restart": True,
-        #         "next_horizon": next_horizon__exponential_generic,
-        #         "policy": klUCBPlusPlus,
-        #         "klucb": klucb,
-        #     }
-        # },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -958,8 +903,8 @@ if TEST_Doubling_Trick:
                 }
             }
             for full_restart in [
-                True,
-                # False,
+                # True,
+                False,
             ]
             for next_horizon in [
                 next_horizon__arithmetic,

@@ -79,7 +79,7 @@ def next_horizon__arithmetic(i, horizon):
 
     .. math::
 
-        T &\mapsto T + 100.
+        T &\mapsto T + 100,\\
         T_i &:= T_0 + 100 \times i.
     """
     return horizon + ARITHMETIC_STEP
@@ -98,7 +98,7 @@ def next_horizon__geometric(i, horizon):
 
     .. math::
 
-        T &\mapsto T \times 2.
+        T &\mapsto T \times 2,\\
         T_i &:= T_0 2^i.
     """
     return horizon * GEOMETRIC_STEP
@@ -117,8 +117,8 @@ def next_horizon__exponential(i, horizon):
 
     .. math::
 
-        T &\mapsto \lfloor T^{1.5} \rfloor.
-        T_i &:= \lfloor T_0^{1.5^i} \rfloor.
+        T &\mapsto \left\lfloor T^{1.5} \right\rfloor,\\
+        T_i &:= \left\lfloor T_0^{1.5^i} \right\rfloor.
     """
     return int(np.floor(horizon ** EXPONENTIAL_STEP))
 
@@ -136,8 +136,8 @@ def next_horizon__exponential_slow(i, horizon):
 
     .. math::
 
-        T &\mapsto \lfloor T^{1.1} \rfloor.
-        T_i &:= \lfloor T_0^{1.1^i} \rfloor.
+        T &\mapsto \left\lfloor T^{1.1} \right\rfloor,\\
+        T_i &:= \left\lfloor T_0^{1.1^i} \right\rfloor.
     """
     return int(np.floor(horizon ** SLOW_EXPONENTIAL_STEP))
 
@@ -155,7 +155,7 @@ def next_horizon__exponential_fast(i, horizon):
 
     .. math::
 
-        T &\mapsto \lfloor T^{2} \rfloor.
+        T &\mapsto \lfloor T^{2} \rfloor,\\
         T_i &:= \lfloor T_0^{2^i} \rfloor.
     """
     return int(np.floor(horizon ** 2))
@@ -172,7 +172,7 @@ BETA = 2
 def next_horizon__exponential_generic(i, horizon):
     r""" The generic exponential horizon progression function:
 
-    .. math:: T_i := \lfloor \frac{T_0}{a} a^{b^i} \rfloor.
+    .. math:: T_i := \left\lfloor \frac{T_0}{a} a^{b^i} \right\rfloor.
     """
     return int((DEFAULT_FIRST_HORIZON / ALPHA) * ALPHA ** (BETA ** i))
     # return int(ALPHA * np.floor(horizon ** BETA))
