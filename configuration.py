@@ -864,10 +864,10 @@ configuration.update({
 # Dynamic hack
 if TEST_Doubling_Trick:
     POLICIES_FOR_DOUBLING_TRICK = [
-            klUCB,  # XXX Don't need the horizon, but suffer the restart (to compare)
+            klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
             # UCBH,
             # MOSSH,
-            klUCBPlusPlus,
+            # klUCBPlusPlus,
             ApproximatedFHGittins,
         ]
     configuration["policies"] = []
@@ -903,11 +903,11 @@ if TEST_Doubling_Trick:
                 }
             }
             for full_restart in [
-                # True,
-                False,
+                True,
+                # False,
             ]
             for next_horizon in [
-                next_horizon__arithmetic,
+                # next_horizon__arithmetic,
                 next_horizon__geometric,
                 # next_horizon__exponential,
                 # next_horizon__exponential_fast,
@@ -917,7 +917,7 @@ if TEST_Doubling_Trick:
         ]
 
 
-# from itertools import product  # XXX If needed!
+from itertools import product  # XXX If needed!
 
 # Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
 if TEST_Aggregator:

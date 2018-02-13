@@ -34,7 +34,7 @@ def g(t, T, K):
 
     .. math::
 
-        g(t, T, K) := \log^+(y (1 + \log^+(y)^2)),
+        g(t, T, K) &:= \log^+(y (1 + \log^+(y)^2)),\\
         y &:= \frac{T}{K t}.
     """
     y = T / (K * t)
@@ -43,11 +43,11 @@ def g(t, T, K):
 
 # @jit
 def np_g(t, T, K):
-    """The exploration function g(t) (for t current time, T horizon, K nb arms), as defined in page 3 of the reference paper, for numpy vectorized inputs.
+    r"""The exploration function g(t) (for t current time, T horizon, K nb arms), as defined in page 3 of the reference paper, for numpy vectorized inputs.
 
     .. math::
 
-        g(t, T, K) := \log^+(y (1 + \log^+(y)^2)),
+        g(t, T, K) &:= \log^+(y (1 + \log^+(y)^2)),\\
         y &:= \frac{T}{K t}.
     """
     y = T / (K * t)
@@ -83,7 +83,7 @@ class klUCBPlusPlus(klUCB):
 
         .. math::
 
-            g(t, T, K) := \log^+(y (1 + \log^+(y)^2)),
+            g(t, T, K) &:= \log^+(y (1 + \log^+(y)^2)),\\
             y &:= \frac{T}{K t}.
         """
         if self.pulls[arm] < 1:
