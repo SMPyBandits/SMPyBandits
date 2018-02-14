@@ -873,6 +873,7 @@ if TEST_Doubling_Trick:
     configuration["policies"] = []
     # Smart way of adding list of Doubling Trick versions
     for policy in POLICIES_FOR_DOUBLING_TRICK:
+        # First add the non-doubling trick version
         accept_horizon = True
         try:
             _ = policy(NB_ARMS, horizon=HORIZON)
@@ -891,6 +892,7 @@ if TEST_Doubling_Trick:
                 }
             }
         ]
+        # Then add the doubling trick version
         configuration["policies"] += [
             # --- Doubling trick algorithm
             {
@@ -903,15 +905,15 @@ if TEST_Doubling_Trick:
                 }
             }
             for full_restart in [
-                True,
-                # False,
+                # True,
+                False,
             ]
             for next_horizon in [
                 # next_horizon__arithmetic,
                 next_horizon__geometric,
                 # next_horizon__exponential,
-                # next_horizon__exponential_fast,
-                # next_horizon__exponential_slow,
+                next_horizon__exponential_fast,
+                next_horizon__exponential_slow,
                 next_horizon__exponential_generic
             ]
         ]

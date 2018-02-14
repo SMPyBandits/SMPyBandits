@@ -5,7 +5,7 @@ Lots of plotting methods, to have various visualizations.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.8"
+__version__ = "0.9"
 
 # Generic imports
 from copy import deepcopy
@@ -416,7 +416,7 @@ class Evaluator(object):
                 if normalizedRegret:
                     MaxMinY /= np.log(2 + X)
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
+        plt.xlabel(r"Time steps $t = 0...T-1$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
         if not (semilogx or semilogy or loglog):
             print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(lowerbound, self.envs[envId].hoifactor()))  # DEBUG
@@ -474,7 +474,7 @@ class Evaluator(object):
             lw = 4 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy) or 'LearnExp' in str(policy) or 'Exp4' in str(policy)) else 2
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
-        plt.xlabel(r"Time steps $t = 1 .. T$, horizon $T = {}${}".format(self.horizon, self.signature))
+        plt.xlabel(r"Time steps $t = 0...T-1$, horizon $T = {}${}".format(self.horizon, self.signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
