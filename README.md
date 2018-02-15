@@ -16,7 +16,7 @@ I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
 
-> **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md) and [this article](https://hal.inria.fr/hal-XXX).
+> **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md) and [this article](https://hal.inria.fr/hal-01705292).
 
 ----
 
@@ -25,6 +25,13 @@ There is another point of view: instead of comparing different single-player pol
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
 > **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md) and [this article](https://hal.inria.fr/hal-01629733).
+
+----
+
+## [**Doubling Trick for Multi-Armed Bandits**](DoublingTrick.md)
+I studied what Doubling Trick can and can't do to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
+
+> **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this article](https://hal.inria.fr/hal-XXX).
 
 ----
 

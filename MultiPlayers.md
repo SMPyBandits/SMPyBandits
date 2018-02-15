@@ -63,9 +63,7 @@ configuration["successive_players"] = [
 
 > Figure 2 : Regret (in loglog scale), for M=6 players for K=9 arms, horizon T=5000, for 1000 repetitions on problem µ=[0.1,dots,0.9]. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The x axis on the regret histograms have different scale for each algorithm.
 
-TODO finish this
-
-> These illustrations come from my article, [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+> These illustrations come from my article, [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 
 ----
 
