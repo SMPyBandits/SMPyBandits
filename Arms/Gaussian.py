@@ -24,7 +24,7 @@ array([ 0.3882...,  0.3200...,  0.3489... ,  0.4120...,  0.3933... ,
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from random import gauss
 from numpy.random import standard_normal
@@ -96,12 +96,22 @@ class Gaussian(Arm):
         return 1 - (mumax - mu) / self.max
 
 
+#: Default value for the variance of an unbounded Gaussian arm
+UNBOUNDED_VARIANCE = 1
+
+
 class UnboundedGaussian(Gaussian):
     """ Gaussian distributed arm, not truncated, ie. supported in (-oo,  oo)."""
 
-    def __init__(self, mu, sigma=VARIANCE):
+    def __init__(self, mu, sigma=UNBOUNDED_VARIANCE):
         """New arm."""
         super(UnboundedGaussian, self).__init__(mu, sigma=sigma, mini=-oo, maxi=oo)
+
+    # def __str__(self):
+    #     return "UnboundedGaussian"
+
+    def __repr__(self):
+        return "N({:.3g}, {:.3g})".format(self.mu, self.sigma)
 
 
 def phi(xi):

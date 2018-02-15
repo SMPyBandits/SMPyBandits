@@ -5,7 +5,7 @@ Reference: [Auer et al. 02].
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.2"
+__version__ = "0.9"
 
 from math import sqrt, log
 import numpy as np
@@ -14,8 +14,8 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from .UCB import UCB
 
 #: Default parameter for alpha
-ALPHA = 4
 ALPHA = 1
+ALPHA = 4
 
 
 class UCBalpha(UCB):

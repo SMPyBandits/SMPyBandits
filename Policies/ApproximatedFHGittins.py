@@ -15,6 +15,7 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from .IndexPolicy import IndexPolicy
 
 #: Default value for the parameter :math:`\alpha > 0` for ApproximatedFHGittins.
+ALPHA = 0.125
 ALPHA = 0.5
 
 #: Default value for the parameter :math:`\tau \geq 1` that is used to artificially increase the horizon, from :math:`T` to :math`\tau T`.
@@ -60,7 +61,7 @@ class ApproximatedFHGittins(IndexPolicy):
 
         .. math::
 
-           I_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha}{2 N_k(t)} \log\left( \frac{m}{N_k(t) \log^{1/2}\left( \frac{m}{N_k(t)} \right)} \right)}, \\
+           I_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \alpha}{N_k(t)} \log\left( \frac{m}{N_k(t) \log^{1/2}\left( \frac{m}{N_k(t)} \right)} \right)}, \\
            \text{where}\;\; & m = T - t + 1.
 
 
@@ -71,11 +72,11 @@ class ApproximatedFHGittins(IndexPolicy):
             return float('+inf')
         else:
             m_by_Nk = float(self.m) / self.pulls[arm]
-            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt(self.alpha / (2. * self.pulls[arm]) * np.log(m_by_Nk / np.sqrt(np.log(m_by_Nk))))
+            return (self.rewards[arm] / self.pulls[arm]) + np.sqrt((2. * self.alpha) / self.pulls[arm] * np.log(m_by_Nk / np.sqrt(np.log(m_by_Nk))))
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
         m_by_Nk = float(self.m) / self.pulls
-        indexes = (self.rewards / self.pulls) + np.sqrt(self.alpha / (2. * self.pulls) * np.log(m_by_Nk / np.sqrt(np.maximum(0, np.log(m_by_Nk)))))
+        indexes = (self.rewards / self.pulls) + np.sqrt((2. * self.alpha) / self.pulls * np.log(m_by_Nk / np.sqrt(np.maximum(0, np.log(m_by_Nk)))))
         indexes[self.pulls < 1] = float('+inf')
         self.index[:] = indexes
