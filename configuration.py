@@ -157,6 +157,10 @@ ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 ENVIRONMENT_BAYESIAN = False
 ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 
+#: True to use full-restart Doubling Trick
+USE_FULL_RESTART = True
+USE_FULL_RESTART = getenv('FULL_RESTART', str(USE_FULL_RESTART)) == 'True'
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -864,13 +868,20 @@ configuration.update({
 # Dynamic hack
 if TEST_Doubling_Trick:
     POLICIES_FOR_DOUBLING_TRICK = [
-            klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
+            # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
             # UCBH,
             # MOSSH,
             # klUCBPlusPlus,
             ApproximatedFHGittins,
         ]
-    configuration["policies"] = []
+    # Just add the klUCB or UCB baseline
+    configuration["policies"] = [
+        {
+            # "archtype": klUCB,
+            "archtype": UCBalpha,
+            "params": {}
+        }
+    ]
     # Smart way of adding list of Doubling Trick versions
     for policy in POLICIES_FOR_DOUBLING_TRICK:
         # First add the non-doubling trick version
@@ -880,7 +891,6 @@ if TEST_Doubling_Trick:
         except TypeError:
             accept_horizon = False  # don't use horizon
         configuration["policies"] += [
-            # --- Doubling trick algorithm
             {
                 "archtype": policy,
                 "params": {
@@ -894,7 +904,6 @@ if TEST_Doubling_Trick:
         ]
         # Then add the doubling trick version
         configuration["policies"] += [
-            # --- Doubling trick algorithm
             {
                 "archtype": DoublingTrickWrapper,
                 "params": {
@@ -905,8 +914,9 @@ if TEST_Doubling_Trick:
                 }
             }
             for full_restart in [
+                USE_FULL_RESTART,
                 # True,
-                False,
+                # False,
             ]
             for next_horizon in [
                 # next_horizon__arithmetic,

@@ -65,7 +65,7 @@ FULL_RESTART = False
 
 
 #: Default horizon, used for the first step.
-DEFAULT_FIRST_HORIZON = 100
+DEFAULT_FIRST_HORIZON = 200
 
 
 #: Default stepsize for the arithmetic horizon progression.
@@ -296,8 +296,7 @@ class DoublingTrickWrapper(BasePolicy):
         str_policy = str(self.policy)
         str_policy = str_policy.replace(r"($T={}$)".format(self._first_horizon), "")
         str_policy = str_policy.replace(r"$T={}$, ".format(self._first_horizon), "")
-        # return r"{}($T_0={}$, {} seq)[{}]".format("DTr" if self.full_restart else "DTnr", self._first_horizon, self.next_horizon_name, str_policy)
-        return r"{}({})[{}]".format("DTr" if self.full_restart else "DTnr", self.next_horizon_name, str_policy)
+        return r"{}({})[{}]".format("DT" if self.full_restart else "DTnr", self.next_horizon_name, str_policy)
 
     # --- Start game by creating new underlying policy
 

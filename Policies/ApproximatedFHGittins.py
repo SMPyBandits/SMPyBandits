@@ -17,6 +17,9 @@ from .IndexPolicy import IndexPolicy
 #: Default value for the parameter :math:`\alpha > 0` for ApproximatedFHGittins.
 ALPHA = 0.5
 
+#: Default value for the parameter :math:`\tau \geq 1` that is used to artificially increase the horizon, from :math:`T` to :math`\tau T`.
+DISTORTION_HORIZON = 1.01
+
 
 class ApproximatedFHGittins(IndexPolicy):
     r""" The approximated Finite-Horizon Gittins index policy for bounded bandits.
@@ -25,9 +28,14 @@ class ApproximatedFHGittins(IndexPolicy):
     - Reference: [Lattimore - COLT, 2016](http://www.jmlr.org/proceedings/papers/v49/lattimore16.pdf), and [his COLT presentation](https://youtu.be/p8AwKiudhZ4?t=276)
     """
 
-    def __init__(self, nbArms, horizon=None, alpha=ALPHA, lower=0., amplitude=1.):
+    def __init__(self, nbArms, horizon=None,
+                 alpha=ALPHA, distortion_horizon=DISTORTION_HORIZON,
+                 lower=0., amplitude=1.):
         super(ApproximatedFHGittins, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        assert alpha > 0, "Error: parameter 'alpha' for ApproximatedFHGittins should be > 0."  # DEBUG
         self.alpha = alpha  #: Parameter :math:`\alpha > 0`.
+        assert distortion_horizon >= 1, "Error: parameter 'distortion_horizon' for ApproximatedFHGittins should be >= 1."  # DEBUG
+        self.distortion_horizon = distortion_horizon  #: Parameter :math:`\tau > 0`.
         self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
@@ -40,9 +48,10 @@ class ApproximatedFHGittins(IndexPolicy):
     def m(self):
         r""":math:`m = T - t + 1` is the number of steps to be played until end of the game.
 
-        .. note:: The article does not explain how to deal with unknown horizon, but eventually if :math:`T` is wrong, this `m` becomes negative. Empirically, I force it to be :math:`\geq 1`, to not mess up with the :math:`\log(m)` used below.
+        .. note:: The article does not explain how to deal with unknown horizon, but eventually if :math:`T` is wrong, this `m` becomes negative. Empirically, I force it to be :math:`\geq 1`, to not mess up with the :math:`\log(m)` used below, by using :math:`\tau T` instead of :math:`T` (e.g., :math:`\tau = 1.01` is enough to not ruin the performance in the last steps of the experiment).
         """
-        return max(self.horizon - self.t + 1, 1)
+        return max((self.distortion_horizon * self.horizon) - self.t + 1, 1)
+        # return max(self.horizon - self.t + 1, 1)
 
     # --- Computation
 
