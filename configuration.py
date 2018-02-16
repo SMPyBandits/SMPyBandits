@@ -131,13 +131,18 @@ UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate 
 
 
 # Parameters for the arms
-VARIANCE = 10   #: Variance of Gaussian arms
+UNBOUNDED_VARIANCE = 1   #: Variance of unbounded Gaussian arms
 VARIANCE = 0.05   #: Variance of Gaussian arms
 
 #: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 9
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
+
+#: Default value for the lower value of means
+lower = 0.
+#: Default value for the amplitude value of means
+amplitude = 1.
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
@@ -147,10 +152,15 @@ mapping_ARM_TYPE = {
     "Uniform": UniformArm,
     "Bernoulli": Bernoulli, "B": Bernoulli,
     "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "UnboundedGaussian": UnboundedGaussian,
     "Poisson": Poisson, "P": Poisson,
     "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
     "Gamma": GammaFromMean,
 }
+if ARM_TYPE == "UnboundedGaussian":
+    lower = -5
+    amplitude = 10
+
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 #: True to use bayesian problem
@@ -206,7 +216,7 @@ configuration = {
         # XXX Default!
         {   # A very easy problem (X arms), but it is used in a lot of articles
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude)
         },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
@@ -277,8 +287,8 @@ if ENVIRONMENT_BAYESIAN:
                     # "mingap": 0.0000001,
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
+                    "lower": lower,
+                    "amplitude": amplitude,
                     "isSorted": True,
                 }
             }
@@ -878,8 +888,9 @@ if TEST_Doubling_Trick:
     configuration["policies"] = [
         {
             # "archtype": klUCB,
-            "archtype": UCBalpha,
-            "params": {}
+            "archtype": UCB,
+            "params": {
+            }
         }
     ]
     # Smart way of adding list of Doubling Trick versions
