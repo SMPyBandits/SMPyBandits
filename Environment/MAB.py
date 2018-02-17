@@ -537,7 +537,7 @@ class DynamicMAB(MAB):
         # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         # print("  It has self.means =\n{}".format(self.means))  # DEBUG
         if latex:
-            text = r"%s, %s with means on $[%.3g, %.3g]$%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap$=%.3g$" % self.args["mingap"])
+            text = r"%s, %s with uniform means on $[%.3g, %.3g]$%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap$=%.3g$" % self.args["mingap"])
         else:
             text = r"%s, %s with means on [%.3g, %.3g]%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
         return wraptext(text)
