@@ -70,7 +70,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'AlgoBandits'
-copyright = '2016-2017, Lilian Besson'
+copyright = '2016-2018, <a href="https://perso.crans.org/besson/">Lilian Besson</a>'
 author = 'Lilian Besson'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -78,7 +78,7 @@ author = 'Lilian Besson'
 # built documents.
 #
 # The short X.Y version.
-version = '0.8'
+version = '0.9'
 # The full version, including alpha/beta/rc tags.
 release = '0.8'
 

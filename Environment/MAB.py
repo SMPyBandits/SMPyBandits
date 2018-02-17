@@ -112,6 +112,9 @@ class MAB(object):
         - Example: openTag = '<red>', endTag = '</red>' for HTML-like tags.
         - Example: openTag = r'\textcolor{red}{', endTag = '}' for LaTeX tags.
         """
+        # # FIXME durty hack before launching simulations
+        # if self.nbArms > 9:
+        #     return "{} Gaussian arms with means in [-5, 5]".format(self.nbArms)
         if nbPlayers is None:
             text = repr(self.arms)
         else:
@@ -172,6 +175,9 @@ class MAB(object):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
         s, K = self.sparsity(), self.nbArms
         assert 0 <= s <= K, "Error: sparsity s = {} has to be 0 <= s <= K = {}...".format(s, K)
+        # FIXME disable this feature when not working on sparse simulations
+        # return ""
+        # FIXME bring back this feature when working on sparse simulations
         return "" if s == K else ", $s={}$".format(s)
 
     #
@@ -539,7 +545,7 @@ class DynamicMAB(MAB):
         if latex:
             text = r"%s, %s with uniform means on $[%.3g, %.3g]$%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap$=%.3g$" % self.args["mingap"])
         else:
-            text = r"%s, %s with means on [%.3g, %.3g]%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
+            text = r"%s, %s with uniform means on [%.3g, %.3g]%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
         return wraptext(text)
 
     #
