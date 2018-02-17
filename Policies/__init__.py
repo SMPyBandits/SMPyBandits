@@ -18,7 +18,7 @@
 
 - Empirical KL-UCB algorithm: :class:`KLempUCB` (FIXME),
 
-- Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`,
+- Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`, :class:`UCBdagger`,
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
@@ -147,6 +147,9 @@ from .DMED import DMED, DMEDPlus
 
 # From [Lattimore, 2016]
 from .OCUCB import OCUCB
+
+# From [Lattimore, 2017]
+from .UCBdagger import UCBdagger
 
 # From [Combes et al, 2017]
 from .OSSB import OSSB

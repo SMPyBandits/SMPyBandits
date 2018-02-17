@@ -110,8 +110,8 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tried.
-TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
 TEST_Doubling_Trick = True
+TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -622,26 +622,26 @@ configuration.update({
                 "horizon": HORIZON,
             }
         },
-        # --- FIXME MOSS-Anytime algorithm, extension of MOSS
+        # --- MOSS-Anytime algorithm, extension of MOSS
         {
             "archtype": MOSSAnytime,
             "params": {
                 "alpha": 1.35,
             }
         },
-        # # --- FIXME MOSS-Experimental algorithm, extension of MOSSAnytime
+        # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
         # {
         #     "archtype": MOSSExperimental,
         #     "params": {}
         # },
-        # # --- Optimally-Confident UCB algorithm
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 1,
-        #     }
-        # },
+        # --- Optimally-Confident UCB algorithm
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 1,
+            }
+        },
         # {
         #     "archtype": OCUCB,
         #     "params": {
@@ -788,13 +788,13 @@ configuration.update({
         #     }
         # },
         # --- AdBandits with different alpha paramters
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON,
-        #     }
-        # },
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON,
+            }
+        },
         # {
         #     "archtype": AdBandits,
         #     "params": {
@@ -864,12 +864,19 @@ configuration.update({
         {
             "archtype": BESA,
             "params": {
-                # "horizon": HORIZON,
+                "horizon": HORIZON,
                 "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
                 "randomized_tournament": True,
                 # "randomized_tournament": False,  # XXX Very inefficient!
                 "random_subsample": True,
                 # "random_subsample": False,  # XXX Very inefficient!
+            }
+        },
+        # --- Auto-tuned UCBdagger algorithm
+        {
+            "archtype": UCBdagger,
+            "params": {
+                "horizon": HORIZON,
             }
         },
     ]
