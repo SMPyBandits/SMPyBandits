@@ -40,6 +40,7 @@ a part of my **on going** research since December 2016.
    How_to_run_the_code.md
    Aggregation.md
    MultiPlayers.md
+   DoublingTrick.md
    API.md
    TODO.md
    plots/README.md
