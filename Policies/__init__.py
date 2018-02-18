@@ -106,6 +106,8 @@ from .UCBmin import UCBmin      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
 from .UCBrandomInit import UCBrandomInit
 
+from .UCBjulia import UCBjulia  # XXX Experimental!
+
 # --- UCB policies with variance terms
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes

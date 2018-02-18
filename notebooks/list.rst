@@ -11,3 +11,8 @@ List of notebooks for AlgoBandits documentation
    Example_of_a_small_Multi-Player_Simulation__with_rhoRand_and_Selfish_Algorithms.ipynb
    Unsupervised_Learning_for_Bandit_problem.ipynb
    BlackBox_Bayesian_Optimization_for_Bandit_problems.ipynb
+   Lai_Robbins_Lower_Bound_for_Doubling_Trick_with_Restarting_Algorithms.ipynb
+
+---
+
+.. note:: I wrote many other `Jupyter notebooks <https://jupyter.org/>`_ covering various topics, see `on my GitHub notebooks/ project <https://github.com/Naereen/notebooks/>`_.
