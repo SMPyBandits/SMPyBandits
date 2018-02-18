@@ -33,8 +33,8 @@ Have a look to:
 
 ----
 
-## Configuration:
-A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+### Configuration:
+A simple python file, [`configuration_multiplayers.py`](configuration_multiplayers.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 See the explanations given for [the simple-player case](Aggregation.md).
 
 ```python
@@ -67,7 +67,7 @@ configuration["successive_players"] = [
 
 ----
 
-## Fairness vs. unfairness
+### Fairness vs. unfairness
 For a multi-player policy, being fair means that on *every* simulation with `M` players, each player access any of the `M` best arms (about) the same amount of time.
 It is important to highlight that it has to be verified on each run of the MP policy, having this property in average is NOT enough.
 

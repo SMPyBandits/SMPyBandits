@@ -36,7 +36,7 @@ All the mathematical details can be found in my paper, [[Aggregation of Multi-Ar
 ----
 
 ## Configuration:
-A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_comparing_aggregation_algorithms.py`](configuration_comparing_aggregation_algorithms.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
 For example, this will compare the classical MAB algorithms [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py) algorithms.
 

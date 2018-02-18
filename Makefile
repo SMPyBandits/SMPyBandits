@@ -3,6 +3,9 @@
 # - lint the Python code (make lint lint3)
 # - install the requirements (make install)
 
+# __author__ = "Lilian Besson"
+# __version__ = "0.9"
+
 # Using bash and not sh, cf. http://stackoverflow.com/a/589300/
 SHELL := /bin/bash -o pipefail
 
@@ -35,6 +38,12 @@ comparing_aggregation_algorithms3:
 	time nice -n 19 ipython3 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt
 comparing_aggregation_algorithms2:
 	time nice -n 19 python2 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py2_log.txt
+
+comparing_doubling_algorithms:	comparing_doubling_algorithms3
+comparing_doubling_algorithms3:
+	time nice -n 19 ipython3 ./main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py3_log.txt
+comparing_doubling_algorithms2:
+	time nice -n 19 python2 ./main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
 
 sparse:	sparse3
 sparse3:

@@ -6,7 +6,7 @@ Script to load the config, run the simulations, and plot them.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 # Generic imports
 import sys
@@ -25,6 +25,8 @@ from Environment import Evaluator, notify
 # Import a configuration file
 if 'configuration_comparing_aggregation_algorithms' in sys.argv:
     from configuration_comparing_aggregation_algorithms import configuration
+if 'configuration_comparing_doubling_algorithms' in sys.argv:
+    from configuration_comparing_doubling_algorithms import configuration
 elif 'configuration_markovian' in sys.argv:
     from configuration_markovian import configuration
 elif 'configuration_sparse' in sys.argv:

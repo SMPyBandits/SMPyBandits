@@ -6,12 +6,10 @@ I studied what Doubling Trick can and can't do for multi-armed bandits, to obtai
 
 ----
 
-## Configuration:
-A simple python file, [`configuration.py`](configuration.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+## Configuration
+A simple python file, [`configuration_comparing_doubling_algorithms.py`](configuration_comparing_doubling_algorithms.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-FIXME write this
-
-For example, this will compare the classical MAB algorithms [`UCB`](Policies/UCB.py), [`Thompson`](Policies/Thompson.py), [`BayesUCB`](Policies/BayesUCB.py), [`klUCB`](Policies/klUCB.py) algorithms.
+For example, we can compare the standard anytime [`klUCB`](Policies/klUCB.py) algorithm against the non-anytime [`klUCBPlusPlus`](Policies/klUCBPlusPlus.py) algorithm, as well as 3 versions of [`DoublingTrickWrapper`](Policies/DoublingTrickWrapper.py) applied to [`klUCBPlusPlus`](Policies/klUCBPlusPlus.py).
 
 ```python
 configuration = {
@@ -22,35 +20,41 @@ configuration = {
     # Environment configuration, you can set up more than one.
     "environment": [
         {
-            "arm_type": Bernoulli,  # Only Bernoulli is available as far as now
+            "arm_type": Bernoulli,
             "probabilities": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.1]
         }
     ],
     # Policies that should be simulated, and their parameters.
     "policies": [
         {"archtype": UCB, "params": {} },
-        {"archtype": Thompson, "params": {} },
         {"archtype": klUCB, "params": {} },
-        {"archtype": BayesUCB, "params": {} },
+        {"archtype": klUCBPlusPlus, "params": { "horizon": 10000 } },
     ]
 }
 ```
 
-To add an aggregated bandit algorithm ([`Aggregator` class](Policies/Aggregator.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
-```python
-current_policies = configuration["policies"]
-configuration["policies"] = current_policies +
-    [{  # Add one Aggregator policy, from all the policies defined above
-        "archtype": Aggregator,
-        "params": {
-            "learningRate": 0.05,  # Tweak this if needed
-            "updateAllChildren": True,
-            "children": current_policies,
-        },
-    }]
-```
+Then add a Doubling-Trick bandit algorithm ([`DoublingTrickWrapper` class](Policies/DoublingTrickWrapper.py)), you can use this piece of code:
 
-The learning rate can be tuned automatically, by using the heuristic proposed by [[Bubeck and Cesa-Bianchi](http://sbubeck.com/SurveyBCB12.pdf), Theorem 4.2], without knowledge of the horizon, a decreasing learning rate `\eta_t = sqrt(log(N) / (t * K))`.
+```python
+configuration["policies"] += [
+    {
+        "archtype": DoublingTrickWrapper,
+        "params": {
+            "next_horizon": next_horizon,
+            "full_restart": full_restart,
+            "policy": klUCBPlusPlus,
+        }
+    }
+    for full_restart in [ True, False ]
+    for next_horizon in [
+        next_horizon__arithmetic,
+        next_horizon__geometric,
+        next_horizon__exponential_fast,
+        next_horizon__exponential_slow,
+        next_horizon__exponential_generic
+    ]
+]
+```
 
 ----
 
@@ -60,7 +64,6 @@ You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
 make install  # install the requirements ONLY ONCE
 make comparing_doubling_algorithms   # run and log the main.py script
-FIXME write this!
 ```
 
 ----
