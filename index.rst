@@ -75,17 +75,6 @@ Indices and tables
 * :ref:`search`.
 
 
-.. note:: Should you use bandits?
-
-   In 2015, `Chris Stucchio advised against <https://www.chrisstucchio.com/blog/2015/dont_use_bandits.html>`_
-   the use of bandits, in the context of improving A/B testings,
-   opposed to his `2013 blog post <https://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html>`_ in favor of bandits, also for A/B testings.
-   Both articles are worth reading, but in this research we are not studying A/B testing,
-   and it has been already proved how efficient bandit algorithms can be for real-world
-   and simulated cognitive radio networks.
-   (See for instance `this article by Wassim Jouini, Christophe Moy and Jacques Palicot <https://scholar.google.com/scholar?q=Multi-armed+bandit+based+policies+for+cognitive+radio%27s+decision+making+issues+by+W+Jouini%2C+D+Ernst%2C+C+Moy%2C+J+Palicot+2009&btnG=&hl=fr&as_sdt=0%2C39>`_, `["Multi-armed bandit based policies for cognitive radio's decision making issues", W Jouini, D Ernst, C Moy, J Palicot 2009] <http://orbi.ulg.be/bitstream/2268/16757/1/SCS09_Jouini_Wassim.pdf>`_).
-
-
 |made-with-latex| |made-with-sphinx|
 
 |ForTheBadge uses-badges| |ForTheBadge uses-git|

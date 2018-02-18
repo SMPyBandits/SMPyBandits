@@ -10,7 +10,7 @@ This repository contains the code of [my](http://perso.crans.org/besson/) numeri
 
 ----
 
-## The [**policy aggregation algorithm**](Aggregation.md)
+## 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
 I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
@@ -20,7 +20,7 @@ Basically, it behaves like a simple MAB bandit just based on empirical means (ev
 
 ----
 
-## [**Multi-players simulation environment**](MultiPlayers.md)
+## 2nd article, using [**Multi-players simulation environment**](MultiPlayers.md)
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
@@ -28,10 +28,18 @@ The basic difference is about **collisions** : at each time `t`, if two or more 
 
 ----
 
-## [**Doubling Trick for Multi-Armed Bandits**](DoublingTrick.md)
+## 3rd article, using [**Doubling Trick for Multi-Armed Bandits**](DoublingTrick.md)
 I studied what Doubling Trick can and can't do to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
 
 > **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this article](https://hal.inria.fr/hal-XXX).
+
+----
+
+## Other interesting things
+### [Single-player Policies](http://banditslilian.gforge.inria.fr/docs/Policies.html)
+- [`SparseWrapper`](http://banditslilian.gforge.inria.fr/docs/Policies.SparseWrapper.html#module-Policies.SparseWrapper) is a generalization of [the SparseUCB from this article](https://arxiv.org/pdf/1706.01383/).
+- Implementation of very recent Multi-Armed Bandits algorithms, e.g., [`kl-UCB++`](http://banditslilian.gforge.inria.fr/docs/Policies.klUCBPlusPlus.html) (from [this article](https://hal.inria.fr/hal-01475078)), [`UCB-dagger`](http://banditslilian.gforge.inria.fr/docs/Policies.UCBdagger.html) (from [this article](https://arxiv.org/pdf/1507.07880)),  or [`MOSS-anytime`](http://banditslilian.gforge.inria.fr/docs/Policies.MOSSAnytime.html) (from [this article](http://proceedings.mlr.press/v48/degenne16.pdf)).
+- Experimental policies: [`BlackBoxOpt`](http://banditslilian.gforge.inria.fr/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](http://banditslilian.gforge.inria.fr/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
 
 ----
 
@@ -46,22 +54,10 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 - Some piece of code come from the [pymaBandits](http://mloss.org/software/view/415/) project, but most of them were refactored. Thanks to the initial project!
 - [G.Varoquaux](http://gael-varoquaux.info/)'s [joblib](https://pythonhosted.org/joblib/) is used for the [`Evaluator`](Environment/Evaluator.py) and [`EvaluatorMultiPlayers`](Environment/EvaluatorMultiPlayers.py) classes, so the simulations are easily parallelized on multi-core machines. (Put `n_jobs = -1` or `PARALLEL = True` in the config file to use all your CPU cores, as it is by default).
 
-### Should you use bandits?
-
-> In 2015, [Chris Stucchio advised against](https://www.chrisstucchio.com/blog/2015/dont_use_bandits.html)
-> the use of bandits, in the context of improving A/B testings, opposed to
-> his [2013 blog post](https://www.chrisstucchio.com/blog/2012/bandit_algorithms_vs_ab.html)
-> in favor of bandits, also for A/B testings. Both articles are worth
-> reading, but in this research we are not studying A/B testing, and it
-> has been already proved how efficient bandit algorithms can be for
-> real-world and simulated cognitive radio networks. (See for instance
-> [this article by Wassim Jouini, Christophe Moy and Jacques Palicot](https://scholar.google.com/scholar?q=Multi-armed+bandit+based+policies+for+cognitive+radio%27s+decision+making+issues+by+W+Jouini%2C+D+Ernst%2C+C+Moy%2C+J+Palicot+2009&btnG=&hl=fr&as_sdt=0%2C39),
-> [\["Multi-armed bandit based policies for cognitive radio's decision making issues", W Jouini, D Ernst, C Moy, J Palicot 2009\]](http://orbi.ulg.be/bitstream/2268/16757/1/SCS09_Jouini_Wassim.pdf)).
-
-
-### Warning
-- This work is still in **its early stage of development**! It's [active research](https://github.com/Naereen/AlgoBandits/graphs/contributors).
-- This aggregated bandit algorithm has no theoretical warranties what so ever - *yet*.
+### :boom: Warning
+- This work is still **experimental**! It's [active research](https://github.com/Naereen/AlgoBandits/graphs/contributors).
+- I don't except issues or pull requests on this project, but you are welcome to.
+- This project is NOT meant to be a library that you can use elsewhere, but a research tool. In particular, I don't take ensure that any of the Python modules can be imported from another directory than the main directory.
 
 ### UML diagrams
 For more details, see [these UML diagrams](uml_diagrams/):
@@ -81,7 +77,7 @@ For more details, see [these UML diagrams](uml_diagrams/):
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/badges.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
-© 2012 [Olivier Cappé](http://perso.telecom-paristech.fr/%7Ecappe/), [Aurélien Garivier](https://www.math.univ-toulouse.fr/%7Eagarivie/), [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/) and for the initial [pymaBandits v1.0](http://mloss.org/software/view/415/) project, and © 2016-2017 [Lilian Besson](https://GitHub.com/Naereen) for the rest.
+© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen)
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
