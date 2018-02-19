@@ -87,7 +87,7 @@ For more details, see [these UML diagrams](uml_diagrams/):
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/badges.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
-© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen)
+© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)

@@ -28,6 +28,15 @@ python main.py configuration_comparing_aggregation_algorithms
 # or
 make comparing_aggregation_algorithms
 ```
+> See these explainations: [Aggregation.md](Aggregation.html)
+
+#### [Single player, doubling-trick algorithms](configuration_comparing_doubling_algorithms.py)
+```bash
+python main.py configuration_comparing_doubling_algorithms
+# or
+make comparing_doubling_algorithms
+```
+> See these explainations: [DoublingTrick.md](DoublingTrick.html)
 
 #### [Single player, with Sparse Stochastic Bandit](configuration_sparse.py)
 ```bash
@@ -57,6 +66,7 @@ python main_multiplayers_more.py
 # or
 make moremulti
 ```
+> See these explainations: [MultiPlayers.md](MultiPlayers.html)
 
 ### Using `env` variables ?
 
@@ -118,7 +128,7 @@ It is also used to clean the code, build the doc, send the doc, etc. (This shoul
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
-© 2012 [Olivier Cappé](http://perso.telecom-paristech.fr/%7Ecappe/), [Aurélien Garivier](https://www.math.univ-toulouse.fr/%7Eagarivie/), [Émilie Kaufmann](http://chercheurs.lille.inria.fr/ekaufman/) and for the initial [pymaBandits v1.0](http://mloss.org/software/view/415/) project, and © 2016-2017 [Lilian Besson](https://GitHub.com/Naereen) for the rest.
+© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
