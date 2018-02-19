@@ -2,33 +2,33 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-  1072	Lilian Besson
+  1118	Lilian Besson
      2	Lilian Besson (Naereen)
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 685
-  - Number of lines added: 748810
-  - Number of lines deleted: 611856
+  - Number of files changed: 711
+  - Number of lines added: 757104
+  - Number of lines deleted: 617568
   - Number of merges: 0
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 685
-  - Number of lines added: 748810
-  - Number of lines deleted: 611856
+  - Number of files changed: 711
+  - Number of lines added: 757104
+  - Number of lines deleted: 617568
   - Number of merges: 0
-    Jan Feb           Mar     Apr       May     Jun     Jul       Aug     Sep       Oct     Nov     Dec       Jan 
-        o           o   .                   .         .                 . .       .   .   .   .                 
-    M . . . O .   o o o             . . .   . . . .   o . .               . . . . .   . . . .     .           . 
-      . o .   . o o O 0 .       .   o   o .       O   o .   .       . . . .   . o     . . .   . .               
-    W   O O . . 0   O O .       . . o   .     . 0 .   o .   .           O .   . .     .   .     .       .       
-      . O o O o o O o o .         . .   . .   . .     o . .     .   .     0   . O       o .     .               
-    F .   O .   O O   . o     . . . o     .     O   o . .           . .   . . . . .     .   o                   
-      o           .   .           . .       .                         .         . .                             
+    Feb   Mar     Apr       May     Jun     Jul       Aug     Sep       Oct     Nov     Dec       Jan     Feb 
+              o   .                   .         .                 . .       .   .   .   .                       
+    M O .   o o o             . . .   . . . .   o . .               . . . . .   . . . .     .           .   . . 
+        . o o O 0 .       .   o   o .       O   o .   .       . . . .   . o     . . .   . .             o   .   
+    W . . 0   O O .       . . o   .     . 0 .   o .   .           O .   . .     .   .     .       .     o . .   
+      O o o O o o .         . .   . .   . .     o . .     .   .     0   . O       o .     .             .   .   
+    F .   O O   . o     . . . o     .     O   o . .           . .   . . . . .     .   o                 o       
+            .   .           . .       .                         .         . .                               o   
 
                                                                                           Less   . o O 0  More
- 737: Total commits
+ 695: Total commits
   14: Days ( Oct  6 2017 - Oct 23 2017 ) - Longest streak excluding weekends       
-   8: Days ( Feb  2 2017 - Feb  9 2017 ) - Longest streak including weekends       
-   1: Days ( Jan 29 2018 - Jan 29 2018 ) - Current streak                          
+   8: Days ( Mar 16 2017 - Mar 23 2017 ) - Longest streak including weekends       
+   2: Days ( Feb 17 2018 - Feb 19 2018 ) - Current streak                          
