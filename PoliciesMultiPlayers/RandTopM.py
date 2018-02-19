@@ -7,7 +7,7 @@ r""" RandTopM: four proposals for an efficient multi-players learning policy. :c
 
 .. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
 
-- Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](XXX)
+- Reference: [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

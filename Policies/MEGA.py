@@ -2,12 +2,13 @@
 """ MEGA: implementation of the single-player policy from [Concurrent bandits and cognitive radio network, O.Avner & S.Mannor, 2014](https://arxiv.org/abs/1404.5421).
 
 The Multi-user epsilon-Greedy collision Avoiding (MEGA) algorithm is based on the epsilon-greedy algorithm introduced in [2], augmented by a collision avoidance mechanism that is inspired by the classical ALOHA protocol.
-[2]: Finite-time analysis of the multiarmed bandit problem, P.Auer & N.Cesa-Bianchi & P.Fischer, 2002
+
+- [2]: Finite-time analysis of the multi-armed bandit problem, P.Auer & N.Cesa-Bianchi & P.Fischer, 2002
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.9"
 
 from random import random
 import numpy as np
@@ -27,7 +28,7 @@ class MEGA(BasePolicy):
         - p0: initial probability p(0); p(t) is the probability of persistance on the chosenArm at time t
         - alpha: scaling in the update for p(t+1) <- alpha p(t) + (1 - alpha(t))
         - beta: exponent used in the interval [t, t + t^beta], from where to sample a random time t_next(k), until when the chosenArm is unavailable
-        - c, d: used to compute the exploration probability epsilon_t, cf the function epsilon_t.
+        - c, d: used to compute the exploration probability epsilon_t, cf the function :func:`_epsilon_t`.
 
         Example:
 
@@ -56,7 +57,7 @@ class MEGA(BasePolicy):
         self.meanRewards = np.zeros(nbArms)  #: Mean rewards
 
     def __str__(self):
-        return r"MEGA($c={}$, $d={}$, $p_0={}$, $\alpha={}$, $\beta={}$)".format(self.c, self.d, self.p0, self.alpha, self.beta)
+        return r"MEGA($c={:.3g}$, $d={:.3g}$, $p_0={:.3g}$, $\alpha={:.3g}$, $\beta={:.3g}$)".format(self.c, self.d, self.p0, self.alpha, self.beta)
 
     def startGame(self):
         """ Just reinitialize all the internal memory."""

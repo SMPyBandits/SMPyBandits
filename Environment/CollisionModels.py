@@ -53,7 +53,7 @@ def handleCollision_or_getZeroReward(player, arm, lower=0):
 def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions):
     """ Simple collision model where only the players alone on one arm samples it and receives the reward.
 
-    - This is the default collision model, cf. [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+    - This is the default collision model, cf. [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     """
     # First, sense in all the arms
@@ -89,7 +89,7 @@ defaultCollisionModel = onlyUniqUserGetsReward
 def onlyUniqUserGetsRewardSparse(t, arms, players, choices, rewards, pulls, collisions):
     """ Simple collision model where only the players alone on one arm samples it and receives the reward.
 
-    - This is the default collision model, cf. [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+    - This is the default collision model, cf. [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
     - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
     - Support for player non activated, by choosing a negative index.
     """

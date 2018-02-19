@@ -9,7 +9,7 @@ The algorithm is a master A, managing several "slave" algorithms, :math:`A_1, ..
 
 - The detail about how to increase or decrease the probabilities are specified below.
 
-- Reference: [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](XXX)
+- Reference: [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](https://hal.inria.fr/hal-01705292)
 
 .. note::
 

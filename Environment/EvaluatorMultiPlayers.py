@@ -361,9 +361,9 @@ class EvaluatorMultiPlayers(object):
             cumRewards[playerId, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
             if semilogx:
-                plt.semilogx(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
+                plt.semilogx(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
             else:
-                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
+                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("Cumulative personal reward {}".format(r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_t]$" % self.repetitions))
@@ -393,7 +393,7 @@ class EvaluatorMultiPlayers(object):
             #     print("  - {} fairness index is = {} ...".format(fN, f))  # DEBUG
             # Plot only one fairness term
             fairness = fairnessFunction(cumRewards)
-            plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId])
+            plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId], lw=2)
         if len(evaluators) > 1:
             legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
@@ -449,11 +449,11 @@ class EvaluatorMultiPlayers(object):
                         Ys[i] = Ys[i][X >= 1] / np.log(X[X >= 1])  # XXX prevent /0
             meanY = np.mean(Y)
             # Now plot
-            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId])
+            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-'), markevery=(evaId / 50., 0.1), label=label, color=colors[evaId], lw=2)
             if len(evaluators) == 1:
                 # if not semilogx and not loglog and not semilogy:
                 #     # We plot a horizontal line ----- at the mean regret
-                #     plot_method(X[::self.delta_t_plot], meanY * np.ones_like(X)[::self.delta_t_plot], '--', label="Mean cumulated centralized regret", color=colors[evaId])
+                #     plot_method(X[::self.delta_t_plot], meanY * np.ones_like(X)[::self.delta_t_plot], '--', label="Mean cumulated centralized regret", color=colors[evaId], lw=2)
                 # " = ${:.3g}$".format(meanY)
                 if subTerms:
                     if sumofthreeterms:
@@ -461,7 +461,7 @@ class EvaluatorMultiPlayers(object):
                         labels.append("Sum of 3 terms (= regret)")
                     # print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
-                        plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1])
+                        plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1], lw=2)
                         if semilogx or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
                             plt.xscale('log')
                         if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
@@ -481,9 +481,9 @@ class EvaluatorMultiPlayers(object):
                 else:
                     X = X[X >= 1]
                     T = np.log(X)
-                plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=2)
-                plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=1)
-                plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=1)
+                plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=3)
+                plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=2)
+                plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=2)
             except AssertionError:
                 print("Error: Unable to compute and display the lower-bound...")  # DEBUG
         # Labels and legends
@@ -508,7 +508,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '')
+            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylim(ymin, max(plt.ylim()[1], 1))
@@ -533,7 +533,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
-            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '')
+            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
         if len(evaluators) > 1:
             legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
@@ -555,7 +555,7 @@ class EvaluatorMultiPlayers(object):
         for playerId, player in enumerate(self.players):
             label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
             Y = self.getBestArmPulls(playerId, envId)
-            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1))
+            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
@@ -579,7 +579,7 @@ class EvaluatorMultiPlayers(object):
                     Y = np.cumsum(Y)
                 if normalized:
                     Y /= 1 + X
-                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1))
+                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
             legend()
             plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
@@ -602,7 +602,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getfreeTransmissions(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
-            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], linewidth=1, markersize=1)
+            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], markersize=1, lw=2)
             # should only plot with markers
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -635,7 +635,7 @@ class EvaluatorMultiPlayers(object):
             if cumulated:
                 Y = np.cumsum(Y)
             Y /= eva.nbPlayers  # To normalized the count?
-            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha=1. if cumulated else 0.7)
+            plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[evaId] + '-') if cumulated else '.', markevery=((evaId / 50., 0.1) if cumulated else None), label=eva.strPlayers(short=True), color=colors[evaId], alpha=1. if cumulated else 0.7, lw=2)
         if not cumulated: add_percent_formatter("yaxis", 1.0)
         # We also plot our lower bound
         if upperbound and cumulated:

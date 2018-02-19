@@ -35,7 +35,7 @@ if getenv('DEBUG', 'False') == 'True':
 else:
     signature = ""
 
-DPI = 110  #: DPI to use for the figures
+DPI = 120  #: DPI to use for the figures
 FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
 
 # Customize the colormap
@@ -127,12 +127,16 @@ def palette(nb, hls=HLS, viridis=VIRIDIS):
 def makemarkers(nb):
     """ Give a list of cycling markers. See http://matplotlib.org/api/markers_api.html
 
+    .. note:: This what I consider the *optimal* sequence of markers, they are clearly differentiable one from another and all are pretty.
+
+    Examples:
+
     >>> makemarkers(7)
-    ['o', 'v', '^', '<', '>', 'D', '*']
+    ['o', 'D', 'v', 'p', '<', 's', '^']
     >>> makemarkers(12)
-    ['o', 'v', '^', '<', '>', 'D', '*', 'o', 'v', '^', '<', '>']
+    ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>', 'o', 'D']
     """
-    allmarkers = ['o', 'v', '^', '<', '>', 'D', '*']
+    allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     return longlist[:nb]  # Truncate
 
@@ -142,8 +146,14 @@ def makemarkers(nb):
 PUTATRIGHT = False
 PUTATRIGHT = True
 
+#: Shrink factor if the legend is displayed on the right of the plot.
+#:
+#: .. warning:: I still don't really understand how this works. Decrease if the legend takes more space (i.e., more algorithms with longer names)
+SHRINKFACTOR = 0.75
+SHRINKFACTOR = 0.65
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=0.75, fig=None):
+
+def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
 
@@ -155,7 +165,9 @@ def legend(putatright=PUTATRIGHT, shrinkfactor=0.75, fig=None):
     if putatright:
         try:
             # Shrink current axis by 20% on xaxis and 10% on yaxis
-            fig.tight_layout(rect=[0.035, 0, shrinkfactor, 1. - (1. - shrinkfactor)/3.])
+            delta_rect = (1. - shrinkfactor)/5.
+            # rect = [left, bottom, right, top] in normalized (0, 1) figure coordinates.
+            fig.tight_layout(rect=[delta_rect/1.25, delta_rect, shrinkfactor, 1 - delta_rect])
             # Put a legend to the right of the current axis
             fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
         except:

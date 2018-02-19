@@ -1,7 +1,7 @@
 ## [**Multi-players simulation environment**](MultiPlayers.md)
 
 > **For more details**, refer to [this article](https://hal.inria.fr/hal-01629733).
->  Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
+>  Reference: [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play *against each other*, in a multi-player setting.
 
@@ -28,7 +28,7 @@ Have a look to:
 - The first one I implemented is the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](Policies/MusicalChair.py).
 - Then I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](Policies/MEGA.py). But it has too much parameter, the question is how to chose them.
 - The [`rhoRand`](PoliciesMultiplayers/rhoRand.py) and variants are from [[Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
-- Our algorithms introduced in [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733) are in [`RandTopM`](PoliciesMultiplayers/RandTopM.py): `RandTopM` and `MCTopM`.
+- Our algorithms introduced in [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733) are in [`RandTopM`](PoliciesMultiplayers/RandTopM.py): `RandTopM` and `MCTopM`.
 - We also studied deeply the [`Selfish`](PoliciesMultiplayers/Selfish.py) policy, without being able to prove that it is as efficient as `rhoRand`, `RandTopM` and `MCTopM`.
 
 ----
@@ -63,7 +63,7 @@ configuration["successive_players"] = [
 
 > Figure 2 : Regret (in loglog scale), for M=6 players for K=9 arms, horizon T=5000, for 1000 repetitions on problem µ=[0.1,dots,0.9]. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The x axis on the regret histograms have different scale for each algorithm.
 
-> These illustrations come from my article, [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
+> These illustrations come from my article, [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 
 ----
 

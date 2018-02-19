@@ -8,7 +8,7 @@ r""" RandTopMEstEst: four proposals for an efficient multi-players learning poli
 
 .. note:: This is **fully decentralized**: player do not need to know the (fixed) number of players!
 
-- Reference: [[Multi-Player Bandits Models Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
+- Reference: [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733)
 
 .. warning:: This is still very experimental!
 

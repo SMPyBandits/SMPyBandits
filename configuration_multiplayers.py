@@ -56,7 +56,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to h    ave exactly one repetition process by cores
 # REPETITIONS = 10000
 # REPETITIONS = 1000
-# REPETITIONS = 200
+REPETITIONS = 200
 # REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
@@ -73,17 +73,6 @@ N_JOBS = -1 if DO_PARALLEL else 1
 if CPU_COUNT > 4:  # We are on a server, let's be nice and not use all cores
     N_JOBS = min(CPU_COUNT, max(int(CPU_COUNT / 3), CPU_COUNT - 8))
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
-
-#: Parameters for the epsilon-greedy and epsilon-... policies
-EPSILON = 0.1
-#: Temperature for the Softmax policies.
-TEMPERATURE = 0.005
-#: Learning rate for my aggregated bandit (it can be autotuned)
-LEARNING_RATE = 0.01
-LEARNING_RATES = [LEARNING_RATE]
-#: Constant time tau for the decreasing rate for my aggregated bandit.
-DECREASE_RATE = HORIZON / 2.0
-DECREASE_RATE = None
 
 #: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
 NB_PLAYERS = 1    # Less that the number of arms
@@ -132,25 +121,9 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 VARIANCE = 0.05   #: Variance of Gaussian arms
 
 
-#: Should I test the Aggregator algorithm here also ?
-TEST_Aggregator = True
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
-
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
-CACHE_REWARDS = TEST_Aggregator
 
-#: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
-UPDATE_ALL_CHILDREN = True
-UPDATE_ALL_CHILDREN = False  # XXX do not let this = False
-
-#: Should the rewards for Aggregator policy use as biased estimator, ie just ``r_t``, or unbiased estimators, ``r_t / p_t``
-UNBIASED = True
-UNBIASED = False
-
-#: Should we update the trusts proba like in Exp4 or like in my initial Aggregator proposal
-UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto time t)
-UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 #: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 2 * NB_PLAYERS
@@ -285,26 +258,26 @@ configuration = {
         #     "params": [0.03] * (20 - 13 + 1) + [0.05] * (12 - 4 + 1) + [0.10, 0.12, 0.15]
         #     # nbPlayers = 3
         # }
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.05,
-                    # "mingap": 1. / (3. * NB_ARMS),
-                    "lower": 0.,
-                    "amplitude": 1.,
-                    "isSorted": True,
-                }
-            }
-        },
-        # # XXX Default!
-        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
-        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        # }
+        #     "params": {
+        #         "function": randomMeans,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.05,
+        #             # "mingap": 1. / (3. * NB_ARMS),
+        #             "lower": 0.,
+        #             "amplitude": 1.,
+        #             "isSorted": True,
+        #         }
+        #     }
+        # },
+        # XXX Default!
+        {   # A very easy problem (X arms), but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        }
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
         #     "params": {
@@ -336,8 +309,10 @@ except (TypeError, KeyError):
 
 if len(configuration['environment']) > 1:
     print("WARNING do not use this hack if you try to use more than one environment.")
-# XXX compute optimal values for d (MEGA's parameter)
-# D = max(0.01, np.min(np.diff(np.sort(configuration['environment'][0]['params']))) / 2)
+
+#: Compute the gap of the first problem.
+#: (for d in MEGA's parameters, and epsilon for MusicalChair's parameters)
+GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
 
 
 configuration["successive_players"] = [
@@ -346,11 +321,11 @@ configuration["successive_players"] = [
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
     # # ---- RandTopM
-    # RandTopM(NB_PLAYERS, nbArms, klUCB).children,
+    RandTopM(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -361,12 +336,12 @@ configuration["successive_players"] = [
     # #     ]) for _ in range(NB_PLAYERS)
     # # ],
     # EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
-    # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
+    RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
     # RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
-    MCTopM(NB_PLAYERS, nbArms, BESA).children,
+    # MCTopM(NB_PLAYERS, nbArms, BESA).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -378,22 +353,21 @@ configuration["successive_players"] = [
     # ],
     # EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
     MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
-    MCTopMEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... MCTopM, klUCB)
-    MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
-    MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
+    # MCTopMEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... MCTopM, klUCB)
+    # MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+    # MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
 
     # ---- Selfish
     # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
-    # FIXME experiment!
-    Selfish(NB_PLAYERS, nbArms, BESA).children,
+    # Selfish(NB_PLAYERS, nbArms, BESA).children,
     # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
     # [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
 
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-    rhoRand(NB_PLAYERS, nbArms, BESA).children,
+    # rhoRand(NB_PLAYERS, nbArms, BESA).children,
     # [ Aggregator(nbArms, children=[  # XXX Not efficient!
     #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
     #         for x in range(NB_ARMS)
@@ -402,7 +376,7 @@ configuration["successive_players"] = [
     # ],
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
     rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
-    rhoEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... rhoRand, klUCB)
+    # rhoEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... rhoRand, klUCB)
     # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)
     # rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
@@ -410,16 +384,21 @@ configuration["successive_players"] = [
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
-    # # FIXME how to chose the 5 parameters for MEGA policy ?
-    # # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
-    # [ MEGA(nbArms, p0=0.6, alpha=0.5, beta=0.8, c=0.1, d=0.2) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
+    # FIXME how to chose the 5 parameters for MEGA policy ?
+    # XXX By trial and error??
+    # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
+    [ MEGA(nbArms, p0=0.1, alpha=0.1, beta=0.5, c=0.1, d=0.99*GAP) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
     # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
-    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=0.05)) for _ in range(NB_PLAYERS) ],
-    # # XXX cheated version, with known gap and known horizon (proba of success delta = 1 / T) !
-    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.2, delta=np.ceil(1. / HORIZON))) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],
+    # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
+    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
 
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
