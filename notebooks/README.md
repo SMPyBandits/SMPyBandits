@@ -15,6 +15,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 ### Single-Player simulations
 - [A simple example of Single-Player simulation](Example_of_a_small_Single-Player_Simulation.ipynb), comparing [`UCB1`](../Policies/UCBalpha.py) (for two values of $\alpha$, 1 and 1/2), [`Thompson Sampling`](../Policies/Thompson.py), [`BayesUCB`](../Policies/BayesUCB.py) and [`kl-UCB`](../Policies/klUCB.py).
 - [*Do we even need UCB?*](Do_we_even_need_UCB.ipynb) demonstrates the need for an algorithm smarter than the naive [`EmpiricalMeans`](../Policies/EmpiricalMeans.py).
+- [Lai-Robbins lower-bound for doubling-tricks algorithms with full restart](Lai_Robbins_Lower_Bound_for_Doubling_Trick_with_Restarting_Algorithms.ipynb).
 
 ### Multi-Player simulations
 - [A simple example of Multi-Player simulation with 4 Centralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb), comparing [`CentralizedMultiplePlay`](../PoliciesMultiPlayers/CentralizedMultiplePlay.py) and [`CentralizedIMP`](../PoliciesMultiPlayers/CentralizedIMP.py) with [`UCB`](../Policies/UCB.py) and [`Thompson Sampling`](../Policies/Thompson.py).
@@ -77,7 +78,7 @@ $ jupyter-notebook --version  # version >= 4 is recommended
 
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/notebooks.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 All the notebooks in this folder are published under the terms of the [MIT License](https://lbesson.mit-license.org/) (file [LICENSE.txt](../LICENSE.txt)).
-© [Lilian Besson](https://GitHub.com/Naereen), 2016-17.
+© [Lilian Besson](https://GitHub.com/Naereen), 2016-18.
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)

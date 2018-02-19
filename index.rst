@@ -38,6 +38,7 @@ a part of my **on going** research since December 2016.
    README.md
    docs/modules.rst
    How_to_run_the_code.md
+   PublicationsWithAlgoBandits.md
    Aggregation.md
    MultiPlayers.md
    DoublingTrick.md
@@ -50,6 +51,8 @@ a part of my **on going** research since December 2016.
    Profiling.md
    uml_diagrams/README.md
    logs/README.md
+   CONTRIBUTING.md
+   CODEOFCONDUCT.md
 
 
 .. note::
