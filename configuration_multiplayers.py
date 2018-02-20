@@ -130,6 +130,11 @@ NB_ARMS = 2 * NB_PLAYERS
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
+#: Default value for the lower value of means
+lower = 0.
+#: Default value for the amplitude value of means
+amplitude = 1.
+
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
@@ -142,7 +147,15 @@ mapping_ARM_TYPE = {
     "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
     "Gamma": GammaFromMean,
 }
+if ARM_TYPE == "UnboundedGaussian":
+    lower = -5
+    amplitude = 10
+
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
+
+#: True to use bayesian problem
+ENVIRONMENT_BAYESIAN = False
+ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 
 
 #: This dictionary configures the experiments
@@ -300,6 +313,26 @@ configuration = {
     ],
 }
 
+if ENVIRONMENT_BAYESIAN:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    # "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    "mingap": 1. / (3 * NB_ARMS),
+                    "lower": lower,
+                    "amplitude": amplitude,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
+
 
 try:
     #: Number of arms *in the first environment*
@@ -312,7 +345,11 @@ if len(configuration['environment']) > 1:
 
 #: Compute the gap of the first problem.
 #: (for d in MEGA's parameters, and epsilon for MusicalChair's parameters)
-GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+try:
+    GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+except (ValueError, np.AxisError):
+    print("Warning: using the default value for the GAP (Bayesian environment maybe?)")  # DEBUG
+    GAP = 1. / (3 * NB_ARMS)
 
 
 configuration["successive_players"] = [
