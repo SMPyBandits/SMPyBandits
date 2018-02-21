@@ -34,6 +34,8 @@ COUNT_RANKS_MARKOV_CHAIN = False  #: If true, count and then print a lot of stat
 MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 
+plot_lowerbounds = True  #: Default is to plot the lower-bounds
+
 FINAL_RANKS_ON_AVERAGE = True  #: Default value for ``finalRanksOnAverage``
 USE_JOBLIB_FOR_POLICIES = False  #: Default value for ``useJoblibForPolicies``. Does not speed up to use it (too much overhead in using too much threads); so it should really be disabled.
 PICKLE_IT = True  #: Default value for ``pickleit`` for saving the figures. If True, then all ``plt.figure`` object are saved (in pickle format).
@@ -68,6 +70,7 @@ class EvaluatorMultiPlayers(object):
         print("Using accurate regrets and last regrets ? {}".format(moreAccurate))
         self.finalRanksOnAverage = self.cfg.get('finalRanksOnAverage', FINAL_RANKS_ON_AVERAGE)  #: Final display of ranks are done on average rewards?
         self.averageOn = self.cfg.get('averageOn', 5e-3)  #: How many last steps for final rank average rewards
+        self.plot_lowerbounds = self.cfg.get('plot_lowerbounds', plot_lowerbounds)  #: Should we plot the lower-bounds?
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         self.count_ranks_markov_chain = self.cfg.get('count_ranks_markov_chain', COUNT_RANKS_MARKOV_CHAIN)#: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
@@ -481,9 +484,10 @@ class EvaluatorMultiPlayers(object):
                 else:
                     X = X[X >= 1]
                     T = np.log(X)
-                plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=3)
-                plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=2)
-                plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=2)
+                if self.plot_lowerbounds:
+                    plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=3)
+                    plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=2)
+                    plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=2)
             except AssertionError:
                 print("Error: Unable to compute and display the lower-bound...")  # DEBUG
         # Labels and legends
