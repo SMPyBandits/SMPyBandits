@@ -11,7 +11,7 @@
 And useful constants and functions for the plotting and stuff:
 
 - :func:`DPI`, :func:`signature`, :func:`maximizeWindow`, :func:`palette`, :func:`makemarkers`, :func:`wraptext`: for plotting
-- :func:`notify`: send a notificaiton
+- :func:`notify`: send a desktop notification
 - :func:`Parallel`, :func:`delayed`: joblib related
 - :func:`tqdm`: pretty range() loops
 - :func:`sortedDistance`, :func:`fairnessMeasures`: science related

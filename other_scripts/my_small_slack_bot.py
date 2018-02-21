@@ -32,6 +32,7 @@ logging.basicConfig(
 from numpy.random import poisson
 from slackclient import SlackClient
 
+sys.path.insert(0, '..')
 # Import algorithms
 from Policies import Thompson
 
