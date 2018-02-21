@@ -8,7 +8,7 @@
 
 - Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
 
-- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, UCBlog10alpha, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`,
+- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`,
 
 - Index based MOSS algorithms: :class:`MOSS`, :class:`MOSSH`, :class:`MOSSAnytime`, :class:`MOSSExperimental`,
 

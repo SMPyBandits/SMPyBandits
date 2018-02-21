@@ -1,16 +1,17 @@
 # [Single-Player policies](http://banditslilian.gforge.inria.fr/docs/Policies.html)
 > See here the documentation: [docs/Policies](http://banditslilian.gforge.inria.fr/docs/Policies.html)
 
-Policies module : contains various bandits algorithms:
+## List of Policies
+`Policies` module : contains various (single-player) bandits algorithms:
 
 - "Stupid" algorithms: [`Uniform`](Uniform.py), [`UniformOnSome`](UniformOnSome.py), [`TakeFixedArm`](TakeFixedArm.py), [`TakeRandomFixedArm`](TakeRandomFixedArm.py),
 
 - Greedy algorithms: [`EpsilonGreedy`](EpsilonGreedy.py), [`EpsilonFirst`](EpsilonFirst.py), [`EpsilonDecreasing`](EpsilonDecreasing.py),
-- And two variants of the Explore-Then-Commit policy: [`ExploreThenCommit.ETC_KnownGap](ExploreThenCommit.py)`, [`ExploreThenCommit.ETC_RandomStop](ExploreThenCommit.py)`,
+- And two variants of the Explore-Then-Commit policy: [`ExploreThenCommit.ETC_KnownGa`p](ExploreThenCommit.py), [`ExploreThenCommit.ETC_RandomStop`](ExploreThenCommit.py),
 
-- Probabilistic weighting algorithms: [`Hedge`](Hedge.py), [`Softmax`](Softmax.py), [`Softmax.SoftmaxDecreasing](Softmax.py)`, [`Softmax.SoftMix](Softmax.py)`, [`Softmax.SoftmaxWithHorizon](Softmax.py)`, [`Exp3`](Exp3.py), [`Exp3.Exp3Decreasing](Exp3.py)`, [`Exp3.Exp3SoftMix](Exp3.py)`, [`Exp3.Exp3WithHorizon](Exp3.py)`, [`Exp3.Exp3ELM](Exp3.py)`, [`ProbabilityPursuit`](ProbabilityPursuit.py), [`Exp3PlusPlus`](Exp3PlusPlus.py), and a smart variant [`BoltzmannGumbel`](BoltzmannGumbel.py),
+- Probabilistic weighting algorithms: [`Hedge`](Hedge.py), [`Softmax`](Softmax.py), [`Softmax.SoftmaxDecreasing`](Softmax.py), [`Softmax.SoftMix`](Softmax.py), [`Softmax.SoftmaxWithHorizon`](Softmax.py), [`Exp3`](Exp3.py), [`Exp3.Exp3Decreasin`g](Exp3.py), [`Exp3.Exp3SoftMix`](Exp3.py), [`Exp3.Exp3WithHorizon`](Exp3.py), [`Exp3.Exp3ELM`](Exp3.py), [`ProbabilityPursuit`](ProbabilityPursuit.py), [`Exp3PlusPlus`](Exp3PlusPlus.py), and a smart variant [`BoltzmannGumbel`](BoltzmannGumbel.py),
 
-- Index based UCB algorithms: [`EmpiricalMeans`](EmpiricalMeans.py), [`UCB`](UCB.py), [`UCBlog10`](UCBlog10.py), [`UCBwrong`](UCBwrong.py), UCBlog10alpha, [`UCBalpha`](UCBalpha.py), [`UCBmin`](UCBmin.py), [`UCBplus`](UCBplus.py), [`UCBrandomInit`](UCBrandomInit.py), [`UCBV`](UCBV.py), [`UCBVtuned`](UCBVtuned.py), [`UCBH`](UCBH.py), [`CPUCB`](CPUCB.py),
+- Index based UCB algorithms: [`EmpiricalMeans`](EmpiricalMeans.py), [`UCB`](UCB.py), [`UCBlog10`](UCBlog10.py), [`UCBwrong`](UCBwrong.py), [`UCBlog10alpha`](UCBlog10alpha.py), [`UCBalpha`](UCBalpha.py), [`UCBmin`](UCBmin.py), [`UCBplus`](UCBplus.py), [`UCBrandomInit`](UCBrandomInit.py), [`UCBV`](UCBV.py), [`UCBVtuned`](UCBVtuned.py), [`UCBH`](UCBH.py), [`CPUCB`](CPUCB.py),
 
 - Index based MOSS algorithms: [`MOSS`](MOSS.py), [`MOSSH`](MOSSH.py), [`MOSSAnytime`](MOSSAnytime.py), [`MOSSExperimental`](MOSSExperimental.py),
 
@@ -20,7 +21,7 @@ Policies module : contains various bandits algorithms:
 
 - Empirical KL-UCB algorithm: [`KLempUCB`](KLempUCB.py) (FIXME),
 
-- Other index algorithms: [`DMED`](DMED.py), [`DMED.](DMED.py)DMEDPlus`, [`OCUCB`](OCUCB.py), [`UCBdagger`](UCBdagger.py),
+- Other index algorithms: [`DMED`](DMED.py), [`DMED.DMEDPlus`](DMED.py), [`OCUCB`](OCUCB.py), [`UCBdagger`](UCBdagger.py),
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: [`AdBandits`](AdBandits.py),
 
@@ -32,9 +33,9 @@ Policies module : contains various bandits algorithms:
 
 - An *experimental* policy, using Black-box optimization: [`BlackBoxOpt`](BlackBoxOpt.py),
 
-- An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), [`SlidingWindowRestart`](SlidingWindowRestart.py), and 3 versions for UCB, UCBalpha and klUCB: [`SlidingWindowRestart.SWR_UCB](SlidingWindowRestart.py)`, [`SlidingWindowRestart.SWR_UCBalpha](SlidingWindowRestart.py)`, [`SlidingWindowRestart.SWR_klUCB](SlidingWindowRestart.py)` (my algorithm, unpublished yet),
+- An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), [`SlidingWindowRestart`](SlidingWindowRestart.py), and 3 versions for UCB, UCBalpha and klUCB: [`SlidingWindowRestart.SWR_UCB`](SlidingWindowRestart.py), [`SlidingWindowRestart.SWR_UCBalpha`](SlidingWindowRestart.py), [`SlidingWindowRestart.SWR_klUCB`](SlidingWindowRestart.py) (my algorithm, unpublished yet),
 
-- An experimental policy, using just a sliding window of for instance 100 draws, [`SlidingWindowUCB.SWUCB](SlidingWindowUCB.py)`, and [`SlidingWindowUCB.SWUCBPlus](SlidingWindowUCB.py)` if the horizon is known.
+- An experimental policy, using just a sliding window of for instance 100 draws, [`SlidingWindowUCB.SWUCB`](SlidingWindowUCB.py), and [`SlidingWindowUCB.SWUCBPlu`s](SlidingWindowUCB.py) if the horizon is known.
 
 - Another experimental policy with a discount factor, [`DiscountedUCB`](DiscountedUCB.py) and [`DiscountedUCB.](DiscountedUCB.py)DiscountedUCBPlus`.
 
@@ -49,6 +50,7 @@ Policies module : contains various bandits algorithms:
 - Some are designed only for (fully decentralized) multi-player games: [`MusicalChair`](MusicalChair.py), [`MEGA`](MEGA.py).
 
 
+## API
 All policies have the same interface, as described in [`BasePolicy`](BasePolicy.py),
 in order to use them in any experiment with the following approach:
 

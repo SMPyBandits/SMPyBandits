@@ -1,6 +1,8 @@
 # [Multi-Player policies](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.html)
 > See here the documentation: [docs/PoliciesMultiPlayers](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.html)
 
+
+## List of Policies
 `PoliciesMultiPlayers` folder : contains various collision-avoidance protocol for the multi-players setting.
 
 - [`Selfish`](Selfish.py): a multi-player policy where every player is selfish, they do not try to handle the collisions.
@@ -17,7 +19,7 @@
 - [`rhoCentralized`](rhoCentralized.py) is a semi-centralized version where orthogonal ranks 1..M are given to the players, instead of just giving them the value of M, but a decentralized learning policy is still used to learn the best arms.
 - [`RandTopM`](RandTopM.py) is another approach, similar to [`rhoRandSticky`](rhoRandSticky.py) and [`MusicalChair`](MusicalChair.py), but we hope it will be better, and we succeed in analyzing more easily.
 
-
+## API
 All policies have the same interface, as described in [`BaseMPPolicy`](BaseMPPolicy.py) for decentralized policies,
 and [`BaseCentralizedPolicy`](BaseCentralizedPolicy.py) for centralized policies,
 in order to use them in any experiment with the following approach:
