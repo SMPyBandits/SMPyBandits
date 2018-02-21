@@ -1,6 +1,6 @@
 # Bandit algorithms, Lilian Besson's AlgoBandits project
 
-<img width="40%" src="logo_large.png" align="right"/>
+<img width="50%" src="logo_large.png" align="right"/>
 
 This repository contains the code of [my](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
@@ -10,10 +10,13 @@ It contains the most complete collection of single-player (classical) bandit alg
 
 I follow very actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually implement quite quickly the new algorithms (see for instance [Exp3++](Policies/Exp3PlusPlus.py), [CORRAL](Policies/CORRAL.py) and [SparseUCB](Policies/SparseUCB.py) from COLT 2017 articles, [LearnExp](Policies/LearnExp.py) from a NIPS 2017 paper, or [klUCBPlusPlus](Policies/klUCBPlusPlus.py) from an ALT 2017 paper).
 
-- Classical MAB have applications in clinical trials, online content recommendation (my framework does *not* implement contextual bandit - yet)
-- [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([rhoRand](PoliciesMultiPlayers, .
+- Classical MAB have a lot of applications, from clinical trials, A/B testing, game tree exploration, and online content recommendation (my framework does *not* implement contextual bandit - yet).
+- [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](PoliciesMultiPlayers/rhoRand.py) from 2009, [`MEGA`](Policies/MEGA.py) from 2015, [`MusicalChair`](Policies/MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](PoliciesMultiPlayers/RandTopM.py) and [`MCTopM`](PoliciesMultiPlayers/MCTopM.py)).
 
-Simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
+With this numerical framework, simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
+Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/Naereen/AlgoBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuratio_...py`).
+
+A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [banditslilian.gforge.inria.fr](http://banditslilian.gforge.inria.fr/). (I won't use [ReadTheDocs](https://readthedocs.org/) for this project, and I won't use continuous integration, don't even think of it!)
 
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
