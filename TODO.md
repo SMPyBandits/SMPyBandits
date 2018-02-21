@@ -6,7 +6,15 @@
 ## Publicly release it and document it - OK
 
 ## Other aspects
-- [ ] publish on GitHub!
+- [x] publish on GitHub!
+
+## Presentation paper
+- [x] A summary describing the high-level functionality and purpose of the software
+for a diverse, non-specialist audience
+- [x] A clear statement of need that illustrates the purpose of the software
+- [x] A list of key references including a link to the software archive
+- [x] Mentions (if applicable) of any ongoing research projects using the software
+or recent scholarly publications enabled by it
 
 ---
 

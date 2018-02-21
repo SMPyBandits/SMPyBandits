@@ -61,7 +61,12 @@ configuration["successive_players"] = [
 ![plots/MP__K9_M6_T10000_N1000__4_algos__all_HistogramsRegret____env1-1_8200873569864822246.png](plots/MP__K9_M6_T10000_N1000__4_algos__all_HistogramsRegret____env1-1_8200873569864822246.png)
 
 
-> Figure 2 : Regret (in loglog scale), for M=6 players for K=9 arms, horizon T=5000, for 1000 repetitions on problem µ=[0.1,dots,0.9]. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The x axis on the regret histograms have different scale for each algorithm.
+> Figure 2 : Regret (in loglog scale), for M=6 players for K=9 arms, horizon T=5000, for 1000 repetitions on problem µ=[0.1,…,0.9]. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The x axis on the regret histograms have different scale for each algorithm.
+
+
+[plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png](plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png)
+
+> Figure 3 : Regret (in logy scale) for M=3 players for K=9 arms, horizon T=123456, for 100 repetitions on problem µ=[0.1,…,0.9]. With the parameters from their respective article, MEGA and MusicalChair fail completely, even with knowing the horizon for MusicalChair.
 
 > These illustrations come from my article, [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 

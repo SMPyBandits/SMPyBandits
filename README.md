@@ -8,7 +8,7 @@ This repository contains the code of [my](http://perso.crans.org/besson/) numeri
 
 It contains the most complete collection of single-player (classical) bandit algorithms on the Internet ([over 65!](Policies/)), as well as implementation of all the state-of-the-art [multi-player algorithms](PoliciesMultiPlayers/).
 
-I follow very actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually implement quite quickly the new algorithms (see for instance [Exp3++](Policies/Exp3PlusPlus.py), [CORRAL](Policies/CORRAL.py) and [SparseUCB](Policies/SparseUCB.py) from COLT 2017 articles, [LearnExp](Policies/LearnExp.py) from a NIPS 2017 paper, or [klUCBPlusPlus](Policies/klUCBPlusPlus.py) from an ALT 2017 paper).
+I follow very actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually implement quite quickly the new algorithms (see for instance, [Exp3++](http://banditslilian.gforge.inria.fr/docs/Policies.Exp3PlusPlus.html), [CORRAL](http://banditslilian.gforge.inria.fr/docs/Policies.CORRAL.html) and [SparseUCB](http://banditslilian.gforge.inria.fr/docs/Policies.SparseUCB.html) were each introduced by articles ([for Exp3++](https://arxiv.org/pdf/1702.06103), [for CORRAL](https://arxiv.org/abs/1612.06246v2), [for SparseUCB](https://arxiv.org/abs/1706.01383)) presented at COLT in July 2017, [LearnExp](http://banditslilian.gforge.inria.fr/docs/Policies.LearnExp.html) comes from a [NIPS 2017 paper](https://arxiv.org/abs/1702.04825), and [kl-UCB++](http://banditslilian.gforge.inria.fr/docs/Policies.klUCBPlusPlus.html) from an [ALT 2017 paper](https://hal.inria.fr/hal-01475078).).
 
 - Classical MAB have a lot of applications, from clinical trials, A/B testing, game tree exploration, and online content recommendation (my framework does *not* implement contextual bandit - yet).
 - [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](PoliciesMultiPlayers/rhoRand.py) from 2009, [`MEGA`](Policies/MEGA.py) from 2015, [`MusicalChair`](Policies/MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](PoliciesMultiPlayers/RandTopM.py) and [`MCTopM`](PoliciesMultiPlayers/MCTopM.py)).
@@ -30,7 +30,7 @@ A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms an
 ----
 
 ## How to cite this work?
-If you use this package for your own work, please consider citing it with this piece of BibTeX.
+If you use this package for your own work, please consider citing it with [this piece of BibTeX](AlgoBandits.bib):
 
 
 ```bibtex
@@ -81,8 +81,8 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 ### Arms and problems
 - My framework mainly target stochastic bandits, with arms following [`Bernoulli`](Arms/Bernoulli.py), bounded (truncated) or unbounded [`Gaussian`](Arms/Gaussian.py), [`Exponential`](Arms/Exponential.py), [`Gamma`](Arms/Gamma.py) or [`Poisson`](Arms/Poisson.py) distributions.
-- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](Environment/MAB.py))).
-- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](Environment/MAB.py)), even though I didn't implement any policies tailored for Markovian problems.
+- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](Environment/MAB.py)).
+- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](Environment/MAB.py), even though I didn't implement any policies tailored for Markovian problems.
 
 ----
 
@@ -99,7 +99,7 @@ TL;DR: this short bash snippet shows how to clone the code, install the requirem
 
 ```bash
 cd /tmp/  # or wherever you want
-git clone https://GitHub.com/Naereen/AlgoBandits.git  # takes a few seconds, there is about 300 Mo of code, due to large notebooks and many examples of plots
+git clone https://GitHub.com/Naereen/AlgoBandits.git
 cd AlgoBandits.git
 # just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv
