@@ -8,6 +8,7 @@ __pycache__/
 *~
 
 # Useless files, generated during builds
+*.pdf
 *.so
 *.dot
 *.lprof

@@ -22,6 +22,9 @@ moremulti:
 sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
+paper_pdf:
+	pandoc --biblatex --bibliography paper.bib  --smart --standalone --normalize --number-sections paper.md -o paper.pdf
+
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc
 	make html clean send
