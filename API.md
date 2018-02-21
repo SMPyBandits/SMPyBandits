@@ -13,6 +13,16 @@
 
 ----
 
+### UML diagrams
+For more details, see [these UML diagrams](uml_diagrams/):
+
+- Packages: organization of the different files:
+  [![UML Diagram - Packages of AlgoBandits.git](uml_diagrams/packages_AlgoBandits.png)](uml_diagrams/packages_AlgoBandits.svg)
+- Classes: inheritance diagrams of the different classes:
+  [![UML Diagram - Classes of AlgoBandits.git](uml_diagrams/classes_AlgoBandits.png)](uml_diagrams/classes_AlgoBandits.svg)
+
+----
+
 ## Question: *How to change the simulations*?
 ### To customize the plots
 1. Change the default settings defined in [`Environment/plotsettings.py`](Environment/plotsettings.py).
