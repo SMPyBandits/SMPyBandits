@@ -37,7 +37,7 @@
 
 - An experimental policy, using just a sliding window of for instance 100 draws, [`SlidingWindowUCB.SWUCB`](SlidingWindowUCB.py), and [`SlidingWindowUCB.SWUCBPlu`s](SlidingWindowUCB.py) if the horizon is known.
 
-- Another experimental policy with a discount factor, [`DiscountedUCB`](DiscountedUCB.py) and [`DiscountedUCB.](DiscountedUCB.py)DiscountedUCBPlus`.
+- Another experimental policy with a discount factor, [`DiscountedUCB`](DiscountedUCB.py) and [`DiscountedUCB.DiscountedUCBPlus`](DiscountedUCB.py).
 
 - A policy designed to tackle sparse stochastic bandit problems, [`SparseUCB`](SparseUCB.py), [`SparseklUCB`](SparseklUCB.py), and [`SparseWrapper`](SparseWrapper.py) that can be used with *any* index policy.
 
