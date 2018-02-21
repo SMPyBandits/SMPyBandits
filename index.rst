@@ -29,6 +29,19 @@ a part of my **on going** research since December 2016.
 
 |Maintenance| |Ask Me Anything|
 
+
+How to cite this work?
+~~~~~~~~~~~~~~~~~~~~~~
+If you use this package for your own work, please consider citing it with this piece of BibTeX: ::
+
+    @misc{AlgoBandits,
+        title =   {{AlgoBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
+        author =  {Lilian Besson},
+        year =    {2018},
+        url =     {https://github.com/Naereen/AlgoBandits/},
+        note =    {Code at https://github.com/Naereen/AlgoBandits/, documentation at http://banditslilian.gforge.inria.fr/}
+    }
+
 ----
 
 .. toctree::
@@ -57,11 +70,10 @@ a part of my **on going** research since December 2016.
 
 .. note::
 
-   This documentation is publically available, but the code is not (yet) open-source.
-   I will publish it soon, when it will be stable and clean enough to be used by others.
+   Both this documentation and the code are publically available avaible, under the `open-source MIT License <https://lbesson.mit-license.org/>`_.
+   The code is hosted on GitHub at `github.com/Naereen/AlgoBandits <https://github.com/Naereen/AlgoBandits/>`_.
 
    |GitHub forks| |GitHub stars| |GitHub watchers|
-
    |GitHub contributors| |GitHub issues| |GitHub issues-closed|
 
 

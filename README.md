@@ -29,6 +29,22 @@ A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms an
 
 ----
 
+## How to cite this work?
+If you use this package for your own work, please consider citing it with this piece of BibTeX.
+
+
+```bibtex
+@misc{AlgoBandits,
+    title =   {{AlgoBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
+    author =  {Lilian Besson},
+    year =    {2018},
+    url =     {https://github.com/Naereen/AlgoBandits/},
+    note =    {Code at https://github.com/Naereen/AlgoBandits/, documentation at http://banditslilian.gforge.inria.fr/}
+}
+```
+
+> A DOI will arrive as soon as possible! I will try to publish [a paper](paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
+
 ## [List of research publications using AlgoBandits](PublicationsWithAlgoBandits.md)
 
 ### 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
