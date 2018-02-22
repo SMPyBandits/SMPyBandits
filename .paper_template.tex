@@ -140,7 +140,7 @@ $if(usehancyhdr)$
     \rhead{\emph{\today}}
     \lfoot{\href{https://GitHub.com/Naereen/AlgoBandits}{GitHub.com/Naereen/AlgoBandits}}
     \cfoot{\(\thepage/\pageref{LastPage}\)}
-    \rfoot{$author$}
+    \rfoot{$if(author-meta)$$author-meta$$else$$author$$endif$}
 $endif$
 $if(listings)$   % Code embedding
 \usepackage{listings}
