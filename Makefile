@@ -22,11 +22,6 @@ moremulti:
 sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
-paper_pdf:
-	pandoc --filter pandoc-citeproc --natbib --from=markdown+citations+footnotes --number-sections paper.md -o paper.pdf
-	# --from=markdown+yaml_metadata_block+implicit_figures+tex_math_dollars+raw_tex
-	# --from=markdown_github+yaml_metadata_block+implicit_figures+tex_math_dollars+raw_tex
-
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc
 	make html clean send
@@ -85,6 +80,32 @@ treeexploration3:
 	time nice -n 19 ipython3 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 treeexploration2:
 	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
+
+# --------------------------------------------------------
+
+# LATEX=lualatex
+# LATEX=xelatex -shell-escape -output-driver="xdvipdfmx -z 0"
+# LATEX=xelatex
+LATEX=pdflatex
+
+PANDOC=pandoc --verbose --filter pandoc-citeproc --template=.paper_template.tex --number-sections --standalone --toc --natbib --bibliography paper.bib
+#  --listings
+MARKDOWNOPTIONS=--from=markdown+backtick_code_blocks+implicit_figures+pipe_tables+citations+footnotes+smart
+#  --columns=600
+
+paper: paper.tex paper.md
+	latexmk -f -gg -pdf paper.tex
+	latexmk -c
+
+paper.tex: paper.md
+	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
+
+paper.pdf: paper.md
+	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
+	# pandoc --filter pandoc-citeproc --natbib --from=markdown+citations+footnotes --number-sections paper.md -o paper.pdf
+
+
+# --------------------------------------------------------
 
 policy_server_py:
 	clear

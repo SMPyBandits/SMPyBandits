@@ -7,8 +7,20 @@ __pycache__/
 # Nano backup
 *~
 
-# Useless files, generated during builds
+# LaTeX files
+paper.tex
+*.aux
+*.bbl
+*.blg
+*.fls
+*.out
+*.synctex.gz
+*.toc
+*.fls
+*.fdb_latexmk
 *.pdf
+
+# Useless files, generated during builds
 *.so
 *.dot
 *.lprof
