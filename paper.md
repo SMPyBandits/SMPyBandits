@@ -78,18 +78,18 @@ class UCB(IndexPolicy):
       return float('+inf')   # in the first steps
     else:                    # or compute UCB index
       estimated_mean = (self.rewards[arm] / self.pulls[arm])
-      observation_bias = sqrt((2 * log(self.t)) / self.pulls[arm])
-      return estimated_mean + observation_bias
+      exploration_bias = sqrt((2 * log(self.t)) / self.pulls[arm])
+      return estimated_mean + exploration_bias
 
 ```
 
 ### Multi-Players MAB
 
-For Cognitive Radio applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
+For Cognitive Radio applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-This package implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+This package implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
 
 ---
 
