@@ -23,7 +23,9 @@ sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
 paper_pdf:
-	pandoc --biblatex --bibliography paper.bib  --smart --standalone --normalize --number-sections paper.md -o paper.pdf
+	pandoc --filter pandoc-citeproc --natbib --from=markdown+citations+footnotes --number-sections paper.md -o paper.pdf
+	# --from=markdown+yaml_metadata_block+implicit_figures+tex_math_dollars+raw_tex
+	# --from=markdown_github+yaml_metadata_block+implicit_figures+tex_math_dollars+raw_tex
 
 alllint:	lint lint3 pyreverse stats doc
 doc:	clean-doc

@@ -50,7 +50,7 @@ configuration = {
     "environment": [
         {
             "arm_type": Bernoulli,  # Only Bernoulli is available as far as now
-            "probabilities": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.1]
+            "params": [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.1]
         }
     ],
     # Policies that should be simulated, and their parameters.

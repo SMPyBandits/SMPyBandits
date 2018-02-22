@@ -70,7 +70,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'AlgoBandits'
-copyright = '2016-2018, <a href="https://perso.crans.org/besson/">Lilian Besson</a>'
+copyright = '2016-2018, Lilian Besson (Naereen)'
 author = 'Lilian Besson'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -80,7 +80,7 @@ author = 'Lilian Besson'
 # The short X.Y version.
 version = '0.9'
 # The full version, including alpha/beta/rc tags.
-release = '0.8'
+release = '0.9.1'
 
 # http://pypi.python.org/pypi/sphinxcontrib-googleanalytics
 # https://bitbucket.org/birkenfeld/sphinx-contrib/src/default/googleanalytics/

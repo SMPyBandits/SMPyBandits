@@ -150,7 +150,7 @@ PUTATRIGHT = True
 #:
 #: .. warning:: I still don't really understand how this works. Decrease if the legend takes more space (i.e., more algorithms with longer names)
 SHRINKFACTOR = 0.75
-SHRINKFACTOR = 0.65
+# SHRINKFACTOR = 0.65
 
 
 def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None):

@@ -311,7 +311,6 @@ except (TypeError, KeyError):
 #: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
 
-
 configuration.update({
     "policies": [
         # # --- Stupid algorithms
@@ -884,6 +883,17 @@ configuration.update({
         },
     ]
 })
+
+# # Tiny configuration, for the paper.pdf illustration.
+# configuration.update({
+#     # Policies that should be simulated, and their parameters.
+#     "policies": [
+#         {"archtype": UCBalpha, "params": { "alpha": 1 } },
+#         {"archtype": klUCB, "params": {} },
+#         {"archtype": klUCBPlusPlus, "params": { "horizon": 10000 } },
+#         {"archtype": Thompson, "params": {} },
+#     ]
+# })
 
 # Dynamic hack
 if TEST_Doubling_Trick:
