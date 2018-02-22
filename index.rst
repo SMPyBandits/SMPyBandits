@@ -42,6 +42,9 @@ If you use this package for your own work, please consider citing it with this p
         note =    {Code at https://github.com/Naereen/AlgoBandits/, documentation at http://banditslilian.gforge.inria.fr/}
     }
 
+I also wrote a small paper to present *AlgoBandits*, and I will send it to `JOSS <http://joss.theoj.org/>`_.
+The paper can be consulted `here on my website <https://perso.crans.org/besson/articles/AlgoBandits.pdf>`_.
+
 ----
 
 .. toctree::
