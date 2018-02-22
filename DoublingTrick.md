@@ -140,7 +140,7 @@ On easy problems like this one, both [kl-UCB](Policies/klUCB.py) and [kl-UCB++](
 
 ----
 
-## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
+### :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
 © 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
