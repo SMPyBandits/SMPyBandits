@@ -143,14 +143,15 @@ def makemarkers(nb):
 
 #: Default parameter for legend(): if True, the legend is placed at the right side of the figure, not on it.
 #: This is almost mandatory for plots with more than 10 algorithms (good for experimenting, bad for publications).
-PUTATRIGHT = False
 PUTATRIGHT = True
+PUTATRIGHT = False
 
 #: Shrink factor if the legend is displayed on the right of the plot.
 #:
-#: .. warning:: I still don't really understand how this works. Decrease if the legend takes more space (i.e., more algorithms with longer names)
-SHRINKFACTOR = 0.75
-# SHRINKFACTOR = 0.65
+#: .. warning:: I still don't really understand how this works. Just manually decrease if the legend takes more space (i.e., more algorithms with longer names)
+# SHRINKFACTOR = 0.75
+SHRINKFACTOR = 0.65
+SHRINKFACTOR = 0.60
 
 
 def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None):

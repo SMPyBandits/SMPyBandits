@@ -689,22 +689,34 @@ def static_change_lower_amplitude(t, l_t, a_t):
 
 
 #: Default value for the :func:`doubling_change_lower_amplitude` function.
-DELTA, T0, DELTA_T, ZOOM = 1, 100, 100, 2
-DELTA, T0, DELTA_T, ZOOM = 0, 100, 500, 1.1
-DELTA, T0, DELTA_T, ZOOM = 0, 100, 500, 1.05
+L0, A0, DELTA, T0, DELTA_T, ZOOM = None, None, 0, 100, 500, 1.1
+L0, A0, DELTA, T0, DELTA_T, ZOOM = None, None, 0, 100, 500, 1.05
+L0, A0, DELTA, T0, DELTA_T, ZOOM = None, None, 1, 2500, 5000, 2
+L0, A0, DELTA, T0, DELTA_T, ZOOM = None, None, 0, -1, 1000, 2
+L0, A0, DELTA, T0, DELTA_T, ZOOM = -1, 1, 0, -1, 1000, 2
+L0, A0, DELTA, T0, DELTA_T, ZOOM = -1, 2, 0, -1, -1, 2
 
-def doubling_change_lower_amplitude(t, l_t, a_t, delta=DELTA, T0=T0, deltaT=DELTA_T, zoom=ZOOM):
+
+def doubling_change_lower_amplitude(t, l_t, a_t, l0=L0, a0=A0, delta=DELTA, T0=T0, deltaT=DELTA_T, zoom=ZOOM):
     r"""A function called by :class:`IncreasingMAB` *at every time t*, to compute the (possibly) knew values for :math:`l_t` and :math:`a_t`.
 
-    - At step `T0` steps, it reduces :math:`l_t` by `delta` (typically from `0` to `-1`).
+    - At time 0, it forces to use :math:`l_0, a_0` if they are given and not ``None``.
+    - At step `T0`, it reduces :math:`l_t` by `delta` (typically from `0` to `-1`).
     - Every `deltaT` steps, it multiplies both  :math:`l_t` and :math:`a_t` by `zoom`.
     - First argument is a boolean, `True` if a change occurred, `False` otherwise.
     """
-    if t > 0:
+    if t == 0 and (l0 is not None or a0 is not None):
+        different_starting = (l_t != l0) or (a_t != a0)
+        if l0 is not None:
+            l_t = l0
+        if a0 is not None:
+            a_t = a0
+        return different_starting, l_t, a_t
+    elif t > 0:
         if t == T0:
-            return True, l_t - delta, a_t
-        elif t > 0 and t % deltaT == 0:
-            return True, zoom * l_t, zoom * a_t
+            return (delta != 0), l_t - delta, a_t
+        elif deltaT > 0 and t % deltaT == 0:
+            return (zoom != 1), zoom * l_t, zoom * a_t
     return False, l_t, a_t
 
 
@@ -747,7 +759,7 @@ class IncreasingMAB(MAB):
         haschanged, l_tp1, a_tp1 = self._change_lower_amplitude(t, l_t, a_t)
         reward = self.arms[armId].draw(t)
         if haschanged:
-            # print("Warning: for {}, current l_t, a_t values for arm {} have changed, from {}, {} to {}, {}...".format(self, self.arms[armId], l_t, a_t, l_tp1, a_tp1))  # DEBUG
+            print("Warning: for {}, current l_t, a_t values for arm {} have changed, from {}, {} to {}, {}...".format(self, self.arms[armId], l_t, a_t, l_tp1, a_tp1))  # DEBUG
             self._lowers[armId], self._amplitudes[armId] = l_tp1, a_tp1
         l_of_a, a_of_a = self._first_lowers[armId], self._first_amplitudes[armId]
         # scale it to [0, 1]?

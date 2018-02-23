@@ -900,15 +900,10 @@ configuration.update({
 configuration.update({
     "environment": [
         {   # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
-            "arm_type": Bernoulli,
+            "arm_type": ARM_TYPE,
             "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude),
             "change_lower_amplitude": True
         },
-        # {   # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
-        #     "arm_type": Gaussian,
-        #     "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude),
-        #     "change_lower_amplitude": True
-        # },
     ],
     # Policies that should be simulated, and their parameters.
     "policies": [
@@ -928,6 +923,11 @@ configuration.update({
                 "policy": klUCB
             }
         },
+        # Reference policy knowing the range
+        {"archtype": klUCB, "params": {
+            "lower": -1,
+            "amplitude": 2,
+        } },
     ]
 })
 

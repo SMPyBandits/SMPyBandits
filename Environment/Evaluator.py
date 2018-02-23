@@ -517,12 +517,12 @@ class Evaluator(object):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
             last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
             print("  Last regrets vector (for all repetitions) is:")
-            print("Shape of  last regrets R_T =", np.shape(last_regrets))
-            print("Min of    last regrets R_T =", np.min(last_regrets))
-            print("Mean of   last regrets R_T =", np.mean(last_regrets))
-            print("Median of last regrets R_T =", np.median(last_regrets))
-            print("Max of    last regrets R_T =", np.max(last_regrets))
-            print("STD of    last regrets R_T =", np.std(last_regrets))
+            print("Shape of  last regrets R_T = {}".format(np.shape(last_regrets)))
+            print("Min of    last regrets R_T = {:.3g}".format(np.min(last_regrets)))
+            print("Mean of   last regrets R_T = {:.3g}".format(np.mean(last_regrets)))
+            print("Median of last regrets R_T = {:.3g}".format(np.median(last_regrets)))
+            print("Max of    last regrets R_T = {:.3g}".format(np.max(last_regrets)))
+            print("STD of    last regrets R_T = {:.3g}".format(np.std(last_regrets)))
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=25, log=False,
