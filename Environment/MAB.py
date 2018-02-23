@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" MAB, MarkovianMAB and DynamicMAB classes to wrap the arms of some Multi-Armed Bandit problems.
+""" MAB, MarkovianMAB, DynamicMAB, and IncreasingMAB classes to wrap the arms of some Multi-Armed Bandit problems.
 
 Such class has to have *at least* these methods:
 
@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 try:
     from .pykov import Chain
 except ImportError:
-    print("Warning: 'pykov' module seems to not be available. Have you installed it from https://github.com/riccardoscalco/Pykov ?")
+    print("Warning: 'pykov' module seems to not be available. But it is shipped with AlgoBandits. Weird.")
+    print("Dou you want to try to install it from https://github.com/riccardoscalco/Pykov ?")
     print("Warning: the 'MarkovianMAB' class will not work...")
 
 # Local imports
@@ -674,6 +675,89 @@ class DynamicMAB(MAB):
             print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
 
         return avg_our_lowerbound, avg_anandkumar_lowerbound, avg_centralized_lowerbound
+
+
+# --- IncreasingMAB
+
+
+def static_change_lower_amplitude(t, l_t, a_t):
+    r"""A function called by :class:`IncreasingMAB` *at every time t*, to compute the (possibly) knew values for :math:`l_t` and :math:`a_t`.
+
+    - First argument is a boolean, `True` if a change occurred, `False` otherwise.
+    """
+    return False, l_t, a_t
+
+
+#: Default value for the :func:`doubling_change_lower_amplitude` function.
+DELTA, T0, DELTA_T, ZOOM = 1, 100, 100, 2
+DELTA, T0, DELTA_T, ZOOM = 0, 100, 500, 1.1
+DELTA, T0, DELTA_T, ZOOM = 0, 100, 500, 1.05
+
+def doubling_change_lower_amplitude(t, l_t, a_t, delta=DELTA, T0=T0, deltaT=DELTA_T, zoom=ZOOM):
+    r"""A function called by :class:`IncreasingMAB` *at every time t*, to compute the (possibly) knew values for :math:`l_t` and :math:`a_t`.
+
+    - At step `T0` steps, it reduces :math:`l_t` by `delta` (typically from `0` to `-1`).
+    - Every `deltaT` steps, it multiplies both  :math:`l_t` and :math:`a_t` by `zoom`.
+    - First argument is a boolean, `True` if a change occurred, `False` otherwise.
+    """
+    if t > 0:
+        if t == T0:
+            return True, l_t - delta, a_t
+        elif t > 0 and t % deltaT == 0:
+            return True, zoom * l_t, zoom * a_t
+    return False, l_t, a_t
+
+
+default_change_lower_amplitude = doubling_change_lower_amplitude
+
+
+class IncreasingMAB(MAB):
+    """Like a static MAB problem, but the range of the rewards is increased from time to time, to test the :class:`Policy.WrapRange` policy.
+
+    - M.arms and M.means is NOT changed after each call to ``newRandomArms()``, but not nbArm.
+
+    .. warning:: It is purely experimental, be careful when using this feature.
+    """
+
+    def __init__(self, configuration):
+        """New MAB."""
+        super(IncreasingMAB, self).__init__(configuration)
+        # XXX Expects a function of (t, lower, amplitude) that gives the new (lower, amplitude)
+        # WARNING the hash function used on configuration dictionary don't like to have non-hashable part in the dictionary keys, I need to fix that
+        if isinstance(configuration, dict):
+            self._change_lower_amplitude = configuration.get("change_lower_amplitude", default_change_lower_amplitude)
+            if self._change_lower_amplitude is True:
+                self._change_lower_amplitude = default_change_lower_amplitude
+        else:
+            self._change_lower_amplitude = default_change_lower_amplitude
+        # Compute the first lower and amplitude values
+        lowers, amplitudes = [], []
+        for a in self.arms:
+            l, a = a.lower_amplitude
+            lowers.append(l)
+            amplitudes.append(a)
+        self._first_lowers = np.array(lowers)
+        self._first_amplitudes = np.array(amplitudes)
+        self._lowers = np.array(lowers)
+        self._amplitudes = np.array(amplitudes)
+
+    def draw(self, armId, t=1):
+        """ Return a random sample from the armId-th arm, at time t. Usually t is not used."""
+        l_t, a_t = self._lowers[armId], self._amplitudes[armId]
+        haschanged, l_tp1, a_tp1 = self._change_lower_amplitude(t, l_t, a_t)
+        reward = self.arms[armId].draw(t)
+        if haschanged:
+            # print("Warning: for {}, current l_t, a_t values for arm {} have changed, from {}, {} to {}, {}...".format(self, self.arms[armId], l_t, a_t, l_tp1, a_tp1))  # DEBUG
+            self._lowers[armId], self._amplitudes[armId] = l_tp1, a_tp1
+            # # scale it to [0, 1]?
+            # reward = (reward - l_t) / a_t
+        # scale it to [0, 1]?
+        l_of_a, a_of_a = self._first_lowers[armId], self._first_amplitudes[armId]
+        reward = (reward - l_of_a) / a_of_a
+        # now unscale it in the new interval
+        reward = l_tp1 + reward * a_tp1
+        # finally, be done and return it
+        return reward
 
 
 # --- Utility functions

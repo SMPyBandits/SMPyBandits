@@ -19,14 +19,7 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 
 .. seealso::
 
-   Reference? Not yet, this is my own idea and it is *active* research.
-   I experimented on it, and I already proved some things, and if it turns out to be an interesting idea, we will publish something about it.
-
-.. warning::
-
-   This is very EXPERIMENTAL! No proof yet!
-   But experimentally, it worked so well... On simple stationary problems with Bernoulli arms,
-   the DoublingTrickWrapper[ApproximatedFHGittins] worked much better than UCB or klUCB or Thompson...
+   Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
 
 .. warning::
 
@@ -261,6 +254,8 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
 
 class DoublingTrickWrapper(BasePolicy):
     r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick".
+
+    - Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
     """
 
     def __init__(self, nbArms,
@@ -312,8 +307,8 @@ class DoublingTrickWrapper(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
-        self.rewards = self.policy.rewards
-        self.pulls = self.policy.pulls
+        self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
+        self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
 
     # --- Pass the call to the subpolicy
 

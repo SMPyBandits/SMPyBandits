@@ -186,8 +186,8 @@ configuration = {
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
     # --- Should we plot the lower-bounds or not?
-    "plot_lowerbound": True,  # XXX Default
-    # "plot_lowerbound": False,
+    # "plot_lowerbound": True,  # XXX Default
+    "plot_lowerbound": False,
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
@@ -894,6 +894,42 @@ configuration.update({
 #         {"archtype": Thompson, "params": {} },
 #     ]
 # })
+
+
+# Tiny configuration, for testing the WrapRange policy.
+configuration.update({
+    "environment": [
+        {   # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
+            "arm_type": Bernoulli,
+            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude),
+            "change_lower_amplitude": True
+        },
+        # {   # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
+        #     "arm_type": Gaussian,
+        #     "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude),
+        #     "change_lower_amplitude": True
+        # },
+    ],
+    # Policies that should be simulated, and their parameters.
+    "policies": [
+        {"archtype": UCB, "params": {} },
+        {"archtype": WrapRange, "params": {
+                "policy": UCB
+            }
+        },
+        # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
+        # {"archtype": Thompson, "params": {} },
+        {"archtype": WrapRange, "params": {
+                "policy": Thompson
+            }
+        },
+        {"archtype": klUCB, "params": {} },
+        {"archtype": WrapRange, "params": {
+                "policy": klUCB
+            }
+        },
+    ]
+})
 
 # Dynamic hack
 if TEST_Doubling_Trick:

@@ -41,7 +41,9 @@
 
 - A policy designed to tackle sparse stochastic bandit problems, [`SparseUCB`](SparseUCB.py), [`SparseklUCB`](SparseklUCB.py), and [`SparseWrapper`](SparseWrapper.py) that can be used with *any* index policy.
 
-- An *experimental* policy, implementing a smart doubling trick to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: [`DoublingTrickWrapper`](DoublingTrickWrapper.py),
+- A policy that implements a "smart doubling trick" to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: [`DoublingTrickWrapper`](DoublingTrickWrapper.py),
+
+- An *experimental* policy, implementing a another kind of doubling trick to turn any policy that needs to know the range `[a,b]` of rewards a policy that don't need to know the range, and that adapt dynamically from the new observations, [`WrapRange`](WrapRange.py),
 
 - The *Optimal Sampling for Structured Bandits* (OSSB) policy: [`OSSB`](OSSB.py) (it is more generic and can be applied to almost any kind of bandit problem, it works fine for classical stationary bandits but it is not optimal),
 
