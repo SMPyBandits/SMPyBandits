@@ -6,11 +6,10 @@ But if the interval :math:`[a,b]` is unknown, what can we do?
 The "Doubling Trick", in this setting, refers to this algorithm:
 
 1. Start with :math:`[a_0, b_0] = [0, 1]`,
-2. If a reward is seen below :math:`a_i`, use :math:`a_(i+1) = min(2 a_i, -2 b_i)`,
-3. If a reward is seen above :math:`b_i`, use :math:`b_(i+1) = max(2 b_i, -2 a_i)`.
+2. If a reward :math:`r_t` is seen below :math:`a_i`, use :math:`a_{i+1} = r_t`,
+3. If a reward :math:`r_t` is seen above :math:`b_i`, use :math:`b_{i+1} = r_t - a_i`.
 
-It ensures that the length of the interval at most doubles everytime a reward is observed outside it.
-Actually, instead of just doubling, one can use :math:`[r_(t), b_i]` or :math:`[a_i, r_(t)]` as it is the smallest interval compatible with the past and the new observation :math:`r_(t)`
+Instead of just doubling the length of the interval ("doubling trick"), we use :math:`[r_t, b_i]` or :math:`[a_i, r_t]` as it is the smallest interval compatible with the past and the new observation :math:`r_t`
 
 - Reference.  I'm not sure which work is the first to have proposed this idea, but [[Normalized online learning, Stéphane Ross & Paul Mineiro & John Langford, 2013](https://arxiv.org/pdf/1305.6646.pdf)] proposes a similar idea.
 
@@ -75,18 +74,18 @@ class WrapRange(BasePolicy):
     def getReward(self, arm, reward):
         r""" Maybe change the current range and rescale all the past history, and then pass the reward, and update t.
 
-        Let call `r_s` the reward at time `s`, `l_{t-1}` and `a_{t-1}` the lower-bound and amplitude of rewards at previous time `t-1`, and `l_t` and `a_t` the new lower-bound and amplitude for current time `t`.
-        The previous history is `R_t := \sum_{s=1}^{t-1} r_s`.
+        Let call :math:`r_s` the reward at time :math:`s`, :math:`l_{t-1}` and :math:`a_{t-1}` the lower-bound and amplitude of rewards at previous time :math:`t-1`, and :math:`l_t` and :math:`a_t` the new lower-bound and amplitude for current time :math:`t`.
+        The previous history is :math:`R_t := \sum_{s=1}^{t-1} r_s`.
 
         The generic formula for rescaling the previous history is the following:
 
-        .. math:: R_t := \frac{(a_{t-1} * R_t + l_{t-1}) - l_t}{a_t}.
+        .. math:: R_t := \frac{(a_{t-1} \times R_t + l_{t-1}) - l_t}{a_t}.
 
         So we have the following efficient algorithm:
 
-        1. If `r < l_{t-1}`, let `l_t = r` and `R_t := R_t + \frac{l_{t-1} - l_t}{a_t}}`,
-        2. Else if `r > l_{t-1} + a_{t-1}`, let `a_t = r - l_{t-1}` and `R_t := R_t \times \frac{a_{t-1}}{a-t}`,
-        3. Otherwise, nothing to do, the current reward is still correctly in `[l_{t-1}, l_{t-1} + a_{t-1}]`, so simply keep `l_t = l_{t-1}` and `a_t = a_{t-1}`.
+        1. If :math:`r < l_{t-1}`, let :math:`l_t = r` and :math:`R_t := R_t + \frac{l_{t-1} - l_t}{a_t}`,
+        2. Else if :math:`r > l_{t-1} + a_{t-1}`, let :math:`a_t = r - l_{t-1}` and :math:`R_t := R_t \times \frac{a_{t-1}}{a-t}`,
+        3. Otherwise, nothing to do, the current reward is still correctly in :math:`[l_{t-1}, l_{t-1} + a_{t-1}]`, so simply keep :math:`l_t = l_{t-1}` and :math:`a_t = a_{t-1}`.
         """
         # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
         # super(WrapRange, self).getReward(arm, reward)

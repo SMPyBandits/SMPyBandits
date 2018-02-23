@@ -186,8 +186,8 @@ configuration = {
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
     # --- Should we plot the lower-bounds or not?
-    # "plot_lowerbound": True,  # XXX Default
-    "plot_lowerbound": False,
+    "plot_lowerbound": True,  # XXX Default
+    # "plot_lowerbound": False,
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms

@@ -39,6 +39,7 @@ If you use this package for your own work, please consider citing it with this p
         author =  {Lilian Besson},
         year =    {2018},
         url =     {https://github.com/Naereen/AlgoBandits/},
+        howpublished = {Online at: \url{GitHub.com/Naereen/AlgoBandits}},
         note =    {Code at https://github.com/Naereen/AlgoBandits/, documentation at http://banditslilian.gforge.inria.fr/}
     }
 

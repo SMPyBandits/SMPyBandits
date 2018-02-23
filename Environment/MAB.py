@@ -749,14 +749,13 @@ class IncreasingMAB(MAB):
         if haschanged:
             # print("Warning: for {}, current l_t, a_t values for arm {} have changed, from {}, {} to {}, {}...".format(self, self.arms[armId], l_t, a_t, l_tp1, a_tp1))  # DEBUG
             self._lowers[armId], self._amplitudes[armId] = l_tp1, a_tp1
-            # # scale it to [0, 1]?
-            # reward = (reward - l_t) / a_t
-        # scale it to [0, 1]?
         l_of_a, a_of_a = self._first_lowers[armId], self._first_amplitudes[armId]
+        # scale it to [0, 1]?
         reward = (reward - l_of_a) / a_of_a
         # now unscale it in the new interval
         reward = l_tp1 + reward * a_tp1
         # finally, be done and return it
+        assert l_tp1 <= reward <= l_tp1 + a_tp1, "Error: the new rescaled reward {:.3g} is not in [{:.3g}, {:.3g}]... that shouldn't be possible!".format(reward, l_tp1, l_tp1 + a_tp1)  # DEBUG
         return reward
 
 
