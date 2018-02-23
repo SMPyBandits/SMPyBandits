@@ -38,13 +38,13 @@ thanks:
 
 # Summary
 
-This article presents [my](http://perso.crans.org/besson/) numerical environment *AlgoBandits*, written in [Python (2 or 3)](https://www.python.org/) [@python], for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12].
+This article presents [my](https://perso.crans.org/besson/) numerical environment *AlgoBandits*, written in [Python (2 or 3)](https://www.python.org/) [@python], for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12].
 
 *AlgoBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
 It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
 *AlgoBandits* does not aim at being blazing fast or perfectly memory efficient, and comes with a pure Python implementation with no dependency except standard open-source Python packages.
-Even if critical parts are coded in C or use Numba [@numba], if speed matters one should rather refer to less exhaustive but faster implementations, like [@TorLibbandit] in `C++` or [@VishMABjl] in Julia.
+Even if some critical parts are also available as a `C` Python extension, and even by using Numba [@numba] whenever it is possible, if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example [@TorLibbandit] in `C++` or [@VishMABjl] in Julia.
 
 ---
 
@@ -78,18 +78,18 @@ class UCB(IndexPolicy):
       return float('+inf')   # in the first steps
     else:                    # or compute UCB index
       estimated_mean = (self.rewards[arm] / self.pulls[arm])
-      observation_bias = sqrt((2 * log(self.t)) / self.pulls[arm])
-      return estimated_mean + observation_bias
+      exploration_bias = sqrt((2 * log(self.t)) / self.pulls[arm])
+      return estimated_mean + exploration_bias
 
 ```
 
 ### Multi-Players MAB
 
-For Cognitive Radio applications, a well-studied extension is to consider $M\geq2$ players, interacting on the same $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
+For Cognitive Radio applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-This package implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+This package implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
 
 ---
 
@@ -135,9 +135,9 @@ configuration = {
   "policies": [
       {"archtype": klUCB, "params": {} },
       {"archtype": klUCBPlusPlus,
+       "params": { "horizon": 10000 } },
       {"archtype": UCBalpha,
        "params": { "alpha": 1 } },
-       "params": { "horizon": 10000 } },
       {"archtype": Thompson, "params": {} },
   ]}
 ```
@@ -203,7 +203,7 @@ For example, this short bash snippet [^docforconf] shows how to clone the code, 
 Using environment variables (`N=1000`) when launching the simulation is not required but it is convenient.
 
 [^docforconf]:  See [this page of the documentation](http://banditslilian.gforge.inria.fr/How_to_run_the_code.html) for more details.
-[^speedofsimu]:  It takes about $20$ to $40$ minutes for each simulation, on a standard $4$ cores Linux laptop.
+[^speedofsimu]:  It takes about $20$ to $40$ minutes for each simulation, on a standard $4$-cores $64$ bits GNU/Linux laptop.
 
 ```bash
 # 1. get the code in /tmp/, or wherever you want
@@ -238,7 +238,7 @@ The two simulations above produce these plots showing the average cumulated regr
 
 *AlgoBandits* was used for the following research articles since $2017$ [^summaryphd]:
 
-[^summaryphd]: [I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October $2016$, and this is a part of my **on going** research since December $2016$. I launched the [documentation](http://banditslilian.gforge.inria.fr/) on March $2017$, I wrote my first research articles using this framework in $2017$ and I was finally able to open-source my project in February 2018.
+[^summaryphd]: [I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October $2016$, and this is a part of my **on going** research since December $2016$. I launched the [documentation](http://banditslilian.gforge.inria.fr/) on March $2017$, I wrote my first research articles using this framework in $2017$ and I was finally able to open-source my project in February $2018$.
 
 - For this first article, [@Bonnefoi17], *AlgoBandits* was not used to generate the main figures, but to explore on a smaller scale many other approaches (using [`EvaluatorSparseMultiPlayers`](http://banditslilian.gforge.inria.fr/docs/Environment.EvaluatorSparseMultiPlayers.html)).
 
@@ -256,8 +256,8 @@ The two simulations above produce these plots showing the average cumulated regr
 
 
 ## Dependencies
-The framework is written in Python [@python], using matplotlib [@matplotlib] for 2D plotting, numpy [@numpy] for data storing, random number generations and and operations on arrays, scipy [@scipy] for statistical and special functions, and seaborn [@seaborn] for pretty default plot configuration.
-Optimal dependencies include joblib [@joblib] for parallel simulations, numba [@numba] for automatic speed-up on some small functions, as well as sphinx [@sphinx] for generating the documentations.
+The framework is written in Python [@python], using matplotlib [@matplotlib] for 2D plotting, numpy [@numpy] for data storing, random number generations and and operations on arrays, scipy [@scipy] for statistical and special functions, and seaborn [@seaborn] for pretty plotting and colorblind-aware colormaps.
+Optional dependencies include joblib [@joblib] for parallel simulations, numba [@numba] for automatic speed-up on some small functions, as well as sphinx [@sphinx] for generating the documentations.
 I also acknowledge the use of virtualenv [@virtualenv] for launching simulations in isolated environments, and jupyter [@jupyter] used with ipython [@ipython] to experiment with the code.
 
 ---
