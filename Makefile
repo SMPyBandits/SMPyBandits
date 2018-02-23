@@ -82,27 +82,29 @@ treeexploration2:
 	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
 
 # --------------------------------------------------------
-
 # LATEX=lualatex
 # LATEX=xelatex -shell-escape -output-driver="xdvipdfmx -z 0"
 # LATEX=xelatex
 LATEX=pdflatex
 
 PANDOC=pandoc --verbose --filter pandoc-citeproc --template=.paper_template.tex --number-sections --standalone --toc --natbib --bibliography paper.bib
-#  --listings
 MARKDOWNOPTIONS=--from=markdown+backtick_code_blocks+implicit_figures+pipe_tables+citations+footnotes+smart
-#  --columns=600
+
+# Generate the paper for http://joss.theoj.org/about#author_guidelines
+longpaper: longpaper.tex longpaper.md
+	latexmk -f -gg -pdf longpaper.tex
+	latexmk -c
+	rm -vf longpaper.bbl longpaper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 
 paper: paper.tex paper.md
 	latexmk -f -gg -pdf paper.tex
 	latexmk -c
+	rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 
-paper.tex: paper.md
+%.tex: %.md
 	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
-
-paper.pdf: paper.md
+%.pdf: %.md
 	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
-	# pandoc --filter pandoc-citeproc --natbib --from=markdown+citations+footnotes --number-sections paper.md -o paper.pdf
 
 
 # --------------------------------------------------------
