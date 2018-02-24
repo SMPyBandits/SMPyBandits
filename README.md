@@ -133,7 +133,7 @@ N=100 T=10000 M=3 K=9 N_JOBS=4 make more
 
 Contributions (issues, questions, pull requests) are of course welcome, but this project is and will stay a personal environment designed for quick research experiments, and will never try to be an industry-ready module for applications of Multi-Armed Bandits algorithms.
 
-If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODEOFCONDUCT.md](CODEOFCONDUCT.md) file.
+If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) file.
 
 - You are welcome to [submit an issue](https://github.com/Naereen/AlgoBandits/issues/new), if it was not previously answered,
 - If you have interesting example of use of AlgoBandits, please share it! ([Jupyter Notebooks](https://www.jupyter.org/) are preferred). And fill a pull request to [add it to the notebooks examples](notebooks/).

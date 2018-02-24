@@ -69,7 +69,7 @@ The paper can be consulted `here on my website <https://perso.crans.org/besson/a
    uml_diagrams/README.md
    logs/README.md
    CONTRIBUTING.md
-   CODEOFCONDUCT.md
+   CODE_OF_CONDUCT.md
 
 
 .. note::
