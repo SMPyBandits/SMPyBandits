@@ -31,7 +31,7 @@ from os import getenv
 import pickle
 
 if getenv('DEBUG', 'False') == 'True':
-    signature = "\n(By Lilian Besson, {} - Code on https://Naereen.GitHub.io/AlgoBandits - MIT Licensed)".format(monthyear)  #: A small string to use as a signature
+    signature = "\n(By Lilian Besson, {} - Code on https://github.com/SMPyBandits/SMPyBandits - MIT Licensed)".format(monthyear)  #: A small string to use as a signature
 else:
     signature = ""
 

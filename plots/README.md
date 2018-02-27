@@ -1,4 +1,4 @@
-# Some illustrations for [this project](https://github.com/Naereen/AlgoBandits)
+# Some illustrations for [this project](https://github.com/SMPyBandits/SMPyBandits)
 
 Here are some plots illustrating the performances of the different [policies](../Policies/) implemented in this project, against various problems (with [`Bernoulli`](../Arms/Bernoulli.py) arms only):
 

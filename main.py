@@ -34,7 +34,7 @@ elif 'configuration_sparse' in sys.argv:
 else:
     from configuration import configuration
 
-# Solving https://github.com/Naereen/AlgoBandits/issues/15#issuecomment-292484493
+# Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
 if getenv('SLEEP', 'False') != 'False':
     from subprocess import call

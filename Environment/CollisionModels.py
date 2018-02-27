@@ -68,7 +68,7 @@ def onlyUniqUserGetsReward(t, arms, players, choices, rewards, pulls, collisions
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsReward: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
-        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/SMPyBandits/SMPyBandits/issues/33
         pulls[i, choices[i]] += 1
         if nbCollisions[choices[i]] < 1:  # No collision
             player.getReward(choices[i], sensing[choices[i]])  # Observing *sensing*
@@ -102,7 +102,7 @@ def onlyUniqUserGetsRewardSparse(t, arms, players, choices, rewards, pulls, coll
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- onlyUniqUserGetsRewardSparse: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
-        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/SMPyBandits/SMPyBandits/issues/33
         if choices[i] >= 0:
             pulls[i, choices[i]] += 1
             if nbCollisions[choices[i]] < 1:  # No collision
@@ -131,7 +131,7 @@ def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, coll
     # if np.max(nbCollisions) >= 1:  # DEBUG
     #     print("- allGetRewardsAndUseCollision: some collisions on channels {} at time t = {} ...".format(np.nonzero(np.array(nbCollisions) >= 1)[0], t))  # DEBUG
     for i, player in enumerate(players):  # Loop is needed because player is needed
-        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/Naereen/AlgoBandits/issues/33
+        # FIXED pulls counts the number of selection, not the number of successful selection!! HUGE BUG! See https://github.com/SMPyBandits/SMPyBandits/issues/33
         pulls[i, choices[i]] += 1
 
         rewards[i] = arms[choices[i]].draw(t)

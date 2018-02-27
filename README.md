@@ -1,8 +1,9 @@
-# Bandit algorithms, Lilian Besson's AlgoBandits project
+# *SMPyBandits*
+**Open-Source Python package for Single- and Multi-Players multi-armed Bandits algorithms**.
 
 <img width="50%" src="logo_large.png" align="right"/>
 
-This repository contains the code of [my](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
+This repository contains the code of [Lilian Besson's](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
 ## Quick presentation
 
@@ -14,13 +15,13 @@ I follow very actively the latest publications related to Multi-Armed Bandits (M
 - [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](PoliciesMultiPlayers/rhoRand.py) from 2009, [`MEGA`](Policies/MEGA.py) from 2015, [`MusicalChair`](Policies/MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](PoliciesMultiPlayers/RandTopM.py) and [`MCTopM`](PoliciesMultiPlayers/MCTopM.py)).
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
-Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/Naereen/AlgoBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuratio_...py`).
+Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/SMPyBandits/SMPyBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuratio_...py`).
 
 A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [banditslilian.gforge.inria.fr](http://banditslilian.gforge.inria.fr/). (I won't use [ReadTheDocs](https://readthedocs.org/) for this project, and I won't use continuous integration, don't even think of it!)
 
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 
 > [I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research since December 2016.
@@ -38,9 +39,9 @@ If you use this package for your own work, please consider citing it with [this 
     title =   {{AlgoBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
     author =  {Lilian Besson},
     year =    {2018},
-    url =     {https://github.com/Naereen/AlgoBandits/},
-    howpublished = {Online at: \url{github.com/Naereen/AlgoBandits}},
-    note =    {Code at https://github.com/Naereen/AlgoBandits/, documentation at http://banditslilian.gforge.inria.fr/}
+    url =     {https://github.com/SMPyBandits/SMPyBandits/},
+    howpublished = {Online at: \url{github.com/SMPyBandits/SMPyBandits}},
+    note =    {Code at https://github.com/SMPyBandits/SMPyBandits/, documentation at http://banditslilian.gforge.inria.fr/}
 }
 ```
 
@@ -103,7 +104,7 @@ TL;DR: this short bash snippet shows how to clone the code, install the requirem
 
 ```bash
 cd /tmp/  # or wherever you want
-git clone https://GitHub.com/Naereen/AlgoBandits.git
+git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
 cd AlgoBandits.git
 # just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv
@@ -124,7 +125,7 @@ N=100 T=10000 M=3 K=9 N_JOBS=4 make more
 ----
 
 ### :boom: Warning
-- This work is still **experimental**! It's [active research](https://github.com/Naereen/AlgoBandits/graphs/contributors). It should be completely bug free (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says).
+- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says).
 - Whenever I add a new feature, I run experiments to check that nothing is broken. But *there is no unittest* (I don't have time). You would have to trust me :sunglasses:!
 - This project is NOT meant to be a library that you can use elsewhere, but a research tool. In particular, I don't take ensure that any of the Python modules can be imported from another directory than the main directory.
 
@@ -135,22 +136,22 @@ Contributions (issues, questions, pull requests) are of course welcome, but this
 
 If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) file.
 
-- You are welcome to [submit an issue](https://github.com/Naereen/AlgoBandits/issues/new), if it was not previously answered,
+- You are welcome to [submit an issue](https://github.com/SMPyBandits/SMPyBandits/issues/new), if it was not previously answered,
 - If you have interesting example of use of AlgoBandits, please share it! ([Jupyter Notebooks](https://www.jupyter.org/) are preferred). And fill a pull request to [add it to the notebooks examples](notebooks/).
 
 ## :boom: [TODO](TODO.md)
-> See this file [`TODO.md`](TODO.md), and [the issues on GitHub](https://github.com/Naereen/AlgoBandits/issues).
+> See this file [`TODO.md`](TODO.md), and [the issues on GitHub](https://github.com/SMPyBandits/SMPyBandits/issues).
 
 ----
 
-## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/Naereen/AlgoBandits.svg)](https://github.com/Naereen/AlgoBandits/blob/master/LICENSE)
+## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/SMPyBandits/SMPyBandits.svg)](https://github.com/SMPyBandits/SMPyBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
 © 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
 
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/AlgoBandits/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
-[![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/Naereen/AlgoBandits/README.md?pixel)](https://GitHub.com/Naereen/AlgoBandits/)
+[![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)

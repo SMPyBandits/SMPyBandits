@@ -465,9 +465,9 @@ class EvaluatorMultiPlayers(object):
                     # print("Difference between regret and sum of three terms:", Y - np.array(Ys[-1]))  # DEBUG
                     for i, (Y, label) in enumerate(zip(Ys, labels)):
                         plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], (markers[i + 1] + '-'), markevery=((i + 1) / 50., 0.1), label=label, color=colors[i + 1], lw=2)
-                        if semilogx or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                        if semilogx or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                             plt.xscale('log')
-                        if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+                        if semilogy or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                             plt.yscale('log')
         # We also plot our lower bound
         if not self.envs[envId].isDynamic:

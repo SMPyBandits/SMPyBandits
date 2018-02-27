@@ -3,7 +3,7 @@
 
 - Reference: https://en.wikipedia.org/wiki/Multi-armed_bandit#Semi-uniform_strategies
 - And [Kaufmann & Moy, 2017, ICC](http://icc2017.ieee-icc.org/program/tutorials#TT01), E.Kaufmann's slides at IEEE ICC 2017
-- See also: https://github.com/Naereen/AlgoBandits/issues/62
+- See also: https://github.com/SMPyBandits/SMPyBandits/issues/62
 
 .. warning:: They don't work as well as the theory predicted...
 """

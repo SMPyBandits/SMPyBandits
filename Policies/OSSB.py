@@ -2,7 +2,7 @@
 """ Optimal Sampling for Structured Bandits (OSSB) algorithm.
 
 - Reference: [[Minimal Exploration in Structured Stochastic Bandits, Combes et al, arXiv:1711.00400 [stat.ML]]](https://arxiv.org/abs/1711.00400)
-- See also: https://github.com/Naereen/AlgoBandits/issues/101
+- See also: https://github.com/SMPyBandits/SMPyBandits/issues/101
 
 .. warning:: This is the simplified OSSB algorithm for classical bandits. It can be applied to more general bandit problems, see the original paper.
 """

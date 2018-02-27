@@ -408,9 +408,9 @@ class Evaluator(object):
                 plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
                 plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
-            if semilogx or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+            if semilogx or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                 plt.xscale('log')
-            if semilogy or loglog:  # Manual fix for issue https://github.com/Naereen/AlgoBandits/issues/38
+            if semilogy or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                 plt.yscale('log')
             # Print standard deviation of regret
             if plotSTD and self.repetitions > 1:

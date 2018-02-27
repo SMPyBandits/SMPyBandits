@@ -23,7 +23,7 @@ sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
 alllint:	lint lint3 pyreverse stats doc
-doc:	clean-doc
+doc:
 	make html clean send
 
 # Runners
@@ -239,17 +239,19 @@ ignorelogs:
 # You can set these variables from the command line.
 PYTHON        = python3
 SPHINXOPTS    =
+# XXX My fork contains the generic indexes, my PR to Sphinx was never accepted
+# XXX Use the system-wise 'sphinx-build' if you prefer
 # SPHINXBUILD   = sphinx-build
 SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
 SPHINXPROJ    = AlgoBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-clean-doc:
-	mkdir --parents $(BUILDDIR)/html
-	-rm -rfv /tmp/$(BUILDDIR)/
-	mv -vf $(BUILDDIR)/ /tmp/
-	mkdir --parents $(BUILDDIR)/html/
+#clean-doc:
+#	mkdir --parents $(BUILDDIR)/html
+#	-rm -rfv /tmp/$(BUILDDIR)/
+#	mv -vf $(BUILDDIR)/ /tmp/
+#	mkdir --parents $(BUILDDIR)/html/
 
 .PHONY: help
 

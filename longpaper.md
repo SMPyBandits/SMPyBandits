@@ -207,7 +207,7 @@ Using environment variables (`N=1000`) when launching the simulation is not requ
 ```bash
 # 1. get the code in /tmp/, or wherever you want
 cd /tmp/
-git clone https://GitHub.com/Naereen/AlgoBandits.git
+git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
 cd AlgoBandits.git
 # 2. just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv

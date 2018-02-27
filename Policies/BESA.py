@@ -2,7 +2,7 @@
 """ The Best Empirical Sampled Average (BESA) algorithm.
 
 - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://hal.archives-ouvertes.fr/hal-01025651)
-- See also: https://github.com/Naereen/AlgoBandits/issues/103
+- See also: https://github.com/SMPyBandits/SMPyBandits/issues/103
 
 .. warning:: This algorithm works VERY well but it is looks weird at first sight. It sounds "too easy", so take a look to the article before wondering why it should work.
 

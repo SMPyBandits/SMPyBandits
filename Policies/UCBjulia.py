@@ -9,7 +9,7 @@ Reference: [Lai & Robbins, 1985].
 
     A naive benchmark showed that in this approach, :class:`UCBjulia` (used withing Python) is about 125 times slower (!) than :class:`UCB`.
 
-.. warning:: This is only experimental, and purely useless. See https://github.com/Naereen/AlgoBandits/issues/98
+.. warning:: This is only experimental, and purely useless. See https://github.com/SMPyBandits/SMPyBandits/issues/98
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -23,7 +23,7 @@ class UCBjulia(IndexPolicy):
     """ The UCB policy for bounded bandits, with UCB indexes computed with Julia.
     Reference: [Lai & Robbins, 1985].
 
-    .. warning:: This is only experimental, and purely useless. See https://github.com/Naereen/AlgoBandits/issues/98
+    .. warning:: This is only experimental, and purely useless. See https://github.com/SMPyBandits/SMPyBandits/issues/98
     """
 
     def __init__(self, nbArms, lower=0., amplitude=1.):

@@ -6,7 +6,7 @@ Found a bug? Have a new feature to suggest? Want to contribute changes to the co
 
 Your code doesn't work, and you have determined that the issue lies with AlgoBandits? Follow these steps to report a bug.
 
-1. Your bug may already be fixed. Make sure to update to the current AlgoBandits master branch. To easily update AlgoBandits: `pip install git+git://github.com/Naereen/AlgoBandits.git --upgrade`
+1. Your bug may already be fixed. Make sure to update to the current AlgoBandits master branch. To easily update AlgoBandits: `pip install git+git://github.com/SMPyBandits/SMPyBandits.git --upgrade`
 
 2. Search for similar issues. Make sure to delete `is:open` on the issue search to find solved tickets as well. It's possible somebody has encountered this bug already. Still having a problem? Open an issue on Github to let us know.
 
@@ -35,7 +35,7 @@ You can also use Github issues to request features you would like to see in Algo
 
 ## Requests for Contributions
 
-[This is the file](https://github.com/Naereen/AlgoBandits/tree/master/TODO.md) where I list current issues and features to be added. If you want to start contributing to AlgoBandits, this is the place to start.
+[This is the file](https://github.com/SMPyBandits/SMPyBandits/tree/master/TODO.md) where I list current issues and features to be added. If you want to start contributing to AlgoBandits, this is the place to start.
 
 ---
 
@@ -43,7 +43,7 @@ You can also use Github issues to request features you would like to see in Algo
 
 **Where should I submit my pull request?**
 
-1. **AlgoBandits improvements and bugfixes** go to the [AlgoBandits `master` branch](https://github.com/Naereen/AlgoBandits/tree/master).
+1. **AlgoBandits improvements and bugfixes** go to the [AlgoBandits `master` branch](https://github.com/SMPyBandits/SMPyBandits/tree/master).
 
 Please note that PRs that are primarily about **code style** (as opposed to fixing bugs, improving docs, or adding new functionality) will likely be rejected.
 
@@ -80,4 +80,4 @@ Here's a quick guide to submitting your improvements:
 ## Adding new examples
 
 Even if you don't contribute to the AlgoBandits source code, if you have an application of AlgoBandits that is concise and powerful, please consider adding it to my collection of examples, as a notebook.
-[Existing notebooks](https://github.com/Naereen/AlgoBandits/tree/master/notebooks) show idiomatic AlgoBandits code: make sure to keep your own script in the same spirit.
+[Existing notebooks](https://github.com/SMPyBandits/SMPyBandits/tree/master/notebooks) show idiomatic AlgoBandits code: make sure to keep your own script in the same spirit.
