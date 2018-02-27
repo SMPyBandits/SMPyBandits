@@ -4,6 +4,7 @@
 <img width="50%" src="logo_large.png" align="right"/>
 
 This repository contains the code of [Lilian Besson's](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
+Documentation is on [banditslilian.gforge.inria.fr](http://banditslilian.gforge.inria.fr/).
 
 ## Quick presentation
 
@@ -50,7 +51,7 @@ The paper can be consulted [here on my website](https://perso.crans.org/besson/a
 
 > A DOI will arrive as soon as possible! I will try to publish [a paper](paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
 
-## [List of research publications using SMPyBandits](PublicationsWithAlgoBandits.md)
+## [List of research publications using SMPyBandits](PublicationsWithSMPyBandits.md)
 
 ### 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
 I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order to test its validity and performance.
