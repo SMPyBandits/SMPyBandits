@@ -31,12 +31,12 @@ A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms an
 ----
 
 ## How to cite this work?
-If you use this package for your own work, please consider citing it with [this piece of BibTeX](AlgoBandits.bib):
+If you use this package for your own work, please consider citing it with [this piece of BibTeX](SMPyBandits.bib):
 
 
 ```bibtex
-@misc{AlgoBandits,
-    title =   {{AlgoBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
+@misc{SMPyBandits,
+    title =   {{SMPyBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
     author =  {Lilian Besson},
     year =    {2018},
     url =     {https://github.com/SMPyBandits/SMPyBandits/},
@@ -45,12 +45,12 @@ If you use this package for your own work, please consider citing it with [this 
 }
 ```
 
-I also wrote a small paper to present *AlgoBandits*, and I will send it to [JOSS](http://joss.theoj.org/).
-The paper can be consulted [here on my website](https://perso.crans.org/besson/articles/AlgoBandits.pdf).
+I also wrote a small paper to present *SMPyBandits*, and I will send it to [JOSS](http://joss.theoj.org/).
+The paper can be consulted [here on my website](https://perso.crans.org/besson/articles/SMPyBandits.pdf).
 
 > A DOI will arrive as soon as possible! I will try to publish [a paper](paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
 
-## [List of research publications using AlgoBandits](PublicationsWithAlgoBandits.md)
+## [List of research publications using SMPyBandits](PublicationsWithAlgoBandits.md)
 
 ### 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
 I designed and added the [`Aggregator`](Policies/Aggregator.py) policy, in order to test its validity and performance.
@@ -105,7 +105,7 @@ TL;DR: this short bash snippet shows how to clone the code, install the requirem
 ```bash
 cd /tmp/  # or wherever you want
 git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
-cd AlgoBandits.git
+cd SMPyBandits.git
 # just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv
 # create and active the virtualenv
@@ -137,7 +137,7 @@ Contributions (issues, questions, pull requests) are of course welcome, but this
 If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) file.
 
 - You are welcome to [submit an issue](https://github.com/SMPyBandits/SMPyBandits/issues/new), if it was not previously answered,
-- If you have interesting example of use of AlgoBandits, please share it! ([Jupyter Notebooks](https://www.jupyter.org/) are preferred). And fill a pull request to [add it to the notebooks examples](notebooks/).
+- If you have interesting example of use of SMPyBandits, please share it! ([Jupyter Notebooks](https://www.jupyter.org/) are preferred). And fill a pull request to [add it to the notebooks examples](notebooks/).
 
 ## :boom: [TODO](TODO.md)
 > See this file [`TODO.md`](TODO.md), and [the issues on GitHub](https://github.com/SMPyBandits/SMPyBandits/issues).

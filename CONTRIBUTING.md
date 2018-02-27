@@ -4,9 +4,9 @@ Found a bug? Have a new feature to suggest? Want to contribute changes to the co
 
 ## Bug reporting
 
-Your code doesn't work, and you have determined that the issue lies with AlgoBandits? Follow these steps to report a bug.
+Your code doesn't work, and you have determined that the issue lies with SMPyBandits? Follow these steps to report a bug.
 
-1. Your bug may already be fixed. Make sure to update to the current AlgoBandits master branch. To easily update AlgoBandits: `pip install git+git://github.com/SMPyBandits/SMPyBandits.git --upgrade`
+1. Your bug may already be fixed. Make sure to update to the current SMPyBandits master branch. To easily update SMPyBandits: `pip install git+git://github.com/SMPyBandits/SMPyBandits.git --upgrade`
 
 2. Search for similar issues. Make sure to delete `is:open` on the issue search to find solved tickets as well. It's possible somebody has encountered this bug already. Still having a problem? Open an issue on Github to let us know.
 
@@ -22,7 +22,7 @@ The more information you provide, the easier it is for us to validate that there
 
 ## Requesting a Feature
 
-You can also use Github issues to request features you would like to see in AlgoBandits, or changes in the AlgoBandits API.
+You can also use Github issues to request features you would like to see in SMPyBandits, or changes in the SMPyBandits API.
 
 1. Provide a clear and detailed explanation of the feature you want and why it's important to add. Keep in mind that I want features that will be useful to my research. Any other requests for features will probably stay unanswered.
 
@@ -35,7 +35,7 @@ You can also use Github issues to request features you would like to see in Algo
 
 ## Requests for Contributions
 
-[This is the file](https://github.com/SMPyBandits/SMPyBandits/tree/master/TODO.md) where I list current issues and features to be added. If you want to start contributing to AlgoBandits, this is the place to start.
+[This is the file](https://github.com/SMPyBandits/SMPyBandits/tree/master/TODO.md) where I list current issues and features to be added. If you want to start contributing to SMPyBandits, this is the place to start.
 
 ---
 
@@ -43,13 +43,13 @@ You can also use Github issues to request features you would like to see in Algo
 
 **Where should I submit my pull request?**
 
-1. **AlgoBandits improvements and bugfixes** go to the [AlgoBandits `master` branch](https://github.com/SMPyBandits/SMPyBandits/tree/master).
+1. **SMPyBandits improvements and bugfixes** go to the [SMPyBandits `master` branch](https://github.com/SMPyBandits/SMPyBandits/tree/master).
 
 Please note that PRs that are primarily about **code style** (as opposed to fixing bugs, improving docs, or adding new functionality) will likely be rejected.
 
 Here's a quick guide to submitting your improvements:
 
-1. If your PR introduces a change in functionality, make sure you start by writing a design doc and sending it to the AlgoBandits mailing list to discuss whether the change should be made, and how to handle it. This will save you from having your PR closed down the road! Of course, if your PR is a simple bug fix, you don't need to do that. The process for writing and submitting design docs is as follow:
+1. If your PR introduces a change in functionality, make sure you start by writing a design doc and sending it to the SMPyBandits mailing list to discuss whether the change should be made, and how to handle it. This will save you from having your PR closed down the road! Of course, if your PR is a simple bug fix, you don't need to do that. The process for writing and submitting design docs is as follow:
     - Start from [this Google Doc template](https://docs.google.com/document/d/1ZXNfce77LDW9tFAj6U5ctaJmI5mT7CQXOFMEAZo-mAA/edit#), and copy it to new Google doc.
     - Fill in the content. Note that you will need to insert code examples. To insert code, use a Google Doc extension such as [CodePretty](https://chrome.google.com/webstore/detail/code-pretty/igjbncgfgnfpbnifnnlcmjfbnidkndnh?hl=en) (there are several such extensions available).
     - Set sharing settings to "everyone with the link is allowed to comment"
@@ -79,5 +79,5 @@ Here's a quick guide to submitting your improvements:
 
 ## Adding new examples
 
-Even if you don't contribute to the AlgoBandits source code, if you have an application of AlgoBandits that is concise and powerful, please consider adding it to my collection of examples, as a notebook.
-[Existing notebooks](https://github.com/SMPyBandits/SMPyBandits/tree/master/notebooks) show idiomatic AlgoBandits code: make sure to keep your own script in the same spirit.
+Even if you don't contribute to the SMPyBandits source code, if you have an application of SMPyBandits that is concise and powerful, please consider adding it to my collection of examples, as a notebook.
+[Existing notebooks](https://github.com/SMPyBandits/SMPyBandits/tree/master/notebooks) show idiomatic SMPyBandits code: make sure to keep your own script in the same spirit.

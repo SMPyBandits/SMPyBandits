@@ -1,5 +1,5 @@
 ---
-title: "*AlgoBandits*: a Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
+title: "*SMPyBandits*: a Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
 authors:
 - name: Lilian Besson
   orcid: 0000-0003-2767-2563
@@ -23,9 +23,9 @@ bibliography: paper.bib
 
 # Summary
 
-*AlgoBandits* is a package for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12], written in [Python (2 or 3)](https://www.python.org/) [@python].
+*SMPyBandits* is a package for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12], written in [Python (2 or 3)](https://www.python.org/) [@python].
 
-*AlgoBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
+*SMPyBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
 It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase.
 It allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
@@ -37,7 +37,7 @@ It allows fast prototyping of simulations and experiments, with an easy configur
 ### Single-Player MAB
 Multi-Armed Bandit (MAB) problems are well-studied sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52,LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization (news article recommendation [@Li10], online advertising [@LiChapelle11] or A/B Testing [@Kaufmann14;Jamieson17]), or portfolio optimization [@Sani12].
 
-*AlgoBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms ([over 65!](http://banditslilian.gforge.inria.fr/docs/Policies.html)).
+*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms ([over 65!](http://banditslilian.gforge.inria.fr/docs/Policies.html)).
 We use a well-designed hierarchical structure and [class inheritance scheme](http://banditslilian.gforge.inria.fr/uml_diagrams/README.html) to minimize redundancy in the codebase.
 Most existing algorithms are index-based, and can be written very shortly by inheriting from the [`IndexPolicy`](http://banditslilian.gforge.inria.fr/docs/Policies.IndexPolicy.html) class.
 
@@ -47,7 +47,7 @@ For Cognitive Radio applications, a well-studied extension is to consider $M\geq
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-*AlgoBandits* implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+*SMPyBandits* implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
 
 ---
 
@@ -73,7 +73,7 @@ Using environment variables (`N=1000`) when launching the simulation is not requ
 # 1. get the code in /tmp/, or wherever you want
 cd /tmp/
 git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
-cd AlgoBandits.git
+cd SMPyBandits.git
 # 2. just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv
 # 3. create and active the virtualenv
@@ -97,19 +97,19 @@ See below in Figure \ref{fig:plot1} for the result showing the average regret [^
 
 ---
 
-## Research using *AlgoBandits*
+## Research using *SMPyBandits*
 
-*AlgoBandits* was used for the following research articles since $2017$:
+*SMPyBandits* was used for the following research articles since $2017$:
 
-- For [@BessonALT2018], we used *AlgoBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.html) and [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.html)).
+- For [@BessonALT2018], we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.html) and [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.html)).
 
 [^article1]:  See [`MultiPlayers`](http://banditslilian.gforge.inria.fr/MultiPlayers.html) on the documentation.
 
-- In [@BessonWCNC2018], we used *AlgoBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](http://banditslilian.gforge.inria.fr/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
+- In [@BessonWCNC2018], we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](http://banditslilian.gforge.inria.fr/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
 [^article2]:  See [`Aggregation`](http://banditslilian.gforge.inria.fr/Aggregation.html) on the documentation.
 
-- In [@Besson2018c], we used *AlgoBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt(T))$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+- In [@Besson2018c], we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt(T))$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
 [^article3]:  See [`DoublingTrick`](http://banditslilian.gforge.inria.fr/DoublingTrick.html) on the documentation.
 

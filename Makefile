@@ -214,18 +214,18 @@ lint3:
 
 pyreverse:
 	-mkdir uml_diagrams/
-	pyreverse -o dot -my -f ALL -p AlgoBandits ./*.py ./*/*.py
-	-mv -vf packages_AlgoBandits.dot classes_AlgoBandits.dot uml_diagrams/
+	pyreverse -o dot -my -f ALL -p SMPyBandits ./*.py ./*/*.py
+	-mv -vf packages_SMPyBandits.dot classes_SMPyBandits.dot uml_diagrams/
 	# Output packages and classes graphs to PNG...
-	dot -Tpng uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.png
-	dot -Tpng uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.dot   > uml_diagrams/packages_SMPyBandits.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.dot    > uml_diagrams/classes_SMPyBandits.png
 	-advpng -z -2 ./uml_diagrams/*.png
 	# Output packages and classes graphs to SVG...
-	dot -Tsvg uml_diagrams/packages_AlgoBandits.dot   > uml_diagrams/packages_AlgoBandits.svg
-	dot -Tsvg uml_diagrams/classes_AlgoBandits.dot    > uml_diagrams/classes_AlgoBandits.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.dot   > uml_diagrams/packages_SMPyBandits.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.dot    > uml_diagrams/classes_SMPyBandits.svg
 	# Output packages and classes graphs to PDF...
-	dot -Tpdf uml_diagrams/packages_AlgoBandits.dot > uml_diagrams/packages_AlgoBandits.pdf
-	dot -Tpdf uml_diagrams/classes_AlgoBandits.dot  > uml_diagrams/classes_AlgoBandits.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.dot > uml_diagrams/packages_SMPyBandits.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.dot  > uml_diagrams/classes_SMPyBandits.pdf
 	-PDFCompress -f ./uml_diagrams/*.pdf
 
 ignorelogs:
@@ -243,7 +243,7 @@ SPHINXOPTS    =
 # XXX Use the system-wise 'sphinx-build' if you prefer
 # SPHINXBUILD   = sphinx-build
 SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
-SPHINXPROJ    = AlgoBandits
+SPHINXPROJ    = SMPyBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
 

@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 try:
     from .pykov import Chain
 except ImportError:
-    print("Warning: 'pykov' module seems to not be available. But it is shipped with AlgoBandits. Weird.")
+    print("Warning: 'pykov' module seems to not be available. But it is shipped with SMPyBandits. Weird.")
     print("Dou you want to try to install it from https://github.com/riccardoscalco/Pykov ?")
     print("Warning: the 'MarkovianMAB' class will not work...")
 

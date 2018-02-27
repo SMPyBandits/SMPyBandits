@@ -17,7 +17,7 @@ from subprocess import Popen
 
 
 # Constants for the program
-PROGRAM_NAME = "AlgoBandits"  #: Program name
+PROGRAM_NAME = "SMPyBandits"  #: Program name
 
 # ICON_PATH = join("..", "logo.png")  #: Icon to use
 ICON_PATH = "logo.png"  #: Icon to use

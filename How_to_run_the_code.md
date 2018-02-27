@@ -87,12 +87,12 @@ If you prefer to not install the requirements globally on your system-wide Pytho
 ```bash
 $ virtualenv .
 Using base prefix '/usr'
-New python executable in /your/path/to/AlgoBandits/bin/python3
-Also creating executable in /your/path/to/AlgoBandits/bin/python
+New python executable in /your/path/to/SMPyBandits/bin/python3
+Also creating executable in /your/path/to/SMPyBandits/bin/python
 Installing setuptools, pip, wheel...done.
 $ source bin/activate  # in bash, use activate.csh or activate.fish if needed
 $ type pip  # just to check
-pip is /your/path/to/AlgoBandits/bin/pip
+pip is /your/path/to/SMPyBandits/bin/pip
 $ pip install -r requirements.txt
 Collecting numpy (from -r requirements.txt (line 5))
 ...

@@ -1,4 +1,4 @@
-.. AlgoBandits documentation master file, created by
+.. SMPyBandits documentation master file, created by
    sphinx-quickstart on Thu Jan 19 17:20:57 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
@@ -37,8 +37,8 @@ How to cite this work?
 ~~~~~~~~~~~~~~~~~~~~~~
 If you use this package for your own work, please consider citing it with this piece of BibTeX: ::
 
-    @misc{AlgoBandits,
-        title =   {{AlgoBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
+    @misc{SMPyBandits,
+        title =   {{SMPyBandits: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms in Python}},
         author =  {Lilian Besson},
         year =    {2018},
         url =     {https://github.com/SMPyBandits/SMPyBandits/},
@@ -46,8 +46,8 @@ If you use this package for your own work, please consider citing it with this p
         note =    {Code at https://github.com/SMPyBandits/SMPyBandits/, documentation at http://banditslilian.gforge.inria.fr/}
     }
 
-I also wrote a small paper to present *AlgoBandits*, and I will send it to `JOSS <http://joss.theoj.org/>`_.
-The paper can be consulted `here on my website <https://perso.crans.org/besson/articles/AlgoBandits.pdf>`_.
+I also wrote a small paper to present *SMPyBandits*, and I will send it to `JOSS <http://joss.theoj.org/>`_.
+The paper can be consulted `here on my website <https://perso.crans.org/besson/articles/SMPyBandits.pdf>`_.
 
 ----
 

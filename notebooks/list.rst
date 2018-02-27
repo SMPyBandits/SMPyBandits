@@ -1,4 +1,4 @@
-List of notebooks for AlgoBandits documentation
+List of notebooks for SMPyBandits documentation
 ===============================================
 
 .. toctree::

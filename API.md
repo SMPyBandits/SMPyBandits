@@ -1,5 +1,5 @@
 # Short documentation of the API
-> This short document aim at documenting the API used in [my AlgoBandits environment](https://github.com/SMPyBandits/SMPyBandits/), and closing [this issue #3](https://github.com/SMPyBandits/SMPyBandits/issues/3).
+> This short document aim at documenting the API used in [my SMPyBandits environment](https://github.com/SMPyBandits/SMPyBandits/), and closing [this issue #3](https://github.com/SMPyBandits/SMPyBandits/issues/3).
 
 ----
 
@@ -17,9 +17,9 @@
 For more details, see [these UML diagrams](uml_diagrams/):
 
 - Packages: organization of the different files:
-  [![UML Diagram - Packages of AlgoBandits.git](uml_diagrams/packages_AlgoBandits.png)](uml_diagrams/packages_AlgoBandits.svg)
+  [![UML Diagram - Packages of SMPyBandits.git](uml_diagrams/packages_SMPyBandits.png)](uml_diagrams/packages_SMPyBandits.svg)
 - Classes: inheritance diagrams of the different classes:
-  [![UML Diagram - Classes of AlgoBandits.git](uml_diagrams/classes_AlgoBandits.png)](uml_diagrams/classes_AlgoBandits.svg)
+  [![UML Diagram - Classes of SMPyBandits.git](uml_diagrams/classes_SMPyBandits.png)](uml_diagrams/classes_SMPyBandits.svg)
 
 ----
 

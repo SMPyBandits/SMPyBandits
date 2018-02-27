@@ -1,7 +1,7 @@
 ---
-title: "*AlgoBandits*"
+title: "*SMPyBandits*"
 subtitle: "a Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
-title-meta: "*AlgoBandits*: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
+title-meta: "*SMPyBandits*: an Open-Source Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
 author-meta: Lilian Besson
 author:
 - name: Lilian Besson
@@ -31,19 +31,19 @@ fontsize: 11pt
 geometry: scale=0.72
 fontfamily: palatino
 abstract:
-  I present the open-source numerical environment *AlgoBandits*, written in Python and designed to be an easy to use framework for experimenting with single- and multi-player algorithms and in different variations of the multi-armed bandits problem.
+  I present the open-source numerical environment *SMPyBandits*, written in Python and designed to be an easy to use framework for experimenting with single- and multi-player algorithms and in different variations of the multi-armed bandits problem.
 thanks:
   Thanks to Emilie Kaufmann and Christophe Moy.
 ---
 
 # Summary
 
-This article presents [my](https://perso.crans.org/besson/) numerical environment *AlgoBandits*, written in [Python (2 or 3)](https://www.python.org/) [@python], for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12].
+This article presents [my](https://perso.crans.org/besson/) numerical environment *SMPyBandits*, written in [Python (2 or 3)](https://www.python.org/) [@python], for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12].
 
-*AlgoBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
+*SMPyBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
 It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase. But most of all it allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
 
-*AlgoBandits* does not aim at being blazing fast or perfectly memory efficient, and comes with a pure Python implementation with no dependency except standard open-source Python packages.
+*SMPyBandits* does not aim at being blazing fast or perfectly memory efficient, and comes with a pure Python implementation with no dependency except standard open-source Python packages.
 Even if some critical parts are also available as a `C` Python extension, and even by using Numba [@numba] whenever it is possible, if simulation speed really matters, one should rather refer to less exhaustive but faster implementations, like for example [@TorLibbandit] in `C++` or [@VishMABjl] in Julia.
 
 ---
@@ -99,7 +99,7 @@ The main goal of this package is to implement [with the same API](http://bandits
 Each algorithm comes with a clean documentation page, containing a reference to the research article(s) that introduced it, and with remarks on its numerical efficiency.
 
 It is neither the first nor the only open-source implementation of multi-armed bandits algorithms, although one can notice the absence of any well-maintained reference implementation.
-I built *AlgoBandits* from a framework called *pymaBandits* [@pymaBandits], which implemented a few algorithms and three kinds of arms, in both Python and MATLAB.
+I built *SMPyBandits* from a framework called *pymaBandits* [@pymaBandits], which implemented a few algorithms and three kinds of arms, in both Python and MATLAB.
 The goal was twofolds, first to implement as many algorithms as possible to have a complete implementation of the current state of research in MAB, and second to implement multi-players simulations with different models.
 
 Since November $2016$, I follow actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually I implement quickly any new algorithms. For instance, [Exp3++](http://banditslilian.gforge.inria.fr/docs/Policies.Exp3PlusPlus.html), [CORRAL](http://banditslilian.gforge.inria.fr/docs/Policies.CORRAL.html) and [SparseUCB](http://banditslilian.gforge.inria.fr/docs/Policies.SparseUCB.html) were each introduced by articles ([for Exp3++](https://arxiv.org/pdf/1702.06103), [for CORRAL](https://arxiv.org/abs/1612.06246v2), [for SparseUCB](https://arxiv.org/abs/1706.01383)) presented at COLT in July 2017, [LearnExp](http://banditslilian.gforge.inria.fr/docs/Policies.LearnExp.html) comes from a [NIPS 2017 paper](https://arxiv.org/abs/1702.04825), and [kl-UCB++](http://banditslilian.gforge.inria.fr/docs/Policies.klUCBPlusPlus.html) from an [ALT 2017 paper](https://hal.inria.fr/hal-01475078).
@@ -194,7 +194,7 @@ A complete sphinx [@sphinx] documentation for each algorithms and every piece of
 - The code is [clean](http://banditslilian.gforge.inria.fr/logs/main_pylint_log.txt), and a special care is given to keep it compatible for both [Python 2](http://banditslilian.gforge.inria.fr/logs/main_pylint_log.txt) and [Python 3](http://banditslilian.gforge.inria.fr/logs/main_pylint3_log.txt).
 - The joblib library [@joblib] is used for the [`Evaluator`](http://banditslilian.gforge.inria.fr/docs/Environment.Evaluator.py) classes, so the simulations are easily ran in parallel on multi-core machines and servers [^nogpu].
 
-[^nogpu]:  Note that *AlgoBandits* does no need a GPU and is not optimized to run on a cluster. In particular, it does not take advantage of popular libraries like [numexpr](https://github.com/pydata/numexpr), [theano](http://www.deeplearning.net/software/theano/) or [tensorflow](https://www.tensorflow.org/).
+[^nogpu]:  Note that *SMPyBandits* does no need a GPU and is not optimized to run on a cluster. In particular, it does not take advantage of popular libraries like [numexpr](https://github.com/pydata/numexpr), [theano](http://www.deeplearning.net/software/theano/) or [tensorflow](https://www.tensorflow.org/).
 
 ### How to run the experiments ?
 
@@ -208,7 +208,7 @@ Using environment variables (`N=1000`) when launching the simulation is not requ
 # 1. get the code in /tmp/, or wherever you want
 cd /tmp/
 git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
-cd AlgoBandits.git
+cd SMPyBandits.git
 # 2. just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade virtualenv
 # 3. create and active the virtualenv
@@ -233,23 +233,23 @@ The two simulations above produce these plots showing the average cumulated regr
 
 ---
 
-## Research using *AlgoBandits*
+## Research using *SMPyBandits*
 
-*AlgoBandits* was used for the following research articles since $2017$ [^summaryphd]:
+*SMPyBandits* was used for the following research articles since $2017$ [^summaryphd]:
 
 [^summaryphd]: [I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October $2016$, and this is a part of my **on going** research since December $2016$. I launched the [documentation](http://banditslilian.gforge.inria.fr/) on March $2017$, I wrote my first research articles using this framework in $2017$ and I was finally able to open-source my project in February $2018$.
 
-- For this first article, [@Bonnefoi17], *AlgoBandits* was not used to generate the main figures, but to explore on a smaller scale many other approaches (using [`EvaluatorSparseMultiPlayers`](http://banditslilian.gforge.inria.fr/docs/Environment.EvaluatorSparseMultiPlayers.html)).
+- For this first article, [@Bonnefoi17], *SMPyBandits* was not used to generate the main figures, but to explore on a smaller scale many other approaches (using [`EvaluatorSparseMultiPlayers`](http://banditslilian.gforge.inria.fr/docs/Environment.EvaluatorSparseMultiPlayers.html)).
 
-- For [@BessonALT2018], we used *AlgoBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.html) and [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.html)).
+- For [@BessonALT2018], we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.html) and [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.html)).
 
 [^article1]:  More details and illustrations are given on the documentation page, [`MultiPlayers`](http://banditslilian.gforge.inria.fr/MultiPlayers.html).
 
-- In [@BessonWCNC2018], we used *AlgoBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](http://banditslilian.gforge.inria.fr/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
+- In [@BessonWCNC2018], we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](http://banditslilian.gforge.inria.fr/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
 [^article2]:  More details and illustrations are given on the documentation page, [`Aggregation`](http://banditslilian.gforge.inria.fr/Aggregation.html).
 
-- In [@Besson2018c], we used *AlgoBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt(T))$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+- In [@Besson2018c], we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt(T))$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
 [^article3]:  More details and illustrations are given on the documentation page, [`DoublingTrick`](http://banditslilian.gforge.inria.fr/DoublingTrick.html).
 

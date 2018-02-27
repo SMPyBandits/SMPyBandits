@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AlgoBandits documentation build configuration file, created by
+SMPyBandits documentation build configuration file, created by
 sphinx-quickstart on Thu Jan 19 17:20:57 2017.
 
 This file is execfile()d with the current directory set to its
@@ -69,7 +69,7 @@ except ImportError:
 master_doc = 'index'
 
 # General information about the project.
-project = 'AlgoBandits'
+project = 'SMPyBandits'
 copyright = '2016-2018, Lilian Besson (Naereen)'
 author = 'Lilian Besson'
 

@@ -1,6 +1,6 @@
 # [Jupyter Notebooks](https://www.jupyter.org/) :notebook: by [Naereen @ GitHub](https://naereen.github.io/)
 
-This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a nice format some numerical experiments for [my AlgoBandits project](https://github.com/SMPyBandits/SMPyBandits/).
+This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a nice format some numerical experiments for [my SMPyBandits project](https://github.com/SMPyBandits/SMPyBandits/).
 
 > [The wonderful Jupyter tools](http://jupyter.org/)  is awesome to write interactive and nicely presented :snake: Python simulations!
 >
@@ -61,7 +61,7 @@ $ jupyter-notebook --version  # version >= 4 is recommended
 4.4.1
 ```
 
-### 3.b. My numerical environment, [`AlgoBandits`](https://github.com/SMPyBandits/SMPyBandits/)
+### 3.b. My numerical environment, [`SMPyBandits`](https://github.com/SMPyBandits/SMPyBandits/)
 
 - First, install its dependencies (`pip install -r requirements`).
 - Then, either install it (*not yet*), or be sure to work in the main folder.
