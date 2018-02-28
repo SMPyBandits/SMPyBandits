@@ -1,5 +1,5 @@
 formats:
-- htmlziz
+- htmlzip
 - pdf
 python:
   version: 3.5
