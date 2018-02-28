@@ -28,8 +28,11 @@ try:
     path.insert(0, '..')
     from Policies import Exp3, Exp3Decreasing
 except ImportError as e:
-    print("Warning: ../Policies/Exp3.py was not imported correctly...")  # DEBUG
-    raise e
+    try:
+        from SMPyBandits.Policies import Exp3, Exp3Decreasing
+    except ImportError:
+        print("Warning: ../Policies/Exp3.py was not imported correctly...")  # DEBUG
+        raise e
 
 from .rhoRand import oneRhoRand, rhoRand
 

@@ -21,10 +21,16 @@ if __name__ == '__main__':
     exit(0)
 
 # Import arms
-from Arms import *
+try:
+    from Arms import *
+except ImportError:
+    from SMPyBandits.Arms import *
 
 # Import algorithms
-from Policies import *
+try:
+    from Policies import *
+except ImportError:
+    from SMPyBandits.Policies import *
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".

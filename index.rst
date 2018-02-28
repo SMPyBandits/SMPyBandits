@@ -17,9 +17,6 @@ Runs on Python 2 and 3, open-source under the `MIT License <https://lbeson.mit-l
    The project is also hosted on `Inria GForge <https://gforge.inria.fr/project/admin/?group_id=9477>`_, and the documentation can be seen online at `<http://banditslilian.gforge.inria.fr/>`_.
    |Website up|
 
-Bandit algorithms, SMPyBandits
---------------------------------------------------------
-
 This repository contains the code of `my <http://perso.crans.org/besson/>`_ numerical environment, written in `Python <https://www.python.org/>`_, in order to perform numerical
 simulations on *single*-player and *multi*-players `Multi-Armed Bandits
 (MAB) <https://en.wikipedia.org/wiki/Multi-armed_bandit>`_ algorithms.

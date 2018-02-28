@@ -13,10 +13,9 @@ USE_NUMBA = True   # XXX Experimental
 # DONE I tried numba.jit() on these functions, and it DOES not give any speedup...:-( sad sad !
 try:
     from numba.decorators import jit
-    # from numba.decorators import jit as numbajit
     import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
     locale.setlocale(locale.LC_NUMERIC, 'C')
-    print("Info: numba.jit seems to be available.")
+    # print("Info: numba.jit seems to be available.")  # DEBUG
 except ImportError:
     print("Warning: numba.jit seems to not be available. Using a dummy decorator for numba.jit() ...")
     USE_NUMBA = False

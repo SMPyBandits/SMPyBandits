@@ -21,23 +21,26 @@ try:
     path.insert(0, '..')
     from Policies import Uniform
 except ImportError:
-    print("Warning: ../Policies/Uniform.py was not imported correctly...")  # DEBUG
-    # ... Just reimplement it here manually, if not found in ../Policies/Uniform.py
-    from random import randint
+    try:
+        from SMPyBandits.Policies import Uniform
+    except ImportError:
+        print("Warning: ../Policies/Uniform.py was not imported correctly...")  # DEBUG
+        # ... Just reimplement it here manually, if not found in ../Policies/Uniform.py
+        from random import randint
 
-    class Uniform():
-        """Quick reimplementation of Policies.Uniform"""
-        def __init__(self, nbArms, lower=0., amplitude=1.):
-            self.nbArms = nbArms
+        class Uniform():
+            """Quick reimplementation of Policies.Uniform"""
+            def __init__(self, nbArms, lower=0., amplitude=1.):
+                self.nbArms = nbArms
 
-        def startGame(self):
-            pass
+            def startGame(self):
+                pass
 
-        def getReward(self, arm, reward):
-            pass
+            def getReward(self, arm, reward):
+                pass
 
-        def choice(self):
-            return randint(0, self.nbArms - 1)
+            def choice(self):
+                return randint(0, self.nbArms - 1)
 
 from .rhoRand import oneRhoRand, rhoRand
 

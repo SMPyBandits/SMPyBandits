@@ -20,19 +20,32 @@ import pickle
 # import h5py
 
 # Local imports
-from Environment import Evaluator, notify
-
-# Import a configuration file
-if 'configuration_comparing_aggregation_algorithms' in sys.argv:
-    from configuration_comparing_aggregation_algorithms import configuration
-if 'configuration_comparing_doubling_algorithms' in sys.argv:
-    from configuration_comparing_doubling_algorithms import configuration
-elif 'configuration_markovian' in sys.argv:
-    from configuration_markovian import configuration
-elif 'configuration_sparse' in sys.argv:
-    from configuration_sparse import configuration
-else:
-    from configuration import configuration
+try:
+    from Environment import Evaluator, notify
+    # Import a configuration file
+    if 'configuration_comparing_aggregation_algorithms' in sys.argv:
+        from configuration_comparing_aggregation_algorithms import configuration
+    if 'configuration_comparing_doubling_algorithms' in sys.argv:
+        from configuration_comparing_doubling_algorithms import configuration
+    elif 'configuration_markovian' in sys.argv:
+        from configuration_markovian import configuration
+    elif 'configuration_sparse' in sys.argv:
+        from configuration_sparse import configuration
+    else:
+        from configuration import configuration
+except ImportError:
+    from SMPyBandits.Environment import Evaluator, notify
+    # Import a configuration file
+    if 'configuration_comparing_aggregation_algorithms' in sys.argv:
+        from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
+    if 'configuration_comparing_doubling_algorithms' in sys.argv:
+        from SMPyBandits.configuration_comparing_doubling_algorithms import configuration
+    elif 'configuration_markovian' in sys.argv:
+        from SMPyBandits.configuration_markovian import configuration
+    elif 'configuration_sparse' in sys.argv:
+        from SMPyBandits.configuration_sparse import configuration
+    else:
+        from SMPyBandits.configuration import configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours

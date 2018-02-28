@@ -9,12 +9,14 @@ Defines one useful function :func:`notify()` to (try to) send a desktop notifica
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.9"
 
 from os import getcwd
 from os.path import exists, join
 from subprocess import Popen
 
+
+VERBOUS = False
 
 # Constants for the program
 PROGRAM_NAME = "SMPyBandits"  #: Program name
@@ -41,9 +43,10 @@ try:
         return iconpng
 
 except ImportError:
-    print("\nError, gi.repository.GdkPixbuf seems to not be available, so notification icons will not be available ...")
-    print("On Ubuntu, if you want notification icons to work, install the 'python-gobject' and 'libnotify-bin' packages.")
-    print("(For more details, cf. 'http://www.devdungeon.com/content/desktop-notifications-python-libnotify')")
+    if VERBOUS:
+        print("\nError, gi.repository.GdkPixbuf seems to not be available, so notification icons will not be available ...")
+        print("On Ubuntu, if you want notification icons to work, install the 'python-gobject' and 'libnotify-bin' packages.")
+        print("(For more details, cf. 'http://www.devdungeon.com/content/desktop-notifications-python-libnotify')")
 
     def load_icon():
         """ Load and open the icon. """
@@ -60,9 +63,10 @@ try:
     Notify.init(PROGRAM_NAME)
     has_Notify = True
 except ImportError:
-    print("\nError, gi.repository.Notify seems to not be available, so notification will not be available ...")
-    print("On Ubuntu, if you want notifications to work, install the 'python-gobject' and 'libnotify-bin' packages.")
-    print("(For more details, cf. 'http://www.devdungeon.com/content/desktop-notifications-python-libnotify')")
+    if VERBOUS:
+        print("\nError, gi.repository.Notify seems to not be available, so notification will not be available ...")
+        print("On Ubuntu, if you want notifications to work, install the 'python-gobject' and 'libnotify-bin' packages.")
+        print("(For more details, cf. 'http://www.devdungeon.com/content/desktop-notifications-python-libnotify')")
 
 
 # Define the first notify function, with gi.repository.Notify

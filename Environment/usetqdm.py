@@ -4,7 +4,7 @@
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 
 def in_notebook():
@@ -31,7 +31,7 @@ try:
         print("Info: Using the Jupyter notebook version of the tqdm() decorator, tqdm_notebook() ...")  # DEBUG
     else:
         from tqdm import tqdm
-        print("Info: Using the regular tqdm() decorator ...")  # DEBUG
+        # print("Info: Using the regular tqdm() decorator ...")  # DEBUG
     USE_TQDM = True
 except ImportError:
     print("Warning: tqdm not found. Install it from pypi ('pip install tqdm') or conda.\n  Info: Not mandatory, but it's pretty!")

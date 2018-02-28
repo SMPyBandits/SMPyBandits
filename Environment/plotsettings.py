@@ -59,12 +59,12 @@ if __name__ != '__main__':
 
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI
-    print(" - Setting dpi of all figures to", DPI, "...")
+    # print(" - Setting dpi of all figures to", DPI, "...")  # DEBUG
 
     # Configure figure size, even of if saved directly and not displayed, use HD screen
     # cf. https://en.wikipedia.org/wiki/Computer_display_standard
     mpl.rcParams['figure.figsize'] = FIGSIZE
-    print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")
+    # print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")  # DEBUG
 
     # Set up a discrete version of the Viridis map for axes.prop_cycle
 
