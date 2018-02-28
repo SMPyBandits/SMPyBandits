@@ -43,15 +43,6 @@ extensions = [
     # From https://nbsphinx.readthedocs.io/
     'nbsphinx',
 ]
-try:
-    import sphinxcontrib.googleanalytics
-    extensions += [
-        # From https://bitbucket.org/birkenfeld/sphinx-contrib/
-        'sphinxcontrib.googleanalytics',
-        # 'sphinxcontrib.autorun',
-    ]
-except ImportError:
-    print("'sphinxcontrib.googleanalytics' was not found, try to install it manually from 'https://bitbucket.org/birkenfeld/sphinx-contrib/'...")  # DEBUG
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -133,10 +124,52 @@ html_theme = 'sphinx_rtd_theme'
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
-    # A installer avec 'pip install sphinx_rtd_theme'
+    # To install with 'pip install sphinx_rtd_theme'
     import sphinx_rtd_theme
     html_theme = 'sphinx_rtd_theme'
     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+    try:
+        import sphinxcontrib.googleanalytics
+        extensions += [
+            # From https://bitbucket.org/birkenfeld/sphinx-contrib/
+            'sphinxcontrib.googleanalytics',
+            # 'sphinxcontrib.autorun',
+        ]
+    except ImportError:
+        print("'sphinxcontrib.googleanalytics' was not found, try to install it manually from 'https://bitbucket.org/birkenfeld/sphinx-contrib/'...")  # DEBUG
+        from sphinx.application import ExtensionError
+
+        def add_ga_javascript(app, pagename, templatename, context, doctree):
+            if not app.config.googleanalytics_enabled:
+                return
+
+            metatags = context.get('metatags', '')
+            metatags += """<script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', '%s']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+            </script>""" % app.config.googleanalytics_id
+            context['metatags'] = metatags
+
+        def check_config(app):
+            if not app.config.googleanalytics_id:
+                raise ExtensionError("'googleanalytics_id' config value must be set for ga statistics to function properly.")
+
+        def setup(app):
+            app.add_config_value('googleanalytics_id', '', 'html')
+            app.add_config_value('googleanalytics_enabled', True, 'html')
+            app.connect('html-page-context', add_ga_javascript)
+            app.connect('builder-inited', check_config)
+            return {'version': '0.1'}
+
 # otherwise, readthedocs.org uses their theme by default, so no need to specify it
 
 
