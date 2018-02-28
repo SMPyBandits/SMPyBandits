@@ -5,7 +5,7 @@
     - Author: Lilian Besson
     - License: MIT License (https://lbesson.mit-license.org/)
     - Date: 09-08-2017
-    - Online: http://banditslilian.gforge.inria.fr/
+    - Online: https://smpybandits.github.io/
     - Reference: https://github.com/arun11299/cpp-subprocess
 */
 

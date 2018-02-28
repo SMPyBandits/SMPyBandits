@@ -1,5 +1,5 @@
-# [Posteriors for Bayesian Index policies:](http://banditslilian.gforge.inria.fr/docs/Policies.Posterior.html)
-> See here the documentation: [docs/Policies.Posterior](http://banditslilian.gforge.inria.fr/docs/Policies.Posterior.html)
+# [Posteriors for Bayesian Index policies:](https://smpybandits.github.io/docs/Policies.Posterior.html)
+> See here the documentation: [docs/Policies.Posterior](https://smpybandits.github.io/docs/Policies.Posterior.html)
 
 
 - [`Beta`](Beta.py) is the default for [`Thompson`](Thompson.py) Sampling and [`BayesUCB`](BayesUCB.py), ideal for Bernoulli experiments,

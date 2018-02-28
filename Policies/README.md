@@ -1,5 +1,5 @@
-# [Single-Player policies](http://banditslilian.gforge.inria.fr/docs/Policies.html)
-> See here the documentation: [docs/Policies](http://banditslilian.gforge.inria.fr/docs/Policies.html)
+# [Single-Player policies](https://smpybandits.github.io/docs/Policies.html)
+> See here the documentation: [docs/Policies](https://smpybandits.github.io/docs/Policies.html)
 
 ## List of Policies
 `Policies` module : contains various (single-player) bandits algorithms:

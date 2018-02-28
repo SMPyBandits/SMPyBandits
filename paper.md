@@ -37,9 +37,9 @@ It allows fast prototyping of simulations and experiments, with an easy configur
 ### Single-Player MAB
 Multi-Armed Bandit (MAB) problems are well-studied sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52,LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization (news article recommendation [@Li10], online advertising [@LiChapelle11] or A/B Testing [@Kaufmann14;Jamieson17]), or portfolio optimization [@Sani12].
 
-*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms ([over 65!](http://banditslilian.gforge.inria.fr/docs/Policies.html)).
-We use a well-designed hierarchical structure and [class inheritance scheme](http://banditslilian.gforge.inria.fr/uml_diagrams/README.html) to minimize redundancy in the codebase.
-Most existing algorithms are index-based, and can be written very shortly by inheriting from the [`IndexPolicy`](http://banditslilian.gforge.inria.fr/docs/Policies.IndexPolicy.html) class.
+*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms ([over 65!](https://smpybandits.github.io/docs/Policies.html)).
+We use a well-designed hierarchical structure and [class inheritance scheme](https://smpybandits.github.io/uml_diagrams/README.html) to minimize redundancy in the codebase.
+Most existing algorithms are index-based, and can be written very shortly by inheriting from the [`IndexPolicy`](https://smpybandits.github.io/docs/Policies.IndexPolicy.html) class.
 
 ### Multi-Players MAB
 
@@ -47,7 +47,7 @@ For Cognitive Radio applications, a well-studied extension is to consider $M\geq
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-*SMPyBandits* implements [all the collision models](http://banditslilian.gforge.inria.fr/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+*SMPyBandits* implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
 
 ---
 
@@ -59,14 +59,14 @@ Making new simulations is very easy, one only needs to write a configuration scr
 
 ### Documentation
 
-A complete sphinx [@sphinx] documentation for each algorithms and every piece of code, included the constants in the different configuration files, is available here: [`http://banditslilian.gforge.inria.fr`](http://banditslilian.gforge.inria.fr/).
+A complete sphinx [@sphinx] documentation for each algorithms and every piece of code, included the constants in the different configuration files, is available here: [`https://smpybandits.github.io`](https://smpybandits.github.io/).
 
 ### How to run the experiments ?
 
 For example, this short bash snippet [^docforconf] shows how to clone the code, install the requirements for Python 3 (in a virtualenv [@virtualenv]), and starts some simulation for $N=1000$ repetitions of the default non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs [^speedofsimu].
 Using environment variables (`N=1000`) when launching the simulation is not required but it is convenient.
 
-[^docforconf]:  See [this page of the documentation](http://banditslilian.gforge.inria.fr/How_to_run_the_code.html) for more details.
+[^docforconf]:  See [this page of the documentation](https://smpybandits.github.io/How_to_run_the_code.html) for more details.
 [^speedofsimu]:  It takes about $20$ to $40$ minutes for each simulation, on a standard $4$-cores $64$ bits GNU/Linux laptop.
 
 ```bash
@@ -87,8 +87,8 @@ N=1000 T=10000 K=9 N_JOBS=4 make single
 
 ### Example of simulation and illustration
 
-A small script [`configuration.py`](http://banditslilian.gforge.inria.fr/docs/configuration.html) is used to import the [arm classes](http://banditslilian.gforge.inria.fr/docs/Arms.html), the [policy classes](http://banditslilian.gforge.inria.fr/docs/Policies.html) and define the problems and the experiments.
-For instance, we can compare the standard anytime [`klUCB`](http://banditslilian.gforge.inria.fr/docs/Policies.klUCB.py) algorithm against the non-anytime variant [`klUCBPlusPlus`](http://banditslilian.gforge.inria.fr/docs/Policies.klUCBPlusPlus.py) algorithm, as well as [`UCB`](http://banditslilian.gforge.inria.fr/docs/Policies.UCBalpha.py) (with $\alpha=1$) and [`Thompson`](http://banditslilian.gforge.inria.fr/docs/Policies.Thompson.py) (with [Beta posterior](http://banditslilian.gforge.inria.fr/docs/Policies.Posterior.Beta.html)).
+A small script [`configuration.py`](https://smpybandits.github.io/docs/configuration.html) is used to import the [arm classes](https://smpybandits.github.io/docs/Arms.html), the [policy classes](https://smpybandits.github.io/docs/Policies.html) and define the problems and the experiments.
+For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.py) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.py) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.py) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.py) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
 See below in Figure \ref{fig:plot1} for the result showing the average regret [^regret] for these $4$ algorithms.
 
 [^regret]:  The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits) and the cumulated rewards of the considered algorithms.
@@ -101,17 +101,17 @@ See below in Figure \ref{fig:plot1} for the result showing the average regret [^
 
 *SMPyBandits* was used for the following research articles since $2017$:
 
-- For [@BessonALT2018], we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](http://banditslilian.gforge.inria.fr/docs/Policies.MEGA.html) and [`MusicalChair`](http://banditslilian.gforge.inria.fr/docs/Policies.MusicalChair.html)).
+- For [@BessonALT2018], we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) and [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html)).
 
-[^article1]:  See [`MultiPlayers`](http://banditslilian.gforge.inria.fr/MultiPlayers.html) on the documentation.
+[^article1]:  See [`MultiPlayers`](https://smpybandits.github.io/MultiPlayers.html) on the documentation.
 
-- In [@BessonWCNC2018], we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](http://banditslilian.gforge.inria.fr/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
+- In [@BessonWCNC2018], we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
-[^article2]:  See [`Aggregation`](http://banditslilian.gforge.inria.fr/Aggregation.html) on the documentation.
+[^article2]:  See [`Aggregation`](https://smpybandits.github.io/Aggregation.html) on the documentation.
 
 - In [@Besson2018c], we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt(T))$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
-[^article3]:  See [`DoublingTrick`](http://banditslilian.gforge.inria.fr/DoublingTrick.html) on the documentation.
+[^article3]:  See [`DoublingTrick`](https://smpybandits.github.io/DoublingTrick.html) on the documentation.
 
 
 ## Dependencies

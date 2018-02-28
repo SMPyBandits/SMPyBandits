@@ -1,0 +1,6 @@
+N=4 T=1000 M=3 K=10 P=0.1 ARM_TYPE=B MUS=0.3,0.2,0.1,0.1,0.05,0.05,0.02,0.08,0.01,0.09 DEBUG=True SAVEALL=False N_JOBS=4 make sparsemulti
+
+N=4 T=10000 M=30 K=10 P=0.01 ARM_TYPE=B MUS=0.3,0.2,0.1,0.1,0.05,0.05,0.02,0.08,0.01,0.09 DEBUG=True SAVEALL=False N_JOBS=4 make sparsemulti
+N=4 T=30000 K=9 ARM_TYPE=Bernoulli DEBUG=True SAVEALL=False N_JOBS=4 make single
+BAYES=True N=1000 T=10000 K=32 ARM_TYPE=Gaussian DEBUG=True SAVEALL=False N_JOBS=-1 make single
+N=40 T=20000 K=5 DEBUG=True SAVEALL=False make single

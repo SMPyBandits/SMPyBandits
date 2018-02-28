@@ -14,7 +14,7 @@ Runs on Python 2 and 3, open-source under the `MIT License <https://lbeson.mit-l
 .. note::
 
    See more on `the GitHub page for this project <https://github.com/SMPyBandits/SMPyBandits/>`_: `<https://github.com/SMPyBandits/SMPyBandits/>`_.
-   The project is also hosted on `Inria GForge <https://gforge.inria.fr/project/admin/?group_id=9477>`_, and the documentation can be seen online at `<http://banditslilian.gforge.inria.fr/>`_.
+   The project is also hosted on `Inria GForge <https://gforge.inria.fr/project/admin/?group_id=9477>`_, and the documentation can be seen online at `<https://smpybandits.github.io/>`_.
    |Website up|
 
 This repository contains the code of `my <http://perso.crans.org/besson/>`_ numerical environment, written in `Python <https://www.python.org/>`_, in order to perform numerical
@@ -40,7 +40,7 @@ If you use this package for your own work, please consider citing it with this p
         year =    {2018},
         url =     {https://github.com/SMPyBandits/SMPyBandits/},
         howpublished = {Online at: \url{GitHub.com/SMPyBandits/SMPyBandits}},
-        note =    {Code at https://github.com/SMPyBandits/SMPyBandits/, documentation at http://banditslilian.gforge.inria.fr/}
+        note =    {Code at https://github.com/SMPyBandits/SMPyBandits/, documentation at https://smpybandits.github.io/}
     }
 
 I also wrote a small paper to present *SMPyBandits*, and I will send it to `JMLR MLOSS <http://jmlr.org/mloss/>`_.
@@ -107,7 +107,7 @@ Indices and tables
 .. |Ask Me Anything| image:: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
    :target: https://GitHub.com/Naereen/ama
 .. |Website up| image:: https://img.shields.io/website-up-down-green-red/http/banditslilian.gforge.inria.fr.svg
-   :target: http://banditslilian.gforge.inria.fr/
+   :target: https://smpybandits.github.io/
 .. |made-with-latex| image:: https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg
    :target: https://www.latex-project.org/
 .. |made-with-sphinx| image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg

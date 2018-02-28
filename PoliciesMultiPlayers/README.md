@@ -1,5 +1,5 @@
-# [Multi-Player policies](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.html)
-> See here the documentation: [docs/PoliciesMultiPlayers](http://banditslilian.gforge.inria.fr/docs/PoliciesMultiPlayers.html)
+# [Multi-Player policies](https://smpybandits.github.io/docs/PoliciesMultiPlayers.html)
+> See here the documentation: [docs/PoliciesMultiPlayers](https://smpybandits.github.io/docs/PoliciesMultiPlayers.html)
 
 
 ## List of Policies

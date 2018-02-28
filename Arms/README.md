@@ -1,5 +1,5 @@
-# [Arms](http://banditslilian.gforge.inria.fr/docs/Arms.html)
-> See here the documentation: [docs/Arms](http://banditslilian.gforge.inria.fr/docs/Arms.html)
+# [Arms](https://smpybandits.github.io/docs/Arms.html)
+> See here the documentation: [docs/Arms](https://smpybandits.github.io/docs/Arms.html)
 
 Arms : contains different types of bandit arms:
 [`Constant`](Constant.py), [`UniformArm`](UniformArm.py), [`Bernoulli`](Bernoulli.py), [`Binomial`](Binomial.py), [`Poisson`](Poisson.py), [`Gaussian`](Gaussian.py), [`Exponential`](Exponential.py), [`Gamma`](Gamma.py).

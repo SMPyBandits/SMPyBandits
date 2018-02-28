@@ -6,7 +6,7 @@
     - Author: Lilian Besson
     - License: MIT License (https://lbesson.mit-license.org/)
     - Date: 28-07-2017
-    - Online: http://banditslilian.gforge.inria.fr/
+    - Online: https://smpybandits.github.io/
     - Reference: http://
    www.binarytides.com/code-a-simple-socket-client-class-in-c/
 */
