@@ -46,7 +46,7 @@ If you use this package for your own work, please consider citing it with this p
         note =    {Code at https://github.com/SMPyBandits/SMPyBandits/, documentation at http://banditslilian.gforge.inria.fr/}
     }
 
-I also wrote a small paper to present *SMPyBandits*, and I will send it to `JOSS <http://joss.theoj.org/>`_.
+I also wrote a small paper to present *SMPyBandits*, and I will send it to `JMLR MLOSS <http://jmlr.org/mloss/>`_.
 The paper can be consulted `here on my website <https://perso.crans.org/besson/articles/SMPyBandits.pdf>`_.
 
 ----

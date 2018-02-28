@@ -1,0 +1,5 @@
+formats:
+- htmlziz
+- pdf
+python:
+  version: 3.5
