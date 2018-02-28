@@ -247,19 +247,22 @@ SPHINXPROJ    = SMPyBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
 
-#clean-doc:
-#	mkdir --parents $(BUILDDIR)/html
-#	-rm -rfv /tmp/$(BUILDDIR)/
-#	mv -vf $(BUILDDIR)/ /tmp/
-#	mkdir --parents $(BUILDDIR)/html/
+clean-doc:
+	mkdir --parents $(BUILDDIR)/html
+	-rm -rfv /tmp/sphinx_html
+	mv -vf $(BUILDDIR)/html /tmp/sphinx_html
+	mv -vf /tmp/sphinx_html/.git/ $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/LICENSE $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/README.md $(BUILDDIR)/html/
+	mkdir --parents $(BUILDDIR)/html/
 
 .PHONY: help
 
 send:	send_zamok send_gforge
 send_zamok:
 	cd notebooks ; make send_zamok ; cd ..
-	CP "$(BUILDDIR)"/html/ ${Szam}phd/AlgoBandits/
-	# -ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/AlgoBandits/_modules/ /tmp/besson/"
+	CP "$(BUILDDIR)"/html/ ${Szam}phd/SMPyBandits/
+	# -ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/SMPyBandits/_modules/ /tmp/besson/"
 send_gforge:
 	CP "$(BUILDDIR)"/html/ lbesson@scm.gforge.inria.fr:/home/groups/banditslilian/htdocs/
 	# -ssh lbesson@scm.gforge.inria.fr "rm -rfv /tmp/banditslilian/_modules/ ; mv -vf /home/groups/banditslilian/htdocs/_modules/ /tmp/banditslilian/"

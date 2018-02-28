@@ -58,7 +58,7 @@ The paper can be consulted `here on my website <https://perso.crans.org/besson/a
    README.md
    docs/modules.rst
    How_to_run_the_code.md
-   PublicationsWithAlgoBandits.md
+   PublicationsWithSMPyBandits.md
    Aggregation.md
    MultiPlayers.md
    DoublingTrick.md
