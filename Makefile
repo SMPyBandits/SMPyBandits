@@ -244,12 +244,9 @@ clean-doc:
 	mkdir --parents $(BUILDDIR)/html
 	-rm -rfv /tmp/sphinx_html
 	mv -vf $(BUILDDIR)/html /tmp/sphinx_html
-	mv -vf /tmp/sphinx_html/.git $(BUILDDIR)/html/
-	mv -vf /tmp/sphinx_html/.gitignore $(BUILDDIR)/html/
-	mv -vf /tmp/sphinx_html/logo_large.png $(BUILDDIR)/html/
-	mv -vf /tmp/sphinx_html/LICENSE $(BUILDDIR)/html/
-	mv -vf /tmp/sphinx_html/README.md $(BUILDDIR)/html/
 	mkdir --parents $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/.git $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/.gitignore .nojekyll logo_large.png ISSUE_TEMPLATE.md LICENSE README.md $(BUILDDIR)/html/
 
 .PHONY: help
 
