@@ -14,8 +14,9 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-import sys
-sys.path.insert(0, '..')
+#import sys
+#sys.path.insert(0, '..')
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -81,6 +82,7 @@ setup(name="SMPyBandits",
             "sphinx_rtd_theme",
             "recommonmark",
             "nbsphinx",
+            "pyreverse",
         ]
     },
     project_urls={  # Optional

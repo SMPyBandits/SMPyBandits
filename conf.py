@@ -23,6 +23,8 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath('.'))
 
+sys.path.insert(0, os.path.abspath('SMPyBandits'))
+
 print("Using python, version %s on %s." % (sys.version, sys.platform))
 
 
@@ -93,7 +95,8 @@ language = None
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-html_last_updated_fmt = '%d %b %Y, %Hh:%Mm:%Ss'
+html_last_updated_fmt = '%d %b %Y, %Hh'
+# avoid doing git commits on https://github.com/SMPyBandits/SMPyBandits.github.io/ if you build the doc twice in the same hour!
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

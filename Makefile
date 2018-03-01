@@ -1,6 +1,7 @@
 # Quick Makefile to:
 # - run easily a Python script, while keeping a text log of its full output (make run)
 # - lint the Python code (make lint lint3)
+# - generate documentation (make apidoc doc)
 # - install the requirements (make install)
 
 # __author__ = "Lilian Besson"
@@ -29,33 +30,33 @@ doc:
 # Runners
 singleplayer:	singleplayer3
 singleplayer3:
-	time nice -n 19 ipython3 ./main.py | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py | tee ./logs/main_py3_log.txt
 singleplayer2:
-	time nice -n 19 python2 ./main.py | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py | tee ./logs/main_py2_log.txt
 
 comparing_aggregation_algorithms:	comparing_aggregation_algorithms3
 comparing_aggregation_algorithms3:
-	time nice -n 19 ipython3 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt
 comparing_aggregation_algorithms2:
-	time nice -n 19 python2 ./main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py2_log.txt
 
 comparing_doubling_algorithms:	comparing_doubling_algorithms3
 comparing_doubling_algorithms3:
-	time nice -n 19 ipython3 ./main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py3_log.txt
 comparing_doubling_algorithms2:
-	time nice -n 19 python2 ./main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
 
 sparse:	sparse3
 sparse3:
-	time nice -n 19 ipython3 ./main.py configuration_sparse | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_py3_log.txt
 sparse2:
-	time nice -n 19 python2 ./main.py configuration_sparse | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_py2_log.txt
 
 markovian:	markovian3
 markovian3:
-	time nice -n 19 ipython3 ./main.py configuration_markovian | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_py3_log.txt
 markovian2:
-	time nice -n 19 python2 ./main.py configuration_markovian | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_py2_log.txt
 
 multiplayers:	multiplayers3
 multiplayers3:
@@ -112,11 +113,6 @@ paper: paper.tex paper.md
 policy_server_py:
 	clear
 	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
-	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "ApproximatedFHGittins", "params": { "alpha": 0.5, "horizon": 10000 }}'
-	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "DoublingTrickWrapper", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" }}'
-	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "SparseWrapper", "params": { "policy": "ApproximatedFHGittins", "sparsity": 3, "horizon": 10000, "alpha": 0.5 }}'
-	@# time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "SparseWrapper", "params": { "policy": "DoublingTrickWrapper", "sparsity": 3, "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "next_horizon": "next_horizon__exponential_slow" } }}'
-	@#time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "DoublingTrickWrapper", "params": { "policy": "SparseWrapper", "next_horizon": "next_horizon__exponential_slow", "params": { "alpha": 0.5, "policy": "ApproximatedFHGittins", "sparsity": 3 } }}'
 
 env_client_py:
 	clear
@@ -139,32 +135,32 @@ env_client_cpp:	env_client.exe
 # Time profilers
 profile: profile3
 profile2:
-	time nice -n 19 python2 -m cProfile -s cumtime ./main.py | tee ./logs/main_py2_profile_log.txt
+	time nice -n 19 python2 -m cProfile -s cumtime ./SMPyBandits/main.py | tee ./logs/main_py2_profile_log.txt
 profile3:
-	time nice -n 19 python3 -m cProfile -s cumtime ./main.py | tee ./logs/main_py3_profile_log.txt
+	time nice -n 19 python3 -m cProfile -s cumtime ./SMPyBandits/main.py | tee ./logs/main_py3_profile_log.txt
 
 # Line time profilers
 line_profiler:	kernprof lprof
 kernprof:
 	@echo "Running the script 'main.py' with the 'kernprof' command line profiler ..."
 	@echo "See 'https://github.com/rkern/line_profiler#kernprof' if needed"
-	time nice -n 19 kernprof -l ./main.py | tee ./logs/main_py3_log.txt
+	time nice -n 19 kernprof -l ./SMPyBandits/main.py | tee ./logs/main_py3_log.txt
 lprof:
 	@echo "Time profile, line by line, for the script 'main.py' ..."
 	@echo "See 'https://github.com/rkern/line_profiler#line-profiler' if needed"
-	time nice -n 19 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
+	time nice -n 19 python3 -m line_profiler ./SMPyBandits/main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
 
 # Python Call Graph, XXX does not work well as far as now
 callgraph:
 	@echo "Running the script 'main.py' with the pycallgraph command line profiler ..."
 	@echo "See 'http://pycallgraph.slowchop.com/en/master/guide/command_line_usage.html#examples' if needed"
-	# time nice -n 19 pycallgraph --verbose --max-depth 10 graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
-	# time nice -n 19 /usr/local/bin/pycallgraph --verbose --threaded --memory graphviz --output-file=logs/pycallgraph.svg -- ./main.py | tee ./logs/main_pycallgraph_log.txt
-	time nice -n 19 pycallgraph --verbose --max-depth 10 gephi --output-file=logs/pycallgraph.gdf -- ./main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 19 pycallgraph --verbose --max-depth 10 graphviz --output-file=logs/pycallgraph.svg -- ./SMPyBandits/main.py | tee ./logs/main_pycallgraph_log.txt
+	# time nice -n 19 /usr/local/bin/pycallgraph --verbose --threaded --memory graphviz --output-file=logs/pycallgraph.svg -- ./SMPyBandits/main.py | tee ./logs/main_pycallgraph_log.txt
+	time nice -n 19 pycallgraph --verbose --max-depth 10 gephi --output-file=logs/pycallgraph.gdf -- ./SMPyBandits/main.py | tee ./logs/main_pycallgraph_log.txt
 	# -convert logs/pycallgraph.svg logs/pycallgraph.png
 
 # Installers
-# FIXME make a virtualenv
+# FIXME make a virtualenv automatically?
 install:
 	sudo -H pip  install -U -r requirements.txt
 install2:
@@ -175,9 +171,6 @@ install3:
 # Senders:
 send_ws3:	clean
 	CP ~/AlgoBandits.git/ lilian_besson@ws3:~/These/src/AlgoBandits.git/
-
-# receive_plots_ws3:
-# 	CP lilian_besson@ws3:~/These/src/AlgoBandits.git/plots ./
 
 # Cleaner
 clean:
@@ -239,8 +232,8 @@ ignorelogs:
 # You can set these variables from the command line.
 PYTHON        = python3
 SPHINXOPTS    =
-# XXX My fork contains the generic indexes, my PR to Sphinx was never accepted
-# XXX Use the system-wise 'sphinx-build' if you prefer
+# WARNING My fork contains the generic indexes, my PR to Sphinx was never accepted
+# WARNING Use the system-wise 'sphinx-build' if you prefer
 # SPHINXBUILD   = sphinx-build
 SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
 SPHINXPROJ    = SMPyBandits
@@ -261,25 +254,21 @@ clean-doc:
 send:	send_zamok send_gforge
 send_zamok:
 	cd notebooks ; make send_zamok ; cd ..
-	CP "$(BUILDDIR)"/html/ ${Szam}phd/SMPyBandits/
-	# -ssh ${SZAM} "rm -rfv /tmp/besson/_modules/ ; mv -vf /home/besson/www/phd/SMPyBandits/_modules/ /tmp/besson/"
+	CP --exclude=.git "$(BUILDDIR)"/html/ ${Szam}phd/SMPyBandits/
+
 send_gforge:
-	CP "$(BUILDDIR)"/html/ lbesson@scm.gforge.inria.fr:/home/groups/banditslilian/htdocs/
-	# -ssh lbesson@scm.gforge.inria.fr "rm -rfv /tmp/banditslilian/_modules/ ; mv -vf /home/groups/banditslilian/htdocs/_modules/ /tmp/banditslilian/"
+	CP --exclude=.git "$(BUILDDIR)"/html/ lbesson@scm.gforge.inria.fr:/home/groups/banditslilian/htdocs/
 
 apidoc:
-	-mkdir -vp /tmp/AlgoBandits/docs/
-	-mv -vf docs/*.rst /tmp/AlgoBandits/docs/
+	-mkdir -vp /tmp/SMPyBandits/docs/
+	-mv -vf docs/*.rst /tmp/SMPyBandits/docs/
 	# @echo "==> Showing you which .rst files will be created in docs/"
 	# sphinx-apidoc -n -o docs -e -M .
 	# @echo "==> OK to generate these files ? [Enter for OK, Ctrl+C to cancel]"
 	# @read
-	sphinx-apidoc -o docs -e -M .
-
-# # Catch-all target: route all unknown targets to Sphinx using the new
-# # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-# %:
-# 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	# sphinx-apidoc -f -o docs -e -M SMPyBandits
+	cd SMPyBandits ; mv -vf __init__.py __init__.py.old ; sphinx-apidoc -f -o ../docs -e -M . ; mv -vf __init__.py.old __init__.py  ; cd ..
+	-mv -fv /tmp/SMPyBandits/docs/modules.rst ./docs/modules.rst
 
 html:
 	$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

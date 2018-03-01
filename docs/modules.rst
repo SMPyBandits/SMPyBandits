@@ -1,3 +1,8 @@
+.. WARNING This file is edited by hand, and not apidoc
+   to preserve the logical ordering.
+   If you add any new modules, add them here also
+
+
 SMPyBandits modules
 ===================
 
