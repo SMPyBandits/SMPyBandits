@@ -88,7 +88,7 @@ For Cognitive Radio applications, a well-studied extension is to consider $M\geq
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-This package implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+This package implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html)) from [@BessonALT2018].
 
 ---
 
@@ -115,7 +115,7 @@ Making new simulations is very easy, one only needs to write a configuration scr
 ### Examples of configuration for some simulations
 
 A small script [`configuration.py`](https://smpybandits.github.io/docs/configuration.html) is used to import the [arm classes](https://smpybandits.github.io/docs/Arms.html), the [policy classes](https://smpybandits.github.io/docs/Policies.html) and define the problems and the experiments.
-For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.py) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.py) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.py) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.py) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
+For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.html) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
 See below in Figure \ref{fig:plot1} for the result showing the average regret for these $4$ algorithms.
 
 ```python
@@ -141,7 +141,7 @@ configuration = {
   ]}
 ```
 
-For a second example, this snippet is a minimal example [^confmultiplayers] of configuration for multiplayer simulations, comparing different multi-player algorithms used with the [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.py) index policy.
+For a second example, this snippet is a minimal example [^confmultiplayers] of configuration for multiplayer simulations, comparing different multi-player algorithms used with the [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) index policy.
 See below in Figure \ref{fig:plot2} for an illustration.
 
 [^confmultiplayers]:  See the file [`configuration_multiplayers.py`](https://smpybandits.github.io/docs/configuration_multiplayers.html) in the code for more details.
@@ -178,21 +178,21 @@ A complete sphinx [@sphinx] documentation for each algorithms and every piece of
 
 #### [Single-player Policies](https://smpybandits.github.io/docs/Policies.html)
 
-- More than 65 algorithms, including all known variants of the [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.py), [kl-UCB](https://smpybandits.github.io/docs/Policies.klUCB.py), [`MOSS`](https://smpybandits.github.io/docs/Policies.MOSS.py) and [Thompson Sampling](https://smpybandits.github.io/docs/Policies.Thompson.py) algorithms, as well as other less known algorithms ([`OCUCB`](https://smpybandits.github.io/docs/Policies.OCUCB.py), [`BESA`](https://smpybandits.github.io/docs/Policies.OCUCB.py), [`OSSB`](https://smpybandits.github.io/docs/Policies.OSSB.py) etc).
+- More than 65 algorithms, including all known variants of the [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html), [kl-UCB](https://smpybandits.github.io/docs/Policies.klUCB.html), [`MOSS`](https://smpybandits.github.io/docs/Policies.MOSS.html) and [Thompson Sampling](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, as well as other less known algorithms ([`OCUCB`](https://smpybandits.github.io/docs/Policies.OCUCB.html), [`BESA`](https://smpybandits.github.io/docs/Policies.OCUCB.html), [`OSSB`](https://smpybandits.github.io/docs/Policies.OSSB.html) etc).
 - Implementation of very recent Multi-Armed Bandits algorithms, e.g., [`kl-UCB++`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html), [`UCB-dagger`](https://smpybandits.github.io/docs/Policies.UCBdagger.html),  or [`MOSS-anytime`](https://smpybandits.github.io/docs/Policies.MOSSAnytime.html) (from [this COLT 2016 article](http://proceedings.mlr.press/v48/degenne16.pdf)).
 - Experimental policies: [`BlackBoxOpt`](https://smpybandits.github.io/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](https://smpybandits.github.io/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
 
 #### Arms and problems
-- The framework mainly targets stochastic bandits, with arms following [`Bernoulli`](Arms/Bernoulli.py), bounded (truncated) or unbounded [`Gaussian`](Arms/Gaussian.py), [`Exponential`](Arms/Exponential.py), [`Gamma`](Arms/Gamma.py) or [`Poisson`](Arms/Poisson.py) distributions.
-- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector $\mu_1,\dots,\mu_K$ change *at every repetition* (see [`MAB.DynamicMAB`](Environment/MAB.py)).
-- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](Environment/MAB.py), even though I preferred to not implement policies specifically designed for Markovian problems.
+- The framework mainly targets stochastic bandits, with arms following [`Bernoulli`](https://smpybandits.github.io/docs/Arms/Bernoulli.html), bounded (truncated) or unbounded [`Gaussian`](https://smpybandits.github.io/docs/Arms/Gaussian.html), [`Exponential`](https://smpybandits.github.io/docs/Arms/Exponential.html), [`Gamma`](https://smpybandits.github.io/docs/Arms/Gamma.html) or [`Poisson`](https://smpybandits.github.io/docs/Arms/Poisson.html) distributions.
+- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](https://smpybandits.github.io/docs/Environment/MAB.html)), but there is also a perfect support for "Bayesian" problems where the mean vector $\mu_1,\dots,\mu_K$ change *at every repetition* (see [`MAB.DynamicMAB`](https://smpybandits.github.io/docs/Environment/MAB.html)).
+- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](https://smpybandits.github.io/docs/Environment/MAB.html), even though I preferred to not implement policies specifically designed for Markovian problems.
 
 ---
 
 ## Other remarks
 - The framework is implemented in an imperative and object oriented style. Algorithm and arms are represented as classes, and the API of the `Arms`, `Policy` and `MultiPlayersPolicy` classes is [clearly documented](https://smpybandits.github.io/API.html).
 - The code is [clean](https://smpybandits.github.io/logs/main_pylint_log.txt), and a special care is given to keep it compatible for both [Python 2](https://smpybandits.github.io/logs/main_pylint_log.txt) and [Python 3](https://smpybandits.github.io/logs/main_pylint3_log.txt).
-- The joblib library [@joblib] is used for the [`Evaluator`](https://smpybandits.github.io/docs/Environment.Evaluator.py) classes, so the simulations are easily ran in parallel on multi-core machines and servers [^nogpu].
+- The joblib library [@joblib] is used for the [`Evaluator`](https://smpybandits.github.io/docs/Environment.Evaluator.html) classes, so the simulations are easily ran in parallel on multi-core machines and servers [^nogpu].
 
 [^nogpu]:  Note that *SMPyBandits* does no need a GPU and is not optimized to run on a cluster. In particular, it does not take advantage of popular libraries like [numexpr](https://github.com/pydata/numexpr), [theano](http://www.deeplearning.net/software/theano/) or [tensorflow](https://www.tensorflow.org/).
 

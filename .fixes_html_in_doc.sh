@@ -40,9 +40,13 @@ for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html; do
     # echo -e "${green}OK to replace these 'Package/File.py' by 'docs/Package.File.html' ??${white}"
     # read  # DEBUG
     sed -r \
+        -e s_'href="SMPyBandits/([^"/]*)\.py"'_'href="docs/\1.html"'_g \
         -e s_'href="([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+        -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
         -e s_'href="([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+        -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
         -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+        -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
         -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
         "$i" > "$i".new
     echo -e "${blue}Modification done${white}, here is the difference (old, new)"

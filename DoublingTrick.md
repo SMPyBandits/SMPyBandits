@@ -1,7 +1,7 @@
 # **Doubling Trick for Multi-Armed Bandits**
-I studied what [Doubling Trick](Policies/DoublingTrickWrapper.py) can and can't do for multi-armed bandits, to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
+I studied what [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) can and can't do for multi-armed bandits, to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
 
-The [Doubling Trick](Policies/DoublingTrickWrapper.py) algorithm, denoted DT(A, (Ti)) for a diverging increasing sequence Ti, is the following algorithm:
+The [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) algorithm, denoted DT(A, (Ti)) for a diverging increasing sequence Ti, is the following algorithm:
 
 ![Policies/DoublingTrick.py](plots/DoublingTrick_algo1.png)
 
@@ -25,9 +25,9 @@ I wrote a research article on that topic, it will be a better introduction as a 
 ----
 
 ## Configuration
-A simple python file, [`configuration_comparing_doubling_algorithms.py`](configuration_comparing_doubling_algorithms.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_comparing_doubling_algorithms.py`](SMPyBandits/configuration_comparing_doubling_algorithms.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-For example, we can compare the standard anytime [`klUCB`](Policies/klUCB.py) algorithm against the non-anytime [`klUCBPlusPlus`](Policies/klUCBPlusPlus.py) algorithm, as well as 3 versions of [`DoublingTrickWrapper`](Policies/DoublingTrickWrapper.py) applied to [`klUCBPlusPlus`](Policies/klUCBPlusPlus.py).
+For example, we can compare the standard anytime [`klUCB`](SMPyBandits/Policies/klUCB.py) algorithm against the non-anytime [`klUCBPlusPlus`](SMPyBandits/Policies/klUCBPlusPlus.py) algorithm, as well as 3 versions of [`DoublingTrickWrapper`](SMPyBandits/Policies/DoublingTrickWrapper.py) applied to [`klUCBPlusPlus`](SMPyBandits/Policies/klUCBPlusPlus.py).
 
 ```python
 configuration = {
@@ -51,7 +51,7 @@ configuration = {
 }
 ```
 
-Then add a [Doubling-Trick](Policies/DoublingTrickWrapper.py) bandit algorithm ([`DoublingTrickWrapper` class](Policies/DoublingTrickWrapper.py)), you can use this piece of code:
+Then add a [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) bandit algorithm (SMPyBandits/[`DoublingTrickWrapper` class](Policies/DoublingTrickWrapper.py)), you can use this piece of code:
 
 ```python
 configuration["policies"] += [
@@ -87,52 +87,52 @@ make comparing_doubling_algorithms   # run and log the main.py script
 ----
 
 ## Some illustrations
-Here are some plots illustrating the performances of the different [policies](Policies/) implemented in this project, against various problems (with [`Bernoulli`](Arms/Bernoulli.py) and [`UnboundedGaussian`](Arms/Gaussian.py) arms only):
+Here are some plots illustrating the performances of the different [policies](SMPyBandits/Policies/) implemented in this project, against various problems (with [`Bernoulli`](Arms/Bernoulli.py) and [`UnboundedGaussian`](SMPyBandits/Arms/Gaussian.py) arms only):
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with restart, on a "simple" Bernoulli problem
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with restart, on a "simple" Bernoulli problem
 ![Doubling-Trick with restart, on a "simple" Bernoulli problem](plots/main____env1-1_1217677871459230631.png)
 
-Regret for [Doubling-Trick](Policies/DoublingTrickWrapper.py), for K=9 [Bernoulli arms](Arms/Bernoulli.py), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [0,1]^K.
+Regret for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py), for K=9 [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [0,1]^K.
 Geometric doubling (b=2) and slow exponential doubling (b=1.1) are too slow, and short first sequences make the regret blow up in the beginning of the experiment.
-At t=40000 we see clearly the effect of a new sequence for the best [doubling trick](Policies/DoublingTrickWrapper.py) (T_i = 200 x 2^i).
-As expected, [kl-UCB++](Policies/klUCBPlusPlus.py) outperforms [kl-UCB](Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](Policies/DoublingTrickWrapper.py)([kl-UCB++](Policies/klUCBPlusPlus.py)) can perform as well as [kl-UCB++](Policies/klUCBPlusPlus.py) (see for t < 40000).
+At t=40000 we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (T_i = 200 x 2^i).
+As expected, [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) outperforms [kl-UCB](SMPyBandits/Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py)(SMPyBandits/[kl-UCB++](Policies/klUCBPlusPlus.py)) can perform as well as [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) (see for t < 40000).
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with restart, on randomly taken Bernoulli problems
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with restart, on randomly taken Bernoulli problems
 ![Doubling-Trick with restart, on randomly taken Bernoulli problems](plots/main____env1-1_3633169128724378553.png)
 
 Similarly but for µ1,…,µK evenly spaced in [0,1]^K ({0.1,…,0.9}).
-Both [kl-UCB](Policies/klUCB.py) and [kl-UCB++](Policies/klUCBPlusPlus.py) are very efficient on "easy" problems like this one, and we can check visually that they match the lower bound from Lai & Robbins (1985).
+Both [kl-UCB](SMPyBandits/Policies/klUCB.py) and [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) are very efficient on "easy" problems like this one, and we can check visually that they match the lower bound from Lai & Robbins (1985).
 As before we check that slow doubling are too slow to give reasonable performance.
 
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with restart, on randomly taken Gaussian problems with variance V=1
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with restart, on randomly taken Gaussian problems with variance V=1
 ![Doubling-Trick with restart, on randomly taken Gaussian problems with variance V=1](plots/main____env1-1_2223860464453456415.png)
 
-Regret for K=9 [Gaussian arms](Arms/Gaussian.py) N(mu, 1), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [-5,5]^K and variance V=1.
-On "hard" problems like this one, both [UCB](Policies/UCB.py) and [AFHG](Policies/ApproximatedFHGittins.py) perform similarly and poorly w.r.t. to the lower bound from Lai & Robbins (1985).
-As before we check that geometric doubling (b=2) and slow exponential doubling (b=1.1) are too slow, but a fast enough doubling sequence does give reasonable performance for the anytime [AFHG](Policies/ApproximatedFHGittins.py) obtained by [Doubling-Trick](Policies/DoublingTrickWrapper.py).
+Regret for K=9 [Gaussian arms](SMPyBandits/Arms/Gaussian.py) N(mu, 1), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [-5,5]^K and variance V=1.
+On "hard" problems like this one, both [UCB](SMPyBandits/Policies/UCB.py) and [AFHG](SMPyBandits/Policies/ApproximatedFHGittins.py) perform similarly and poorly w.r.t. to the lower bound from Lai & Robbins (1985).
+As before we check that geometric doubling (b=2) and slow exponential doubling (b=1.1) are too slow, but a fast enough doubling sequence does give reasonable performance for the anytime [AFHG](SMPyBandits/Policies/ApproximatedFHGittins.py) obtained by [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py).
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with restart, on an easy Gaussian problems with variance V=1
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with restart, on an easy Gaussian problems with variance V=1
 ![Doubling-Trick with restart, on an easy Gaussian problems with variance V=1](plots/main____env1-1_6979515539977716717.png)
 
-Regret for [Doubling-Trick](Policies/DoublingTrickWrapper.py), for K=9 [Gaussian arms](Arms/Gaussian.py) N(mu, 1), horizon T=45678, n=1000 repetitions and µ1,…,µK uniformly spaced in [-5,5]^K.
-On "easy" problems like this one, both [UCB](Policies/UCB.py) and [AFHG](Policies/ApproximatedFHGittins.py) perform similarly and attain near constant regret (identifying the best [Gaussian arm](Arms/Gaussian.py) is very easy here as they are sufficiently distinct).
-Each [doubling trick](Policies/DoublingTrickWrapper.py) also appear to attain near constant regret, but geometric doubling (b=2) and slow exponential doubling (b=1.1) are slower to converge and thus less efficient.
+Regret for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py), for K=9 [Gaussian arms](SMPyBandits/Arms/Gaussian.py) N(mu, 1), horizon T=45678, n=1000 repetitions and µ1,…,µK uniformly spaced in [-5,5]^K.
+On "easy" problems like this one, both [UCB](SMPyBandits/Policies/UCB.py) and [AFHG](SMPyBandits/Policies/ApproximatedFHGittins.py) perform similarly and attain near constant regret (SMPyBandits/identifying the best [Gaussian arm](Arms/Gaussian.py) is very easy here as they are sufficiently distinct).
+Each [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) also appear to attain near constant regret, but geometric doubling (b=2) and slow exponential doubling (b=1.1) are slower to converge and thus less efficient.
 
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with no restart, on randomly taken Bernoulli problems
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with no restart, on randomly taken Bernoulli problems
 ![Doubling-Trick with no restart, on randomly taken Bernoulli problems](plots/main____env1-1_5964629015089571121.png)
 
-Regret for K=9 [Bernoulli arms](Arms/Bernoulli.py), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [0,1]^K, for [Doubling-Trick](Policies/DoublingTrickWrapper.py) no-restart.
+Regret for K=9 [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py), horizon T=45678, n=1000 repetitions and µ1,…,µK taken uniformly in [0,1]^K, for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart.
 Geometric doubling (\eg, b=2) and slow exponential doubling (\eg, b=1.1) are too slow, and short first sequences make the regret blow up in the beginning of the experiment.
-At t=40000 we see clearly the effect of a new sequence for the best [doubling trick](Policies/DoublingTrickWrapper.py) (T_i = 200 x 2^i).
-As expected, [kl-UCB++](Policies/klUCBPlusPlus.py) outperforms [kl-UCB](Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](Policies/DoublingTrickWrapper.py) no-restart for [kl-UCB++](Policies/klUCBPlusPlus.py) can perform as well as [kl-UCB++](Policies/klUCBPlusPlus.py).
+At t=40000 we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (T_i = 200 x 2^i).
+As expected, [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) outperforms [kl-UCB](SMPyBandits/Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart for [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) can perform as well as [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py).
 
-### [Doubling-Trick](Policies/DoublingTrickWrapper.py) with no restart, on an "simple" Bernoulli problems
+### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with no restart, on an "simple" Bernoulli problems
 ![Doubling-Trick with no restart, on an "simple" Bernoulli problems](plots/main____env1-1_5972568793654673752.png)
 
-K=9 [Bernoulli arms](Arms/Bernoulli.py) with µ1,…,µK evenly spaced in [0,1]^K.
-On easy problems like this one, both [kl-UCB](Policies/klUCB.py) and [kl-UCB++](Policies/klUCBPlusPlus.py) are very efficient, and here the geometric allows the [Doubling-Trick](Policies/DoublingTrickWrapper.py) no-restart anytime version of [kl-UCB++](Policies/klUCBPlusPlus.py) to outperform both [kl-UCB](Policies/klUCB.py) and [kl-UCB++](Policies/klUCBPlusPlus.py).
+K=9 [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py) with µ1,…,µK evenly spaced in [0,1]^K.
+On easy problems like this one, both [kl-UCB](SMPyBandits/Policies/klUCB.py) and [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) are very efficient, and here the geometric allows the [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart anytime version of [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) to outperform both [kl-UCB](SMPyBandits/Policies/klUCB.py) and [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py).
 
 
 > These illustrations come from my article, [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.

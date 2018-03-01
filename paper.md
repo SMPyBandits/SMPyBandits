@@ -47,7 +47,7 @@ For Cognitive Radio applications, a well-studied extension is to consider $M\geq
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 
-*SMPyBandits* implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.py) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.py) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.py) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.py) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.py)) from [@BessonALT2018].
+*SMPyBandits* implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html)) from [@BessonALT2018].
 
 ---
 
@@ -88,7 +88,7 @@ N=1000 T=10000 K=9 N_JOBS=4 make single
 ### Example of simulation and illustration
 
 A small script [`configuration.py`](https://smpybandits.github.io/docs/configuration.html) is used to import the [arm classes](https://smpybandits.github.io/docs/Arms.html), the [policy classes](https://smpybandits.github.io/docs/Policies.html) and define the problems and the experiments.
-For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.py) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.py) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.py) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.py) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
+For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.html) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
 See below in Figure \ref{fig:plot1} for the result showing the average regret [^regret] for these $4$ algorithms.
 
 [^regret]:  The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits) and the cumulated rewards of the considered algorithms.
