@@ -14,7 +14,7 @@ EMOJIZE=emojize.py
 
 BUILDDIR=_build/html
 
-for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html; do
+for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html "$BUILDDIR"/*/*/*.html "$BUILDDIR"/*/*/*/*.html; do
     # 1. fix links from .md to .html
     # 2. OPTIONAL remove :emojis: in HTML output (from GFM Markdown), see https://stackoverflow.com/questions/42087466/sphinx-extension-to-use-github-markdown-emoji-in-sphinx#comment73617151_42256239
     #    uncomment the two s/':[a-z0-9_-]+: '/''/g and s/' :[a-z0-9_-]+:'/''/g lines below
@@ -49,9 +49,54 @@ for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html; do
         -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
         -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
         "$i" > "$i".new
+    # # read  # DEBUG
+    # sed -r \
+    #     -e s_'href="SMPyBandits/([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     "$i".new > "$i".new2
+    # # read  # DEBUG
+    # sed -r \
+    #     -e s_'href="SMPyBandits/([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     "$i".new2 > "$i".new
+    # # read  # DEBUG
+    # sed -r \
+    #     -e s_'href="SMPyBandits/([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     "$i".new > "$i".new2
+    # # read  # DEBUG
+    # sed -r \
+    #     -e s_'href="SMPyBandits/([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="([^"/]*)\.py"'_'href="docs/\1.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.html"'_g \
+    #     -e s_'href="SMPyBandits/([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     -e s_'href="([^"/]*)/([^"/]*)/([^"/]*)/([^"/]*)\.py"'_'href="docs/\1.\2.\3.\4.html"'_g \
+    #     "$i".new2 > "$i".new
     echo -e "${blue}Modification done${white}, here is the difference (old, new)"
     wdiff -3 "$i" "$i".new
     # read  # DEBUG
+    mv -vf "$i".new "$i"
 
     # 3. convert :emojis: to UTF-8 in HTML output (from GFM Markdown), see https://stackoverflow.com/questions/42087466/sphinx-extension-to-use-github-markdown-emoji-in-sphinx#comment73617151_42256239
     if type $EMOJIZE &>/dev/null ; then
@@ -60,6 +105,7 @@ for i in "$BUILDDIR"/*.html "$BUILDDIR"/*/*.html; do
     wdiff -3 "$i" "$i".new
     # read  # DEBUG
     mv -vf "$i".new "$i"
+    rm -vf "$i".new2
 done
 
 # End of newscript.sh

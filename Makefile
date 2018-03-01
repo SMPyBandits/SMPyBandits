@@ -244,7 +244,9 @@ clean-doc:
 	mkdir --parents $(BUILDDIR)/html
 	-rm -rfv /tmp/sphinx_html
 	mv -vf $(BUILDDIR)/html /tmp/sphinx_html
-	mv -vf /tmp/sphinx_html/.git/ $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/.git $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/.gitignore $(BUILDDIR)/html/
+	mv -vf /tmp/sphinx_html/logo_large.png $(BUILDDIR)/html/
 	mv -vf /tmp/sphinx_html/LICENSE $(BUILDDIR)/html/
 	mv -vf /tmp/sphinx_html/README.md $(BUILDDIR)/html/
 	mkdir --parents $(BUILDDIR)/html/
@@ -274,6 +276,8 @@ html:
 	$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# \cp notebooks/*.html "$(BUILDDIR)"/html/notebooks/  # no need thanks to http://nbsphinx.readthedocs.io/
+	-cp -vf ./logo_large.png $(BUILDDIR)/html/
+	-rm -vf $(BUILDDIR)/html/SMPyBandits $(BUILDDIR)/html/_sources/SMPyBandits
 	-./notebooks/symlinks.sh
 	-./.fixes_html_in_doc.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
