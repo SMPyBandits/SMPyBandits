@@ -121,7 +121,8 @@ TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test m
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
-CACHE_REWARDS = False  # XXX to disable manually this feature
+CACHE_REWARDS = True  # XXX to manually enable this feature?
+CACHE_REWARDS = False  # XXX to manually disable this feature?
 
 #: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -146,9 +147,9 @@ NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
 #: Default value for the lower value of means
-lower = 0.
+LOWER = 0.
 #: Default value for the amplitude value of means
-amplitude = 1.
+AMPLITUDE = 1.
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
@@ -158,15 +159,26 @@ mapping_ARM_TYPE = {
     "Uniform": UniformArm,
     "Bernoulli": Bernoulli, "B": Bernoulli,
     "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
     "UnboundedGaussian": UnboundedGaussian,
     "Poisson": Poisson, "P": Poisson,
     "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
     "Gamma": GammaFromMean,
 }
-if ARM_TYPE == "UnboundedGaussian":
-    lower = -5
-    amplitude = 10
 
+# WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values...
+if ARM_TYPE in [
+            "UnboundedGaussian",
+            # "Gaussian",
+        ]:
+    LOWER = -5
+    AMPLITUDE = 10
+
+LOWER = float(getenv('LOWER', LOWER))
+AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
+assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
+
+ARM_TYPE_str = str(ARM_TYPE)
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 #: True to use bayesian problem
@@ -225,7 +237,7 @@ configuration = {
         # XXX Default!
         {   # A very easy problem (X arms), but it is used in a lot of articles
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude)
+            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
         },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
@@ -269,11 +281,11 @@ configuration = {
     # "environment": [  # XXX Gaussian arms
     #     {   # An example problem with 3 arms
     #         "arm_type": Gaussian,
-    #         "params": [(0.2, VARIANCE), (0.5, VARIANCE), (0.8, VARIANCE)]
+    #         "params": [(0.2, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.5, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.8, VARIANCE, LOWER, LOWER+AMPLITUDE)]
     #     },
     #     # {   # An example problem with 9 arms
     #     #     "arm_type": Gaussian,
-    #     #     "params": [(0.1, VARIANCE), (0.2, VARIANCE), (0.3, VARIANCE), (0.4, VARIANCE), (0.5, VARIANCE), (0.6, VARIANCE), (0.7, VARIANCE), (0.8, VARIANCE), (0.9, VARIANCE)]
+    #     #     "params": [(0.1, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.2, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.3, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.4, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.5, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.6, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.7, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.8, VARIANCE, LOWER, LOWER+AMPLITUDE), (0.9, VARIANCE, LOWER, LOWER+AMPLITUDE)]
     #     # },
     # ],
     # "environment": [  # XXX Unbounded Gaussian arms
@@ -296,8 +308,8 @@ if ENVIRONMENT_BAYESIAN:
                     # "mingap": 0.0000001,
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": lower,
-                    "amplitude": amplitude,
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
                     "isSorted": True,
                 }
             }
@@ -903,38 +915,102 @@ configuration.update({
 
 
 # Tiny configuration, for testing the WrapRange policy.
+if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
+    configuration.update({
+        "environment": [ {
+                "arm_type": ARM_TYPE,
+                "params": [
+                    (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
+                    for mu in
+                    uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+                ],
+                # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
+        }, ],
+    })
+else:
+    configuration.update({
+        "environment": [ {
+                "arm_type": ARM_TYPE,
+                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+            }, ],
+    })
+
 configuration.update({
-    "environment": [
-        {   # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
-            "arm_type": ARM_TYPE,
-            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=lower, amplitude=amplitude),
-            "change_lower_amplitude": True
-        },
-    ],
     # Policies that should be simulated, and their parameters.
     "policies": [
-        {"archtype": UCB, "params": {} },
-        {"archtype": WrapRange, "params": {
+        # --- UCB
+        {"archtype": UCB, "append_label": " on $[0,1]$",
+            "params": {
+                "lower": 0.0,
+                "amplitude": 1.0,
+            }
+        },
+        {"archtype": WrapRange,
+            "params": {
                 "policy": UCB
             }
         },
+        # Reference policy knowing the range
+        {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            "params": {
+                "lower": LOWER,
+                "amplitude": AMPLITUDE,
+            }
+        },
+        # --- Thompson
         # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
-        # {"archtype": Thompson, "params": {} },
-        {"archtype": WrapRange, "params": {
+        {"archtype": Thompson, "append_label": " on $[0,1]$",
+            "params": {
+                "lower": 0.0,
+                "amplitude": 1.0,
+            }
+        },
+        {"archtype": WrapRange,
+            "params": {
                 "policy": Thompson
             }
         },
-        {"archtype": klUCB, "params": {} },
-        {"archtype": WrapRange, "params": {
+        # Reference policy knowing the range
+        {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            "params": {
+                "lower": LOWER,
+                "amplitude": AMPLITUDE,
+            }
+        },
+        # --- klUCB
+        {"archtype": klUCB, "append_label": " on $[0,1]$",
+            "params": {
+                "lower": 0.0,
+                "amplitude": 1.0,
+            }
+        },
+        {"archtype": WrapRange,
+            "params": {
                 "policy": klUCB
             }
         },
         # Reference policy knowing the range
-        {"archtype": klUCB, "params": {
-            "lower": -1,
-            "amplitude": 2,
-        } },
+        {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            "params": {
+                "lower": LOWER,
+                "amplitude": AMPLITUDE,
+            }
+        },
     ]
+})
+
+# XXX Huge hack! Use this if you want to modify the legends
+configuration.update({
+    "append_labels": {
+        policyId: cfgpolicy.get("append_label", "")
+        for policyId, cfgpolicy in enumerate(configuration["policies"])
+        if "append_label" in cfgpolicy
+    },
+    "change_labels": {
+        policyId: cfgpolicy.get("change_label", "")
+        for policyId, cfgpolicy in enumerate(configuration["policies"])
+        if "change_label" in cfgpolicy
+    }
 })
 
 # Dynamic hack

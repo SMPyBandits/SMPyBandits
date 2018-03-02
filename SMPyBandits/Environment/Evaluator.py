@@ -83,6 +83,8 @@ class Evaluator(object):
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.cache_rewards = self.cfg.get('cache_rewards', False)  #: Should we cache and precompute rewards
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
+        self.change_labels = self.cfg.get('change_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (overwrite their name).
+        self.append_labels = self.cfg.get('append_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (by appending the result from 'append_labels').
 
         # Internal object memory
         self.envs = []  #: List of environments
@@ -146,6 +148,14 @@ class Evaluator(object):
             else:
                 print("  Using this already created policy 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
                 self.policies.append(policy)
+        for policyId in range(len(self.policies)):
+            self.policies[policyId].__cachestr__ = str(self.policies[policyId])
+            # FIXME experimental
+            if policyId in self.append_labels:
+                self.policies[policyId].__cachestr__ += self.append_labels[policyId]
+            if policyId in self.change_labels:
+                self.policies[policyId].__cachestr__ = self.append_labels[policyId]
+
 
     # --- Start computation
 
@@ -402,12 +412,12 @@ class Evaluator(object):
                 if normalizedRegret:
                     Y /= np.log(2 + X)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
-            lw = 4 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy) or 'LearnExp' in str(policy) or 'Exp4' in str(policy)) else 2
+            lw = 4 if ('$N=' in policy.__cachestr__ or 'Aggr' in policy.__cachestr__ or 'CORRAL' in policy.__cachestr__ or 'LearnExp' in policy.__cachestr__ or 'Exp4' in policy.__cachestr__) else 2
             if semilogx or loglog:
                 # FIXED for semilogx plots, truncate to only show t >= 100
-                plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=policy.__cachestr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
-                plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachestr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             if semilogx or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                 plt.xscale('log')
             if semilogy or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
@@ -481,8 +491,8 @@ class Evaluator(object):
         X = self._times[2:]
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
-            lw = 4 if ('$N=' in str(policy) or 'Aggr' in str(policy) or 'CORRAL' in str(policy) or 'LearnExp' in str(policy) or 'Exp4' in str(policy)) else 2
-            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(policy), color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+            lw = 4 if ('$N=' in policy.__cachestr__ or 'Aggr' in policy.__cachestr__ or 'CORRAL' in policy.__cachestr__ or 'LearnExp' in policy.__cachestr__ or 'Exp4' in policy.__cachestr__) else 2
+            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachestr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
@@ -508,7 +518,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(lastY)
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(str(policy), i + 1, nbPolicies, lastY[k]))
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(policy.__cachestr__, i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
 
     def printLastRegrets(self, envId=0, moreAccurate=None):
@@ -537,7 +547,7 @@ class Evaluator(object):
             figs = []
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
-                plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(str(policy), self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+                plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(policy.__cachestr__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 n, bins, patches = plt.hist(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate), normed=normed, color=colors[policyId], bins=nbbins)
@@ -564,7 +574,7 @@ class Evaluator(object):
                 n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=nbbins, log=log)
                 addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
-                ax.set_title(str(policy), fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
+                ax.set_title(policy.__cachestr__, fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
@@ -575,7 +585,7 @@ class Evaluator(object):
             labels = []
             for policyId, policy in enumerate(self.policies):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
-                labels.append(str(policy))
+                labels.append(policy.__cachestr__)
             ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
