@@ -87,7 +87,7 @@ class WrapRange(BasePolicy):
         2. Else if :math:`r > l_{t-1} + a_{t-1}`, let :math:`a_t = r - l_{t-1}` and :math:`R_t := R_t \times \frac{a_{t-1}}{a-t}`,
         3. Otherwise, nothing to do, the current reward is still correctly in :math:`[l_{t-1}, l_{t-1} + a_{t-1}]`, so simply keep :math:`l_t = l_{t-1}` and :math:`a_t = a_{t-1}`.
         """
-        print(" - At time t = {}, got a reward = {:.3g} from arm {} ...".format(self.t, reward, arm))  # DEBUG
+        # print(" - At time t = {}, got a reward = {:.3g} from arm {} ...".format(self.t, reward, arm))  # DEBUG
         self.t += 1
 
         # check if the reward is still in [lower, lower + amplitude]

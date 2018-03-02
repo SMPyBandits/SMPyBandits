@@ -177,6 +177,7 @@ if ARM_TYPE in [
 LOWER = float(getenv('LOWER', LOWER))
 AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
 assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
+VARIANCE = float(getenv('VARIANCE', VARIANCE))
 
 ARM_TYPE_str = str(ARM_TYPE)
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
@@ -958,13 +959,13 @@ configuration.update({
             }
         },
         # --- Thompson
-        # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
-        {"archtype": Thompson, "append_label": " on $[0,1]$",
-            "params": {
-                "lower": 0.0,
-                "amplitude": 1.0,
-            }
-        },
+        # # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
+        # {"archtype": Thompson, "append_label": " on $[0,1]$",
+        #     "params": {
+        #         "lower": 0.0,
+        #         "amplitude": 1.0,
+        #     }
+        # },
         {"archtype": WrapRange,
             "params": {
                 "policy": Thompson
@@ -997,20 +998,6 @@ configuration.update({
             }
         },
     ]
-})
-
-# XXX Huge hack! Use this if you want to modify the legends
-configuration.update({
-    "append_labels": {
-        policyId: cfgpolicy.get("append_label", "")
-        for policyId, cfgpolicy in enumerate(configuration["policies"])
-        if "append_label" in cfgpolicy
-    },
-    "change_labels": {
-        policyId: cfgpolicy.get("change_label", "")
-        for policyId, cfgpolicy in enumerate(configuration["policies"])
-        if "change_label" in cfgpolicy
-    }
 })
 
 # Dynamic hack
@@ -1278,6 +1265,21 @@ if TEST_Aggregator:
 # configuration.update({
 #     "policies": Scenario1(NB_PLAYERS, nbArms).children
 # })
+
+
+# XXX Huge hack! Use this if you want to modify the legends
+configuration.update({
+    "append_labels": {
+        policyId: cfgpolicy.get("append_label", "")
+        for policyId, cfgpolicy in enumerate(configuration["policies"])
+        if "append_label" in cfgpolicy
+    },
+    "change_labels": {
+        policyId: cfgpolicy.get("change_label", "")
+        for policyId, cfgpolicy in enumerate(configuration["policies"])
+        if "change_label" in cfgpolicy
+    }
+})
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

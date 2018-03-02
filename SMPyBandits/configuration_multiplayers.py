@@ -131,9 +131,9 @@ NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
 #: Default value for the lower value of means
-lower = 0.
+LOWER = 0.
 #: Default value for the amplitude value of means
-amplitude = 1.
+AMPLITUDE = 1.
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
@@ -147,10 +147,15 @@ mapping_ARM_TYPE = {
     "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
     "Gamma": GammaFromMean,
 }
-if ARM_TYPE == "UnboundedGaussian":
-    lower = -5
-    amplitude = 10
+if ARM_TYPE in ["UnboundedGaussian"]:
+    LOWER = -5
+    AMPLITUDE = 10
 
+LOWER = float(getenv('LOWER', LOWER))
+AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
+assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
+
+ARM_TYPE_str = str(ARM_TYPE)
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
 #: True to use bayesian problem
@@ -328,8 +333,8 @@ if ENVIRONMENT_BAYESIAN:
                     # "mingap": 0.0000001,
                     # "mingap": 0.1,
                     "mingap": 1. / (3 * NB_ARMS),
-                    "lower": lower,
-                    "amplitude": amplitude,
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
                     "isSorted": True,
                 }
             }
@@ -663,7 +668,6 @@ configuration["successive_players"] = [
     # MCTopM(NB_PLAYERS, nbArms, Thompson).children,
 ]
 
-
 # XXX Comparing different rhoRand approaches
 # configuration["successive_players"] = [
 #     rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,  # This one is efficient!
@@ -803,6 +807,21 @@ configuration.update({
     # "players": rhoRandSticky(NB_PLAYERS, nbArms, BayesUCB, stickyTime=10).children
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
+
+
+# XXX Huge hack! Use this if you want to modify the legends
+configuration.update({
+    "append_labels": {
+        playerId: cfgplayer.get("append_label", "")
+        for playerId, cfgplayer in enumerate(configuration["successive_players"])
+        if "append_label" in cfgplayer
+    },
+    "change_labels": {
+        playerId: cfgplayer.get("change_label", "")
+        for playerId, cfgplayer in enumerate(configuration["successive_players"])
+        if "change_label" in cfgpolicy
+    }
+})
 
 
 # DONE

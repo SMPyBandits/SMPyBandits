@@ -74,6 +74,10 @@ class EvaluatorMultiPlayers(object):
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         self.count_ranks_markov_chain = self.cfg.get('count_ranks_markov_chain', COUNT_RANKS_MARKOV_CHAIN)#: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
+
+        self.change_labels = self.cfg.get('change_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (overwrite their name).
+        self.append_labels = self.cfg.get('append_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (by appending the result from 'append_labels').
+
         # Internal object memory
         self.envs = []  #: List of environments
         self.players = []  #: List of policies
@@ -90,6 +94,7 @@ class EvaluatorMultiPlayers(object):
         self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.freeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
         self.lastCumRewards = dict()  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
+
         print("Number of environments to try:", len(self.envs))  # DEBUG
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):  # Zeros everywhere
@@ -139,6 +144,12 @@ class EvaluatorMultiPlayers(object):
             else:  # Or already a player object
                 print("  Using this already created player 'player' = {} ...".format(player))  # DEBUG
                 self.players.append(player)
+        for playerId in range(len(self.players)):
+            self.players[playerId].__cachedstr__ = str(self.players[playerId])
+            if playerId in self.append_labels:
+                self.players[playerId].__cachedstr__ += self.append_labels[playerId]
+            if playerId in self.change_labels:
+                self.players[playerId].__cachedstr__ = self.append_labels[playerId]
 
     # --- Start computation
 
@@ -359,7 +370,7 @@ class EvaluatorMultiPlayers(object):
         X = self._times - 1
         cumRewards = np.zeros((self.nbPlayers, self.horizon))
         for playerId, player in enumerate(self.players):
-            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(player.__cachedstr__))
             Y = self.getRewards(playerId, envId)
             cumRewards[playerId, :] = Y
             ymin = min(ymin, np.min(Y))  # XXX Should be smarter
@@ -507,7 +518,7 @@ class EvaluatorMultiPlayers(object):
         markers = makemarkers(self.nbPlayers)
         plot_method = plt.semilogx if semilogx else plt.plot
         for playerId, player in enumerate(self.players):
-            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(player.__cachedstr__))
             Y = self.getNbSwitchs(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
@@ -557,7 +568,7 @@ class EvaluatorMultiPlayers(object):
         colors = palette(self.nbPlayers)
         markers = makemarkers(self.nbPlayers)
         for playerId, player in enumerate(self.players):
-            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(str(player)))
+            label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(player.__cachedstr__))
             Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
         legend()
@@ -583,7 +594,7 @@ class EvaluatorMultiPlayers(object):
                     Y = np.cumsum(Y)
                 if normalized:
                     Y /= 1 + X
-                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=str(player), color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
+                plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=player.__cachedstr__, color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
             legend()
             plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
@@ -606,7 +617,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getfreeTransmissions(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
-            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=str(player), color=colors[playerId], markersize=1, lw=2)
+            plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=player.__cachedstr__, color=colors[playerId], markersize=1, lw=2)
             # should only plot with markers
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -718,7 +729,7 @@ class EvaluatorMultiPlayers(object):
         if verb:
             for i, k in enumerate(index_of_sorting):
                 player = self.players[k]
-                print("- Player #{:>2} / {}, {}\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, self.nbPlayers, _extract(str(player)), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
+                print("- Player #{:>2} / {}, {}\twas ranked\t{} / {} for this simulation (last rewards = {:.5g}).".format(k + 1, self.nbPlayers, _extract(player.__cachedstr__), i + 1, self.nbPlayers, lastY[k]))  # DEBUG
         return lastY, index_of_sorting
 
     def printFinalRankingAll(self, envId=0, evaluators=()):
@@ -816,7 +827,7 @@ class EvaluatorMultiPlayers(object):
 
     def strPlayers(self, short=False, latex=True):
         """Get a string of the players for this environment."""
-        listStrPlayers = [_extract(str(player)) for player in self.players]
+        listStrPlayers = [_extract(player.__cachedstr__) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
             if latex:
                 text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
