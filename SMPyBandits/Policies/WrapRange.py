@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 r""" A policy that acts as a wrapper on another policy `P`, which requires to know the range :math:`[a, b]` of the rewards, by implementing a "doubling trick" to adapt to an unknown range of rewards.
 
-It's an interesting variant of the "doubling trick", used to tackle another unknown aspect of sequential experiments: some algorithms need to use rewards in :math:`[0,1]`, and are easy to use if the rewards known to be in some interval :math:`[a, b]` (I did this from the very beginning here, with :math:`[lower, lower+amplitude]`).
+It's an interesting variant of the "doubling trick", used to tackle another unknown aspect of sequential experiments: some algorithms need to use rewards in :math:`[0,1]`, and are easy to use if the rewards known to be in some interval :math:`[a, b]` (I did this from the very beginning here, with ``[lower, lower+amplitude]``).
 But if the interval :math:`[a,b]` is unknown, what can we do?
 The "Doubling Trick", in this setting, refers to this algorithm:
 
@@ -87,8 +87,7 @@ class WrapRange(BasePolicy):
         2. Else if :math:`r > l_{t-1} + a_{t-1}`, let :math:`a_t = r - l_{t-1}` and :math:`R_t := R_t \times \frac{a_{t-1}}{a-t}`,
         3. Otherwise, nothing to do, the current reward is still correctly in :math:`[l_{t-1}, l_{t-1} + a_{t-1}]`, so simply keep :math:`l_t = l_{t-1}` and :math:`a_t = a_{t-1}`.
         """
-        # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
-        # super(WrapRange, self).getReward(arm, reward)
+        print(" - At time t = {}, got a reward = {:.3g} from arm {} ...".format(self.t, reward, arm))  # DEBUG
         self.t += 1
 
         # check if the reward is still in [lower, lower + amplitude]
@@ -101,7 +100,7 @@ class WrapRange(BasePolicy):
                 # Now we maybe have to rescale all the previous history!
                 # 1st case: At+1=At, so just a small linear shift is enough
                 # FIXME bring this back! but count it correctly for the regret
-                # self.rewards += (old_l - self.lower) / self.amplitude
+                self.rewards += (old_l - self.lower) / self.amplitude
             else:
                 print("Info: {} saw a reward {:.3g} above its higher value {:.3g}, now amplitude = {:.3g}... ({}th change)".format(self, reward, self.lower + self.amplitude, reward - self.lower, self._i))  # DEBUG
                 self.amplitude = self.policy.amplitude = reward - self.lower
@@ -109,7 +108,7 @@ class WrapRange(BasePolicy):
                 # 2nd case: Lt+1=Lt, so just a small multiplicative shift is enough
                 # the shift is < 1, OK
                 # FIXME bring this back! but count it correctly for the regret
-                # self.rewards *= old_a / self.amplitude
+                self.rewards *= old_a / self.amplitude
 
         self.policy.getReward(arm, reward)
 

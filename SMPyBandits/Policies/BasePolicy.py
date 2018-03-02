@@ -6,9 +6,13 @@
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 import numpy as np
+
+#: If True, every time a reward is received, a warning message is displayed if it lies outsides of ``[lower, lower + amplitude]``.
+CHECKBOUNDS = True
+CHECKBOUNDS = False
 
 
 class BasePolicy(object):
@@ -39,17 +43,29 @@ class BasePolicy(object):
         self.pulls.fill(0)
         self.rewards.fill(0)
 
-    # def getReward(self, arm, reward, checkBounds=False):  # XXX useless checkBounds feature
-    def getReward(self, arm, reward):
-        """ Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1])."""
-        self.t += 1
-        self.pulls[arm] += 1
-        # # XXX we could check here if the reward is outside the bounds
-        # if checkBounds:
-        #     if not 0 <= reward - self.lower <= self.amplitude:
-        #         print("[Warning] {} received on arm {} a reward = {} that is outside the interval [{}, {}] : the policy will probably fail to work correctly...".format(self, arm, reward, self.lower, self.lower + self.amplitude))
-        reward = (reward - self.lower) / self.amplitude
-        self.rewards[arm] += reward
+    if CHECKBOUNDS:
+        # XXX useless checkBounds feature
+        def getReward(self, arm, reward):
+            """ Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1])."""
+            self.t += 1
+            self.pulls[arm] += 1
+            # XXX we could check here if the reward is outside the bounds
+            if not 0 <= reward - self.lower <= self.amplitude:
+                print("Warning: {} received on arm {} a reward = {:.3g} that is outside the interval [{:.3g}, {:.3g}] : the policy will probably fail to work correctly...".format(self, arm, reward, self.lower, self.lower + self.amplitude))  # DEBUG
+            # else:
+            #     print("Info: {} received on arm {} a reward = {:.3g} that is inside the interval [{:.3g}, {:.3g}]".format(self, arm, reward, self.lower, self.lower + self.amplitude))  # DEBUG
+            reward = (reward - self.lower) / self.amplitude
+            self.rewards[arm] += reward
+    else:
+        # It's faster to define two methods and pick one
+        # (one test in init, that's it)
+        # rather than doing the test in the method
+        def getReward(self, arm, reward):
+            """ Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1])."""
+            self.t += 1
+            self.pulls[arm] += 1
+            reward = (reward - self.lower) / self.amplitude
+            self.rewards[arm] += reward
 
     # --- Basic choice() and handleCollision() method
 
