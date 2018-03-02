@@ -41,7 +41,7 @@ if __name__ != "__main__":
     from .Bernoulli import Bernoulli
     from .Binomial import Binomial
     from .Poisson import Poisson, UnboundedPoisson
-    from .Gaussian import Gaussian, UnboundedGaussian
+    from .Gaussian import Gaussian, Gaussian_0_1, Gaussian_0_2, Gaussian_0_5, Gaussian_0_10, Gaussian_0_100, Gaussian_m1_1, Gaussian_m2_2, Gaussian_m5_5, Gaussian_m10_10, Gaussian_m100_100, UnboundedGaussian
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
 

@@ -96,6 +96,66 @@ class Gaussian(Arm):
         return 1 - (mumax - mu) / self.max
 
 
+class Gaussian_0_1(Gaussian):
+    """ Gaussian distributed arm, truncated to [0, 1]."""
+    def __init__(self, mu, sigma=0.05, mini=0, maxi=1):
+        super(Gaussian_0_1, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_0_2(Gaussian):
+    """ Gaussian distributed arm, truncated to [0, 2]."""
+    def __init__(self, mu, sigma=0.1, mini=0, maxi=2):
+        super(Gaussian_0_2, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_0_5(Gaussian):
+    """ Gaussian distributed arm, truncated to [0, 5]."""
+    def __init__(self, mu, sigma=0.5, mini=0, maxi=5):
+        super(Gaussian_0_5, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_0_10(Gaussian):
+    """ Gaussian distributed arm, truncated to [0, 10]."""
+    def __init__(self, mu, sigma=1, mini=0, maxi=10):
+        super(Gaussian_0_10, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_0_100(Gaussian):
+    """ Gaussian distributed arm, truncated to [0, 100]."""
+    def __init__(self, mu, sigma=5, mini=0, maxi=100):
+        super(Gaussian_0_100, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_m1_1(Gaussian):
+    """ Gaussian distributed arm, truncated to [-1, 1]."""
+    def __init__(self, mu, sigma=0.1, mini=-1, maxi=1):
+        super(Gaussian_m1_1, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_m2_2(Gaussian):
+    """ Gaussian distributed arm, truncated to [-2, 2]."""
+    def __init__(self, mu, sigma=0.25, mini=-2, maxi=2):
+        super(Gaussian_m2_2, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_m5_5(Gaussian):
+    """ Gaussian distributed arm, truncated to [-5, 5]."""
+    def __init__(self, mu, sigma=1, mini=-5, maxi=5):
+        super(Gaussian_m5_5, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_m10_10(Gaussian):
+    """ Gaussian distributed arm, truncated to [-10, 10]."""
+    def __init__(self, mu, sigma=2, mini=-10, maxi=10):
+        super(Gaussian_m10_10, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
+class Gaussian_m100_100(Gaussian):
+    """ Gaussian distributed arm, truncated to [-100, 100]."""
+    def __init__(self, mu, sigma=10, mini=-100, maxi=100):
+        super(Gaussian_m100_100, self).__init__(mu, sigma=sigma, mini=mini, maxi=maxi)
+
+
 #: Default value for the variance of an unbounded Gaussian arm
 UNBOUNDED_VARIANCE = 1
 
@@ -109,6 +169,16 @@ class UnboundedGaussian(Gaussian):
 
     # def __str__(self):
     #     return "UnboundedGaussian"
+
+    # --- Random samples
+
+    def draw(self, t=None):
+        """ Draw one random sample. The parameter t is ignored in this Arm."""
+        return gauss(self.mu, self.sigma)
+
+    def draw_nparray(self, shape=(1,)):
+        """ Draw a numpy array of random samples, of a certain shape."""
+        return self.mu + self.sigma * standard_normal(shape)
 
     def __repr__(self):
         return "N({:.3g}, {:.3g})".format(self.mu, self.sigma)
@@ -134,5 +204,18 @@ def Phi(x):
     return (1. + erf(x / np.sqrt(2.))) / 2.
 
 
-# Only export and expose the class defined here
-__all__ = ["Gaussian", "UnboundedGaussian"]
+# Only export and expose the classes defined here
+__all__ = [
+    "Gaussian",
+    "Gaussian_0_1",
+    "Gaussian_0_2",
+    "Gaussian_0_5",
+    "Gaussian_0_10",
+    "Gaussian_0_100",
+    "Gaussian_m1_1",
+    "Gaussian_m2_2",
+    "Gaussian_m5_5",
+    "Gaussian_m10_10",
+    "Gaussian_m100_100",
+    "UnboundedGaussian"
+]
