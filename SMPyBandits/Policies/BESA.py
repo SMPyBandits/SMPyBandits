@@ -2,7 +2,7 @@
 """ The Best Empirical Sampled Average (BESA) algorithm.
 
 - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://hal.archives-ouvertes.fr/hal-01025651)
-- See also: https://github.com/SMPyBandits/SMPyBandits/issues/103
+- See also: https://github.com/SMPyBandits/SMPyBandits/issues/103 and https://github.com/SMPyBandits/SMPyBandits/issues/116
 
 .. warning:: This algorithm works VERY well but it is looks weird at first sight. It sounds "too easy", so take a look to the article before wondering why it should work.
 
@@ -25,6 +25,11 @@ def subsample_deterministic(n, m):
     r"""Returns :math:`\{1,\dots,n\}` if :math:`n < m` or :math:`\{1,\dots,m\}` if :math:`n \geq m` (*ie*, it is :math:`\{1,\dots,\min(n,m)\}`).
 
     .. warning:: The BESA algorithm is efficient only with the random sub-sampling, don't use this one except for comparing.
+
+    >>> subsample_deterministic(5, 3)  # doctest: +ELLIPSIS
+    array([0, 1, 2, 3])
+    >>> subsample_deterministic(10, 20)  # doctest: +ELLIPSIS
+    array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
     """
     return np.arange(min(n, m) + 1)
 
@@ -35,6 +40,12 @@ def subsample_uniform(n, m):
     - Fails if n > m.
 
     .. note:: The BESA algorithm is efficient only with the random sub-sampling.
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> subsample_uniform(3, 5)  # doctest: +ELLIPSIS
+    array([4, 0, 1])
+    >>> subsample_uniform(10, 20)  # doctest: +ELLIPSIS
+    array([ 7, 16,  2,  3,  1, 18,  5,  4,  0,  8])
     """
     return np.random.choice(m, size=n, replace=False)
 
@@ -47,7 +58,14 @@ TOLERANCE = 1e-6
 
 
 def inverse_permutation(permutation, j):
-    """ Inverse the permutation for given input j, that is, it finds i such that p[i] = j."""
+    """ Inverse the permutation for given input j, that is, it finds i such that p[i] = j.
+
+    >>> permutation = [1, 0, 3, 2]
+    >>> inverse_permutation(permutation, 1)
+    0
+    >>> inverse_permutation(permutation, 0)
+    1
+    """
     for i, pi in enumerate(permutation):
         if pi == j:
             return i
@@ -65,6 +83,16 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     - And in case of a tie, break by choosing i such that Ni is minimal (or random [a, b] if Na=Nb).
 
     .. note:: ``rewards`` can be a numpy array of shape (at least) ``(nbArms, max(Na, Nb))`` or a dictionary maping ``a,b`` to lists (or iterators) of lengths ``>= max(Na, Nb)``.
+
+    >>> np.random.seed(2345)  # reproducible results
+    >>> pulls = [6, 10]; K = len(pulls); N = max(pulls)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 1 is better
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 0 is better in the first 6 samples
+    >>> besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    0
+    >>> [besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [0, 0, 1, 1, 0, 0, 1, 0, 0, 0]
     """
     if a == b:
         print("Error: no need to call 'besa_two_actions' if a = = {} = b = {}...".format(a, b))  # DEBUG
@@ -108,6 +136,18 @@ def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_functi
     - The depth argument is just for pretty printing debugging information (useless).
 
     .. warning:: The binary tournament is NOT RANDOMIZED here, this version is only for testing.
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 0 is better
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+    >>> besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    3
+    >>> [besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [0, 3, 3, 0, 3, 0, 0, 0, 3, 1]
     """
     # assert left <= right, "Error: in 'besa_K_actions' function, left = {} was not <= right = {}...".format(left, right)  # DEBUG
     # print("In 'besa_K_actions', left = {} and right = {} for this call.".format(left, right))  # DEBUG
@@ -128,13 +168,25 @@ def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_functi
     return chosen_arm
 
 
-def besa_K_actions__smart_divideandconquer(rewards, pulls, left, right, random_permutation_of_arm, subsample_function=subsample_uniform, depth=0):
+def besa_K_actions__smart_divideandconquer(rewards, pulls, left, right, random_permutation_of_arm=None, subsample_function=subsample_uniform, depth=0):
     r""" BESA recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
 
     - I prefer to implement for a discrete action set :math:`\{\text{left}, \dots, \text{right}\}` (end *included*) instead of a generic ``actions`` vector, to speed up the code, but it is less readable.
     - The depth argument is just for pretty printing debugging information (useless).
 
     .. note:: The binary tournament is RANDOMIZED here, as it should be.
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 0 is better
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+    >>> besa_K_actions__smart_divideandconquer(rewards, pulls, 0, K-1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    3
+    >>> [besa_K_actions__smart_divideandconquer(rewards, pulls, 0, K-1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
     """
     # assert left <= right, "Error: in 'besa_K_actions__smart_divideandconquer' function, left = {} was not <= right = {}...".format(left, right)  # DEBUG
     # print("In 'besa_K_actions__smart_divideandconquer', left = {} and right = {} for this call.".format(left, right))  # DEBUG
@@ -170,6 +222,19 @@ def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform
     - The depth argument is just for pretty printing debugging information (useless).
 
     .. note:: The binary tournament is RANDOMIZED here, *as it should be*.
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+    >>> actions = np.arange(K)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 0 is better
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+    >>> besa_K_actions(rewards, pulls, actions, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    3
+    >>> [besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
     """
     # print("In 'besa_K_actions', actions = {} for this call.".format(actions))  # DEBUG
     if len(actions) <= 1:
@@ -189,6 +254,74 @@ def besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform
     return chosen_arm
 
 
+def besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsample_uniform, depth=0):
+    r""" BESA recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
+
+    - Instead of doing this binary tree tournaments (which results in :math:`\mathcal{O}(K^2)` calls to the 2-arm procedure), we can do a line tournaments: 1 vs 2, winner vs 3, winner vs 4 etc, winner vs K-1 (which results in :math:`\mathcal{O}(K)` calls),
+    - Actions is assumed to be shuffled *before* calling this function!
+    - The depth argument is just for pretty printing debugging information (useless).
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+    >>> actions = np.arange(K)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 0 is better
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+    >>> besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    3
+    >>> [besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [3, 3, 3, 2, 0, 3, 3, 3, 3, 3]
+    """
+    # print("In 'besa_K_actions__non_binary', actions = {} for this call.".format(actions))  # DEBUG
+    if len(actions) <= 1:
+        chosen_arm = actions[0]
+    elif len(actions) == 2:
+        chosen_arm = besa_two_actions(rewards, pulls, actions[0], actions[1], subsample_function=subsample_function)
+    else:
+        chosen_arm = actions[0]
+        for i in range(1, len(actions)):
+            chosen_arm = besa_two_actions(rewards, pulls, chosen_arm, actions[i], subsample_function=subsample_function)
+    # print("{}In 'besa_K_actions__non_binary', actions = {} gave chosen_arm = {}.".format("\t" * depth, actions, chosen_arm))  # DEBUG
+    return chosen_arm
+
+
+def besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_uniform):
+    r""" BESA non-recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
+
+    - No calls to :func:`besa_two_actions`, just generalize it to K actions instead of 2.
+    - Actions is assumed to be shuffled *before* calling this function!
+
+    >>> np.random.seed(1234)  # reproducible results
+    >>> pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+    >>> rewards = np.random.randn(K, N)
+    >>> np.mean(rewards, axis=1)  # arm 0 is better
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+    >>> besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    3
+    >>> [besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    [1, 3, 0, 2, 2, 3, 1, 1, 3, 1]
+    """
+    K = len(pulls)
+    min_pulls = np.min(pulls)
+    sub_means = np.zeros(K)
+    for k in range(K):
+        Ik = subsample_function(min_pulls, pulls[k])
+        # sub_means[k] = np.mean(rewards[k, Ik])
+        if isinstance(rewards, np.ndarray):  # faster to compute this
+            sub_means[k] = np.sum(rewards[k, Ik]) / min_pulls
+        else:  # than this for other data type (eg. dict mapping int to list)
+            sub_means[k] = sum(rewards[k][i] for i in Ik) / min_pulls
+    max_sub_means = np.max(sub_means)
+    which_are_best = np.nonzero(sub_means == max_sub_means)[0]
+    best_less_sampled = np.asarray(pulls)[which_are_best]
+    # return which_are_best[np.argmin(best_less_sampled)]
+    return which_are_best[np.random.choice(np.nonzero(best_less_sampled == np.min(best_less_sampled))[0])]
+
+
 # --- The BESA policy
 
 
@@ -202,6 +335,7 @@ class BESA(IndexPolicy):
 
     def __init__(self, nbArms, horizon=None,
                  minPullsOfEachArm=1, randomized_tournament=True, random_subsample=True,
+                 non_binary=False, non_recursive=False,
                  lower=0., amplitude=1.):
         super(BESA, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # --- Arguments
@@ -210,6 +344,9 @@ class BESA(IndexPolicy):
         self.minPullsOfEachArm = max(1, int(minPullsOfEachArm))  #: Minimum number of pulls of each arm before using the BESA algorithm. Using 1 might not be the best choice
         self.randomized_tournament = randomized_tournament  #: Whether to use a deterministic or random tournament.
         self.random_subsample = random_subsample  #: Whether to use a deterministic or random sub-sampling procedure.
+        self.non_binary = non_binary  #: Whether to use :func:`besa_K_actions` or :func:`besa_K_actions__non_binary` for the selection of K arms.
+        self.non_recursive = non_recursive  #: Whether to use :func:`besa_K_actions` or :func:`besa_K_actions__non_recursive` for the selection of K arms.
+        assert not (non_binary and non_recursive), "Error: BESA cannot use simultaneously non_binary and non_recursive option..."  # DEBUG
         self._subsample_function = subsample_uniform if random_subsample else subsample_deterministic
         # --- Internal memory
         assert nbArms >= 2, "Error: BESA algorithm can only work for at least 2 arms."
@@ -227,17 +364,21 @@ class BESA(IndexPolicy):
 
     def __str__(self):
         """ -> str"""
-        b1, b2, b3, b4 = not self.random_subsample, not self.randomized_tournament, self.minPullsOfEachArm > 1, not self._has_horizon
-        return "BESA{}{}{}{}{}{}{}{}{}".format(
-            "(" if (b1 or b2 or b3 or b4) else "",
+        b1, b2, b3, b4, b5, b6 = not self.random_subsample, not self.randomized_tournament, self.minPullsOfEachArm > 1, not self._has_horizon, self.non_binary, self.non_recursive
+        return "BESA{}{}{}{}{}{}{}{}{}{}{}{}{}".format(
+            "(" if (b1 or b2 or b3 or b4 or b5 or b6) else "",
             "non-random subsample" if b1 else "",
-            ", " if b1 and (b2 or b3 or b4) else "",
+            ", " if b1 and (b2 or b3 or b4 or b5 or b6) else "",
             "non-random tournament" if b2 else "",
-            ", " if b2 and (b3 or b4) else "",
+            ", " if b2 and (b3 or b4 or b5 or b6) else "",
             r"$T_0={}$".format(self.minPullsOfEachArm) if b3 else "",
-            ", " if b3 and b4 else "",
+            ", " if b3 and (b4 or b5 or b6) else "",
             "anytime" if b4 else "",
-            ")" if (b1 or b2 or b3 or b4) else "",
+            ", " if b4 and (b5 or b6) else "",
+            "non-binary" if b5 else "",
+            ", " if b5 and b6 else "",
+            "non-recursive" if b6 else "",
+            ")" if (b1 or b2 or b3 or b4 or b5 or b6) else "",
         )
 
     def getReward(self, arm, reward):
@@ -324,6 +465,8 @@ class BESA(IndexPolicy):
         choices = self.choiceMultiple(nb=rank)
         return choices[-1]
 
+    # XXX self.index is NOT used to choose arm, only to estimate their order
+
     def computeIndex(self, arm):
         """ Compute the current index of arm 'arm'.
 
@@ -345,3 +488,12 @@ class BESA(IndexPolicy):
     def handleCollision(self, arm, reward=None):
         """ Nothing special to do."""
         pass
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

@@ -111,13 +111,17 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
-#: To know if my Aggregator policy is tried.
+#: To know if my Aggregator policy is tested.
 TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
-#: To know if my Doubling Trick policy is tried.
+#: To know if my Doubling Trick policy is tested.
 TEST_Doubling_Trick = True
 TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
+
+#: To know if my WrapRange policy is tested.
+TEST_WrapRange = True
+TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -891,6 +895,24 @@ configuration.update({
                 # "randomized_tournament": False,  # XXX Very inefficient!
                 "random_subsample": True,
                 # "random_subsample": False,  # XXX Very inefficient!
+                "non_binary": False,
+                # "non_binary": True,
+                "non_recursive": False,
+                # "non_recursive": True,
+            }
+        },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "non_binary": True,
+            }
+        },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "non_recursive": True,
             }
         },
         # --- Auto-tuned UCBdagger algorithm
@@ -936,69 +958,70 @@ else:
             }, ],
     })
 
-configuration.update({
-    # Policies that should be simulated, and their parameters.
-    "policies": [
-        # --- UCB
-        {"archtype": UCB, "append_label": " on $[0,1]$",
-            "params": {
-                "lower": 0.0,
-                "amplitude": 1.0,
-            }
-        },
-        {"archtype": WrapRange,
-            "params": {
-                "policy": UCB
-            }
-        },
-        # Reference policy knowing the range
-        {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
-            "params": {
-                "lower": LOWER,
-                "amplitude": AMPLITUDE,
-            }
-        },
-        # --- Thompson
-        # # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
-        # {"archtype": Thompson, "append_label": " on $[0,1]$",
-        #     "params": {
-        #         "lower": 0.0,
-        #         "amplitude": 1.0,
-        #     }
-        # },
-        {"archtype": WrapRange,
-            "params": {
-                "policy": Thompson
-            }
-        },
-        # Reference policy knowing the range
-        {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
-            "params": {
-                "lower": LOWER,
-                "amplitude": AMPLITUDE,
-            }
-        },
-        # --- klUCB
-        {"archtype": klUCB, "append_label": " on $[0,1]$",
-            "params": {
-                "lower": 0.0,
-                "amplitude": 1.0,
-            }
-        },
-        {"archtype": WrapRange,
-            "params": {
-                "policy": klUCB
-            }
-        },
-        # Reference policy knowing the range
-        {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
-            "params": {
-                "lower": LOWER,
-                "amplitude": AMPLITUDE,
-            }
-        },
-    ]
-})
+if TEST_WrapRange:
+    configuration.update({
+        # Policies that should be simulated, and their parameters.
+        "policies": [
+            # --- UCB
+            {"archtype": UCB, "append_label": " on $[0,1]$",
+                "params": {
+                    "lower": 0.0,
+                    "amplitude": 1.0,
+                }
+            },
+            {"archtype": WrapRange,
+                "params": {
+                    "policy": UCB
+                }
+            },
+            # Reference policy knowing the range
+            {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+                "params": {
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                }
+            },
+            # --- Thompson
+            # # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
+            # {"archtype": Thompson, "append_label": " on $[0,1]$",
+            #     "params": {
+            #         "lower": 0.0,
+            #         "amplitude": 1.0,
+            #     }
+            # },
+            {"archtype": WrapRange,
+                "params": {
+                    "policy": Thompson
+                }
+            },
+            # Reference policy knowing the range
+            {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+                "params": {
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                }
+            },
+            # --- klUCB
+            {"archtype": klUCB, "append_label": " on $[0,1]$",
+                "params": {
+                    "lower": 0.0,
+                    "amplitude": 1.0,
+                }
+            },
+            {"archtype": WrapRange,
+                "params": {
+                    "policy": klUCB
+                }
+            },
+            # Reference policy knowing the range
+            {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+                "params": {
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                }
+            },
+        ]
+    })
 
 # Dynamic hack
 if TEST_Doubling_Trick:
