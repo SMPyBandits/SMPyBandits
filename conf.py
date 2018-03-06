@@ -45,7 +45,14 @@ if on_rtd:
         if os.path.exists(os.path.join('SMPyBandits', '__init__.py')):
             os.replace(os.path.join('SMPyBandits', '__init__.py'), os.path.join('SMPyBandits', '__init__.py.backup'))
         # --- Then simulate a cli call to sphinx-apidoc
-        from sphinx.ext import apidoc
+        try:
+            from sphinx.ext import apidoc
+        except ImportError:
+            try:
+                from sphinx import apidoc
+            except ImportError:
+                print("Error: impossible to import 'apidoc', from both 'sphinx.ext' and 'sphinx' ?")  # DEBUG
+                break
         os.chdir('SMPyBandits')
         argv = [
             "fake_call_to_sphinx-apidoc"
