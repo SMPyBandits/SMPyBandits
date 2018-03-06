@@ -21,6 +21,7 @@ from __future__ import division, print_function  # Python 2 compatibility
 
 import sys
 import os
+import sphinx
 # import shutil
 
 sys.path.insert(0, os.path.abspath('.'))
@@ -64,7 +65,7 @@ if on_rtd and has_apidoc:
         os.chdir("SMPyBandits")
         print("Content of '../docs' before calling apidoc:\n", os.listdir(os.path.join("..", "docs")))
         argv = [
-            # "fake_call_to_sphinx-apidoc",
+            "fake_call_to_sphinx-apidoc",
             # this first argument gets deleted on old versions of sphinx
             # but now it is not, see https://github.com/sphinx-doc/sphinx/blob/31fd657/sphinx/ext/apidoc.py#L385
             "-o", os.path.join("..", "docs"),
@@ -72,7 +73,12 @@ if on_rtd and has_apidoc:
             "-e",
             "-M", ".",
         ]
-        main_apidoc(argv=argv)
+        if sphinx.version_info[:2] < (1, 7):
+            print("Sphinx version < 1.7, using apidoc.main(argv) as a hack.")  # DEBUG
+            main_apidoc(argv=argv)
+        else:
+            print("Sphinx version >= 1.7, using apidoc.main(argv[1:]) as a hack.")  # DEBUG
+            main_apidoc(argv=argv[1:])
         os.chdir("..")
         # --- Restore files
         if os.path.exists(os.path.join('docs', 'modules.rst.backup')):
