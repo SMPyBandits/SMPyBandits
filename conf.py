@@ -47,31 +47,46 @@ if on_rtd:
             os.replace(os.path.join('SMPyBandits', '__init__.py'), os.path.join('SMPyBandits', '__init__.py.backup'))
         # --- Then simulate a cli call to sphinx-apidoc
         try:
-            from sphinx.ext import apidoc
+            from sphinx.ext.apidoc import main as main_apidoc
             has_apidoc = True
         except ImportError:
+            print("Failing to import 'apidoc' from 'sphinx.ext'...")  # DEBUG
             try:
-                from sphinx import apidoc
+                from sphinx.apidoc import main as main_apidoc
                 has_apidoc = True
             except ImportError:
+                print("Failing to import 'apidoc' from 'ext'...")  # DEBUG
                 print("Error: impossible to import 'apidoc', from both 'sphinx.ext' and 'sphinx' ?")  # DEBUG
 
 if on_rtd and has_apidoc:
-        os.chdir('SMPyBandits')
+    if not os.path.exists(os.path.join('docs', 'Arms.rst')):
+
+        os.chdir("SMPyBandits")
+        print("Content of '../docs' before calling apidoc:\n", os.listdir(os.path.join("..", "docs")))
         argv = [
-            "fake_call_to_sphinx-apidoc"
+            # "fake_call_to_sphinx-apidoc",
+            # this first argument gets deleted on old versions of sphinx
+            # but now it is not, see https://github.com/sphinx-doc/sphinx/blob/31fd657/sphinx/ext/apidoc.py#L385
+            "-o", os.path.join("..", "docs"),
             "-f",
-            "-o", "../docs",
             "-e",
             "-M", ".",
         ]
-        apidoc.main(argv[1:])
-        os.chdir('..')
+        main_apidoc(argv=argv)
+        os.chdir("..")
         # --- Restore files
         if os.path.exists(os.path.join('docs', 'modules.rst.backup')):
             os.replace(os.path.join('docs', 'modules.rst.backup'), os.path.join('docs', 'modules.rst'))
+        if os.path.exists(os.path.join('docs', 'modules.rst.backup')):
+            os.rename(os.path.join('docs', 'modules.rst.backup'), os.path.join('docs', 'modules.rst'))
+        assert not os.path.exists(os.path.join('docs', 'modules.rst.backup'))
         if os.path.exists(os.path.join('SMPyBandits', '__init__.py.backup')):
             os.replace(os.path.join('SMPyBandits', '__init__.py.backup'), os.path.join('SMPyBandits', '__init__.py'))
+        if os.path.exists(os.path.join('SMPyBandits', '__init__.py.backup')):
+            os.rename(os.path.join('SMPyBandits', '__init__.py.backup'), os.path.join('SMPyBandits', '__init__.py'))
+        assert not os.path.exists(os.path.join('SMPyBandits', '__init__.py.backup'))
+        # Check
+        print("Content of '../docs' after calling apidoc:\n", os.listdir("docs")[:10])
 
 
 # -- General configuration ------------------------------------------------

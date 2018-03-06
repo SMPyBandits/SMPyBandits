@@ -174,9 +174,8 @@ send_ws3:	clean
 
 # Cleaner
 clean:
-	-mv -vf *.pyc */*.pyc /tmp/
-	-rm -vfr __pycache__/ **/__pycache__/
-	-rm -vf *.pyc */*.pyc
+	-rm -vfr __pycache__/ */__pycache__/ */*/__pycache__/ */*/*/__pycache__/ */*/*/*/__pycache__/
+	-rm -vf *.pyc */*.pyc */*/*.pyc */*/*/*.pyc */*/*/*/*.pyc */*/*/*/*.pyc
 
 clean-build:
 	-rm -vfr /tmp/SMPyBandits_build/
@@ -276,11 +275,13 @@ apidoc:
 	-mv -fv /tmp/SMPyBandits/docs/modules.rst ./docs/modules.rst
 
 html:
-	[ -x $(SPHINXBUILD) ] && $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) || $(DEFAULTSPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	# XXX Adapt to using either my own sphinxbuild or the system-wide sphinxbuild script
+	if [[ -x $(SPHINXBUILD) ]]; then $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); else $(DEFAULTSPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); fi
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# \cp notebooks/*.html "$(BUILDDIR)"/html/notebooks/  # no need thanks to http://nbsphinx.readthedocs.io/
 	-cp -vf ./logo_large.png $(BUILDDIR)/html/
-	-rm -rvf $(BUILDDIR)/html/SMPyBandits/ $(BUILDDIR)/html/_sources/SMPyBandits/
+	-rm -rvf $(BUILDDIR)/html/SMPyBandits/ $(BUILDDIR)/html/_modules/SMPyBandits/
+	#-rm -rvf $(BUILDDIR)/html/_sources/SMPyBandits/
 	-./notebooks/symlinks.sh
 	-./.fixes_html_in_doc.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
