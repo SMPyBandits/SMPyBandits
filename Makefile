@@ -178,6 +178,11 @@ clean:
 	-rm -vfr __pycache__/ **/__pycache__/
 	-rm -vf *.pyc */*.pyc
 
+clean-build:
+	-rm -vfr /tmp/SMPyBandits_build/
+	-mkdir -p /tmp/SMPyBandits_build/
+	-mv -vf build dist SMPyBandits.egg-info /tmp/SMPyBandits_build/
+
 # Stats
 stats:
 	git-complete-stats.sh | tee complete-stats.txt
@@ -234,6 +239,7 @@ PYTHON        = python3
 SPHINXOPTS    =
 # WARNING My fork contains the generic indexes, my PR to Sphinx was never accepted
 # WARNING Use the system-wise 'sphinx-build' if you prefer
+DEFAULTSPHINXBUILD   = sphinx-build
 # SPHINXBUILD   = sphinx-build
 SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
 SPHINXPROJ    = SMPyBandits
@@ -270,7 +276,7 @@ apidoc:
 	-mv -fv /tmp/SMPyBandits/docs/modules.rst ./docs/modules.rst
 
 html:
-	$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	[ -x $(SPHINXBUILD) ] && $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) || $(DEFAULTSPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	# \cp notebooks/*.html "$(BUILDDIR)"/html/notebooks/  # no need thanks to http://nbsphinx.readthedocs.io/
 	-cp -vf ./logo_large.png $(BUILDDIR)/html/

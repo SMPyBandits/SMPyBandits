@@ -21,11 +21,46 @@ from __future__ import division, print_function  # Python 2 compatibility
 
 import sys
 import os
-sys.path.insert(0, os.path.abspath('.'))
+# import shutil
 
+sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('SMPyBandits'))
 
 print("Using python, version %s on %s." % (sys.version, sys.platform))
+
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+print("On readthedocs.org ?", on_rtd)  # DEBUG
+
+# -- Generate apidoc from Python code -------------------------------------
+
+if on_rtd:
+    if not os.path.isdir('docs'):
+        os.mkdir('docs')
+    if not os.path.exists(os.path.join('docs', 'Arms.rst')):
+        print("WARNING: the docs/*.rst files are not here, we will try to regenerate them.")
+        # --- Move files that bother sphinx-apidoc
+        if os.path.exists(os.path.join('docs', 'modules.rst')):
+            os.replace(os.path.join('docs', 'modules.rst'), os.path.join('docs', 'modules.rst.backup'))
+        if os.path.exists(os.path.join('SMPyBandits', '__init__.py')):
+            os.replace(os.path.join('SMPyBandits', '__init__.py'), os.path.join('SMPyBandits', '__init__.py.backup'))
+        # --- Then simulate a cli call to sphinx-apidoc
+        from sphinx.ext import apidoc
+        os.chdir('SMPyBandits')
+        argv = [
+            "fake_call_to_sphinx-apidoc"
+            "-f",
+            "-o", "../docs",
+            "-e",
+            "-M", ".",
+        ]
+        apidoc.main(argv[1:])
+        os.chdir('..')
+        # --- Restore files
+        if os.path.exists(os.path.join('docs', 'modules.rst.backup')):
+            os.replace(os.path.join('docs', 'modules.rst.backup'), os.path.join('docs', 'modules.rst'))
+        if os.path.exists(os.path.join('SMPyBandits', '__init__.py.backup')):
+            os.replace(os.path.join('SMPyBandits', '__init__.py.backup'), os.path.join('SMPyBandits', '__init__.py'))
 
 
 # -- General configuration ------------------------------------------------
@@ -122,9 +157,6 @@ autodoc_member_order = 'bysource'
 #
 # html_theme = 'alabaster'
 html_theme = 'sphinx_rtd_theme'
-
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
     # To install with 'pip install sphinx_rtd_theme'
