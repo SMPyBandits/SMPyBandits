@@ -34,6 +34,7 @@ print("On readthedocs.org ?", on_rtd)  # DEBUG
 
 # -- Generate apidoc from Python code -------------------------------------
 
+has_apidoc = False
 if on_rtd:
     if not os.path.isdir('docs'):
         os.mkdir('docs')
@@ -47,12 +48,15 @@ if on_rtd:
         # --- Then simulate a cli call to sphinx-apidoc
         try:
             from sphinx.ext import apidoc
+            has_apidoc = True
         except ImportError:
             try:
                 from sphinx import apidoc
+                has_apidoc = True
             except ImportError:
                 print("Error: impossible to import 'apidoc', from both 'sphinx.ext' and 'sphinx' ?")  # DEBUG
-                break
+
+if on_rtd and has_apidoc:
         os.chdir('SMPyBandits')
         argv = [
             "fake_call_to_sphinx-apidoc"
