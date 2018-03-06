@@ -122,6 +122,17 @@ N=100 T=10000 K=9 N_JOBS=4 make single
 N=100 T=10000 M=3 K=9 N_JOBS=4 make more
 ```
 
+You can also install it directly with [`pip`](https://pip.pypa.io/) and from GitHub:
+
+```bash
+cd /tmp/ ; mkdir SMPyBandits ; cd SMPyBandits/
+virtualenv venv
+. venv/bin/activate
+type pip  # check it is /tmp/SMPyBandits/venv/bin/pip
+type python  # check it is /tmp/SMPyBandits/venv/bin/python
+pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[full]
+```
+
 > - If speed matters to you and you want to use algorithms based on [kl-UCB](SMPyBandits/Policies/klUCB.py), you should take the time to build and install the fast C implementation of the utilities KL functions. Default is to use [kullback.py](SMPyBandits/Policies/kullback.py), but using [the C version from Policies/C/](Policies/C/) really speeds up the computations. Just follow the instructions, it should work well (you need `gcc` to be installed).
 > - And if speed matters, be sure that you have a working version of [Numba](https://numba.pydata.org/), it is used by many small functions to (try to automatically) speed up the computations.
 
