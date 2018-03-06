@@ -78,7 +78,7 @@ setup(name="SMPyBandits",
     ],
     extras_require={
         "full": [
-            "tdqm",
+            "tqdm",
             "numba",
             "docopt",
             "ipython",
