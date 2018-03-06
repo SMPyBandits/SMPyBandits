@@ -819,7 +819,7 @@ configuration.update({
     "change_labels": {
         playerId: cfgplayer.get("change_label", "")
         for playerId, cfgplayer in enumerate(configuration["successive_players"])
-        if "change_label" in cfgpolicy
+        if "change_label" in cfgplayer
     }
 })
 

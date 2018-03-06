@@ -25,7 +25,9 @@ from .BasePolicy import BasePolicy
 # --- Utility
 
 def with_probability(p):
-    """Use it like this: ::
+    """Use it like this:
+
+    .. code:: python
 
         if with_probability(0.2):
             print("This happens only 20% of the times!")

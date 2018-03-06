@@ -573,7 +573,7 @@ class DynamicMAB(MAB):
 
     @property
     def means(self):
-        """ Return the list of means of arms for this DynamicMAB: after :math:`x` calls to :method:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
+        """ Return the list of means of arms for this DynamicMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
 
         .. warning:: Highly experimental!
         """
