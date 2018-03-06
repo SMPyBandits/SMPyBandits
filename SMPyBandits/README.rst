@@ -143,7 +143,7 @@ License ? |GitHub license|
 © 2016-2018 `Lilian Besson <https://GitHub.com/Naereen>`__.
 
 |Maintenance| |Ask Me Anything| |Analytics| |PyPI implementation|
-|PyPI pyversions| |ForTheBadge uses-badges| |ForTheBadge uses-git|
+|PyPI pyversions| |Documentation Status| |ForTheBadge uses-badges| |ForTheBadge uses-git|
 
 |forthebadge made-with-python| |ForTheBadge built-with-science|
 
@@ -157,6 +157,8 @@ License ? |GitHub license|
    :target: https://github.com/SMPyBandits/SMPyBandits/blob/master/LICENSE
 .. |Analytics| image:: https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel
    :target: https://GitHub.com/SMPyBandits/SMPyBandits/
+.. |Documentation Status| image:: https://readthedocs.org/projects/smpybandits/badge/?version=latest
+   :target: https://smpybandits.readthedocs.io/en/latest/?badge=latest
 .. |ForTheBadge uses-badges| image:: http://ForTheBadge.com/images/badges/uses-badges.svg
    :target: http://ForTheBadge.com
 .. |ForTheBadge uses-git| image:: http://ForTheBadge.com/images/badges/uses-git.svg
