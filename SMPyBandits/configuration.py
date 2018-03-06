@@ -950,7 +950,7 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
         }, ],
     })
-else:
+elif not ENVIRONMENT_BAYESIAN:
     configuration.update({
         "environment": [ {
                 "arm_type": ARM_TYPE,
@@ -975,7 +975,7 @@ if TEST_WrapRange:
                 }
             },
             # Reference policy knowing the range
-            {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
@@ -995,7 +995,7 @@ if TEST_WrapRange:
                 }
             },
             # Reference policy knowing the range
-            {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
@@ -1014,7 +1014,7 @@ if TEST_WrapRange:
                 }
             },
             # Reference policy knowing the range
-            {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, AMPLITUDE),
+            {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,

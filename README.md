@@ -18,7 +18,7 @@ I follow very actively the latest publications related to Multi-Armed Bandits (M
 With this numerical framework, simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
 Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/SMPyBandits/SMPyBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuration_...py`).
 
-A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [smpybandits.github.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, and I won't use continuous integration, don't even think of it!)
+A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [smpybandits.github.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, but I won't use any *continuous integration*, don't even think of it!)
 
 ![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
@@ -106,14 +106,16 @@ TL;DR: this short bash snippet shows how to clone the code, install the requirem
 ```bash
 cd /tmp/  # or wherever you want
 git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
-cd SMPyBandits.git
+cd SMPyBandits
 # just be sure you have the latest virtualenv from Python 3
-sudo pip3 install --upgrade virtualenv
+sudo pip3 install --upgrade --force-reinstall virtualenv
 # create and active the virtualenv
-virtualenv3 venv || virtualenv venv
+virtualenv venv
 . venv/bin/activate
+type pip  # check it is /tmp/SMPyBandits/venv/bin/pip
+type python  # check it is /tmp/SMPyBandits/venv/bin/python
 # install the requirements in the virtualenv
-pip3 install -r requirements.txt
+pip install -r requirements_full.txt
 # run a single-player simulation!
 N=100 T=10000 K=9 N_JOBS=4 make single
 # run a multi-player simulation!
@@ -126,7 +128,7 @@ N=100 T=10000 M=3 K=9 N_JOBS=4 make more
 ----
 
 ### :boom: Warning
-- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says).
+- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free and every single module/file should work perfectly(as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says), but bugs are sometimes hard to spot so if you encounter any issue, [please fill a bug ticket](https://github.com/SMPyBandits/SMPyBandits/issues/new).
 - Whenever I add a new feature, I run experiments to check that nothing is broken. But *there is no unittest* (I don't have time). You would have to trust me :sunglasses:!
 - This project is NOT meant to be a library that you can use elsewhere, but a research tool. In particular, I don't take ensure that any of the Python modules can be imported from another directory than the main directory.
 

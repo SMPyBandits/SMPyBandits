@@ -71,7 +71,7 @@ setup(name="SMPyBandits",
         "scikit-learn",
         "scikit-optimize",
     ],
-    extra_requires={
+    extras_require={
         "full": [
             "tdqm",
             "numba",
