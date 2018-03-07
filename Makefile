@@ -60,38 +60,38 @@ markovian2:
 
 multiplayers:	multiplayers3
 multiplayers3:
-	time nice -n 19 ipython3 ./main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers.py | tee ./logs/main_multiplayers_py3_log.txt
 multiplayers2:
-	time nice -n 19 python2 ./main_multiplayers.py | tee ./logs/main_multiplayers_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main_multiplayers.py | tee ./logs/main_multiplayers_py2_log.txt
 
 moremultiplayers: moremultiplayers3
 moremultiplayers3:
-	time nice -n 19 ipython3 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 moremultiplayers2:
-	time nice -n 19 python2 ./main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
 
 sparsemultiplayers: sparsemultiplayers3
 sparsemultiplayers3:
-	time nice -n 19 ipython3 ./main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py3_log.txt
 sparsemultiplayers2:
-	time nice -n 19 python2 ./main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main_sparse_multiplayers.py | tee ./logs/main_sparse_multiplayers_py2_log.txt
 
 treeexploration: treeexploration3
 treeexploration3:
-	time nice -n 19 ipython3 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py3_log.txt
 treeexploration2:
-	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
 
 # --------------------------------------------------------
 # Build and upload to PyPI
-build_for_pypi:	clean_build sdist wheel
+build_for_pypi:	clean_pypi_build sdist wheel
 
 test_twine:
 	twine upload --sign --repository testpypi dist/*.whl
 twine:
 	twine upload --sign --repository pypi dist/*.whl
 
-clean_build:
+clean_pypi_build:
 	-mv -vf dist/* /tmp/
 sdist:	sdist.zip sdist.tar.gz
 sdist.zip:
@@ -203,7 +203,7 @@ clean:
 	-rm -vfr __pycache__/ */__pycache__/ */*/__pycache__/ */*/*/__pycache__/ */*/*/*/__pycache__/
 	-rm -vf *.pyc */*.pyc */*/*.pyc */*/*/*.pyc */*/*/*/*.pyc */*/*/*/*.pyc
 
-clean-build:
+clean_build:
 	-rm -vfr /tmp/SMPyBandits_build/
 	-mkdir -p /tmp/SMPyBandits_build/
 	-mv -vf build dist SMPyBandits.egg-info /tmp/SMPyBandits_build/
