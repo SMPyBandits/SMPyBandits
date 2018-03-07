@@ -24,12 +24,15 @@ if path.exists(README):
         long_description = f.read()
         # print("Using a long_description of length,", len(long_description), "from file", README)  # DEBUG
 
-version = "0.9"
+version = "0.9.2"
 try:
     from SMPyBandits import __version__ as version
 except ImportError:
     print("Error: cannot import version from SMPyBandits.")
     print("Are you sure you are building in the correct folder?")
+
+# FIXME revert when done uploading the first version to PyPI
+# version = "0.0.1.dev9"
 
 
 setup(name="SMPyBandits",
@@ -37,9 +40,9 @@ setup(name="SMPyBandits",
     description="SMPyBandits: Open-Source Python package for Single- and Multi-Players multi-armed Bandits algorithms.",
     long_description=long_description,
     author="Lilian Besson",
-    author_email="naereenATcrans.org".replace("AT", "@"),
+    author_email="naereen AT crans DOT org".replace(" AT ", "@").replace(" DOT ", "."),
     url="https://github.com/SMPyBandits/SMPyBandits/",
-    download_url="https://github.com/SMPyBandits/SMPyBandits/",
+    download_url="https://github.com/SMPyBandits/SMPyBandits/releases/",
     license="MIT",
     platforms=["GNU/Linux"],
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -98,7 +101,7 @@ setup(name="SMPyBandits",
     },
     project_urls={  # Optional
         "Bug Reports": "https://github.com/SMPyBandits/SMPyBandits/issues",
-        "Source":      "https://github.com/SMPyBandits/SMPyBandits/",
+        "Source":      "https://github.com/SMPyBandits/SMPyBandits/tree/master/",
     },
 )
 

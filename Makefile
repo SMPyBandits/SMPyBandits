@@ -83,6 +83,32 @@ treeexploration2:
 	time nice -n 19 python2 ./complete_tree_exploration_for_MP_bandits.py | tee ./logs/complete_tree_exploration_for_MP_bandits_py2_log.txt
 
 # --------------------------------------------------------
+# Build and upload to PyPI
+build_for_pypi:	clean_build sdist wheel
+
+test_twine:
+	twine upload --sign --repository testpypi dist/*.whl
+twine:
+	twine upload --sign --repository pypi dist/*.whl
+
+clean_build:
+	-mv -vf dist/* /tmp/
+sdist:	sdist.zip sdist.tar.gz
+sdist.zip:
+	python3 setup.py sdist --formats=zip
+	# -gpg --detach-sign -a dist/*.zip
+	-ls -larth dist/*.zip
+sdist.tar.gz:
+	python3 setup.py sdist --formats=gztar
+	# -gpg --detach-sign -a dist/*.tar.gz
+	-ls -larth dist/*.tar.gz
+wheel:
+	python3 setup.py bdist_wheel --universal
+	# -gpg --detach-sign -a dist/*.whl
+	-ls -larth dist/*.whl
+
+
+# --------------------------------------------------------
 # LATEX=lualatex
 # LATEX=xelatex -shell-escape -output-driver="xdvipdfmx -z 0"
 # LATEX=xelatex
@@ -188,13 +214,6 @@ stats:
 	git-cal --ascii | tee -a complete-stats.txt
 	git wdiff complete-stats.txt
 
-# Backup
-ZIPFILE = ~/Dropbox/AlgoBandits.git.zip
-zip:	clean
-	zip -r -9 -y -v $(ZIPFILE) ./ -x plots/*/ plots/*/*
-	zipinfo $(ZIPFILE) | tac
-	ls -larth $(ZIPFILE)
-
 # Linters
 # NPROC = `nproc`
 # NPROC = 1
@@ -204,10 +223,6 @@ lint:
 	-pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
 lint3:
 	-pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
-
-2to3:
-	-echo "FIXME this does not work from make (Makefile), but work from Bash"
-	echo 'for i in {,*/}*.py; do clear; echo $i; 2to3 -p $i 2>&1 | grep -v "root:" | colordiff ; read; done'
 
 pyreverse:
 	-mkdir uml_diagrams/

@@ -44,12 +44,12 @@ or recent scholarly publications enabled by it
 - [ ] ["TDFS"](https://arxiv.org/abs/0910.2065v3) from [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3).
 
 ### Dynamic settings
-- [ ] add the possibility to have a varying number of dynamic users for multi-users simulations
-- [ ] implement the experiments from [Musical Chair], [rhoRand] articles, and Navik Modi's experiments
+- [ ] add the possibility to have a varying number of dynamic users for multi-users simulations…
+- [ ] implement the experiments from [Musical Chair], [rhoRand] articles, and Navik Modi's experiments?
 
 ---
 
-## C++ library
+## C++ library / bridge to C++
 - [ ] Finish to write a perfectly clean CLI client to my Python server
 - [ ] Write a small library that can be included in any other C++ program to do : 1. start the socket connexion to the server, 2. then play one step at a time,
 - [ ] Check that the library can be used within a GNU Radio block !
@@ -64,7 +64,8 @@ or recent scholarly publications enabled by it
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
-![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
-![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
+![PyPI version](https://img.shields.io/pypi/v/smpybandits.svg)
+![PyPI implementation](https://img.shields.io/pypi/implementation/SMPyBandits.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/SMPyBandits.svg)
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)

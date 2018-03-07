@@ -4,11 +4,12 @@
 <img width="50%" src="logo_large.png" align="right"/>
 
 This repository contains the code of [Lilian Besson's](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
-Documentation is on [smpybandits.github.io](https://smpybandits.github.io/).
+
+A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
 
 ## Quick presentation
 
-It contains the most complete collection of single-player (classical) bandit algorithms on the Internet ([over 65!](Policies/)), as well as implementation of all the state-of-the-art [multi-player algorithms](PoliciesMultiPlayers/).
+It contains the most complete collection of single-player (classical) bandit algorithms on the Internet ([over 65!](SMPyBandits/Policies/)), as well as implementation of all the state-of-the-art [multi-player algorithms](SMPyBandits/PoliciesMultiPlayers/).
 
 I follow very actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually implement quite quickly the new algorithms (see for instance, [Exp3++](https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html), [CORRAL](https://smpybandits.github.io/docs/Policies.CORRAL.html) and [SparseUCB](https://smpybandits.github.io/docs/Policies.SparseUCB.html) were each introduced by articles ([for Exp3++](https://arxiv.org/pdf/1702.06103), [for CORRAL](https://arxiv.org/abs/1612.06246v2), [for SparseUCB](https://arxiv.org/abs/1706.01383)) presented at COLT in July 2017, [LearnExp](https://smpybandits.github.io/docs/Policies.LearnExp.html) comes from a [NIPS 2017 paper](https://arxiv.org/abs/1702.04825), and [kl-UCB++](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) from an [ALT 2017 paper](https://hal.inria.fr/hal-01475078).).
 
@@ -18,10 +19,11 @@ I follow very actively the latest publications related to Multi-Armed Bandits (M
 With this numerical framework, simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
 Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/SMPyBandits/SMPyBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuration_...py`).
 
-A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [smpybandits.github.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, but I won't use any *continuous integration*, don't even think of it!)
+A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [SMPyBandits.GitHub.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, but I won't use any *continuous integration*, don't even think of it!)
 
-![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
-![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
+![PyPI version](https://img.shields.io/pypi/v/smpybandits.svg)
+![PyPI implementation](https://img.shields.io/pypi/implementation/smpybandits.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
@@ -81,7 +83,7 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 ## Other interesting things
 ### [Single-player Policies](https://smpybandits.github.io/docs/Policies.html)
-- More than 65 algorithms, including all known variants of the [`UCB`](SMPyBandits/Policies/UCB.py), [kl-UCB](SMPyBandits/Policies/klUCB.py), [`MOSS`](SMPyBandits/Policies/MOSS.py) and [Thompson Sampling](SMPyBandits/Policies/Thompson.py) algorithms, as well as other less known algorithms (SMPyBandits/[`OCUCB`](Policies/OCUCB.py), [`BESA`](SMPyBandits/Policies/OCUCB.py), [`OSSB`](SMPyBandits/Policies/OSSB.py) etc).
+- More than 65 algorithms, including all known variants of the [`UCB`](SMPyBandits/Policies/UCB.py), [kl-UCB](SMPyBandits/Policies/klUCB.py), [`MOSS`](SMPyBandits/Policies/MOSS.py) and [Thompson Sampling](SMPyBandits/Policies/Thompson.py) algorithms, as well as other less known algorithms ([`OCUCB`](SMPyBandits/Policies/OCUCB.py), [`BESA`](SMPyBandits/Policies/OCUCB.py), [`OSSB`](SMPyBandits/Policies/OSSB.py) etc).
 - [`SparseWrapper`](https://smpybandits.github.io/docs/Policies.SparseWrapper.html#module-Policies.SparseWrapper) is a generalization of [the SparseUCB from this article](https://arxiv.org/pdf/1706.01383/).
 - Implementation of very recent Multi-Armed Bandits algorithms, e.g., [`kl-UCB++`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) (from [this article](https://hal.inria.fr/hal-01475078)), [`UCB-dagger`](https://smpybandits.github.io/docs/Policies.UCBdagger.html) (from [this article](https://arxiv.org/pdf/1507.07880)),  or [`MOSS-anytime`](https://smpybandits.github.io/docs/Policies.MOSSAnytime.html) (from [this article](http://proceedings.mlr.press/v48/degenne16.pdf)).
 - Experimental policies: [`BlackBoxOpt`](https://smpybandits.github.io/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](https://smpybandits.github.io/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
@@ -167,8 +169,9 @@ If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUT
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
-![PyPI implementation](https://img.shields.io/pypi/implementation/ansicolortags.svg)
-![PyPI pyversions](https://img.shields.io/pypi/pyversions/ansicolortags.svg)
+![PyPI version](https://img.shields.io/pypi/v/smpybandits.svg)
+![PyPI implementation](https://img.shields.io/pypi/implementation/smpybandits.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
