@@ -14,15 +14,27 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 # import h5py
-# Local imports, libraries
-from .usejoblib import USE_JOBLIB, Parallel, delayed
-from .usetqdm import USE_TQDM, tqdm
-# Local imports, tools and config
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
-from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
-# Local imports, objects and functions
-from .MAB import MAB, MarkovianMAB, DynamicMAB, IncreasingMAB
-from .Result import Result
+
+try:
+    # Local imports, libraries
+    from .usejoblib import USE_JOBLIB, Parallel, delayed
+    from .usetqdm import USE_TQDM, tqdm
+    # Local imports, tools and config
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+    # Local imports, objects and functions
+    from .MAB import MAB, MarkovianMAB, DynamicMAB, IncreasingMAB
+    from .Result import Result
+except ImportError:
+    # Local imports, libraries
+    from usejoblib import USE_JOBLIB, Parallel, delayed
+    from usetqdm import USE_TQDM, tqdm
+    # Local imports, tools and config
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+    # Local imports, objects and functions
+    from MAB import MAB, MarkovianMAB, DynamicMAB, IncreasingMAB
+    from Result import Result
 
 
 REPETITIONS = 1    #: Default nb of repetitions
@@ -703,3 +715,12 @@ def shuffled(mylist):
     copiedlist = copy(mylist)
     shuffle(copiedlist)
     return copiedlist
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

@@ -21,10 +21,16 @@ __version__ = "0.8"
 
 import numpy as np
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
-from .RandTopM import oneRandTopM
-from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+    from .RandTopM import oneRandTopM
+    from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
+    from RandTopM import oneRandTopM
+    from EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
 
 
 class oneRandTopMEst(oneRandTopM):
@@ -262,3 +268,12 @@ class MCTopMEstPlus(RandTopMEstPlus):
 
     def __str__(self):
         return "MCTopMEstPlus({} x {})".format(self.nbPlayers, str(self._players[0]))
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

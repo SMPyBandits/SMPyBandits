@@ -11,7 +11,10 @@ import numpy as np
 import scipy.stats
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCB import UCB
+try:
+    from .UCB import UCB
+except ImportError:
+    from UCB import UCB
 
 
 def binofit_scalar(x, n, alpha=0.05):

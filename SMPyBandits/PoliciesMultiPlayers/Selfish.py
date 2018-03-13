@@ -11,8 +11,12 @@ __version__ = "0.5"
 
 from warnings import warn
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
 
 
 class SelfishChildPointer(ChildPointer):
@@ -83,3 +87,12 @@ class Selfish(BaseMPPolicy):
             print("Warning: Selfish internal indexes does NOT get updated by reward, but by 0, in case of collision, learning is done on SUCCESSFUL TRANSMISSIONS (ie. ACK), not sensing!")  # DEBUG
         player = self._players[playerId]
         player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

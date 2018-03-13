@@ -27,15 +27,12 @@ __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"
 
 from math import log, sqrt, exp
-# from numpy import log, sqrt, exp
-# from numpy import minimum as min
-# from numpy import maximum as max
 
 import numpy as np
 
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, SystemError):
+except (ValueError, ModuleNotFoundError, ImportError, SystemError):
     from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
 

@@ -33,8 +33,15 @@ from random import gammavariate
 from numpy.random import gamma
 import numpy as np
 
-from .Arm import Arm
-from .kullback import klGamma
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klGamma
+except ImportError:
+    from kullback import klGamma
 
 oo = float('+inf')  # Nice way to write +infinity
 
@@ -119,3 +126,12 @@ class UnboundedGamma(Gamma):
 
 # Only export and expose the class defined here
 __all__ = ["Gamma", "GammaFromMean", "UnboundedGamma"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

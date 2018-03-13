@@ -11,7 +11,10 @@ from math import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 class UCB(IndexPolicy):

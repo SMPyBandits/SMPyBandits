@@ -29,8 +29,15 @@ __version__ = "0.6"
 from random import random
 from numpy.random import random as nprandom
 
-from .Arm import Arm
-from .kullback import klBern
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klBern
+except ImportError:
+    from kullback import klBern
 
 
 class UniformArm(Arm):
@@ -94,3 +101,12 @@ class UniformArm(Arm):
 
 
 __all__ = ["UniformArm"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

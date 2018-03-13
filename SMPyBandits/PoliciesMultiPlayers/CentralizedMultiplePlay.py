@@ -8,8 +8,12 @@ __version__ = "0.2"
 
 import numpy as np
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
 
 
 # --- Class for a child player
@@ -99,3 +103,12 @@ class CentralizedMultiplePlay(BaseMPPolicy):
     def _estimatedOrder_one(self, playerId):
         """Use the centralized algorithm to estimate ranking of the arms."""
         return self.player.estimatedOrder()
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

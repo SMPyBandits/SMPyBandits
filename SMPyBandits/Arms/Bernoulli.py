@@ -27,8 +27,15 @@ __version__ = "0.6"
 import numpy as np
 from numpy.random import binomial
 
-from .Arm import Arm
-from .kullback import klBern
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klBern
+except ImportError:
+    from kullback import klBern
 
 
 class Bernoulli(Arm):
@@ -79,3 +86,12 @@ class Bernoulli(Arm):
 
 # Only export and expose the class defined here
 __all__ = ["Bernoulli"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

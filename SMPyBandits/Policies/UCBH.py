@@ -10,7 +10,10 @@ from numpy import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBalpha import UCBalpha, ALPHA
+try:
+    from .UCBalpha import UCBalpha, ALPHA
+except ImportError:
+    from UCBalpha import UCBalpha, ALPHA
 
 
 class UCBH(UCBalpha):

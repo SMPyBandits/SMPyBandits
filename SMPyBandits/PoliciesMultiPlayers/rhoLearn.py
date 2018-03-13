@@ -19,7 +19,10 @@ __version__ = "0.6"
 try:
     from sys import path
     path.insert(0, '..')
-    from Policies import Uniform
+    try:
+        from .Policies import Uniform
+    except ImportError:
+        from Policies import Uniform
 except ImportError:
     try:
         from SMPyBandits.Policies import Uniform
@@ -42,7 +45,10 @@ except ImportError:
             def choice(self):
                 return randint(0, self.nbArms - 1)
 
-from .rhoRand import oneRhoRand, rhoRand
+try:
+    from .rhoRand import oneRhoRand, rhoRand
+except ImportError:
+    from rhoRand import oneRhoRand, rhoRand
 
 
 #: Should oneRhoLearn players select a (possibly new) rank *at each step* ?
@@ -155,3 +161,12 @@ class rhoLearn(rhoRand):
 
     def __str__(self):
         return "rhoLearn({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

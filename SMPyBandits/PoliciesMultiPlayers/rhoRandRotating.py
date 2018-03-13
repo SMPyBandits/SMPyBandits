@@ -17,7 +17,10 @@ __version__ = "0.6"
 
 import numpy.random as rn
 
-from .rhoRand import oneRhoRand, rhoRand
+try:
+    from .rhoRand import oneRhoRand, rhoRand
+except ImportError:
+    from rhoRand import oneRhoRand, rhoRand
 
 
 # --- Class oneRhoRandRotating, for children
@@ -101,3 +104,12 @@ class rhoRandRotating(rhoRand):
 
     def __str__(self):
         return "rhoRandRotating({} x {}{})".format(self.nbPlayers, str(self._players[0]))
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

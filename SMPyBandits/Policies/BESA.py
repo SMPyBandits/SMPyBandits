@@ -15,7 +15,10 @@ __version__ = "0.9"
 
 
 import numpy as np
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 # --- Utility functions

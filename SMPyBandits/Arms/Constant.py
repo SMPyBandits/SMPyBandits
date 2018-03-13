@@ -23,7 +23,11 @@ __version__ = "0.6"
 
 import numpy as np
 
-from .Arm import Arm
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
 
 
 class Constant(Arm):
@@ -82,3 +86,12 @@ class Constant(Arm):
 
 
 __all__ = ["Constant"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

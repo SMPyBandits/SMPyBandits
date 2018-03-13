@@ -33,8 +33,15 @@ from math import isinf, exp
 import numpy as np
 from scipy.stats import poisson
 
-from .Arm import Arm
-from .kullback import klPoisson
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klPoisson
+except ImportError:
+    from kullback import klPoisson
 
 
 class Poisson(Arm):
@@ -104,3 +111,12 @@ class UnboundedPoisson(Poisson):
 
 # Only export and expose the class defined here
 __all__ = ["Poisson", "UnboundedPoisson"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

@@ -28,8 +28,15 @@ __version__ = "0.5"
 import numpy as np
 from numpy.random import binomial as npbinomial
 
-from .Arm import Arm
-from .kullback import klBin
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klBin
+except ImportError:
+    from kullback import klBin
 
 
 class Binomial(Arm):
@@ -80,3 +87,12 @@ class Binomial(Arm):
 
 # Only export and expose the class defined here
 __all__ = ["Binomial"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

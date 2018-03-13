@@ -16,8 +16,12 @@ __version__ = "0.5"
 
 import numpy.random as rn
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
 
 
 # --- Class oneRhoRand, for children
@@ -97,3 +101,12 @@ class rhoRand(BaseMPPolicy):
 
     def __str__(self):
         return "rhoRand({} x {}{})".format(self.nbPlayers, str(self._players[0]))
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

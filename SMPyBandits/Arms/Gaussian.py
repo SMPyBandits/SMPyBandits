@@ -31,8 +31,15 @@ from numpy.random import standard_normal
 import numpy as np
 from scipy.special import erf
 
-from .Arm import Arm
-from .kullback import klGauss
+# Local imports
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klGauss
+except ImportError:
+    from kullback import klGauss
 
 oo = float('+inf')  # Nice way to write +infinity
 
@@ -219,3 +226,12 @@ __all__ = [
     "Gaussian_m100_100",
     "UnboundedGaussian"
 ]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

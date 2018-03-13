@@ -19,7 +19,10 @@ __version__ = "0.6"
 from random import random, randint
 import numpy.random as rn
 
-from .rhoRand import oneRhoRand, rhoRand
+try:
+    from .rhoRand import oneRhoRand, rhoRand
+except ImportError:
+    from rhoRand import oneRhoRand, rhoRand
 
 
 # --- Utilitary functions
@@ -183,3 +186,12 @@ class rhoRandALOHA(rhoRand):
 
     def __str__(self):
         return "rhoRandALOHA({} x {}{}{})".format(self.nbPlayers, str(self._players[0]), r"$p_0:{:.5g}$, $\alpha:{:.5g}$".format(self.p0, self.alpha_p0) if self.p0 > 0 else "")
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

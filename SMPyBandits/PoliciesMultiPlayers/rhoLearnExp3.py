@@ -23,10 +23,14 @@ __version__ = "0.6"
 import numpy as np
 import numpy.random as rn
 
+# XXX Durty hack!
 try:
     from sys import path
     path.insert(0, '..')
-    from Policies import Exp3, Exp3Decreasing
+    try:
+        from .Policies import Exp3, Exp3Decreasing
+    except ImportError:
+        from Policies import Exp3, Exp3Decreasing
 except ImportError as e:
     try:
         from SMPyBandits.Policies import Exp3, Exp3Decreasing
@@ -34,7 +38,10 @@ except ImportError as e:
         print("Warning: ../Policies/Exp3.py was not imported correctly...")  # DEBUG
         raise e
 
-from .rhoRand import oneRhoRand, rhoRand
+try:
+    from .rhoRand import oneRhoRand, rhoRand
+except ImportError:
+    from rhoRand import oneRhoRand, rhoRand
 
 
 # --- Define various function mapping the two decoupled feedback to a numerical reward
@@ -256,3 +263,12 @@ class rhoLearnExp3(rhoRand):
 
     def __str__(self):
         return "rhoLearnExp3({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

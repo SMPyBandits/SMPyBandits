@@ -13,9 +13,14 @@ __version__ = "0.1"
 
 import numpy as np
 
-from .BaseMPPolicy import BaseMPPolicy
-from .BaseCentralizedPolicy import BaseCentralizedPolicy
-from .ChildPointer import ChildPointer
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .BaseCentralizedPolicy import BaseCentralizedPolicy
+    from .ChildPointer import ChildPointer
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from BaseCentralizedPolicy import BaseCentralizedPolicy
+    from ChildPointer import ChildPointer
 
 
 class Fixed(BaseCentralizedPolicy):
@@ -116,3 +121,12 @@ class CentralizedFixed(BaseMPPolicy):
     def _choice_one(self, playerId):
         """Pass the call to the player algorithm."""
         return self._players[playerId].choice()
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

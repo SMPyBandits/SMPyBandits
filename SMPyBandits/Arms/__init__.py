@@ -35,6 +35,7 @@ from copy import copy
 import json
 import numpy as np
 
+# Local imports
 if __name__ != "__main__":
     from .Constant import Constant
     from .UniformArm import UniformArm

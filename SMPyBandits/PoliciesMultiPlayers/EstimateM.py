@@ -19,8 +19,12 @@ __version__ = "0.8"
 import numpy as np
 import numpy.random as rn
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
 
 
 # --- threshold function xi(n, k)
@@ -254,3 +258,12 @@ class EstimateM(BaseMPPolicy):
 
     def __str__(self):
         return "EstimateM({} x {})".format(self.nbPlayers, str(self._players[0]))
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

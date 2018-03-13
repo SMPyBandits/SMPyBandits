@@ -16,19 +16,34 @@ from random import random as uniform_in_zero_one
 import numpy as np
 import matplotlib.pyplot as plt
 # import h5py
-# Local imports, libraries
-from .usejoblib import USE_JOBLIB, Parallel, delayed
-from .usetqdm import USE_TQDM, tqdm
-# Local imports, tools and config
-from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
-from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
-from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
-# Local imports, objects and functions
-from .CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
-from .MAB import MAB, MarkovianMAB, DynamicMAB
-from .ResultMultiPlayers import ResultMultiPlayers
-# Inheritance
-from .EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
+try:
+    # Local imports, libraries
+    from .usejoblib import USE_JOBLIB, Parallel, delayed
+    from .usetqdm import USE_TQDM, tqdm
+    # Local imports, tools and config
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+    from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
+    # Local imports, objects and functions
+    from .CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
+    from .MAB import MAB, MarkovianMAB, DynamicMAB
+    from .ResultMultiPlayers import ResultMultiPlayers
+    # Inheritance
+    from .EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
+except ImportError:
+    # Local imports, libraries
+    from usejoblib import USE_JOBLIB, Parallel, delayed
+    from usetqdm import USE_TQDM, tqdm
+    # Local imports, tools and config
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+    from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
+    # Local imports, objects and functions
+    from CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
+    from MAB import MAB, MarkovianMAB, DynamicMAB
+    from ResultMultiPlayers import ResultMultiPlayers
+    # Inheritance
+    from EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
 
 
 REPETITIONS = 1  #: Default nb of repetitions
@@ -325,3 +340,12 @@ def with_proba(proba):
     11162
     """
     return uniform_in_zero_one() <= proba
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

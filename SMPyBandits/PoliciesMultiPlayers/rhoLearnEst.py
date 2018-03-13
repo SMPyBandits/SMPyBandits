@@ -17,7 +17,10 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from .rhoLearn import rhoLearn, Uniform, oneRhoLearn, CHANGE_RANK_EACH_STEP
+try:
+    from .rhoLearn import rhoLearn, Uniform, oneRhoLearn, CHANGE_RANK_EACH_STEP
+except ImportError:
+    from rhoLearn import rhoLearn, Uniform, oneRhoLearn, CHANGE_RANK_EACH_STEP
 
 
 class oneRhoLearnEst(oneRhoLearn):
@@ -69,3 +72,12 @@ class rhoLearnEst(rhoLearn):
 
     def __str__(self):
         return "rhoLearnEst({} x {}, ranks ~ {})".format(self.nbPlayers, str(self._players[0]), self._rankSelection)
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

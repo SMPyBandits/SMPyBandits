@@ -17,7 +17,10 @@ __version__ = "0.6"
 
 import numpy.random as rn
 
-from .rhoRand import oneRhoRand, rhoRand
+try:
+    from .rhoRand import oneRhoRand, rhoRand
+except ImportError:
+    from rhoRand import oneRhoRand, rhoRand
 
 #: Default value for STICKY_TIME
 STICKY_TIME = 10
@@ -113,3 +116,12 @@ class rhoRandSticky(rhoRand):
 
     def __str__(self):
         return "rhoRandSticky({} x {}{}{})".format(self.nbPlayers, str(self._players[0]), "$T_0:{}$".format(self.stickyTime) if self.stickyTime > 0 else "")
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

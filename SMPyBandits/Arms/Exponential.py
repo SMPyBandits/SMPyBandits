@@ -33,8 +33,14 @@ from numpy.random import random as nprandom
 from scipy.optimize import minimize
 
 # Local imports
-from .Arm import Arm
-from .kullback import klExp
+try:
+    from .Arm import Arm
+except ImportError:
+    from Arm import Arm
+try:
+    from .kullback import klExp
+except ImportError:
+    from kullback import klExp
 
 
 def p_of_expectation(expectation, trunc=1):
@@ -136,3 +142,12 @@ class UnboundedExponential(Exponential):
 
 # Only export and expose the class defined here
 __all__ = ["Exponential", "ExponentialFromMean", "UnboundedExponential"]
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
