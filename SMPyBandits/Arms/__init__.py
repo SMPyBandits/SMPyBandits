@@ -184,7 +184,7 @@ def randomMeansWithGapBetweenMbestMworst(nbArms=3, mingap=None, nbPlayers=2, low
 def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerNonZero=0.5, amplitude=1., isSorted=True):
     """Return a list of means of arms, in [lower, lower + amplitude], with a min gap >= mingap.
 
-    - Exactly ``nbArms-sparsity`` arms will have a mean = ``lower`` and the others are randomly sampled uniformly in [lowerNonZero, lower + amplitude].
+    - Exactly ``nbArms-sparsity`` arms will have a mean = ``lower`` and the others are randomly sampled uniformly in ``[lowerNonZero, lower + amplitude]``.
     - All means will be different, except if ``mingap=None``, with a min gap > 0.
 
     >>> import numpy as np; np.random.seed(1234)  # reproducible results
@@ -211,6 +211,53 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerN
             mus = np.sort(np.random.rand(sparsity))
     bad_mus = [lower] * (nbArms - sparsity)
     good_mus = lowerNonZero + ((lower + amplitude - lowerNonZero) * mus)
+    mus = list(bad_mus) + list(good_mus)
+    if isSorted:
+        return sorted(list(mus))
+    else:
+        return shuffled(list(mus))
+
+
+def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, lowerNonZero=0.0, amplitude=2.0, isSorted=True):
+    """Return a list of means of arms, in [lower, lower + amplitude], with a min gap >= mingap.
+
+    - Exactly ``nbArms-sparsity`` arms will have a mean sampled uniformly in ``[lower, lowerNonZero]`` and the others are randomly sampled uniformly in ``[lowerNonZero, lower + amplitude]``.
+    - All means will be different, except if ``mingap=None``, with a min gap > 0.
+
+    >>> import numpy as np; np.random.seed(1234)  # reproducible results
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
+    [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+    [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
+
+    - Means are sorted, except if ``isSorted=False``.
+
+    >>> import random; random.seed(1234)  # reproducible results
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+    [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+    [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
+    """
+    assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
+    assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
+    assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity, nbArms)  # DEBUG
+    assert lower < lowerNonZero, "Error: 'lower' = {:.3g} has to be < 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
+    # first the bad
+    nb_bad = nbArms - sparsity
+    mus = np.sort(np.random.rand(nb_bad))
+    if mingap is not None and mingap > 0:
+        while len(set(mus)) == nb_bad and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
+            mus = np.sort(np.random.rand(nb_bad))
+    bad_mus = lower + ((lowerNonZero - lower) * mus)
+    assert np.min(bad_mus) >= lower and np.max(bad_mus) <= lowerNonZero, "Error: bad generation of 'bad_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(np.min(bad_mus), np.max(bad_mus), lower, lowerNonZero)  # DEBUG
+    # then the good
+    nb_good = sparsity
+    mus = np.sort(np.random.rand(nb_good))
+    if mingap is not None and mingap > 0:
+        while len(set(mus)) == nb_good and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
+            mus = np.sort(np.random.rand(nb_good))
+    good_mus = lowerNonZero + ((lower + amplitude - lowerNonZero) * mus)
+    assert np.min(good_mus) >= lowerNonZero and np.max(good_mus) <= lower + amplitude, "Error: bad generation of 'good_mus', in interval [{:.3g},{:.3g}] instead of [{:.3g},{:.3g}]...".format(np.min(good_mus), np.max(good_mus), lowerNonZero, lower + amplitude)  # DEBUG
     mus = list(bad_mus) + list(good_mus)
     if isSorted:
         return sorted(list(mus))

@@ -47,6 +47,20 @@ def solve_optimization_problem(thetas):
     return 1. / klBern_vect(thetas, np.max(thetas))
 
 
+def solve_optimization_problem__sparse_bandits(thetas):
+    r""" Solve the optimization problem (2)-(3) as defined in the paper.
+
+    - FIXME
+    """
+    # values = np.zeros_like(thetas)
+    # theta_max = np.max(thetas)
+    # for i, theta in enumerate(thetas):
+    #     if theta < theta_max:
+    #         values[i] = 1 / klBern(theta, theta_max)
+    # return values
+    return 1. / klBern_vect(thetas, np.max(thetas))
+
+
 class OSSB(BasePolicy):
     r""" Optimal Sampling for Structured Bandits (OSSB) algorithm.
 

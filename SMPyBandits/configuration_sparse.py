@@ -88,8 +88,8 @@ UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Aggregator = True
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = TEST_Aggregator
@@ -117,6 +117,11 @@ SPARSITY = 4
 SPARSITY = int(getenv('S', SPARSITY))
 SPARSITY = int(getenv('SPARSITY', SPARSITY))
 
+#: Default value for the lower value of means
+LOWER = 0.
+#: Default value for the amplitude value of means
+AMPLITUDE = 1.
+
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Gaussian"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
@@ -125,11 +130,32 @@ mapping_ARM_TYPE = {
     "Uniform": UniformArm,
     "Bernoulli": Bernoulli, "B": Bernoulli,
     "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+    "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
+    "UnboundedGaussian": UnboundedGaussian,
     "Poisson": Poisson, "P": Poisson,
     "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
     "Gamma": GammaFromMean,
 }
+
+# WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values...
+if ARM_TYPE in [
+            "UnboundedGaussian",
+            # "Gaussian",
+        ]:
+    LOWER = -5
+    AMPLITUDE = 10
+
+LOWER = float(getenv('LOWER', LOWER))
+AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
+assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
+VARIANCE = float(getenv('VARIANCE', VARIANCE))
+
+ARM_TYPE_str = str(ARM_TYPE)
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
+
+#: True to use bayesian problem
+ENVIRONMENT_BAYESIAN = False
+ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=None, lower=0., lowerNonZero=0.1, amplitude=1.)
@@ -158,10 +184,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": MEANS
-        # },
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": Gaussian,
+            "params": MEANS
+        },
         # "environment": [  # 2)  Gaussian arms
         # {   # An example problem with 3 or 9 arms
         #     "arm_type": Gaussian,
@@ -176,26 +202,46 @@ configuration = {
         #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True)
         # },
         # FIXED I need to do Bayesian problems for Gaussian arms also!
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": ARM_TYPE,
+        #     # # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
+        #     "params": {
+        #         "function": randomMeansWithSparsity,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3 * NB_ARMS),
+        #             "lower": 0.,
+        #             "lowerNonZero": 0.1,
+        #             "amplitude": 1.,
+        #             "isSorted": True,
+        #             "sparsity": SPARSITY,
+        #         }
+        #     }
+        # },
+    ],
+}
+
+if ENVIRONMENT_BAYESIAN:
+    configuration["environment"] = [  # XXX Bernoulli arms
         {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": ARM_TYPE,
-            # # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
             "params": {
-                "function": randomMeansWithSparsity,
+                "function": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
+                    # "mingap": 0.0000001,
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": 0.,
-                    "lowerNonZero": 0.1,
-                    "amplitude": 1.,
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
                     "isSorted": True,
-                    "sparsity": SPARSITY,
                 }
             }
         },
-    ],
-}
+    ]
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -252,7 +298,7 @@ configuration.update({
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": klUCBPlus,
+                "policy": klUCB,
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": True,
                 "lower": LOWER, "amplitude": AMPLITUDE,
@@ -262,7 +308,7 @@ configuration.update({
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": klUCBPlus,
+                "policy": klUCB,
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": False,
                 "lower": LOWER, "amplitude": AMPLITUDE,
@@ -272,7 +318,7 @@ configuration.update({
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": klUCBPlus,
+                "policy": klUCB,
                 "use_ucb_for_set_J": False,
                 "use_ucb_for_set_K": True,
                 "lower": LOWER, "amplitude": AMPLITUDE,
@@ -282,7 +328,7 @@ configuration.update({
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": klUCBPlus,
+                "policy": klUCB,
                 "use_ucb_for_set_J": False,
                 "use_ucb_for_set_K": False,
                 "lower": LOWER, "amplitude": AMPLITUDE,
@@ -415,7 +461,7 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- KL algorithms, here only klUCBPlus with different klucb functions
+        # --- KL algorithms, here only klUCB with different klucb functions
         {
             "archtype": klUCB,
             "params": {
@@ -424,28 +470,28 @@ configuration.update({
             }
         },
         {
-            "archtype": klUCBPlus,
+            "archtype": klUCB,
             "params": {
                 "klucb": klucbBern,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
         # {
-        #     "archtype": klUCBPlus,
+        #     "archtype": klUCB,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #         "klucb": klucbExp,
         #     }
         # },
         # {
-        #     "archtype": klUCBPlus,
+        #     "archtype": klUCB,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #         "klucb": klucbGauss,
         #     }
         # },
         # {
-        #     "archtype": klUCBPlus,
+        #     "archtype": klUCB,
         #     "params": {
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #         "klucb": klucbGamma,
@@ -499,7 +545,7 @@ NON_AGGR_POLICIES_1 = [
         {
             "archtype": SparseWrapper,
             "params": {
-                "policy": klUCBPlus,
+                "policy": klUCB,
                 "sparsity": s,
                 "use_ucb_for_set_J": False, "use_ucb_for_set_K": False,
                 "lower": LOWER, "amplitude": AMPLITUDE,
