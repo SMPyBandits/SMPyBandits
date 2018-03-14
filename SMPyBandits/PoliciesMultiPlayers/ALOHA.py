@@ -6,7 +6,7 @@ This policy uses the collision avoidance mechanism that is inspired by the class
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.5"
+__version__ = "0.9"
 
 from random import random
 import numpy as np
@@ -23,24 +23,58 @@ except ImportError:
 # --- Functions to define [t, t + tnext] intervals
 
 def tnext_beta(t, beta=0.5):
-    """ Simple function, as used in MEGA: upper_tnext(t) = t ** beta. Default to t ** 0.5. """
+    r""" Simple function, as used in MEGA: ``upper_tnext(t)`` = :math:`t^{\beta}`. Default to :math:`t^{0.5}`.
+
+    >>> tnext_beta(100, beta=0.1)  # doctest: +ELLIPSIS
+    1.584...
+    >>> tnext_beta(100, beta=0.5)
+    10.0
+    >>> tnext_beta(100, beta=0.9)  # doctest: +ELLIPSIS
+    63.095...
+    >>> tnext_beta(1000)  # doctest: +ELLIPSIS
+    31.622...
+    """
     return t ** beta
 
 
 def make_tnext_beta(beta=0.5):
-    """ Returns the function t --> t ** beta. """
+    r""" Returns the function :math:`t \mapsto t^{\beta}`.
+
+    >>> tnext = make_tnext_beta(0.5)
+    >>> tnext(100)
+    10.0
+    >>> tnext(1000)  # doctest: +ELLIPSIS
+    31.622...
+    """
     def tnext(t):
         return t ** beta
     return tnext
 
 
 def tnext_log(t, scaling=1.):
-    """ Other function, not the one used in MEGA, but our proposal: upper_tnext(t) = scaling * log(1 + t). """
+    r""" Other function, not the one used in MEGA, but our proposal: ``upper_tnext(t)`` = :math:`\text{scaling} * \log(1 + t)`.
+
+    >>> tnext_log(100, scaling=1)  # doctest: +ELLIPSIS
+    4.615...
+    >>> tnext_log(100, scaling=10)  # doctest: +ELLIPSIS
+    46.151...
+    >>> tnext_log(100, scaling=100)  # doctest: +ELLIPSIS
+    461.512...
+    >>> tnext_log(1000)  # doctest: +ELLIPSIS
+    6.908...
+    """
     return scaling * np.log(1 + t)
 
 
-def make_tnext_log_scaling(scaling=0.5):
-    """ Returns the function t --> scaling * log(1 + t). """
+def make_tnext_log_scaling(scaling=1.):
+    r""" Returns the function :math:`t \mapsto \text{scaling} * \log(1 + t)`.
+
+    >>> tnext = make_tnext_log_scaling(1)
+    >>> tnext(100)  # doctest: +ELLIPSIS
+    4.615...
+    >>> tnext(1000)  # doctest: +ELLIPSIS
+    6.908...
+    """
     def tnext(t):
         return scaling * np.log(1 + t)
     return tnext
@@ -173,17 +207,24 @@ class ALOHA(BaseMPPolicy):
 
         Example:
 
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
         >>> p0, alpha_p0 = 0.6, 0.5
-        >>> s = ALOHA(nbPlayers, Thompson, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
-        >>> s = ALOHA(nbPlayers, UCBalpha, nbArms, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
+        >>> s = ALOHA(nbPlayers, nbArms, Thompson, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
+        >>> [ child.choice() for child in s.children ]
+        [6, 11, 8, 4, 8, 8]
+        >>> s = ALOHA(nbPlayers, nbArms, UCBalpha, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
+        >>> [ child.choice() for child in s.children ]
+        [1, 0, 5, 2, 15, 3]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for rhoRand class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players
+        self.nbArms = nbArms  #: Number of arms
         # Internal memory
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
@@ -192,7 +233,6 @@ class ALOHA(BaseMPPolicy):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
             # Initialize proxy child
             self.children[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta)
-        self.nbArms = nbArms  #: Number of arms
 
     def __str__(self):
         return "ALOHA({} x {})".format(self.nbPlayers, str(self._players[0]))

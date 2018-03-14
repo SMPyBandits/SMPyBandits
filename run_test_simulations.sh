@@ -30,13 +30,13 @@ export S=3
 # allsingleplayer test
 clear
 echo -e "\n\n\nLaunching 'make allsingleplayer'"
-N=4 T=1000 make allsingleplayer
+N=4 T=20 make allsingleplayer
 # read  # DEBUG
 
 # allsingleplayer test
 clear
 echo -e "\n\n\nLaunching 'make allsingleplayer'"
-N=4 T=1000 BAYES=True make allsingleplayer
+N=4 T=20 BAYES=True make allsingleplayer
 # read  # DEBUG
 
 # single test
