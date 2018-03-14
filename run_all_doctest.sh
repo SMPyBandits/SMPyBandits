@@ -5,14 +5,17 @@
 #
 # Run all doctests in all Python files that have doctest in the subdirectories.
 #
-# Usage: ./run_all_doctest
+# Usage: ./run_all_doctest.sh
 #
+
+# More details at http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
 
 for file in $(find . -type f -iname '*.py'); do
     if grep 'from doctest import testmod' "$file"; then
         clear
         echo -e "\n${green}Testing the file '$file'...${reset}"  # DEBUG
         python3 "$file"
-        # read
+        read  # DEBUG
     fi
 done

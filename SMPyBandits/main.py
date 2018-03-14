@@ -59,7 +59,7 @@ if getenv('SLEEP', 'False') != 'False':
 USE_PICKLE = False   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
-PLOT_DIR = "plots"  #: Directory for the plots
+PLOT_DIR = getenv('PLOT_DIR', 'plots')  #: Directory for the plots
 semilogx = False  #: Plot in semilogx by default?
 semilogy = False  #: Plot in semilogy by default?
 loglog   = False  #: Plot in loglog   by default?

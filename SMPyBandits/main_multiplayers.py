@@ -34,7 +34,7 @@ if getenv('SLEEP', 'False') != 'False':
 USE_PICKLE = False   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
-PLOT_DIR = "plots"  #: Directory for the plots
+PLOT_DIR = getenv('PLOT_DIR', 'plots')  #: Directory for the plots
 piechart = True  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
 piechart = False  #: Plot a piechart for collision counts? Otherwise, plot an histogram.
 averageRegret = True  #: Use average regret ?
