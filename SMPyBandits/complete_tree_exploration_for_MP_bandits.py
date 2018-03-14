@@ -1166,15 +1166,6 @@ def test(depth=1, M=2, K=2, S=None, Stilde=None, N=None, Ntilde=None, mus=None, 
     return results
 
 
-# # --- Debugging
-
-# if __name__ == "__main__":
-#     # Code for debugging purposes.
-#     from doctest import testmod
-#     print("\nTesting automatically all the docstring written in each functions of this module :")
-#     testmod(verbose=True)
-
-
 if __name__ == '__main__':
     all_update_memories = None
     all_players = [FixedArm]  # XXX just for testing

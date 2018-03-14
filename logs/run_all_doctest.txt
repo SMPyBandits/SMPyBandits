@@ -1,0 +1,5554 @@
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Gamma.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    Gamma03 = GammaFromMean(0.3)
+Expecting nothing
+ok
+Trying:
+    Gamma03
+Expecting:
+    \Gamma(0.3, 1)
+ok
+Trying:
+    Gamma03.mean
+Expecting:
+    0.3
+ok
+Trying:
+    Gamma03.draw()  # doctest: +ELLIPSIS
+Expecting:
+    0.079...
+ok
+Trying:
+    Gamma03.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting:
+    array([1.35...e-01, 1.84...e-01, 5.71...e-02, 6.36...e-02,
+           4.94...e-01, 1.51...e-01, 1.48...e-04, 2.25...e-06,
+           4.56...e-01, 1.00...e+00, 7.59...e-02, 8.12...e-04,
+           1.54...e-03, 1.14...e-01, 1.18...e-02, 7.30...e-02,
+           1.76...e-06, 1.94...e-01, 1.00...e+00, 3.30...e-02])
+ok
+14 items had no tests:
+    __main__.Gamma
+    __main__.Gamma.__init__
+    __main__.Gamma.__repr__
+    __main__.Gamma.__str__
+    __main__.Gamma.draw
+    __main__.Gamma.draw_nparray
+    __main__.Gamma.kl
+    __main__.Gamma.lower_amplitude
+    __main__.Gamma.oneHOI
+    __main__.Gamma.oneLR
+    __main__.GammaFromMean
+    __main__.GammaFromMean.__init__
+    __main__.UnboundedGamma
+    __main__.UnboundedGamma.__init__
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 15 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/__init__.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    my_arm = Arm(params)  #: doctest: +SKIP
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 7, in __main__
+Failed example:
+    my_arm = Arm(params)  #: doctest: +SKIP
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__[0]>", line 1, in <module>
+        my_arm = Arm(params)  #: doctest: +SKIP
+    NameError: name 'Arm' is not defined
+Trying:
+    my_arm.mean  #: doctest: +SKIP
+Expecting:
+    0.5
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 8, in __main__
+Failed example:
+    my_arm.mean  #: doctest: +SKIP
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__[1]>", line 1, in <module>
+        my_arm.mean  #: doctest: +SKIP
+    NameError: name 'my_arm' is not defined
+Trying:
+    my_arm.draw()  # one random draw  #: doctest: +SKIP
+Expecting:
+    0.0
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 10, in __main__
+Failed example:
+    my_arm.draw()  # one random draw  #: doctest: +SKIP
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__[2]>", line 1, in <module>
+        my_arm.draw()  # one random draw  #: doctest: +SKIP
+    NameError: name 'my_arm' is not defined
+Trying:
+    my_arm.draw_nparray(20)  # or ((3, 10)), many draw  #: doctest: +SKIP
+Expecting:
+    array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
+            1.,  0.,  0.,  0.,  1.,  1.,  1.])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 12, in __main__
+Failed example:
+    my_arm.draw_nparray(20)  # or ((3, 10)), many draw  #: doctest: +SKIP
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__[3]>", line 1, in <module>
+        my_arm.draw_nparray(20)  # or ((3, 10)), many draw  #: doctest: +SKIP
+    NameError: name 'my_arm' is not defined
+Trying:
+    array_from_str("[0.1, 0.2, 0.3]")
+Expecting:
+    array([ 0.1,  0.2,  0.3])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 272, in __main__.array_from_str
+Failed example:
+    array_from_str("[0.1, 0.2, 0.3]")
+Expected:
+    array([ 0.1,  0.2,  0.3])
+Got:
+    array([0.1, 0.2, 0.3])
+Trying:
+    array_from_str("0.1, 0.2, 0.3")
+Expecting:
+    array([ 0.1,  0.2,  0.3])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 274, in __main__.array_from_str
+Failed example:
+    array_from_str("0.1, 0.2, 0.3")
+Expected:
+    array([ 0.1,  0.2,  0.3])
+Got:
+    array([0.1, 0.2, 0.3])
+Trying:
+    array_from_str("0.9")
+Expecting:
+    array(0.9)
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 276, in __main__.array_from_str
+Failed example:
+    array_from_str("0.9")
+Expected:
+    array(0.9)
+Got:
+    array([0.9])
+Trying:
+    list_from_str("[0.1, 0.2, 0.3]")
+Expecting:
+    [0.1, 0.2, 0.3]
+ok
+Trying:
+    list_from_str("0.1, 0.2, 0.3")
+Expecting:
+    [0.1, 0.2, 0.3]
+ok
+Trying:
+    list_from_str("0.9")
+Expecting:
+    [0.9]
+ok
+Trying:
+    optimal_selection_probabilities(3, [0.1,0.1,0.1])
+Expecting:
+    array([ 0.33333333,  0.33333333,  0.33333333])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 352, in __main__.optimal_selection_probabilities
+Failed example:
+    optimal_selection_probabilities(3, [0.1,0.1,0.1])
+Expected:
+    array([ 0.33333333,  0.33333333,  0.33333333])
+Got:
+    array([0.33333333, 0.33333333, 0.33333333])
+Trying:
+    optimal_selection_probabilities(3, [0.1,0.2,0.3])  # weird ? not really...
+Expecting:
+    array([ 0.        ,  0.43055556,  0.56944444])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 355, in __main__.optimal_selection_probabilities
+Failed example:
+    optimal_selection_probabilities(3, [0.1,0.2,0.3])  # weird ? not really...
+Expected:
+    array([ 0.        ,  0.43055556,  0.56944444])
+Got:
+    array([0.        , 0.43055556, 0.56944444])
+Trying:
+    optimal_selection_probabilities(3, [0.1,0.3,0.9])  # weird ? not really...
+Expecting:
+    array([ 0.        ,  0.45061728,  0.54938272])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 358, in __main__.optimal_selection_probabilities
+Failed example:
+    optimal_selection_probabilities(3, [0.1,0.3,0.9])  # weird ? not really...
+Expected:
+    array([ 0.        ,  0.45061728,  0.54938272])
+Got:
+    array([0.        , 0.45061728, 0.54938272])
+Trying:
+    optimal_selection_probabilities(3, [0.7,0.8,0.9])
+Expecting:
+    array([ 0.15631866,  0.35405647,  0.48962487])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 361, in __main__.optimal_selection_probabilities
+Failed example:
+    optimal_selection_probabilities(3, [0.7,0.8,0.9])
+Expected:
+    array([ 0.15631866,  0.35405647,  0.48962487])
+Got:
+    array([0.15631866, 0.35405647, 0.48962487])
+Trying:
+    import numpy as np; np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeans(nbArms=3, mingap=0.05)  # doctest: +ELLIPSIS
+Expecting:
+    [0.191..., 0.437..., 0.622...]
+ok
+Trying:
+    randomMeans(nbArms=3, mingap=0.1)  # doctest: +ELLIPSIS
+Expecting:
+    [0.276..., 0.801..., 0.958...]
+ok
+Trying:
+    import random; random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeans(nbArms=5, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+Expecting:
+    [0.006..., 0.229..., 0.416..., 0.535..., 0.899...]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 142, in __main__.randomMeans
+Failed example:
+    randomMeans(nbArms=5, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.randomMeans[4]>", line 1, in <module>
+        randomMeans(nbArms=5, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+      File "./SMPyBandits/Arms/__init__.py", line 151, in randomMeans
+        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+    AssertionError: Error: 'mingap' = 0.1 is too large, it might be impossible to find a vector of means with such a large gap for 5 arms.
+Trying:
+    randomMeans(nbArms=5, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+Expecting:
+    [0.419..., 0.932..., 0.072..., 0.755..., 0.650...]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 144, in __main__.randomMeans
+Failed example:
+    randomMeans(nbArms=5, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.randomMeans[5]>", line 1, in <module>
+        randomMeans(nbArms=5, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+      File "./SMPyBandits/Arms/__init__.py", line 151, in randomMeans
+        assert (nbArms * mingap) < (amplitude / 2.), "Error: 'mingap' = {:.3g} is too large, it might be impossible to find a vector of means with such a large gap for {} arms.".format(mingap, nbArms)  # DEBUG
+    AssertionError: Error: 'mingap' = 0.1 is too large, it might be impossible to find a vector of means with such a large gap for 5 arms.
+Trying:
+    import numpy as np; np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
+ok
+Trying:
+    randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
+ok
+Trying:
+    import random; random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
+ok
+Trying:
+    randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
+ok
+Trying:
+    import numpy as np; np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 229, in __main__.randomMeansWithSparsity2
+Failed example:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
+Expected:
+    [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
+Got:
+    [-0.8084805496211077, -0.5622722609928855, -0.37789122896016814, -0.2146414162862308, 0.2725926052826416, 0.7799758081188035]
+Trying:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 231, in __main__.randomMeansWithSparsity2
+Failed example:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+Expected:
+    [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
+Got:
+    [-0.6351140160986277, -0.3846038215665063, -0.22717337838762597, -0.11735880936388343, 0.07538124164297655, 0.3688240060019745]
+Trying:
+    import random; random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 237, in __main__.randomMeansWithSparsity2
+Failed example:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+Expected:
+    [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
+Got:
+    [-0.6027974222738458, -0.3486218567734226, -0.2112698570592545, -0.06685989801747838, 0.31683612216887125, 0.5680986526260692]
+Trying:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 239, in __main__.randomMeansWithSparsity2
+Failed example:
+    randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+Expected:
+    [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
+Got:
+    [-0.8157129161861864, -0.5578592445958234, 0.6748809435823302, 0.04735527880151513, -0.9401907772201481, -0.09068404102752747]
+Trying:
+    from random import seed; seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    mylist = [ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9]
+Expecting nothing
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.9, 0.4, 0.3, 0.6, 0.5, 0.7, 0.1, 0.2, 0.8]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.4, 0.3, 0.7, 0.5, 0.8, 0.1, 0.9, 0.6, 0.2]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.4, 0.6, 0.9, 0.5, 0.7, 0.2, 0.1, 0.3, 0.8]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.8, 0.7, 0.3, 0.1, 0.9, 0.5, 0.6, 0.2, 0.4]
+ok
+Trying:
+    tuple_from_str("[0.1, 0.2, 0.3]")
+Expecting:
+    (0.1, 0.2, 0.3)
+ok
+Trying:
+    tuple_from_str("0.1, 0.2, 0.3")
+Expecting:
+    (0.1, 0.2, 0.3)
+ok
+Trying:
+    tuple_from_str("0.9")
+Expecting:
+    (0.9,)
+ok
+Trying:
+    np.array(uniformMeans(2, 0.1))
+Expecting:
+    array([ 0.1,  0.9])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 77, in __main__.uniformMeans
+Failed example:
+    np.array(uniformMeans(2, 0.1))
+Expected:
+    array([ 0.1,  0.9])
+Got:
+    array([0.1, 0.9])
+Trying:
+    np.array(uniformMeans(3, 0.1))
+Expecting:
+    array([ 0.1,  0.5,  0.9])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 79, in __main__.uniformMeans
+Failed example:
+    np.array(uniformMeans(3, 0.1))
+Expected:
+    array([ 0.1,  0.5,  0.9])
+Got:
+    array([0.1, 0.5, 0.9])
+Trying:
+    np.array(uniformMeans(9, 1 / (1. + 9)))
+Expecting:
+    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 81, in __main__.uniformMeans
+Failed example:
+    np.array(uniformMeans(9, 1 / (1. + 9)))
+Expected:
+    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
+Got:
+    array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
+Trying:
+    import numpy as np; np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2))  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.55,  0.95])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 101, in __main__.uniformMeansWithSparsity
+Failed example:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2))  # doctest: +ELLIPSIS
+Expected:
+    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.55,  0.95])
+Got:
+    array([0.  , 0.  , 0.  , 0.  , 0.55, 0.95])
+Trying:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2, lowerNonZero=0.8, delta=0.03))  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.806,  0.994])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 103, in __main__.uniformMeansWithSparsity
+Failed example:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2, lowerNonZero=0.8, delta=0.03))  # doctest: +ELLIPSIS
+Expected:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.806,  0.994])
+Got:
+    array([0.   , 0.   , 0.   , 0.   , 0.806, 0.994])
+Trying:
+    np.array(uniformMeansWithSparsity(nbArms=10, sparsity=2))  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.55,  0.95])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 105, in __main__.uniformMeansWithSparsity
+Failed example:
+    np.array(uniformMeansWithSparsity(nbArms=10, sparsity=2))  # doctest: +ELLIPSIS
+Expected:
+    array([ 0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.  ,  0.55,  0.95])
+Got:
+    array([0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.55, 0.95])
+Trying:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2, delta=0.05))  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.525,  0.975])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 107, in __main__.uniformMeansWithSparsity
+Failed example:
+    np.array(uniformMeansWithSparsity(nbArms=6, sparsity=2, delta=0.05))  # doctest: +ELLIPSIS
+Expected:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.525,  0.975])
+Got:
+    array([0.   , 0.   , 0.   , 0.   , 0.525, 0.975])
+Trying:
+    np.array(uniformMeansWithSparsity(nbArms=10, sparsity=4, delta=0.05))  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.525,  0.675,
+            0.825,  0.975])
+**********************************************************************
+File "./SMPyBandits/Arms/__init__.py", line 109, in __main__.uniformMeansWithSparsity
+Failed example:
+    np.array(uniformMeansWithSparsity(nbArms=10, sparsity=4, delta=0.05))  # doctest: +ELLIPSIS
+Expected:
+    array([ 0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.   ,  0.525,  0.675,
+            0.825,  0.975])
+Got:
+    array([0.   , 0.   , 0.   , 0.   , 0.   , 0.   , 0.525, 0.675, 0.825,
+           0.975])
+1 items had no tests:
+    __main__.randomMeansWithGapBetweenMbestMworst
+4 items passed all tests:
+   3 tests in __main__.list_from_str
+   6 tests in __main__.randomMeansWithSparsity
+   6 tests in __main__.shuffled
+   3 tests in __main__.tuple_from_str
+**********************************************************************
+7 items had failures:
+   4 of   4 in __main__
+   3 of   3 in __main__.array_from_str
+   4 of   4 in __main__.optimal_selection_probabilities
+   2 of   6 in __main__.randomMeans
+   4 of   6 in __main__.randomMeansWithSparsity2
+   3 of   3 in __main__.uniformMeans
+   5 of   6 in __main__.uniformMeansWithSparsity
+50 tests in 12 items.
+25 passed and 25 failed.
+***Test Failed*** 25 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Exponential.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    Exp03 = ExponentialFromMean(0.3)
+Expecting nothing
+ok
+Trying:
+    Exp03
+Expecting:
+    \mathrm{Exp}(3.2, 1)
+ok
+Trying:
+    Exp03.mean  # doctest: +ELLIPSIS
+Expecting:
+    0.3000...
+ok
+Trying:
+    Exp03.draw()  # doctest: +ELLIPSIS
+Expecting:
+    0.052...
+ok
+Trying:
+    Exp03.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting:
+    array([0.18..., 0.10..., 0.15..., 0.18..., 0.26...,
+           0.13..., 0.25..., 0.03..., 0.01..., 0.29... ,
+           0.07..., 0.19..., 0.17..., 0.02... , 0.82... ,
+           0.76..., 1.     , 0.05..., 0.07..., 0.04...])
+ok
+15 items had no tests:
+    __main__.Exponential
+    __main__.Exponential.__init__
+    __main__.Exponential.__repr__
+    __main__.Exponential.__str__
+    __main__.Exponential.draw
+    __main__.Exponential.draw_nparray
+    __main__.Exponential.kl
+    __main__.Exponential.lower_amplitude
+    __main__.Exponential.oneHOI
+    __main__.Exponential.oneLR
+    __main__.ExponentialFromMean
+    __main__.ExponentialFromMean.__init__
+    __main__.UnboundedExponential
+    __main__.UnboundedExponential.__init__
+    __main__.p_of_expectation
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 16 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Poisson.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    Poisson5 = Poisson(5, trunc=10)
+Expecting nothing
+ok
+Trying:
+    Poisson5
+Expecting:
+    P(5, 10)
+ok
+Trying:
+    Poisson5.mean  # doctest: +ELLIPSIS
+Expecting:
+    4.9778...
+ok
+Trying:
+    Poisson5.draw()  # doctest: +ELLIPSIS
+Expecting:
+    9
+ok
+Trying:
+    Poisson5.draw_nparray(20)  # doctest: +ELLIPSIS
+Expecting:
+    array([ 5,  6,  5,  5,  8,  4,  5,  4,  3,  3,  7,  3,  3,  4,  5,  2,  1,
+            7,  7, 10])
+ok
+10 items had no tests:
+    __main__.Poisson
+    __main__.Poisson.__init__
+    __main__.Poisson.__repr__
+    __main__.Poisson.__str__
+    __main__.Poisson.draw
+    __main__.Poisson.draw_nparray
+    __main__.Poisson.kl
+    __main__.Poisson.oneLR
+    __main__.UnboundedPoisson
+    __main__.UnboundedPoisson.__init__
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 11 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/UniformArm.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    Unif01 = UniformArm(0, 1)
+Expecting nothing
+ok
+Trying:
+    Unif01
+Expecting:
+    U(0, 1)
+ok
+Trying:
+    Unif01.mean
+Expecting:
+    0.5
+ok
+Trying:
+    Unif01.draw()  # doctest: +ELLIPSIS
+Expecting:
+    0.8444...
+ok
+Trying:
+    Unif01.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting:
+    array([0.54... , 0.71..., 0.60..., 0.54..., 0.42... ,
+           0.64..., 0.43..., 0.89...  , 0.96..., 0.38...,
+           0.79..., 0.52..., 0.56..., 0.92..., 0.07...,
+           0.08... , 0.02... , 0.83..., 0.77..., 0.87...])
+ok
+Trying:
+    arm_0_1 = UniformArm()
+Expecting nothing
+ok
+Trying:
+    arm_0_10 = UniformArm(0, 10)  # maxi = 10
+Expecting nothing
+ok
+Trying:
+    arm_2_4 = UniformArm(2, 4)
+Expecting nothing
+ok
+Trying:
+    arm_m10_10 = UniformArm(-10, 10)  # also UniformArm(lower=-10, amplitude=20)
+Expecting nothing
+ok
+7 items had no tests:
+    __main__.UniformArm.__init__
+    __main__.UniformArm.__repr__
+    __main__.UniformArm.__str__
+    __main__.UniformArm.draw
+    __main__.UniformArm.draw_nparray
+    __main__.UniformArm.kl
+    __main__.UniformArm.oneLR
+2 items passed all tests:
+   7 tests in __main__
+   4 tests in __main__.UniformArm
+11 tests in 9 items.
+11 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Binomial.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    B03_10 = Binomial(0.3, 10)
+Expecting nothing
+ok
+Trying:
+    B03_10
+Expecting:
+    Bin(0.3, 10)
+ok
+Trying:
+    B03_10.mean
+Expecting:
+    3.0
+ok
+Trying:
+    B03_10.draw()
+Expecting:
+    3
+ok
+Trying:
+    B03_10.draw_nparray(20)
+Expecting:
+    array([4., 3., 3., 3., 3., 3., 5., 6., 3., 4., 3., 3., 5., 1., 1., 0., 4.,
+           4., 5., 6.])
+ok
+9 items had no tests:
+    __main__.Binomial
+    __main__.Binomial.__init__
+    __main__.Binomial.__repr__
+    __main__.Binomial.__str__
+    __main__.Binomial.draw
+    __main__.Binomial.draw_nparray
+    __main__.Binomial.kl
+    __main__.Binomial.lower_amplitude
+    __main__.Binomial.oneLR
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 10 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Bernoulli.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    B03 = Bernoulli(0.3)
+Expecting nothing
+ok
+Trying:
+    B03
+Expecting:
+    B(0.3)
+ok
+Trying:
+    B03.mean
+Expecting:
+    0.3
+ok
+Trying:
+    B03.draw()
+Expecting:
+    0
+ok
+Trying:
+    B03.draw_nparray(20)
+Expecting:
+    array([1., 0., 0., 0., 0., 0., 1., 1., 0., 1., 0., 0., 1., 0., 0., 0., 1.,
+           1., 1., 1.])
+ok
+9 items had no tests:
+    __main__.Bernoulli
+    __main__.Bernoulli.__init__
+    __main__.Bernoulli.__repr__
+    __main__.Bernoulli.__str__
+    __main__.Bernoulli.draw
+    __main__.Bernoulli.draw_nparray
+    __main__.Bernoulli.kl
+    __main__.Bernoulli.lower_amplitude
+    __main__.Bernoulli.oneLR
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 10 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Constant.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    C013 = Constant(0.13)
+Expecting nothing
+ok
+Trying:
+    C013
+Expecting:
+    Constant(0.13)
+ok
+Trying:
+    C013.mean
+Expecting:
+    0.13
+ok
+Trying:
+    C013.draw()
+Expecting:
+    0.13
+ok
+Trying:
+    C013.draw_nparray(3)
+Expecting:
+    array([0.13, 0.13, 0.13])
+ok
+Trying:
+    arm_0_5 = Constant(0.5)
+Expecting nothing
+ok
+Trying:
+    arm_0_5.draw()
+Expecting:
+    0.5
+ok
+Trying:
+    arm_0_5.draw_nparray((3, 2))
+Expecting:
+    array([[0.5, 0.5],
+           [0.5, 0.5],
+           [0.5, 0.5]])
+ok
+7 items had no tests:
+    __main__.Constant.__init__
+    __main__.Constant.__repr__
+    __main__.Constant.__str__
+    __main__.Constant.draw
+    __main__.Constant.draw_nparray
+    __main__.Constant.kl
+    __main__.Constant.oneLR
+2 items passed all tests:
+   5 tests in __main__
+   3 tests in __main__.Constant
+8 tests in 9 items.
+8 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Arms/Gaussian.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; import numpy as np
+Expecting nothing
+ok
+Trying:
+    random.seed(0); np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    Gauss03 = Gaussian(0.3, 0.05)  # small variance
+Expecting nothing
+ok
+Trying:
+    Gauss03
+Expecting:
+    G(0.3, 0.05)
+ok
+Trying:
+    Gauss03.mean
+Expecting:
+    0.3
+ok
+Trying:
+    Gauss03.draw()  # doctest: +ELLIPSIS
+Expecting:
+    0.3470...
+ok
+Trying:
+    Gauss03.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting:
+    array([0.388..., 0.320..., 0.348... , 0.412..., 0.393... ,
+           0.251..., 0.347..., 0.292..., 0.294..., 0.320...,
+           0.307..., 0.372..., 0.338..., 0.306..., 0.322...,
+           0.316..., 0.374..., 0.289..., 0.315..., 0.257...])
+ok
+37 items had no tests:
+    __main__.Gaussian
+    __main__.Gaussian.__init__
+    __main__.Gaussian.__repr__
+    __main__.Gaussian.__str__
+    __main__.Gaussian.draw
+    __main__.Gaussian.draw_nparray
+    __main__.Gaussian.kl
+    __main__.Gaussian.lower_amplitude
+    __main__.Gaussian.oneHOI
+    __main__.Gaussian.oneLR
+    __main__.Gaussian_0_1
+    __main__.Gaussian_0_1.__init__
+    __main__.Gaussian_0_10
+    __main__.Gaussian_0_10.__init__
+    __main__.Gaussian_0_100
+    __main__.Gaussian_0_100.__init__
+    __main__.Gaussian_0_2
+    __main__.Gaussian_0_2.__init__
+    __main__.Gaussian_0_5
+    __main__.Gaussian_0_5.__init__
+    __main__.Gaussian_m100_100
+    __main__.Gaussian_m100_100.__init__
+    __main__.Gaussian_m10_10
+    __main__.Gaussian_m10_10.__init__
+    __main__.Gaussian_m1_1
+    __main__.Gaussian_m1_1.__init__
+    __main__.Gaussian_m2_2
+    __main__.Gaussian_m2_2.__init__
+    __main__.Gaussian_m5_5
+    __main__.Gaussian_m5_5.__init__
+    __main__.Phi
+    __main__.UnboundedGaussian
+    __main__.UnboundedGaussian.__init__
+    __main__.UnboundedGaussian.__repr__
+    __main__.UnboundedGaussian.draw
+    __main__.UnboundedGaussian.draw_nparray
+    __main__.phi
+1 items passed all tests:
+   7 tests in __main__
+7 tests in 38 items.
+7 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/CentralizedCycling.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    s = CentralizedCycling(2, 3)
+Expecting nothing
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [0, 2]
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [1, 0]
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+ok
+10 items had no tests:
+    __main__
+    __main__.CentralizedCycling
+    __main__.CentralizedCycling.__str__
+    __main__.CentralizedCycling._printNbCollisions
+    __main__.Cycling
+    __main__.Cycling.__init__
+    __main__.Cycling.__str__
+    __main__.Cycling.choice
+    __main__.Cycling.getReward
+    __main__.Cycling.startGame
+1 items passed all tests:
+   6 tests in __main__.CentralizedCycling.__init__
+6 tests in 11 items.
+6 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoEst.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 135, in __main__.rhoEst.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEst.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoEst(nbPlayers, nbArms, UCB, threshold=threshold_on_t)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 139, in __main__.rhoEst.__init__
+Failed example:
+    s = rhoEst(nbPlayers, nbArms, UCB, threshold=threshold_on_t)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEst.__init__[4]>", line 1, in <module>
+        s = rhoEst(nbPlayers, nbArms, UCB, threshold=threshold_on_t)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 140, in __main__.rhoEst.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEst.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 142, in __main__.rhoEst.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEst.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 180, in __main__.rhoEstPlus.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEstPlus.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    horizon = 1000
+Expecting nothing
+ok
+Trying:
+    s = rhoEstPlus(nbPlayers, nbArms, UCB, horizon=horizon)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 185, in __main__.rhoEstPlus.__init__
+Failed example:
+    s = rhoEstPlus(nbPlayers, nbArms, UCB, horizon=horizon)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEstPlus.__init__[5]>", line 1, in <module>
+        s = rhoEstPlus(nbPlayers, nbArms, UCB, horizon=horizon)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 186, in __main__.rhoEstPlus.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEstPlus.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoEst.py", line 188, in __main__.rhoEstPlus.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoEstPlus.__init__[7]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+11 items had no tests:
+    __main__
+    __main__.oneRhoEst
+    __main__.oneRhoEst.__init__
+    __main__.oneRhoEst.__str__
+    __main__.oneRhoEst.getReward
+    __main__.oneRhoEst.handleCollision
+    __main__.oneRhoEst.startGame
+    __main__.rhoEst
+    __main__.rhoEst.__str__
+    __main__.rhoEstPlus
+    __main__.rhoEstPlus.__str__
+**********************************************************************
+2 items had failures:
+   4 of   7 in __main__.rhoEst.__init__
+   4 of   8 in __main__.rhoEstPlus.__init__
+15 tests in 13 items.
+7 passed and 8 failed.
+***Test Failed*** 8 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoLearn.py'...[0;39;49m
+Warning: ../Policies/Uniform.py was not imported correctly...
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearn.py", line 140, in __main__.rhoLearn.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearn.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    stickyTime = 5
+Expecting nothing
+ok
+Trying:
+    s = rhoLearn(nbPlayers, nbArms, UCB, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearn.py", line 145, in __main__.rhoLearn.__init__
+Failed example:
+    s = rhoLearn(nbPlayers, nbArms, UCB, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearn.__init__[5]>", line 1, in <module>
+        s = rhoLearn(nbPlayers, nbArms, UCB, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearn.py", line 146, in __main__.rhoLearn.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearn.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearn.py", line 148, in __main__.rhoLearn.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearn.__init__[7]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+14 items had no tests:
+    __main__
+    __main__.Uniform
+    __main__.Uniform.__init__
+    __main__.Uniform.choice
+    __main__.Uniform.getReward
+    __main__.Uniform.startGame
+    __main__.oneRhoLearn
+    __main__.oneRhoLearn.__init__
+    __main__.oneRhoLearn.__str__
+    __main__.oneRhoLearn.getReward
+    __main__.oneRhoLearn.handleCollision
+    __main__.oneRhoLearn.startGame
+    __main__.rhoLearn
+    __main__.rhoLearn.__str__
+**********************************************************************
+1 items had failures:
+   4 of   8 in __main__.rhoLearn.__init__
+8 tests in 15 items.
+4 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/DepRound.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import numpy as np; import random
+Expecting nothing
+ok
+Trying:
+    np.random.seed(0); random.seed(0)  # for reproductibility!
+Expecting nothing
+ok
+Trying:
+    K = 5
+Expecting nothing
+ok
+Trying:
+    k = 2
+Expecting nothing
+ok
+Trying:
+    weights_p = [ 2, 2, 2, 2, 2 ]  # all equal weights
+Expecting nothing
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [3, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [3, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 1]
+ok
+Trying:
+    weights_p = [ 10, 8, 6, 4, 2 ]  # decreasing weights
+Expecting nothing
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [1, 2]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [3, 4]
+ok
+Trying:
+    weights_p = [ 3, 3, 0, 0, 3 ]  # decreasing weights
+Expecting nothing
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 4]
+ok
+Trying:
+    DepRound(weights_p, k)
+Expecting:
+    [0, 1]
+ok
+1 items had no tests:
+    __main__
+1 items passed all tests:
+  17 tests in __main__.DepRound
+17 tests in 2 items.
+17 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoRandSticky.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandSticky.py", line 98, in __main__.rhoRandSticky.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandSticky.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    stickyTime = 5
+Expecting nothing
+ok
+Trying:
+    s = rhoRandSticky(nbPlayers, nbArms, UCB, stickyTime=stickyTime)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandSticky.py", line 103, in __main__.rhoRandSticky.__init__
+Failed example:
+    s = rhoRandSticky(nbPlayers, nbArms, UCB, stickyTime=stickyTime)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandSticky.__init__[5]>", line 1, in <module>
+        s = rhoRandSticky(nbPlayers, nbArms, UCB, stickyTime=stickyTime)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandSticky.py", line 104, in __main__.rhoRandSticky.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandSticky.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandSticky.py", line 106, in __main__.rhoRandSticky.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandSticky.__init__[7]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+9 items had no tests:
+    __main__
+    __main__.oneRhoRandSticky
+    __main__.oneRhoRandSticky.__init__
+    __main__.oneRhoRandSticky.__str__
+    __main__.oneRhoRandSticky.getReward
+    __main__.oneRhoRandSticky.handleCollision
+    __main__.oneRhoRandSticky.startGame
+    __main__.rhoRandSticky
+    __main__.rhoRandSticky.__str__
+**********************************************************************
+1 items had failures:
+   4 of   8 in __main__.rhoRandSticky.__init__
+8 tests in 10 items.
+4 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/CentralizedMultiplePlay.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/CentralizedMultiplePlay.py", line 47, in __main__.CentralizedMultiplePlay.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.CentralizedMultiplePlay.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    s = CentralizedMultiplePlay(2, 3, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/CentralizedMultiplePlay.py", line 48, in __main__.CentralizedMultiplePlay.__init__
+Failed example:
+    s = CentralizedMultiplePlay(2, 3, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.CentralizedMultiplePlay.__init__[1]>", line 1, in <module>
+        s = CentralizedMultiplePlay(2, 3, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 0]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/CentralizedMultiplePlay.py", line 49, in __main__.CentralizedMultiplePlay.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.CentralizedMultiplePlay.__init__[2]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+11 items had no tests:
+    __main__
+    __main__.CentralizedChildPointer
+    __main__.CentralizedChildPointer.__repr__
+    __main__.CentralizedChildPointer.__str__
+    __main__.CentralizedMultiplePlay
+    __main__.CentralizedMultiplePlay.__str__
+    __main__.CentralizedMultiplePlay._choice_one
+    __main__.CentralizedMultiplePlay._estimatedOrder_one
+    __main__.CentralizedMultiplePlay._getReward_one
+    __main__.CentralizedMultiplePlay._handleCollision_one
+    __main__.CentralizedMultiplePlay._startGame_one
+**********************************************************************
+1 items had failures:
+   3 of   3 in __main__.CentralizedMultiplePlay.__init__
+3 tests in 12 items.
+0 passed and 3 failed.
+***Test Failed*** 3 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/Selfish.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/Selfish.py", line 57, in __main__.Selfish.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.Selfish.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = Selfish(nbPlayers, nbArms, Uniform)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/Selfish.py", line 61, in __main__.Selfish.__init__
+Failed example:
+    s = Selfish(nbPlayers, nbArms, Uniform)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.Selfish.__init__[4]>", line 1, in <module>
+        s = Selfish(nbPlayers, nbArms, Uniform)
+    NameError: name 'Uniform' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 13, 1, 8, 16, 15]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/Selfish.py", line 62, in __main__.Selfish.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.Selfish.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 9, 15, 11, 6, 16]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/Selfish.py", line 64, in __main__.Selfish.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.Selfish.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+6 items had no tests:
+    __main__
+    __main__.Selfish
+    __main__.Selfish.__str__
+    __main__.Selfish._handleCollision_one
+    __main__.SelfishChildPointer
+    __main__.SelfishChildPointer.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.Selfish.__init__
+7 tests in 7 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoRandRand.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRand.py", line 83, in __main__.rhoRandRand.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRand.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoRandRand(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRand.py", line 87, in __main__.rhoRandRand.__init__
+Failed example:
+    s = rhoRandRand(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRand.__init__[4]>", line 1, in <module>
+        s = rhoRandRand(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRand.py", line 88, in __main__.rhoRandRand.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRand.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRand.py", line 90, in __main__.rhoRandRand.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRand.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+9 items had no tests:
+    __main__
+    __main__.oneRhoRandRand
+    __main__.oneRhoRandRand.__init__
+    __main__.oneRhoRandRand.__str__
+    __main__.oneRhoRandRand.choice
+    __main__.oneRhoRandRand.handleCollision
+    __main__.oneRhoRandRand.startGame
+    __main__.rhoRandRand
+    __main__.rhoRandRand.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.rhoRandRand.__init__
+7 tests in 10 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoRandALOHA.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    from random import seed; seed(0)  # reproducibility
+Expecting nothing
+ok
+Trying:
+    [ new_rank(1, 8, False) for _ in range(10) ]
+Expecting:
+    [7, 7, 1, 5, 9, 8, 7, 5, 8, 6]
+ok
+Trying:
+    [ new_rank(8, 8, False) for _ in range(10) ]
+Expecting:
+    [4, 9, 3, 5, 3, 2, 5, 9, 3, 5]
+ok
+Trying:
+    [ new_rank(1, 8, True) for _ in range(10) ]
+Expecting:
+    [2, 2, 6, 8, 9, 2, 6, 7, 6, 4]
+ok
+Trying:
+    [ new_rank(5, 8, True) for _ in range(10) ]
+Expecting:
+    [9, 8, 8, 9, 1, 9, 1, 2, 7, 1]
+ok
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandALOHA.py", line 165, in __main__.rhoRandALOHA.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandALOHA.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    p0, alpha_p0, forceChange = 0.6, 0.5, True
+Expecting nothing
+ok
+Trying:
+    s = rhoRandALOHA(nbPlayers, nbArms, UCB, p0, alpha_p0, forceChange)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandALOHA.py", line 170, in __main__.rhoRandALOHA.__init__
+Failed example:
+    s = rhoRandALOHA(nbPlayers, nbArms, UCB, p0, alpha_p0, forceChange)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandALOHA.__init__[5]>", line 1, in <module>
+        s = rhoRandALOHA(nbPlayers, nbArms, UCB, p0, alpha_p0, forceChange)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandALOHA.py", line 171, in __main__.rhoRandALOHA.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandALOHA.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandALOHA.py", line 173, in __main__.rhoRandALOHA.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandALOHA.__init__[7]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    from random import seed; seed(0)  # reproducibility
+Expecting nothing
+ok
+Trying:
+    with_proba(0.5)
+Expecting:
+    False
+ok
+Trying:
+    with_proba(0.9)
+Expecting:
+    True
+ok
+Trying:
+    with_proba(0.1)
+Expecting:
+    False
+ok
+9 items had no tests:
+    __main__
+    __main__.oneRhoRandALOHA
+    __main__.oneRhoRandALOHA.__init__
+    __main__.oneRhoRandALOHA.__str__
+    __main__.oneRhoRandALOHA.getReward
+    __main__.oneRhoRandALOHA.handleCollision
+    __main__.oneRhoRandALOHA.startGame
+    __main__.rhoRandALOHA
+    __main__.rhoRandALOHA.__str__
+2 items passed all tests:
+   5 tests in __main__.new_rank
+   4 tests in __main__.with_proba
+**********************************************************************
+1 items had failures:
+   4 of   8 in __main__.rhoRandALOHA.__init__
+17 tests in 12 items.
+13 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoLearnEst.py'...[0;39;49m
+Warning: ../Policies/Uniform.py was not imported correctly...
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearnEst.py", line 54, in __main__.rhoLearnEst.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearnEst.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoLearnEst(nbPlayers, nbArms, UCB, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearnEst.py", line 58, in __main__.rhoLearnEst.__init__
+Failed example:
+    s = rhoLearnEst(nbPlayers, nbArms, UCB, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearnEst.__init__[4]>", line 1, in <module>
+        s = rhoLearnEst(nbPlayers, nbArms, UCB, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearnEst.py", line 59, in __main__.rhoLearnEst.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearnEst.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoLearnEst.py", line 61, in __main__.rhoLearnEst.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoLearnEst.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+5 items had no tests:
+    __main__
+    __main__.oneRhoLearnEst
+    __main__.oneRhoLearnEst.__str__
+    __main__.rhoLearnEst
+    __main__.rhoLearnEst.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.rhoLearnEst.__init__
+7 tests in 6 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoRandRotating.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRotating.py", line 88, in __main__.rhoRandRotating.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRotating.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoRandRotating(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRotating.py", line 92, in __main__.rhoRandRotating.__init__
+Failed example:
+    s = rhoRandRotating(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRotating.__init__[4]>", line 1, in <module>
+        s = rhoRandRotating(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRotating.py", line 93, in __main__.rhoRandRotating.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRotating.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRandRotating.py", line 95, in __main__.rhoRandRotating.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRandRotating.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+9 items had no tests:
+    __main__
+    __main__.oneRhoRandRotating
+    __main__.oneRhoRandRotating.__init__
+    __main__.oneRhoRandRotating.__str__
+    __main__.oneRhoRandRotating.choice
+    __main__.oneRhoRandRotating.handleCollision
+    __main__.oneRhoRandRotating.startGame
+    __main__.rhoRandRotating
+    __main__.rhoRandRotating.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.rhoRandRotating.__init__
+7 tests in 10 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 159, in __main__.RandTopMEst.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEst.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = RandTopMEst(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 163, in __main__.RandTopMEst.__init__
+Failed example:
+    s = RandTopMEst(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEst.__init__[4]>", line 1, in <module>
+        s = RandTopMEst(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 164, in __main__.RandTopMEst.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEst.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 213, in __main__.RandTopMEstPlus.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEstPlus.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    horizon = 1000
+Expecting nothing
+ok
+Trying:
+    s = RandTopMEstPlus(nbPlayers, nbArms, UCB, horizon)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 218, in __main__.RandTopMEstPlus.__init__
+Failed example:
+    s = RandTopMEstPlus(nbPlayers, nbArms, UCB, horizon)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEstPlus.__init__[5]>", line 1, in <module>
+        s = RandTopMEstPlus(nbPlayers, nbArms, UCB, horizon)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopMEst.py", line 219, in __main__.RandTopMEstPlus.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMEstPlus.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+17 items had no tests:
+    __main__
+    __main__.MCTopMEst
+    __main__.MCTopMEst.__init__
+    __main__.MCTopMEst.__str__
+    __main__.MCTopMEstPlus
+    __main__.MCTopMEstPlus.__init__
+    __main__.MCTopMEstPlus.__str__
+    __main__.RandTopMEst
+    __main__.RandTopMEst.__str__
+    __main__.RandTopMEstPlus
+    __main__.RandTopMEstPlus.__str__
+    __main__.oneRandTopMEst
+    __main__.oneRandTopMEst.__init__
+    __main__.oneRandTopMEst.__str__
+    __main__.oneRandTopMEst.getReward
+    __main__.oneRandTopMEst.handleCollision
+    __main__.oneRandTopMEst.startGame
+**********************************************************************
+2 items had failures:
+   3 of   6 in __main__.RandTopMEst.__init__
+   3 of   7 in __main__.RandTopMEstPlus.__init__
+13 tests in 19 items.
+7 passed and 6 failed.
+***Test Failed*** 6 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoRand.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRand.py", line 85, in __main__.rhoRand.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRand.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoRand(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRand.py", line 89, in __main__.rhoRand.__init__
+Failed example:
+    s = rhoRand(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRand.__init__[4]>", line 1, in <module>
+        s = rhoRand(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRand.py", line 90, in __main__.rhoRand.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRand.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoRand.py", line 92, in __main__.rhoRand.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoRand.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+9 items had no tests:
+    __main__
+    __main__.oneRhoRand
+    __main__.oneRhoRand.__init__
+    __main__.oneRhoRand.__str__
+    __main__.oneRhoRand.choice
+    __main__.oneRhoRand.handleCollision
+    __main__.oneRhoRand.startGame
+    __main__.rhoRand
+    __main__.rhoRand.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.rhoRand.__init__
+7 tests in 10 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/ALOHA.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/ALOHA.py", line 210, in __main__.ALOHA.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.ALOHA.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    p0, alpha_p0 = 0.6, 0.5
+Expecting nothing
+ok
+Trying:
+    s = ALOHA(nbPlayers, nbArms, Thompson, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/ALOHA.py", line 215, in __main__.ALOHA.__init__
+Failed example:
+    s = ALOHA(nbPlayers, nbArms, Thompson, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.ALOHA.__init__[5]>", line 1, in <module>
+        s = ALOHA(nbPlayers, nbArms, Thompson, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log)
+    NameError: name 'Thompson' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [6, 11, 8, 4, 8, 8]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/ALOHA.py", line 216, in __main__.ALOHA.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.ALOHA.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    s = ALOHA(nbPlayers, nbArms, UCBalpha, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/ALOHA.py", line 218, in __main__.ALOHA.__init__
+Failed example:
+    s = ALOHA(nbPlayers, nbArms, UCBalpha, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.ALOHA.__init__[7]>", line 1, in <module>
+        s = ALOHA(nbPlayers, nbArms, UCBalpha, p0=p0, alpha_p0=alpha_p0, beta=0.5, alpha=1)
+    NameError: name 'UCBalpha' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [1, 0, 5, 2, 15, 3]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/ALOHA.py", line 219, in __main__.ALOHA.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.ALOHA.__init__[8]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    tnext = make_tnext_beta(0.5)
+Expecting nothing
+ok
+Trying:
+    tnext(100)
+Expecting:
+    10.0
+ok
+Trying:
+    tnext(1000)  # doctest: +ELLIPSIS
+Expecting:
+    31.622...
+ok
+Trying:
+    tnext = make_tnext_log_scaling(1)
+Expecting nothing
+ok
+Trying:
+    tnext(100)  # doctest: +ELLIPSIS
+Expecting:
+    4.615...
+ok
+Trying:
+    tnext(1000)  # doctest: +ELLIPSIS
+Expecting:
+    6.908...
+ok
+Trying:
+    tnext_beta(100, beta=0.1)  # doctest: +ELLIPSIS
+Expecting:
+    1.584...
+ok
+Trying:
+    tnext_beta(100, beta=0.5)
+Expecting:
+    10.0
+ok
+Trying:
+    tnext_beta(100, beta=0.9)  # doctest: +ELLIPSIS
+Expecting:
+    63.095...
+ok
+Trying:
+    tnext_beta(1000)  # doctest: +ELLIPSIS
+Expecting:
+    31.622...
+ok
+Trying:
+    tnext_log(100, scaling=1)  # doctest: +ELLIPSIS
+Expecting:
+    4.615...
+ok
+Trying:
+    tnext_log(100, scaling=10)  # doctest: +ELLIPSIS
+Expecting:
+    46.151...
+ok
+Trying:
+    tnext_log(100, scaling=100)  # doctest: +ELLIPSIS
+Expecting:
+    461.512...
+ok
+Trying:
+    tnext_log(1000)  # doctest: +ELLIPSIS
+Expecting:
+    6.908...
+ok
+11 items had no tests:
+    __main__
+    __main__.ALOHA
+    __main__.ALOHA.__str__
+    __main__.oneALOHA
+    __main__.oneALOHA.__init__
+    __main__.oneALOHA.__str__
+    __main__.oneALOHA.choice
+    __main__.oneALOHA.ftnext
+    __main__.oneALOHA.getReward
+    __main__.oneALOHA.handleCollision
+    __main__.oneALOHA.startGame
+4 items passed all tests:
+   3 tests in __main__.make_tnext_beta
+   3 tests in __main__.make_tnext_log_scaling
+   4 tests in __main__.tnext_beta
+   4 tests in __main__.tnext_log
+**********************************************************************
+1 items had failures:
+   5 of   9 in __main__.ALOHA.__init__
+23 tests in 16 items.
+18 passed and 5 failed.
+***Test Failed*** 5 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/rhoCentralized.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoCentralized.py", line 88, in __main__.rhoCentralized.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoCentralized.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = rhoCentralized(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoCentralized.py", line 92, in __main__.rhoCentralized.__init__
+Failed example:
+    s = rhoCentralized(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoCentralized.__init__[4]>", line 1, in <module>
+        s = rhoCentralized(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoCentralized.py", line 93, in __main__.rhoCentralized.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoCentralized.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [9, 4, 6, 12, 1, 6]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/rhoCentralized.py", line 95, in __main__.rhoCentralized.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.rhoCentralized.__init__[6]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+9 items had no tests:
+    __main__
+    __main__.oneRhoCentralized
+    __main__.oneRhoCentralized.__init__
+    __main__.oneRhoCentralized.__str__
+    __main__.oneRhoCentralized.choice
+    __main__.oneRhoCentralized.handleCollision
+    __main__.oneRhoCentralized.startGame
+    __main__.rhoCentralized
+    __main__.rhoCentralized.__str__
+**********************************************************************
+1 items had failures:
+   4 of   7 in __main__.rhoCentralized.__init__
+7 tests in 10 items.
+3 passed and 4 failed.
+***Test Failed*** 4 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/CentralizedFixed.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    s = CentralizedFixed(2, 3)
+Expecting nothing
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+ok
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    s = CentralizedFixed(4, 8)
+Expecting nothing
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [7, 6, 1, 2]
+ok
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [7, 6, 1, 2]
+ok
+Trying:
+    s = CentralizedFixed(10, 14)
+Expecting nothing
+ok
+13 items had no tests:
+    __main__
+    __main__.CentralizedFixed
+    __main__.CentralizedFixed.__str__
+    __main__.CentralizedFixed._choice_one
+    __main__.CentralizedFixed._getReward_one
+    __main__.CentralizedFixed._printNbCollisions
+    __main__.CentralizedFixed._startGame_one
+    __main__.Fixed
+    __main__.Fixed.__init__
+    __main__.Fixed.__str__
+    __main__.Fixed.choice
+    __main__.Fixed.getReward
+    __main__.Fixed.startGame
+1 items passed all tests:
+   9 tests in __main__.CentralizedFixed.__init__
+9 tests in 14 items.
+9 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/OracleFair.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleFair.py", line 69, in __main__.OracleFair.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleFair.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+    ModuleNotFoundError: No module named 'Environment'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleFair.py", line 71, in __main__.OracleFair.__init__
+Failed example:
+    problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleFair.__init__[2]>", line 1, in <module>
+        problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+    NameError: name 'MAB' is not defined
+Trying:
+    s = OracleFair(2, problem)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleFair.py", line 73, in __main__.OracleFair.__init__
+Failed example:
+    s = OracleFair(2, problem)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleFair.__init__[3]>", line 1, in <module>
+        s = OracleFair(2, problem)
+    NameError: name 'problem' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [1, 2]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleFair.py", line 74, in __main__.OracleFair.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleFair.__init__[4]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleFair.py", line 76, in __main__.OracleFair.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleFair.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+10 items had no tests:
+    __main__
+    __main__.CyclingBest
+    __main__.CyclingBest.__init__
+    __main__.CyclingBest.__str__
+    __main__.CyclingBest.choice
+    __main__.CyclingBest.getReward
+    __main__.CyclingBest.startGame
+    __main__.OracleFair
+    __main__.OracleFair.__str__
+    __main__.OracleFair._printNbCollisions
+**********************************************************************
+1 items had failures:
+   5 of   6 in __main__.OracleFair.__init__
+6 tests in 11 items.
+1 passed and 5 failed.
+***Test Failed*** 5 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/EstimateM.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *; from PoliciesMultiPlayers import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/EstimateM.py", line 261, in __main__.EstimateM.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *; from PoliciesMultiPlayers import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.EstimateM.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *; from PoliciesMultiPlayers import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 4
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 2
+Expecting nothing
+ok
+Trying:
+    s = EstimateM(nbPlayers, nbArms, rhoRand, UCBalpha, alpha=0.5)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/EstimateM.py", line 265, in __main__.EstimateM.__init__
+Failed example:
+    s = EstimateM(nbPlayers, nbArms, rhoRand, UCBalpha, alpha=0.5)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.EstimateM.__init__[4]>", line 1, in <module>
+        s = EstimateM(nbPlayers, nbArms, rhoRand, UCBalpha, alpha=0.5)
+    NameError: name 'rhoRand' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [0, 3]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/EstimateM.py", line 266, in __main__.EstimateM.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.EstimateM.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    threshold_on_t(1000, 3)  # doctest: +ELLIPSIS
+Expecting:
+    47.730...
+ok
+Trying:
+    threshold_on_t(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+Expecting:
+    47.730...
+ok
+Trying:
+    threshold_on_t_doubling_trick(1000, 3)  # doctest: +ELLIPSIS
+Expecting:
+    14.356...
+ok
+Trying:
+    threshold_on_t_doubling_trick(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+Expecting:
+    14.356...
+ok
+Trying:
+    threshold_on_t_with_horizon(1000, 3)  # doctest: +ELLIPSIS
+Expecting:
+    14.287...
+ok
+Trying:
+    threshold_on_t_with_horizon(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+Expecting:
+    16.357...
+ok
+17 items had no tests:
+    __main__
+    __main__.EstimateM
+    __main__.EstimateM.__str__
+    __main__.oneEstimateM
+    __main__.oneEstimateM.__init__
+    __main__.oneEstimateM.__str__
+    __main__.oneEstimateM.choice
+    __main__.oneEstimateM.choiceFromSubSet
+    __main__.oneEstimateM.choiceIMP
+    __main__.oneEstimateM.choiceMultiple
+    __main__.oneEstimateM.choiceWithRank
+    __main__.oneEstimateM.estimatedBestArms
+    __main__.oneEstimateM.estimatedOrder
+    __main__.oneEstimateM.getReward
+    __main__.oneEstimateM.handleCollision
+    __main__.oneEstimateM.startGame
+    __main__.oneEstimateM.updateNbPlayers
+3 items passed all tests:
+   2 tests in __main__.threshold_on_t
+   2 tests in __main__.threshold_on_t_doubling_trick
+   2 tests in __main__.threshold_on_t_with_horizon
+**********************************************************************
+1 items had failures:
+   3 of   6 in __main__.EstimateM.__init__
+12 tests in 21 items.
+9 passed and 3 failed.
+***Test Failed*** 3 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/RandTopM.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 349, in __main__.MCTopM.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopM.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = MCTopM(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 353, in __main__.MCTopM.__init__
+Failed example:
+    s = MCTopM(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopM.__init__[4]>", line 1, in <module>
+        s = MCTopM(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 354, in __main__.MCTopM.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopM.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 381, in __main__.MCTopMCautious.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMCautious.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = MCTopMCautious(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 385, in __main__.MCTopMCautious.__init__
+Failed example:
+    s = MCTopMCautious(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMCautious.__init__[4]>", line 1, in <module>
+        s = MCTopMCautious(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 386, in __main__.MCTopMCautious.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMCautious.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 413, in __main__.MCTopMExtraCautious.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMExtraCautious.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = MCTopMExtraCautious(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 417, in __main__.MCTopMExtraCautious.__init__
+Failed example:
+    s = MCTopMExtraCautious(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMExtraCautious.__init__[4]>", line 1, in <module>
+        s = MCTopMExtraCautious(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 418, in __main__.MCTopMExtraCautious.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMExtraCautious.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 445, in __main__.MCTopMOld.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMOld.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = MCTopMOld(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 449, in __main__.MCTopMOld.__init__
+Failed example:
+    s = MCTopMOld(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMOld.__init__[4]>", line 1, in <module>
+        s = MCTopMOld(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 450, in __main__.MCTopMOld.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.MCTopMOld.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 203, in __main__.RandTopM.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopM.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = RandTopM(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 207, in __main__.RandTopM.__init__
+Failed example:
+    s = RandTopM(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopM.__init__[4]>", line 1, in <module>
+        s = RandTopM(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 208, in __main__.RandTopM.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopM.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 253, in __main__.RandTopMCautious.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMCautious.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = RandTopMCautious(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 257, in __main__.RandTopMCautious.__init__
+Failed example:
+    s = RandTopMCautious(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMCautious.__init__[4]>", line 1, in <module>
+        s = RandTopMCautious(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 258, in __main__.RandTopMCautious.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMCautious.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 286, in __main__.RandTopMExtraCautious.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMExtraCautious.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = RandTopMExtraCautious(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 290, in __main__.RandTopMExtraCautious.__init__
+Failed example:
+    s = RandTopMExtraCautious(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMExtraCautious.__init__[4]>", line 1, in <module>
+        s = RandTopMExtraCautious(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 291, in __main__.RandTopMExtraCautious.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMExtraCautious.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 317, in __main__.RandTopMOld.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Policies import *
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMOld.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Policies import *
+    ModuleNotFoundError: No module named 'Policies'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    nbArms = 17
+Expecting nothing
+ok
+Trying:
+    nbPlayers = 6
+Expecting nothing
+ok
+Trying:
+    s = RandTopMOld(nbPlayers, nbArms, UCB)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 321, in __main__.RandTopMOld.__init__
+Failed example:
+    s = RandTopMOld(nbPlayers, nbArms, UCB)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMOld.__init__[4]>", line 1, in <module>
+        s = RandTopMOld(nbPlayers, nbArms, UCB)
+    NameError: name 'UCB' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [12, 15, 0, 3, 3, 7]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/RandTopM.py", line 322, in __main__.RandTopMOld.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.RandTopMOld.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+28 items had no tests:
+    __main__
+    __main__.MCTopM
+    __main__.MCTopM.__str__
+    __main__.MCTopMCautious
+    __main__.MCTopMCautious.__str__
+    __main__.MCTopMExtraCautious
+    __main__.MCTopMExtraCautious.__str__
+    __main__.MCTopMOld
+    __main__.MCTopMOld.__str__
+    __main__.RandTopM
+    __main__.RandTopM.__str__
+    __main__.RandTopMCautious
+    __main__.RandTopMCautious.__str__
+    __main__.RandTopMExtraCautious
+    __main__.RandTopMExtraCautious.__str__
+    __main__.RandTopMOld
+    __main__.RandTopMOld.__str__
+    __main__.oneRandTopM
+    __main__.oneRandTopM.Mbest
+    __main__.oneRandTopM.__init__
+    __main__.oneRandTopM.__str__
+    __main__.oneRandTopM._index
+    __main__.oneRandTopM.choice
+    __main__.oneRandTopM.getReward
+    __main__.oneRandTopM.handleCollision
+    __main__.oneRandTopM.startGame
+    __main__.oneRandTopM.worst_Mbest
+    __main__.oneRandTopM.worst_previous__and__current_Mbest
+**********************************************************************
+8 items had failures:
+   3 of   6 in __main__.MCTopM.__init__
+   3 of   6 in __main__.MCTopMCautious.__init__
+   3 of   6 in __main__.MCTopMExtraCautious.__init__
+   3 of   6 in __main__.MCTopMOld.__init__
+   3 of   6 in __main__.RandTopM.__init__
+   3 of   6 in __main__.RandTopMCautious.__init__
+   3 of   6 in __main__.RandTopMExtraCautious.__init__
+   3 of   6 in __main__.RandTopMOld.__init__
+48 tests in 36 items.
+24 passed and 24 failed.
+***Test Failed*** 24 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py", line 64, in __main__.OracleNotFair.__init__
+Failed example:
+    import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleNotFair.__init__[0]>", line 1, in <module>
+        import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+    ModuleNotFoundError: No module named 'Environment'
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py", line 66, in __main__.OracleNotFair.__init__
+Failed example:
+    problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleNotFair.__init__[2]>", line 1, in <module>
+        problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+    NameError: name 'MAB' is not defined
+Trying:
+    s = OracleNotFair(2, problem)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py", line 68, in __main__.OracleNotFair.__init__
+Failed example:
+    s = OracleNotFair(2, problem)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleNotFair.__init__[3]>", line 1, in <module>
+        s = OracleNotFair(2, problem)
+    NameError: name 'problem' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py", line 69, in __main__.OracleNotFair.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleNotFair.__init__[4]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+Trying:
+    [ child.choice() for child in s.children ]
+Expecting:
+    [2, 1]
+**********************************************************************
+File "./SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py", line 71, in __main__.OracleNotFair.__init__
+Failed example:
+    [ child.choice() for child in s.children ]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.OracleNotFair.__init__[5]>", line 1, in <module>
+        [ child.choice() for child in s.children ]
+    NameError: name 's' is not defined
+10 items had no tests:
+    __main__
+    __main__.Fixed
+    __main__.Fixed.__init__
+    __main__.Fixed.__str__
+    __main__.Fixed.choice
+    __main__.Fixed.getReward
+    __main__.Fixed.startGame
+    __main__.OracleNotFair
+    __main__.OracleNotFair.__str__
+    __main__.OracleNotFair._printNbCollisions
+**********************************************************************
+1 items had failures:
+   5 of   6 in __main__.OracleNotFair.__init__
+6 tests in 11 items.
+1 passed and 5 failed.
+***Test Failed*** 5 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Policies/CPUCB.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    true_p = 0.6
+Expecting nothing
+ok
+Trying:
+    N = 100
+Expecting nothing
+ok
+Trying:
+    xArray = np.random.binomial(N, true_p, 4)
+Expecting nothing
+ok
+Trying:
+    xArray
+Expecting:
+    array([61, 54, 61, 52])
+ok
+Trying:
+    (phat, pci) = binofit(xArray, N)
+Expecting nothing
+ok
+Trying:
+    phat
+Expecting:
+    array([0.61, 0.54, 0.61, 0.52])
+ok
+Trying:
+    pci  # 0.6 of course lies in the 95% confidence intervals  # doctest: +ELLIPSIS
+Expecting:
+    array([[0.507..., 0.705...],
+           [0.437..., 0.640...],
+           [0.507..., 0.705...],
+           [0.417..., 0.620...]])
+ok
+Trying:
+    (phat, pci) = binofit(xArray, N, 0.01)
+Expecting nothing
+ok
+Trying:
+    pci  # 0.6 is also in the 99% confidence intervals, but it is larger  # doctest: +ELLIPSIS
+Expecting:
+    array([[0.476..., 0.732...],
+           [0.407..., 0.668...],
+           [0.476..., 0.732...],
+           [0.387..., 0.650...]])
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    true_p = 0.6
+Expecting nothing
+ok
+Trying:
+    N = 100
+Expecting nothing
+ok
+Trying:
+    x = np.random.binomial(N, true_p)
+Expecting nothing
+ok
+Trying:
+    (phat, pci) = binofit_scalar(x, N)
+Expecting nothing
+ok
+Trying:
+    phat
+Expecting:
+    0.61
+ok
+Trying:
+    pci  # 0.6 of course lies in the 95% confidence interval  # doctest: +ELLIPSIS
+Expecting:
+    (0.507..., 0.705...)
+ok
+Trying:
+    (phat, pci) = binofit_scalar(x, N, 0.01)
+Expecting nothing
+ok
+Trying:
+    pci  # 0.6 is also in the 99% confidence interval, but it is larger  # doctest: +ELLIPSIS
+Expecting:
+    (0.476..., 0.732...)
+ok
+5 items had no tests:
+    __main__
+    __main__.CPUCB
+    __main__.CPUCB.__init__
+    __main__.CPUCB.computeIndex
+    __main__.ClopperPearsonUCB
+2 items passed all tests:
+  10 tests in __main__.binofit
+   9 tests in __main__.binofit_scalar
+19 tests in 7 items.
+19 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Policies/BESA.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    actions = np.arange(K)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 0 is better
+Expecting:
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+Expecting:
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+ok
+Trying:
+    besa_K_actions(rewards, pulls, actions, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    3
+ok
+Trying:
+    [besa_K_actions(rewards, pulls, actions, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    actions = np.arange(K)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 0 is better
+Expecting:
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+Expecting:
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+ok
+Trying:
+    besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    3
+ok
+Trying:
+    [besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [3, 3, 3, 2, 0, 3, 3, 3, 3, 3]
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 0 is better
+Expecting:
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+Expecting:
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+ok
+Trying:
+    besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    3
+ok
+Trying:
+    [besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 0 is better
+Expecting:
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+Expecting:
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+ok
+Trying:
+    besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    3
+ok
+Trying:
+    [besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [1, 3, 0, 2, 2, 3, 1, 1, 3, 1]
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [5, 6, 7, 8]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 0 is better
+Expecting:
+    array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
+Expecting:
+    array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
+ok
+Trying:
+    besa_K_actions__smart_divideandconquer(rewards, pulls, 0, K-1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    3
+ok
+Trying:
+    [besa_K_actions__smart_divideandconquer(rewards, pulls, 0, K-1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
+ok
+Trying:
+    np.random.seed(2345)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    pulls = [6, 10]; K = len(pulls); N = max(pulls)
+Expecting nothing
+ok
+Trying:
+    rewards = np.random.randn(K, N)
+Expecting nothing
+ok
+Trying:
+    np.mean(rewards, axis=1)  # arm 1 is better  # doctest: +ELLIPSIS
+Expecting:
+    array([0.154..., 0.158...])
+ok
+Trying:
+    np.mean(rewards[:, :min(pulls)], axis=1)  # arm 0 is better in the first 6 samples  # doctest: +ELLIPSIS
+Expecting:
+    array([0.341..., 0.019...])
+ok
+Trying:
+    besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+Expecting:
+    0
+ok
+Trying:
+    [besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+Expecting:
+    [0, 0, 1, 1, 0, 0, 1, 0, 0, 0]
+ok
+Trying:
+    permutation = [1, 0, 3, 2]
+Expecting nothing
+ok
+Trying:
+    inverse_permutation(permutation, 1)
+Expecting:
+    0
+ok
+Trying:
+    inverse_permutation(permutation, 0)
+Expecting:
+    1
+ok
+Trying:
+    subsample_deterministic(5, 3)  # doctest: +ELLIPSIS
+Expecting:
+    array([0, 1, 2, 3])
+ok
+Trying:
+    subsample_deterministic(10, 20)  # doctest: +ELLIPSIS
+Expecting:
+    array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
+ok
+Trying:
+    np.random.seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    subsample_uniform(3, 5)  # doctest: +ELLIPSIS
+Expecting:
+    array([4, 0, 1])
+ok
+Trying:
+    subsample_uniform(10, 20)  # doctest: +ELLIPSIS
+Expecting:
+    array([ 7, 16,  2,  3,  1, 18,  5,  4,  0,  8])
+ok
+12 items had no tests:
+    __main__
+    __main__.BESA
+    __main__.BESA.__init__
+    __main__.BESA.__str__
+    __main__.BESA.choice
+    __main__.BESA.choiceFromSubSet
+    __main__.BESA.choiceMultiple
+    __main__.BESA.choiceWithRank
+    __main__.BESA.computeAllIndex
+    __main__.BESA.computeIndex
+    __main__.BESA.getReward
+    __main__.BESA.handleCollision
+9 items passed all tests:
+   8 tests in __main__.besa_K_actions
+   8 tests in __main__.besa_K_actions__non_binary
+   7 tests in __main__.besa_K_actions__non_randomized
+   7 tests in __main__.besa_K_actions__non_recursive
+   7 tests in __main__.besa_K_actions__smart_divideandconquer
+   7 tests in __main__.besa_two_actions
+   3 tests in __main__.inverse_permutation
+   2 tests in __main__.subsample_deterministic
+   3 tests in __main__.subsample_uniform
+52 tests in 21 items.
+52 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Policies/kullback.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import numpy as np
+Expecting nothing
+ok
+Trying:
+    klBern_vect = np.vectorize(klBern)
+Expecting nothing
+ok
+Trying:
+    klBern_vect([0.1, 0.5, 0.9], 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    array([0.036..., 0.223..., 1.145...])
+ok
+Trying:
+    klBern_vect(0.4, [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+Expecting:
+    array([0.104..., 0.022..., 0...])
+ok
+Trying:
+    klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+Expecting:
+    array([0.036..., 0.087..., 0.550...])
+ok
+Trying:
+    klBern(0.5, 0.5)
+Expecting:
+    0.0
+ok
+Trying:
+    klBern(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.757779...
+ok
+Trying:
+    klBern(0.9, 0.1)  # And this KL is symetric  # doctest: +ELLIPSIS
+Expecting:
+    1.757779...
+ok
+Trying:
+    klBern(0.4, 0.5)  # doctest: +ELLIPSIS
+Expecting:
+    0.020135...
+ok
+Trying:
+    klBern(0.01, 0.99)  # doctest: +ELLIPSIS
+Expecting:
+    4.503217...
+ok
+Trying:
+    klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    34.539575...
+ok
+Trying:
+    klBin(0.5, 0.5, 10)
+Expecting:
+    0.0
+ok
+Trying:
+    klBin(0.1, 0.9, 10)  # doctest: +ELLIPSIS
+Expecting:
+    17.57779...
+ok
+Trying:
+    klBin(0.9, 0.1, 10)  # And this KL is symetric  # doctest: +ELLIPSIS
+Expecting:
+    17.57779...
+ok
+Trying:
+    klBin(0.4, 0.5, 10)  # doctest: +ELLIPSIS
+Expecting:
+    0.20135...
+ok
+Trying:
+    klBin(0.01, 0.99, 10)  # doctest: +ELLIPSIS
+Expecting:
+    45.03217...
+ok
+Trying:
+    klBin(0, 1, 10)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    345.39575...
+ok
+Trying:
+    klExp(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klExp(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klExp(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klExp(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klExp(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klExp(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.037682...
+ok
+Trying:
+    klExp(-3, 2)
+Expecting:
+    inf
+ok
+Trying:
+    klExp(3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klExp(-3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klGamma(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klGamma(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.193147...
+ok
+Trying:
+    klGamma(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klGamma(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klGamma(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.037682...
+ok
+Trying:
+    klGamma(-3, 2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGamma(-3, -2)
+Expecting:
+    inf
+ok
+Trying:
+    klGauss(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klGauss(3, 6)
+Expecting:
+    18.0
+ok
+Trying:
+    klGauss(1, 2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(2, 1)  # And this KL is symetric
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(4, 2)
+Expecting:
+    8.0
+ok
+Trying:
+    klGauss(6, 8)
+Expecting:
+    8.0
+ok
+Trying:
+    klGauss(-3, 2)
+Expecting:
+    50.0
+ok
+Trying:
+    klGauss(3, -2)
+Expecting:
+    50.0
+ok
+Trying:
+    klGauss(-3, -2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(3, 2)
+Expecting:
+    2.0
+ok
+Trying:
+    klGauss(3, 3, sig2=10)
+Expecting:
+    0.0
+ok
+Trying:
+    klGauss(3, 6, sig2=10)
+Expecting:
+    0.45
+ok
+Trying:
+    klGauss(1, 2, sig2=10)
+Expecting:
+    0.05
+ok
+Trying:
+    klGauss(2, 1, sig2=10)  # And this KL is symetric
+Expecting:
+    0.05
+ok
+Trying:
+    klGauss(4, 2, sig2=10)
+Expecting:
+    0.2
+ok
+Trying:
+    klGauss(6, 8, sig2=10)
+Expecting:
+    0.2
+ok
+Trying:
+    klNegBin(0.5, 0.5)
+Expecting:
+    0.0
+ok
+Trying:
+    klNegBin(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    -0.711611...
+ok
+Trying:
+    klNegBin(0.9, 0.1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    2.0321564...
+ok
+Trying:
+    klNegBin(0.4, 0.5)  # doctest: +ELLIPSIS
+Expecting:
+    -0.130653...
+ok
+Trying:
+    klNegBin(0.01, 0.99)  # doctest: +ELLIPSIS
+Expecting:
+    -0.717353...
+ok
+Trying:
+    klBern(0, 1)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    34.539575...
+ok
+Trying:
+    klNegBin(0.5, 0.5, r=2)
+Expecting:
+    0.0
+ok
+Trying:
+    klNegBin(0.1, 0.9, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.832991...
+ok
+Trying:
+    klNegBin(0.1, 0.9, r=4)  # doctest: +ELLIPSIS
+Expecting:
+    -0.914890...
+ok
+Trying:
+    klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    2.3325528...
+ok
+Trying:
+    klNegBin(0.4, 0.5, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.154572...
+ok
+Trying:
+    klNegBin(0.01, 0.99, r=2)  # doctest: +ELLIPSIS
+Expecting:
+    -0.836257...
+ok
+Trying:
+    klPoisson(3, 3)
+Expecting:
+    0.0
+ok
+Trying:
+    klPoisson(2, 1)  # doctest: +ELLIPSIS
+Expecting:
+    0.386294...
+ok
+Trying:
+    klPoisson(1, 2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+Expecting:
+    0.306852...
+ok
+Trying:
+    klPoisson(3, 6)  # doctest: +ELLIPSIS
+Expecting:
+    0.920558...
+ok
+Trying:
+    klPoisson(6, 8)  # doctest: +ELLIPSIS
+Expecting:
+    0.273907...
+ok
+Trying:
+    klPoisson(1, 0)  # Should be +inf, but 0 --> eps, 1 --> 1 - eps  # doctest: +ELLIPSIS
+Expecting:
+    33.538776...
+ok
+Trying:
+    klPoisson(0, 0)
+Expecting:
+    0.0
+ok
+Trying:
+    klucbBern(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.378391...
+ok
+Trying:
+    klucbBern(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.787088...
+ok
+Trying:
+    klucbBern(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.994489...
+ok
+Trying:
+    klucbBern(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.519475...
+ok
+Trying:
+    klucbBern(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.734714...
+ok
+Trying:
+    klucbBern(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.871035...
+ok
+Trying:
+    klucbBern(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.956809...
+ok
+Trying:
+    klucbBern(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.999285...
+ok
+Trying:
+    klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.999995...
+ok
+Trying:
+    klucbExp(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.202741...
+ok
+Trying:
+    klucbExp(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.013706...
+ok
+Trying:
+    klucbExp(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.824671...
+ok
+Trying:
+    klucbExp(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.285792...
+ok
+Trying:
+    klucbExp(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.559088...
+ok
+Trying:
+    klucbExp(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.428962...
+ok
+Trying:
+    klucbExp(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.795442...
+ok
+Trying:
+    klucbExp(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    2.572132...
+ok
+Trying:
+    klucbExp(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    5.031795...
+ok
+Trying:
+    klucbGamma(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.202...
+ok
+Trying:
+    klucbGamma(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.013...
+ok
+Trying:
+    klucbGamma(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.824...
+ok
+Trying:
+    klucbGamma(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.285...
+ok
+Trying:
+    klucbGamma(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.559...
+ok
+Trying:
+    klucbGamma(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.428...
+ok
+Trying:
+    klucbGamma(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.795...
+ok
+Trying:
+    klucbGamma(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    2.572...
+ok
+Trying:
+    klucbGamma(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    5.031...
+ok
+Trying:
+    klucbGauss(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.416227...
+ok
+Trying:
+    klucbGauss(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.816227...
+ok
+Trying:
+    klucbGauss(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.216227...
+ok
+Trying:
+    klucbGauss(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.547213...
+ok
+Trying:
+    klucbGauss(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    0.770820...
+ok
+Trying:
+    klucbGauss(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.947213...
+ok
+Trying:
+    klucbGauss(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.170820...
+ok
+Trying:
+    klucbGauss(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.347213...
+ok
+Trying:
+    klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.570820...
+ok
+Trying:
+    klucbPoisson(0.1, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    0.450523...
+ok
+Trying:
+    klucbPoisson(0.5, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.089376...
+ok
+Trying:
+    klucbPoisson(0.9, 0.2)  # doctest: +ELLIPSIS
+Expecting:
+    1.640112...
+ok
+Trying:
+    klucbPoisson(0.1, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    0.693684...
+ok
+Trying:
+    klucbPoisson(0.1, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    1.252796...
+ok
+Trying:
+    klucbPoisson(0.5, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    1.422933...
+ok
+Trying:
+    klucbPoisson(0.5, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.122985...
+ok
+Trying:
+    klucbPoisson(0.9, 0.4)  # doctest: +ELLIPSIS
+Expecting:
+    2.033691...
+ok
+Trying:
+    klucbPoisson(0.9, 0.9)  # doctest: +ELLIPSIS
+Expecting:
+    2.831573...
+ok
+4 items had no tests:
+    __main__.klucb
+    __main__.maxEV
+    __main__.reseqp
+    __main__.reseqp2
+13 items passed all tests:
+   5 tests in __main__
+   6 tests in __main__.klBern
+   6 tests in __main__.klBin
+   9 tests in __main__.klExp
+   9 tests in __main__.klGamma
+  16 tests in __main__.klGauss
+  12 tests in __main__.klNegBin
+   7 tests in __main__.klPoisson
+   9 tests in __main__.klucbBern
+   9 tests in __main__.klucbExp
+   9 tests in __main__.klucbGamma
+   9 tests in __main__.klucbGauss
+   9 tests in __main__.klucbPoisson
+115 tests in 17 items.
+115 passed and 0 failed.
+Test passed.
+
+klucbGauss(0.9, 0.2) = 1.216227766016838
+klucbBern(0.9, 0.2) = 0.9944896697998048
+klucbPoisson(0.9, 0.2) = 1.6401128559741487
+
+p = [0.5 0.5]
+V = [10  3]
+klMax = 0.1
+value = 10.1 , y =  1.3521789999354539
+value =  10.38213628766
+value =  10.38213628766 , y =  0.737843038433692
+value =  11.041764181114674
+value =  11.041764181114674 , y =  0.3505334784012032
+value =  12.13054070800645
+value =  12.13054070800645 , y =  0.14420511948636391
+value =  13.419920996036193
+value =  13.419920996036193 , y =  0.04773590051880258
+value =  14.380848594767235
+value =  14.380848594767235 , y =  0.00984836596374325
+value =  14.696737202348494
+value =  14.696737202348494 , y =  0.0006471795882815046
+value =  14.720526998851636
+value =  14.720526998851636 , y =  3.2215083810294143e-06
+eta =  14.720526998851636
+value = 10.1 , y =  1.3521789999354539
+value =  10.38213628766
+value =  10.38213628766 , y =  0.737843038433692
+value =  11.041764181114674
+value =  11.041764181114674 , y =  0.3505334784012032
+value =  12.13054070800645
+value =  12.13054070800645 , y =  0.14420511948636391
+value =  13.419920996036193
+value =  13.419920996036193 , y =  0.04773590051880258
+value =  14.380848594767235
+value =  14.380848594767235 , y =  0.00984836596374325
+value =  14.696737202348494
+value =  14.696737202348494 , y =  0.0006471795882815046
+value =  14.720526998851636
+value =  14.720526998851636 , y =  3.2215083810294143e-06
+Uq =  [0.71288173 0.28711827]
+
+p = [0.5 0.5]
+V = [10  3]
+klMax = 0.0168913409484
+value = 10.1 , y =  0.005247359860871496
+value =  10.78705674563825
+value =  10.78705674563825 , y =  0.00086712877499057
+value =  10.950135730265673
+value =  10.950135730265673 , y =  3.3094305404938323e-05
+eta =  10.950135730265673
+value = 7.1 , y =  0.3853146537918814
+value =  7.223491430918487
+value =  7.223491430918487 , y =  0.1953900475050962
+value =  7.479318209272624
+value =  7.479318209272624 , y =  0.09821280864332199
+value =  7.99046340808369
+value =  7.99046340808369 , y =  0.04705243537345222
+value =  8.867187756095737
+value =  8.867187756095737 , y =  0.019817570097212914
+value =  9.947785537965958
+value =  9.947785537965958 , y =  0.006462971124198306
+value =  10.721736669852884
+value =  10.721736669852884 , y =  0.0012200483684327613
+value =  10.94396961951179
+value =  10.94396961951179 , y =  6.346824777642493e-05
+Uq =  [0.09350345 0.24384361 0.30592818 0.1540174  0.1217364  0.04491065
+ 0.01349865 0.02256166 0.        ]
+
+x = 2
+d = 2.51
+klucbExp(x, d) =  64.86538319246381
+Upper bound =  -16.246834368696188
+Stupid upperbound =  66.89653556788981
+
+Done for tests of 'kullback.py' ...
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Policies/UCB.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; random.seed(0); import numpy as np; np.random.seed(0)
+Expecting nothing
+ok
+Trying:
+    policy = UCB(10)
+Expecting nothing
+ok
+Trying:
+    policy.choice()
+Expecting:
+    5
+ok
+Trying:
+    policy.computeAllIndex(); policy.index
+Expecting:
+    array([inf, inf, inf, inf, inf, inf, inf, inf, inf, inf])
+ok
+3 items had no tests:
+    __main__
+    __main__.UCB.computeAllIndex
+    __main__.UCB.computeIndex
+1 items passed all tests:
+   4 tests in __main__.UCB
+4 tests in 4 items.
+4 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Policies/DoublingTrickWrapper.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    first_horizon = 1000
+Expecting nothing
+ok
+Trying:
+    horizon = 30000
+Expecting nothing
+ok
+Trying:
+    breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+Expecting:
+    ([1000, 1200, 1400, ..., 29800, 30000], 0)
+ok
+Trying:
+    breakpoints(next_horizon__geometric, first_horizon, horizon)
+Expecting:
+    ([1000, 2000, 4000, 8000, 16000, 32000], 2000)
+ok
+Trying:
+    breakpoints(next_horizon__exponential, first_horizon, horizon)
+Expecting:
+    ([1000, 31622], 1622)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
+Expecting:
+    ([1000, 1995, 4265, 9838, 24671, 67827], 37827)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
+Expecting:
+    ([1000, 1000000], 970000)
+ok
+Trying:
+    first_horizon = 5000
+Expecting nothing
+ok
+Trying:
+    horizon = 1000000
+Expecting nothing
+ok
+Trying:
+    breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+Expecting:
+    ([5000, 5200, ..., 999600, 999800, 1000000], 0)
+ok
+Trying:
+    breakpoints(next_horizon__geometric, first_horizon, horizon)
+Expecting:
+    ([5000, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000], 280000)
+ok
+Trying:
+    breakpoints(next_horizon__exponential, first_horizon, horizon)
+Expecting:
+    ([5000, 353553, 210223755], 209223755)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
+Expecting:
+    ([5000, 11718, 29904, 83811, 260394, 906137, 3572014], 2572014)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
+Expecting:
+    ([5000, 25000000], 24000000)
+ok
+Trying:
+    first_horizon = 10
+Expecting nothing
+ok
+Trying:
+    horizon = 1123456
+Expecting nothing
+ok
+Trying:
+    breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+Expecting:
+    ([10, 210, 410, ..., 1123210, 1123410, 1123610], 154)
+ok
+Trying:
+    breakpoints(next_horizon__geometric, first_horizon, horizon)
+Expecting:
+    ([10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 20480, 40960, 81920, 163840, 327680, 655360, 1310720], 187264)
+ok
+Trying:
+    breakpoints(next_horizon__exponential, first_horizon, horizon)
+Expecting:
+    ([10, 31, 172, 2255, 107082, 35040856], 33917400)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
+Expecting:
+    ([10, 12, 15, 19, 25, 34, 48, 70, 107, 170, 284, 499, 928, 1837, 3895, 8903, 22104, 60106, 180638, 606024, 2294768], 1171312)
+ok
+Trying:
+    breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
+Expecting:
+    ([10, 100, 10000, 100000000], 98876544)
+ok
+22 items had no tests:
+    __main__
+    __main__.DoublingTrickWrapper
+    __main__.DoublingTrickWrapper.__init__
+    __main__.DoublingTrickWrapper.__str__
+    __main__.DoublingTrickWrapper.choice
+    __main__.DoublingTrickWrapper.choiceFromSubSet
+    __main__.DoublingTrickWrapper.choiceIMP
+    __main__.DoublingTrickWrapper.choiceMultiple
+    __main__.DoublingTrickWrapper.choiceWithRank
+    __main__.DoublingTrickWrapper.computeAllIndex
+    __main__.DoublingTrickWrapper.computeIndex
+    __main__.DoublingTrickWrapper.estimatedBestArms
+    __main__.DoublingTrickWrapper.estimatedOrder
+    __main__.DoublingTrickWrapper.getReward
+    __main__.DoublingTrickWrapper.index
+    __main__.DoublingTrickWrapper.startGame
+    __main__.next_horizon__arithmetic
+    __main__.next_horizon__exponential
+    __main__.next_horizon__exponential_fast
+    __main__.next_horizon__exponential_generic
+    __main__.next_horizon__exponential_slow
+    __main__.next_horizon__geometric
+1 items passed all tests:
+  21 tests in __main__.breakpoints
+21 tests in 23 items.
+21 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/EvaluatorSparseMultiPlayers.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import random; random.seed(0)
+Expecting nothing
+ok
+Trying:
+    tosses = [with_proba(0.6) for _ in range(10000)]; sum(tosses)
+Expecting:
+    5977
+ok
+Trying:
+    tosses = [with_proba(0.111) for _ in range(100000)]; sum(tosses)
+Expecting:
+    11158
+ok
+16 items had no tests:
+    __main__
+    __main__.EvaluatorSparseMultiPlayers
+    __main__.EvaluatorSparseMultiPlayers.__init__
+    __main__.EvaluatorSparseMultiPlayers.getAllLastWeightedSelections
+    __main__.EvaluatorSparseMultiPlayers.getCentralizedRegret
+    __main__.EvaluatorSparseMultiPlayers.getCentralizedRegret_LessAccurate
+    __main__.EvaluatorSparseMultiPlayers.getCentralizedRegret_MoreAccurate
+    __main__.EvaluatorSparseMultiPlayers.getFirstRegretTerm
+    __main__.EvaluatorSparseMultiPlayers.getLastRegrets
+    __main__.EvaluatorSparseMultiPlayers.getLastRegrets_LessAccurate
+    __main__.EvaluatorSparseMultiPlayers.getLastRegrets_MoreAccurate
+    __main__.EvaluatorSparseMultiPlayers.getSecondRegretTerm
+    __main__.EvaluatorSparseMultiPlayers.getThirdRegretTerm
+    __main__.EvaluatorSparseMultiPlayers.startOneEnv
+    __main__.EvaluatorSparseMultiPlayers.strPlayers
+    __main__.delayed_play
+1 items passed all tests:
+   3 tests in __main__.with_proba
+3 tests in 17 items.
+3 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/Evaluator.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    from random import seed; seed(1234)  # reproducible results
+Expecting nothing
+ok
+Trying:
+    mylist = [ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9]
+Expecting nothing
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.9, 0.4, 0.3, 0.6, 0.5, 0.7, 0.1, 0.2, 0.8]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.4, 0.3, 0.7, 0.5, 0.8, 0.1, 0.9, 0.6, 0.2]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.4, 0.6, 0.9, 0.5, 0.7, 0.2, 0.1, 0.3, 0.8]
+ok
+Trying:
+    shuffled(mylist)
+Expecting:
+    [0.8, 0.7, 0.3, 0.1, 0.9, 0.5, 0.6, 0.2, 0.4]
+ok
+33 items had no tests:
+    __main__
+    __main__.Evaluator
+    __main__.Evaluator.__initEnvironments__
+    __main__.Evaluator.__initPolicies__
+    __main__.Evaluator.__init__
+    __main__.Evaluator.compute_cache_rewards
+    __main__.Evaluator.getAllLastWeightedSelections
+    __main__.Evaluator.getAverageRewards
+    __main__.Evaluator.getAverageWeightedSelections
+    __main__.Evaluator.getBestArmPulls
+    __main__.Evaluator.getCumulatedRegret
+    __main__.Evaluator.getCumulatedRegret_LessAccurate
+    __main__.Evaluator.getCumulatedRegret_MoreAccurate
+    __main__.Evaluator.getLastRegrets
+    __main__.Evaluator.getLastRegrets_LessAccurate
+    __main__.Evaluator.getLastRegrets_MoreAccurate
+    __main__.Evaluator.getMaxMinReward
+    __main__.Evaluator.getMaxRewards
+    __main__.Evaluator.getPulls
+    __main__.Evaluator.getRewards
+    __main__.Evaluator.getRewardsSquared
+    __main__.Evaluator.getSTDRegret
+    __main__.Evaluator.loadfromdisk
+    __main__.Evaluator.plotBestArmPulls
+    __main__.Evaluator.plotLastRegrets
+    __main__.Evaluator.plotRegrets
+    __main__.Evaluator.printFinalRanking
+    __main__.Evaluator.printLastRegrets
+    __main__.Evaluator.saveondisk
+    __main__.Evaluator.startAllEnv
+    __main__.Evaluator.startOneEnv
+    __main__.EvaluatorFromDisk
+    __main__.delayed_play
+1 items passed all tests:
+   6 tests in __main__.shuffled
+6 tests in 34 items.
+6 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/plotsettings.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import sys; sys.path.insert(0, '..')
+Expecting nothing
+ok
+Trying:
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/Environment/plotsettings.py", line 5, in __main__
+Failed example:
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__[1]>", line 1, in <module>
+        from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols
+    ModuleNotFoundError: No module named '__main__.plotsettings'; '__main__' is not a package
+Trying:
+    n, bins, patches = plt.hist(...)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/Environment/plotsettings.py", line 299, in __main__.addTextForWorstCases
+Failed example:
+    n, bins, patches = plt.hist(...)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.addTextForWorstCases[0]>", line 1, in <module>
+        n, bins, patches = plt.hist(...)
+      File "/usr/local/lib/python3.6/dist-packages/matplotlib/pyplot.py", line 3029, in hist
+        stacked=stacked, normed=normed, data=data, **kwargs)
+      File "/usr/local/lib/python3.6/dist-packages/matplotlib/__init__.py", line 1845, in inner
+        return func(ax, *args, **kwargs)
+      File "/usr/local/lib/python3.6/dist-packages/matplotlib/axes/_axes.py", line 6500, in hist
+        xmin = min(xmin, xi.min())
+    TypeError: '<' not supported between instances of 'ellipsis' and 'float'
+Trying:
+    addTextForWorstCases(ax, n, bins, patches, rate=0.65)
+Expecting nothing
+**********************************************************************
+File "./SMPyBandits/Environment/plotsettings.py", line 300, in __main__.addTextForWorstCases
+Failed example:
+    addTextForWorstCases(ax, n, bins, patches, rate=0.65)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/lib/python3.6/doctest.py", line 1330, in __run
+        compileflags, 1), test.globs)
+      File "<doctest __main__.addTextForWorstCases[1]>", line 1, in <module>
+        addTextForWorstCases(ax, n, bins, patches, rate=0.65)
+    NameError: name 'ax' is not defined
+Trying:
+    makemarkers(7)
+Expecting:
+    ['o', 'D', 'v', 'p', '<', 's', '^']
+ok
+Trying:
+    makemarkers(12)
+Expecting:
+    ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>', 'o', 'D']
+ok
+Trying:
+    for N in range(1, 22):
+        nrows, ncols = nrows_ncols(N)
+        print("For N = {:>2}, {} rows and {} cols are enough.".format(N, nrows, ncols))
+Expecting:
+    For N =  1, 1 rows and 1 cols are enough.
+    For N =  2, 2 rows and 1 cols are enough.
+    For N =  3, 2 rows and 2 cols are enough.
+    For N =  4, 2 rows and 2 cols are enough.
+    For N =  5, 3 rows and 2 cols are enough.
+    For N =  6, 3 rows and 2 cols are enough.
+    For N =  7, 3 rows and 3 cols are enough.
+    For N =  8, 3 rows and 3 cols are enough.
+    For N =  9, 3 rows and 3 cols are enough.
+    For N = 10, 4 rows and 3 cols are enough.
+    For N = 11, 4 rows and 3 cols are enough.
+    For N = 12, 4 rows and 3 cols are enough.
+    For N = 13, 4 rows and 4 cols are enough.
+    For N = 14, 4 rows and 4 cols are enough.
+    For N = 15, 4 rows and 4 cols are enough.
+    For N = 16, 4 rows and 4 cols are enough.
+    For N = 17, 5 rows and 4 cols are enough.
+    For N = 18, 5 rows and 4 cols are enough.
+    For N = 19, 5 rows and 4 cols are enough.
+    For N = 20, 5 rows and 4 cols are enough.
+    For N = 21, 5 rows and 5 cols are enough.
+ok
+Trying:
+    palette(10, hls=True)  # doctest: +ELLIPSIS
+Expecting:
+    [(0.86..., 0.37..., 0.33...), (0.86...,.65..., 0.33...), (0.78..., 0.86...,.33...), (0.49..., 0.86...,.33...), (0.33..., 0.86...,.46...), (0.33..., 0.86...,.74...), (0.33..., 0.68..., 0.86...) (0.33..., 0.40..., 0.86...) (0.56..., 0.33..., 0.86...) (0.84..., 0.33..., 0.86...)]
+**********************************************************************
+File "./SMPyBandits/Environment/plotsettings.py", line 82, in __main__.palette
+Failed example:
+    palette(10, hls=True)  # doctest: +ELLIPSIS
+Expected:
+    [(0.86..., 0.37..., 0.33...), (0.86...,.65..., 0.33...), (0.78..., 0.86...,.33...), (0.49..., 0.86...,.33...), (0.33..., 0.86...,.46...), (0.33..., 0.86...,.74...), (0.33..., 0.68..., 0.86...) (0.33..., 0.40..., 0.86...) (0.56..., 0.33..., 0.86...) (0.84..., 0.33..., 0.86...)]
+Got:
+    [(0.86, 0.3712, 0.33999999999999997), (0.86, 0.6548363636363637, 0.33999999999999997), (0.7815272727272726, 0.86, 0.33999999999999997), (0.4978909090909092, 0.86, 0.33999999999999997), (0.33999999999999997, 0.86, 0.46574545454545463), (0.33999999999999997, 0.86, 0.7493818181818184), (0.33999999999999997, 0.6869818181818181, 0.86), (0.33999999999999997, 0.4033454545454544, 0.86), (0.560290909090909, 0.33999999999999997, 0.86), (0.8439272727272731, 0.33999999999999997, 0.86)]
+Trying:
+    palette(10, hls=False)  # doctest: +ELLIPSIS
+Expecting:
+    [[0.96..., 0.44..., 0.53...], [0.88..., 0.52..., 0.19...], [0.71..., 0.60..., 0.19...], [0.54..., 0.65..., 0.19...], [0.19..., 0.69..., 0.34...], [0.20..., 0.68..., 0.58...],[0.21..., 0.67..., 0.69...], [0.22..., 0.65..., 0.84...], [0.55..., 0.57..., 0.95...], [0.85..., 0.44..., 0.95...]]
+**********************************************************************
+File "./SMPyBandits/Environment/plotsettings.py", line 84, in __main__.palette
+Failed example:
+    palette(10, hls=False)  # doctest: +ELLIPSIS
+Expected:
+    [[0.96..., 0.44..., 0.53...], [0.88..., 0.52..., 0.19...], [0.71..., 0.60..., 0.19...], [0.54..., 0.65..., 0.19...], [0.19..., 0.69..., 0.34...], [0.20..., 0.68..., 0.58...],[0.21..., 0.67..., 0.69...], [0.22..., 0.65..., 0.84...], [0.55..., 0.57..., 0.95...], [0.85..., 0.44..., 0.95...]]
+Got:
+    [[0.9677975592919913, 0.44127456009157356, 0.5358103155058701], [0.8836443049112893, 0.5240073524369634, 0.19569304285113343], [0.710130687316902, 0.6046852192663268, 0.19426060163712158], [0.5432776721247529, 0.6540981095185215, 0.19324494273892204], [0.19592059105779686, 0.6981620017487838, 0.3452219818913641], [0.2067117296964458, 0.6829103404254792, 0.5829988925822328], [0.21420912437215422, 0.6714963557258681, 0.6986206664203177], [0.22537170008202412, 0.6531400148480775, 0.841007805313343], [0.5596943802099308, 0.5764402169887779, 0.9583930713150347], [0.8578978803740231, 0.44058452715322166, 0.957819659566579]]
+Trying:
+    palette(10, viridis=True)  # doctest: +ELLIPSIS
+Expecting:
+    [(0.28..., 0.13..., 0.44...), (0.26..., 0.24..., 0.52...), (0.22..., 0.34..., 0.54...), (0.17..., 0.43..., 0.55...), (0.14..., 0.52..., 0.55...), (0.11..., 0.60..., 0.54...), (0.16..., 0.69..., 0.49...), (0.31..., 0.77..., 0.41...), (0.52..., 0.83..., 0.28...), (0.76..., 0.87..., 0.13...)]
+ok
+6 items had no tests:
+    __main__.add_percent_formatter
+    __main__.legend
+    __main__.maximizeWindow
+    __main__.show_and_save
+    __main__.wraplatex
+    __main__.wraptext
+2 items passed all tests:
+   2 tests in __main__.makemarkers
+   1 tests in __main__.nrows_ncols
+**********************************************************************
+3 items had failures:
+   1 of   2 in __main__
+   2 of   2 in __main__.addTextForWorstCases
+   2 of   3 in __main__.palette
+10 tests in 11 items.
+5 passed and 5 failed.
+***Test Failed*** 5 failures.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/sortedDistance.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    perm = [0, 1, 2, 3, 4]
+Expecting nothing
+ok
+Trying:
+    gestalt(perm)  # sorted  # doctest: +ELLIPSIS
+Expecting:
+    1.0...
+ok
+Trying:
+    perm = [0, 1, 2, 5, 4, 3]
+Expecting nothing
+ok
+Trying:
+    gestalt(perm)  # almost sorted!  # doctest: +ELLIPSIS
+Expecting:
+    0.666...
+ok
+Trying:
+    perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]
+Expecting nothing
+ok
+Trying:
+    gestalt(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.4...
+ok
+Trying:
+    perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!
+Expecting nothing
+ok
+Trying:
+    gestalt(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.5...
+ok
+Trying:
+    import random
+Expecting nothing
+ok
+Trying:
+    random.seed(0)
+Expecting nothing
+ok
+Trying:
+    ratings = [random.gauss(1200, 200) for i in range(100000)]
+Expecting nothing
+ok
+Trying:
+    gestalt(ratings)  # doctest: +ELLIPSIS
+Expecting:
+    8e-05...
+ok
+Trying:
+    perm = [0, 1, 2, 3, 4]
+Expecting nothing
+ok
+Trying:
+    kendalltau(perm)  # sorted  # doctest: +ELLIPSIS
+Expecting:
+    0.98...
+ok
+Trying:
+    perm = [0, 1, 2, 5, 4, 3]
+Expecting nothing
+ok
+Trying:
+    kendalltau(perm)  # almost sorted!  # doctest: +ELLIPSIS
+Expecting:
+    0.90...
+ok
+Trying:
+    perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]
+Expecting nothing
+ok
+Trying:
+    kendalltau(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.211...
+ok
+Trying:
+    perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!
+Expecting nothing
+ok
+Trying:
+    kendalltau(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.984...
+ok
+Trying:
+    perm = [0, 1, 2, 3, 4]
+Expecting nothing
+ok
+Trying:
+    manhattan(perm)  # sorted  # doctest: +ELLIPSIS
+Expecting:
+    1.0...
+ok
+Trying:
+    perm = [0, 1, 2, 5, 4, 3]
+Expecting nothing
+ok
+Trying:
+    manhattan(perm)  # almost sorted!  # doctest: +ELLIPSIS
+Expecting:
+    0.777...
+ok
+Trying:
+    perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]  # doctest: +ELLIPSIS
+Expecting nothing
+ok
+Trying:
+    manhattan(perm)
+Expecting:
+    0.4
+ok
+Trying:
+    perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!  # doctest: +ELLIPSIS
+Expecting nothing
+ok
+Trying:
+    manhattan(perm)
+Expecting:
+    0.72
+ok
+Trying:
+    perm = [0, 1, 2, 3, 4]
+Expecting nothing
+ok
+Trying:
+    meanDistance(perm)  # sorted  # doctest: +ELLIPSIS
+Expecting:
+    1.0
+ok
+Trying:
+    perm = [0, 1, 2, 5, 4, 3]
+Expecting nothing
+ok
+Trying:
+    meanDistance(perm)  # almost sorted!  # doctest: +ELLIPSIS
+Expecting:
+    0.722...
+ok
+Trying:
+    perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]  # doctest: +ELLIPSIS
+Expecting nothing
+ok
+Trying:
+    meanDistance(perm)
+Expecting:
+    0.4
+ok
+Trying:
+    perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!  # doctest: +ELLIPSIS
+Expecting nothing
+ok
+Trying:
+    meanDistance(perm)
+Expecting:
+    0.61
+ok
+Trying:
+    perm = [0, 1, 2, 3, 4]
+Expecting nothing
+ok
+Trying:
+    spearmanr(perm)  # sorted  # doctest: +ELLIPSIS
+Expecting:
+    1.0...
+ok
+Trying:
+    perm = [0, 1, 2, 5, 4, 3]
+Expecting nothing
+ok
+Trying:
+    spearmanr(perm)  # almost sorted!  # doctest: +ELLIPSIS
+Expecting:
+    0.92...
+ok
+Trying:
+    perm = [2, 9, 6, 4, 0, 3, 1, 7, 8, 5]
+Expecting nothing
+ok
+Trying:
+    spearmanr(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.248...
+ok
+Trying:
+    perm = [2, 1, 6, 4, 0, 3, 5, 7, 8, 9]  # better sorted!
+Expecting nothing
+ok
+Trying:
+    spearmanr(perm)  # doctest: +ELLIPSIS
+Expecting:
+    0.986...
+ok
+Trying:
+    weights = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+Expecting nothing
+ok
+Trying:
+    choices = [8, 6, 5, 2]
+Expecting nothing
+ok
+Trying:
+    weightedDistance(choices, weights)  # not a bad choice  # doctest: +ELLIPSIS
+Expecting:
+    0.8333...
+ok
+Trying:
+    choices = [8, 6, 5, 7]
+Expecting nothing
+ok
+Trying:
+    weightedDistance(choices, weights)  # best choice!  # doctest: +ELLIPSIS
+Expecting:
+    1.000...
+ok
+Trying:
+    choices = [3, 2, 1, 0]
+Expecting nothing
+ok
+Trying:
+    weightedDistance(choices, weights)  # worst choice!  # doctest: +ELLIPSIS
+Expecting:
+    0.3333...
+ok
+1 items had no tests:
+    __main__
+6 items passed all tests:
+  12 tests in __main__.gestalt
+   8 tests in __main__.kendalltau
+   8 tests in __main__.manhattan
+   8 tests in __main__.meanDistance
+   8 tests in __main__.spearmanr
+   7 tests in __main__.weightedDistance
+51 tests in 7 items.
+51 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/MAB.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    binomialCoefficient(-3, 10)
+Expecting:
+    0
+ok
+Trying:
+    binomialCoefficient(1, -10)
+Expecting:
+    0
+ok
+Trying:
+    binomialCoefficient(1, 10)
+Expecting:
+    10
+ok
+Trying:
+    binomialCoefficient(5, 10)
+Expecting:
+    80
+ok
+Trying:
+    binomialCoefficient(5, 20)
+Expecting:
+    12960
+ok
+Trying:
+    binomialCoefficient(10, 30)
+Expecting:
+    10886400
+ok
+47 items had no tests:
+    __main__
+    __main__.DynamicMAB
+    __main__.DynamicMAB.Mbest
+    __main__.DynamicMAB.Mworst
+    __main__.DynamicMAB.__init__
+    __main__.DynamicMAB.__repr__
+    __main__.DynamicMAB.arms
+    __main__.DynamicMAB.hoifactor
+    __main__.DynamicMAB.lowerbound
+    __main__.DynamicMAB.lowerbound_multiplayers
+    __main__.DynamicMAB.maxArm
+    __main__.DynamicMAB.means
+    __main__.DynamicMAB.minArm
+    __main__.DynamicMAB.newRandomArms
+    __main__.DynamicMAB.reprarms
+    __main__.IncreasingMAB
+    __main__.IncreasingMAB.__init__
+    __main__.IncreasingMAB.draw
+    __main__.MAB
+    __main__.MAB.Mbest
+    __main__.MAB.Mworst
+    __main__.MAB.__init__
+    __main__.MAB.__repr__
+    __main__.MAB.draw
+    __main__.MAB.draw_each
+    __main__.MAB.draw_each_nparray
+    __main__.MAB.draw_nparray
+    __main__.MAB.hoifactor
+    __main__.MAB.lowerbound
+    __main__.MAB.lowerbound_multiplayers
+    __main__.MAB.new_order_of_arm
+    __main__.MAB.plotComparison_our_anandkumar
+    __main__.MAB.plotHistogram
+    __main__.MAB.reprarms
+    __main__.MAB.sparsity
+    __main__.MAB.str_sparsity
+    __main__.MAB.sumBestMeans
+    __main__.MAB.upperbound_collisions
+    __main__.MarkovianMAB
+    __main__.MarkovianMAB.__init__
+    __main__.MarkovianMAB.__repr__
+    __main__.MarkovianMAB.draw
+    __main__.MarkovianMAB.reprarms
+    __main__.dict_of_transition_matrix
+    __main__.doubling_change_lower_amplitude
+    __main__.static_change_lower_amplitude
+    __main__.transition_matrix_of_dict
+1 items passed all tests:
+   6 tests in __main__.binomialCoefficient
+6 tests in 48 items.
+6 passed and 0 failed.
+Test passed.
+    from doctest import testmod
+[H[J
+[01;32mTesting the file './SMPyBandits/Environment/fairnessMeasures.py'...[0;39;49m
+
+Testing automatically all the docstring written in each functions of this module :
+Trying:
+    import numpy.random as rn; rn.seed(1)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.rand(10, 1000))
+Expecting nothing
+ok
+Trying:
+    amplitude_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.999...
+ok
+Trying:
+    amplitude_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.999...
+ok
+Trying:
+    amplitude_fairness(np.log(1 + np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.959...
+ok
+Trying:
+    rn.seed(3)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = rn.randint(0, 10, (10, 1000)); Y = np.cumsum(X, axis=1)
+Expecting nothing
+ok
+Trying:
+    np.min(Y, axis=0)[0], np.max(Y, axis=0)[0]
+Expecting:
+    (3, 9)
+ok
+Trying:
+    np.min(Y, axis=0)[-1], np.max(Y, axis=0)[-1]
+Expecting:
+    (4387, 4601)
+ok
+Trying:
+    amplitude_fairness(Y, axis=0).shape
+Expecting:
+    (1000,)
+ok
+Trying:
+    list(amplitude_fairness(Y, axis=0))  # doctest: +ELLIPSIS
+Expecting:
+    [0.666..., 0.764..., ..., 0.0465...]
+ok
+Trying:
+    X[X >= 3] = 3; Y = np.cumsum(X, axis=1)
+Expecting nothing
+ok
+Trying:
+    np.min(Y, axis=0)[0], np.max(Y, axis=0)[0]
+Expecting:
+    (3, 3)
+ok
+Trying:
+    np.min(Y, axis=0)[-1], np.max(Y, axis=0)[-1]
+Expecting:
+    (2353, 2433)
+ok
+Trying:
+    amplitude_fairness(Y, axis=0).shape
+Expecting:
+    (1000,)
+ok
+Trying:
+    list(amplitude_fairness(Y, axis=0))  # Less spreadout # doctest: +ELLIPSIS
+Expecting:
+    [0.0, 0.5, ..., 0.0328...]
+ok
+Trying:
+    import numpy.random as rn; rn.seed(1)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.rand(10, 1000))
+Expecting nothing
+ok
+Trying:
+    mean_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.607...
+ok
+Trying:
+    mean_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.678...
+ok
+Trying:
+    mean_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.523...
+ok
+Trying:
+    rn.seed(2)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.randint(0, 10, (10, 100)))
+Expecting nothing
+ok
+Trying:
+    mean_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.605...
+ok
+Trying:
+    mean_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.834...
+ok
+Trying:
+    mean_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.509...
+ok
+Trying:
+    import numpy.random as rn; rn.seed(1)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.rand(10, 1000))
+Expecting nothing
+ok
+Trying:
+    alpha = 0
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    24972857.013...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    82933940429.039...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    471371.219...
+ok
+Trying:
+    alpha = 0.99999
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    1000075176.390...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    1000150358.528...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    1000037587.478...
+ok
+Trying:
+    alpha = 1
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    75173.509...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    150347.019...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    37586.754...
+ok
+Trying:
+    alpha = 1.00001
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    -999924829.359...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -999849664.476...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -999962413.957...
+ok
+Trying:
+    alpha = 2
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    -22.346...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -9.874...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -283.255...
+ok
+Trying:
+    alpha = 5
+Expecting nothing
+ok
+Trying:
+    mo_walrand_fairness(X, alpha=alpha)  # doctest: +ELLIPSIS
+Expecting:
+    -8.737...
+ok
+Trying:
+    mo_walrand_fairness(X ** 2, alpha=alpha)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -273.522...
+ok
+Trying:
+    mo_walrand_fairness(np.sqrt(np.abs(X)), alpha=alpha)  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    -2.468...
+ok
+Trying:
+    import numpy.random as rn; rn.seed(1)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.rand(10, 1000))
+Expecting nothing
+ok
+Trying:
+    rajjain_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.248...
+ok
+Trying:
+    rajjain_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.441...
+ok
+Trying:
+    rajjain_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.110...
+ok
+Trying:
+    rn.seed(2)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.randint(0, 10, (10, 100)))
+Expecting nothing
+ok
+Trying:
+    rajjain_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.246...
+ok
+Trying:
+    rajjain_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.917...
+ok
+Trying:
+    rajjain_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.107...
+ok
+Trying:
+    import numpy.random as rn; rn.seed(1)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.rand(10, 1000))
+Expecting nothing
+ok
+Trying:
+    std_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.575...
+ok
+Trying:
+    std_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.594...
+ok
+Trying:
+    std_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.470...
+ok
+Trying:
+    rn.seed(2)  # for reproductibility
+Expecting nothing
+ok
+Trying:
+    X = np.cumsum(rn.randint(0, 10, (10, 100)))
+Expecting nothing
+ok
+Trying:
+    std_fairness(X)  # doctest: +ELLIPSIS
+Expecting:
+    0.570...
+ok
+Trying:
+    std_fairness(X ** 2)  # More spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.587...
+ok
+Trying:
+    std_fairness(np.sqrt(np.abs(X)))  # Less spreadout  # doctest: +ELLIPSIS
+Expecting:
+    0.463...
+ok
+1 items had no tests:
+    __main__
+5 items passed all tests:
+  16 tests in __main__.amplitude_fairness
+  10 tests in __main__.mean_fairness
+  26 tests in __main__.mo_walrand_fairness
+  10 tests in __main__.rajjain_fairness
+  10 tests in __main__.std_fairness
+72 tests in 6 items.
+72 passed and 0 failed.
+Test passed.

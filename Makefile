@@ -225,9 +225,11 @@ stats:
 # NPROC = 1
 NPROC = `getconf _NPROCESSORS_ONLN`
 
-tests:
-	./run_all_doctest.sh
-	./run_test_simulations.sh
+tests:	alldoctest testsimulations
+alldoctest:
+	-./run_all_doctest.sh | tee ./logs/run_all_doctest.txt
+testsimulations:
+	-./run_test_simulations.sh | tee ./logs/run_test_simulations.txt
 
 lint:
 	-pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
