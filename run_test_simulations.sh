@@ -20,11 +20,24 @@ export PLOT_DIR="/tmp/SMPyBandits/plots/"
 mkdir -p "$PLOT_DIR"  # XXX
 export SAVEALL=False
 export N_JOBS=4
+export BAYES=False
 export LOWER=0
 export AMPLITUDE=1
 export ARM_TYPE=Bernoulli
 export M=3
 export S=3
+
+# allsingleplayer test
+clear
+echo -e "\n\n\nLaunching 'make allsingleplayer'"
+N=4 T=1000 make allsingleplayer
+# read  # DEBUG
+
+# allsingleplayer test
+clear
+echo -e "\n\n\nLaunching 'make allsingleplayer'"
+N=4 T=1000 BAYES=True make allsingleplayer
+# read  # DEBUG
 
 # single test
 clear

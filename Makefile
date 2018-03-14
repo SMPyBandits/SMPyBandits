@@ -34,6 +34,12 @@ singleplayer3:
 singleplayer2:
 	time nice -n 19 python2 ./SMPyBandits/main.py | tee ./logs/main_py2_log.txt
 
+allsingleplayer:	allsingleplayer3
+allsingleplayer3:
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_py3_log.txt
+allsingleplayer2:
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_py2_log.txt
+
 comparing_aggregation_algorithms:	comparing_aggregation_algorithms3
 comparing_aggregation_algorithms3:
 	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt

@@ -7,14 +7,14 @@ Basically, it works like this:
 - Then, fit some unsupervised learning model on each arm, to build a model of its distribution (e.g., a simple Gaussian, with mean and variance obtained from the data).
 - And then, at each time step, use the models to generate some prediction for the output of each arm, and play according to the arm with highest prediction.
 
-  + If needed, refit the models once in a while, to incorporate all the collected data.
-  + If needed, use a robust estimate (e.g., mean of 100 samples) to choose the arm to play, instead of only *one* sample.
+    + If needed, refit the models once in a while, to incorporate all the collected data.
+    + If needed, use a robust estimate (e.g., mean of 100 samples) to choose the arm to play, instead of only *one* sample.
 
 .. warning:: This is still **experimental**! It is NOT efficient in terms of storage, and NOT efficient either in terms of efficiency against a Bandit problem (i.e., regret, best arm identification etc).
 .. warning:: It is NOT really an on-line policy, as both the memory consumption and the time complexity of each step *increase* with time!
 
 
-This module provides also two simple Unsupervised Learning algorithm, :class:`SimpleGaussianKernel` and :class:`SimpleBernoulliKernel`, see below.
+This module provides also two simple Unsupervised Learning algorithm, :class:`SimpleGaussianA` and :class:`SimpleBernoulliKernel`, see below.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -186,7 +186,9 @@ class UnsupervisedLearning(object):
       + Otherwise, use the previously trained model to choose the arm :math:`A(t) \in \{1,\dots,K\}` to play next (see :meth:`choice` below).
     """
 
-    def __init__(self, nbArms, estimator=KernelDensity,
+    def __init__(self, nbArms,
+                 estimator=SimpleGaussianKernel,
+                #  estimator=KernelDensity,
                  T_0=T0, fit_every=FIT_EVERY, meanOf=MEAN_OF,
                  lower=0., amplitude=1.,  # not used, but needed for my framework
                  *args, **kwargs):

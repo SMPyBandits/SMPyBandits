@@ -5,7 +5,7 @@ This is the perfect static policy if armIndex = bestArmIndex (not realistic, for
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.9"
 
 from .BasePolicy import BasePolicy
 
@@ -15,8 +15,10 @@ class TakeFixedArm(BasePolicy):
     This is the perfect static policy if armIndex = bestArmIndex (not realistic, for test only).
     """
 
-    def __init__(self, nbArms, armIndex, lower=0., amplitude=1.):
+    def __init__(self, nbArms, armIndex=None, lower=0., amplitude=1.):
         self.nbArms = nbArms  #: Number of arms
+        if armIndex is None:
+            armIndex = 0
         self.armIndex = armIndex  #: Fixed arm
 
     def __str__(self):

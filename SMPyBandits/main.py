@@ -25,7 +25,9 @@ try:
     # Import a configuration file
     if 'configuration_comparing_aggregation_algorithms' in sys.argv:
         from configuration_comparing_aggregation_algorithms import configuration
-    if 'configuration_comparing_doubling_algorithms' in sys.argv:
+    elif 'configuration_all_singleplayer' in sys.argv:
+        from configuration_all_singleplayer import configuration
+    elif 'configuration_comparing_doubling_algorithms' in sys.argv:
         from configuration_comparing_doubling_algorithms import configuration
     elif 'configuration_markovian' in sys.argv:
         from configuration_markovian import configuration
@@ -38,7 +40,9 @@ except ImportError:
     # Import a configuration file
     if 'configuration_comparing_aggregation_algorithms' in sys.argv:
         from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
-    if 'configuration_comparing_doubling_algorithms' in sys.argv:
+    elif 'configuration_all_singleplayer' in sys.argv:
+        from SMPyBandits.configuration_all_singleplayer import configuration
+    elif 'configuration_comparing_doubling_algorithms' in sys.argv:
         from SMPyBandits.configuration_comparing_doubling_algorithms import configuration
     elif 'configuration_markovian' in sys.argv:
         from SMPyBandits.configuration_markovian import configuration

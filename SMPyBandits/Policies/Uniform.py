@@ -5,7 +5,7 @@
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from random import randint
+import random
 from .BasePolicy import BasePolicy
 
 
@@ -30,7 +30,7 @@ class Uniform(BasePolicy):
 
     def choice(self):
         """Uniform random choice between 0 and nbArms - 1 (included)."""
-        return randint(0, self.nbArms - 1)
+        return random.randint(0, self.nbArms - 1)
 
     def choiceWithRank(self, rank=1):
         """Ignore the rank!"""

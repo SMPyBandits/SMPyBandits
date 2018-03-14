@@ -6,7 +6,7 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.1"
 
-from random import choice
+import random
 
 from .Uniform import Uniform
 
@@ -26,4 +26,4 @@ class UniformOnSome(Uniform):
 
     def choice(self):
         """Uniform choice from armIndexes."""
-        return choice(self.armIndexes)
+        return random.choice(self.armIndexes)
