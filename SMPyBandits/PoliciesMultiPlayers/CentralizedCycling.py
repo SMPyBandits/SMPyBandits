@@ -60,7 +60,16 @@ class CentralizedCycling(BaseMPPolicy):
 
         Examples:
 
-        >>> s = CentralizedCycling(10, 14)
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> s = CentralizedCycling(2, 3)
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
+        >>> [ child.choice() for child in s.children ]
+        [0, 2]
+        >>> [ child.choice() for child in s.children ]
+        [1, 0]
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use
@@ -84,13 +93,13 @@ class CentralizedCycling(BaseMPPolicy):
             # XXX this "trash" arm with max number of collision will cycle: that's the best we can do!
         # Shuffle it once, just to be even more fair in average (by repetitions)
         np.random.shuffle(self._offsets)
-        print("CentralizedCycling: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
-        print("It decided to use this affectation of arms :")  # DEBUG
+        # print("CentralizedCycling: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        # print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
-            print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
+            # print(" - Player number {} will use an offset of {} ...".format(playerId + 1, self._offsets[playerId]))  # DEBUG
             self._players[playerId] = Cycling(nbArms, self._offsets[playerId])
             self.children[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG

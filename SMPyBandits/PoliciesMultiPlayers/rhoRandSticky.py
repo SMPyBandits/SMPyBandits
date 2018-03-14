@@ -39,7 +39,7 @@ class oneRhoRandSticky(oneRhoRand):
         super(oneRhoRandSticky, self).__init__(maxRank, *args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         self.stickyTime = stickyTime  #: Number of time steps needed without collisions before sitting (never changing rank again)
-        self.rank = None  #: Current rank, starting to 1 by default
+        self.rank = 1  #: Current rank, starting to 1 by default
         self.sitted = False  #: Not yet sitted. After stickyTime steps without collisions, sit and never change rank again.
         self.stepsWithoutCollisions = 0  #: Number of steps since we chose that rank and did not see any collision. As soon as this gets greater than stickyTime, the player sit.
 
@@ -95,7 +95,16 @@ class rhoRandSticky(rhoRand):
 
         Example:
 
-        >>> s = rhoRandSticky(nbPlayers, Thompson, nbArms, stickyTime)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> stickyTime = 5
+        >>> s = rhoRandSticky(nbPlayers, nbArms, UCB, stickyTime=stickyTime)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
 

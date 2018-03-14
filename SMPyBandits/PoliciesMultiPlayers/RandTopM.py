@@ -200,7 +200,13 @@ class RandTopM(BaseMPPolicy):
 
         Example:
 
-        >>> s = RandTopM(nbPlayers, Thompson, nbArms)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = RandTopM(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
 
         - To get a list of usable players, use ``s.children``.
 
@@ -241,6 +247,16 @@ class RandTopMCautious(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the RandTopMCautious child (default to nbPlayers, but for instance if there is 2 × RandTopMCautious[UCB] + 2 × RandTopMCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = RandTopMCautious(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(RandTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -263,6 +279,17 @@ class RandTopMExtraCautious(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the RandTopMExtraCautious child (default to nbPlayers, but for instance if there is 2 × RandTopMExtraCautious[UCB] + 2 × RandTopMExtraCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = RandTopMExtraCautious(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(RandTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -283,6 +310,17 @@ class RandTopMOld(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the RandTopMOld child (default to nbPlayers, but for instance if there is 2 × RandTopMOld[UCB] + 2 × RandTopMOld[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = RandTopMOld(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(RandTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -305,6 +343,16 @@ class MCTopM(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the MCTopM child (default to nbPlayers, but for instance if there is 2 × MCTopM[UCB] + 2 × MCTopM[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = MCTopM(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(MCTopM, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -327,6 +375,16 @@ class MCTopMCautious(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the MCTopMCautious child (default to nbPlayers, but for instance if there is 2 × MCTopMCautious[UCB] + 2 × MCTopMCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = MCTopMCautious(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(MCTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -349,6 +407,16 @@ class MCTopMExtraCautious(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the MCTopMExtraCautious child (default to nbPlayers, but for instance if there is 2 × MCTopMExtraCautious[UCB] + 2 × MCTopMExtraCautious[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = MCTopMExtraCautious(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(MCTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 
@@ -371,6 +439,16 @@ class MCTopMOld(RandTopM):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - maxRank: maximum rank allowed by the MCTopMOld child (default to nbPlayers, but for instance if there is 2 × MCTopMOld[UCB] + 2 × MCTopMOld[klUCB], maxRank should be 4 not 2).
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
+
+        Example:
+
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = MCTopMOld(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
         """
         super(MCTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
 

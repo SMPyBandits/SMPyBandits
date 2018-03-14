@@ -167,7 +167,7 @@ class oneRhoLearnExp3(oneRhoRand):
         super(oneRhoLearnExp3, self).__init__(maxRank, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(maxRank)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        self.rank = None  #: Current rank, starting to 1
+        self.rank = 1  #: Current rank, starting to 1
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
         self.feedback_function = feedback_function  #: Feedback function: (sensing, collision) -> reward
         feedback_name = str(feedback_function.__name__)
@@ -239,8 +239,15 @@ class rhoLearnExp3(rhoRand):
 
         Example:
 
-        >>> s = rhoLearnExp3(nbPlayers, BayesUCB, nbArms, Uniform)  # Exactly rhoRand!
-        >>> s = rhoLearnExp3(nbPlayers, BayesUCB, nbArms)           # Possibly better than rhoRand!
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = rhoLearnExp3(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [0, 1, 9, 0, 10, 3]
+        >>> [ child.choice() for child in s.children ]
+        [11, 2, 0, 0, 4, 5]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

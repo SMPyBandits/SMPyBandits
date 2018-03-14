@@ -36,7 +36,7 @@ class oneRhoRand(ChildPointer):
     def __init__(self, maxRank, *args, **kwargs):
         super(oneRhoRand, self).__init__(*args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        self.rank = None  #: Current rank, starting to 1 by default
+        self.rank = 1  #: Current rank, starting to 1 by default
 
     def __str__(self):   # Better to recompute it automatically
         # return r"#{}<{}[{}{}]>".format(self.playerId + 1, r"$\rho^{\mathrm{Rand}}$", self.mother._players[self.playerId], ", rank:{}".format(self.rank) if self.rank is not None else "")
@@ -82,7 +82,15 @@ class rhoRand(BaseMPPolicy):
 
         Example:
 
-        >>> s = rhoRand(nbPlayers, Thompson, nbArms)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = rhoRand(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

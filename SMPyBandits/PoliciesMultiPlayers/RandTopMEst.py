@@ -156,7 +156,13 @@ class RandTopMEst(BaseMPPolicy):
 
         Example:
 
-        >>> s = RandTopMEst(nbPlayers, Thompson, nbArms)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = RandTopMEst(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
 
         - To get a list of usable players, use ``s.children``.
 
@@ -204,7 +210,14 @@ class RandTopMEstPlus(BaseMPPolicy):
 
         Example:
 
-        >>> s = RandTopMEstPlus(nbPlayers, Thompson, nbArms)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> horizon = 1000
+        >>> s = RandTopMEstPlus(nbPlayers, nbArms, UCB, horizon)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
 
         - To get a list of usable players, use ``s.children``.
 

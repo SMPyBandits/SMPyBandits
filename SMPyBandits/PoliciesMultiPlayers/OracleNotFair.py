@@ -61,7 +61,15 @@ class OracleNotFair(BaseMPPolicy):
 
         Examples:
 
-        >>> s = OracleNotFair(10, MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]}))
+        >>> import sys; sys.path.insert(0, '..'); from Environment import MAB; from Arms import Bernoulli
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> problem = MAB({'arm_type': Bernoulli, 'params': [0.1, 0.5, 0.9]})  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+        ...
+        >>> s = OracleNotFair(2, problem)
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use
@@ -74,7 +82,7 @@ class OracleNotFair(BaseMPPolicy):
         self.nbPlayers = nbPlayers  #: Number of players
         self.nbArms = nbArms  #: Number of arms
         # Internal vectorial memory
-        means = np.array([arm.mean() for arm in armsMAB.arms])
+        means = np.array([arm.mean for arm in armsMAB.arms])
         if nbPlayers <= nbArms:
             self._affectations = np.argsort(means)[-nbPlayers:]  # Decide the affectations of the centralized players
         else:
@@ -86,13 +94,13 @@ class OracleNotFair(BaseMPPolicy):
             # XXX this "trash" arm with max number of collision will not change, but it's the worse arm, so we are optimal!
         # Shuffle it once, just to be fair in average
         np.random.shuffle(self._affectations)
-        print("OracleNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
-        print("It decided to use this affectation of arms :")  # DEBUG
+        # print("OracleNotFair: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        # print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
-            print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
+            # print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
             self._players[playerId] = Fixed(nbArms, self._affectations[playerId])
             self.children[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG

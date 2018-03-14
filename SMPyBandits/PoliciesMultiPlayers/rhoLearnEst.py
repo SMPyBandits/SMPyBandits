@@ -51,8 +51,15 @@ class rhoLearnEst(rhoLearn):
 
         Example:
 
-        >>> s = rhoLearnEst(nbPlayers, Thompson, nbArms, Uniform)  # rhoRand but with a wrong estimate of maxRanks!
-        >>> s = rhoLearnEst(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = rhoLearnEst(nbPlayers, nbArms, UCB, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

@@ -44,8 +44,10 @@ class CentralizedMultiplePlay(BaseMPPolicy):
 
         Examples:
 
-        >>> s = CentralizedMultiplePlay(10, TakeFixedArm, 14)
-        >>> s = CentralizedMultiplePlay(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> s = CentralizedMultiplePlay(2, 3, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [2, 0]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

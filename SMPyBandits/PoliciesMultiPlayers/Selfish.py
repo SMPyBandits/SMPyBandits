@@ -54,8 +54,15 @@ class Selfish(BaseMPPolicy):
 
         Examples:
 
-        >>> s = Selfish(10, TakeFixedArm, 14)
-        >>> s = Selfish(NB_PLAYERS, Softmax, nbArms, temperature=TEMPERATURE)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = Selfish(nbPlayers, nbArms, Uniform)
+        >>> [ child.choice() for child in s.children ]
+        [12, 13, 1, 8, 16, 15]
+        >>> [ child.choice() for child in s.children ]
+        [12, 9, 15, 11, 6, 16]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

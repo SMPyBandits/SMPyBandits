@@ -52,7 +52,7 @@ class oneRhoEst(oneRhoRand):
         self.threshold = threshold  #: Threshold function
         # Internal variables
         self.nbPlayersEstimate = 1  #: Number of players. Optimistic: start by assuming it is alone!
-        self.rank = None  #: Current rank, starting to 1
+        self.rank = 1  #: Current rank, starting to 1
         self.collisionCount = np.zeros(self.nbArms, dtype=int)  #: Count collisions on each arm, since last increase of nbPlayersEstimate
         self.timeSinceLastCollision = 0  #: Time since last collision. Don't remember why I thought using this could be useful... But it's not!
         self.t = 0  #: Internal time
@@ -132,7 +132,15 @@ class rhoEst(rhoRand):
 
         Example:
 
-        >>> s = rhoEst(nbPlayers, UCB, nbArms, threshold=threshold_on_t)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = rhoEst(nbPlayers, nbArms, UCB, threshold=threshold_on_t)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
@@ -169,7 +177,16 @@ class rhoEstPlus(rhoRand):
 
         Example:
 
-        >>> s = rhoEstPlus(nbPlayers, UCB, nbArms, horizon)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> horizon = 1000
+        >>> s = rhoEstPlus(nbPlayers, nbArms, UCB, horizon=horizon)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

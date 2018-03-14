@@ -14,7 +14,7 @@ r""" EstimateM: generic wrapper on a multi-player decentralized learning policy,
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.8"
+__version__ = "0.9"
 
 import numpy as np
 import numpy.random as rn
@@ -38,6 +38,13 @@ def threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=None):
     - any function such that: :math:`\xi(T, k) = \omega(\log T)` for all `k > 1`. (cf. http://mathworld.wolfram.com/Little-OmegaNotation.html). I choose :math:`\log(1 + T)^2` or :math:`\log(1 + T) \log(1 + \log(1 + T))`, as it seems to work just fine and satisfies the condition (25) from [Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
 
     .. warning:: It requires the horizon :math:`T`, and does not use the current time :math:`t`.
+
+    Example:
+
+    >>> threshold_on_t_with_horizon(1000, 3)  # doctest: +ELLIPSIS
+    14.287...
+    >>> threshold_on_t_with_horizon(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+    16.357...
     """
     # print("Calling threshold function 'threshold_on_t_with_horizon' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
@@ -61,6 +68,13 @@ def threshold_on_t_doubling_trick(t, nbPlayersEstimate, horizon=None, base=2, mi
     - If :math:`T_t` is too small, ``min_fake_horizon`` is used instead.
 
     .. warning:: This is ongoing research!
+
+    Example:
+
+    >>> threshold_on_t_doubling_trick(1000, 3)  # doctest: +ELLIPSIS
+    14.356...
+    >>> threshold_on_t_doubling_trick(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+    14.356...
     """
     fake_horizon_now = max(T0 * (base ** (np.ceil(np.log(1 + t) / np.log(base)))), min_fake_horizon)
     return threshold_on_t_with_horizon(t, nbPlayersEstimate, horizon=fake_horizon_now)
@@ -73,6 +87,13 @@ def threshold_on_t(t, nbPlayersEstimate, horizon=None):
     - `1` if `nbPlayersEstimate` is `1`,
     - My heuristic to be any-time (ie, without needing to know the horizon) is to use a function of :math:`t` (current time) and not :math:`T` (horizon).
     - The choice which seemed to perform the best in practice was :math:`\xi(t, k) = c t` for a small constant :math:`c` (like 5 or 10).
+
+    Example:
+
+    >>> threshold_on_t(1000, 3)  # doctest: +ELLIPSIS
+    47.730...
+    >>> threshold_on_t(1000, 3, horizon=2000)  # doctest: +ELLIPSIS
+    47.730...
     """
     # print("Calling threshold function 'threshold_on_t' with t = {}, nbPlayersEstimate = {} and horizon = {} ...".format(t, nbPlayersEstimate, horizon))  # DEBUG
     if nbPlayersEstimate <= 1:
@@ -237,7 +258,13 @@ class EstimateM(BaseMPPolicy):
 
         Example:
 
-        >>> s = EstimateM(nbPlayers, nbArms, rhoRand, UCB, alpha=0.5)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *; from PoliciesMultiPlayers import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 4
+        >>> nbPlayers = 2
+        >>> s = EstimateM(nbPlayers, nbArms, rhoRand, UCBalpha, alpha=0.5)
+        >>> [ child.choice() for child in s.children ]
+        [0, 3]
 
         - To get a list of usable players, use ``s.children``.
 

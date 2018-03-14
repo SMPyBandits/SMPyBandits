@@ -53,16 +53,16 @@ def new_rank(rank, maxRank, forceChange=False):
 
     >>> from random import seed; seed(0)  # reproducibility
     >>> [ new_rank(1, 8, False) for _ in range(10) ]
-    [1, 5, 9, 8, 7, 5, 8, 6, 4, 9]
+    [7, 7, 1, 5, 9, 8, 7, 5, 8, 6]
     >>> [ new_rank(8, 8, False) for _ in range(10) ]
-    [5, 3, 2, 5, 9, 3, 5, 2, 2, 6]
+    [4, 9, 3, 5, 3, 2, 5, 9, 3, 5]
 
     Example with `forceChange = True`, when a new rank is picked different than the current one.
 
     >>> [ new_rank(1, 8, True) for _ in range(10) ]
-    [9, 2, 6, 7, 6, 4, 9, 8, 8, 9]
+    [2, 2, 6, 8, 9, 2, 6, 7, 6, 4]
     >>> [ new_rank(5, 8, True) for _ in range(10) ]
-    [1, 9, 1, 2, 7, 1, 8, 6, 4, 6]
+    [9, 8, 8, 9, 1, 9, 1, 2, 7, 1]
     """
     r = randint(1, maxRank + 1)
     if forceChange:
@@ -91,7 +91,7 @@ class oneRhoRandALOHA(oneRhoRand):
         assert 0 <= alpha_p0 <= 1, "Error: parameter 'alpha_p0' for a ALOHA player should be in [0, 1]."  # DEBUG
         self.alpha_p0 = alpha_p0  #: Parameter alpha for the recurrence equation for probability p(t)
         # rank
-        self.rank = None  #: Current rank, starting to 1 by default
+        self.rank = 1  #: Current rank, starting to 1 by default
         self.forceChange = forceChange  #: Should a *different* rank be used when moving? Or not.
 
     def __str__(self):   # Better to recompute it automatically
@@ -162,7 +162,16 @@ class rhoRandALOHA(rhoRand):
 
         Example:
 
-        >>> s = rhoRandALOHA(nbPlayers, Thompson, nbArms, p0, alpha_p0, forceChange)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> p0, alpha_p0, forceChange = 0.6, 0.5, True
+        >>> s = rhoRandALOHA(nbPlayers, nbArms, UCB, p0, alpha_p0, forceChange)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

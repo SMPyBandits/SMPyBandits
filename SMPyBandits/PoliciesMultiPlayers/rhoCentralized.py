@@ -33,8 +33,8 @@ class oneRhoCentralized(ChildPointer):
     - The player does not aim at the best arm, but at the rank-th best arm, based on her index policy.
     """
 
-    def __init__(self, maxRank, rank=None, *args, **kwargs):
-        super(oneRhoCentralized, self).__init__(*args, **kwargs)
+    def __init__(self, maxRank, mother, playerId, rank=None, *args, **kwargs):
+        super(oneRhoCentralized, self).__init__(mother, playerId, *args, **kwargs)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
         assert rank is None or 1 <= rank <= maxRank, "Error: the 'rank' parameter = {} for oneRhoCentralized was not correct: only possible values are None or an integer 1 <= rank <= maxRank = {}.".format(rank, maxRank)  # DEBUG
         self.keep_the_same_rank = rank is not None  #: If True, the rank is kept constant during the game, as if it was given by the Base Station
@@ -85,7 +85,15 @@ class rhoCentralized(BaseMPPolicy):
 
         Example:
 
-        >>> s = rhoCentralized(nbPlayers, Thompson, nbArms)
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> s = rhoCentralized(nbPlayers, nbArms, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!

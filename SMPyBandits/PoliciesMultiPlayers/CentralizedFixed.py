@@ -59,6 +59,20 @@ class CentralizedFixed(BaseMPPolicy):
 
         Examples:
 
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> s = CentralizedFixed(2, 3)
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
+        >>> [ child.choice() for child in s.children ]
+        [2, 1]
+
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> s = CentralizedFixed(4, 8)
+        >>> [ child.choice() for child in s.children ]
+        [7, 6, 1, 2]
+        >>> [ child.choice() for child in s.children ]
+        [7, 6, 1, 2]
+
         >>> s = CentralizedFixed(10, 14)
 
         - To get a list of usable players, use ``s.children``.
@@ -85,13 +99,13 @@ class CentralizedFixed(BaseMPPolicy):
             # self._affectations[nbArms:] = np.random.choice(nbArms, size=nbPlayers - nbArms, replace=True)
         # Shuffle it once, just to be fair, IN AVERAGE (by repetitions)
         np.random.shuffle(self._affectations)
-        print("CentralizedFixed: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
-        print("It decided to use this affectation of arms :")  # DEBUG
+        # print("CentralizedFixed: initialized with {} arms and {} players ...".format(nbArms, nbPlayers))  # DEBUG
+        # print("It decided to use this affectation of arms :")  # DEBUG
         # Internal object memory
         self._players = [None] * nbPlayers
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
-            print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
+            # print(" - Player number {} will always choose the arm number {} ...".format(playerId + 1, self._affectations[playerId]))  # DEBUG
             self._players[playerId] = Fixed(nbArms, self._affectations[playerId])
             self.children[playerId] = ChildPointer(self, playerId)
         self._printNbCollisions()  # DEBUG

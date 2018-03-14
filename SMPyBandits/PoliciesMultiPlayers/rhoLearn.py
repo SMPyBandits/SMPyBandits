@@ -72,7 +72,7 @@ class oneRhoLearn(oneRhoRand):
         super(oneRhoLearn, self).__init__(maxRank, *args, **kwargs)
         self.rankSelection = rankSelectionAlgo(maxRank)
         self.maxRank = maxRank  #: Max rank, usually nbPlayers but can be different
-        self.rank = None  #: Current rank, starting to 1
+        self.rank = 1  #: Current rank, starting to 1
         self.change_rank_each_step = change_rank_each_step  #: Change rank at each step?
 
     def __str__(self):   # Better to recompute it automatically
@@ -137,8 +137,16 @@ class rhoLearn(rhoRand):
 
         Example:
 
-        >>> s = rhoLearn(nbPlayers, Thompson, nbArms, Uniform)  # Exactly rhoRand!
-        >>> s = rhoLearn(nbPlayers, Thompson, nbArms, UCB)      # Possibly better than rhoRand!
+        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+        >>> nbArms = 17
+        >>> nbPlayers = 6
+        >>> stickyTime = 5
+        >>> s = rhoLearn(nbPlayers, nbArms, UCB, UCB)
+        >>> [ child.choice() for child in s.children ]
+        [12, 15, 0, 3, 3, 7]
+        >>> [ child.choice() for child in s.children ]
+        [9, 4, 6, 12, 1, 6]
 
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
