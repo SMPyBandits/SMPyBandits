@@ -9,20 +9,15 @@ Example of creating an arm:
 >>> Poisson5
 P(5, 10)
 >>> Poisson5.mean  # doctest: +ELLIPSIS
-4.9778
+4.9778...
 
 Examples of sampling from an arm:
 
 >>> Poisson5.draw()  # doctest: +ELLIPSIS
 9
 >>> Poisson5.draw_nparray(20)  # doctest: +ELLIPSIS
-array([  1.35...e-01,   1.84...e-01,   5.71...e-02,
-         6.36...e-02,   4.94...e-01,   1.51...e-01,
-         1.48...e-04,   2.25...e-06,   4.56...e-01,
-         1.00...e+00,   7.59...e-02,   8.12...e-04,
-         1.54...e-03,   1.14...e-01,   1.18...e-02,
-         7.30...e-02,   1.76...e-06,   1.94...e-01,
-         1.00...e+00,   3.30...e-02])
+array([ 5,  6,  5,  5,  8,  4,  5,  4,  3,  3,  7,  3,  3,  4,  5,  2,  1,
+        7,  7, 10])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

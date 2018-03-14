@@ -14,7 +14,7 @@ Examples of sampling from an arm:
 >>> C013.draw()
 0.13
 >>> C013.draw_nparray(3)
-array([ 0.13,  0.13,  0.13])
+array([0.13, 0.13, 0.13])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -40,9 +40,9 @@ class Constant(Arm):
     >>> arm_0_5.draw()
     0.5
     >>> arm_0_5.draw_nparray((3, 2))
-    array([[ 0.5,  0.5],
-           [ 0.5,  0.5],
-           [ 0.5,  0.5]])
+    array([[0.5, 0.5],
+           [0.5, 0.5],
+           [0.5, 0.5]])
     """
 
     def __init__(self, constant_reward=0.5, lower=0., amplitude=1.):

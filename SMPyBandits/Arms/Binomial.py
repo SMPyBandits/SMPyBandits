@@ -14,10 +14,10 @@ Bin(0.3, 10)
 Examples of sampling from an arm:
 
 >>> B03_10.draw()
-3.0
+3
 >>> B03_10.draw_nparray(20)
-array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
-        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+array([4., 3., 3., 3., 3., 3., 5., 6., 3., 4., 3., 3., 5., 1., 1., 0., 4.,
+       4., 5., 6.])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -54,7 +54,8 @@ class Binomial(Arm):
 
     def draw(self, t=None):
         """ Draw one random sample. The parameter t is ignored in this Arm."""
-        return np.asarray(npbinomial(self.draws, self.probability), dtype=float)
+        # return np.asarray(npbinomial(self.draws, self.probability), dtype=float)
+        return npbinomial(self.draws, self.probability)
 
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""

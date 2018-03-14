@@ -14,10 +14,10 @@ B(0.3)
 Examples of sampling from an arm:
 
 >>> B03.draw()
-0.0
+0
 >>> B03.draw_nparray(20)
-array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
-        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+array([1., 0., 0., 0., 0., 0., 1., 1., 0., 1., 0., 0., 1., 0., 0., 0., 1.,
+       1., 1., 1.])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -51,7 +51,8 @@ class Bernoulli(Arm):
 
     def draw(self, t=None):
         """ Draw one random sample."""
-        return np.asarray(binomial(1, self.probability), dtype=float)
+        return binomial(1, self.probability)
+        # return np.asarray(binomial(1, self.probability), dtype=float)
 
     def draw_nparray(self, shape=(1,)):
         """ Draw a numpy array of random samples, of a certain shape."""

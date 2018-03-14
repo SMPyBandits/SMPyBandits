@@ -4,12 +4,12 @@
 
 Each arm class follows the same interface:
 
->>> my_arm = Arm(params)
->>> my_arm.mean
+>>> my_arm = Arm(params)  #: doctest: +SKIP
+>>> my_arm.mean  #: doctest: +SKIP
 0.5
->>> my_arm.draw()  # one random draw
+>>> my_arm.draw()  # one random draw  #: doctest: +SKIP
 0.0
->>> my_arm.draw_nparray(20)  # or ((3, 10)), many draw
+>>> my_arm.draw_nparray(20)  # or ((3, 10)), many draw  #: doctest: +SKIP
 array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
         1.,  0.,  0.,  0.,  1.,  1.,  1.])
 

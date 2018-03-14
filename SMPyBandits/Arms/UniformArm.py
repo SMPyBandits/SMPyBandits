@@ -14,12 +14,12 @@ U(0, 1)
 Examples of sampling from an arm:
 
 >>> Unif01.draw()  # doctest: +ELLIPSIS
-0.4049...
->>> Unif01.draw_nparray(20)  # doctest: +ELLIPSIS
-array([ 0.5488...,  0.7151...,  0.6027...,  0.5448...,  0.4236...,
-        0.6458...,  0.4375...,  0.8917...,  0.9636...,  0.3834...,
-        0.7917...,  0.5288...,  0.5680...,  0.9255...,  0.0710...,
-        0.0871...,  0.0202...,  0.8326...,  0.7781...,  0.8700...])
+0.8444...
+>>> Unif01.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+array([0.54... , 0.71..., 0.60..., 0.54..., 0.42... ,
+       0.64..., 0.43..., 0.89...  , 0.96..., 0.38...,
+       0.79..., 0.52..., 0.56..., 0.92..., 0.07...,
+       0.08... , 0.02... , 0.83..., 0.77..., 0.87...])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -52,7 +52,7 @@ class UniformArm(Arm):
     >>> arm_m10_10 = UniformArm(-10, 10)  # also UniformArm(lower=-10, amplitude=20)
     """
 
-    def __init__(self, mean=None, mini=0., maxi=1., lower=0., amplitude=1.):
+    def __init__(self, mini=0., maxi=1., mean=None, lower=0., amplitude=1.):
         """New arm."""
         mini = max(mini, lower)
         maxi = min(maxi, lower + amplitude)

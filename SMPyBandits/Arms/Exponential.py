@@ -7,19 +7,19 @@ Example of creating an arm:
 >>> random.seed(0); np.random.seed(0)
 >>> Exp03 = ExponentialFromMean(0.3)
 >>> Exp03
-Exp(3.21, 1)
+\mathrm{Exp}(3.2, 1)
 >>> Exp03.mean  # doctest: +ELLIPSIS
 0.3000...
 
 Examples of sampling from an arm:
 
 >>> Exp03.draw()  # doctest: +ELLIPSIS
-0.0109...
->>> Exp03.draw_nparray(20)  # doctest: +ELLIPSIS
-array([ 0.1876...,  0.1048...,  0.1583...,  0.1899...,  0.2686...,
-        0.1367...,  0.2585...,  0.0358...,  0.0115...,  0.2998... ,
-        0.0730...,  0.1992...,  0.1768...,  0.0241...,  0.8271... ,
-        0.7633...,  1.    ...,  0.0572...,  0.0784...,  0.0435...])
+0.052...
+>>> Exp03.draw_nparray(20)  # doctest: +ELLIPSIS,+NORMALIZE_WHITESPACE
+array([0.18..., 0.10..., 0.15..., 0.18..., 0.26...,
+       0.13..., 0.25..., 0.03..., 0.01..., 0.29... ,
+       0.07..., 0.19..., 0.17..., 0.02... , 0.82... ,
+       0.76..., 1.     , 0.05..., 0.07..., 0.04...])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
