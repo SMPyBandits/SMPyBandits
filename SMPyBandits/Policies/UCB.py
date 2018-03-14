@@ -20,6 +20,13 @@ except ImportError:
 class UCB(IndexPolicy):
     """ The UCB policy for bounded bandits.
     Reference: [Lai & Robbins, 1985].
+
+    >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
+    >>> policy = UCB(10)
+    >>> policy.choice()
+    5
+    >>> policy.computeAllIndex(); policy.index
+    array([inf, inf, inf, inf, inf, inf, inf, inf, inf, inf])
     """
 
     def computeIndex(self, arm):
@@ -37,3 +44,13 @@ class UCB(IndexPolicy):
         indexes = (self.rewards / self.pulls) + np.sqrt((2 * np.log(self.t)) / self.pulls)
         indexes[self.pulls < 1] = float('+inf')
         self.index[:] = indexes
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
+

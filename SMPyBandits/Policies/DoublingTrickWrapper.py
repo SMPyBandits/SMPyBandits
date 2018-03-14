@@ -200,9 +200,9 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     >>> first_horizon = 1000
     >>> horizon = 30000
     >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
-    ([1000, 2000, 3000, 4000, 5000, ..., 28000, 29000, 30000], 0)
+    ([1000, 1200, 1400, ..., 29800, 30000], 0)
     >>> breakpoints(next_horizon__geometric, first_horizon, horizon)
-    ([1000, 10000, 100000], 70000)
+    ([1000, 2000, 4000, 8000, 16000, 32000], 2000)
     >>> breakpoints(next_horizon__exponential, first_horizon, horizon)
     ([1000, 31622], 1622)
     >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
@@ -215,9 +215,9 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     >>> first_horizon = 5000
     >>> horizon = 1000000
     >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
-    ([5000, 6000, 7000, ..., 998000, 999000, 1000000], 0)
+    ([5000, 5200, ..., 999600, 999800, 1000000], 0)
     >>> breakpoints(next_horizon__geometric, first_horizon, horizon)
-    ([5000, 50000, 500000, 5000000], 4000000)
+    ([5000, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000], 280000)
     >>> breakpoints(next_horizon__exponential, first_horizon, horizon)
     ([5000, 353553, 210223755], 209223755)
     >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
@@ -229,15 +229,15 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
 
     >>> first_horizon = 10
     >>> horizon = 1123456
-    >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon, debug=True)  # doctest: +ELLIPSIS
-    ([10, 1010, ..., 1122010, 1123010, 1124010], 554)
-    >>> breakpoints(next_horizon__geometric, first_horizon, horizon, debug=True)
-    ([10, 100, 1000, 10000, 100000, 1000000, 10000000], 8876544)
-    >>> breakpoints(next_horizon__exponential, first_horizon, horizon, debug=True)
+    >>> breakpoints(next_horizon__arithmetic, first_horizon, horizon)  # doctest: +ELLIPSIS
+    ([10, 210, 410, ..., 1123210, 1123410, 1123610], 154)
+    >>> breakpoints(next_horizon__geometric, first_horizon, horizon)
+    ([10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10240, 20480, 40960, 81920, 163840, 327680, 655360, 1310720], 187264)
+    >>> breakpoints(next_horizon__exponential, first_horizon, horizon)
     ([10, 31, 172, 2255, 107082, 35040856], 33917400)
-    >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon, debug=True)
+    >>> breakpoints(next_horizon__exponential_slow, first_horizon, horizon)
     ([10, 12, 15, 19, 25, 34, 48, 70, 107, 170, 284, 499, 928, 1837, 3895, 8903, 22104, 60106, 180638, 606024, 2294768], 1171312)
-    >>> breakpoints(next_horizon__exponential_fast, first_horizon, horizon, debug=True)
+    >>> breakpoints(next_horizon__exponential_fast, first_horizon, horizon)
     ([10, 100, 10000, 100000000], 98876544)
     """
     i = 0

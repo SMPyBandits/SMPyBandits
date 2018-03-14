@@ -9,17 +9,17 @@
 
 .. warning::
 
-   All function are *not* vectorized, and assume only one value for each argument.
-   If you want vectorized function, use the wrapper :func:`numpy.vectorize`:
+    All function are *not* vectorized, and assume only one value for each argument.
+    If you want vectorized function, use the wrapper :func:`numpy.vectorize`:
 
-   >>> import numpy as np
-   >>> klBern_vect = np.vectorize(klBern)
-   >>> klBern_vect([0.1, 0.5, 0.9], 0.2)  # doctest: +ELLIPSIS
-   array([ 0.036...,  0.223...,  1.145...])
-   >>> klBern_vect(0.4, [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
-   array([ 0.104...,  0.022...,  0...])
-   >>> klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
-   array([ 0.036...,  0.087...,  0.550...])
+    >>> import numpy as np
+    >>> klBern_vect = np.vectorize(klBern)
+    >>> klBern_vect([0.1, 0.5, 0.9], 0.2)  # doctest: +ELLIPSIS
+    array([0.036..., 0.223..., 1.145...])
+    >>> klBern_vect(0.4, [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+    array([0.104..., 0.022..., 0...])
+    >>> klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
+    array([0.036..., 0.087..., 0.550...])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

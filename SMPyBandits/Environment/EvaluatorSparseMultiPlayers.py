@@ -334,10 +334,11 @@ def with_proba(proba):
 
     Examples:
 
+    >>> import random; random.seed(0)
     >>> tosses = [with_proba(0.6) for _ in range(10000)]; sum(tosses)
-    6043
+    5977
     >>> tosses = [with_proba(0.111) for _ in range(100000)]; sum(tosses)
-    11162
+    11158
     """
     return uniform_in_zero_one() <= proba
 

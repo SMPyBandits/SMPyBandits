@@ -90,8 +90,10 @@ def besa_two_actions(rewards, pulls, a, b, subsample_function=subsample_uniform)
     >>> np.random.seed(2345)  # reproducible results
     >>> pulls = [6, 10]; K = len(pulls); N = max(pulls)
     >>> rewards = np.random.randn(K, N)
-    >>> np.mean(rewards, axis=1)  # arm 1 is better
-    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 0 is better in the first 6 samples
+    >>> np.mean(rewards, axis=1)  # arm 1 is better  # doctest: +ELLIPSIS
+    array([0.154..., 0.158...])
+    >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 0 is better in the first 6 samples  # doctest: +ELLIPSIS
+    array([0.341..., 0.019...])
     >>> besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
     0
     >>> [besa_two_actions(rewards, pulls, 0, 1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
@@ -150,7 +152,7 @@ def besa_K_actions__non_randomized(rewards, pulls, left, right, subsample_functi
     >>> besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
     3
     >>> [besa_K_actions__non_randomized(rewards, pulls, 0, K-1, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
-    [0, 3, 3, 0, 3, 0, 0, 0, 3, 1]
+    [3, 3, 2, 3, 3, 0, 0, 0, 2, 3]
     """
     # assert left <= right, "Error: in 'besa_K_actions' function, left = {} was not <= right = {}...".format(left, right)  # DEBUG
     # print("In 'besa_K_actions', left = {} and right = {} for this call.".format(left, right))  # DEBUG

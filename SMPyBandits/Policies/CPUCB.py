@@ -108,19 +108,19 @@ def binofit(xArray, nArray, alpha=0.05):
 
     >>> (phat, pci) = binofit(xArray, N)
     >>> phat
-    array([ 0.61,  0.54,  0.61,  0.52])
+    array([0.61, 0.54, 0.61, 0.52])
     >>> pci  # 0.6 of course lies in the 95% confidence intervals  # doctest: +ELLIPSIS
-    array([[ 0.507...,  0.705...],
-           [ 0.437...,  0.640...],
-           [ 0.507...,  0.705...],
-           [ 0.417...,  0.620...]])
+    array([[0.507..., 0.705...],
+           [0.437..., 0.640...],
+           [0.507..., 0.705...],
+           [0.417..., 0.620...]])
 
     >>> (phat, pci) = binofit(xArray, N, 0.01)
     >>> pci  # 0.6 is also in the 99% confidence intervals, but it is larger  # doctest: +ELLIPSIS
-    array([[ 0.476...,  0.732...],
-           [ 0.407...,  0.668...],
-           [ 0.476...,  0.732...],
-           [ 0.387...,  0.650...]])
+    array([[0.476..., 0.732...],
+           [0.407..., 0.668...],
+           [0.476..., 0.732...],
+           [0.387..., 0.650...]])
     """
     # If inputs are list or tuples
     if isinstance(xArray, (list, tuple)):
