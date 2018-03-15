@@ -46,7 +46,7 @@ except ImportError:
 
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, ModuleNotFoundError, SystemError):
+except (ValueError, ImportError, SystemError):
     from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
 

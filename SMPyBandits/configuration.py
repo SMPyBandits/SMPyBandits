@@ -1159,7 +1159,7 @@ if TEST_Aggregator:
 
 
 # def klucbGauss(x, d, precision=0.):
-#     """klucbGauss(x, d, sig2) with the good variance."""
+#     """klucbGauss(x, d, sig2x) with the good variance."""
 #     # return _klucbGauss(x, d, 0.25)
 #     return _klucbGauss(x, d, VARIANCE)
 

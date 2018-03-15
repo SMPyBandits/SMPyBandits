@@ -24,7 +24,7 @@
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from math import log, sqrt, exp
 
@@ -32,7 +32,7 @@ import numpy as np
 
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, ModuleNotFoundError, ImportError, SystemError):
+except (ValueError, ImportError, SystemError):
     from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
 
@@ -52,7 +52,7 @@ def klBern(x, y):
     0.0
     >>> klBern(0.1, 0.9)  # doctest: +ELLIPSIS
     1.757779...
-    >>> klBern(0.9, 0.1)  # And this KL is symetric  # doctest: +ELLIPSIS
+    >>> klBern(0.9, 0.1)  # And this KL is symmetric  # doctest: +ELLIPSIS
     1.757779...
     >>> klBern(0.4, 0.5)  # doctest: +ELLIPSIS
     0.020135...
@@ -79,7 +79,7 @@ def klBin(x, y, n):
     0.0
     >>> klBin(0.1, 0.9, 10)  # doctest: +ELLIPSIS
     17.57779...
-    >>> klBin(0.9, 0.1, 10)  # And this KL is symetric  # doctest: +ELLIPSIS
+    >>> klBin(0.9, 0.1, 10)  # And this KL is symmetric  # doctest: +ELLIPSIS
     17.57779...
     >>> klBin(0.4, 0.5, 10)  # doctest: +ELLIPSIS
     0.20135...
@@ -104,7 +104,7 @@ def klPoisson(x, y):
     0.0
     >>> klPoisson(2, 1)  # doctest: +ELLIPSIS
     0.386294...
-    >>> klPoisson(1, 2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    >>> klPoisson(1, 2)  # And this KL is non-symmetric  # doctest: +ELLIPSIS
     0.306852...
     >>> klPoisson(3, 6)  # doctest: +ELLIPSIS
     0.920558...
@@ -133,7 +133,7 @@ def klExp(x, y):
     0.193147...
     >>> klExp(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
     0.193147...
-    >>> klExp(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    >>> klExp(2, 1)  # And this KL is non-symmetric  # doctest: +ELLIPSIS
     0.306852...
     >>> klExp(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
     0.306852...
@@ -167,7 +167,7 @@ def klGamma(x, y, a=1):
     0.193147...
     >>> klGamma(1, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
     0.193147...
-    >>> klGamma(2, 1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    >>> klGamma(2, 1)  # And this KL is non-symmetric  # doctest: +ELLIPSIS
     0.306852...
     >>> klGamma(4, 2)  # Only the proportion between x and y is used  # doctest: +ELLIPSIS
     0.306852...
@@ -199,7 +199,7 @@ def klNegBin(x, y, r=1):
     0.0
     >>> klNegBin(0.1, 0.9)  # doctest: +ELLIPSIS
     -0.711611...
-    >>> klNegBin(0.9, 0.1)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    >>> klNegBin(0.9, 0.1)  # And this KL is non-symmetric  # doctest: +ELLIPSIS
     2.0321564...
     >>> klNegBin(0.4, 0.5)  # doctest: +ELLIPSIS
     -0.130653...
@@ -219,7 +219,7 @@ def klNegBin(x, y, r=1):
     -0.832991...
     >>> klNegBin(0.1, 0.9, r=4)  # doctest: +ELLIPSIS
     -0.914890...
-    >>> klNegBin(0.9, 0.1, r=2)  # And this KL is non-symetric  # doctest: +ELLIPSIS
+    >>> klNegBin(0.9, 0.1, r=2)  # And this KL is non-symmetric  # doctest: +ELLIPSIS
     2.3325528...
     >>> klNegBin(0.4, 0.5, r=2)  # doctest: +ELLIPSIS
     -0.154572...
@@ -232,8 +232,12 @@ def klNegBin(x, y, r=1):
 
 
 @jit
-def klGauss(x, y, sig2=0.25):
-    """ Kullback-Leibler divergence for Gaussian distributions. https://en.wikipedia.org/wiki/Normal_distribution#Kullback.E2.80.93Leibler_divergence
+def klGauss(x, y, sig2x=0.25, sig2y=None):
+    r""" Kullback-Leibler divergence for Gaussian distributions of means ``x`` and ``y`` and variances ``sig2x`` and ``sig2y``, :math:`\nu_1 = \mathcal{N}(x, \sigma_x^2)` and :math:`\nu_2 = \mathcal{N}(y, \sigma_x^2)`:
+
+    .. math:: \mathrm{KL}(\nu_1, \nu_2) = \frac{(x - y)^2}{2 \sigma_y^2} + \frac{1}{2}\left( \frac{\sigma_x^2}{\sigma_y^2} - 1 \log\left(\frac{\sigma_x^2}{\sigma_y^2}\right) \right).
+
+    See https://en.wikipedia.org/wiki/Normal_distribution#Other_properties
 
     >>> klGauss(3, 3)
     0.0
@@ -241,7 +245,7 @@ def klGauss(x, y, sig2=0.25):
     18.0
     >>> klGauss(1, 2)
     2.0
-    >>> klGauss(2, 1)  # And this KL is symetric
+    >>> klGauss(2, 1)  # And this KL is symmetric
     2.0
     >>> klGauss(4, 2)
     8.0
@@ -259,22 +263,48 @@ def klGauss(x, y, sig2=0.25):
     >>> klGauss(3, 2)
     2.0
 
-    - With other values for `sig2`:
+    - With other values for `sig2x`:
 
-    >>> klGauss(3, 3, sig2=10)
+    >>> klGauss(3, 3, sig2x=10)
     0.0
-    >>> klGauss(3, 6, sig2=10)
+    >>> klGauss(3, 6, sig2x=10)
     0.45
-    >>> klGauss(1, 2, sig2=10)
+    >>> klGauss(1, 2, sig2x=10)
     0.05
-    >>> klGauss(2, 1, sig2=10)  # And this KL is symetric
+    >>> klGauss(2, 1, sig2x=10)  # And this KL is symmetric
     0.05
-    >>> klGauss(4, 2, sig2=10)
+    >>> klGauss(4, 2, sig2x=10)
     0.2
-    >>> klGauss(6, 8, sig2=10)
+    >>> klGauss(6, 8, sig2x=10)
     0.2
+
+    - With different values for `sig2x` and `sig2y`:
+
+    >>> klGauss(0, 0, sig2x=0.25, sig2y=0.5)  # doctest: +ELLIPSIS
+    -0.0284...
+    >>> klGauss(0, 0, sig2x=0.25, sig2y=1.0)  # doctest: +ELLIPSIS
+    0.2243...
+    >>> klGauss(0, 0, sig2x=0.5, sig2y=0.25)  # not symmetric here!  # doctest: +ELLIPSIS
+    1.1534...
+
+    >>> klGauss(0, 1, sig2x=0.25, sig2y=0.5)  # doctest: +ELLIPSIS
+    0.9715...
+    >>> klGauss(0, 1, sig2x=0.25, sig2y=1.0)  # doctest: +ELLIPSIS
+    0.7243...
+    >>> klGauss(0, 1, sig2x=0.5, sig2y=0.25)  # not symmetric here!  # doctest: +ELLIPSIS
+    3.1534...
+
+    >>> klGauss(1, 0, sig2x=0.25, sig2y=0.5)  # doctest: +ELLIPSIS
+    0.9715...
+    >>> klGauss(1, 0, sig2x=0.25, sig2y=1.0)  # doctest: +ELLIPSIS
+    0.7243...
+    >>> klGauss(1, 0, sig2x=0.5, sig2y=0.25)  # not symmetric here!  # doctest: +ELLIPSIS
+    3.1534...
     """
-    return (x - y) ** 2 / (2 * sig2)
+    if sig2y is None or np.isclose(sig2y, sig2x):
+        return (x - y) ** 2 / (2. * sig2x)
+    else:
+        return (x - y) ** 2 / (2. * sig2y) + 0.5 * ((sig2x/sig2y)**2 - 1 - log(sig2x/sig2y))
 
 
 # --- KL functions, for the KL-UCB policy
@@ -334,17 +364,18 @@ def klucbBern(x, d, precision=1e-6):
     >>> klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
     0.999995...
     """
-    upperbound = min(1., klucbGauss(x, d, sig2=0.25))
+    upperbound = min(1., klucbGauss(x, d, sig2x=0.25))
     # upperbound = min(1., klucbPoisson(x, d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
 
 @jit
-def klucbGauss(x, d, sig2=0.25, precision=0.):
+def klucbGauss(x, d, sig2x=0.25, precision=0.):
     """ KL-UCB index computation for Gaussian distributions.
 
     - Note that it does not require any search.
-    - Warning: it works only if the good variance constant is given.
+
+    .. warning:: it works only if the good variance constant is given.
 
     - Influence of x:
 
@@ -372,7 +403,7 @@ def klucbGauss(x, d, sig2=0.25, precision=0.):
     >>> klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
     1.570820...
     """
-    return x + sqrt(2 * sig2 * d)
+    return x + sqrt(2 * sig2x * d)
 
 
 @jit

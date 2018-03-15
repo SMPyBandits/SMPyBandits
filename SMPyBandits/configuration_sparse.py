@@ -277,7 +277,7 @@ _klucbGauss = klucbGauss
 
 
 def klucbGauss(x, d, precision=0.):
-    """klucbGauss(x, d, sig2) with the good variance (= 0.05)."""
+    """klucbGauss(x, d, sig2x) with the good variance (= 0.05)."""
     return _klucbGauss(x, d, 0.25)
     # return _klucbGauss(x, d, VARIANCE)
 
@@ -287,7 +287,7 @@ _klucbGamma = klucbGamma
 
 
 def klucbGamma(x, d, precision=0.):
-    """klucbGamma(x, d, sig2) with the good scale (= 1)."""
+    """klucbGamma(x, d, sig2x) with the good scale (= 1)."""
     return _klucbGamma(x, d, SCALE)
 
 
