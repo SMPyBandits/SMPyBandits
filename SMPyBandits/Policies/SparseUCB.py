@@ -41,7 +41,7 @@ class SparseUCB(UCBalpha):
 
     def __init__(self, nbArms, sparsity=None, alpha=ALPHA, lower=0., amplitude=1.):
         super(SparseUCB, self).__init__(nbArms, alpha=alpha, lower=lower, amplitude=amplitude)
-        if sparsity is None:
+        if sparsity is None or sparsity == nbArms:
             sparsity = nbArms
             print("Warning: regular UCBalpha should be used instead of SparseUCB if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
         assert 1 <= sparsity <= nbArms, "Error: 'sparsity' has to be in [1, nbArms = {}] but was {} ...".format(nbArms, sparsity)  # DEBUG

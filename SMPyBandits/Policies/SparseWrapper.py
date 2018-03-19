@@ -72,7 +72,7 @@ class SparseWrapper(BasePolicy):
                  lower=0., amplitude=1.,
                  *args, **kwargs):
         super(SparseWrapper, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        if sparsity is None:
+        if sparsity is None or sparsity == nbArms:
             sparsity = nbArms
             print("Warning: regular klUCB should be used instead of SparseWrapper if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
         assert 1 <= sparsity <= nbArms, "Error: 'sparsity' has to be in [1, nbArms = {}] but was {} ...".format(nbArms, sparsity)  # DEBUG

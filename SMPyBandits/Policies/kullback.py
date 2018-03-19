@@ -301,7 +301,7 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
     >>> klGauss(1, 0, sig2x=0.5, sig2y=0.25)  # not symmetric here!  # doctest: +ELLIPSIS
     3.1534...
     """
-    if sig2y is None or np.isclose(sig2y, sig2x):
+    if sig2y is None or - eps < (sig2y - sig2x) < eps:
         return (x - y) ** 2 / (2. * sig2x)
     else:
         return (x - y) ** 2 / (2. * sig2y) + 0.5 * ((sig2x/sig2y)**2 - 1 - log(sig2x/sig2y))

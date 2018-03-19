@@ -45,7 +45,7 @@ REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 # REPETITIONS = 1000
 # REPETITIONS = 200
-# REPETITIONS = 100
+REPETITIONS = 100
 # REPETITIONS = 50
 # REPETITIONS = 20
 REPETITIONS = int(getenv('N', REPETITIONS))
@@ -108,12 +108,12 @@ SCALE = 1   #: Scale of Gamma arms
 # --- Parameters for the sparsity
 
 #: Number of arms for non-hard-coded problems (Bayesian problems)
-NB_ARMS = 10
+NB_ARMS = 15
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
 #: Sparsity for non-hard-coded problems (Bayesian problems)
-SPARSITY = 4
+SPARSITY = 7
 SPARSITY = int(getenv('S', SPARSITY))
 SPARSITY = int(getenv('SPARSITY', SPARSITY))
 
@@ -123,7 +123,7 @@ LOWER = 0.
 AMPLITUDE = 1.
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
-ARM_TYPE = "Gaussian"
+ARM_TYPE = "Gaussian_m2_2"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
 mapping_ARM_TYPE = {
     "Constant": Constant,
@@ -184,10 +184,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
-        {   # A very easy problem, but it is used in a lot of articles
-            "arm_type": Gaussian,
-            "params": MEANS
-        },
+        # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Gaussian,
+        #     "params": MEANS
+        # },
         # "environment": [  # 2)  Gaussian arms
         # {   # An example problem with 3 or 9 arms
         #     "arm_type": Gaussian,
@@ -202,24 +202,23 @@ configuration = {
         #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True)
         # },
         # FIXED I need to do Bayesian problems for Gaussian arms also!
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
-        #     "arm_type": ARM_TYPE,
-        #     # # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
-        #     "params": {
-        #         "function": randomMeansWithSparsity,
-        #         "args": {
-        #             "nbArms": NB_ARMS,
-        #             "mingap": None,
-        #             # "mingap": 0.1,
-        #             # "mingap": 1. / (3 * NB_ARMS),
-        #             "lower": 0.,
-        #             "lowerNonZero": 0.1,
-        #             "amplitude": 1.,
-        #             "isSorted": True,
-        #             "sparsity": SPARSITY,
-        #         }
-        #     }
-        # },
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "function": randomMeansWithSparsity,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": -2.,
+                    "lowerNonZero": 2,
+                    "amplitude": 4.,
+                    "isSorted": True,
+                    "sparsity": SPARSITY,
+                }
+            }
+        },
     ],
 }
 
@@ -293,6 +292,31 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
+        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.001,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY,
+        #     }
+        # },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "sparsity": SPARSITY,
+            }
+        },
         # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
             "archtype": SparseWrapper,
@@ -338,21 +362,7 @@ configuration.update({
         # {
         #     "archtype": UCBalpha,
         #     "params": {
-        #         "alpha": 4,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,
-        #     "params": {
         #         "alpha": 1,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBalpha,
-        #     "params": {
-        #         "alpha": 0.5,
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
@@ -401,30 +411,12 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # --- SparseklUCB algorithm, using KL-UCB for sets J(t) and K(t)
-        # {
-        #     "archtype": SparseklUCB,
-        #     "params": {
-        #         "sparsity": SPARSITY,
-        #         "use_ucb_for_sets": False,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
         # # --- SparseklUCB algorithm with a too small value for s, using KL-UCB for sets J(t) and K(t)
         # {
         #     "archtype": SparseklUCB,
         #     "params": {
         #         "sparsity": max(SPARSITY - 2, 1),
         #         "use_ucb_for_sets": False,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # --- SparseklUCB algorithm, using old UCB for sets J(t) and K(t)
-        # {
-        #     "archtype": SparseklUCB,
-        #     "params": {
-        #         "sparsity": SPARSITY,
-        #         "use_ucb_for_sets": True,
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
@@ -472,31 +464,10 @@ configuration.update({
         {
             "archtype": klUCB,
             "params": {
-                "klucb": klucbBern,
+                "klucb": klucbGauss,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # {
-        #     "archtype": klUCB,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbExp,
-        #     }
-        # },
-        # {
-        #     "archtype": klUCB,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGauss,
-        #     }
-        # },
-        # {
-        #     "archtype": klUCB,
-        #     "params": {
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #         "klucb": klucbGamma,
-        #     }
-        # },
         # --- BayesUCB algorithm
         {
             "archtype": BayesUCB,
@@ -513,14 +484,6 @@ configuration.update({
         #     }
         # },
         # --- Finite-Horizon Gittins index
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 2,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
@@ -529,14 +492,37 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
+        # --- The new OSSB algorithm
         # {
-        #     "archtype": ApproximatedFHGittins,
+        #     "archtype": OSSB,
         #     "params": {
-        #         "horizon": 1.1 * HORIZON,
-        #         "alpha": 0.5,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
         #     }
         # },
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.001,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "solve_optimization_problem": "classic",
+            }
+        },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "solve_optimization_problem": "gaussian",
+            }
+        },
     ]
 })
 

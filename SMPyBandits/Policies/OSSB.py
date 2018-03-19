@@ -17,8 +17,12 @@ import numpy as np
 from .BasePolicy import BasePolicy
 
 
-from .kullback import klBern
+from .kullback import klBern, klGauss
 klBern_vect = np.vectorize(klBern)
+
+# klGauss_vect = np.vectorize(klGauss, excluded="y")
+def klGauss_vect(xs, y, sig2x=0.25):
+    return np.array([klGauss(x, y, sig2x) for x in xs])
 
 
 #: Different phases during the OSSB algorithm
@@ -33,8 +37,8 @@ EPSILON = 0.0
 GAMMA = 0.0
 
 
-def solve_optimization_problem(thetas):
-    r""" Solve the optimization problem (2)-(3) as defined in the paper.
+def solve_optimization_problem__classic(thetas):
+    r""" Solve the optimization problem (2)-(3) as defined in the paper, for classical stochastic bandits.
 
     - No need to solve anything, as they give the solution for classical bandits.
     """
@@ -47,10 +51,10 @@ def solve_optimization_problem(thetas):
     return 1. / klBern_vect(thetas, np.max(thetas))
 
 
-def solve_optimization_problem__sparse_bandits(thetas):
-    r""" Solve the optimization problem (2)-(3) as defined in the paper.
+def solve_optimization_problem__gaussian(thetas):
+    r""" Solve the optimization problem (2)-(3) as defined in the paper, for classical stochastic bandits.
 
-    - FIXME
+    - No need to solve anything, as they give the solution for classical bandits.
     """
     # values = np.zeros_like(thetas)
     # theta_max = np.max(thetas)
@@ -58,30 +62,95 @@ def solve_optimization_problem__sparse_bandits(thetas):
     #     if theta < theta_max:
     #         values[i] = 1 / klBern(theta, theta_max)
     # return values
-    return 1. / klBern_vect(thetas, np.max(thetas))
+    return 1. / klGauss_vect(thetas, np.max(thetas))
+
+
+def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
+    r""" Solve the optimization problem (2)-(3) as defined in the paper, for sparse stochastic bandits.
+
+    - FIXME
+    """
+    # print("Calling 'solve_optimization_problem__sparse_bandits' with thetas = {} and sparsity = {}...".format(thetas, sparsity))  # DEBUG
+
+    d = len(thetas)
+    if sparsity is None:
+        sparsity = d
+    permutation = np.argsort(thetas)[::-1]  # sort in decreasing order!
+    # sorted_thetas = np.sort(thetas)
+    sorted_thetas = thetas[permutation]
+    best_theta = sorted_thetas[0]
+    gaps = sorted_thetas - best_theta
+    strong_sparsity = lambda k: (d - sparsity)/float(best_theta) - sum(gaps[i]/sorted_thetas[i]**2 for i in range(k, sparsity) if gaps[i] > 0)
+    ci = np.zeros(d)
+    # # DEBUG
+    # print("    We have d =", d, "sparsity =", sparsity, "permutation =", permutation)  # DEBUG
+    # print("    and sorted_thetas =", sorted_thetas, "with best_thetas =", sorted_thetas)  # DEBUG
+    # print("    gaps =", gaps)  # DEBUG
+    # for i in range(d):
+    #     print("       for i =", i, "strong_sparsity(i) =", strong_sparsity(i))  # DEBUG
+    # # DEBUG
+
+    if strong_sparsity(0) > 0:
+        # OK we have strong sparsity
+        print("Info: OK we have strong sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi²) = {:.3g} > 0...".format(d, sparsity, best_theta, strong_sparsity(0)))  # DEBUG
+
+        for i in range(sparsity):
+            if gaps[i] > 0:
+                ci[permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
+    else:
+        # we only have weak sparsity... search for the k!
+        k = None
+        for possible_k in range(1, sparsity):
+            if strong_sparsity(possible_k) < 0:
+                k = possible_k
+        assert k is not None, "Error: there must exist a k in [1, s] such that (d-s)/µ1 - sum(Delta_i/µi², i=k...s) < 0..."  # DEBUG
+        print("Warning: we only have weak sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi², i=k={}...s) = {:.3g} < 0...".format(d, sparsity, best_theta, k, strong_sparsity(k)))  # DEBUG
+
+        for i in range(k):
+            if gaps[i] > 0:
+                ci[permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
+        for i in range(k, sparsity):
+            assert gaps[i] > 0, "Error: for i = {} >= k = {}, the gap should be > 0, but is {:.3g}...".format(i, k, gaps[i])  # XXX should be useless
+            ci[permutation[i]] = 0.5 * (sorted_thetas[k] / (sorted_thetas[i] * gaps[i])) ** 2
+        for i in range(sparsity, d):
+            assert gaps[i] > 0, "Error: for i = {} >= s = {}, the gap should be > 0, but is {:.3g}...".format(i, sparsity, gaps[i])  # XXX should be useless
+            ci[permutation[i]] = 0.5 * (1 - (sorted_thetas[k] / gaps[k]) ** 2) / (gaps[i] * best_theta)
+    # return the argmax ci of the optimization problem
+    return ci
 
 
 class OSSB(BasePolicy):
     r""" Optimal Sampling for Structured Bandits (OSSB) algorithm.
 
+    - ``solve_optimization_problem`` can be ``"classic"`` for classic stochastic bandit with no structure, or ``"sparse"`` for sparse stochastic bandit (give the sparsity ``s`` in a ``kwargs``).
     - Reference: [[Minimal Exploration in Structured Stochastic Bandits, Combes et al, arXiv:1711.00400 [stat.ML]]](https://arxiv.org/abs/1711.00400)
     """
 
     def __init__(self, nbArms, epsilon=EPSILON, gamma=GAMMA,
-                 lower=0., amplitude=1.):
+                 solve_optimization_problem="classic",
+                 lower=0., amplitude=1., **kwargs):
         super(OSSB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # Arguments
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for 'OSSB' class has to be 0 <= <= 1."  # DEBUG
         self.epsilon = epsilon
         assert gamma >= 0, "Error: the 'gamma' parameter for 'OSSB' class has to be >= 0."  # DEBUG
         self.gamma = gamma
+        # Solver for the optimization problem.
+        self._solve_optimization_problem = solve_optimization_problem__classic
+        self._info_on_solver = ""
+        if solve_optimization_problem == "sparse":
+            self._solve_optimization_problem = solve_optimization_problem__sparse_bandits
+        elif solve_optimization_problem == "gaussian":
+            self._info_on_solver = ", Gaussian"
+            self._solve_optimization_problem = solve_optimization_problem__gaussian
+        self._kwargs = kwargs
         # Internal memory
         self.counter_s_no_exploitation_phase = 0
         self.phase = None
 
     def __str__(self):
         """ -> str"""
-        return r"OSSB($\varepsilon={:.3g}$, $\gamma={:.3g}$)".format(self.epsilon, self.gamma)
+        return r"OSSB($\varepsilon={:.3g}$, $\gamma={:.3g}${})".format(self.epsilon, self.gamma, self._info_on_solver)
 
     # --- Start game, and receive rewards
 
@@ -103,7 +172,7 @@ class OSSB(BasePolicy):
         if np.any(self.pulls < 1):
             return np.random.choice(np.nonzero(self.pulls < 1)[0])
 
-        values_c_x_mt = solve_optimization_problem(means)
+        values_c_x_mt = self._solve_optimization_problem(means, **self._kwargs)
 
         if np.all(self.pulls >= (1 + self.gamma) * np.log(self.t) * values_c_x_mt):
             self.phase = Phase.exploitation
@@ -130,3 +199,19 @@ class OSSB(BasePolicy):
         """ Nothing special to do."""
         pass
 
+
+class SparseOSSB(OSSB):
+    r""" Optimal Sampling for Structured Bandits (OSSB) algorithm, for Sparse Stochastic Bandits.
+    """
+
+    def __init__(self, nbArms, epsilon=EPSILON, gamma=GAMMA, sparsity=None,
+                 lower=0., amplitude=1., **kwargs):
+        if sparsity is None or sparsity == nbArms:
+            sparsity = nbArms
+            print("Warning: regular UCBalpha should be used instead of SparseUCB if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
+        kwargs.update({'sparsity': sparsity})
+        super(SparseOSSB, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, solve_optimization_problem="sparse", lower=lower, amplitude=amplitude, **kwargs)
+
+    def __str__(self):
+        """ -> str"""
+        return r"SparseOSSB($\varepsilon={:.3g}$, $\gamma={:.3g}$)".format(self.epsilon, self.gamma)
