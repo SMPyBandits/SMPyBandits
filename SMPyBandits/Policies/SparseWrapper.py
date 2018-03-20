@@ -107,7 +107,7 @@ class SparseWrapper(BasePolicy):
             ucb_for += "K"
         elif self.use_ucb_for_set_J and not self.use_ucb_for_set_K:
             ucb_for += "J"
-        return r"SparseWrapper(s={})[{}{}]".format(self.sparsity, self.policy, ucb_for)
+        return r"SparseWrapper($s={}$)[{}{}]".format(self.sparsity, self.policy, ucb_for)
 
     # --- Start game by creating new underlying policy
 

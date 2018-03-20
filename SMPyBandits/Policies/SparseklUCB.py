@@ -7,6 +7,8 @@
 - This SparseklUCB is my version. It uses the KL-UCB index for both the decision in the UCB phase and the construction of the sets :math:`\mathcal{J}(t)` and :math:`\mathcal{K}(t)`.
 - The usual UCB indexes can be used for the sets by setting the flag ``use_ucb_for_sets`` to true.
 - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)] who introduced SparseUCB.
+
+.. warning:: This algorithm only works for sparse Gaussian (or sub-Gaussian) stochastic bandits, of **known** variance.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

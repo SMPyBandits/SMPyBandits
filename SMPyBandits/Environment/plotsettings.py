@@ -124,18 +124,28 @@ PUTATRIGHT = False
 #:
 #: .. warning:: I still don't really understand how this works. Just manually decrease if the legend takes more space (i.e., more algorithms with longer names)
 # SHRINKFACTOR = 0.75
-SHRINKFACTOR = 0.65
 SHRINKFACTOR = 0.60
+SHRINKFACTOR = 0.65
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None):
+#: Default parameter for maximum number of label to display in the legend INSIDE the figure
+MAXNBOFLABELINFIGURE = 8
+
+
+def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
-
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.
     """
+    try:
+        len_leg = len(plt.gca().get_legend_handles_labels()[1])
+        putatright = len_leg > maxnboflabelinfigure
+        print("Warning: forcing to use putatright = {} because there is {} items in the legend.".format(putatright, len_leg))  # DEBUG
+    except (ValueError, AttributeError, IndexError) as e:
+        # print("    e =", e)  # DEBUG
+        pass
     if fig is None:
-        hack_fig = plt.gcf()
+        # fig = plt.gcf()
         fig = plt  # HACK XXX WARNING
     if putatright:
         try:
@@ -242,7 +252,7 @@ def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', f
 
 
 #: Default value for the ``width`` parameter for :func:`wraptext` and :func:`wraplatex`.
-WIDTH = 150
+WIDTH = 95
 
 
 def wraptext(text, width=WIDTH):

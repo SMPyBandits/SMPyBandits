@@ -123,14 +123,27 @@ class MAB(object):
             text = repr(self.arms)
         else:
             assert nbPlayers >= 0, "Error, the 'nbPlayers' argument for reprarms method of a MAB object has to be a non-negative integer."  # DEBUG
+            append_to_repr = ""
+
             means = self.means
             bestmean = np.max(means)
             bestArms = np.argsort(means)[-min(nbPlayers, self.nbArms):]
+            repr_arms = [repr(arm) for arm in self.arms]
+
+            # WARNING improve display for Gaussian arms that all have same variance
+            if all("Gaussian" in str(type(arm)) for arm in self.arms) and len({arm.sigma for arm in self.arms}) == 1:
+                sigma = self.arms[0].sigma
+                repr_arms = [s.replace(', {:.3g}'.format(sigma), '') for s in repr_arms]
+                append_to_repr = r", \sigma^2={:.3g}".format(sigma) if latex else ", sigma2={:.3g}".format(sigma)
+
             if nbPlayers == 0: bestArms = []
             text = '[{}]'.format(', '.join(
-                openTag + repr(arm) + endTag if (nbPlayers > 0 and (armId in bestArms or np.isclose(arm.mean, bestmean))) else repr(arm)
+                openTag + repr_arms[armId] + endTag
+                if (nbPlayers > 0 and (armId in bestArms or np.isclose(arm.mean, bestmean)))
+                else repr_arms[armId]
                 for armId, arm in enumerate(self.arms))
             )
+            text += append_to_repr
         return wraplatex('$' + text + '$') if latex else wraptext(text)
 
     # --- Draw samples
@@ -172,8 +185,9 @@ class MAB(object):
     # --- Estimate sparsity
 
     def sparsity(self):
-        """ Estimate the sparsity of the problem, i.e., the number of arms with non-zero means."""
-        return np.count_nonzero(self.means)
+        """ Estimate the sparsity of the problem, i.e., the number of arms with positive means."""
+        return np.count_nonzero(self.means > 0)
+        # return np.count_nonzero(self.means)
 
     def str_sparsity(self):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""

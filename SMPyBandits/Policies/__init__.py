@@ -42,7 +42,7 @@
 
 - An *experimental* policy, implementing a another kind of doubling trick to turn any policy that needs to know the range :math:`[a,b]` of rewards a policy that don't need to know the range, and that adapt dynamically from the new observations, :class:`WrapRange`,
 
-- The *Optimal Sampling for Structured Bandits* (OSSB) policy: :class:`OSSB` (it is more generic and can be applied to almost any kind of bandit problem, it works fine for classical stationary bandits but it is not optimal), and a variant for sparse bandits :class:`SparseOSSB`,
+- The *Optimal Sampling for Structured Bandits* (OSSB) policy: :class:`OSSB` (it is more generic and can be applied to almost any kind of bandit problem, it works fine for classical stationary bandits but it is not optimal), a variant for gaussian problem :class:`GaussianOSSB`, and a variant for sparse bandits :class:`SparseOSSB`,
 
 - **New!** The Best Empirical Sampled Average (BESA) policy: :class:`BESA` (it works crazily well),
 
@@ -155,8 +155,8 @@ from .OCUCB import OCUCB
 # From [Lattimore, 2017]
 from .UCBdagger import UCBdagger
 
-# From [Combes et al, 2017]
-from .OSSB import OSSB, SparseOSSB
+# From [Combes et al, 2017] and my own work on the OSSB algorithm
+from .OSSB import OSSB, GaussianOSSB, SparseOSSB
 
 # From [Baransi et al, 2014]
 from .BESA import BESA

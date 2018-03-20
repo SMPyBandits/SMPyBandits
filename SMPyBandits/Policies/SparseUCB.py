@@ -5,6 +5,8 @@
 - The SparseUCB algorithm requires to known **exactly** the value of ``s``.
 
 - Reference: [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
+
+.. warning:: This algorithm only works for sparse Gaussian (or sub-Gaussian) stochastic bandits.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

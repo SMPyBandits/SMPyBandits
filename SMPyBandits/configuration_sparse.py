@@ -244,17 +244,17 @@ elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 "params": [
                     (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
                     for mu in
-                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
+                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
                 ],
         }, ],
     })
-elif not ENVIRONMENT_BAYESIAN:
-    configuration.update({
-        "environment": [ {
-                "arm_type": ARM_TYPE,
-                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
-            }, ],
-    })
+# else:
+#     configuration.update({
+#         "environment": [ {
+#                 "arm_type": ARM_TYPE,
+#                 "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+#             }, ],
+#     })
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -289,9 +289,9 @@ _klucbGauss = klucbGauss
 
 
 def klucbGauss(x, d, precision=0.):
-    """klucbGauss(x, d, sig2x) with the good variance (= 0.05)."""
-    # return _klucbGauss(x, d, 0.25)
-    return _klucbGauss(x, d, VARIANCE)
+    """klucbGauss(x, d, sig2x) with the good variance (= 0.25)."""
+    return _klucbGauss(x, d, 0.25)
+    # return _klucbGauss(x, d, VARIANCE)
 
 
 _klucbGamma = klucbGamma
@@ -304,152 +304,14 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
-        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
-        # {
-        #     "archtype": SparseOSSB,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #         "gamma": 0.0,
-        #         "sparsity": SPARSITY,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseOSSB,
-        #     "params": {
-        #         "epsilon": 0.001,
-        #         "gamma": 0.0,
-        #         "sparsity": SPARSITY,
-        #     }
-        # },
+        # --- UCBalpha algorithm
         {
-            "archtype": SparseOSSB,
+            "archtype": UCBalpha,
             "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "sparsity": SPARSITY,
-            }
-        },
-        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "use_ucb_for_set_J": True,
-                "use_ucb_for_set_K": True,
+                "alpha": 1,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "use_ucb_for_set_J": True,
-                "use_ucb_for_set_K": False,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "use_ucb_for_set_J": False,
-                "use_ucb_for_set_K": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "use_ucb_for_set_J": False,
-                "use_ucb_for_set_K": False,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # # --- UCBalpha algorithm
-        # {
-        #     "archtype": UCBalpha,
-        #     "params": {
-        #         "alpha": 1,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- SparseUCB algorithm
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 4,
-        #         "sparsity": SPARSITY,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 1,
-        #         "sparsity": SPARSITY,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "sparsity": SPARSITY,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- DONE SparseUCB algorithm with a too small value for s
-        # # XXX It fails completely!
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 1,
-        #         "sparsity": max(SPARSITY - 1, 1),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- DONE SparseUCB algorithm with a larger value for s
-        # # XXX It fails completely!
-        # {
-        #     "archtype": SparseUCB,
-        #     "params": {
-        #         "alpha": 1,
-        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- SparseklUCB algorithm with a too small value for s, using KL-UCB for sets J(t) and K(t)
-        # {
-        #     "archtype": SparseklUCB,
-        #     "params": {
-        #         "sparsity": max(SPARSITY - 2, 1),
-        #         "use_ucb_for_sets": False,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- SparseklUCB algorithm with a too small value for s, using old UCB for sets J(t) and K(t)
-        # {
-        #     "archtype": SparseklUCB,
-        #     "params": {
-        #         "sparsity": max(SPARSITY - 2, 1),
-        #         "use_ucb_for_sets": True,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
-        # # --- DONE SparseklUCB algorithm with a larger value for s
-        # # XXX It fails completely!
-        # {
-        #     "archtype": SparseklUCB,
-        #     "params": {
-        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
         # --- Thompson algorithm
         {
             "archtype": Thompson,
@@ -504,35 +366,104 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- The new OSSB algorithm
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.001,
-        #         "gamma": 0.0,
-        #     }
-        # },
+        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
-            "archtype": OSSB,
+            "archtype": SparseWrapper,
             "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "solve_optimization_problem": "classic",
+                "sparsity": SPARSITY,
+                "policy": klUCB,
+                "klucb": klucbGauss,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
         {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCB,
+                "klucb": klucbGauss,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": False,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCB,
+                "klucb": klucbGauss,
+                "use_ucb_for_set_J": False,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": klUCB,
+                "klucb": klucbGauss,
+                "use_ucb_for_set_J": False,
+                "use_ucb_for_set_K": False,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # # --- SparseUCB algorithm
+        {
+            "archtype": SparseUCB,
+            "params": {
+                "alpha": 1,
+                "sparsity": SPARSITY,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # # --- DONE SparseUCB algorithm with a too small value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": max(SPARSITY - 1, 1),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- DONE SparseUCB algorithm with a larger value for s
+        # # XXX It fails completely!
+        # {
+        #     "archtype": SparseUCB,
+        #     "params": {
+        #         "alpha": 1,
+        #         "sparsity": min(SPARSITY + 1, NB_ARMS),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # --- The new OSSB algorithm
+        {
             "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,  # XXX test to change these values!
+                "gamma": 0.0,  # XXX test to change these values!
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
+        {
+            "archtype": GaussianOSSB,
             "params": {
                 "epsilon": 0.0,
                 "gamma": 0.0,
-                "solve_optimization_problem": "gaussian",
+                "variance": VARIANCE,
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "sparsity": SPARSITY,
             }
         },
     ]

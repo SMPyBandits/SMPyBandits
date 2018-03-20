@@ -128,7 +128,8 @@ def uniformMeansWithSparsity(nbArms=10, sparsity=3, delta=0.1, lower=0., lowerNo
     assert 0 <= sparsity <= nbArms, "Error: 'sparsity' = {} has to be 0 <= sparsity <= nbArms = {} ...".format(sparsity, nbArms)  # DEBUG
     assert lower < lowerNonZero, "Error: 'lower' = {:.3g} has to be < 'lowerNonZero' = {:.3g} ...".format(lower, lowerNonZero)  # DEBUG
     mus = np.sort(np.random.rand(sparsity))
-    bad_mus = [lower] * (nbArms - sparsity)
+    # bad_mus = [lower] * (nbArms - sparsity)  # WARNING this was putting all the bad arms on 0 !
+    bad_mus = list(lower + (lowerNonZero - lower) * np.linspace(delta, 1 - delta, nbArms - sparsity))
     good_mus = list(lowerNonZero + (lower + amplitude - lowerNonZero) * np.linspace(delta, 1 - delta, sparsity))
     mus = list(bad_mus) + list(good_mus)
     if isSorted:
@@ -222,7 +223,8 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, lower=0., lowerN
     if mingap is not None and mingap > 0:
         while len(set(mus)) == sparsity and np.min(np.abs(np.diff(mus))) <= mingap:  # Ensure a min gap > mingap
             mus = np.sort(np.random.rand(sparsity))
-    bad_mus = [lower] * (nbArms - sparsity)
+    # bad_mus = [lower] * (nbArms - sparsity)  # WARNING this was putting all the bad arms on 0 !
+    bad_mus = list(lower + (lowerNonZero - lower) * np.linspace(delta, 1 - delta, nbArms - sparsity))
     good_mus = lowerNonZero + ((lower + amplitude - lowerNonZero) * mus)
     mus = list(bad_mus) + list(good_mus)
     if isSorted:
