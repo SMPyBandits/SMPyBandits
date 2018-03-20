@@ -46,6 +46,18 @@ if __name__ != "__main__":
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
 
+    mapping_ARM_TYPE = {
+        "Constant": Constant,
+        "Uniform": UniformArm,
+        "Bernoulli": Bernoulli, "B": Bernoulli,
+        "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
+        "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
+        "UnboundedGaussian": UnboundedGaussian,
+        "Poisson": Poisson, "P": Poisson,
+        "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
+        "Gamma": GammaFromMean,
+    }
+
 
 def shuffled(mylist):
     """Returns a shuffled version of the input 1D list. sorted() exists instead of list.sort(), but shuffled() does not exist instead of random.shuffle()...

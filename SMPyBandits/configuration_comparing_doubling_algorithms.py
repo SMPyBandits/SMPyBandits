@@ -68,16 +68,6 @@ amplitude = 1.
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-mapping_ARM_TYPE = {
-    "Constant": Constant,
-    "Uniform": UniformArm,
-    "Bernoulli": Bernoulli, "B": Bernoulli,
-    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
-    "UnboundedGaussian": UnboundedGaussian,
-    "Poisson": Poisson, "P": Poisson,
-    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
-    "Gamma": GammaFromMean,
-}
 if ARM_TYPE == "UnboundedGaussian":
     lower = -5
     amplitude = 10

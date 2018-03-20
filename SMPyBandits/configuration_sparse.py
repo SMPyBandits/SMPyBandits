@@ -119,23 +119,14 @@ SPARSITY = int(getenv('SPARSITY', SPARSITY))
 
 #: Default value for the lower value of means
 LOWER = 0.
+#: Default value for the lower value of non-zero means
+LOWERNONZERO = 0.25
 #: Default value for the amplitude value of means
 AMPLITUDE = 1.
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
-ARM_TYPE = "Gaussian_m2_2"
+ARM_TYPE = "Gaussian"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-mapping_ARM_TYPE = {
-    "Constant": Constant,
-    "Uniform": UniformArm,
-    "Bernoulli": Bernoulli, "B": Bernoulli,
-    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
-    "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
-    "UnboundedGaussian": UnboundedGaussian,
-    "Poisson": Poisson, "P": Poisson,
-    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
-    "Gamma": GammaFromMean,
-}
 
 # WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values...
 if ARM_TYPE in [
@@ -146,6 +137,7 @@ if ARM_TYPE in [
     AMPLITUDE = 10
 
 LOWER = float(getenv('LOWER', LOWER))
+LOWERNONZERO = float(getenv('LOWERNONZERO', LOWERNONZERO))
 AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
 assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
 VARIANCE = float(getenv('VARIANCE', VARIANCE))
@@ -158,7 +150,7 @@ ENVIRONMENT_BAYESIAN = False
 ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
-MEANS = randomMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, mingap=None, lower=0., lowerNonZero=0.1, amplitude=1.)
+MEANS = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
 
 
 #: This dictionary configures the experiments
@@ -176,19 +168,24 @@ configuration = {
     "nb_random_events": NB_RANDOM_EVENTS,
     # --- Arms
     "environment": [  # 1)  Bernoulli arms
-        # {   # A very easy problem, but it is used in a lot of articles
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # },
         # {   # A easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
         #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         # },
         # {   # A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": MEANS
+        # },
+        # "environment": [  # 2)  custom arms
+        {   # A very easy problem, but it is used in a lot of articles
+            "arm_type": ARM_TYPE,
+            "params": MEANS
+        },
+        # # "environment": [  # 3)  Gaussian arms
+        # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Gaussian,
         #     "params": MEANS
         # },
-        # "environment": [  # 2)  Gaussian arms
         # {   # An example problem with 3 or 9 arms
         #     "arm_type": Gaussian,
         #     # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
@@ -198,27 +195,26 @@ configuration = {
         # },
         # {   # A non-Bayesian random problem
         #     "arm_type": ARM_TYPE,
-        #     # "arm_type": lambda mu: Gaussian(mu, VARIANCE),  # XXX Not sure a lambda can be a 'arm_type', as joblib will need to pickle the objects for parallelization
         #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True)
         # },
-        # FIXED I need to do Bayesian problems for Gaussian arms also!
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeansWithSparsity,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
-                    "lower": -2.,
-                    "lowerNonZero": 2,
-                    "amplitude": 4.,
-                    "isSorted": True,
-                    "sparsity": SPARSITY,
-                }
-            }
-        },
+        # # FIXED I need to do Bayesian problems for Gaussian arms also!
+        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        #     "arm_type": ARM_TYPE,
+        #     "params": {
+        #         "function": randomMeansWithSparsity,
+        #         "args": {
+        #             "nbArms": NB_ARMS,
+        #             "mingap": None,
+        #             # "mingap": 0.1,
+        #             # "mingap": 1. / (3 * NB_ARMS),
+        #             "lower": -2.,
+        #             "lowerNonZero": 2,
+        #             "amplitude": 4.,
+        #             "isSorted": True,
+        #             "sparsity": SPARSITY,
+        #         }
+        #     }
+        # },
     ],
 }
 
@@ -241,6 +237,24 @@ if ENVIRONMENT_BAYESIAN:
             }
         },
     ]
+elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
+    configuration.update({
+        "environment": [ {
+                "arm_type": ARM_TYPE,
+                "params": [
+                    (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
+                    for mu in
+                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
+                ],
+        }, ],
+    })
+elif not ENVIRONMENT_BAYESIAN:
+    configuration.update({
+        "environment": [ {
+                "arm_type": ARM_TYPE,
+                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+            }, ],
+    })
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -272,17 +286,15 @@ except Exception as e:
 
 # Custom klucb function
 _klucbGauss = klucbGauss
-# del klucbGauss
 
 
 def klucbGauss(x, d, precision=0.):
     """klucbGauss(x, d, sig2x) with the good variance (= 0.05)."""
-    return _klucbGauss(x, d, 0.25)
-    # return _klucbGauss(x, d, VARIANCE)
+    # return _klucbGauss(x, d, 0.25)
+    return _klucbGauss(x, d, VARIANCE)
 
 
 _klucbGamma = klucbGamma
-# del klucbGamma
 
 
 def klucbGamma(x, d, precision=0.):

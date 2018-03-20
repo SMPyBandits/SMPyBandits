@@ -158,17 +158,6 @@ AMPLITUDE = 1.
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-mapping_ARM_TYPE = {
-    "Constant": Constant,
-    "Uniform": UniformArm,
-    "Bernoulli": Bernoulli, "B": Bernoulli,
-    "Gaussian": Gaussian, "Gauss": Gaussian, "G": Gaussian,
-    "Gaussian_0_1": Gaussian_0_1, "Gaussian_0_2": Gaussian_0_2, "Gaussian_0_5": Gaussian_0_5, "Gaussian_0_10": Gaussian_0_10, "Gaussian_0_100": Gaussian_0_100, "Gaussian_m1_1": Gaussian_m1_1, "Gaussian_m2_2": Gaussian_m2_2, "Gaussian_m5_5": Gaussian_m5_5, "Gaussian_m10_10": Gaussian_m10_10, "Gaussian_m100_100": Gaussian_m100_100,
-    "UnboundedGaussian": UnboundedGaussian,
-    "Poisson": Poisson, "P": Poisson,
-    "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
-    "Gamma": GammaFromMean,
-}
 
 # WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values...
 if ARM_TYPE in [
