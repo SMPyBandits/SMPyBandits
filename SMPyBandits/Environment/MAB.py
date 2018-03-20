@@ -119,9 +119,6 @@ class MAB(object):
         - Example: openTag = '<red>', endTag = '</red>' for HTML-like tags.
         - Example: openTag = r'\textcolor{red}{', endTag = '}' for LaTeX tags.
         """
-        # # FIXME durty hack before launching simulations
-        # if self.nbArms > 9:
-        #     return "{} Gaussian arms with means in [-5, 5]".format(self.nbArms)
         if nbPlayers is None:
             text = repr(self.arms)
         else:
