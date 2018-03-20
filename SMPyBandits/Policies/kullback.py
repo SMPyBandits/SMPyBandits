@@ -310,7 +310,7 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
 # --- KL functions, for the KL-UCB policy
 
 @jit
-def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
+def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6, max_iterations=50):
     """ The generic KL-UCB index computation.
 
     - x: value of the cum reward,
@@ -325,7 +325,9 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6):
     """
     value = max(x, lowerbound)
     u = upperbound
-    while u - value > precision:
+    _count_iteration = 0
+    while _count_iteration < max_iterations and u - value > precision:
+        _count_iteration += 1
         m = (value + u) / 2.
         if kl(x, m) > d:
             u = m
@@ -364,7 +366,7 @@ def klucbBern(x, d, precision=1e-6):
     >>> klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
     0.999995...
     """
-    upperbound = min(1., klucbGauss(x, d, sig2x=0.25))
+    upperbound = min(1., klucbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
     # upperbound = min(1., klucbPoisson(x, d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
@@ -566,9 +568,8 @@ def maxEV(p, V, klMax):
 
 
 @jit
-def reseqp(p, V, klMax):
+def reseqp(p, V, klMax, max_iterations=50):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
-
 
     .. note:: This is a subroutine of :func:`maxEV`.
 
@@ -584,7 +585,9 @@ def reseqp(p, V, klMax):
     u = np.dot(p, (1 / (value - V)))
     y = np.dot(p, np.log(value - V)) + log(u) - klMax
     print("value =", value, ", y = ", y)  # DEBUG
-    while np.abs(y) > tol:
+    _count_iteration = 0
+    while _count_iteration < max_iterations and np.abs(y) > tol:
+        _count_iteration += 1
         yp = u - np.dot(p, (1 / (value - V)**2)) / u  # derivative
         value -= y / yp
         print("value = ", value)  # DEBUG  # newton iteration

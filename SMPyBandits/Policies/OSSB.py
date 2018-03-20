@@ -67,6 +67,10 @@ def solve_optimization_problem__gaussian(thetas, sig2x=0.25):
     #         values[i] = 1 / klGauss(theta, theta_max)
     # return values
     return 1. / klGauss_vect(thetas, np.max(thetas), sig2x=sig2x)
+    # # DEBUG
+    # values = 1. / klGauss_vect(thetas, np.max(thetas), sig2x=sig2x)
+    # print("solve_optimization_problem__gaussian({}, sig2x={}) gives {}...".format(thetas, sig2x, values))  # DEBUG
+    # return values
 
 
 def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
@@ -80,6 +84,9 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
     if sparsity is None:
         sparsity = d
     permutation = np.argsort(thetas)[::-1]  # sort in decreasing order!
+    anti_permutation = [-1] * d
+    for i in range(d):
+        anti_permutation[permutation[i]] = i
     # sorted_thetas = np.sort(thetas)
     sorted_thetas = thetas[permutation]
     # assert list(np.sort(sorted_thetas)[::-1]) == list(sorted_thetas), "Error in the sorting of list thetas."  # DEBUG
@@ -106,8 +113,8 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
 
         for i in range(1, sparsity):
             if gaps[i] > 0:
-                ci[permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
-                print("       for i =", i, "ci[", permutation[i], "] =", ci[permutation[i]])  # DEBUG
+                ci[anti_permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
+                print("       for i =", i, "ci[", anti_permutation[i], "] =", ci[anti_permutation[i]])  # DEBUG
     else:
         # we only have weak sparsity... search for the good k
         k = None
@@ -122,11 +129,11 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
 
         for i in range(1, k):
             if gaps[i] > 0:
-                ci[permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
+                ci[anti_permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
         for i in range(k, sparsity):
-            ci[permutation[i]] = 0.5 * (sorted_thetas[k] / (sorted_thetas[i] * gaps[i])) ** 2
+            ci[anti_permutation[i]] = 0.5 * (sorted_thetas[k] / (sorted_thetas[i] * gaps[i])) ** 2
         for i in range(sparsity, d):
-            ci[permutation[i]] = 0.5 * (1 - (sorted_thetas[k] / gaps[k]) ** 2) / (gaps[i] * best_theta)
+            ci[anti_permutation[i]] = 0.5 * (1 - (sorted_thetas[k] / gaps[k]) ** 2) / (gaps[i] * best_theta)
 
     # return the argmax ci of the optimization problem
     ci = np.maximum(0, ci)
@@ -164,7 +171,7 @@ class OSSB(BasePolicy):
         self._kwargs = kwargs  # Keep in memory the other arguments, to give to self._solve_optimization_problem
         # Internal memory
         self.counter_s_no_exploitation_phase = 0  #: counter of number of exploitation phase
-        # self.phase = None  #: categorical variable for the phase
+        self.phase = None  #: categorical variable for the phase
 
     def __str__(self):
         """ -> str"""
@@ -176,7 +183,7 @@ class OSSB(BasePolicy):
         """ Start the game (fill pulls and rewards with 0)."""
         super(OSSB, self).startGame()
         self.counter_s_no_exploitation_phase = 0
-        # self.phase = Phase.initialisation
+        self.phase = Phase.initialisation
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1])."""
@@ -188,26 +195,32 @@ class OSSB(BasePolicy):
         """ Applies the OSSB procedure, it's quite complicated so see the original paper."""
         means = (self.rewards / self.pulls)
         if np.any(self.pulls < 1):
+            print("[initial phase] force exploration of an arm that was never pulled...")  # DEBUG
             return np.random.choice(np.nonzero(self.pulls < 1)[0])
 
         values_c_x_mt = self._solve_optimization_problem(means, **self._kwargs)
 
         if np.all(self.pulls >= (1. + self.gamma) * np.log(self.t) * values_c_x_mt):
-            # self.phase = Phase.exploitation
+            self.phase = Phase.exploitation
             # self.counter_s_no_exploitation_phase += 0  # useless
-            return np.random.choice(np.nonzero(means == np.max(means))[0])
+            chosen_arm = np.random.choice(np.nonzero(means == np.max(means))[0])
+            print("[exploitation phase] Choosing at random in the set of best arms {} at time t = {} : choice = {} ...".format(np.nonzero(means == np.max(means))[0], self.t, chosen_arm))  # DEBUG
+            return chosen_arm
         else:
             self.counter_s_no_exploitation_phase += 1
             # we don't just take argmin because of possible non-uniqueness
             least_explored = np.random.choice(np.nonzero(self.pulls == np.min(self.pulls))[0])
             ratios = self.pulls / values_c_x_mt
             least_probable = np.random.choice(np.nonzero(ratios == np.min(ratios))[0])
+            print("Using ratio of pulls / values_c_x_mt = {}, and least probable arm(s) are {}...".format(ratios, least_probable))  # DEBUG
 
             if self.pulls[least_explored] <= self.epsilon * self.counter_s_no_exploitation_phase:
-                # self.phase = Phase.estimation
+                self.phase = Phase.estimation
+                print("[estimation phase] Choosing the arm the least explored at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
                 return least_explored
             else:
-                # self.phase = Phase.exploration
+                self.phase = Phase.exploration
+                print("[exploration phase] Choosing the arm the least probable at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
                 return least_probable
 
     # --- Others choice...() methods, partly implemented

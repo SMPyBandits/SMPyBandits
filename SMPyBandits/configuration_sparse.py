@@ -152,6 +152,10 @@ ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
 
+#: Whether to sort the means of the problems or not.
+ISSORTED = True
+ISSORTED = False
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -210,7 +214,7 @@ configuration = {
         #             "lower": -2.,
         #             "lowerNonZero": 2,
         #             "amplitude": 4.,
-        #             "isSorted": True,
+        #             "isSorted": ISSORTED,
         #             "sparsity": SPARSITY,
         #         }
         #     }
@@ -232,7 +236,7 @@ if ENVIRONMENT_BAYESIAN:
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
-                    "isSorted": True,
+                    "isSorted": ISSORTED,
                 }
             }
         },
@@ -244,7 +248,7 @@ elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 "params": [
                     (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
                     for mu in
-                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
+                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=ISSORTED)
                 ],
         }, ],
     })
@@ -366,48 +370,56 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        # # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        # {
+        #     "archtype": SparseWrapper,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "policy": klUCB,
+        #         "klucb": klucbGauss,
+        #         "use_ucb_for_set_J": True,
+        #         "use_ucb_for_set_K": True,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseWrapper,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "policy": klUCB,
+        #         "klucb": klucbGauss,
+        #         "use_ucb_for_set_J": True,
+        #         "use_ucb_for_set_K": False,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseWrapper,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "policy": klUCB,
+        #         "klucb": klucbGauss,
+        #         "use_ucb_for_set_J": False,
+        #         "use_ucb_for_set_K": True,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseWrapper,
+        #     "params": {
+        #         "sparsity": SPARSITY,
+        #         "policy": klUCB,
+        #         "klucb": klucbGauss,
+        #         "use_ucb_for_set_J": False,
+        #         "use_ucb_for_set_K": False,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- SparseUCB algorithm
         {
-            "archtype": SparseWrapper,
+            "archtype": SparseklUCB,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": klUCB,
-                "klucb": klucbGauss,
-                "use_ucb_for_set_J": True,
-                "use_ucb_for_set_K": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "klucb": klucbGauss,
-                "use_ucb_for_set_J": True,
-                "use_ucb_for_set_K": False,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "klucb": klucbGauss,
-                "use_ucb_for_set_J": False,
-                "use_ucb_for_set_K": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "sparsity": SPARSITY,
-                "policy": klUCB,
-                "klucb": klucbGauss,
-                "use_ucb_for_set_J": False,
-                "use_ucb_for_set_K": False,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },

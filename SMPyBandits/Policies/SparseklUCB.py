@@ -72,7 +72,7 @@ class SparseklUCB(klUCB):
     # --- pretty printing
 
     def __str__(self):
-        return r"Sparse-KL-UCB($s={}$, {}{}{})".format(self.sparsity, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:], ", UCB for sets" if self.use_ucb_for_sets else "")
+        return r"Sparse-kl-UCB($s={}$, {}{}{})".format(self.sparsity, "" if self.c == 1 else r"$c={:.3g}$".format(self.c), self.klucb.__name__[5:], ", UCB for sets" if self.use_ucb_for_sets else "")
 
     def startGame(self):
         """ Initialize the policy for a new game."""

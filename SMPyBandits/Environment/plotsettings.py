@@ -123,13 +123,12 @@ PUTATRIGHT = False
 #: Shrink factor if the legend is displayed on the right of the plot.
 #:
 #: .. warning:: I still don't really understand how this works. Just manually decrease if the legend takes more space (i.e., more algorithms with longer names)
-# SHRINKFACTOR = 0.75
 SHRINKFACTOR = 0.60
 SHRINKFACTOR = 0.65
-
+SHRINKFACTOR = 0.70
 
 #: Default parameter for maximum number of label to display in the legend INSIDE the figure
-MAXNBOFLABELINFIGURE = 8
+MAXNBOFLABELINFIGURE = 7
 
 
 def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE):
@@ -146,13 +145,13 @@ def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnbofla
         pass
     if fig is None:
         # fig = plt.gcf()
-        fig = plt  # HACK XXX WARNING
+        fig = plt  # HACK
     if putatright:
         try:
             # Shrink current axis by 20% on xaxis and 10% on yaxis
-            delta_rect = (1. - shrinkfactor)/5.
-            # rect = [left, bottom, right, top] in normalized (0, 1) figure coordinates.
-            fig.tight_layout(rect=[delta_rect/1.25, delta_rect, shrinkfactor, 1 - delta_rect])
+            delta_rect = (1. - shrinkfactor)/6.25
+            # XXX rect = [left, bottom, right, top] in normalized (0, 1) figure coordinates.
+            fig.tight_layout(rect=[delta_rect, delta_rect, shrinkfactor, 1 - 2*delta_rect])
             # Put a legend to the right of the current axis
             fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
         except:
