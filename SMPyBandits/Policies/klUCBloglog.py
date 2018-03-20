@@ -24,7 +24,7 @@ class klUCBloglog(klUCB):
     """
 
     def __str__(self):
-        return r"KLUCB({}{}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), r"$\log\log$, ", self.klucb.__name__[5:])
+        return r"kl-UCB({}{}{})".format("" if self.c == 1 else r"$c={:.3g}$, ".format(self.c), r"$\log\log$, ", self.klucb.__name__[5:])
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

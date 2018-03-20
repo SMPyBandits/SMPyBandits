@@ -39,7 +39,7 @@ class klUCB(IndexPolicy):
         if name == "Bern": name = ""
         complement = "{}{}".format(name, "" if self.c == 1 else r"$c={:.3g}$".format(self.c))
         if complement != "": complement = "({})".format(complement)
-        return r"KLUCB{}".format(complement)
+        return r"kl-UCB{}".format(complement)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
