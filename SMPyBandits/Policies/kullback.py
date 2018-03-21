@@ -9,8 +9,8 @@
 
 .. warning::
 
-    All function are *not* vectorized, and assume only one value for each argument.
-    If you want vectorized function, use the wrapper :func:`numpy.vectorize`:
+    All functions are *not* vectorized, and assume only one value for each argument.
+    If you want vectorized function, use the wrapper :py:class:`numpy.vectorize`:
 
     >>> import numpy as np
     >>> klBern_vect = np.vectorize(klBern)
@@ -20,6 +20,15 @@
     array([0.104..., 0.022..., 0...])
     >>> klBern_vect([0.1, 0.5, 0.9], [0.2, 0.3, 0.4])  # doctest: +ELLIPSIS
     array([0.036..., 0.087..., 0.550...])
+
+    For some functions, you would be better off writing a vectorized version manually, for instance if you want to fix a value of some optional parameters:
+
+    >>> # WARNING using np.vectorize gave weird result on klGauss
+    >>> # klGauss_vect = np.vectorize(klGauss, excluded="y")
+    >>> def klGauss_vect(xs, y, sig2x=0.25):  # vectorized for first input only
+    ...    return np.array([klGauss(x, y, sig2x) for x in xs])
+    >>> klGauss_vect([-1, 0, 1], 0.1)  # doctest: +ELLIPSIS
+    array([2.42, 0.02, 1.62])
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -30,13 +39,14 @@ from math import log, sqrt, exp
 
 import numpy as np
 
+# https://www.docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.fixed_point
+from scipy import optimize
+
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 except (ValueError, ImportError, SystemError):
     from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
-
-# Warning: np.dot is miserably slow!
 
 eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
@@ -46,7 +56,9 @@ eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - 
 
 @jit
 def klBern(x, y):
-    """ Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
+    r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
+
+    .. math:: \mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).
 
     >>> klBern(0.5, 0.5)
     0.0
@@ -71,9 +83,13 @@ def klBern(x, y):
 
 @jit
 def klBin(x, y, n):
-    """ Kullback-Leibler divergence for Binomial distributions. https://math.stackexchange.com/questions/320399/kullback-leibner-divergence-of-binomial-distributions
+    r""" Kullback-Leibler divergence for Binomial distributions. https://math.stackexchange.com/questions/320399/kullback-leibner-divergence-of-binomial-distributions
 
-    Warning, the two distributions must have the same parameter n, and x, y are p, q in (0, 1).
+    - It is simply the n times :func:`klBern` on x and y.
+
+    .. math:: \mathrm{KL}(\mathrm{Bin}(x, n), \mathrm{Bin}(y, n)) = n \times \left(x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}) \right).
+
+    .. warning:: The two distributions must have the same parameter n, and x, y are p, q in (0, 1).
 
     >>> klBin(0.5, 0.5, 10)
     0.0
@@ -98,7 +114,9 @@ def klBin(x, y, n):
 
 @jit
 def klPoisson(x, y):
-    """ Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution#Kullback.E2.80.93Leibler_divergence
+    r""" Kullback-Leibler divergence for Poison distributions. https://en.wikipedia.org/wiki/Poisson_distribution#Kullback.E2.80.93Leibler_divergence
+
+    .. math:: \mathrm{KL}(\mathrm{Poisson}(x), \mathrm{Poisson}(y)) = y - x + x \times \log(\frac{x}{y}).
 
     >>> klPoisson(3, 3)
     0.0
@@ -125,7 +143,14 @@ def klPoisson(x, y):
 
 @jit
 def klExp(x, y):
-    """ Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution#Kullback.E2.80.93Leibler_divergence
+    r""" Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution#Kullback.E2.80.93Leibler_divergence
+
+    .. math::
+
+        \mathrm{KL}(\mathrm{Exp}(x), \mathrm{Exp}(y)) = \begin{cases}
+        \frac{x}{y} - 1 - \log(\frac{x}{y}) & \text{if} x > 0, y > 0\\
+        +\infty & \text{otherwise}
+        \end{cases}
 
     >>> klExp(3, 3)
     0.0
@@ -159,7 +184,18 @@ def klExp(x, y):
 
 @jit
 def klGamma(x, y, a=1):
-    """ Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution#Kullback.E2.80.93Leibler_divergence
+    r""" Kullback-Leibler divergence for gamma distributions. https://en.wikipedia.org/wiki/Gamma_distribution#Kullback.E2.80.93Leibler_divergence
+
+    - It is simply the a times :func:`klExp` on x and y.
+
+    .. math::
+
+        \mathrm{KL}(\Gamma(x, a), \Gamma(y, a)) = \begin{cases}
+        a \times \left( \frac{x}{y} - 1 - \log(\frac{x}{y}) \right) & \text{if} x > 0, y > 0\\
+        +\infty & \text{otherwise}
+        \end{cases}
+
+    .. warning:: The two distributions must have the same parameter a.
 
     >>> klGamma(3, 3)
     0.0
@@ -193,7 +229,11 @@ def klGamma(x, y, a=1):
 
 @jit
 def klNegBin(x, y, r=1):
-    """ Kullback-Leibler divergence for negative binomial distributions. https://en.wikipedia.org/wiki/Gamma_distribution
+    r""" Kullback-Leibler divergence for negative binomial distributions. https://en.wikipedia.org/wiki/Negative_binomial_distribution
+
+    .. math:: \mathrm{KL}(\mathrm{NegBin}(x, r), \mathrm{NegBin}(y, r)) = r \times \log((r + x) / (r + y)) - x \times \log(y \times (r + x) / (x \times (r + y))).
+
+    .. warning:: The two distributions must have the same parameter r.
 
     >>> klNegBin(0.5, 0.5)
     0.0
@@ -238,6 +278,10 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
     .. math:: \mathrm{KL}(\nu_1, \nu_2) = \frac{(x - y)^2}{2 \sigma_y^2} + \frac{1}{2}\left( \frac{\sigma_x^2}{\sigma_y^2} - 1 \log\left(\frac{\sigma_x^2}{\sigma_y^2}\right) \right).
 
     See https://en.wikipedia.org/wiki/Normal_distribution#Other_properties
+
+    - By default, sig2y is assumed to be sig2x (same variance).
+
+    .. warning:: The C version does not support different variances.
 
     >>> klGauss(3, 3)
     0.0
@@ -300,6 +344,8 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
     0.7243...
     >>> klGauss(1, 0, sig2x=0.5, sig2y=0.25)  # not symmetric here!  # doctest: +ELLIPSIS
     3.1534...
+
+    .. warning:: Using :class:`Policies.klUCB` (and variants) with :func:`klGauss` is equivalent to use :class:`Policies.UCB`, so prefer the simpler version.
     """
     if sig2y is None or - eps < (sig2y - sig2x) < eps:
         return (x - y) ** 2 / (2. * sig2x)
@@ -315,13 +361,29 @@ def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6, max_it
 
     - x: value of the cum reward,
     - d: upper bound on the divergence,
-    - kl: the KL divergence to be used (klBern, klGauss, etc),
+    - kl: the KL divergence to be used (:func:`klBern`, :func:`klGauss`, etc),
     - upperbound, lowerbound=float('-inf'): the known bound of the values x,
     - precision=1e-6: the threshold from where to stop the research,
+    - max_iterations: max number of iterations of the loop (safer to bound it to reduce time complexity).
 
+    .. note:: It uses a **bisection search**, and one call to ``kl`` for each step of the bisection search.
 
-    .. note:: It uses a bisection search.
+    For example, for :func:`klucbBern`, the two steps are to first compute an upperbound (as precise as possible) and the compute the kl-UCB index:
 
+    >>> x, d = 0.9, 0.2   # mean x, exploration term d
+    >>> upperbound = min(1., klucbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
+    >>> upperbound  # doctest: +ELLIPSIS
+    1.0
+    >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-3, max_iterations=10)  # doctest: +ELLIPSIS
+    0.9941...
+    >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-6, max_iterations=10)  # doctest: +ELLIPSIS
+    0.994482...  # doctest: +ELLIPSIS
+    >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-3, max_iterations=50)  # doctest: +ELLIPSIS
+    0.9941...
+    >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-6, max_iterations=100)  # more and more precise!  # doctest: +ELLIPSIS
+    0.994489...
+
+    .. note:: See below for more examples for different KL divergence functions.
     """
     value = max(x, lowerbound)
     u = upperbound
@@ -404,6 +466,8 @@ def klucbGauss(x, d, sig2x=0.25, precision=0.):
     1.347213...
     >>> klucbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
     1.570820...
+
+    .. warning:: Using :class:`Policies.klUCB` (and variants) with :func:`klucbGauss` is equivalent to use :class:`Policies.UCB`, so prefer the simpler version.
     """
     return x + sqrt(2 * sig2x * d)
 
@@ -532,7 +596,7 @@ def klucbGamma(x, d, precision=1e-6):
 
 @jit
 def maxEV(p, V, klMax):
-    """ Maximize expectation of V wrt. q st. KL(p, q) < klMax.
+    r""" Maximize expectation of :math:`V` with respect to :math:`q` st. :math:`\mathrm{KL}(p, q) < \text{klMax}`.
 
     - Input args.: p, V, klMax.
     - Reference: Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
@@ -569,12 +633,13 @@ def maxEV(p, V, klMax):
 
 @jit
 def reseqp(p, V, klMax, max_iterations=50):
-    """ Solve f(reseqp(p, V, klMax)) = klMax, using Newton method.
+    """ Solve ``f(reseqp(p, V, klMax)) = klMax``, using Newton method.
 
     .. note:: This is a subroutine of :func:`maxEV`.
 
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011](https://arxiv.org/pdf/1004.5229.pdf).
-    - Warning: `np.dot` is very slow!
+
+    .. warning:: `np.dot` is very slow!
     """
     MV = np.max(V)
     mV = np.min(V)
@@ -599,10 +664,6 @@ def reseqp(p, V, klMax, max_iterations=50):
     return value
 
 
-# https://www.docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.fixed_point
-from scipy.optimize import minimize
-
-
 def reseqp2(p, V, klMax):
     """ Solve f(reseqp(p, V, klMax)) = klMax, using a blackbox minimizer, from scipy.optimize.
 
@@ -611,7 +672,8 @@ def reseqp2(p, V, klMax):
     .. note:: This is a subroutine of :func:`maxEV`.
 
     - Reference: Eq. (4) in Section 3.2 of [Filippi, Cappé & Garivier - Allerton, 2011].
-    - Warning: `np.dot` is very slow!
+
+    .. warning:: `np.dot` is very slow!
     """
     MV = np.max(V)
     mV = np.min(V)
@@ -628,9 +690,9 @@ def reseqp2(p, V, klMax):
             y = np.dot(p, np.log(value - V)) + log(u)
         return np.abs(y - klMax)
 
-    res = minimize(f, value0)
+    res = optimize.minimize(f, value0)
     print("scipy.optimize.minimize returned", res)
-    return res.x
+    return res.x if hasattr(res, 'x') else res
 
 
 # --- Debugging

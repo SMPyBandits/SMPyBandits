@@ -153,8 +153,8 @@ ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 MEANS = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
 
 #: Whether to sort the means of the problems or not.
-ISSORTED = True
 ISSORTED = False
+ISSORTED = True
 
 
 #: This dictionary configures the experiments
@@ -308,6 +308,20 @@ def klucbGamma(x, d, precision=0.):
 
 configuration.update({
     "policies": [
+        # --- Naive algorithms
+        {
+            "archtype": EmpiricalMeans,
+            "params": {
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": EpsilonDecreasing,
+            "params": {
+                "epsilon": 1. / (2 * nbArms),
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- UCBalpha algorithm
         {
             "archtype": UCBalpha,
@@ -365,12 +379,38 @@ configuration.update({
         {
             "archtype": ApproximatedFHGittins,
             "params": {
-                "horizon": 1.1 * HORIZON,
+                "horizon": 1.05 * HORIZON,
+                "alpha": 4,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.05 * HORIZON,
                 "alpha": 1,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "horizon": 1.05 * HORIZON,
+                "alpha": 0.25,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": BayesUCB,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # {
         #     "archtype": SparseWrapper,
         #     "params": {

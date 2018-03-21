@@ -25,6 +25,7 @@ sparsemulti:
 
 alllint:	lint lint3 pyreverse stats doc
 doc:
+	git checkout -- ./logs/
 	make html clean send
 
 # Runners

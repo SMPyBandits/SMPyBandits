@@ -6,11 +6,13 @@ No need for tricks to handle non-binary rewards.
 
 - See https://en.wikipedia.org/wiki/Normal_distribution#With_unknown_mean_and_unknown_variance
 - And https://en.wikipedia.org/wiki/Conjugate_prior#Continuous_distributions
+
+.. warning:: It is computationally really slower than :class:`Posterior.Beta`! About 10 to 50 times slower.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from warnings import warn
 import numpy as np
@@ -140,10 +142,10 @@ class Gauss(Posterior):
 
         .. math::
 
-           \mu' &:= \frac{\nu \mu + n \overline{x}}{\nu + n}, \\
-           \nu' &:= \nu + n, \\
-           \alpha' &:= \alpha + \frac{n}{2}, \\
-           \beta' &:= \beta + \frac{1}{2} \sum_{i=1}^{n} (x_i - \overline{x})^2 + \frac{n \nu}{\nu + n} \frac{(\overline{x} - \mu)^2}{2}.\\
+            \mu' &:= \frac{\nu \mu + n \overline{x}}{\nu + n}, \\
+            \nu' &:= \nu + n, \\
+            \alpha' &:= \alpha + \frac{n}{2}, \\
+            \beta' &:= \beta + \frac{1}{2} \sum_{i=1}^{n} (x_i - \overline{x})^2 + \frac{n \nu}{\nu + n} \frac{(\overline{x} - \mu)^2}{2}.\\
 
         """
         # print("Info: calling Gauss.update() with obs = {} ...".format(obs))  # DEBUG
