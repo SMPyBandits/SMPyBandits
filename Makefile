@@ -23,9 +23,8 @@ moremulti:
 sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
-alllint:	lint lint3 pyreverse stats doc
-doc:
-	git checkout -- ./logs/
+alllint:	lint lint3 uml stats doc
+doc:	ignorelogs
 	make html clean send
 
 # Runners
@@ -237,7 +236,7 @@ lint:
 lint3:
 	-pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
 
-pyreverse:
+uml:
 	-mkdir uml_diagrams/
 	pyreverse -o dot -my -f ALL -p SMPyBandits ./*.py ./*/*.py
 	-mv -vf packages_SMPyBandits.dot classes_SMPyBandits.dot uml_diagrams/
