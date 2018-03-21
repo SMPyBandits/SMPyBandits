@@ -315,13 +315,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": EpsilonDecreasing,
-            "params": {
-                "epsilon": 1. / (2 * nbArms),
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": EpsilonDecreasing,
+        #     "params": {
+        #         "epsilon": 1. / (2 * nbArms),
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- UCBalpha algorithm
         {
             "archtype": UCBalpha,
