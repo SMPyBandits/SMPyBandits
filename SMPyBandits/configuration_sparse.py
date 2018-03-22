@@ -353,13 +353,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucbGauss,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         "klucb": klucbGauss,  # XXX exactly like UCB !
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- BayesUCB algorithm
         {
             "archtype": BayesUCB,
@@ -392,14 +392,14 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.05 * HORIZON,
-                "alpha": 0.25,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.05 * HORIZON,
+        #         "alpha": 0.25,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
             "archtype": SparseWrapper,
@@ -515,6 +515,30 @@ configuration.update({
             "params": {
                 "epsilon": 0.0,
                 "gamma": 0.0,
+                "sparsity": SPARSITY,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.0,
+                "sparsity": SPARSITY,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.1,
+                "sparsity": SPARSITY,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.1,
                 "sparsity": SPARSITY,
             }
         },

@@ -98,34 +98,34 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
     strong_sparsity = lambda k: (d - sparsity)/float(best_theta) - sum(gaps[i]/(sorted_thetas[i]**2) for i in range(k, sparsity))
     ci = np.zeros(d)
 
-    # DEBUG
-    print()
-    print("    We have d =", d, "sparsity =", sparsity, "permutation =", permutation)  # DEBUG
-    print("    and sorted_thetas =", sorted_thetas, "with best_theta =", best_theta)  # DEBUG
-    print("    gaps =", gaps)  # DEBUG
-    # DEBUG
+    # # DEBUG
+    # print()
+    # print("    We have d =", d, "sparsity =", sparsity, "permutation =", permutation)  # DEBUG
+    # print("    and sorted_thetas =", sorted_thetas, "with best_theta =", best_theta)  # DEBUG
+    # print("    gaps =", gaps)  # DEBUG
+    # # DEBUG
 
     if strong_sparsity(0) > 0:
-        print("       for k =", 0, "strong_sparsity(0) =", strong_sparsity(0))  # DEBUG
+        # print("       for k =", 0, "strong_sparsity(0) =", strong_sparsity(0))  # DEBUG
         # OK we have strong sparsity
 
-        print("Info: OK we have strong sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi²) = {:.3g} > 0...".format(d, sparsity, best_theta, strong_sparsity(0)))  # DEBUG
+        # print("Info: OK we have strong sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi²) = {:.3g} > 0...".format(d, sparsity, best_theta, strong_sparsity(0)))  # DEBUG
 
         for i in range(1, sparsity):
             if gaps[i] > 0:
                 ci[anti_permutation[i]] = 0.5 / min(gaps[i], sorted_thetas[i])
-                print("       for i =", i, "ci[", anti_permutation[i], "] =", ci[anti_permutation[i]])  # DEBUG
+                # print("       for i =", i, "ci[", anti_permutation[i], "] =", ci[anti_permutation[i]])  # DEBUG
     else:
         # we only have weak sparsity... search for the good k
         k = None
         for possible_k in range(1, sparsity - 1):
-            print("       for k =", possible_k, "strong_sparsity(k) =", strong_sparsity(possible_k))  # DEBUG
+            # print("       for k =", possible_k, "strong_sparsity(k) =", strong_sparsity(possible_k))  # DEBUG
             if strong_sparsity(possible_k) <= 0:
                 k = possible_k
                 break  # no need to continue the loop
         assert k is not None, "Error: there must exist a k in [1, s] such that (d-s)/µ1 - sum(Delta_i/µi², i=k...s) < 0..."  # DEBUG
 
-        print("Warning: we only have weak sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi², i=k={}...s) = {:.3g} < 0...".format(d, sparsity, best_theta, k, strong_sparsity(k)))  # DEBUG
+        # print("Warning: we only have weak sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi², i=k={}...s) = {:.3g} < 0...".format(d, sparsity, best_theta, k, strong_sparsity(k)))  # DEBUG
 
         for i in range(1, k):
             if gaps[i] > 0:
@@ -137,7 +137,7 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
 
     # return the argmax ci of the optimization problem
     ci = np.maximum(0, ci)
-    print("So we have ci =", ci)  # DEBUG
+    # print("So we have ci =", ci)  # DEBUG
     return ci
 
 
@@ -195,7 +195,7 @@ class OSSB(BasePolicy):
         """ Applies the OSSB procedure, it's quite complicated so see the original paper."""
         means = (self.rewards / self.pulls)
         if np.any(self.pulls < 1):
-            print("[initial phase] force exploration of an arm that was never pulled...")  # DEBUG
+            # print("[initial phase] force exploration of an arm that was never pulled...")  # DEBUG
             return np.random.choice(np.nonzero(self.pulls < 1)[0])
 
         values_c_x_mt = self._solve_optimization_problem(means, **self._kwargs)
@@ -204,7 +204,7 @@ class OSSB(BasePolicy):
             self.phase = Phase.exploitation
             # self.counter_s_no_exploitation_phase += 0  # useless
             chosen_arm = np.random.choice(np.nonzero(means == np.max(means))[0])
-            print("[exploitation phase] Choosing at random in the set of best arms {} at time t = {} : choice = {} ...".format(np.nonzero(means == np.max(means))[0], self.t, chosen_arm))  # DEBUG
+            # print("[exploitation phase] Choosing at random in the set of best arms {} at time t = {} : choice = {} ...".format(np.nonzero(means == np.max(means))[0], self.t, chosen_arm))  # DEBUG
             return chosen_arm
         else:
             self.counter_s_no_exploitation_phase += 1
@@ -212,15 +212,15 @@ class OSSB(BasePolicy):
             least_explored = np.random.choice(np.nonzero(self.pulls == np.min(self.pulls))[0])
             ratios = self.pulls / values_c_x_mt
             least_probable = np.random.choice(np.nonzero(ratios == np.min(ratios))[0])
-            print("Using ratio of pulls / values_c_x_mt = {}, and least probable arm(s) are {}...".format(ratios, least_probable))  # DEBUG
+            # print("Using ratio of pulls / values_c_x_mt = {}, and least probable arm(s) are {}...".format(ratios, least_probable))  # DEBUG
 
             if self.pulls[least_explored] <= self.epsilon * self.counter_s_no_exploitation_phase:
                 self.phase = Phase.estimation
-                print("[estimation phase] Choosing the arm the least explored at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
+                # print("[estimation phase] Choosing the arm the least explored at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
                 return least_explored
             else:
                 self.phase = Phase.exploration
-                print("[exploration phase] Choosing the arm the least probable at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
+                # print("[exploration phase] Choosing the arm the least probable at time t = {} : choice = {} ...".format(self.t, least_explored))  # DEBUG
                 return least_probable
 
     # --- Others choice...() methods, partly implemented
