@@ -121,9 +121,12 @@ $for(polyglossia-otherlangs)$
 $endfor$
 \fi
 $endif$
+$if(bibtex)$
+  \bibliographystyle{$if(biblio-style)$$biblio-style$$else$ieeetr$endif$}
+$endif$
 $if(natbib)$
-\usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+  \usepackage{natbib}
+  \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
 $endif$
 $if(biblatex)$
 \usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
@@ -136,7 +139,7 @@ $if(usehancyhdr)$
 \pagestyle{fancy}
     \renewcommand{\headrulewidth}{0.2pt}
     \renewcommand{\footrulewidth}{0.2pt}
-    \lhead{\emph{$title$} presentation paper}
+    \lhead{$if(fancyhdrtitle)$\emph{$fancyhdrtitle$} presentation paper$else$\emph{$title$}$endif$}
     \rhead{\emph{\today}}
     \lfoot{\href{https://GitHub.com/SMPyBandits/SMPyBandits}{GitHub.com/SMPyBandits/SMPyBandits}}
     \cfoot{\(\thepage/\pageref{LastPage}\)}
@@ -271,6 +274,30 @@ $else$
 \title{$title$}
 $endif$
 $endif$
+
+$if(authors)$
+  \author{
+    $for(authors)$
+      $authors.name$\thanks{
+        $if(authors.email)$
+          \textcolor{blue}{\Letter: \texttt{$authors.email$}},
+        $endif$
+        $if(authors.orcid)$
+          \textcolor{darkgreen}{ORCID: \href{https://orcid.org/$authors.orcid$}{\texttt{$authors.orcid$}}}
+        $endif$
+        \newline
+        $if(authors.affiliation)$
+          $authors.affiliation$
+        $endif$
+        $if(authors.thanks)$
+          $authors.thanks$
+        $endif$
+      }
+      $sep$ \and
+    $endfor$
+  }
+$endif$
+
 $if(author)$
 \author{$for(author)$$author.name$\thanks{\textcolor{blue}{\Letter: \texttt{$author.email$}}, \textcolor{darkgreen}{ORCID: \href{https://orcid.org/$author.orcid$}{\texttt{$author.orcid$}}}\newline $author.affiliation$ $author.thanks$}$sep$ \and $endfor$}
 % \author{$for(author)$$author$$sep$ \and $endfor$$if(thanks)$\thanks{$if(email)$\textcolor{blue}{\texttt{$email$}}, $endif$$if(institute)$$institute$.\newline $endif$$thanks$}$endif$}
@@ -310,33 +337,40 @@ $endif$
 % \end{small}
 }
 $endif$
+
 $if(lot)$
-\listoftables
+  \listoftables
 $endif$
 $if(lof)$
-\listoffigures
+  \listoffigures
 $endif$
+
 $body$
 
+$if(bibtex)$
+  $if(bibliography)$
+    \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+  $endif$
+$endif$
 $if(natbib)$
-$if(bibliography)$
-$if(biblio-title)$
-$if(book-class)$
-\renewcommand\bibname{$biblio-title$}
-$else$
-\renewcommand\refname{$biblio-title$}
+  $if(bibliography)$
+    $if(biblio-title)$
+      $if(book-class)$
+        \renewcommand\bibname{$biblio-title$}
+      $else$
+        \renewcommand\refname{$biblio-title$}
+      $endif$
+    $endif$
+    \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+  $endif$
 $endif$
-$endif$
-\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
 
-$endif$
-$endif$
 $if(biblatex)$
-\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
-
+  \printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
 $endif$
-$for(include-after)$
-$include-after$
 
+$for(include-after)$
+  $include-after$
 $endfor$
+
 \end{document}

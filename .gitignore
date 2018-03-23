@@ -1,4 +1,4 @@
-# Python cache
+ --toc --natbib# Python cache
 *.pyc
 *.pyo
 __pycache__/
@@ -14,7 +14,7 @@ __pycache__/
 *.blg
 *.fls
 *.out
-*.synctex.gz
+*.synctex*
 *.toc
 *.fls
 *.fdb_latexmk

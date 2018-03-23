@@ -120,24 +120,32 @@ wheel:
 # LATEX=xelatex
 LATEX=pdflatex
 
-PANDOC=pandoc --verbose --filter pandoc-citeproc --template=.paper_template.tex --number-sections --standalone --toc --natbib --bibliography paper.bib
+#  --standalone
+#  --natbib
+PANDOCOPTIONS=--verbose --filter pandoc-citeproc --template=.paper_template.tex --number-sections --bibliography paper.bib
 MARKDOWNOPTIONS=--from=markdown+backtick_code_blocks+implicit_figures+pipe_tables+citations+footnotes+smart
 
 # Generate the paper for http://joss.theoj.org/about#author_guidelines
 longpaper: longpaper.tex longpaper.md
-	latexmk -f -gg -pdf longpaper.tex
-	latexmk -c
-	rm -vf longpaper.bbl longpaper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
+	-latexmk -c
+	-rm -vf longpaper.bbl longpaper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
+	latexmk -f -gg -pdf -xelatex longpaper.tex
+	-latexmk -c
+	-rm -vf longpaper.bbl longpaper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 
 paper: paper.tex paper.md
-	latexmk -f -gg -pdf paper.tex
-	latexmk -c
-	rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
+	-latexmk -c
+	-rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
+	latexmk -f -gg -pdf -xelatex paper.tex
+	-latexmk -c
+	-rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 
+longpaper.tex: longpaper.md
+	pandoc $(PANDOCOPTIONS) --toc $(MARKDOWNOPTIONS) $< -o $@
 %.tex: %.md
-	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
+	pandoc $(PANDOCOPTIONS) $(MARKDOWNOPTIONS) $< -o $@
 %.pdf: %.md
-	$(PANDOC) $(MARKDOWNOPTIONS) $< -o $@
+	pandoc $(PANDOCOPTIONS) $(MARKDOWNOPTIONS) $< -o $@
 
 
 # --------------------------------------------------------
