@@ -183,6 +183,7 @@ exclude_patterns = [
     'Thumbs.db', '.DS_Store',
     '**.ipynb_checkpoints',
     'paper.md', 'longpaper.md',
+    'paper',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
