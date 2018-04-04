@@ -73,13 +73,16 @@ def solve_optimization_problem__gaussian(thetas, sig2x=0.25):
     # return values
 
 
-def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
+def solve_optimization_problem__sparse_bandits(thetas, sparsity=None, only_strong_or_weak=False):
     r""" Solve the optimization problem (2)-(3) as defined in the paper, for sparse stochastic bandits.
 
     - I recomputed suboptimal solution to the optimization problem, and found the same as in [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
+
+    - If only_strong_or_weak is True, the solution :math:`c_i` are not returned, but instead ``strong_or_weak, k`` is returned (to know if the problem is strongly sparse or not, and if not, the k that satisfy the required constraint).
     """
     # print("Calling 'solve_optimization_problem__sparse_bandits' with thetas = {} and sparsity = {}...".format(thetas, sparsity))  # DEBUG
 
+    thetas = np.array(thetas)  # copy and force to be an array
     d = len(thetas)
     if sparsity is None:
         sparsity = d
@@ -109,7 +112,9 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
         # print("       for k =", 0, "strong_sparsity(0) =", strong_sparsity(0))  # DEBUG
         # OK we have strong sparsity
 
-        # print("Info: OK we have strong sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi²) = {:.3g} > 0...".format(d, sparsity, best_theta, strong_sparsity(0)))  # DEBUG
+        if only_strong_or_weak:
+            print("Info: OK we have strong sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi²) = {:.3g} > 0...".format(d, sparsity, best_theta, strong_sparsity(0)))  # DEBUG
+            return True, 0
 
         for i in range(1, sparsity):
             if gaps[i] > 0:
@@ -125,7 +130,9 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None):
                 break  # no need to continue the loop
         assert k is not None, "Error: there must exist a k in [1, s] such that (d-s)/µ1 - sum(Delta_i/µi², i=k...s) < 0..."  # DEBUG
 
-        # print("Warning: we only have weak sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi², i=k={}...s) = {:.3g} < 0...".format(d, sparsity, best_theta, k, strong_sparsity(k)))  # DEBUG
+        if only_strong_or_weak:
+            print("Warning: we only have weak sparsity! With d = {} arms and s = {}, µ1 = {}, and (d-s)/µ1 - sum(Delta_i/µi², i=k={}...s) = {:.3g} < 0...".format(d, sparsity, best_theta, k, strong_sparsity(k)))  # DEBUG
+            return False, k
 
         for i in range(1, k):
             if gaps[i] > 0:
@@ -159,14 +166,15 @@ class OSSB(BasePolicy):
         self.gamma = gamma  #: Parameter :math:`\gamma` for the OSSB algorithm. Can be = 0.
         # Solver for the optimization problem.
         self._solve_optimization_problem = solve_optimization_problem__classic  # Keep the function to use to solve the optimization problem
-        self._info_on_solver = ", Bernoulli"  # small delta string
+        self._info_on_solver = ", Bern"  # small delta string
 
         # WARNING the option is a string to keep the configuration hashable and pickable
         if solve_optimization_problem == "sparse":
-            self._info_on_solver = ", sparse Gaussian"
+            # self._info_on_solver = ", sparse Gauss"  # XXX
+            self._info_on_solver = ", Gauss"
             self._solve_optimization_problem = solve_optimization_problem__sparse_bandits
         elif solve_optimization_problem == "gaussian":
-            self._info_on_solver = ", Gaussian"
+            self._info_on_solver = ", Gauss"
             self._solve_optimization_problem = solve_optimization_problem__gaussian
         self._kwargs = kwargs  # Keep in memory the other arguments, to give to self._solve_optimization_problem
         # Internal memory
@@ -250,3 +258,4 @@ class SparseOSSB(OSSB):
             print("Warning: regular OSSB should be used instead of SparseOSSB if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
         kwargs.update({'sparsity': sparsity})
         super(SparseOSSB, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, solve_optimization_problem="sparse", lower=lower, amplitude=amplitude, **kwargs)
+        self._info_on_solver += ", $s={}$".format(sparsity)

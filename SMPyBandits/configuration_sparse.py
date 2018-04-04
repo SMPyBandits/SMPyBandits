@@ -36,14 +36,14 @@ HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # # # HORIZON = 40000
-# HORIZON = 100000
+HORIZON = 100000
 HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be statistically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
+REPETITIONS = 1000
 # REPETITIONS = 200
 REPETITIONS = 100
 # REPETITIONS = 50
@@ -242,13 +242,17 @@ if ENVIRONMENT_BAYESIAN:
         },
     ]
 elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
+    from Policies.OSSB import solve_optimization_problem__sparse_bandits
+    means = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=ISSORTED)
+    for s in [SPARSITY-1, SPARSITY, SPARSITY+1]:
+        solve_optimization_problem__sparse_bandits(means, sparsity=SPARSITY, only_strong_or_weak=True)
+
     configuration.update({
         "environment": [ {
                 "arm_type": ARM_TYPE,
                 "params": [
                     (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
-                    for mu in
-                    uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=ISSORTED)
+                    for mu in means
                 ],
         }, ],
     })
@@ -338,21 +342,21 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": Thompson,
-            "params": {
-                "posterior": Gauss,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        # --- KL algorithms, here only klUCB with different klucb functions
-        {
-            "archtype": klUCB,
-            "params": {
-                "klucb": klucbBern,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": Thompson,
+        #     "params": {
+        #         "posterior": Gauss,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # # --- KL algorithms, here only klUCB with different klucb functions
+        # {
+        #     "archtype": klUCB,
+        #     "params": {
+        #         "klucb": klucbBern,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # {
         #     "archtype": klUCB,
         #     "params": {
@@ -360,38 +364,38 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # --- BayesUCB algorithm
-        {
-            "archtype": BayesUCB,
-            "params": {
-                "posterior": Beta,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # --- BayesUCB algorithm
         # {
         #     "archtype": BayesUCB,
         #     "params": {
-        #         "posterior": Gauss,  # XXX does not work yet!
+        #         "posterior": Beta,
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # --- Finite-Horizon Gittins index
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.05 * HORIZON,
-                "alpha": 4,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.05 * HORIZON,
-                "alpha": 1,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # # {
+        # #     "archtype": BayesUCB,
+        # #     "params": {
+        # #         "posterior": Gauss,  # XXX does not work yet!
+        # #         "lower": LOWER, "amplitude": AMPLITUDE,
+        # #     }
+        # # },
+        # # --- Finite-Horizon Gittins index
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.05 * HORIZON,
+        #         "alpha": 4,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "horizon": 1.05 * HORIZON,
+        #         "alpha": 1,
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # {
         #     "archtype": ApproximatedFHGittins,
         #     "params": {
@@ -492,14 +496,14 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # --- The new OSSB algorithm
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.0,  # XXX test to change these values!
-                "gamma": 0.0,  # XXX test to change these values!
-            }
-        },
+        # # --- The new OSSB algorithm
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.0,  # XXX test to change these values!
+        #         "gamma": 0.0,  # XXX test to change these values!
+        #     }
+        # },
         # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
         {
             "archtype": GaussianOSSB,
@@ -540,6 +544,72 @@ configuration.update({
                 "epsilon": 0.01,
                 "gamma": 0.1,
                 "sparsity": SPARSITY,
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "sparsity": SPARSITY - 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.0,
+                "sparsity": SPARSITY - 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.1,
+                "sparsity": SPARSITY - 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.1,
+                "sparsity": SPARSITY - 1,
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "sparsity": SPARSITY + 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.0,
+                "sparsity": SPARSITY + 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.1,
+                "sparsity": SPARSITY + 1,
+            }
+        },
+        {
+            "archtype": SparseOSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.1,
+                "sparsity": SPARSITY + 1,
             }
         },
     ]
