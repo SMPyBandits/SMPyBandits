@@ -546,72 +546,72 @@ configuration.update({
                 "sparsity": SPARSITY,
             }
         },
-        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "sparsity": SPARSITY - 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.0,
-                "sparsity": SPARSITY - 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.1,
-                "sparsity": SPARSITY - 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.1,
-                "sparsity": SPARSITY - 1,
-            }
-        },
-        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "sparsity": SPARSITY + 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.0,
-                "sparsity": SPARSITY + 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.1,
-                "sparsity": SPARSITY + 1,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.1,
-                "sparsity": SPARSITY + 1,
-            }
-        },
+        # # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY - 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY - 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.1,
+        #         "sparsity": SPARSITY - 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.1,
+        #         "sparsity": SPARSITY - 1,
+        #     }
+        # },
+        # # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY + 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
+        #         "sparsity": SPARSITY + 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.1,
+        #         "sparsity": SPARSITY + 1,
+        #     }
+        # },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.1,
+        #         "sparsity": SPARSITY + 1,
+        #     }
+        # },
     ]
 })
 
