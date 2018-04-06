@@ -174,32 +174,38 @@ configuration = {
     "environment": [  # 1)  Bernoulli arms
         # {   # A easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+        #     "sparsity": SPARSITY,
         # },
         # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Bernoulli,
-        #     "params": MEANS
+        #     "params": MEANS,
+        #     "sparsity": SPARSITY,
         # },
         # "environment": [  # 2)  custom arms
         {   # A very easy problem, but it is used in a lot of articles
             "arm_type": ARM_TYPE,
-            "params": MEANS
+            "params": MEANS,
+            "sparsity": SPARSITY,
         },
         # # "environment": [  # 3)  Gaussian arms
         # {   # A very easy problem, but it is used in a lot of articles
         #     "arm_type": Gaussian,
-        #     "params": MEANS
+        #     "params": MEANS,
+        #     "sparsity": SPARSITY,
         # },
         # {   # An example problem with 3 or 9 arms
         #     "arm_type": Gaussian,
-        #     # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))]
-        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]]
-        #     "params": [(mean, VARIANCE) for mean in MEANS]
-        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]]
+        #     # "params": [(mean, VARIANCE, MINI, MAXI) for mean in list(range(-8, 10, 2))],
+        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]],
+        #     "params": [(mean, VARIANCE) for mean in MEANS],
+        #     # "params": [(mean, VARIANCE) for mean in [0.1, 0.5, 0.9]],
+        #     "sparsity": SPARSITY,
         # },
         # {   # A non-Bayesian random problem
         #     "arm_type": ARM_TYPE,
-        #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True)
+        #     "params": randomMeansWithSparsity(NB_ARMS, SPARSITY, mingap=None, lower=0., lowerNonZero=0.2, amplitude=1., isSorted=True),
+        #     "sparsity": SPARSITY,
         # },
         # # FIXED I need to do Bayesian problems for Gaussian arms also!
         # {   # A Bayesian problem: every repetition use a different mean vectors!
@@ -217,7 +223,8 @@ configuration = {
         #             "isSorted": ISSORTED,
         #             "sparsity": SPARSITY,
         #         }
-        #     }
+        #     },
+        #     "sparsity": SPARSITY,
         # },
     ],
 }
@@ -238,14 +245,15 @@ if ENVIRONMENT_BAYESIAN:
                     "amplitude": AMPLITUDE,
                     "isSorted": ISSORTED,
                 }
-            }
+            },
+            "sparsity": SPARSITY,
         },
     ]
 elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
     from Policies.OSSB import solve_optimization_problem__sparse_bandits
     means = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.2, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=ISSORTED)
     for s in [SPARSITY-1, SPARSITY, SPARSITY+1]:
-        solve_optimization_problem__sparse_bandits(means, sparsity=SPARSITY, only_strong_or_weak=True)
+        solve_optimization_problem__sparse_bandits(means, sparsity=s, only_strong_or_weak=True)
 
     configuration.update({
         "environment": [ {
@@ -254,13 +262,15 @@ elif ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                     (mu, VARIANCE, LOWER, LOWER+AMPLITUDE)
                     for mu in means
                 ],
+                "sparsity": SPARSITY,
         }, ],
     })
 # else:
 #     configuration.update({
 #         "environment": [ {
 #                 "arm_type": ARM_TYPE,
-#                 "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+#                 "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE),
+#                 "sparsity": SPARSITY,
 #             }, ],
 #     })
 

@@ -448,8 +448,11 @@ class Evaluator(object):
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
         plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
+        lowerbound_sparse = self.envs[envId].lowerbound_sparse()
         if not (semilogx or semilogy or loglog):
             print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(lowerbound, self.envs[envId].hoifactor()))  # DEBUG
+            if self.envs[envId]._sparsity is not None:
+                print("\n- a [Joon et al] sparse lower-bound with s = {} non-negative arm, C'(mu) = {:.3g}...".format(self.envs[envId]._sparsity, lowerbound_sparse))  # DEBUG
         if not meanRegret:
             plt.ylim(ymin, plt.ylim()[1])
         # Get a small string to add to ylabel
@@ -465,7 +468,10 @@ class Evaluator(object):
         elif normalizedRegret:
             if self.plot_lowerbound:
                 # We also plot the Lai & Robbins lower bound
-                plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="Lai & Robbins lower bound = ${:.3g}$".format(lowerbound), lw=3)
+                plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="[Lai & Robbins] lower bound = ${:.3g}$".format(lowerbound), lw=3)
+                # We also plot the Joon et al lower bound
+                if self.envs[envId]._sparsity is not None:
+                    plt.plot(X[::self.delta_t_plot], lowerbound_sparse * np.ones_like(X)[::self.delta_t_plot], 'k--', label="[Joon et al.] lower bound, $s = {}$, $= {:.3g}$".format(self.envs[envId]._sparsity, lowerbound_sparse), lw=3)
             legend()
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
@@ -485,7 +491,10 @@ class Evaluator(object):
                 X = X[X >= 1]
             if self.plot_lowerbound:
                 # We also plot the Lai & Robbins lower bound
-                plt.plot(X[::self.delta_t_plot], lowerbound * np.log(X)[::self.delta_t_plot], 'k-', label=r"Lai & Robbins lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)
+                plt.plot(X[::self.delta_t_plot], lowerbound * np.log(X)[::self.delta_t_plot], 'k-', label=r"[Lai & Robbins] lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)
+                # We also plot the Joon et al lower bound
+                if self.envs[envId]._sparsity is not None:
+                    plt.plot(X[::self.delta_t_plot], lowerbound_sparse * np.ones_like(X)[::self.delta_t_plot], 'k--', label=r"[Joon et al.] lower bound, $s = {}$, $= {:.3g} \; \log(t)$".format(self.envs[envId]._sparsity, lowerbound_sparse), lw=3)
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))

@@ -74,6 +74,8 @@ class MAB(object):
             # Each 'param' could be one value (eg. 'mean' = probability for a Bernoulli) or a tuple (eg. '(mu, sigma)' for a Gaussian) or a dictionnary
             for param in params:
                 self.arms.append(arm_type(*param) if isinstance(param, (dict, tuple, list)) else arm_type(param))
+            # XXX try to read sparsity
+            self._sparsity = configuration["sparsity"] if "sparsity" in configuration else None
         else:
             print("  Taking arms of this MAB problem from a list of arms 'configuration' = {} ...".format(configuration))  # DEBUG
             for arm in configuration:
@@ -85,6 +87,8 @@ class MAB(object):
         print(" - with 'means' =", self.means)  # DEBUG
         self.nbArms = len(self.arms)  #: Number of arms
         print(" - with 'nbArms' =", self.nbArms)  # DEBUG
+        if self._sparsity is not None:
+            print(" - with 'sparsity' =", self._sparsity)  # DEBUG
         self.maxArm = np.max(self.means)  #: Max mean of arms
         print(" - with 'maxArm' =", self.maxArm)  # DEBUG
         self.minArm = np.min(self.means)  #: Min mean of arms
@@ -184,14 +188,18 @@ class MAB(object):
     #
     # --- Estimate sparsity
 
+    @property
     def sparsity(self):
         """ Estimate the sparsity of the problem, i.e., the number of arms with positive means."""
-        return np.count_nonzero(self.means > 0)
-        # return np.count_nonzero(self.means)
+        if self._sparsity is not None:
+            return self._sparsity
+        else:
+            return np.count_nonzero(self.means > 0)
+            # return np.count_nonzero(self.means)
 
     def str_sparsity(self):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
-        s, K = self.sparsity(), self.nbArms
+        s, K = self.sparsity, self.nbArms
         assert 0 <= s <= K, "Error: sparsity s = {} has to be 0 <= s <= K = {}...".format(s, K)
         # FIXME disable this feature when not working on sparse simulations
         # return ""
@@ -202,8 +210,25 @@ class MAB(object):
     # --- Compute lower bounds
 
     def lowerbound(self):
-        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        r""" Compute the constant :math:`C(\mu)`, for the [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from ``kullback.py`` or ``kullback.so`` (see :mod:`Arms.kullback`). """
         return sum(a.oneLR(self.maxArm, a.mean) for a in self.arms if a.mean != self.maxArm)
+
+    def lowerbound_sparse(self, sparsity=None):
+        """ Compute the constant :math:`C(\mu)`, for [Joon et al, 2017] lower-bound for sparse bandits for this MAB problem (complexity)
+
+        - I recomputed suboptimal solution to the optimization problem, and found the same as in [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
+        """
+        if hasattr(self, "sparsity") and sparsity is None:
+            sparsity = self._sparsity
+        if sparsity is None:
+            sparsity = self.nbArms
+
+        from Policies.OSSB import solve_optimization_problem__sparse_bandits
+        ci = solve_optimization_problem__sparse_bandits(self.means, sparsity=sparsity, only_strong_or_weak=False)
+        # now we use these ci to compute the lower-bound
+        gaps = [self.maxArm - a.mean for a in self.arms]
+        lowerbound = sum( delta * c for (delta, c) in zip(gaps, ci) )
+        return lowerbound
 
     def hoifactor(self):
         """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017)."""
