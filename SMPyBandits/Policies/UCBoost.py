@@ -27,6 +27,10 @@ except (ValueError, ImportError, SystemError):
 c = 3.  #: Default value.
 
 
+#: Tolerance when checking (with ``assert``) that the solution of convex problem are correct.
+tolerance_with_upperbound = 1.0001
+
+
 # --- New distance and algorithm: biquadratic
 
 @jit
@@ -34,12 +38,14 @@ def biquadratic_distance(p, q):
     r"""The *biquadratic distance*, :math:`d_{bq}(p, q) := 2 (p - q)^2 + (4/9) * (p - q)^4`."""
     # return 2 * (p - q)**2 + (4./9) * (p - q)**4
     # XXX about 20% slower than the second less naive solution
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     d = 2 * (p - q)**2
     return d + d**2 / 9.
 
 
 @jit
-def solution_pb_bq(p, upperbound):
+def solution_pb_bq(p, upperbound, check_solution=False):
     r"""Closed-form solution of the following optimisation problem, for :math:`d = d_{bq}` the :func:`biquadratic_distance` function:
 
     .. math::
@@ -55,10 +61,11 @@ def solution_pb_bq(p, upperbound):
     """
     if np.any(upperbound) < 0:
         return np.ones_like(p) * np.nan
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     # XXX is it faster to precompute the constants ? yes, about 12% faster
     # q_star = np.minimum(1, p + np.sqrt(-9./4 + np.sqrt(81./16 + 9./4 * upperbound)))
     q_star = np.minimum(1, p + np.sqrt(-2.25 + np.sqrt(5.0625 + 2.25 * upperbound)))
-    if not np.all(biquadratic_distance(p, q_star) <= 1.0001 * upperbound):
+    if check_solution and not np.all(biquadratic_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
         print("Error: the solution to the optimisation problem P_1(d_bq), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (bq(p,q^*) = {:.3g} > {:.3g}...".format(p, upperbound, q_star, biquadratic_distance(p, q_star), upperbound))  # DEBUG
     return q_star
 
@@ -104,11 +111,13 @@ class UCB_bq(IndexPolicy):
 @jit
 def hellinger_distance(p, q):
     r"""The *Hellinger distance*, :math:`d_{h}(p, q) := (\sqrt{p} - \sqrt{q})^2 + (\sqrt{1 - p} - \sqrt{1 - q})^2`."""
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return (np.sqrt(p) - np.sqrt(q))**2 + (np.sqrt(1. - p) - np.sqrt(1. - q))**2
 
 
 @jit
-def solution_pb_hellinger(p, upperbound):
+def solution_pb_hellinger(p, upperbound, check_solution=False):
     r"""Closed-form solution of the following optimisation problem, for :math:`d = d_{h}` the :func:`hellinger_distance` function:
 
     .. math::
@@ -125,12 +134,13 @@ def solution_pb_hellinger(p, upperbound):
     if np.any(upperbound < 0):
         return np.ones_like(p) * np.nan
     # XXX is it faster to precompute the constants ? yes, about 12% faster
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     sqrt_p = np.sqrt(p)
     if np.any(upperbound < (2 - 2 * sqrt_p)):
         q_star = (1 - upperbound/2.) * sqrt_p + np.sqrt((1 - p) * (upperbound - upperbound**2 / 4.)) ** 2
     else:
         q_star = np.ones_like(p)
-    if not np.all(hellinger_distance(p, q_star) <= 1.0001 * upperbound):
+    if check_solution and not np.all(hellinger_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
         print("Error: the solution to the optimisation problem P_1(d_h), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g}...".format(p, upperbound, q_star, hellinger_distance(p, q_star), upperbound))  # DEBUG
     return q_star
 
@@ -177,29 +187,29 @@ eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - 
 
 
 @jit
-def kullback_leibler_distance(x, y):
+def kullback_leibler_distance(p, q):
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
-    .. math:: kl(x, y) = \mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).
+    .. math:: kl(p, q) = \mathrm{KL}(\mathcal{B}(p), \mathcal{B}(q)) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
     """
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    return p * np.log(p / q) + (1 - p) * np.log((1 - p) / (1 - q))
 
 
 @jit
-def kullback_leibler_distance_lowerbound(x, y):
+def kullback_leibler_distance_lowerbound(p, q):
     r""" Lower-bound on the Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
-    .. math:: d_{lb}(x, y) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).
+    .. math:: d_{lb}(p, q) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
     """
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x) + (1 - x) * np.log((1 - x) / (1 - y))
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    return p * np.log(p) + (1 - p) * np.log((1 - p) / (1 - q))
 
 
 @jit
-def solution_pb_kllb(p, upperbound):
+def solution_pb_kllb(p, upperbound, check_solution=False):
     r"""Closed-form solution of the following optimisation problem, for :math:`d = d_{lb}` the proposed lower-bound on the Kullback-Leibler binary distance (:func:`kullback_leibler_distance_lowerbound`) function:
 
     .. math::
@@ -209,15 +219,16 @@ def solution_pb_kllb(p, upperbound):
 
     .. math::
 
-        q^* = XXX.
+        q^* = 1 - (1 - p) \exp(\frac{p \log(p) - \delta}{1 - p}).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
     if np.any(upperbound < 0):
         return np.ones_like(p) * np.nan
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     one_m_p = 1 - p
     q_star = 1 - one_m_p * np.exp( (p * np.log(p) - upperbound) / one_m_p )
-    if not np.all(kullback_leibler_distance_lowerbound(p, q_star) <= 1.0001 * upperbound):
+    if check_solution and not np.all(kullback_leibler_distance_lowerbound(p, q_star) <= tolerance_with_upperbound * upperbound):
         print("Error: the solution to the optimisation problem P_1(d_lb), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g}...".format(p, upperbound, q_star, kullback_leibler_distance_lowerbound(p, q_star), upperbound))  # DEBUG
     return q_star
 
@@ -261,18 +272,19 @@ class UCB_lb(IndexPolicy):
 
 
 @jit
-def distance_t(x, y):
+def distance_t(p, q):
     r""" A shifted tangent line function of :func:`kullback_leibler_distance`.
 
-    .. math:: d_t(x, y) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).
+    .. math:: d_t(p, q) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
     """
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x) + (1 - x) * np.log((1 - x) / (1 - y))
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
+    # XXX this could be optimized!
+    return (2 * q) / (p + 1) + p * np.log(p / (p + 1)) + np.log(2 / (p + 1)) - 1.
 
 
 @jit
-def solution_pb_t(p, upperbound):
+def solution_pb_t(p, upperbound, check_solution=False):
     r"""Closed-form solution of the following optimisation problem, for :math:`d = d_t` a shifted tangent line function of :func:`kullback_leibler_distance` (:func:`distance_t`) function:
 
     .. math::
@@ -282,15 +294,15 @@ def solution_pb_t(p, upperbound):
 
     .. math::
 
-        q^* = XXX.
+        q^* = \min(1, \frac{p + 1}{2} \left( \delta - p \log\left\frac{p}{p + 1}\right) - \log\left(\frac{2}{\mathrm{e} (p + 1)}\right) \right)).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
+    p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     if np.any(upperbound < 0):
         return np.ones_like(p) * np.nan
-    q_star = XXX
-    np.minimum(1, (p + 1) / 2. * (upperbound - p * np.log(p / (p + 1)) - np.log(2 / (np.e * (1 + p)))))
-    if not np.all(distance_t(p, q_star) <= 1.0001 * upperbound):
+    q_star = np.minimum(1, ((p + 1) / 2.) * (upperbound - p * np.log(p / (p + 1)) - np.log(2 / (1 + p)) + 1))
+    if check_solution and not np.all(distance_t(p, q_star) <= tolerance_with_upperbound * upperbound):
         print("Error: the solution to the optimisation problem P_1(d_t), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g}...".format(p, upperbound, q_star, distance_t(p, q_star), upperbound))  # DEBUG
     return q_star
 
@@ -334,7 +346,7 @@ class UCB_t(IndexPolicy):
 
 try:
     from numbers import Number
-    def is_a_true_number(n)
+    def is_a_true_number(n):
         return isinstance(n, Number)
 except ImportError:
     def is_a_true_number(n):
@@ -380,7 +392,7 @@ class UCBoost(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"UCBoost(|D|={}, $c={:.3g}$)".format(len(self.set_D), self.c)
+        return r"UCBoost($|D|={}$, $c={:.3g}$)".format(len(self.set_D), self.c)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

@@ -344,7 +344,15 @@ configuration.update({
         },
         {
             "archtype": UCBoost,
-            "params": {}
+            "params": {
+                "set_D": 3,
+            }
+        },
+        {
+            "archtype": UCBoost,
+            "params": {
+                "set_D": 4,
+            }
         },
         # # --- Stupid algorithms
         # {
