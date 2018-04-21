@@ -46,7 +46,7 @@
 
 - The Best Empirical Sampled Average (BESA) policy: :class:`BESA` (it works crazily well),
 
-- **New!** The UCBoost (Upper Confidence bounds with Boosting) policy: :class:`UCBoost`,
+- **New!** The UCBoost (Upper Confidence bounds with Boosting) policy:  :class:`UCB_bq`, :class:`UCB_h`, :class:`UCBoost`,
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
@@ -164,7 +164,7 @@ from .OSSB import OSSB, GaussianOSSB, SparseOSSB
 from .BESA import BESA
 
 # From [Fang Liu et al, 2018]
-from .UCBoost import UCBoost
+from .UCBoost import UCB_bq, UCB_h, UCBoost
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits

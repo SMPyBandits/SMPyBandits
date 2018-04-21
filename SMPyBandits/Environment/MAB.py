@@ -64,6 +64,7 @@ class MAB(object):
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = False  #: Flag to know if the problem is Markovian or not.
         self.arms = []  #: List of arms
+        self._sparsity = None
 
         if isinstance(configuration, dict):
             print("  Reading arms of this MAB problem from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
@@ -402,6 +403,7 @@ class MarkovianMAB(MAB):
         print("\n\nCreating a new MarkovianMAB problem ...")  # DEBUG
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
+        self._sparsity = None
 
         assert isinstance(configuration, dict), "Error: 'configuration' for a MarkovianMAB must be a dictionary."  # DEBUG
         assert "params" in configuration and \
@@ -541,8 +543,9 @@ class DynamicMAB(MAB):
     """
 
     def __init__(self, configuration, verbose=VERBOSE):
-        """New dynamic MAB."""
+        """New DynamicMAB."""
         self.isDynamic = True  #: Flag to know if the problem is static or not.
+        self._sparsity = None
 
         assert isinstance(configuration, dict) \
             and "arm_type" in configuration and "params" in configuration \

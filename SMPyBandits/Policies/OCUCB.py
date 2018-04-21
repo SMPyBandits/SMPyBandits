@@ -35,7 +35,7 @@ class OCUCB(UCB):
         self.rho = rho  #: Parameter :math:`\rho \in (1/2, 1]`.
 
     def __str__(self):
-        return r"OC-UCB($\eta:{:.3g}$, $\rho:{:.3g}$)".format(self.eta, self.rho)
+        return r"OC-UCB($\eta={:.3g}$, $\rho={:.3g}$)".format(self.eta, self.rho)
 
     def _Bterm(self, k):
         r""" Compute the extra term :math:`B_k(t)` as follows:

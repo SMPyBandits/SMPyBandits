@@ -231,7 +231,7 @@ configuration = {
         # XXX Default!
         {   # A very easy problem (X arms), but it is used in a lot of articles
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE, isSorted=False)
         },
         # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
         #     "arm_type": Bernoulli,
@@ -325,6 +325,15 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
+        # --- FIXME new UCBoost algorithmes
+        {
+            "archtype": UCB_bq,
+            "params": {}
+        },
+        {
+            "archtype": UCB_h,
+            "params": {}
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
@@ -538,10 +547,10 @@ configuration.update({
         #     }
         # },
         # --- UCB algorithms
-        # {
-        #     "archtype": UCB,   # This basic UCB is very worse than the other
-        #     "params": {}
-        # },
+        {
+            "archtype": UCB,   # This basic UCB is very worse than the other
+            "params": {}
+        },
         # {
         #     "archtype": UCBlog10,   # This basic UCB is very worse than the other
         #     "params": {}
@@ -874,43 +883,43 @@ configuration.update({
         #         "gamma": 0.0,
         #     }
         # },
-        # --- The awesome BESA algorithm
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-                "randomized_tournament": True,
-                # "randomized_tournament": False,  # XXX Very inefficient!
-                "random_subsample": True,
-                # "random_subsample": False,  # XXX Very inefficient!
-                "non_binary": False,
-                # "non_binary": True,
-                "non_recursive": False,
-                # "non_recursive": True,
-            }
-        },
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "non_binary": True,
-            }
-        },
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "non_recursive": True,
-            }
-        },
-        # --- Auto-tuned UCBdagger algorithm
-        {
-            "archtype": UCBdagger,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
+        # # --- The awesome BESA algorithm
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+        #         "randomized_tournament": True,
+        #         # "randomized_tournament": False,  # XXX Very inefficient!
+        #         "random_subsample": True,
+        #         # "random_subsample": False,  # XXX Very inefficient!
+        #         "non_binary": False,
+        #         # "non_binary": True,
+        #         "non_recursive": False,
+        #         # "non_recursive": True,
+        #     }
+        # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_binary": True,
+        #     }
+        # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_recursive": True,
+        #     }
+        # },
+        # # --- Auto-tuned UCBdagger algorithm
+        # {
+        #     "archtype": UCBdagger,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
     ]
 })
 
