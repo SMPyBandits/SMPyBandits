@@ -334,6 +334,18 @@ configuration.update({
             "archtype": UCB_h,
             "params": {}
         },
+        {
+            "archtype": UCB_lb,
+            "params": {}
+        },
+        {
+            "archtype": UCB_t,
+            "params": {}
+        },
+        {
+            "archtype": UCBoost,
+            "params": {}
+        },
         # # --- Stupid algorithms
         # {
         #     "archtype": Uniform,   # The stupidest policy, fully uniform
