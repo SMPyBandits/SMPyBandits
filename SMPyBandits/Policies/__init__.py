@@ -44,7 +44,9 @@
 
 - The *Optimal Sampling for Structured Bandits* (OSSB) policy: :class:`OSSB` (it is more generic and can be applied to almost any kind of bandit problem, it works fine for classical stationary bandits but it is not optimal), a variant for gaussian problem :class:`GaussianOSSB`, and a variant for sparse bandits :class:`SparseOSSB`,
 
-- **New!** The Best Empirical Sampled Average (BESA) policy: :class:`BESA` (it works crazily well),
+- The Best Empirical Sampled Average (BESA) policy: :class:`BESA` (it works crazily well),
+
+- **New!** The UCBoost (Upper Confidence bounds with Boosting) policy: :class:`UCBoost`,
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
 
@@ -160,6 +162,9 @@ from .OSSB import OSSB, GaussianOSSB, SparseOSSB
 
 # From [Baransi et al, 2014]
 from .BESA import BESA
+
+# From [Fang Liu et al, 2018]
+from .UCBoost import UCBoost
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
