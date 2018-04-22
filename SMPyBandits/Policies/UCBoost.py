@@ -481,7 +481,7 @@ def solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK
     assert 0 < epsilon < 1, "Error: epsilon should be in (0, 1) strictly, but = {:.3g} is not!".format(epsilon)  # DEBUG
     # eta doesn't depend on p
     eta = epsilon / (1.0 + epsilon)
-    # tau_1 and tau_2 depend on p
+    # tau_1 and tau_2 depend on p, XXX cannot be precomputed!
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     tau_1_p = np.ceil((np.log(1 - p)) / (np.log(1 - eta)))
     tau_2_p = np.ceil((np.log(1 - np.exp(- epsilon / p))) / (np.log(1 - eta)))
@@ -496,7 +496,7 @@ def solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK
     list_of_solution_pb_step_kl = [  # q_k ** (indic(delta <= kl(p, q_k)))
         qk
         if upperbound < kullback_leibler_distance(p, qk) else 1
-        for k, qk in zip(list_of_k, list_of_qk)
+        for qk in list_of_qk
     ]
     # XXX yes yes, we could write a generator, or directly return the minimum,
     # but this is not the bottleneck of the efficiency of this code !
@@ -531,7 +531,7 @@ class UCBoostEpsilon(IndexPolicy):
         self.epsilon = epsilon  #: Parameter epsilon
 
     def __str__(self):
-        return r"UCBoost($\varpesilon={:.3g}$, $c={:.3g}$)".format(self.epsilon, self.c)
+        return r"UCBoost($\varepsilon={:.3g}$, $c={:.3g}$)".format(self.epsilon, self.c)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
