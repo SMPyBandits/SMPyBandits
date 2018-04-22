@@ -23,8 +23,8 @@ except (ValueError, ImportError, SystemError):
 
 
 #: Default value for the constant c used in the computation of the index
-# c = 0.  #: Default value for better practical performance.
-c = 3.  #: Default value for the theorems to hold.
+# c = 3.  #: Default value for the theorems to hold.
+c = 0.  #: Default value for better practical performance.
 
 
 #: Tolerance when checking (with ``assert``) that the solution(s) of any convex problem are correct.
@@ -37,7 +37,7 @@ CHECK_SOLUTION = False  # XXX Faster!
 
 # --- New distance and algorithm: quadratic
 
-# @jit
+@jit
 def squadratic_distance(p, q):
     r"""The *quadratic distance*, :math:`d_{sq}(p, q) := 2 (p - q)^2`."""
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -51,12 +51,12 @@ def solution_pb_sq(p, upperbound, check_solution=CHECK_SOLUTION):
 
     .. math::
 
-        P_1(d)(p, \delta): & \max_{q \in \Theta} q,\\
-        \text{such that }  & d(p, q) \leq \delta.
+        P_1(d_{sq})(p, \delta): & \max_{q \in \Theta} q,\\
+        \text{such that }  & d_{sq}(p, q) \leq \delta.
 
     .. math::
 
-        q^* = \min(1, p + \sqrt{-\frac{9}{4} + \sqrt{\sqrt{81}{16} + \sqrt{9}{4} \delta}).
+        q^* = p + \sqrt{\frac{\delta}{2}}.
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
@@ -70,7 +70,7 @@ def solution_pb_sq(p, upperbound, check_solution=CHECK_SOLUTION):
 
 # --- New distance and algorithm: biquadratic
 
-# @jit
+@jit
 def biquadratic_distance(p, q):
     r"""The *biquadratic distance*, :math:`d_{bq}(p, q) := 2 (p - q)^2 + (4/9) * (p - q)^4`."""
     # return 2 * (p - q)**2 + (4./9) * (p - q)**4
@@ -92,7 +92,7 @@ def solution_pb_bq(p, upperbound, check_solution=CHECK_SOLUTION):
 
     .. math::
 
-        q^* = \min(1, p + \sqrt{-\frac{9}{4} + \sqrt{\sqrt{81}{16} + \sqrt{9}{4} \delta}).
+        q^* = \min(1, p + \sqrt{-\frac{9}{4} + \sqrt{\frac{81}{16} + \frac{9}{4} \delta}}).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
@@ -127,7 +127,7 @@ class UCB_bq(IndexPolicy):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            I_k(t) &= P_1(d_{bq})(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}).
+            I_k(t) &= P_1(d_{bq})\left(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}\right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
@@ -144,7 +144,7 @@ class UCB_bq(IndexPolicy):
 # --- New distance and algorithm: Hellinger
 
 
-# @jit
+@jit
 def hellinger_distance(p, q):
     r"""The *Hellinger distance*, :math:`d_{h}(p, q) := (\sqrt{p} - \sqrt{q})^2 + (\sqrt{1 - p} - \sqrt{1 - q})^2`."""
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -201,7 +201,7 @@ class UCB_h(IndexPolicy):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            I_k(t) &= P_1(d_h)(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}).
+            I_k(t) &= P_1(d_h)\left(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}\right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
@@ -221,22 +221,22 @@ class UCB_h(IndexPolicy):
 eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 
-# @jit
+@jit
 def kullback_leibler_distance(p, q):
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
-    .. math:: kl(p, q) = \mathrm{KL}(\mathcal{B}(p), \mathcal{B}(q)) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
+    .. math:: \mathrm{kl}(p, q) = \mathrm{KL}(\mathcal{B}(p), \mathcal{B}(q)) = p \log\left(\frac{p}{q}\right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
     """
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return p * np.log(p / q) + (1 - p) * np.log((1 - p) / (1 - q))
 
 
-# @jit
+@jit
 def kullback_leibler_distance_lowerbound(p, q):
     r""" Lower-bound on the Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
-    .. math:: d_{lb}(p, q) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
+    .. math:: d_{lb}(p, q) = p \log(\left p \right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
     """
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -254,7 +254,7 @@ def solution_pb_kllb(p, upperbound, check_solution=CHECK_SOLUTION):
 
     .. math::
 
-        q^* = 1 - (1 - p) \exp(\frac{p \log(p) - \delta}{1 - p}).
+        q^* = 1 - (1 - p) \exp\left(\frac{p \log(p) - \delta}{1 - p}\right).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
@@ -288,7 +288,7 @@ class UCB_lb(IndexPolicy):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            I_k(t) &= P_1(d_lb)(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}).
+            I_k(t) &= P_1(d_{lb})\left(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}\right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
@@ -305,11 +305,13 @@ class UCB_lb(IndexPolicy):
 # --- New distance and algorithm: a shifted tangent line function of d_kl
 
 
-# @jit
+@jit
 def distance_t(p, q):
     r""" A shifted tangent line function of :func:`kullback_leibler_distance`.
 
-    .. math:: d_t(p, q) = p \log(\frac{p}{q}) + (1-p) \log(\frac{1-p}{1-q}).
+    .. math:: d_t(p, q) = \frac{2 q}{p + 1} + p \log\left(\frac{p}{p + 1}\right) + \log\left(\frac{2}{\mathrm{e}(p + 1)}\right).
+
+    .. warning:: I think there might be a typo in the formula in the article, as this :math:`d_t` does not seem to "depend enough on q" *(just intuition)*.
     """
     p = np.minimum(np.maximum(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     q = np.minimum(np.maximum(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -328,7 +330,7 @@ def solution_pb_t(p, upperbound, check_solution=CHECK_SOLUTION):
 
     .. math::
 
-        q^* = \min(1, \frac{p + 1}{2} \left( \delta - p \log\left\frac{p}{p + 1}\right) - \log\left(\frac{2}{\mathrm{e} (p + 1)}\right) \right)).
+        q^* = \min\left(1, \frac{p + 1}{2} \left( \delta - p \log\left\frac{p}{p + 1}\right) - \log\left(\frac{2}{\mathrm{e} (p + 1)}\right) \right)\right).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
@@ -361,7 +363,7 @@ class UCB_t(IndexPolicy):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            I_k(t) &= P_1(d_t)(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}).
+            I_k(t) &= P_1(d_t)\left(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}\right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
@@ -474,7 +476,7 @@ def solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK
 
         q^* &= q_k^{\boldsymbol{1}(\delta < d_{kl}(p, q_k))},\\
         d_s^k &: (p, q) \mapsto d_{kl}(p, q_k) \boldsymbol{1}(q > q_k),\\
-        q_k &:= 1 - (1 - \frac{\varepsilon}{1 + \varepsilon})^k.
+        q_k &:= 1 - \left( 1 - \frac{\varepsilon}{1 + \varepsilon} \right)^k.
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
@@ -539,7 +541,7 @@ class UCBoostEpsilon(IndexPolicy):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            I_k(t) &= \min_{d\in D} P_1(d)(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}).
+            I_k(t) &= \min_{d\in D_{\varepsilon}} P_1(d)\left(\hat{\mu}_k(t), \frac{\log(t) + c\log(\log(t))}{N_k(t)}\right).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
