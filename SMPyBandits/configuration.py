@@ -161,9 +161,9 @@ ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
 
 # WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values...
 if ARM_TYPE in [
-            "UnboundedGaussian",
-            # "Gaussian",
-        ]:
+        "UnboundedGaussian",
+        # "Gaussian",
+    ]:
     LOWER = -5
     AMPLITUDE = 10
 
@@ -325,7 +325,7 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 configuration.update({
     "policies": [
-        # --- FIXME new UCBoost algorithmes
+        # --- FIXME new UCBoost algorithms
         {
             "archtype": UCB_bq,
             "params": {}
@@ -352,6 +352,31 @@ configuration.update({
             "archtype": UCBoost,
             "params": {
                 "set_D": 4,
+            }
+        },
+        {
+            "archtype": UCBoost,
+            "params": {
+                "set_D": 5,
+            }
+        },
+        # --- FIXME new UCBoostEpsilon algorithm
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.08,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.05,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.01,
             }
         },
         # # --- Stupid algorithms
@@ -971,9 +996,9 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
 elif not ENVIRONMENT_BAYESIAN:
     configuration.update({
         "environment": [ {
-                "arm_type": ARM_TYPE,
-                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
-            }, ],
+            "arm_type": ARM_TYPE,
+            "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+        }, ],
     })
 
 if TEST_WrapRange:
