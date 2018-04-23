@@ -275,7 +275,7 @@ def kullback_leibler_distance_on_mean(p, q):
 def kullback_leibler_distance_lowerbound(p, q):
     r""" Lower-bound on the Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
-    .. math:: d_{lb}(p, q) = p \log(\left p \right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
+    .. math:: d_{lb}(p, q) = p \log\left( p \right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
     """
     p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     q = min(max(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -370,7 +370,7 @@ def solution_pb_t(p, upperbound, check_solution=CHECK_SOLUTION):
 
     .. math::
 
-        q^* = \min\left(1, \frac{p + 1}{2} \left( \delta - p \log\left\frac{p}{p + 1}\right) - \log\left(\frac{2}{\mathrm{e} (p + 1)}\right) \right)\right).
+        q^* = \min\left(1, \frac{p + 1}{2} \left( \delta - p \log\left(\frac{p}{p + 1}\right) - \log\left(\frac{2}{\mathrm{e} (p + 1)}\right) \right)\right).
 
     - :math:`\delta` is the ``upperbound`` parameter on the semi-distance between input :math:`p` and solution :math:`q^*`.
     """
