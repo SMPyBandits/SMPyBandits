@@ -331,6 +331,10 @@ configuration.update({
     "policies": [
         # --- FIXME new UCBoost algorithms
         {
+            "archtype": UCB_sq,
+            "params": {}
+        },
+        {
             "archtype": UCB_bq,
             "params": {}
         },
@@ -340,35 +344,45 @@ configuration.update({
         },
         {
             "archtype": UCB_lb,
-            "params": {}
+            "params": {
+                "c": 3,
+            }
+        },
+        {
+            "archtype": UCB_lb,
+            "params": {
+                "c": 0,
+            }
         },
         {
             "archtype": UCB_t,
+            "params": {
+                "c": 3,
+            }
+        },
+        {
+            "archtype": UCB_t,
+            "params": {
+                "c": 0,
+            }
+        },
+        {
+            "archtype": UCBoost_bq_h_lb,
             "params": {}
         },
         {
-            "archtype": UCBoost,
-            "params": {
-                "set_D": 3,
-            }
+            "archtype": UCBoost_bq_h_lb_t,
+            "params": {}
         },
         {
-            "archtype": UCBoost,
-            "params": {
-                "set_D": 4,
-            }
-        },
-        {
-            "archtype": UCBoost,
-            "params": {
-                "set_D": 5,
-            }
+            "archtype": UCBoost_bq_h_lb_t_sq,
+            "params": {}
         },
         # --- FIXME new UCBoostEpsilon algorithm
         {
             "archtype": UCBoostEpsilon,
             "params": {
-                "epsilon": 0.08,
+                "epsilon": 0.1,
             }
         },
         {

@@ -164,7 +164,7 @@ from .OSSB import OSSB, GaussianOSSB, SparseOSSB
 from .BESA import BESA
 
 # From [Fang Liu et al, 2018]
-from .UCBoost import UCB_bq, UCB_h, UCB_lb, UCB_t, UCBoost, UCBoostEpsilon
+from .UCBoost import UCB_sq, UCB_bq, UCB_h, UCB_lb, UCB_t, UCBoost_bq_h_lb, UCBoost_bq_h_lb_t, UCBoost_bq_h_lb_t_sq, UCBoost, UCBoostEpsilon
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
