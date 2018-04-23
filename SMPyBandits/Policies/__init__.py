@@ -46,9 +46,10 @@
 
 - The Best Empirical Sampled Average (BESA) policy: :class:`BESA` (it works crazily well),
 
-- **New!** The UCBoost (Upper Confidence bounds with Boosting) policy:  :class:`UCB_bq`, :class:`UCB_h`, :class:`UCBoost`,
+- **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting: :class:`UCB_sq`, :class:`UCB_bq`, :class:`UCB_h`, :class:`UCB_lb`, :class:`UCB_t`, and then the ones with non-adaptive boosting: :class:`UCBoost_bq_h_lb`, :class:`UCBoost_bq_h_lb_t`, :class:`UCBoost_bq_h_lb_t_sq`, :class:`UCBoost`, and finally the epsilon-approximation boosting with :class:`UCBoostEpsilon`,
 
-- Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`.
+
+- Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`...
 
 
 All policies have the same interface, as described in :class:`BasePolicy`,

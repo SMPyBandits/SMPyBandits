@@ -388,6 +388,8 @@ class UCB_t(IndexPolicy):
 
     - It uses :func:`solution_pb_t` as a closed-form solution to compute the UCB indexes (using a shifted tangent line function of :func:`kullback_leibler_distance_on_mean`).
     - Reference: [Fang Liu et al, 2018](https://arxiv.org/abs/1804.05929).
+
+    .. warning:: It has bad performance, as expected (see the paper for their remark).
     """
 
     def __init__(self, nbArms, c=c, lower=0., amplitude=1.):
