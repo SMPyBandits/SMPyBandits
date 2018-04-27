@@ -1,63 +1,60 @@
 # -*- coding: utf-8 -*-
-""" The UCBoost policy for bounded bandits (on [0, 1]).
+""" The UCBoost policy for bounded bandits (on [0, 1]), using a Cython extension.
 
 - Reference: [Fang Liu et al, 2018](https://arxiv.org/abs/1804.05929).
-
-.. warning:: FIXME, so far, ``lower=0`` and ``amplitude=1`` are the only possible parameters, I need to adapt this to generic range.
-
-.. warning:: FIXME, so far, :class:`UCBoostEpsilon` is VERY inefficient, I need to improve it and optimize it as much as possible! See [issue #122](https://github.com/SMPyBandits/SMPyBandits/issues/122#issuecomment-383417650).
+- The entire module is optimized with Cython, that should be compiled using Cython (http://docs.cython.org/).
 
 .. warning:: The whole goal of their paper is to provide a numerically efficient alternative to kl-UCB, so for my comparison to be fair, I should either use the Python versions of klUCB utility functions (using :mod:`kullback`) or write C or Cython versions of this UCBoost module. TODO!
+
+.. warning::
+
+    This extension should be used with the ``setup.py`` script, by running::
+
+        $ python setup.py build_ext --inplace
+
+    You can also use [pyximport](http://docs.cython.org/en/latest/src/tutorial/cython_tutorial.html#pyximport-cython-compilation-for-developers) to import the ``kullback_cython`` module transparently:
+
+    >>> import pyximport; pyximport.install()  # instantaneous  # doctest: +ELLIPSIS
+    (None, <pyximport.pyximport.PyxImporter at 0x...>)
+    >>> from UCBoost_cython import *     # takes about two seconds
 """
-from __future__ import division, print_function  # Python 2 compatibility
+# from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from math import log, sqrt, exp, ceil, floor
-
-import numpy as np
-np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
-
+from libc.math cimport log, sqrt, exp, ceil, floor
 
 try:
-    from .IndexPolicy import IndexPolicy
+    # from IndexPolicy import IndexPolicy
+    import IndexPolicy as INDEXPOLICY
+    IndexPolicy = INDEXPOLICY.IndexPolicy
 except ImportError:
-    from IndexPolicy import IndexPolicy
+    from .IndexPolicy import IndexPolicy
 
-try:
-    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, ImportError, SystemError):
-    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+cdef float eps = 1e-5  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 
 #: Default value for the constant c used in the computation of the index
+cdef float c
 c = 3.  #: Default value for the theorems to hold.
 c = 0.  #: Default value for better practical performance.
 
 
 #: Tolerance when checking (with ``assert``) that the solution(s) of any convex problem are correct.
-tolerance_with_upperbound = 1.0001
+cdef float tolerance_with_upperbound = 1.0001
 
-
-#: Whether to check that the solution(s) of any convex problem are correct.
-#:
-#: .. warning:: This is currently disabled, to try to optimize this module! WARNING bring it back when debugging!
-CHECK_SOLUTION = True
-CHECK_SOLUTION = False  # XXX Faster!
 
 # --- New distance and algorithm: quadratic
 
-@jit
-def squadratic_distance(p, q):
+def squadratic_distance(float p, float q) -> float:
     r""" The *quadratic distance*, :math:`d_{sq}(p, q) := 2 (p - q)^2`."""
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     # q = min(max(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return 2 * (p - q)**2
 
 
-@jit
-def solution_pb_sq(p, upperbound, check_solution=CHECK_SOLUTION):
+def solution_pb_sq(float p, float upperbound) -> float:
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{sq}` the :func:`biquadratic_distance` function:
 
     .. math::
@@ -75,11 +72,6 @@ def solution_pb_sq(p, upperbound, check_solution=CHECK_SOLUTION):
     """
     return p + sqrt(upperbound / 2.)
 
-    # XXX useless checking of the solution, takes time
-    # if check_solution and not np.all(squadratic_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
-    #     print("Error: the solution to the optimisation problem P_1(d_sq), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (sq(p,q^*) = {:.3g} > {:.3g})...".format(p, upperbound, q_star, squadratic_distance(p, q_star), upperbound))  # DEBUG
-    # return q_star
-
 
 class UCB_sq(IndexPolicy):
     """ The UCB(d_sq) policy for bounded bandits (on [0, 1]).
@@ -94,9 +86,9 @@ class UCB_sq(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCB}_{d=d_{sq}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{sq}}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -120,19 +112,17 @@ class UCB_sq(IndexPolicy):
 
 # --- New distance and algorithm: biquadratic
 
-@jit
-def biquadratic_distance(p, q):
+def biquadratic_distance(float p, float q) -> float:
     r""" The *biquadratic distance*, :math:`d_{bq}(p, q) := 2 (p - q)^2 + (4/9) * (p - q)^4`."""
     # return 2 * (p - q)**2 + (4./9) * (p - q)**4
     # XXX about 20% slower than the second less naive solution
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     # q = min(max(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
-    d = 2 * (p - q)**2
+    cdef float d = 2 * (p - q)**2
     return d + d**2 / 9.
 
 
-@jit
-def solution_pb_bq(p, upperbound, check_solution=CHECK_SOLUTION):
+def solution_pb_bq(float p, float upperbound) -> float:
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{bq}` the :func:`biquadratic_distance` function:
 
     .. math::
@@ -152,11 +142,6 @@ def solution_pb_bq(p, upperbound, check_solution=CHECK_SOLUTION):
     # DONE is it faster to precompute the constants ? yes, about 12% faster
     return min(1, p + sqrt(-2.25 + sqrt(5.0625 + 2.25 * upperbound)))
 
-    # XXX useless checking of the solution, takes time
-    # if check_solution and not np.all(biquadratic_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
-    #     print("Error: the solution to the optimisation problem P_1(d_bq), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (bq(p,q^*) = {:.3g} > {:.3g})...".format(p, upperbound, q_star, biquadratic_distance(p, q_star), upperbound))  # DEBUG
-    # return q_star
-
 
 class UCB_bq(IndexPolicy):
     """ The UCB(d_bq) policy for bounded bandits (on [0, 1]).
@@ -171,9 +156,9 @@ class UCB_bq(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCB}_{d=d_{bq}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{bq}}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -190,17 +175,14 @@ class UCB_bq(IndexPolicy):
 
 # --- New distance and algorithm: Hellinger
 
-
-@jit
-def hellinger_distance(p, q):
+def hellinger_distance(float p, float q) -> float:
     r""" The *Hellinger distance*, :math:`d_{h}(p, q) := (\sqrt{p} - \sqrt{q})^2 + (\sqrt{1 - p} - \sqrt{1 - q})^2`."""
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     # q = min(max(q, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return (sqrt(p) - sqrt(q))**2 + (sqrt(1. - p) - sqrt(1. - q))**2
 
 
-@jit
-def solution_pb_hellinger(p, upperbound, check_solution=CHECK_SOLUTION):
+def solution_pb_hellinger(float p, float upperbound) -> float:
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{h}` the :func:`hellinger_distance` function:
 
     .. math::
@@ -218,16 +200,11 @@ def solution_pb_hellinger(p, upperbound, check_solution=CHECK_SOLUTION):
     """
     # DONE is it faster to precompute the constants ? yes, about 12% faster
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
-    sqrt_p = sqrt(p)
+    cdef float sqrt_p = sqrt(p)
     if upperbound < (2 - 2 * sqrt_p):
         return (1 - upperbound/2.) * sqrt_p + sqrt((1 - p) * (upperbound - upperbound**2 / 4.)) ** 2
     else:
         return p
-
-    # XXX useless checking of the solution, takes time
-    # if check_solution and not np.all(hellinger_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
-    #     print("Error: the solution to the optimisation problem P_1(d_h), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g})...".format(p, upperbound, q_star, hellinger_distance(p, q_star), upperbound))  # DEBUG
-    # return q_star
 
 
 class UCB_h(IndexPolicy):
@@ -243,9 +220,9 @@ class UCB_h(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCB}_{d=d_h}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_h}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -263,11 +240,7 @@ class UCB_h(IndexPolicy):
 # --- New distance and algorithm: lower-bound on the Kullback-Leibler distance
 
 
-eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
-
-
-@jit
-def kullback_leibler_distance_on_mean(p, q):
+def kullback_leibler_distance_on_mean(float p, float q) -> float:
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
     .. math:: \mathrm{kl}(p, q) = \mathrm{KL}(\mathcal{B}(p), \mathcal{B}(q)) = p \log\left(\frac{p}{q}\right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
@@ -277,8 +250,7 @@ def kullback_leibler_distance_on_mean(p, q):
     return p * log(p / q) + (1 - p) * log((1 - p) / (1 - q))
 
 
-@jit
-def kullback_leibler_distance_lowerbound(p, q):
+def kullback_leibler_distance_lowerbound(float p, float q) -> float:
     r""" Lower-bound on the Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
     .. math:: d_{lb}(p, q) = p \log\left( p \right) + (1-p) \log\left(\frac{1-p}{1-q}\right).
@@ -288,8 +260,7 @@ def kullback_leibler_distance_lowerbound(p, q):
     return p * log(p) + (1 - p) * log((1 - p) / (1 - q))
 
 
-@jit
-def solution_pb_kllb(p, upperbound, check_solution=CHECK_SOLUTION):
+def solution_pb_kllb(float p, float upperbound) -> float:
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{lb}` the proposed lower-bound on the Kullback-Leibler binary distance (:func:`XXX`) function:
 
     .. math::
@@ -308,11 +279,6 @@ def solution_pb_kllb(p, upperbound, check_solution=CHECK_SOLUTION):
     p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return 1 - (1 - p) * exp((p * log(p) - upperbound) / (1 - p))
 
-    # XXX useless checking of the solution, takes time
-    # if check_solution and not np.all(kullback_leibler_distance_lowerbound(p, q_star) <= tolerance_with_upperbound * upperbound):
-    #     print("Error: the solution to the optimisation problem P_1(d_lb), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g})...".format(p, upperbound, q_star, kullback_leibler_distance_lowerbound(p, q_star), upperbound))  # DEBUG
-    # return q_star
-
 
 class UCB_lb(IndexPolicy):
     """ The UCB(d_lb) policy for bounded bandits (on [0, 1]).
@@ -327,9 +293,9 @@ class UCB_lb(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCB}_{d=d_{lb}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{lb}}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -347,8 +313,7 @@ class UCB_lb(IndexPolicy):
 # --- New distance and algorithm: a shifted tangent line function of d_kl
 
 
-@jit
-def distance_t(p, q):
+def distance_t(float p, float q) -> float:
     r""" A shifted tangent line function of :func:`kullback_leibler_distance_on_mean`.
 
     .. math:: d_t(p, q) = \frac{2 q}{p + 1} + p \log\left(\frac{p}{p + 1}\right) + \log\left(\frac{2}{\mathrm{e}(p + 1)}\right).
@@ -364,8 +329,7 @@ def distance_t(p, q):
 
 
 
-@jit
-def solution_pb_t(p, upperbound, check_solution=CHECK_SOLUTION):
+def solution_pb_t(float p, float upperbound) -> float:
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_t` a shifted tangent line function of :func:`kullback_leibler_distance_on_mean` (:func:`distance_t`) function:
 
     .. math::
@@ -384,11 +348,6 @@ def solution_pb_t(p, upperbound, check_solution=CHECK_SOLUTION):
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     return min(1, ((p + 1) / 2.) * (upperbound - p * log(p / (p + 1)) - log(2 / (p + 1)) + 1))
 
-    # XXX useless checking of the solution, takes time
-    # if check_solution and not np.all(distance_t(p, q_star) <= tolerance_with_upperbound * upperbound):
-    #     print("Error: the solution to the optimisation problem P_1(d_t), with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g})...".format(p, upperbound, q_star, distance_t(p, q_star), upperbound))  # DEBUG
-    # return q_star
-
 
 class UCB_t(IndexPolicy):
     """ The UCB(d_t) policy for bounded bandits (on [0, 1]).
@@ -405,9 +364,9 @@ class UCB_t(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCB}_{d=d_t}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_t}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -481,9 +440,9 @@ class UCBoost(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"UCBoost($|D|={}$, $c={:.3g}$)".format(len(self.set_D), self.c)
+        return r"UCBoostCython($|D|={}$, $c={:.3g}$)".format(len(self.set_D), self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -493,13 +452,14 @@ class UCBoost(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        p = self.rewards[arm] / self.pulls[arm]
+        cdef float p = self.rewards[arm] / self.pulls[arm]
         # upperbound = log(self.t) / self.pulls[arm]
-        upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
-        return min(
-            _distance_of_key[key](p, upperbound)
-            for key in self.set_D
-        )
+        cdef float upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
+        cdef float min_solution = float('+inf')
+        cdef char *key
+        for key in self.set_D:
+            min_solution = min(min_solution, _distance_of_key[key](p, upperbound))
+        return min_solution
 
 
 _bq_h_lb = [solution_pb_bq, solution_pb_hellinger, solution_pb_kllb]
@@ -516,9 +476,9 @@ class UCBoost_bq_h_lb(UCBoost):
         super(UCBoost_bq_h_lb, self).__init__(nbArms, set_D=3, c=c, lower=lower, amplitude=amplitude)
 
     def __str__(self):
-        return r"UCBoost($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb}\}", self.c)
+        return r"UCBoostcython($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb}\}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -528,9 +488,9 @@ class UCBoost_bq_h_lb(UCBoost):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        p = self.rewards[arm] / self.pulls[arm]
+        cdef float p = self.rewards[arm] / self.pulls[arm]
         # upperbound = log(self.t) / self.pulls[arm]
-        upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
+        cdef float upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
         return min(
             solution_pb(p, upperbound)
             for solution_pb in _bq_h_lb
@@ -551,9 +511,9 @@ class UCBoost_bq_h_lb_t(UCBoost):
         super(UCBoost_bq_h_lb_t, self).__init__(nbArms, set_D=4, c=c, lower=lower, amplitude=amplitude)
 
     def __str__(self):
-        return r"UCBoost($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb},d_t\}", self.c)
+        return r"UCBoostcython($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb},d_t\}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -563,9 +523,9 @@ class UCBoost_bq_h_lb_t(UCBoost):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        p = self.rewards[arm] / self.pulls[arm]
+        cdef float p = self.rewards[arm] / self.pulls[arm]
         # upperbound = log(self.t) / self.pulls[arm]
-        upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
+        cdef float upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
         return min(
             solution_pb(p, upperbound)
             for solution_pb in _bq_h_lb_t
@@ -586,9 +546,9 @@ class UCBoost_bq_h_lb_t_sq(UCBoost):
         super(UCBoost_bq_h_lb_t_sq, self).__init__(nbArms, set_D=5, c=c, lower=lower, amplitude=amplitude)
 
     def __str__(self):
-        return r"UCBoost($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb},d_t,d_{sq}\}", self.c)
+        return r"UCBoostcython($D={}$, $c={:.3g}$)".format("\{d_{bq},d_h,d_{lb},d_t,d_{sq}\}", self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -598,20 +558,20 @@ class UCBoost_bq_h_lb_t_sq(UCBoost):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        p = self.rewards[arm] / self.pulls[arm]
+        cdef float p = self.rewards[arm] / self.pulls[arm]
         # upperbound = log(self.t) / self.pulls[arm]
-        upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
+        cdef float upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
         return min(
             solution_pb(p, upperbound)
             for solution_pb in _bq_h_lb_t_sq
         )
 
 
+
 # --- New distance and algorithm: epsilon approximation on the Kullback-Leibler distance
 
-# @jit
-def min_solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK_SOLUTION):
-    r""" List of closed-form solutions of the following optimisation problems, for :math:`d = d_s^k` approximation of :math:`d_{kl}` and any :math:`\tau_1(p) \leq k \leq \tau_2(p)`:
+def min_solutions_pb_from_epsilon(float p, float upperbound, float epsilon=0.001) -> float:
+    r""" Minimum of the closed-form solutions of the following optimisation problems, for :math:`d = d_s^k` approximation of :math:`d_{kl}` and any :math:`\tau_1(p) \leq k \leq \tau_2(p)`:
 
     .. math::
 
@@ -630,15 +590,17 @@ def min_solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=C
     """
     # assert 0 < epsilon < 1, "Error: epsilon should be in (0, 1) strictly, but = {:.3g} is not!".format(epsilon)  # DEBUG
     # eta doesn't depend on p
-    eta = epsilon / (1.0 + epsilon)
+    cdef float eta = epsilon / (1.0 + epsilon)
+    cdef float temp
     # tau_1 and tau_2 depend on p, XXX cannot be precomputed!
     p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
-    tau_1_p = int(ceil((log(1 - p)) / (log(1 - eta))))
-    tau_2_p = int(ceil((log(1 - exp(- epsilon / p))) / (log(1 - eta))))
+    cdef int tau_1_p = int(ceil((log(1 - p)) / (log(1 - eta))))
+    cdef int tau_2_p = int(ceil((log(1 - exp(- epsilon / p))) / (log(1 - eta))))
     # if tau_1_p > tau_2_p:
     #     print("Error: tau_1_p = {:.3g} should be <= tau_2_p = {:.3g}...".format(tau_1_p, tau_2_p))  # DEBUG
 
-    min_of_solutions = float('+inf')
+    cdef int k
+    cdef float min_of_solutions = float('+inf')
     for k in range(tau_1_p, tau_2_p + 1):
         temp = 1 - (1.0 - eta) ** float(k)
         if upperbound < kullback_leibler_distance_on_mean(p, temp):
@@ -664,9 +626,9 @@ class UCBoostEpsilon(IndexPolicy):
         self.epsilon = epsilon  #: Parameter epsilon
 
     def __str__(self):
-        return r"UCBoost($\varepsilon={:.3g}$, $c={:.3g}$)".format(self.epsilon, self.c)
+        return r"UCBoostcython($\varepsilon={:.3g}$, $c={:.3g}$)".format(self.epsilon, self.c)
 
-    def computeIndex(self, arm):
+    def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
         .. math::
@@ -677,15 +639,15 @@ class UCBoostEpsilon(IndexPolicy):
         if self.pulls[arm] < 1:
             return float('+inf')
 
-        p = self.rewards[arm] / self.pulls[arm]
+        cdef float p = self.rewards[arm] / self.pulls[arm]
         # upperbound = log(self.t) / self.pulls[arm]
-        upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
+        cdef float upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
 
-        min_solutions = min_solutions_pb_from_epsilon(p, upperbound, epsilon=self.epsilon)
+        cdef float min_solutions = min_solutions_pb_from_epsilon(p, upperbound, epsilon=self.epsilon)
         return min(
-            min(
-                solution_pb_kllb(p, upperbound),
-                solution_pb_sq(p, upperbound)
-            ),
+            # min(
+            #     solution_pb_kllb(p, upperbound),
+                solution_pb_sq(p, upperbound),
+            # ),
             min_solutions
         )
