@@ -15,17 +15,18 @@ serve to show the default.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-
 import sys
 import os
 import sphinx
 # import shutil
 
+# If extensions (or modules to document with autodoc) are in another directory,
+# add these directories to sys.path here. If the directory is relative to the
+# documentation root, use os.path.abspath to make it absolute, like shown here.
+
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('SMPyBandits'))
+# sys.path.insert(0, os.path.abspath(os.path.join('SMPyBandits', 'Policies')))
 
 print("Using python, version %s on %s." % (sys.version, sys.platform))
 

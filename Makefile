@@ -275,6 +275,8 @@ apidoc:
 	-mv -fv /tmp/SMPyBandits/docs/modules.rst ./docs/modules.rst
 
 html:
+	-mv -vf ./SMPyBandits/Policies/*.so /tmp/SMPyBandits/
+	-mv -vf /tmp/SMPyBandits/*_cython*.so ./SMPyBandits/Policies/
 	# XXX Adapt to using either my own sphinxbuild or the system-wide sphinxbuild script
 	if [[ -x $(SPHINXBUILD) ]]; then $(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); else $(DEFAULTSPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O); fi
 	# $(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -286,6 +288,7 @@ html:
 	-./.fixes_html_in_doc.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
 	\cp logs/*.txt "$(BUILDDIR)"/html/logs/
+	-mv -vf /tmp/SMPyBandits/*.so ./SMPyBandits/Policies/
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
