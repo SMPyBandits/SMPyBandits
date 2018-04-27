@@ -215,7 +215,7 @@ class MAB(object):
         return sum(a.oneLR(self.maxArm, a.mean) for a in self.arms if a.mean != self.maxArm)
 
     def lowerbound_sparse(self, sparsity=None):
-        """ Compute the constant :math:`C(\mu)`, for [Joon et al, 2017] lower-bound for sparse bandits for this MAB problem (complexity)
+        """ Compute the constant :math:`C(\mu)`, for [Kwon et al, 2017] lower-bound for sparse bandits for this MAB problem (complexity)
 
         - I recomputed suboptimal solution to the optimization problem, and found the same as in [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
         """
