@@ -1,21 +1,23 @@
 # Basic Makefile to compile a Cython extension.
-# It is used to compile the kullback_cython extension, by running 'make kullback_cython'
+# It is used to compile the cython_extensions extension, by running 'make cython_extensions'
 
-kullback_cython3:	kullback_cython
-kullback_cython:
+cython_extensions3:	cython_extensions
+cython_extensions:
 	python3 setup.py build_ext --inplace
-	mv -vf SMPyBandits/Policies/*.so ./
-	chmod -x ./*.so
-	chmod g-w ./*.so
-	chmod o-w ./*.so
-	ls -larth ./*.so
-	-trash ./build ./SMPyBandits ./kullback_cython.c
+	-cp -vf SMPyBandits/Policies/*.so ./
+	-chmod -x ./*.so
+	-chmod g-w ./*.so
+	-chmod o-w ./*.so
+	-ls -larth ./*.so
+	-trash ./build ./*.c
+	# -trash ./SMPyBandits
 
-kullback_cython2:
+cython_extensions2:
 	python2 setup.py build_ext --inplace
-	mv -vf SMPyBandits/Policies/*.so ./
-	chmod -x ./*.so
-	chmod g-w ./*.so
-	chmod o-w ./*.so
-	ls -larth ./*.so
-	-trash ./build ./SMPyBandits ./kullback_cython.c
+	-cp -vf SMPyBandits/Policies/*.so ./
+	-chmod -x ./*.so
+	-chmod g-w ./*.so
+	-chmod o-w ./*.so
+	-ls -larth ./*.so
+	-trash ./build ./*.c
+	# -trash ./SMPyBandits

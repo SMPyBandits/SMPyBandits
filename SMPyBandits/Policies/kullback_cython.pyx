@@ -86,7 +86,7 @@ __version__ = "0.9"
 from libc.math cimport log, sqrt, exp
 
 
-eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+cdef float eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 
 # --- Simple Kullback-Leibler divergence for known distributions
@@ -567,8 +567,8 @@ def klucbExp(float x, float d, float precision=1e-6) -> float:
     >>> klucbExp(0.9, 0.9)  # doctest: +ELLIPSIS
     5.031795...
     """
-    cdef float upperbound = 1
-    cdef float lowerbound = 0
+    cdef float upperbound
+    cdef float lowerbound
     if d < 0.77:  # XXX where does this value come from?
         upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
         # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
@@ -611,8 +611,8 @@ def klucbGamma(float x, float d, float precision=1e-6) -> float:
     >>> klucbGamma(0.9, 0.9)  # doctest: +ELLIPSIS
     5.031...
     """
-    cdef float upperbound = 1
-    cdef float lowerbound = 0
+    cdef float upperbound
+    cdef float lowerbound
     if d < 0.77:  # XXX where does this value come from?
         upperbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
         # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
@@ -624,28 +624,3 @@ def klucbGamma(float x, float d, float precision=1e-6) -> float:
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
     # FIXME specify the value for a !
     return klucb(x, d, klGamma, max(upperbound, 1e2), min(-1e2, lowerbound), precision)
-
-
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)
-
-    print("\nklucbGauss(0.9, 0.2) =", klucbGauss(0.9, 0.2))
-    print("klucbBern(0.9, 0.2) =", klucbBern(0.9, 0.2))
-    print("klucbPoisson(0.9, 0.2) =", klucbPoisson(0.9, 0.2))
-
-    x = 2
-    print("\nx =", x)
-    d = 2.51
-    print("d =", d)
-    print("klucbExp(x, d) = ", klucbExp(x, d))
-
-    ub = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
-    print("Upper bound = ", ub)
-    print("Stupid upperbound = ", x * exp(d + 1))
-
-    print("\nDone for tests of 'kullback.pyx' ...")

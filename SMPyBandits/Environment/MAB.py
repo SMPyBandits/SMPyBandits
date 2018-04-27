@@ -224,11 +224,14 @@ class MAB(object):
         if sparsity is None:
             sparsity = self.nbArms
 
-        from Policies.OSSB import solve_optimization_problem__sparse_bandits
-        ci = solve_optimization_problem__sparse_bandits(self.means, sparsity=sparsity, only_strong_or_weak=False)
-        # now we use these ci to compute the lower-bound
-        gaps = [self.maxArm - a.mean for a in self.arms]
-        lowerbound = sum( delta * c for (delta, c) in zip(gaps, ci) )
+        try:
+            from Policies.OSSB import solve_optimization_problem__sparse_bandits
+            ci = solve_optimization_problem__sparse_bandits(self.means, sparsity=sparsity, only_strong_or_weak=False)
+            # now we use these ci to compute the lower-bound
+            gaps = [self.maxArm - a.mean for a in self.arms]
+            lowerbound = sum( delta * c for (delta, c) in zip(gaps, ci) )
+        except (ValueError, AssertionError):  # WARNING this is durty!
+            lowerbound = np.nan
         return lowerbound
 
     def hoifactor(self):

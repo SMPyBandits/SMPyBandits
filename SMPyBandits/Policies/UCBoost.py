@@ -20,7 +20,10 @@ import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
@@ -103,7 +106,8 @@ class UCB_sq(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        # return solution_pb_sq(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
+        if self.c == 0:
+            return solution_pb_sq(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_sq(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
     # TODO make this vectorized function working!
@@ -146,7 +150,7 @@ def solution_pb_bq(p, upperbound, check_solution=CHECK_SOLUTION):
     """
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
     # DONE is it faster to precompute the constants ? yes, about 12% faster
-    return min(1, p + np.sqrt(-2.25 + np.sqrt(5.0625 + 2.25 * upperbound)))
+    return min(1, p + sqrt(-2.25 + sqrt(5.0625 + 2.25 * upperbound)))
 
     # XXX useless checking of the solution, takes time
     # if check_solution and not np.all(biquadratic_distance(p, q_star) <= tolerance_with_upperbound * upperbound):
@@ -179,7 +183,8 @@ class UCB_bq(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        # return solution_pb_bq(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
+        if self.c == 0:
+            return solution_pb_bq(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_bq(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
 
@@ -250,7 +255,8 @@ class UCB_h(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        # return solution_pb_hellinger(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
+        if self.c == 0:
+            return solution_pb_hellinger(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_hellinger(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
 
@@ -333,7 +339,8 @@ class UCB_lb(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        # return solution_pb_kllb(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
+        if self.c == 0:
+            return solution_pb_kllb(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_kllb(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
 
@@ -410,7 +417,8 @@ class UCB_t(IndexPolicy):
         """
         if self.pulls[arm] < 1:
             return float('+inf')
-        # return solution_pb_t(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
+        if self.c == 0:
+            return solution_pb_t(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_t(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
 
@@ -602,7 +610,7 @@ class UCBoost_bq_h_lb_t_sq(UCBoost):
 # --- New distance and algorithm: epsilon approximation on the Kullback-Leibler distance
 
 # @jit
-def solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK_SOLUTION):
+def min_solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK_SOLUTION):
     r""" List of closed-form solutions of the following optimisation problems, for :math:`d = d_s^k` approximation of :math:`d_{kl}` and any :math:`\tau_1(p) \leq k \leq \tau_2(p)`:
 
     .. math::
@@ -625,34 +633,19 @@ def solutions_pb_from_epsilon(p, upperbound, epsilon=0.001, check_solution=CHECK
     eta = epsilon / (1.0 + epsilon)
     # tau_1 and tau_2 depend on p, XXX cannot be precomputed!
     p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
-    tau_1_p = ceil((log(1 - p)) / (log(1 - eta)))
-    tau_2_p = ceil((log(1 - exp(- epsilon / p))) / (log(1 - eta)))
+    tau_1_p = int(ceil((log(1 - p)) / (log(1 - eta))))
+    tau_2_p = int(ceil((log(1 - exp(- epsilon / p))) / (log(1 - eta))))
     # if tau_1_p > tau_2_p:
     #     print("Error: tau_1_p = {:.3g} should be <= tau_2_p = {:.3g}...".format(tau_1_p, tau_2_p))  # DEBUG
 
-    # now construct all the k, and all the step kl functions
-    # WARNING yes we could inline all this for speedup, but this would require recomputing for the check_solution...
-    list_of_k = np.arange(tau_1_p, tau_2_p + 1)
-    list_of_qk = 1 - (1.0 - eta) ** list_of_k
-
-    list_of_solution_pb_step_kl = [  # q_k ** (indic(delta <= kl(p, q_k)))
-        qk
-        if upperbound < kullback_leibler_distance_on_mean(p, qk) else 1
-        for qk in list_of_qk
-    ]
-    # XXX yes yes, we could write a generator, or directly return the minimum,
-    # but this is not the bottleneck of the efficiency of this code !
-
-    # XXX actually, we don't need to compute the step kl functions! only to check
-
-    # XXX useless checking of the solution, takes time
-    # if check_solution:
-    #     for k, qk, qk_star in zip(list_of_k, list_of_qk, list_of_solution_pb_step_kl):
-    #         distance_step_kl = lambda p, q: kullback_leibler_distance_on_mean(p, q) if q >= qk else 0
-    #         if not np.all(distance_step_kl(p, qk_star) <= tolerance_with_upperbound * upperbound):
-    #             print("Error: the solution to the optimisation problem P_1(d_s^k) for k = {} and q_k = {:.3g}, with p = {:.3g} and delta = {:.3g} was computed to be q^* = {:.3g} which seem incorrect (h(p,q^*) = {:.3g} > {:.3g})...".format(k, qk, p, upperbound, qk_star, distance_t(p, qk_star), upperbound))  # DEBUG
-
-    return list_of_solution_pb_step_kl
+    min_of_solutions = float('+inf')
+    for k in range(tau_1_p, tau_2_p + 1):
+        temp = 1 - (1.0 - eta) ** float(k)
+        if upperbound < kullback_leibler_distance_on_mean(p, temp):
+            min_of_solutions = min(min_of_solutions, temp)
+        else:
+            min_of_solutions = min(min_of_solutions, 1)
+    return min_of_solutions
 
 
 class UCBoostEpsilon(IndexPolicy):
@@ -688,19 +681,11 @@ class UCBoostEpsilon(IndexPolicy):
         # upperbound = log(self.t) / self.pulls[arm]
         upperbound = (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm]
 
-        # TODO find a way to check if sols won't be empty… without computing it?
-        sols = solutions_pb_from_epsilon(p, upperbound, epsilon=self.epsilon)
-        if len(sols) > 0:
-            min_solutions_pb_from_epsilon = min(sols)
-            return min(
-                min(
-                    solution_pb_kllb(p, upperbound),
-                    solution_pb_sq(p, upperbound)
-                ),
-                min_solutions_pb_from_epsilon
-            )
-        else:
-            return min(
+        min_solutions = min_solutions_pb_from_epsilon(p, upperbound, epsilon=self.epsilon)
+        return min(
+            min(
                 solution_pb_kllb(p, upperbound),
                 solution_pb_sq(p, upperbound)
-            )
+            ),
+            min_solutions
+        )

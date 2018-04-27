@@ -12,8 +12,31 @@ You can also use [pyximport](http://docs.cython.org/en/latest/src/tutorial/cytho
 >>> # then use kullback.klucbBern or others, as if they came from the pure Python version!
 """
 from distutils.core import setup
+from distutils.extension import Extension
 from Cython.Build import cythonize
 
+extensions = [
+    Extension("kullback_cython", ["kullback_cython.pyx"]),
+    # XXX also build the extension with full name?
+    # Extension("SMPyBandits.Policies.kullback_cython", ["kullback_cython.pyx"]),
+    Extension("UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
+    # XXX also build the extension with full name?
+    # Extension("SMPyBandits.Policies.UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
+    Extension("UCBoost_cython", ["UCBoost_cython.pyx"]),
+    # XXX also build the extension with full name?
+    # Extension("SMPyBandits.Policies.UCBoost_cython", ["UCBoost_cython.pyx"]),
+]
+
 setup(
-    ext_modules = cythonize("kullback_cython.pyx")
+    ext_modules = cythonize(extensions, compiler_directives={
+        'embedsignature': True,
+        'language_level': 3,
+        'warn.undeclared': True,
+        'warn.unreachable': True,
+        'warn.maybe_uninitialized': True,
+        'warn.unused': True,
+        'warn.unused_arg': True,
+        'warn.unused_result': True,
+        'warn.multiple_declarators': True,
+    })
 )

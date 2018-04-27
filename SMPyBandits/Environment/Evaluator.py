@@ -451,7 +451,7 @@ class Evaluator(object):
         lowerbound_sparse = self.envs[envId].lowerbound_sparse()
         if not (semilogx or semilogy or loglog):
             print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(lowerbound, self.envs[envId].hoifactor()))  # DEBUG
-            if self.envs[envId]._sparsity is not None:
+            if self.envs[envId]._sparsity is not None and not np.isnan(lowerbound_sparse):
                 print("\n- a [Kwon et al] sparse lower-bound with s = {} non-negative arm, C'(mu) = {:.3g}...".format(self.envs[envId]._sparsity, lowerbound_sparse))  # DEBUG
         if not meanRegret:
             plt.ylim(ymin, plt.ylim()[1])
@@ -470,7 +470,7 @@ class Evaluator(object):
                 # We also plot the Lai & Robbins lower bound
                 plt.plot(X[::self.delta_t_plot], lowerbound * np.ones_like(X)[::self.delta_t_plot], 'k-', label="[Lai & Robbins] lower bound = ${:.3g}$".format(lowerbound), lw=3)
                 # We also plot the Kwon et al lower bound
-                if self.envs[envId]._sparsity is not None:
+                if self.envs[envId]._sparsity is not None and not np.isnan(lowerbound_sparse):
                     plt.plot(X[::self.delta_t_plot], lowerbound_sparse * np.ones_like(X)[::self.delta_t_plot], 'k--', label="[Kwon et al.] lower bound, $s = {}$, $= {:.3g}$".format(self.envs[envId]._sparsity, lowerbound_sparse), lw=3)
             legend()
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
@@ -493,7 +493,7 @@ class Evaluator(object):
                 # We also plot the Lai & Robbins lower bound
                 plt.plot(X[::self.delta_t_plot], lowerbound * np.log(X)[::self.delta_t_plot], 'k-', label=r"[Lai & Robbins] lower bound = ${:.3g}\; \log(t)$".format(lowerbound), lw=3)
                 # We also plot the Kwon et al lower bound
-                if self.envs[envId]._sparsity is not None:
+                if self.envs[envId]._sparsity is not None and not np.isnan(lowerbound_sparse):
                     plt.plot(X[::self.delta_t_plot], lowerbound_sparse * np.ones_like(X)[::self.delta_t_plot], 'k--', label=r"[Kwon et al.] lower bound, $s = {}$, $= {:.3g} \; \log(t)$".format(self.envs[envId]._sparsity, lowerbound_sparse), lw=3)
             legend()
             plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))

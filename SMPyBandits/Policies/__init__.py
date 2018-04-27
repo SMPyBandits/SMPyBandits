@@ -167,6 +167,17 @@ from .BESA import BESA
 # From [Fang Liu et al, 2018]
 from .UCBoost import UCB_sq, UCB_bq, UCB_h, UCB_lb, UCB_t, UCBoost_bq_h_lb, UCBoost_bq_h_lb_t, UCBoost_bq_h_lb_t_sq, UCBoost, UCBoostEpsilon
 
+# FIXME experimental!
+from .UCBoost_faster import UCB_sq as UCB_sq_faster, UCB_bq as UCB_bq_faster, UCB_h as UCB_h_faster, UCB_lb as UCB_lb_faster, UCB_t as UCB_t_faster, UCBoost_bq_h_lb as UCBoost_bq_h_lb_faster, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_faster, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_faster, UCBoost as UCBoost_faster, UCBoostEpsilon as UCBoostEpsilon_faster
+
+# FIXME experimental!
+try:
+    import pyximport; pyximport.install()
+    from .UCBoost_cython import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
+except ImportError:
+    print("Warning: the 'UCBoost_cython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
+    from .UCBoost_faster import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
+
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
 
