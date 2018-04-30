@@ -996,33 +996,33 @@ configuration.update({
             "archtype": UCB_h_cython,
             "params": {}
         },
-        # {
-        #     "archtype": UCB_lb_cython,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBoost_bq_h_lb_cython,
-        #     "params": {}
-        # },
-        # # --- FIXME new UCBoostEpsilon_cython algorithm
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.1,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.05,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #     }
-        # },
+        {
+            "archtype": UCB_lb_cython,
+            "params": {}
+        },
+        {
+            "archtype": UCBoost_bq_h_lb_cython,
+            "params": {}
+        },
+        # --- FIXME new UCBoostEpsilon_cython algorithm
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.1,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.05,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.01,
+            }
+        },
     ]
 })
 

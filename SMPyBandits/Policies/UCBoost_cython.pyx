@@ -261,7 +261,7 @@ def kullback_leibler_distance_lowerbound(float p, float q) -> float:
 
 
 def solution_pb_kllb(float p, float upperbound) -> float:
-    r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{lb}` the proposed lower-bound on the Kullback-Leibler binary distance (:func:`XXX`) function:
+    r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{lb}` the proposed lower-bound on the Kullback-Leibler binary distance (:func:`kullback_leibler_distance_lowerbound`) function:
 
     .. math::
 

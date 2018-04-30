@@ -16,15 +16,15 @@ from distutils.extension import Extension
 from Cython.Build import cythonize
 
 extensions = [
-    Extension("kullback_cython", ["kullback_cython.pyx"]),
+    # Extension("kullback_cython", ["kullback_cython.pyx"]),
     # XXX also build the extension with full name?
-    # Extension("SMPyBandits.Policies.kullback_cython", ["kullback_cython.pyx"]),
-    Extension("UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
+    Extension("SMPyBandits.Policies.kullback_cython", ["kullback_cython.pyx"]),
+    # Extension("UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
     # XXX also build the extension with full name?
-    # Extension("SMPyBandits.Policies.UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
-    Extension("UCBoost_cython", ["UCBoost_cython.pyx"]),
+    Extension("SMPyBandits.Policies.UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
+    # Extension("UCBoost_cython", ["UCBoost_cython.pyx"]),
     # XXX also build the extension with full name?
-    # Extension("SMPyBandits.Policies.UCBoost_cython", ["UCBoost_cython.pyx"]),
+    Extension("SMPyBandits.Policies.UCBoost_cython", ["UCBoost_cython.pyx"]),
 ]
 
 setup(

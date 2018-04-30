@@ -25,6 +25,11 @@ except ImportError:
     except ImportError:
         from UCBoost import *
 
+
+#: Default value for the constant c used in the computation of the index
+c = 3.  #: Default value for the theorems to hold.
+c = 0.  #: Default value for better practical performance.
+
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
