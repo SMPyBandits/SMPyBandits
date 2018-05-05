@@ -353,6 +353,10 @@ except (ValueError, np.AxisError):
 
 configuration["successive_players"] = [
 
+    # XXX stupid version with fixed T0 : cannot adapt to any problem
+    [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
+    # FIXME test this new TrekkingTSN algorithm!
+
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
     # # rhoRand(NB_PLAYERS, nbArms, BESA).children,
@@ -425,10 +429,6 @@ configuration["successive_players"] = [
     # # XXX By trial and error??
     # # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
     # [ MEGA(nbArms, p0=0.1, alpha=0.1, beta=0.5, c=0.1, d=0.99*GAP) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
-
-    # XXX stupid version with fixed T0 : cannot adapt to any problem
-    [ TrekkingTSN(nbArms, theta=0.01, epsilon=0.1, delta=0.01) for _ in range(NB_PLAYERS) ],
-    # FIXME test this new TrekkingTSN algorithm!
 
     # # # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # # # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],

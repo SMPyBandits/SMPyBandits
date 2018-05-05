@@ -49,10 +49,10 @@ def special_times(nbArms=10, theta=0.01, epsilon=0.1, delta=0.05):
     T_RH = int((np.log(delta / (3 * K))) / (np.log(1 - theta * (1 - 1/K)**(K-1))))
     T_SH = int((2 * K / epsilon**2) * np.log(2 * K**2 / (delta / 3)))
     T_TR = int(np.ceil((np.log((delta / 3) * K * XXX)) / (np.log(1 - theta))) * ((K - 1) * K) / 2.)
-    FIXME this T_TR CANNOT be negative !
+    # XXX this T_TR CANNOT be negative !
     assert T_RH > 0, "Error: time T_RH cannot be <= 0 but was found = {}...".format(T_RH)  # DEBUG
     assert T_SH > 0, "Error: time T_SH cannot be <= 0 but was found = {}...".format(T_SH)  # DEBUG
-    assert T_TR > 0, "Error: time T_TR cannot be <= 0 but was found = {}...".format(T_TR)  # DEBUG
+    # assert T_TR > 0, "Error: time T_TR cannot be <= 0 but was found = {}...".format(T_TR)  # DEBUG
     return T_RH, T_SH, T_TR
 
 
@@ -128,13 +128,17 @@ class TrekkingTSN(BasePolicy):
         self.state = State.NotStarted  #: Current state
 
         # compute times
-        T_TR, T_SH, T_RH = special_times(nbArms=nbArms=, theta=theta, epsilon=epsilon, delta=delta)
+        T_RH, T_SH, T_TR = special_times(nbArms=nbArms, theta=theta, epsilon=epsilon, delta=delta)
+
+        self.theta = theta  #: Parameter :math:`\theta`.
+        self.epsilon = epsilon  #: Parameter :math:`\epsilon`.
+        self.delta = delta  #: Parameter :math:`\delta`.
 
         # Store parameters
-        self.T_TR = T_TR  #: Parameter :math:`T_TR` computed from :func:`special_times`
-        self.T_SH = T_SH  #: Parameter :math:`T_SH` computed from :func:`special_times`
-        self.T_CC = T_TR + T_TH  #: Parameter :math:`T_CC = T_TR + T_TH`
-        self.T_RH = T_RH  #: Parameter :math:`T_RH` computed from :func:`special_times`
+        self.T_RH = T_RH  #: Parameter :math:`T_{RH}` computed from :func:`special_times`
+        self.T_SH = T_SH  #: Parameter :math:`T_{SH}` computed from :func:`special_times`
+        self.T_CC = T_RH + T_SH  #: Parameter :math:`T_{CC} = T_{RH} + T_{SH}`
+        self.T_TR = T_TR  #: Parameter :math:`T_{TR}` computed from :func:`special_times`
 
         # Internal memory
         self.last_was_successful = False  #: That's the l of the paper
@@ -152,7 +156,7 @@ class TrekkingTSN(BasePolicy):
         self.t = -1  #: Internal times
 
     def __str__(self):
-        return r"TrekkingTSN($T_TR = {:.3g}, T_SH = {:.3g}, T_RH = {:.3g}$)".format(self.T_TR, self.T_SH, self.T_RH)  # Use current estimate
+        return r"TSN(${} = {:.3g}, {} = {:.3g}$)".format(r"T_{RH}", self.T_RH, r"T_{SH}", self.T_SH)  # Use current estimate
 
     def startGame(self):
         """ Just reinitialize all the internal memory, and decide how to start (state 1 or 2)."""
@@ -179,7 +183,7 @@ class TrekkingTSN(BasePolicy):
                 # randomly choose channel
                 i = np.random.randint(self.nbArms)
         elif self.state == State.TrekkingTSN:
-            if selt.t == self.T_CC or np.sum(self.Y) == 0:
+            if self.t == self.T_CC or np.sum(self.Y) == 0:
                 i = (self.J - 1) % self.nbArms
             elif self.lock_channel:
                 i = self.last_choice
@@ -239,7 +243,7 @@ class TrekkingTSN(BasePolicy):
         self.J = self.index_sort[self.last_choice]
 
         for j in range(self.nbArms):
-            self.M[j] = sum(np.ceil(np.log(self.delta / 3.) / (1 - empiricalMeans[index_sort[j]])) for i in range(j-1))
+            self.M[j] = sum(np.ceil(np.log(self.delta / 3.) / (1 - empiricalMeans[self.index_sort[j]])) for i in range(j-1))
 
     def handleCollision(self, arm, reward=None):
         """ Handle a collision, on arm of index 'arm'.
