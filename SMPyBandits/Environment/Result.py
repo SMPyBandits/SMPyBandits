@@ -25,6 +25,7 @@ class Result(object):
         if np.size(indexes_bestarm) == 1:
             indexes_bestarm = np.asarray([indexes_bestarm])
         self.indexes_bestarm = [ indexes_bestarm for _ in range(horizon)]  #: Store also the position of the best arm, XXX in case of dynamically switching environment.
+        self.running_time = -1  #: Store the running time of the experiment
 
     def store(self, time, choice, reward):
         """ Store results."""

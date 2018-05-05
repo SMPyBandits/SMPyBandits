@@ -63,6 +63,7 @@ class DiscountedUCB(UCBalpha):
         """
         self.t += 1
         self.pulls[arm] = (self.gamma * self.pulls[arm]) + 1
+        # XXX self.pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
         reward = (reward - self.lower) / self.amplitude
         self.rewards[arm] = (self.gamma * self.rewards[arm]) + reward
 

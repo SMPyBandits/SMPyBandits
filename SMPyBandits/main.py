@@ -136,6 +136,9 @@ if __name__ == '__main__':
         print("\n\nGiving the final ranks ...")
         evaluation.printFinalRanking(envId)
 
+        print("\n\nGiving the mean and std running times ...")
+        evaluation.printRunningTimes(envId)
+
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
@@ -175,6 +178,14 @@ if __name__ == '__main__':
 
         if not do_plots:
             break
+
+        # --- Also plotting the running times
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_RunningTimes')
+            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+            evaluation.plotRunningTimes(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotRunningTimes(envId)  # XXX To plot without saving
 
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))

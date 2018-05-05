@@ -10,6 +10,7 @@ __version__ = "0.9"
 # Generic imports
 from copy import deepcopy
 import random
+import time
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -119,12 +120,14 @@ class Evaluator(object):
         self.pulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.allPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
+        self.runningTimes = dict()  #: For each env, keep the history of running times
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for env in range(len(self.envs)):
             self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
             self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
             self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
+            self.runningTimes[env] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -161,7 +164,7 @@ class Evaluator(object):
             else:
                 print("  Using this already created policy 'self.cfg['policies'][{}]' = {} ...".format(policyId, policy))  # DEBUG
                 self.policies.append(policy)
-        for policyId in range(len(self.policies)):
+        for policyId in range(self.nbPolicies):
             self.policies[policyId].__cachedstr__ = str(self.policies[policyId])
             if policyId in self.append_labels:
                 self.policies[policyId].__cachedstr__ += self.append_labels[policyId]
@@ -216,6 +219,7 @@ class Evaluator(object):
             self.pulls[envId][policyId, :] += r.pulls
             self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
+            self.runningTimes[envId][policyId, repeatId] = r.running_time
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
@@ -397,6 +401,13 @@ class Evaluator(object):
         return (self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]) / (float(self.repetitions) ** 0.5)
         # return self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]
 
+    def getRunningTimes(self, envId=0):
+        """Get the means and stds and list of running time of the different policies."""
+        all_times = [ self.runningTimes[envId][policyId, :] for policyId in range(self.nbPolicies) ]
+        means = [ np.mean(times) for times in all_times ]
+        stds  = [ np.std(times) for times in all_times ]
+        return means, stds, all_times
+
     # --- Plotting methods
 
     def plotRegrets(self, envId,
@@ -523,6 +534,26 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
+    def plotRunningTimes(self, envId=0, savefig=None):
+        """Plot the running times of the different policies, as a box plot for each."""
+        means, _, all_times = self.getRunningTimes(envId=envId)
+        # order by increasing mean time
+        index_of_sorting = np.argsort(means)
+        labels = [ policy.__cachedstr__ for policy in self.policies ]
+        labels = [ labels[i] for i in index_of_sorting ]
+        all_times = [ all_times[i] for i in index_of_sorting ]
+        fig = plt.figure()
+        if len(labels) < 8:
+            plt.boxplot(all_times, labels=labels)
+            legend()
+        else:
+            plt.boxplot(all_times)
+        plt.xlabel("Policies")
+        plt.ylabel("Running times (in seconds), for {} repetitions".format(self.repetitions))
+        plt.title("Running times for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        return fig
+
     def printFinalRanking(self, envId=0, moreAccurate=None):
         """Print the final ranking of the different policies."""
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
@@ -541,6 +572,24 @@ class Evaluator(object):
             policy = self.policies[k]
             print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastY[k]))
         return lastY, index_of_sorting
+
+    def printRunningTimes(self, envId=0, precision=3):
+        """Print the average+-std running time of the different policies."""
+        from IPython.core.magics.execution import _format_time
+        means, stds, _ = self.getRunningTimes(envId)
+
+        for policyId in np.argsort(means):
+            policy = self.policies[policyId]
+            print("\nFor policy #{} called '{}' ...".format(policyId, policy))
+            mean_time, std_time  = means[policyId], stds[policyId]
+            print(u"    {mean} ± {std} per loop (mean ± std. dev. of {runs} run{run_plural})"
+                .format(
+                    runs = self.repetitions,
+                    run_plural = "" if self.repetitions == 1 else "s",
+                    mean = _format_time(mean_time, precision),
+                    std = _format_time(std_time, precision)
+                )
+            )
 
     def printLastRegrets(self, envId=0, moreAccurate=None):
         """Print the last regrets of the different policies."""
@@ -624,6 +673,7 @@ def delayed_play(env, policy, horizon,
                  seed=None, allrewards=None, repeatId=0):
     """Helper function for the parallelization."""
     # Give a unique seed to random & numpy.random for each call of this function
+    start_time = time.time()
     try:
         if seed is not None:
             random.seed(seed)
@@ -688,6 +738,8 @@ def delayed_play(env, policy, horizon,
         # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
         print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
         print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
+
+    result.running_time = time.time() - start_time
     return result
 
 
