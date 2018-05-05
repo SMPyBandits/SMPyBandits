@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r""" MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+r""" MusicalChair: implementation of the decentralized multi-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
 
 - Each player has 3 states, 1st is random exploration, 2nd is musical chair, 3rd is staying sit
 - 1st step
@@ -93,7 +93,7 @@ State = Enum('State', ['NotStarted', 'InitialPhase', 'MusicalChair', 'Sitted'])
 # --- Class MusicalChair
 
 class MusicalChair(BasePolicy):
-    """ MusicalChair: implementation of the single-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
+    """ MusicalChair: implementation of the decentralized multi-player policy from [A Musical Chair approach, Shamir et al., 2015](https://arxiv.org/abs/1512.02866).
     """
 
     def __init__(self, nbArms, Time0=0.25, Time1=None, N=None, lower=0., amplitude=1.):  # Named argument to give them in any order
@@ -189,7 +189,7 @@ class MusicalChair(BasePolicy):
         #     pass  # Nothing to do in this second phase
         #     # We don't care anymore about rewards in this step
 
-        # And if t = Time0, we are do with the initial phase
+        # And if t = Time0, we are done with the initial phase
         if self.t >= self.Time0 and self.state == State.InitialPhase:
             self._endInitialPhase()
 

@@ -205,6 +205,8 @@ from .WrapRange import WrapRange
 from .MusicalChair import MusicalChair, optimalT0  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
 # from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
 
+from .TrekkingTSN import TrekkingTSN  # Cf. [R.Kumar, A.Yadav, S.J.Darak, M.K.Hanawal, Trekking based Distributed Algorithm for Opportunistic Spectrum Access in Infrastructure-less Network, 2018](XXX)
+
 from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)
 
 
