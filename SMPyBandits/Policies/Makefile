@@ -9,8 +9,8 @@ cython_extensions:
 	-chmod g-w ./*.so
 	-chmod o-w ./*.so
 	-ls -larth ./*.so
-	-trash ./build ./*.c
-	# -trash ./SMPyBandits
+	-rm -vfr ./build ./*.c
+	# -mv -vf ./SMPyBandits /tmp/
 
 cython_extensions2:
 	python2 setup.py build_ext --inplace
@@ -19,5 +19,5 @@ cython_extensions2:
 	-chmod g-w ./*.so
 	-chmod o-w ./*.so
 	-ls -larth ./*.so
-	-trash ./build ./*.c
-	# -trash ./SMPyBandits
+	-rm -vfr ./build ./*.c
+	# -mv -vf ./SMPyBandits /tmp/
