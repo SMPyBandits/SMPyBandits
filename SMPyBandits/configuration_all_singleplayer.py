@@ -449,30 +449,6 @@ configuration.update({
             "params": {}
         },
         {
-            "archtype": UCBplus,
-            "params": {}
-        },
-        {
-            "archtype": UCBmin,
-            "params": {}
-        },
-        # {
-        #     "archtype": UCBjulia,  # WARNING
-        #     "params": {}
-        # },
-        {
-            "archtype": UCBrandomInit,
-            "params": {}
-        },
-        {
-            "archtype": UCBV,   # UCB with variance term
-            "params": {}
-        },
-        {
-            "archtype": UCBVtuned,   # UCB with variance term and one trick
-            "params": {}
-        },
-        {
             "archtype": UCBalpha,   # UCB with custom alpha parameter
             "params": {
                 "alpha": 1,
@@ -483,6 +459,34 @@ configuration.update({
             "params": {
                 "alpha": 1,
             }
+        },
+        {
+            "archtype": UCBmin,
+            "params": {}
+        },
+        {
+            "archtype": UCBplus,
+            "params": {}
+        },
+        {
+            "archtype": UCBrandomInit,
+            "params": {}
+        },
+        # {
+        #     "archtype": UCBjulia,  # WARNING
+        #     "params": {}
+        # },
+        {
+            "archtype": UCBcython,  # WARNING
+            "params": {}
+        },
+        {
+            "archtype": UCBV,   # UCB with variance term
+            "params": {}
+        },
+        {
+            "archtype": UCBVtuned,   # UCB with variance term and one trick
+            "params": {}
         },
         {
             "archtype": SWUCB,   # XXX experimental sliding window algorithm
@@ -724,6 +728,98 @@ configuration.update({
                 "horizon": HORIZON,
             }
         },
+        # --- new UCBoost algorithms
+        {
+            "archtype": UCB_bq,
+            "params": {}
+        },
+        {
+            "archtype": UCB_h,
+            "params": {}
+        },
+        {
+            "archtype": UCB_lb,
+            "params": {}
+        },
+        {
+            "archtype": UCBoost_bq_h_lb,
+            "params": {}
+        },
+        # # --- new UCBoostEpsilon algorithm
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.1,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.05,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon,
+            "params": {
+                "epsilon": 0.01,
+            }
+        },
+        # --- new UCBoost_cython algorithms
+        {
+            "archtype": UCB_bq_cython,
+            "params": {}
+        },
+        {
+            "archtype": UCB_h_cython,
+            "params": {}
+        },
+        {
+            "archtype": UCB_lb_cython,
+            "params": {}
+        },
+        {
+            "archtype": UCBoost_bq_h_lb_cython,
+            "params": {}
+        },
+        # --- new UCBoostEpsilon_cython algorithm
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.1,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.05,
+            }
+        },
+        {
+            "archtype": UCBoostEpsilon_cython,
+            "params": {
+                "epsilon": 0.01,
+            }
+        },
+        # new UCBcython algorithm
+        {
+            "archtype": UCBcython,
+            "params": {
+                "alpha": 4.0,
+            }
+        },
+        {
+            "archtype": UCBcython,
+            "params": {
+                "alpha": 1.0,
+            }
+        },
+        {
+            "archtype": UCBcython,
+            "params": {
+                "alpha": 0.5,
+            }
+        },
+
     ]
 })
 

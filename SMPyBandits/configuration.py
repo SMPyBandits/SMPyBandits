@@ -915,112 +915,95 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- XXX new UCBoost algorithms
-        {
-            "archtype": UCB_bq,
-            "params": {}
-        },
-        {
-            "archtype": UCB_h,
-            "params": {}
-        },
+        # # --- new UCBoost algorithms
+        # {
+        #     "archtype": UCB_bq,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCB_h,
+        #     "params": {}
+        # },
         {
             "archtype": UCB_lb,
             "params": {}
         },
-        {
-            "archtype": UCBoost_bq_h_lb,
-            "params": {}
-        },
-        # --- XXX new UCBoostEpsilon algorithm
-        {
-            "archtype": UCBoostEpsilon,
-            "params": {
-                "epsilon": 0.1,
-            }
-        },
-        {
-            "archtype": UCBoostEpsilon,
-            "params": {
-                "epsilon": 0.05,
-            }
-        },
-        {
-            "archtype": UCBoostEpsilon,
-            "params": {
-                "epsilon": 0.01,
-            }
-        },
-        # --- FIXME new UCBoost_faster algorithms
-        {
-            "archtype": UCB_bq_faster,
-            "params": {}
-        },
-        {
-            "archtype": UCB_h_faster,
-            "params": {}
-        },
-        {
-            "archtype": UCB_lb_faster,
-            "params": {}
-        },
-        {
-            "archtype": UCBoost_bq_h_lb_faster,
-            "params": {}
-        },
-        # --- FIXME new UCBoostEpsilon_faster algorithm
-        {
-            "archtype": UCBoostEpsilon_faster,
-            "params": {
-                "epsilon": 0.1,
-            }
-        },
-        {
-            "archtype": UCBoostEpsilon_faster,
-            "params": {
-                "epsilon": 0.05,
-            }
-        },
-        {
-            "archtype": UCBoostEpsilon_faster,
-            "params": {
-                "epsilon": 0.01,
-            }
-        },
-        # --- FIXME new UCBoost_cython algorithms
-        {
-            "archtype": UCB_bq_cython,
-            "params": {}
-        },
-        {
-            "archtype": UCB_h_cython,
-            "params": {}
-        },
+        # {
+        #     "archtype": UCBoost_bq_h_lb,
+        #     "params": {}
+        # },
+        # # --- new UCBoostEpsilon algorithm
+        # {
+        #     "archtype": UCBoostEpsilon,
+        #     "params": {
+        #         "epsilon": 0.1,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBoostEpsilon,
+        #     "params": {
+        #         "epsilon": 0.05,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBoostEpsilon,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #     }
+        # },
+        # --- new UCBoost_cython algorithms
+        # {
+        #     "archtype": UCB_bq_cython,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": UCB_h_cython,
+        #     "params": {}
+        # },
         {
             "archtype": UCB_lb_cython,
             "params": {}
         },
+        # {
+        #     "archtype": UCBoost_bq_h_lb_cython,
+        #     "params": {}
+        # },
+        # # --- new UCBoostEpsilon_cython algorithm
+        # {
+        #     "archtype": UCBoostEpsilon_cython,
+        #     "params": {
+        #         "epsilon": 0.1,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBoostEpsilon_cython,
+        #     "params": {
+        #         "epsilon": 0.05,
+        #     }
+        # },
+        # {
+        #     "archtype": UCBoostEpsilon_cython,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #     }
+        # },
+        # FIXME new UCBcython algorithm
         {
-            "archtype": UCBoost_bq_h_lb_cython,
-            "params": {}
-        },
-        # --- FIXME new UCBoostEpsilon_cython algorithm
-        {
-            "archtype": UCBoostEpsilon_cython,
+            "archtype": UCBcython,
             "params": {
-                "epsilon": 0.1,
+                "alpha": 4.0,
             }
         },
         {
-            "archtype": UCBoostEpsilon_cython,
+            "archtype": UCBcython,
             "params": {
-                "epsilon": 0.05,
+                "alpha": 1.0,
             }
         },
         {
-            "archtype": UCBoostEpsilon_cython,
+            "archtype": UCBcython,
             "params": {
-                "epsilon": 0.01,
+                "alpha": 0.5,
             }
         },
     ]

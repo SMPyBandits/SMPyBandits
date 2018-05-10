@@ -25,6 +25,9 @@ extensions = [
     # Extension("UCBoost_cython", ["UCBoost_cython.pyx"]),
     # XXX also build the extension with full name?
     Extension("SMPyBandits.Policies.UCBoost_cython", ["UCBoost_cython.pyx"]),
+    # Extension("UCBcython", ["UCBcython.pyx"]),
+    # XXX also build the extension with full name?
+    Extension("SMPyBandits.Policies.UCBcython", ["UCBcython.pyx"]),
 ]
 
 setup(
