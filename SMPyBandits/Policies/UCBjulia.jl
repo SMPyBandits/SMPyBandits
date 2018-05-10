@@ -1,3 +1,8 @@
+#!/usr/bin/env julia
+"""
+A small Julia module that defines a simple function, to be used in UCBjulia.py (with pyjulia).
+"""
+
 # Small Julia module to wrap the function that computes a UCB index
 module UCBjulia
     function index(rewards, pulls, t, arm, alpha=4)

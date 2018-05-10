@@ -53,4 +53,6 @@ class UCBjulia(IndexPolicy):
 
         .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2 \log(t)}{N_k(t)}}.
         """
+        # WARNING: the 'arm + 1' part comes from the difference between 0-based indexes
+        # for Python and the 1-based indexes in Julia. The rest works pretty well!
         return self._index_function(self.rewards, self.pulls, self.t, arm + 1)
