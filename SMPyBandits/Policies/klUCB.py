@@ -16,10 +16,16 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from .kullback import klucbBern
 from .IndexPolicy import IndexPolicy
 
-#: Default value for the constant c used in the computation of KL-UCB index
+#: Default value for the constant c used in the computation of KL-UCB index.
 c = 1.  #: default value, as it was in pymaBandits v1.0
 # c = 1.  #: as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
 
+
+#: Default value for the tolerance for computing numerical approximations of the kl-UCB indexes.
+TOLERANCE = 1e-4
+
+
+# --- Class
 
 class klUCB(IndexPolicy):
     """ The generic KL-UCB policy for one-parameter exponential distributions.
@@ -27,7 +33,7 @@ class klUCB(IndexPolicy):
     Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
     """
 
-    def __init__(self, nbArms, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
+    def __init__(self, nbArms, tolerance=TOLERANCE, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.c = c  #: Parameter c
         self.klucb = np.vectorize(klucb)  #: kl function to use

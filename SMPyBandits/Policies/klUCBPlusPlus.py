@@ -14,21 +14,14 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 from .kullback import klucbBern
 from .klUCB import klUCB, c
 
-try:
-    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, SystemError):
-    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-
 
 # --- Numerical functions required for the function g(n) for kl-UCB++
 
-# @jit
 def logplus(x):
     """..math:: \log^+(x) := \max(0, \log(x))."""
     return max(0., log(x))
 
 
-# @jit
 def g(t, T, K):
     r"""The exploration function g(t) (for t current time, T horizon, K nb arms), as defined in page 3 of the reference paper.
 
@@ -41,7 +34,6 @@ def g(t, T, K):
     return max(0., log(y * (1. + max(0., log(y)) ** 2)))
 
 
-# @jit
 def np_g(t, T, K):
     r"""The exploration function g(t) (for t current time, T horizon, K nb arms), as defined in page 3 of the reference paper, for numpy vectorized inputs.
 
@@ -74,9 +66,9 @@ class klUCBPlusPlus(klUCB):
 
         .. math::
 
-           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-           U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c g(N_k(t), T, K)}{N_k(t)} \right\},\\
-           I_k(t) &= U_k(t).
+            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c g(N_k(t), T, K)}{N_k(t)} \right\},\\
+            I_k(t) &= U_k(t).
 
         If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
         and c is the parameter (default to 1), and where :math:`g(t, T, K)` is this function:
