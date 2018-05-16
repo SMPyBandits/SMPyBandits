@@ -541,11 +541,11 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- UCB algorithms
-        {
-            "archtype": UCB,   # This basic UCB is very worse than the other
-            "params": {}
-        },
+        # # --- UCB algorithms
+        # {
+        #     "archtype": UCB,   # This basic UCB is very worse than the other
+        #     "params": {}
+        # },
         # {
         #     "archtype": UCBlog10,   # This basic UCB is very worse than the other
         #     "params": {}
@@ -628,6 +628,13 @@ configuration.update({
         #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
         #     }
         # },
+        # --- new UCBcython algorithm
+        {
+            "archtype": UCBcython,
+            "params": {
+                "alpha": 1.,
+            }
+        },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -652,56 +659,56 @@ configuration.update({
         #     "archtype": MOSSExperimental,
         #     "params": {}
         # },
-        # --- Optimally-Confident UCB algorithm
-        {
-            "archtype": OCUCB,
-            "params": {
-                "eta": 1.1,
-                "rho": 1,
-            }
-        },
+        # # --- Optimally-Confident UCB algorithm
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 0.9,
+        #         "rho": 1,
         #     }
         # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.8,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.7,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.6,
-        #     }
-        # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.9,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.8,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.7,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.6,
+        # #     }
+        # # },
         # --- CPUCB algorithm, other variant of UCB
         # {
         #     "archtype": CPUCB,
         #     "params": {}
         # },
-        # # --- DMED algorithm, similar to klUCB
-        # {
-        #     "archtype": DMEDPlus,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": DMED,
-        #     "params": {}
-        # },
+        # --- DMED algorithm, similar to klUCB
+        {
+            "archtype": DMEDPlus,
+            "params": {}
+        },
+        {
+            "archtype": DMED,
+            "params": {}
+        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -787,6 +794,37 @@ configuration.update({
                 "klucb": klucb
             }
         },
+        # --- FIXME new klUCBswitch algorithm!
+        {
+            "archtype": klUCBswitch,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb,
+                "threshold": "best"
+            }
+        },
+        {
+            "archtype": klUCBswitch,
+            "params": {
+                "horizon": HORIZON,
+                "klucb": klucb,
+                "threshold": "delayed"
+            }
+        },
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "best"
+            }
+        },
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "delayed"
+            }
+        },
         # # --- Empirical KL-UCB algorithm
         # {
         #     "archtype": KLempUCB,
@@ -813,35 +851,7 @@ configuration.update({
                 "horizon": HORIZON,
             }
         },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.125,
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.01,
-        #         "horizon": HORIZON,
-        #     }
-        # },
         # # --- Horizon-dependent algorithm ApproximatedFHGittins
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "alpha": 4,
-        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-        #     }
-        # },
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "alpha": 1,
-        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-        #     }
-        # },
         {
             "archtype": ApproximatedFHGittins,
             "params": {
@@ -901,20 +911,20 @@ configuration.update({
         #         "non_binary": True,
         #     }
         # },
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_recursive": True,
-        #     }
-        # },
-        # # --- Auto-tuned UCBdagger algorithm
-        # {
-        #     "archtype": UCBdagger,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "non_recursive": True,
+            }
+        },
+        # --- Auto-tuned UCBdagger algorithm
+        {
+            "archtype": UCBdagger,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # # --- new UCBoost algorithms
         # {
         #     "archtype": UCB_bq,
@@ -932,80 +942,49 @@ configuration.update({
         #     "archtype": UCBoost_bq_h_lb,
         #     "params": {}
         # },
-        # # --- new UCBoostEpsilon algorithm
+        # # # --- new UCBoostEpsilon algorithm
+        # # {
+        # #     "archtype": UCBoostEpsilon,
+        # #     "params": {
+        # #         "epsilon": 0.1,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": UCBoostEpsilon,
+        # #     "params": {
+        # #         "epsilon": 0.05,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": UCBoostEpsilon,
+        # #     "params": {
+        # #         "epsilon": 0.01,
+        # #     }
+        # # },
+        # # --- new UCBoost_cython algorithms
+        # # {
+        # #     "archtype": UCB_bq_cython,
+        # #     "params": {}
+        # # },
+        # # {
+        # #     "archtype": UCB_h_cython,
+        # #     "params": {}
+        # # },
         # {
-        #     "archtype": UCBoostEpsilon,
-        #     "params": {
-        #         "epsilon": 0.1,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon,
-        #     "params": {
-        #         "epsilon": 0.05,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #     }
-        # },
-        # --- new UCBoost_cython algorithms
-        # {
-        #     "archtype": UCB_bq_cython,
+        #     "archtype": UCB_lb_cython,
         #     "params": {}
         # },
-        # {
-        #     "archtype": UCB_h_cython,
-        #     "params": {}
-        # },
-        {
-            "archtype": UCB_lb_cython,
-            "params": {}
-        },
-        # {
-        #     "archtype": UCBoost_bq_h_lb_cython,
-        #     "params": {}
-        # },
-        # # --- new UCBoostEpsilon_cython algorithm
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.1,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.05,
-        #     }
-        # },
-        # {
-        #     "archtype": UCBoostEpsilon_cython,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #     }
-        # },
-        # FIXME new UCBcython algorithm
-        {
-            "archtype": UCBcython,
-            "params": {
-                "alpha": 4.0,
-            }
-        },
-        {
-            "archtype": UCBcython,
-            "params": {
-                "alpha": 1.0,
-            }
-        },
-        {
-            "archtype": UCBcython,
-            "params": {
-                "alpha": 0.5,
-            }
-        },
+        # # {
+        # #     "archtype": UCBoost_bq_h_lb_cython,
+        # #     "params": {}
+        # # },
+        # # # --- new UCBoostEpsilon_cython algorithm
+        # # {
+        # #     "archtype": UCBoostEpsilon_cython,
+        # #     "params": {
+        # #         "epsilon": 0.05,
+        # #     }
+        # # },
     ]
 })
 

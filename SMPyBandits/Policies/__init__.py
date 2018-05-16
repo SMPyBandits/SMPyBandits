@@ -14,7 +14,7 @@
 
 - Bayesian algorithms: :class:`Thompson`, :class:`ThompsonRobust`, :class:`BayesUCB`,
 
-- Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBlog10`, :class:`klUCBloglog`, :class:`klUCBloglog10`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`,
+- Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBlog10`, :class:`klUCBloglog`, :class:`klUCBloglog10`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`, :class:`klUCBswitch`,
 
 - Empirical KL-UCB algorithm: :class:`KLempUCB` (FIXME),
 
@@ -153,6 +153,7 @@ from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBH import klUCBH          # Knowing the horizon
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
+from .klUCBswitch import klUCBswitch, klUCBswitchAnytime  # Different indexes
 from .KLempUCB import KLempUCB  # Empirical KL UCB
 
 # From [Honda & Takemura, COLT 2010]
