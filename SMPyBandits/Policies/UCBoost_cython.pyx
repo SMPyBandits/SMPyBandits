@@ -4,7 +4,7 @@
 - Reference: [Fang Liu et al, 2018](https://arxiv.org/abs/1804.05929).
 - The entire module is optimized with Cython, that should be compiled using Cython (http://docs.cython.org/).
 
-.. warning:: The whole goal of their paper is to provide a numerically efficient alternative to kl-UCB, so for my comparison to be fair, I should either use the Python versions of klUCB utility functions (using :mod:`kullback`) or write C or Cython versions of this UCBoost module. TODO!
+.. warning:: The whole goal of their paper is to provide a numerically efficient alternative to kl-UCB, so for my comparison to be fair, I should either use the Python versions of klUCB utility functions (using :mod:`kullback`) or write C or Cython versions of this UCBoost module. My conclusion is that kl-UCB is *always* faster than UCBoost.
 
 .. warning::
 
@@ -86,7 +86,7 @@ class UCB_sq(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{sq}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"UCBcython_{d=d_{sq}}", self.c)
 
     def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

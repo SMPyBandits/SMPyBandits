@@ -277,7 +277,9 @@ class klUCBswitchAnytime(klUCBswitch):
     def __str__(self):
         name = "" if self.klucb.__name__[5:] == "Bern" else self.klucb.__name__[5:] + ", "
         complement = "{}{}{}".format(name, "" if self.c == 1 else r", $c={:.3g}$".format(self.c), "" if self._threshold_switch_name == "" else ", {}".format(self._threshold_switch_name))
-        return r"kl-UCB-switch-Anytime({})".format(complement)
+        if complement.startswith(", "): complement = complement.replace(", ", "", 1)
+        complement = "({})".format(complement) if complement != "" else ""
+        return r"kl-UCB-switch{}".format(complement)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

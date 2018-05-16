@@ -18,8 +18,8 @@ from .BasePolicy import BasePolicy
 
 
 #: Variant: with this set to false, use a less aggressive list pruning criterion corresponding to the version called DMED in [Garivier & Cappé, COLT 2011]; the default is the original proposal of [Honda & Takemura, COLT 2010] (called DMED+ in [Garivier & Cappé, COLT 2011])
+# GENUINE = True
 GENUINE = False
-GENUINE = True
 
 
 class DMED(BasePolicy):

@@ -628,13 +628,13 @@ configuration.update({
         #         "alpha": 0.05,      # XXX Below the theoretically acceptable value!
         #     }
         # },
-        # --- new UCBcython algorithm
-        {
-            "archtype": UCBcython,
-            "params": {
-                "alpha": 1.,
-            }
-        },
+        # # --- new UCBcython algorithm
+        # {
+        #     "archtype": UCBcython,
+        #     "params": {
+        #         "alpha": 1.,
+        #     }
+        # },
         # --- MOSS algorithm, like UCB
         {
             "archtype": MOSS,
@@ -705,10 +705,10 @@ configuration.update({
             "archtype": DMEDPlus,
             "params": {}
         },
-        {
-            "archtype": DMED,
-            "params": {}
-        },
+        # {
+        #     "archtype": DMED,
+        #     "params": {}
+        # },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -911,20 +911,20 @@ configuration.update({
         #         "non_binary": True,
         #     }
         # },
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "non_recursive": True,
-            }
-        },
-        # --- Auto-tuned UCBdagger algorithm
-        {
-            "archtype": UCBdagger,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_recursive": True,
+        #     }
+        # },
+        # # --- Auto-tuned UCBdagger algorithm
+        # {
+        #     "archtype": UCBdagger,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
         # # --- new UCBoost algorithms
         # {
         #     "archtype": UCB_bq,
