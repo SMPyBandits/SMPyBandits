@@ -38,6 +38,10 @@ def threshold_switch_delayed(T, K, gamma=8.0/9):
     return np.floor((T / float(K)) ** gamma)
 
 
+
+threshold_switch_default = threshold_switch_bestchoice
+
+
 # --- Numerical functions required for the indexes for kl-UCB-switch
 
 
@@ -47,7 +51,7 @@ def klucbplus_index(reward, pull, horizon, nbArms, klucb=klucbBern, c=c, toleran
     .. math::
 
         \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-        I^{KL+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t / N_k(t))}{N_k(t)} \right\}.
+        I^{KL+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(T / (K * N_k(t)))}{N_k(t)} \right\}.
     """
     return klucb(reward / pull, c * log(horizon / (nbArms * pull)) / pull, tolerance)
 
@@ -58,7 +62,7 @@ def klucbplus_index(reward, pull, horizon, nbArms, klucb=klucbBern, c=c, toleran
 #     .. math::
 
 #         \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-#         I^{KL+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t / N_k(t))}{N_k(t)} \right\}.
+#         I^{KL+}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(T / (K * N_k(t)))}{N_k(t)} \right\}.
 #     """
 #     return klucb(rewards / pulls, c * np.log(horizon / (nbArms * pulls)) / pulls, tolerance)
 
@@ -68,7 +72,7 @@ def mossplus_index(reward, pull, horizon, nbArms):
 
     .. math::
 
-        I^{MOSS+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)}\right)}.
+        I^{MOSS+}_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}\right)}.
     """
     return (reward / pull) + sqrt(max(0, log(horizon / (nbArms * pull))) / (2 * pull))
 
@@ -78,13 +82,9 @@ def mossplus_index(reward, pull, horizon, nbArms):
 
 #     .. math::
 
-#         I^{MOSS+}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)}\right)}.
+#         I^{MOSS+}_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{T}{K N_k(t)}\right)}{N_k(t)}\right)}.
 #     """
 #     return (rewards / pulls) + np.sqrt(np.maximum(0, np.log(horizon / (nbArms * pulls))) / (2 * pulls))
-
-
-
-threshold_switch_default = threshold_switch_bestchoice
 
 
 # --- Classes
@@ -123,8 +123,8 @@ class klUCBswitch(klUCB):
         #: For klUCBswitch (not the anytime variant), we can precompute the threshold as it is constant, :math:`= f(T, K)`.
         self.constant_threshold_switch = threshold_switch(self.horizon, self.nbArms)
 
-        #: Initialize internal memory: at first, every arm uses the kl-UCB index, then some will switch to MOSS
-        self.use_MOSS_index = [ False for k in range(nbArms) ]
+        #: Initialize internal memory: at first, every arm uses the kl-UCB index, then some will switch to MOSS. (Array of K bool).
+        self.use_MOSS_index = np.zeros(nbArms, dtype=bool)
 
     def __str__(self):
         name = "" if self.klucb.__name__[5:] == "Bern" else self.klucb.__name__[5:] + ", "
@@ -137,7 +137,7 @@ class klUCBswitch(klUCB):
         .. math::
 
             U_k(t) = \begin{cases}
-                U^{KL+}_k(t) & \text{if } N_k(t) \leq f(T, K),
+                U^{KL+}_k(t) & \text{if } N_k(t) \leq f(T, K), \\
                 U^{MOSS+}_k(t) & \text{if } N_k(t) > f(T, K).
             \end{cases}.
 
@@ -225,7 +225,7 @@ def moss_index(reward, pull, t, nbArms):
 
     .. math::
 
-        I^{MOSS}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)}\right)}.
+        I^{MOSS}_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\max\left(0, \frac{\log\left(\frac{t}{K N_k(t)}\right)}{N_k(t)}\right)}.
     """
     return (reward / pull) + sqrt(phi(log(t / (nbArms * pull))) / (2 * pull))
 
@@ -245,9 +245,9 @@ def moss_index(reward, pull, t, nbArms):
 
 
 class klUCBswitchAnytime(klUCBswitch):
-    """ The anytime variant of the kl-UCB-switch policy, for bounded distributions.
+    r""" The anytime variant of the kl-UCB-switch policy, for bounded distributions.
 
-    - It does not use a doubling trick, but an augmented exploration function (replaces the :math:`\log_+` by :math:`\phi` in both :func:`klucb_index` and :func:`moss_index` from :math:`klucbplus_index` and :math:`mossplus_index`).
+    - It does not use a doubling trick, but an augmented exploration function (replaces the :math:`\log_+` by :math:`\phi` in both :func:`klucb_index` and :func:`moss_index` from :func:`klucbplus_index` and :func:`mossplus_index`).
     - Reference: [Garivier et al, 2018](https://arxiv.org/abs/1805.05071)
     """
 
@@ -285,7 +285,7 @@ class klUCBswitchAnytime(klUCBswitch):
         .. math::
 
             U_k(t) = \begin{cases}
-                U^{KL}_k(t) & \text{if } N_k(t) \leq f(t, K),
+                U^{KL}_k(t) & \text{if } N_k(t) \leq f(t, K), \\
                 U^{MOSS}_k(t) & \text{if } N_k(t) > f(t, K).
             \end{cases}.
 
