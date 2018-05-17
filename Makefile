@@ -117,13 +117,15 @@ wheel:
 
 policy_server_py:
 	clear
-	cd SMPyBandits ; time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	# cd SMPyBandits ; time ./policy_server.py --port=10000 --host=127.0.0.1 --means='[0,0,0,0,0,0,0.7,0.8,0.9]' '{"nbArms": 9, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	cd SMPyBandits ; time ./policy_server.py --port=10000 --host=127.0.0.1 --means='[0.1,0.2,0.3,0.4,0.5,0.6,0.85,0.87,0.9]' '{"nbArms": 9, "archtype": "klUCBswitchAnytime", "params": { }}'
 
 env_client_py:
 	clear
-	# cd SMPyBandits ; time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9]}'
+	# cd SMPyBandits ; time ./env_client.py --speed=50 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0,0,0,0,0,0,0.7,0.8,0.9]}'
+	cd SMPyBandits ; time ./env_client.py --speed=20 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0.1,0.2,0.3,0.4,0.5,0.6,0.85,0.87,0.9]}'
 	# A Bayesian problem: every repetition use a different mean vectors!
-	cd SMPyBandits ; time ./env_client.py dynamic --speed=10 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": {"function": "randomMeans", "args": {"nbArms": 9, "isSorted": false}}}'
+	# cd SMPyBandits ; time ./env_client.py dynamic --speed=50 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": {"function": "randomMeans", "args": {"nbArms": 9, "isSorted": false}}}'
 
 env_client.exe:
 	clear
@@ -131,7 +133,7 @@ env_client.exe:
 
 env_client_cpp:	env_client.exe
 	clear
-	cd SMPyBandits ; time ./env_client.exe --speed=1000 --port=10000 --host=127.0.0.1
+	cd SMPyBandits ; time ./env_client.exe --speed=50 --port=10000 --host=127.0.0.1
 
 # test_sub:
 # 	clear

@@ -4,7 +4,7 @@
 Server to play multi-armed bandits problem against.
 
 Usage:
-    policy_server.py [--port=<PORT>] [--host=<HOST>] <json_configuration>
+    policy_server.py [--port=<PORT>] [--host=<HOST>] [--means=<MEANS>] <json_configuration>
     policy_server.py (-h|--help)
     policy_server.py --version
 
@@ -13,6 +13,7 @@ Options:
     --version   Show version.
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
+    --means=<MEANS> Means of arms used by the environment, to print regret [default: None].
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -22,6 +23,7 @@ version = "MAB Policy server v{}".format(__version__)
 
 import json
 import socket
+import numpy as np
 try:
     from docopt import docopt
 except ImportError:
@@ -47,7 +49,7 @@ def read_configuration_policy(a_string):
     return obj
 
 
-def server(policy, host, port):
+def server(policy, host, port, means=None):
     """
     Launch a server that:
 
@@ -70,6 +72,11 @@ def server(policy, host, port):
 
     chosen_arm = None
 
+    if means is not None:
+        max_mean = np.max(means)
+        max_regret_by_logt = float('-inf')
+        max_estregret_by_logt = float('-inf')
+
     try:
         while True:
             # Wait for a connection
@@ -84,6 +91,21 @@ def server(policy, host, port):
                     print("\n  Its pulls   = {}...\n  Its rewards = {}...\n  ==> means   = {}...".format(policy.pulls, policy.rewards, policy.rewards / (1 + policy.pulls)))
                     if has_index:
                         print("  And internal indexes =", policy.index)
+
+                    # print regret
+                    if means is not None and policy.t > 1:
+                        cumulated_rewards = np.sum(policy.rewards)
+                        instant_regret = (max_mean * policy.t) - cumulated_rewards
+                        instant_regret_by_logt = instant_regret / np.log(policy.t)
+                        max_regret_by_logt = max(max_regret_by_logt, instant_regret_by_logt)
+                        print("\n- Current instantaneous regret at time t = {} is = {:.3g}, and regret / log(t) = {:.3g}\n  and total max regret / log(t) already seen = {:.3g}...".format(policy.t, instant_regret, instant_regret_by_logt, max_regret_by_logt))  # DEBUG
+
+                        estimated_rewards = np.sum(np.dot(means, policy.pulls))
+                        estimated_regret = (max_mean * policy.t) - estimated_rewards
+                        instant_estregret_by_logt = estimated_regret / np.log(policy.t)
+                        max_estregret_by_logt = max(max_estregret_by_logt, instant_estregret_by_logt)
+                        print("- Current estimated regret at time t = {} is = {:.3g}, and estimated regret / log(t) = {:.3g}.\n  and total max estimated regret / log(t) already seen = {:.3g} (based on pulls and means, not actual rewards)...".format(policy.t, estimated_regret, instant_estregret_by_logt, max_estregret_by_logt))  # DEBUG
+
                     data = connection.recv(16)
                     message = data.decode()
                     print("\nData received: {!r}".format(message))
@@ -141,16 +163,27 @@ def main(args):
     """
     host = str(args['--host'])
     port = int(args['--port'])
+    try:
+        means = str(args['--means'])
+        means = means.replace('[', '').replace(']', '')
+        means = [ float(m) for m in means.split(',') ]
+        means = np.asarray(means, dtype=float)
+    except ValueError:
+        means = None
+
     json_configuration = args['<json_configuration>']
     configuration = read_configuration_policy(json_configuration)
+
     nbArms = int(configuration['nbArms'])
     # try to map strings in the dictionary to variables, e.g., policies
     params = configuration['params']
     transform_str(params)
+
     print("Params =", params)
     policy = globals()[configuration['archtype']](nbArms, **params)
     print("Using the policy", policy)
-    return server(policy, host, port)
+
+    return server(policy, host, port, means=means)
 
 
 if __name__ == '__main__':
