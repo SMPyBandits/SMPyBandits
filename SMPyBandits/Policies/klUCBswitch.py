@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" The kl-UCB-switch policy, for bounded distributions.
+r""" The kl-UCB-switch policy, for bounded distributions.
 
 - Reference: [Garivier et al, 2018](https://arxiv.org/abs/1805.05071)
 """

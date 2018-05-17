@@ -182,13 +182,15 @@ if __name__ == '__main__':
         # --- Also plotting the running times
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_RunningTimes')
-            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+            print(" - Plotting the running times arm, and saving the plot to {} ...".format(savefig))
             evaluation.plotRunningTimes(envId, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotRunningTimes(envId)  # XXX To plot without saving
 
+        # --- Also plotting the regret
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
+            savefig = mainfig
             evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogx')
             evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure

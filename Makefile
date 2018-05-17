@@ -117,20 +117,21 @@ wheel:
 
 policy_server_py:
 	clear
-	time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
+	cd SMPyBandits ; time ./policy_server.py --port=10000 --host=127.0.0.1 '{"nbArms": 9, "archtype": "UCBalpha", "params": { "alpha": 1.0 }}'
 
 env_client_py:
 	clear
-	# time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9]}'
+	# cd SMPyBandits ; time ./env_client.py --speed=1000 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": [0, 0, 0, 0, 0, 0, 0, 0.7, 0.8, 0.9]}'
 	# A Bayesian problem: every repetition use a different mean vectors!
-	time ./env_client.py dynamic --speed=10 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": {"function": "randomMeans", "args": {"nbArms": 9, "isSorted": false}}}'
+	cd SMPyBandits ; time ./env_client.py dynamic --speed=10 --port=10000 --host=127.0.0.1 '{"arm_type": "Bernoulli", "params": {"function": "randomMeans", "args": {"nbArms": 9, "isSorted": false}}}'
 
 env_client.exe:
 	clear
-	g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
+	cd SMPyBandits ; g++ -Wall -Iinclude -o env_client.exe include/docopt.cpp env_client.cpp
 
 env_client_cpp:	env_client.exe
-	time ./env_client.exe --speed=1000 --port=10000 --host=127.0.0.1
+	clear
+	cd SMPyBandits ; time ./env_client.exe --speed=1000 --port=10000 --host=127.0.0.1
 
 # test_sub:
 # 	clear

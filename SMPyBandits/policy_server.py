@@ -22,7 +22,10 @@ version = "MAB Policy server v{}".format(__version__)
 
 import json
 import socket
-from docopt import docopt
+try:
+    from docopt import docopt
+except ImportError:
+    print("ERROR: the 'docopt' module is needed for this script 'policy_server.py'.\nPlease install it with 'sudo pip install docopt' (or pip3), and try again!\nIf the issue persists, please fill a ticket here: https://github.com/SMPyBandits/SMPyBandits/issues/new")  # DEBUG
 
 from Policies import *
 
@@ -46,7 +49,7 @@ def read_configuration_policy(a_string):
 
 def server(policy, host, port):
     """
-    Launch an server that:
+    Launch a server that:
 
     - uses sockets to listen to input and reply
     - create a learning algorithm from a JSON configuration (exactly like ``main.py`` when it reads ``configuration.py``)

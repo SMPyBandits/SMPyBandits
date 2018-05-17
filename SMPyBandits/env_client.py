@@ -27,7 +27,10 @@ version = "MAB environment client v{}".format(__version__)
 import json
 import socket
 import time
-from docopt import docopt
+try:
+    from docopt import docopt
+except ImportError:
+    print("ERROR: the 'docopt' module is needed for this script 'env_client.py'.\nPlease install it with 'sudo pip install docopt' (or pip3), and try again!\nIf the issue persists, please fill a ticket here: https://github.com/SMPyBandits/SMPyBandits/issues/new")  # DEBUG
 
 from Environment import MAB, MarkovianMAB, DynamicMAB
 from Arms import *
@@ -51,14 +54,14 @@ def read_configuration_env(a_string):
 
 
 def send_message(sock, message):
-    # Send data
+    """ Send this message to the socket."""
     print("sending {!r}".format(message))
-    sock.sendall(message)
+    return sock.sendall(message)
 
 
 def client(env, host, port, speed):
     """
-    Launch an client that:
+    Launch a client that:
 
     - uses sockets to listen to input and reply
     - create a MAB environment from a JSON configuration (exactly like ``main.py`` when it reads ``configuration.py``)
