@@ -89,7 +89,7 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 - Experimental policies: [`BlackBoxOpt`](https://smpybandits.github.io/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](https://smpybandits.github.io/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
 
 ### Arms and problems
-- My framework mainly targets stochastic bandits, with arms following [`Bernoulli`](SMPyBandits/Arms/Bernoulli.py), bounded (SMPyBandits/truncated) or unbounded [`Gaussian`](Arms/Gaussian.py), [`Exponential`](SMPyBandits/Arms/Exponential.py), [`Gamma`](SMPyBandits/Arms/Gamma.py) or [`Poisson`](SMPyBandits/Arms/Poisson.py) distributions.
+- My framework mainly targets stochastic bandits, with arms following [`Bernoulli`](SMPyBandits/Arms/Bernoulli.py), bounded (truncated) or unbounded [`Gaussian`](SMPyBandits/Arms/Gaussian.py), [`Exponential`](SMPyBandits/Arms/Exponential.py), [`Gamma`](SMPyBandits/Arms/Gamma.py) or [`Poisson`](SMPyBandits/Arms/Poisson.py) distributions.
 - The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](SMPyBandits/Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](SMPyBandits/Environment/MAB.py)).
 - There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](SMPyBandits/Environment/MAB.py), even though I didn't implement any policies tailored for Markovian problems.
 
@@ -142,7 +142,7 @@ pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[f
 ----
 
 ### :boom: Warning
-- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free and every single module/file should work perfectly(as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says), but bugs are sometimes hard to spot so if you encounter any issue, [please fill a bug ticket](https://github.com/SMPyBandits/SMPyBandits/issues/new).
+- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free and every single module/file should work perfectly (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says), but bugs are sometimes hard to spot so if you encounter any issue, [please fill a bug ticket](https://github.com/SMPyBandits/SMPyBandits/issues/new).
 - Whenever I add a new feature, I run experiments to check that nothing is broken. But *there is no unittest* (I don't have time). You would have to trust me :sunglasses:!
 - This project is NOT meant to be a library that you can use elsewhere, but a research tool. In particular, I don't take ensure that any of the Python modules can be imported from another directory than the main directory.
 
