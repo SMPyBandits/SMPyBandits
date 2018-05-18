@@ -19,10 +19,10 @@ For example, I implemented these different collision models, in [`CollisionModel
 
 ### More details on the code
 Have a look to:
-- [`main_multiplayers.py`](./main_multiplayers.py) and [`configuration_multiplayers.py`](./configuration_multiplayers.py) to run and configure the simulation,
-- the [`EvaluatorMultiPlayers`](./Environment/EvaluatorMultiPlayers.py) class that performs the simulation,
-- the [`ResultMultiPlayers`](./Environment/ResultMultiPlayers.py) class to store the results,
-- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](./PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py), [`CentralizedFixed`](SMPyBandits/PoliciesMultiPlayers/CentralizedFixed.py), [`CentralizedCycling`](SMPyBandits/PoliciesMultiPlayers/CentralizedCycling.py), [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) multi-players policy.
+- [`main_multiplayers.py`](SMPyBandits/main_multiplayers.py) and [`configuration_multiplayers.py`](SMPyBandits/configuration_multiplayers.py) to run and configure the simulation,
+- the [`EvaluatorMultiPlayers`](SMPyBandits/Environment/EvaluatorMultiPlayers.py) class that performs the simulation,
+- the [`ResultMultiPlayers`](SMPyBandits/Environment/ResultMultiPlayers.py) class to store the results,
+- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](SMPyBandits/PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py), [`CentralizedFixed`](SMPyBandits/PoliciesMultiPlayers/CentralizedFixed.py), [`CentralizedCycling`](SMPyBandits/PoliciesMultiPlayers/CentralizedCycling.py), [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) multi-players policy.
 
 ### Policies designed to be used in the multi-players setting
 - The first one I implemented is the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py).

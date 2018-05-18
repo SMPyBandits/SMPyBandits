@@ -10,17 +10,17 @@ Long story short, we proved the two following theorems.
 ### For geometric sequences
 > It works for minimax regret bounds (in RT = O(sqrt(T))), with a constant multiplicative loss <= 4, but not for logarithmic regret bounds (in RT = O(log(T))).
 
-![https://hal.inria.fr/hal-XXX](plots/DoublingTrick_theorem1.png)
+![https://hal.inria.fr/hal-01736357](plots/DoublingTrick_theorem1.png)
 
 ### For exponential sequences
 > It works for logarithmic regret bounds (in RT = O(log(T))), but not for minimax regret bounds (in RT = O(sqrt(T))).
 
-![https://hal.inria.fr/hal-XXX](plots/DoublingTrick_theorem2.png)
+![https://hal.inria.fr/hal-01736357](plots/DoublingTrick_theorem2.png)
 
 ----
 
 ## Article
-I wrote a research article on that topic, it will be a better introduction as a self-contained document to explain this idea and the algorithms. Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
+I wrote a research article on that topic, it is a better introduction as a self-contained document to explain this idea and the algorithms. Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-01736357).
 
 ----
 
@@ -51,7 +51,7 @@ configuration = {
 }
 ```
 
-Then add a [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) bandit algorithm (SMPyBandits/[`DoublingTrickWrapper` class](Policies/DoublingTrickWrapper.py)), you can use this piece of code:
+Then add a [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) bandit algorithm ([`DoublingTrickWrapper` class](SMPyBandits/Policies/DoublingTrickWrapper.py)), you can use this piece of code:
 
 ```python
 configuration["policies"] += [
@@ -60,7 +60,7 @@ configuration["policies"] += [
         "params": {
             "next_horizon": next_horizon,
             "full_restart": full_restart,
-            "policy": klUCBPlusPlus,
+            "policy": BayesUCB,
         }
     }
     for full_restart in [ True, False ]
@@ -135,7 +135,7 @@ K=9 [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py) with µ1,…,µK evenly spac
 On easy problems like this one, both [kl-UCB](SMPyBandits/Policies/klUCB.py) and [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) are very efficient, and here the geometric allows the [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart anytime version of [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) to outperform both [kl-UCB](SMPyBandits/Policies/klUCB.py) and [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py).
 
 
-> These illustrations come from my article, [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
+> These illustrations come from my article, [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-01736357).
 
 
 ----

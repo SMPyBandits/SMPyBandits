@@ -63,7 +63,7 @@ configuration = {
 }
 ```
 
-To add an aggregated bandit algorithm (SMPyBandits/[`Aggregator` class](Policies/Aggregator.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
+To add an aggregated bandit algorithm ([`Aggregator` class](SMPyBandits/Policies/Aggregator.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
 ```python
 current_policies = configuration["policies"]
 configuration["policies"] = current_policies +
