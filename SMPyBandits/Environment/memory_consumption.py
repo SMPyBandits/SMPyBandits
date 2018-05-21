@@ -14,7 +14,7 @@ except ImportError as e:
     raise e
 
 
-def getCurrentMemory(thread=False):
+def getCurrentMemory(thread=False, both=False):
     """ Get the current memory consumption of the process, or the thread.
 
     - Example, before and after creating a huge random matrix in Numpy, and asking to invert it:
@@ -32,12 +32,19 @@ def getCurrentMemory(thread=False):
     >>> diffMemory = getCurrentMemory() - currentMemory; currentMemory += diffMemory
     >>> print("Consumed {} more memory".format(sizeof_fmt(diffMemory)))  # doctest: +SKIP
     Consumed 63.9 KiB more memory
+
+    .. warning:: This is still experimental for multi-threaded code.
     """
     if thread:
         try:
             return resource.getrusage(resource.RUSAGE_THREAD).ru_maxrss
         except ValueError:
             print("Warning: resource.RUSAGE_THREAD is not available.")  # DEBUG
+    if both:
+        try:
+            return resource.getrusage(resource.RUSAGE_BOTH).ru_maxrss
+        except ValueError:
+            print("Warning: resource.RUSAGE_BOTH is not available.")  # DEBUG
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
 

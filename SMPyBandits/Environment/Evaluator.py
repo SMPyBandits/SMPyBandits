@@ -416,9 +416,9 @@ class Evaluator(object):
     def getMemoryConsumption(self, envId=0):
         """Get the means and stds and list of memory consumptions of the different policies."""
         all_memories = [ self.memoryConsumption[envId][policyId, :] for policyId in range(self.nbPolicies) ]
+        for policyId in range(self.nbPolicies):
+            all_memories[policyId] = [ m for m in all_memories[policyId] if m > 0 ]
         means = [ np.mean(memories) for memories in all_memories ]
-        for memories in all_memories:
-            print("min, max of memories of shape {} : {}, {}...".format(np.shape(memories), np.min(memories), np.max(memories)))  # DEBUG
         stds  = [ np.std(memories) for memories in all_memories ]
         return means, stds, all_memories
 
