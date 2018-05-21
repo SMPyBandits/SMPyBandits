@@ -139,6 +139,9 @@ if __name__ == '__main__':
         print("\n\nGiving the mean and std running times ...")
         evaluation.printRunningTimes(envId)
 
+        print("\n\nGiving the mean and std memory consumption ...")
+        evaluation.printMemoryConsumption(envId)
+
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
@@ -182,10 +185,18 @@ if __name__ == '__main__':
         # --- Also plotting the running times
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_RunningTimes')
-            print(" - Plotting the running times arm, and saving the plot to {} ...".format(savefig))
+            print(" - Plotting the running times, and saving the plot to {} ...".format(savefig))
             evaluation.plotRunningTimes(envId, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotRunningTimes(envId)  # XXX To plot without saving
+
+        # --- Also plotting the memory consumption
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_MemoryConsumption')
+            print(" - Plotting the memory consumption, and saving the plot to {} ...".format(savefig))
+            evaluation.plotMemoryConsumption(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotMemoryConsumption(envId)  # XXX To plot without saving
 
         # --- Also plotting the regret
         if saveallfigs:

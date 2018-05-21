@@ -3,10 +3,6 @@
 
 - Reference: [Fang Liu et al, 2018](https://arxiv.org/abs/1804.05929).
 
-.. warning:: FIXME, so far, ``lower=0`` and ``amplitude=1`` are the only possible parameters, I need to adapt this to generic range.
-
-.. warning:: FIXME, so far, :class:`UCBoostEpsilon` is VERY inefficient, I need to improve it and optimize it as much as possible! See [issue #122](https://github.com/SMPyBandits/SMPyBandits/issues/122#issuecomment-383417650).
-
 .. warning:: The whole goal of their paper is to provide a numerically efficient alternative to kl-UCB, so for my comparison to be fair, I should either use the Python versions of klUCB utility functions (using :mod:`kullback`) or write C or Cython versions of this UCBoost module. My conclusion is that kl-UCB is *always* faster than UCBoost.
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -48,7 +44,7 @@ CHECK_SOLUTION = False  # XXX Faster!
 
 # --- New distance and algorithm: quadratic
 
-@jit
+# @jit
 def squadratic_distance(p, q):
     r""" The *quadratic distance*, :math:`d_{sq}(p, q) := 2 (p - q)^2`."""
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -56,7 +52,7 @@ def squadratic_distance(p, q):
     return 2 * (p - q)**2
 
 
-@jit
+# @jit
 def solution_pb_sq(p, upperbound, check_solution=CHECK_SOLUTION):
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{sq}` the :func:`biquadratic_distance` function:
 
@@ -120,7 +116,7 @@ class UCB_sq(IndexPolicy):
 
 # --- New distance and algorithm: biquadratic
 
-@jit
+# @jit
 def biquadratic_distance(p, q):
     r""" The *biquadratic distance*, :math:`d_{bq}(p, q) := 2 (p - q)^2 + (4/9) * (p - q)^4`."""
     # return 2 * (p - q)**2 + (4./9) * (p - q)**4
@@ -131,7 +127,7 @@ def biquadratic_distance(p, q):
     return d + d**2 / 9.
 
 
-@jit
+# @jit
 def solution_pb_bq(p, upperbound, check_solution=CHECK_SOLUTION):
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{bq}` the :func:`biquadratic_distance` function:
 
@@ -191,7 +187,7 @@ class UCB_bq(IndexPolicy):
 # --- New distance and algorithm: Hellinger
 
 
-@jit
+# @jit
 def hellinger_distance(p, q):
     r""" The *Hellinger distance*, :math:`d_{h}(p, q) := (\sqrt{p} - \sqrt{q})^2 + (\sqrt{1 - p} - \sqrt{1 - q})^2`."""
     # p = min(max(p, eps), 1 - eps)  # XXX project [0,1] to [eps,1-eps]
@@ -199,7 +195,7 @@ def hellinger_distance(p, q):
     return (sqrt(p) - sqrt(q))**2 + (sqrt(1. - p) - sqrt(1. - q))**2
 
 
-@jit
+# @jit
 def solution_pb_hellinger(p, upperbound, check_solution=CHECK_SOLUTION):
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{h}` the :func:`hellinger_distance` function:
 
@@ -266,7 +262,7 @@ class UCB_h(IndexPolicy):
 eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 
-@jit
+# @jit
 def kullback_leibler_distance_on_mean(p, q):
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
@@ -277,7 +273,7 @@ def kullback_leibler_distance_on_mean(p, q):
     return p * log(p / q) + (1 - p) * log((1 - p) / (1 - q))
 
 
-@jit
+# @jit
 def kullback_leibler_distance_lowerbound(p, q):
     r""" Lower-bound on the Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
@@ -288,7 +284,7 @@ def kullback_leibler_distance_lowerbound(p, q):
     return p * log(p) + (1 - p) * log((1 - p) / (1 - q))
 
 
-@jit
+# @jit
 def solution_pb_kllb(p, upperbound, check_solution=CHECK_SOLUTION):
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_{lb}` the proposed lower-bound on the Kullback-Leibler binary distance (:func:`kullback_leibler_distance_lowerbound`) function:
 
@@ -347,7 +343,7 @@ class UCB_lb(IndexPolicy):
 # --- New distance and algorithm: a shifted tangent line function of d_kl
 
 
-@jit
+# @jit
 def distance_t(p, q):
     r""" A shifted tangent line function of :func:`kullback_leibler_distance_on_mean`.
 
@@ -364,7 +360,7 @@ def distance_t(p, q):
 
 
 
-@jit
+# @jit
 def solution_pb_t(p, upperbound, check_solution=CHECK_SOLUTION):
     r""" Closed-form solution of the following optimisation problem, for :math:`d = d_t` a shifted tangent line function of :func:`kullback_leibler_distance_on_mean` (:func:`distance_t`) function:
 

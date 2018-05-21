@@ -26,6 +26,7 @@ class Result(object):
             indexes_bestarm = np.asarray([indexes_bestarm])
         self.indexes_bestarm = [ indexes_bestarm for _ in range(horizon)]  #: Store also the position of the best arm, XXX in case of dynamically switching environment.
         self.running_time = -1  #: Store the running time of the experiment
+        self.memory_consumption = -1  #: Store the memory consumption of the experiment
 
     def store(self, time, choice, reward):
         """ Store results."""

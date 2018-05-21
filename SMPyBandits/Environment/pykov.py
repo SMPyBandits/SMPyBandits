@@ -1554,3 +1554,12 @@ def _machineEpsilon(func=float):
         machine_epsilon_last = machine_epsilon
         machine_epsilon = func(machine_epsilon) / func(2)
     return machine_epsilon_last
+
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)

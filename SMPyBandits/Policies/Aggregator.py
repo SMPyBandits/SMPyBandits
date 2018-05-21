@@ -142,7 +142,11 @@ class Aggregator(BasePolicy):
             s = r"{}($N={}${}, $\eta={:.3g}$, $dRate={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate, self.decreaseRate)
         else:
             s = r"{}($N={}${}, $\eta={:.3g}$)".format(name, self.nbChildren, all_children, self.learningRate)
-        return s + self.extra_str
+        # usually information in extra_str gives information about N=...
+        if self.extra_str != "":
+            return s.replace("($N={}$)".format(self.nbChildren), "") + self.extra_str
+        else:
+            return s + self.extra_str
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property

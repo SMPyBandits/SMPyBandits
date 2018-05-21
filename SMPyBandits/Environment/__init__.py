@@ -40,3 +40,5 @@ from .usetqdm import *
 
 from .sortedDistance import *
 from .fairnessMeasures import *
+
+from .memory_consumption import getCurrentMemory, sizeof_fmt

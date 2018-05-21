@@ -26,6 +26,7 @@ try:
     # Local imports, objects and functions
     from .MAB import MAB, MarkovianMAB, DynamicMAB, IncreasingMAB
     from .Result import Result
+    from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
     # Local imports, libraries
     from usejoblib import USE_JOBLIB, Parallel, delayed
@@ -36,6 +37,7 @@ except ImportError:
     # Local imports, objects and functions
     from MAB import MAB, MarkovianMAB, DynamicMAB, IncreasingMAB
     from Result import Result
+    from memory_consumption import getCurrentMemory, sizeof_fmt
 
 
 REPETITIONS = 1    #: Default nb of repetitions
@@ -121,6 +123,7 @@ class Evaluator(object):
         self.allPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.runningTimes = dict()  #: For each env, keep the history of running times
+        self.memoryConsumption = dict()  #: For each env, keep the history of running times
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for env in range(len(self.envs)):
             self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
@@ -128,6 +131,7 @@ class Evaluator(object):
             self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
             self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
             self.runningTimes[env] = np.zeros((self.nbPolicies, self.repetitions))
+            self.memoryConsumption[env] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -220,6 +224,7 @@ class Evaluator(object):
             self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
             self.runningTimes[envId][policyId, repeatId] = r.running_time
+            self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
@@ -228,14 +233,14 @@ class Evaluator(object):
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 repeatIdout = 0
                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId)
+                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId, useJoblib=self.useJoblib)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
                     store(r, policyId, repeatIdout)
                     repeatIdout += 1
             else:
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, repeatId=repeatId)
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, repeatId=repeatId, useJoblib=self.useJoblib)
                     store(r, policyId, repeatId)
 
     # --- Save to disk methods
@@ -408,6 +413,15 @@ class Evaluator(object):
         stds  = [ np.std(times) for times in all_times ]
         return means, stds, all_times
 
+    def getMemoryConsumption(self, envId=0):
+        """Get the means and stds and list of memory consumptions of the different policies."""
+        all_memories = [ self.memoryConsumption[envId][policyId, :] for policyId in range(self.nbPolicies) ]
+        means = [ np.mean(memories) for memories in all_memories ]
+        for memories in all_memories:
+            print("min, max of memories of shape {} : {}, {}...".format(np.shape(memories), np.min(memories), np.max(memories)))  # DEBUG
+        stds  = [ np.std(memories) for memories in all_memories ]
+        return means, stds, all_memories
+
     # --- Plotting methods
 
     def plotRegrets(self, envId,
@@ -534,7 +548,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotRunningTimes(self, envId=0, savefig=None):
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30):
         """Plot the running times of the different policies, as a box plot for each."""
         means, _, all_times = self.getRunningTimes(envId=envId)
         # order by increasing mean time
@@ -543,14 +557,40 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_times = [ all_times[i] for i in index_of_sorting ]
         fig = plt.figure()
-        if len(labels) < 8:
+        if len(labels) < maxNbOfLabels:
             plt.boxplot(all_times, labels=labels)
+            locs, labels = plt.xticks()
+            plt.subplots_adjust(bottom=0.40)
             legend()
+            plt.xticks(locs, labels, rotation=60)  # See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
-        plt.xlabel("Policies")
+        plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Running times (in seconds), for {} repetitions".format(self.repetitions))
-        plt.title("Running times for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        return fig
+
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30):
+        """Plot the memory consumption of the different policies, as a box plot for each."""
+        means, _, all_memories = self.getMemoryConsumption(envId=envId)
+        # order by increasing mean memory consumption
+        index_of_sorting = np.argsort(means)
+        labels = [ policy.__cachedstr__ for policy in self.policies ]
+        labels = [ labels[i] for i in index_of_sorting ]
+        all_memories = [ all_memories[i] for i in index_of_sorting ]
+        fig = plt.figure()
+        if len(labels) < maxNbOfLabels:
+            plt.boxplot(all_memories, labels=labels)
+            locs, labels = plt.xticks()
+            plt.subplots_adjust(bottom=0.40)
+            legend()
+            plt.xticks(locs, labels, rotation=60)  # See https://stackoverflow.com/a/37708190/
+        else:
+            plt.boxplot(all_memories)
+        plt.xlabel("Policies{}".format(self.signature))
+        plt.ylabel("Memory consumption (in bytes), for {} repetitions".format(self.repetitions))
+        plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
@@ -590,6 +630,19 @@ class Evaluator(object):
                     std = _format_time(std_time, precision)
                 )
             )
+
+    def printMemoryConsumption(self, envId=0):
+        """Print the average+-std memory consumption of the different policies."""
+        means, stds, _ = self.getMemoryConsumption(envId)
+
+        for policyId in np.argsort(means):
+            policy = self.policies[policyId]
+            print("\nFor policy #{} called '{}' ...".format(policyId, policy))
+            mean_time, std_time = means[policyId], stds[policyId]
+            if self.repetitions <= 1:
+                print(u"    {mean} (mean of 1 run)".format(mean=sizeof_fmt(mean_time)))
+            else:
+                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=self.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
 
     def printLastRegrets(self, envId=0, moreAccurate=None):
         """Print the last regrets of the different policies."""
@@ -670,10 +723,12 @@ class Evaluator(object):
 
 def delayed_play(env, policy, horizon,
                  random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
-                 seed=None, allrewards=None, repeatId=0):
+                 seed=None, allrewards=None, repeatId=0,
+                 useJoblib=False):
     """Helper function for the parallelization."""
-    # Give a unique seed to random & numpy.random for each call of this function
     start_time = time.time()
+    start_memory = getCurrentMemory(thread=useJoblib)
+    # Give a unique seed to random & numpy.random for each call of this function
     try:
         if seed is not None:
             random.seed(seed)
@@ -739,7 +794,9 @@ def delayed_play(env, policy, horizon,
         print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
         print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
 
+    # Finally, store running time and consumed memory
     result.running_time = time.time() - start_time
+    result.memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
     return result
 
 
