@@ -548,48 +548,52 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30):
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
+            base=1, unit="seconds"
+        ):
         """Plot the running times of the different policies, as a box plot for each."""
         means, _, all_times = self.getRunningTimes(envId=envId)
         # order by increasing mean time
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_times = [ all_times[i] for i in index_of_sorting ]
+        all_times = [ all_times[i] / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_times, labels=labels)
             locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.40)
+            plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=60)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
         plt.xlabel("Policies{}".format(self.signature))
-        plt.ylabel("Running times (in seconds), for {} repetitions".format(self.repetitions))
+        plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30):
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
+            base=1024, unit="KiB"
+        ):
         """Plot the memory consumption of the different policies, as a box plot for each."""
         means, _, all_memories = self.getMemoryConsumption(envId=envId)
         # order by increasing mean memory consumption
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_memories = [ all_memories[i] for i in index_of_sorting ]
+        all_memories = [ all_memories[i] / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_memories, labels=labels)
             locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.40)
+            plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=60)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)
         plt.xlabel("Policies{}".format(self.signature))
-        plt.ylabel("Memory consumption (in bytes), for {} repetitions".format(self.repetitions))
+        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
@@ -649,8 +653,8 @@ class Evaluator(object):
         for policyId, policy in enumerate(self.policies):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
             last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-            print("  Last regrets vector (for all repetitions) is:")
-            print("Shape of  last regrets R_T = {}".format(np.shape(last_regrets)))
+            print("  Last regrets (for all repetitions) have:")
+            # print("Shape of  last regrets R_T = {}".format(np.shape(last_regrets)))  # DEBUG
             print("Min of    last regrets R_T = {:.3g}".format(np.min(last_regrets)))
             print("Mean of   last regrets R_T = {:.3g}".format(np.mean(last_regrets)))
             print("Median of last regrets R_T = {:.3g}".format(np.median(last_regrets)))

@@ -10,11 +10,12 @@
 
 And useful constants and functions for the plotting and stuff:
 
-- :func:`DPI`, :func:`signature`, :func:`maximizeWindow`, :func:`palette`, :func:`makemarkers`, :func:`wraptext`: for plotting
-- :func:`notify`: send a desktop notification
-- :func:`Parallel`, :func:`delayed`: joblib related
-- :func:`tqdm`: pretty range() loops
-- :func:`sortedDistance`, :func:`fairnessMeasures`: science related
+- :data:`DPI`, :func:`signature`, :func:`maximizeWindow`, :func:`palette`, :func:`makemarkers`, :func:`wraptext`: for plotting,
+- :func:`notify`: send a desktop notification,
+- :func:`Parallel`, :func:`delayed`: joblib related,
+- :mod:`tqdm`: pretty range() loops,
+- :mod:`sortedDistance`, :mod:`fairnessMeasures`: science related,
+- :func:`getCurrentMemory`, :func:`sizeof_fmt`: to measure and pretty print memory consumption.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -41,4 +42,4 @@ from .usetqdm import *
 from .sortedDistance import *
 from .fairnessMeasures import *
 
-from .memory_consumption import getCurrentMemory, sizeof_fmt
+from .memory_consumption import getCurrentMemory, sizeof_fmt, start_tracemalloc, display_top_tracemalloc

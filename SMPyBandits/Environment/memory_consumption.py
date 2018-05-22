@@ -1,11 +1,31 @@
 # -*- coding: utf-8 -*-
-""" Tiny module that defines a utility function to get the memory consumes in a thread, and the function :func:`sizeof_fmt`."""
+""" Tiny module to measure and work on memory consumption.
+
+It defines a utility function to get the memory consumes in the current process or the current thread (:func:`getCurrentMemory`), and a function to pretty print memory size (:func:`sizeof_fmt`).
+
+It also imports :mod:`tracemalloc` and define a convenient function that pretty print the most costly lines after a run.
+
+- Reference: https://docs.python.org/3/library/tracemalloc.html#pretty-top
+- Example:
+
+>>> start_tracemalloc()
+Starting to trace memory allocations...
+>>> # ... run your application ...
+>>> display_top_tracemalloc()
+Top 10 lines ranked by memory consumption:
+...
+...
+
+.. warning:: TODO do this automatically when DEBUG=True, in all module? or in all :func:`Environment.Evaluator.delayed_play`?
+"""
 
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
+import os
+from linecache import getline
 
 try:
     import resource
@@ -98,6 +118,79 @@ def sizeof_fmt(num, suffix='B', longsuffix=True, usespace=True, base=1024):
         suffix=suffix,
     ).replace(".0", "")
 
+
+#: Max number of lines to show with :func:`display_top_tracemalloc`.
+LIMIT = 20
+
+try:
+    import tracemalloc
+
+    def start_tracemalloc():
+        """Wrapper function around :func:`tracemalloc.start`, to log the start of tracing memory allocation."""
+        tracemalloc.start()
+        print("Starting to trace memory allocations...\n")  # DEBUG
+        return 0
+
+    def display_top_tracemalloc(snapshot=None, key_type='lineno', limit=LIMIT):
+        """ Display detailed information on the ``limit`` most costly lines in this memory snapshot.
+        """
+        if snapshot is None:
+            snapshot = tracemalloc.take_snapshot()
+
+        snapshot = snapshot.filter_traces((
+            tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),
+            tracemalloc.Filter(False, "<frozen importlib._bootstrap_external>"),
+            tracemalloc.Filter(False, "<unknown>"),
+            # TODO add my own filter if needed!
+        ))
+        top_stats = snapshot.statistics(key_type)
+
+        print("\nTop {} lines ranked by memory consumption:".format(limit))
+        for index, stat in enumerate(top_stats[:limit], 1):
+            frame = stat.traceback[0]
+            # replace "/path/to/module/file.py" with "module/file.py"
+            filename = os.sep.join(frame.filename.split(os.sep)[-2:])
+            print("#{index}: {filename}:{lineno}: {size}".format(
+                index=index,
+                filename=filename,
+                lineno=frame.lineno,
+                size=sizeof_fmt(stat.size)
+            ))
+            line = getline(frame.filename, frame.lineno).strip()
+            if line:
+                print("    {}".format(line))
+
+        other = top_stats[limit:]
+        if other:
+            size = sum(stat.size for stat in other)
+            print("{other} others: {size}".format(other=len(other), size=sizeof_fmt(size)))
+
+        total = sum(stat.size for stat in top_stats)
+        print("\nTotal allocated size: {size}".format(size=sizeof_fmt(total)))
+        return total
+
+# ----------------------------------------------------------------------------
+except ImportError:
+    print("'tracemalloc' module not available. Are you on Python 2?\nYou should use Python 3 for this feature.")  # WARNING
+
+    def start_tracemalloc():
+        """Fake :func:`start_tracemalloc` function, if :mod:`tracemalloc` is not available."""
+        print("Warning: tracemalloc module is not available, no information can be printed about memory consumption.")  # DEBUG
+        return -1
+
+    def display_top_tracemalloc(snapshot=None, key_type='lineno', limit=LIMIT):
+        """Fake :func:`display_top_tracemalloc` function, if :mod:`tracemalloc` is not available."""
+        print("Warning: tracemalloc module is not available, no information can be printed about memory consumption.")  # DEBUG
+        return -1
+
+
+# Only export and expose the useful functions defined here
+__all__ = [
+    "getCurrentMemory",
+    "sizeof_fmt",
+    "start_tracemalloc",
+    "display_top_tracemalloc",
+]
 
 # --- Debugging
 

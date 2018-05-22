@@ -36,7 +36,7 @@ HORIZON = 10000
 # HORIZON = 20000
 # HORIZON = 30000
 # # # HORIZON = 40000
-HORIZON = 100000
+# HORIZON = 100000
 HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
@@ -88,12 +88,12 @@ UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
+TEST_Aggregator = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = TEST_Aggregator
 CACHE_REWARDS = False  # XXX to disable manually this feature
+CACHE_REWARDS = TEST_Aggregator
 
 
 # Parameters for the arms
@@ -352,13 +352,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # {
-        #     "archtype": Thompson,
-        #     "params": {
-        #         "posterior": Gauss,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
+        {
+            "archtype": Thompson,
+            "params": {
+                "posterior": Gauss,   # WARNING Gaussian posterior is still experimental
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # # --- KL algorithms, here only klUCB with different klucb functions
         # {
         #     "archtype": klUCB,

@@ -21,7 +21,7 @@ import pickle
 
 # Local imports
 try:
-    from Environment import Evaluator, notify
+    from Environment import Evaluator, notify, start_tracemalloc, display_top_tracemalloc
     # Import a configuration file
     if 'configuration_comparing_aggregation_algorithms' in sys.argv:
         from configuration_comparing_aggregation_algorithms import configuration
@@ -86,13 +86,24 @@ averageOn = 1e-2               #: Average the final rank on the 1% last time ste
 #: Whether to do the plots or not
 do_plots = True
 
+if getenv('NOPLOTS', 'False') == 'True' and __name__ == '__main__':
+    print("====> TURNING NOPLOTS MODE ON <=====")
+    do_plots = False
+
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
 
+#: Debug the memory consumption? Using :func:`Environment.memory_consumption.display_top_tracemalloc`.
+debug_memory = False
+
 if getenv('DEBUG', 'False') == 'True' and __name__ == '__main__':
     print("====> TURNING DEBUG MODE ON <=====")
     saveallfigs, interactive = False, True
+
+if getenv('DEBUGMEMORY', 'False') == 'True' and __name__ == '__main__':
+    print("====> TURNING DEBUGMEMORY MODE ON <=====")
+    debug_memory = True
 
 if getenv('SAVEALL', 'False') == 'True' and __name__ == '__main__':
     print("====> SAVING FIGURES <=====")
@@ -126,21 +137,22 @@ if __name__ == '__main__':
         # (almost) unique hash from the configuration
         hashvalue = abs(hash((tuple(configuration.keys()), tuple([(len(k) if isinstance(k, (dict, tuple, list)) else k) for k in configuration.values()]))))
 
+        if debug_memory: start_tracemalloc()  # DEBUG
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 
         # Display the final regrets and rankings for that env
         print("\n\nGiving the vector of final regrets ...")
         evaluation.printLastRegrets(envId)
-
         print("\n\nGiving the final ranks ...")
         evaluation.printFinalRanking(envId)
-
         print("\n\nGiving the mean and std running times ...")
         evaluation.printRunningTimes(envId)
-
         print("\n\nGiving the mean and std memory consumption ...")
         evaluation.printMemoryConsumption(envId)
+
+        if debug_memory: display_top_tracemalloc()  # DEBUG
 
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
@@ -290,3 +302,6 @@ if __name__ == '__main__':
     # Done
     print("Done for simulations main.py ...")
     notify("Done for simulations main.py ...")
+
+    if interactive:
+        display_top_tracemalloc()
