@@ -124,9 +124,9 @@ TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = TEST_Aggregator
 CACHE_REWARDS = True  # XXX to manually enable this feature?
 CACHE_REWARDS = False  # XXX to manually disable this feature?
+CACHE_REWARDS = TEST_Aggregator
 
 #: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True

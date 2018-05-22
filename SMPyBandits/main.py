@@ -149,10 +149,10 @@ if __name__ == '__main__':
         evaluation.printFinalRanking(envId)
         print("\n\nGiving the mean and std running times ...")
         evaluation.printRunningTimes(envId)
-        print("\n\nGiving the mean and std memory consumption ...")
-        evaluation.printMemoryConsumption(envId)
-
-        if debug_memory: display_top_tracemalloc()  # DEBUG
+        if debug_memory:
+            print("\n\nGiving the mean and std memory consumption ...")
+            evaluation.printMemoryConsumption(envId)
+            display_top_tracemalloc()  # DEBUG
 
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
@@ -302,6 +302,3 @@ if __name__ == '__main__':
     # Done
     print("Done for simulations main.py ...")
     notify("Done for simulations main.py ...")
-
-    if interactive:
-        display_top_tracemalloc()

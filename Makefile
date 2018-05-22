@@ -140,6 +140,7 @@ env_client_cpp:	env_client.exe
 # 	g++ -std=c++11 -Iinclude -o test_sub.exe test_sub.cpp -pthread
 # 	./test_sub.exe
 
+# Cf. http://www.marinamele.com/7-tips-to-time-python-scripts-and-control-memory-and-cpu-usage
 # Time profilers
 profile: profile3
 profile2:
@@ -147,16 +148,22 @@ profile2:
 profile3:
 	time nice -n 19 python3 -m cProfile -s cumtime ./SMPyBandits/main.py | tee ./logs/main_py3_profile_log.txt
 
+# Line memory profilers
+memory_profiler:
+	@echo "Running the script 'main.py' with the 'python -m memory_profiler' command line profiler ..."
+	@echo "See 'https://pypi.python.org/pypi/memory_profiler' if needed"
+	time nice -n 19 python3 -m memory_profiler ./SMPyBandits/main.py | tee ./logs/main_py3_memory_profiler_log.txt
+
 # Line time profilers
 line_profiler:	kernprof lprof
 kernprof:
 	@echo "Running the script 'main.py' with the 'kernprof' command line profiler ..."
 	@echo "See 'https://github.com/rkern/line_profiler#kernprof' if needed"
-	time nice -n 19 kernprof -l ./SMPyBandits/main.py | tee ./logs/main_py3_log.txt
+	time nice -n 19 kernprof -l -v ./SMPyBandits/main.py | tee ./logs/main_py3_kernprof_log.txt
 lprof:
 	@echo "Time profile, line by line, for the script 'main.py' ..."
 	@echo "See 'https://github.com/rkern/line_profiler#line-profiler' if needed"
-	time nice -n 19 python3 -m line_profiler ./SMPyBandits/main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
+	time nice -n 19 python3 -m line_profiler ./main.py.lprof | tee ./logs/main_py3_line_profiler_log.txt
 
 # Python Call Graph, XXX does not work well as far as now
 callgraph:

@@ -14,9 +14,8 @@ Starting to trace memory allocations...
 >>> display_top_tracemalloc()
 Top 10 lines ranked by memory consumption:
 ...
-...
 
-.. warning:: TODO do this automatically when DEBUG=True, in all module? or in all :func:`Environment.Evaluator.delayed_play`?
+.. warning:: this is automatically used (for ``main.py`` at least) when ``DEBUGMEMORY=True`` (cli env).
 """
 
 from __future__ import division, print_function  # Python 2 compatibility

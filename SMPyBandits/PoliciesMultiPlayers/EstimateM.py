@@ -115,6 +115,12 @@ class oneEstimateM(ChildPointer):
     - The procedure to estimate :math:`\hat{M}_i(t)` is not so simple, but basically everyone starts with :math:`\hat{M}_i(0) = 1`, and when colliding :math:`\hat{M}_i(t+1) = \hat{M}_i(t) + 1`, for some time (with a complicated threshold).
     """
 
+    # WARNING this line fails in Python2
+    # See difference between https://docs.python.org/3/tutorial/controlflow.html#arbitrary-argument-lists
+    # and https://docs.python.org/2/tutorial/controlflow.html#arbitrary-argument-lists
+    #
+    # XXX I don't want to write ugly dynamic code that handles both, so let's just say this breaks Python2 compatibility
+    # You shouldn't use Python2 anyway! https://pythonclock.org/
     def __init__(self, nbArms, playerAlgo, threshold, decentralizedPolicy, *args,
                  lower=0., amplitude=1., horizon=None,
                  args_decentralizedPolicy=None, kwargs_decentralizedPolicy=None,

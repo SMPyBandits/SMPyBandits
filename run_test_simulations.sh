@@ -16,8 +16,10 @@ export K=9
 export N=4
 export T=1000  # FIXME increase
 export DEBUG=False
+export DEBUGMEMORY=False
 export PLOT_DIR="/tmp/SMPyBandits/plots/"
 mkdir -p "$PLOT_DIR"  # XXX
+export DOPLOTS=False
 export SAVEALL=False
 export N_JOBS=4
 export BAYES=False
@@ -27,16 +29,16 @@ export ARM_TYPE=Bernoulli
 export M=3
 export S=3
 
-# allsingleplayer test
+# all_singleplayer test
 clear
-echo -e "\n\n\nLaunching 'make allsingleplayer'"
-N=4 T=20 make allsingleplayer
+echo -e "\n\n\nLaunching 'make all_singleplayer'"
+N=4 T=20 make all_singleplayer
 # read  # DEBUG
 
-# allsingleplayer test
+# all_singleplayer test
 clear
-echo -e "\n\n\nLaunching 'make allsingleplayer'"
-N=4 T=20 BAYES=True make allsingleplayer
+echo -e "\n\n\nLaunching 'make all_singleplayer'"
+N=4 T=20 BAYES=True make all_singleplayer
 # read  # DEBUG
 
 # single test

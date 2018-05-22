@@ -73,8 +73,12 @@ from .rhoCentralized import rhoCentralized
 from .RandTopM import RandTopM, RandTopMCautious, RandTopMExtraCautious, RandTopMOld, MCTopM, MCTopMCautious, MCTopMExtraCautious, MCTopMOld
 from .RandTopMEst import RandTopMEst, RandTopMEstPlus, MCTopMEst, MCTopMEstPlus  # New versions, still experimental!
 
-from .EstimateM import EstimateM  # FIXME experimental!
-from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
+try:
+    from .EstimateM import EstimateM  # XXX experimental!
+    from .EstimateM import threshold_on_t_with_horizon, threshold_on_t_doubling_trick, threshold_on_t
+except SyntaxError:
+    print("Error: unable to import 'EstimateM.EstimateM'...")  # DEBUG
+    print("WARNING I don't want to write ugly dynamic code that handles both, so let's just say this breaks Python2 compatibility.\nYou shouldn't use Python2 anyway! Cf. https://pythonclock.org/")  # DEBUG
 
 
 from .ALOHA import ALOHA, tnext_beta, tnext_log

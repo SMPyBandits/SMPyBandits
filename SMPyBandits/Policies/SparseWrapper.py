@@ -99,6 +99,7 @@ class SparseWrapper(BasePolicy):
 
     def __str__(self):
         ucb_for = ""
+        # FIXME use notations B_cJ, B_cK from my article
         if self.use_ucb_for_set_K or self.use_ucb_for_set_J:
             ucb_for = ", UCB for "
         if self.use_ucb_for_set_J and self.use_ucb_for_set_K:
