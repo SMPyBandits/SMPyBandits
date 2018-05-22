@@ -88,8 +88,8 @@ UPDATE_LIKE_EXP4 = True     # trusts^(t+1) = exp(rate_t * estimated rewards upto
 UPDATE_LIKE_EXP4 = False    # trusts^(t+1) <-- trusts^t * exp(rate_t * estimate reward at time t)
 
 #: To know if my Aggregator policy is tried.
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 TEST_Aggregator = True
+TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
@@ -234,7 +234,7 @@ if ENVIRONMENT_BAYESIAN:
         {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": ARM_TYPE,
             "params": {
-                "function": randomMeans,
+                "function": randomMeansWithSparsity,
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
@@ -242,8 +242,10 @@ if ENVIRONMENT_BAYESIAN:
                     # "mingap": 0.1,
                     # "mingap": 1. / (3 * NB_ARMS),
                     "lower": LOWER,
+                    "lowerNonZero": LOWERNONZERO,
                     "amplitude": AMPLITUDE,
                     "isSorted": ISSORTED,
+                    "sparsity": SPARSITY,
                 }
             },
             "sparsity": SPARSITY,

@@ -55,8 +55,8 @@ STORE_ALL_REWARDS = True       #: Store all rewards?
 STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
-MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 FINAL_RANKS_ON_AVERAGE = True
 USE_JOBLIB_FOR_POLICIES = False
 
@@ -120,7 +120,7 @@ class Evaluator(object):
 
         self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.pulls = dict()  #: For each env, keep cumulative counts of all arm pulls
-        self.allPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
+        if self.moreAccurate: self.allPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.runningTimes = dict()  #: For each env, keep the history of running times
         self.memoryConsumption = dict()  #: For each env, keep the history of running times
@@ -128,7 +128,7 @@ class Evaluator(object):
         for env in range(len(self.envs)):
             self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
             self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
-            self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
+            if self.moreAccurate: self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
             self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
             self.runningTimes[env] = np.zeros((self.nbPolicies, self.repetitions))
             self.memoryConsumption[env] = np.zeros((self.nbPolicies, self.repetitions))
@@ -221,7 +221,7 @@ class Evaluator(object):
                 self.maxCumRewards[policyId, envId, :] = np.maximum(self.maxCumRewards[policyId, envId, :], np.cumsum(r.rewards)) if repeatId > 1 else np.cumsum(r.rewards)
             self.bestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
-            self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
+            if self.moreAccurate: self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
             self.runningTimes[envId][policyId, repeatId] = r.running_time
             self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
@@ -333,6 +333,7 @@ class Evaluator(object):
 
     def getCumulatedRegret_MoreAccurate(self, policyId, envId=0):
         """Compute cumulative regret, based on counts of selections and not actual rewards."""
+        assert self.moreAccurate, "Error: getCumulatedRegret_MoreAccurate() is only available when using the 'moreAccurate' option (it consumes more memory!)."  # DEBUG
         return np.cumsum(self.envs[envId].maxArm - self.getAverageWeightedSelections(policyId, envId))
 
     def getCumulatedRegret(self, policyId, envId=0, moreAccurate=None):
