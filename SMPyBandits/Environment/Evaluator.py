@@ -583,7 +583,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_memories = [ all_memories[i] / float(base) for i in index_of_sorting ]
+        all_memories = [ [ memory / float(base) for memory in all_memories[i] ] for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_memories, labels=labels)

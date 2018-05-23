@@ -985,6 +985,13 @@ configuration.update({
         # #         "epsilon": 0.05,
         # #     }
         # # },
+        # --- FIXME new UCBimproved algorithm
+        {
+            "archtype": UCBimproved,
+            "params": {
+                "horizon": HORIZON,
+            }
+        }
     ]
 })
 

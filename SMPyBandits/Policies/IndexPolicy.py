@@ -92,7 +92,7 @@ class IndexPolicy(BasePolicy):
         """ In an index policy, choose the best arm from sub-set availableArms (uniformly at random)."""
         if isinstance(availableArms, str) and availableArms == 'all':
             return self.choice()
-        # If availableArms are all arms?
+        # If availableArms are all arms? XXX no this could loop, better do it here
         # elif len(availableArms) == self.nbArms:
         #     return self.choice()
         elif len(availableArms) == 0:

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-""" The UCB+ policy for bounded bandits, with a small trick on the index.
-Reference: [Auer et al. 02].
+r""" The UCB+ policy for bounded bandits, with a small trick on the index.
+
+- Reference: [Auer et al. 2002], and [[Garivier et al. 2016](https://arxiv.org/pdf/1605.08988.pdf)] (it is noted :math:`\mathrm{UCB}^*` in the second article).
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.1"
+__version__ = "0.9"
 
 from math import sqrt, log
 import numpy as np
@@ -15,8 +16,9 @@ from .UCB import UCB
 
 
 class UCBplus(UCB):
-    """ The UCB+ policy for bounded bandits, with a small trick on the index.
-    Reference: [Auer et al. 02].
+    r""" The UCB+ policy for bounded bandits, with a small trick on the index.
+
+    - Reference: [Auer et al. 2002], and [[Garivier et al. 2016](https://arxiv.org/pdf/1605.08988.pdf)] (it is noted :math:`\mathrm{UCB}^*` in the second article).
     """
 
     def computeIndex(self, arm):

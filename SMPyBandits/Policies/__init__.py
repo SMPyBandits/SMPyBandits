@@ -119,6 +119,9 @@ except:
     print("Warning: the 'UCBcython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
     from .UCB import UCB as UCBcython
 
+# --- UCB with successive eliminations
+from .UCBimproved import UCBimproved          # Different indexes
+
 # --- UCB policies with variance terms
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
