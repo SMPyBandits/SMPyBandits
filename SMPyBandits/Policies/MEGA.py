@@ -16,6 +16,26 @@ import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
+
 # --- Class MEGA
 
 class MEGA(BasePolicy):
@@ -81,7 +101,7 @@ class MEGA(BasePolicy):
                 # raise ValueError("FIXME MEGA.choice() should 'Refrain from transmitting in this round' but my model does not allow this - YET")
             else:  # There is some available arms
                 epsilon = self._epsilon_t()
-                if random() < epsilon:  # With proba epsilon_t
+                if with_proba(epsilon):  # With proba epsilon_t
                     newArm = rn.choice(availableArms)  # Explore valid arms
                     if self.chosenArm != newArm:
                         self.p = self.p0  # Reinitialize proba p
@@ -114,11 +134,11 @@ class MEGA(BasePolicy):
         """
         assert self.chosenArm == arm, "Error: a MEGA player can only see a collision on her chosenArm. Here, arm = {} != chosenArm = {} ...".format(arm, self.chosenArm)  # DEBUG
         # print("- A MEGA player saw a collision on arm {}, and time t = {} ...".format(arm, self.t))  # DEBUG
-        # 1. With proba p, persist
-        # if random() < self.p:
-        #     self.chosenArm = self.chosenArm
+        # # 1. With proba p, persist  XXX useless code
+        # # if with_proba(self.p):
+        # #     self.chosenArm = self.chosenArm
         # 2. With proba 1 - p, give up
-        if random() >= self.p:
+        if with_proba(1 - self.p):
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.t**self.beta))
             self.tnext[self.chosenArm] = self.t + delta_tnext_k

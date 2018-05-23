@@ -20,6 +20,26 @@ except ImportError:
     from ChildPointer import ChildPointer
 
 
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
+
 # --- Functions to define [t, t + tnext] intervals
 
 def tnext_beta(t, beta=0.5):
@@ -157,7 +177,7 @@ class oneALOHA(ChildPointer):
         # print(" ---------> A oneALOHA player saw a collision on arm {}, at time t = {} ... Currently, p = {} ...".format(arm, self.t, self.p))  # DEBUG
         # self.getReward(arm, self.mother.lower)  # FIXED should we give a 0 reward ? Not in this model!
         # 1. With proba 1 - p, give up
-        if random() >= self.p:
+        if with_proba(1 - self.p):
             # Random time offset until when this arm self.chosenArm is not sampled
             delta_tnext_k = rn.randint(low=0, high=1 + int(self.ftnext(self.t)))
             self.tnext[self.chosenArm] = self.t + 1 + delta_tnext_k

@@ -19,6 +19,29 @@ import numpy as np
 from random import random
 
 
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
+
+# --- Utility functions
+
+
 def DepRound(weights_p, k=1):
     r""" [[Algorithms for adversarial bandit problems with multiple plays, by T.Uchiya, A.Nakamura and M.Kudo, 2010](http://hdl.handle.net/2115/47057)] Figure 5 (page 15) is a very clean presentation of the algorithm.
 
@@ -85,7 +108,7 @@ def DepRound(weights_p, k=1):
         # Set alpha, beta
         alpha, beta = min(1 - pi, pj), min(pi, 1 - pj)
         proba = alpha / (alpha + beta)
-        if random() < proba:  # with probability = proba = alpha/(alpha+beta)
+        if with_proba(proba):  # with probability = proba = alpha/(alpha+beta)
             pi, pj = pi + alpha, pj - alpha
         else:            # with probability = 1 - proba = beta/(alpha+beta)
             pi, pj = pi - beta, pj + beta

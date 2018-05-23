@@ -16,6 +16,26 @@ import numpy.random as rn
 
 from .BasePolicy import BasePolicy
 
+
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
 #: Default value for epsilon
 EPSILON = 0.1
 
@@ -42,7 +62,7 @@ class EpsilonGreedy(BasePolicy):
 
     def choice(self):
         """With a probability of epsilon, explore (uniform choice), otherwhise exploit based on just accumulated *rewards* (not empirical mean rewards)."""
-        if random() < self.epsilon:  # Proba epsilon : explore
+        if with_proba(self.epsilon):  # Proba epsilon : explore
             return rn.randint(0, self.nbArms - 1)
         else:  # Proba 1 - epsilon : exploit
             # Uniform choice among the best arms
@@ -53,7 +73,7 @@ class EpsilonGreedy(BasePolicy):
         if rank == 1:
             return self.choice()
         else:
-            if random() < self.epsilon:  # Proba epsilon : explore
+            if with_proba(self.epsilon):  # Proba epsilon : explore
                 return rn.randint(0, self.nbArms - 1)
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)
@@ -70,7 +90,7 @@ class EpsilonGreedy(BasePolicy):
             return self.choice()
             # return np.random.randint(self.nbArms)
         else:
-            if random() < self.epsilon:  # Proba epsilon : explore
+            if with_proba(self.epsilon):  # Proba epsilon : explore
                 return rn.choice(availableArms)
             else:  # Proba 1 - epsilon : exploit
                 # Uniform choice among the best arms
@@ -81,7 +101,7 @@ class EpsilonGreedy(BasePolicy):
             return np.array([self.choice()])
         else:
             # FIXME the explore/exploit balancy should be for each choice, right?
-            if random() < self.epsilon:  # Proba epsilon : Explore
+            if with_proba(self.epsilon):  # Proba epsilon : Explore
                 return rn.choice(self.nbArms, size=nb, replace=False)
             else:  # Proba 1 - epsilon : exploit
                 sortedRewards = np.sort(self.rewards)

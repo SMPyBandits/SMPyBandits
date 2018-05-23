@@ -17,23 +17,30 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.7"
 
+from random import random
 import numpy as np
 import numpy.random as rn
 from .BasePolicy import BasePolicy
 
 
-# --- Utility
+# --- Utility functions
 
-def with_probability(p):
-    """Use it like this:
 
-    .. code:: python
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
 
-        if with_probability(0.2):
-            print("This happens only 20% of the times!")
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
     """
-    assert 0 <= p <= 1, "Error: for 'with_probability(p)', p = {:.3g} has to be between 0 and 1 to be a valid probability."  # DEBUG
-    return bool(rn.random() <= p)
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
 
 
 # --- Renormalize function
@@ -147,7 +154,7 @@ class LearnExp(BasePolicy):
         # 1. First, give rewards to that slave, with probability rate / trusts
         probability = self.rate / self.trusts[self.last_choice]
         assert 0 <= probability <= 1, "Error: 'probability' = {:.3g} = rate = {:.3g} / trust_j^t = {:.3g} should have been in [0, 1]...".format(probability, self.rate, self.trusts[self.last_choice])  # DEBUG
-        if with_probability(probability):
+        if with_proba(probability):
             self.children[self.last_choice].getReward(arm, reward)
 
         # 2. Then reinitialize this array of losses

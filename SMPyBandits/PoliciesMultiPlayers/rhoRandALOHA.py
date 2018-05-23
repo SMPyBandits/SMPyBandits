@@ -25,15 +25,15 @@ except ImportError:
     from rhoRand import oneRhoRand, rhoRand
 
 
-# --- Utilitary functions
+# --- Utility functions
 
 
-def with_proba(eps):
+def with_proba(epsilon):
     r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
 
     Example:
 
-    >>> from random import seed; seed(0)  # reproducibility
+    >>> from random import seed; seed(0)  # reproductible
     >>> with_proba(0.5)
     False
     >>> with_proba(0.9)
@@ -41,7 +41,8 @@ def with_proba(eps):
     >>> with_proba(0.1)
     False
     """
-    return random() < eps
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
 
 
 def new_rank(rank, maxRank, forceChange=False):

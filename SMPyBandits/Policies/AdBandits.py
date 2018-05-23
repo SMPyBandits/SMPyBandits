@@ -2,12 +2,14 @@
 """ The AdBandits bandit algorithm, mixing Thompson Sampling and BayesUCB.
 
 - Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
-- Code from: https://github.com/flaviotruzzi/AdBandits/
+- Code inspired from: https://github.com/flaviotruzzi/AdBandits/
+
+.. warning:: This policy is very not famous, but for stochastic bandits it works usually VERY WELL! It is not anytime thought.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
-__author__ = "Flavio Truzzi et al."
-__version__ = "0.6"
+__author__ = "Flavio Truzzi and Lilian Besson"
+__version__ = "0.9"
 
 from random import random, choice
 import numpy as np
@@ -16,11 +18,35 @@ from .Posterior import Beta
 from .BasePolicy import BasePolicy
 
 
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
+
+# --- Class
+
 class AdBandits(BasePolicy):
     """ The AdBandits bandit algorithm, mixing Thompson Sampling and BayesUCB.
 
     - Reference: [AdBandit: A New Algorithm For Multi-Armed Bandits, F.S.Truzzi, V.F.da Silva, A.H.R.Costa, F.G.Cozman](http://sites.poli.usp.br/p/fabio.cozman/Publications/Article/truzzi-silva-costa-cozman-eniac2013.pdf)
-    - Code from: https://github.com/flaviotruzzi/AdBandits/
+    - Code inspired from: https://github.com/flaviotruzzi/AdBandits/
+
+    .. warning:: This policy is very not famous, but for stochastic bandits it works usually VERY WELL! It is not anytime thought.
     """
 
     def __init__(self, nbArms, horizon, alpha, posterior=Beta, lower=0., amplitude=1.):
@@ -57,7 +83,7 @@ class AdBandits(BasePolicy):
     def choice(self):
         r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to choose one arm."""
         # Thompson Exploration
-        if random() > self.epsilon:
+        if with_proba(1 - self.epsilon):  # with proba 1-epsilon
             upperbounds = [self.posterior[i].sample() for i in range(self.nbArms)]
             maxIndex = max(upperbounds)
             bestArms = [arm for (arm, index) in enumerate(upperbounds) if index == maxIndex]
@@ -78,7 +104,7 @@ class AdBandits(BasePolicy):
         else:
             assert rank >= 1, "Error: for AdBandits = {}, in choiceWithRank(rank={}) rank has to be >= 1.".format(self, rank)
             # Thompson Exploration
-            if random() > self.epsilon:
+            if with_proba(1 - self.epsilon):  # with proba 1-epsilon
                 indexes = [self.posterior[i].sample() for i in range(self.nbArms)]
             # UCB-Bayes
             else:

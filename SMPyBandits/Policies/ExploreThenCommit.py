@@ -5,7 +5,7 @@
 - And [Kaufmann & Moy, 2017, ICC](http://icc2017.ieee-icc.org/program/tutorials#TT01), E.Kaufmann's slides at IEEE ICC 2017
 - See also: https://github.com/SMPyBandits/SMPyBandits/issues/62
 
-.. warning:: They don't work as well as the theory predicted...
+.. warning:: They sometimes do not work as well as the theory predicted...
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

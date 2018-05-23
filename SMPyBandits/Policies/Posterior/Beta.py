@@ -25,6 +25,26 @@ from scipy.special import btdtri
 from .Posterior import Posterior
 
 
+# --- Utility functions
+
+
+def with_proba(epsilon):
+    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
+
+    Example:
+
+    >>> from random import seed; seed(0)  # reproductible
+    >>> with_proba(0.5)
+    False
+    >>> with_proba(0.9)
+    True
+    >>> with_proba(0.1)
+    False
+    """
+    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
+    return random() < epsilon  # True with proba epsilon
+
+
 def bernoulliBinarization(r_t):
     r""" Return a (random) binarization of a reward :math:`r_t`, in the continuous interval :math:`[0, 1]` as an observation in discrete :math:`{0, 1}`.
 
@@ -60,7 +80,7 @@ def bernoulliBinarization(r_t):
         return 1  # Returns a int!
     else:
         assert 0 <= r_t <= 1, "Error: only bounded rewards in [0, 1] are supported by this Beta posterior right now."
-        return int(random() < r_t)
+        return int(with_proba(r_t))
 
 
 class Beta(Posterior):
