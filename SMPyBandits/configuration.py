@@ -327,6 +327,15 @@ except (TypeError, KeyError):
 #: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
 
+#: Compute the gap of the first problem.
+#: (for d in MEGA's parameters, and epsilon for MusicalChair's parameters)
+try:
+    GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+except (ValueError, np.AxisError):
+    print("Warning: using the default value for the GAP (Bayesian environment maybe?)")  # DEBUG
+    GAP = 1. / (3 * NB_ARMS)
+
+
 configuration.update({
     "policies": [
         # # --- Stupid algorithms
@@ -373,13 +382,13 @@ configuration.update({
         #     }
         # },
         # --- Explore-Then-Commit policies
-        # {
-        #     "archtype": ETC_KnownGap,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "gap": 0.1,
-        #     }
-        # },
+        {
+            "archtype": ETC_KnownGap,
+            "params": {
+                "horizon": HORIZON,
+                "gap": GAP,
+            }
+        },
         # {
         #     "archtype": ETC_KnownGap,
         #     "params": {
@@ -401,12 +410,39 @@ configuration.update({
         #         "gap": 0.5
         #     }
         # },
-        # {
-        #     "archtype": ETC_RandomStop,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
+        {
+            "archtype": ETC_RandomStop,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": ETC_FixedBudget,
+            "params": {
+                "horizon": HORIZON,
+                "gap": GAP,
+            }
+        },
+        {
+            "archtype": ETC_SPRT,
+            "params": {
+                "horizon": HORIZON,
+                "gap": GAP,
+            }
+        },
+        {
+            "archtype": ETC_BAI,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": DeltaUCB,
+            "params": {
+                "horizon": HORIZON,
+                "gap": GAP,
+            }
+        },
         # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad
@@ -985,13 +1021,13 @@ configuration.update({
         # #         "epsilon": 0.05,
         # #     }
         # # },
-        # --- FIXME new UCBimproved algorithm
-        {
-            "archtype": UCBimproved,
-            "params": {
-                "horizon": HORIZON,
-            }
-        }
+        # # --- new UCBimproved algorithm
+        # {
+        #     "archtype": UCBimproved,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # }
     ]
 })
 

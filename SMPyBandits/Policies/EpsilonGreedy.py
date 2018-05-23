@@ -14,8 +14,12 @@ from random import random
 import numpy as np
 import numpy.random as rn
 
-from .BasePolicy import BasePolicy
-from .with_proba import with_proba
+try:
+    from .BasePolicy import BasePolicy
+    from .with_proba import with_proba
+except ImportError:
+    from BasePolicy import BasePolicy
+    from with_proba import with_proba
 
 #: Default value for epsilon
 EPSILON = 0.1
@@ -47,7 +51,10 @@ class EpsilonGreedy(BasePolicy):
             return rn.randint(0, self.nbArms - 1)
         else:  # Proba 1 - epsilon : exploit
             # Uniform choice among the best arms
-            return rn.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
+            biased_means = self.rewards / (1 + self.pulls)
+            # FIXME why max on rewards and not mean rewards?
+            return rn.choice(np.nonzero(biased_means == np.max(biased_means))[0])
+            # return rn.choice(np.nonzero(self.rewards == np.max(self.rewards))[0])
 
     def choiceWithRank(self, rank=1):
         """With a probability of epsilon, explore (uniform choice), otherwhise exploit with the rank, based on just accumulated *rewards* (not empirical mean rewards)."""

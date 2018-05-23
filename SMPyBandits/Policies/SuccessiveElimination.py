@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Generic policy based on successive elimination.
+""" Generic policy based on successive elimination, mostly useless except to maintain a clear hierarchy of inheritance.
 """
 
 __author__ = "Lilian Besson"
@@ -16,7 +16,7 @@ except ImportError:
 
 
 class SuccessiveElimination(IndexPolicy):
-    """ Generic policy based on successive elimination.
+    """ Generic policy based on successive elimination, mostly useless except to maintain a clear hierarchy of inheritance.
     """
 
     def choice(self):

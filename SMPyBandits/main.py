@@ -215,12 +215,14 @@ if __name__ == '__main__':
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
             savefig = mainfig
             evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
-            savefig = mainfig.replace('main', 'main_semilogx')
-            evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
+            if configuration['horizon'] >= 1000:
+                savefig = mainfig.replace('main', 'main_semilogx')
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogy')
             evaluation.plotRegrets(envId, savefig=savefig, semilogy=True)  # XXX To save the figure
-            savefig = mainfig.replace('main', 'main_loglog')
-            evaluation.plotRegrets(envId, savefig=savefig, loglog=True)  # XXX To save the figure
+            if configuration['horizon'] >= 1000:
+                savefig = mainfig.replace('main', 'main_loglog')
+                evaluation.plotRegrets(envId, savefig=savefig, loglog=True)  # XXX To save the figure
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     savefig = savefig.replace('main', 'main_STD')
@@ -230,9 +232,11 @@ if __name__ == '__main__':
                     evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotMaxMin=True)  # XXX To save the figure
         else:
             evaluation.plotRegrets(envId)  # XXX To plot without saving
-            evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
+            if configuration['horizon'] >= 1000:
+                evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogy=True)  # XXX To plot without saving
-            evaluation.plotRegrets(envId, loglog=True)
+            if configuration['horizon'] >= 1000:
+                evaluation.plotRegrets(envId, loglog=True)
             if configuration['repetitions'] > 1:
                 if plotSTD:
                     evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotSTD=True)  # XXX To plot without saving

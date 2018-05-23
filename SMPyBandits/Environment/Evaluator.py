@@ -55,8 +55,8 @@ STORE_ALL_REWARDS = True       #: Store all rewards?
 STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
-MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 FINAL_RANKS_ON_AVERAGE = True
 USE_JOBLIB_FOR_POLICIES = False
 
@@ -793,10 +793,10 @@ def delayed_play(env, policy, horizon,
         order = policy.estimatedOrder()
         print("\nEstimated order by the policy {} after {} steps: {} ...".format(policy, horizon, order))
         print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=1)))
-        print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-        # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
-        # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
-        print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+        # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+        # # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+        # # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+        # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
         print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
 
     # Finally, store running time and consumed memory

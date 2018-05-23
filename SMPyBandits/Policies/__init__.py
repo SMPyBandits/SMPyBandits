@@ -4,11 +4,11 @@
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
-- And two variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`,
+- And variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`, :class:`ExploreThenCommit.ETC_FixedBudget`, :class:`ExploreThenCommit.ETC_SPRT`, :class:`ExploreThenCommit.ETC_BAI`, :class:`ExploreThenCommit.DeltaUCB`,
 
 - Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
 
-- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`,
+- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`, :class:`UCBimproved`,
 
 - Index based MOSS algorithms: :class:`MOSS`, :class:`MOSSH`, :class:`MOSSAnytime`, :class:`MOSSExperimental`,
 
@@ -85,7 +85,7 @@ from .EpsilonExpDecreasing import EpsilonExpDecreasing
 from .EmpiricalMeans import EmpiricalMeans
 
 # --- Variants on EpsilonFirst, Explore-Then-Commit from E.Kaufmann's slides at IEEE ICC 2017
-from .ExploreThenCommit import ETC_KnownGap, ETC_RandomStop
+from .ExploreThenCommit import ETC_KnownGap, ETC_RandomStop, ETC_FixedBudget, ETC_SPRT, ETC_BAI, DeltaUCB
 
 # --- Mine, Softmax and Exp3 policies
 from .Softmax import Softmax, SoftmaxDecreasing, SoftMix, SoftmaxWithHorizon

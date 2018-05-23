@@ -106,7 +106,7 @@ class UCBimproved(SuccessiveElimination):
                 if not recursive:
                     return self.choice(recursive=True)
                 else:
-                    print("Warning: something is wrong for UCBimproved.choice(), in a recursive call it could find any arm not explored enough. Please DEBUG me!")  # FIXME
+                    print("Warning: something is wrong for UCBimproved.choice(), in a recursive call it could find any arm not explored enough. Please DEBUG me!")  # DEBUG
                     return np.random.choice(self.nbArms)
             # here we have some arms that are not explored enough
             return np.random.choice(arms_not_explored_enough)
