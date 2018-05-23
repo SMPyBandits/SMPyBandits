@@ -215,6 +215,10 @@ from .TrekkingTSN import TrekkingTSN  # Cf. [R.Kumar, A.Yadav, S.J.Darak, M.K.Ha
 from .MEGA import MEGA  # Cf. [Avner & Mannor, 2014](https://arxiv.org/abs/1404.5421)
 
 
+# --- Utility functions
+
+from .with_proba import with_proba
+
 # --- KL-UCB index functions
 from .usenumba import jit
 

@@ -14,28 +14,20 @@ __version__ = "0.9"
 from random import random, choice
 import numpy as np
 
-from .Posterior import Beta
-from .BasePolicy import BasePolicy
+try:
+    from .Posterior import Beta
+    from .BasePolicy import BasePolicy
+    from .with_proba import with_proba
+except ImportError:
+    from Posterior import Beta
+    from BasePolicy import BasePolicy
+    from with_proba import with_proba
 
 
-# --- Utility functions
+# --- Data
 
-
-def with_proba(epsilon):
-    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
-
-    Example:
-
-    >>> from random import seed; seed(0)  # reproductible
-    >>> with_proba(0.5)
-    False
-    >>> with_proba(0.9)
-    True
-    >>> with_proba(0.1)
-    False
-    """
-    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
-    return random() < epsilon  # True with proba epsilon
+#: Default value for the parameter :math:`\alpha` for the :class:`AdBandits` class.
+ALPHA = 1
 
 
 # --- Class
@@ -49,7 +41,7 @@ class AdBandits(BasePolicy):
     .. warning:: This policy is very not famous, but for stochastic bandits it works usually VERY WELL! It is not anytime thought.
     """
 
-    def __init__(self, nbArms, horizon, alpha, posterior=Beta, lower=0., amplitude=1.):
+    def __init__(self, nbArms, horizon, alpha=ALPHA, posterior=Beta, lower=0., amplitude=1.):
         """ New policy."""
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter alpha
@@ -78,7 +70,8 @@ class AdBandits(BasePolicy):
     @property
     def epsilon(self):
         r""" Time variating parameter :math:`\varepsilon(t)`."""
-        return float(self.t / (self.horizon * self.alpha))
+        # Crop it to [0, 1]
+        return max(0, min(1, float(self.t / (self.horizon * self.alpha))))
 
     def choice(self):
         r""" With probability :math:`1 - \varepsilon(t)`, use a Thompson Sampling step, otherwise use a UCB-Bayes step, to choose one arm."""

@@ -17,26 +17,8 @@ __version__ = "0.6"
 
 import numpy as np
 from random import random
+from .with_proba import with_proba
 
-
-# --- Utility functions
-
-
-def with_proba(epsilon):
-    r"""Bernoulli test, with probability :math:`\varepsilon`, return `True`, and with probability :math:`1 - \varepsilon`, return `False`.
-
-    Example:
-
-    >>> from random import seed; seed(0)  # reproductible
-    >>> with_proba(0.5)
-    False
-    >>> with_proba(0.9)
-    True
-    >>> with_proba(0.1)
-    False
-    """
-    assert 0 <= epsilon <= 1, "Error: for 'with_proba(epsilon)', epsilon = {:.3g} has to be between 0 and 1 to be a valid probability.".format(epsilon)  # DEBUG
-    return random() < epsilon  # True with proba epsilon
 
 
 # --- Utility functions
