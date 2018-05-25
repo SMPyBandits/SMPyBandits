@@ -30,11 +30,9 @@ from numpy.random import binomial
 # Local imports
 try:
     from .Arm import Arm
-except ImportError:
-    from Arm import Arm
-try:
     from .kullback import klBern
 except ImportError:
+    from Arm import Arm
     from kullback import klBern
 
 

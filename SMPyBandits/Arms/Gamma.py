@@ -34,11 +34,9 @@ import numpy as np
 # Local imports
 try:
     from .Arm import Arm
-except ImportError:
-    from Arm import Arm
-try:
     from .kullback import klGamma
 except ImportError:
+    from Arm import Arm
     from kullback import klGamma
 
 oo = float('+inf')  # Nice way to write +infinity

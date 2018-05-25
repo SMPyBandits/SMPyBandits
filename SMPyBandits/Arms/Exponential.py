@@ -35,11 +35,9 @@ from scipy.optimize import minimize
 # Local imports
 try:
     from .Arm import Arm
-except ImportError:
-    from Arm import Arm
-try:
     from .kullback import klExp
 except ImportError:
+    from Arm import Arm
     from kullback import klExp
 
 

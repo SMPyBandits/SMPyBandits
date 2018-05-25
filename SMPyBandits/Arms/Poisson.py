@@ -31,11 +31,9 @@ from scipy.stats import poisson
 # Local imports
 try:
     from .Arm import Arm
-except ImportError:
-    from Arm import Arm
-try:
     from .kullback import klPoisson
 except ImportError:
+    from Arm import Arm
     from kullback import klPoisson
 
 

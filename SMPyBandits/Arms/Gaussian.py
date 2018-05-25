@@ -34,11 +34,9 @@ from scipy.special import erf
 # Local imports
 try:
     from .Arm import Arm
-except ImportError:
-    from Arm import Arm
-try:
     from .kullback import klGauss
 except ImportError:
+    from Arm import Arm
     from kullback import klGauss
 
 oo = float('+inf')  # Nice way to write +infinity
