@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Arms : contains different types of bandit arms:
-:class:`Constant`, :class:`UniformArm`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`.
+:class:`Constant`, :class:`UniformArm`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`, :class:`DiscreteArm`.
 
 Each arm class follows the same interface:
 
@@ -45,6 +45,7 @@ if __name__ != "__main__":
     from .Gaussian import Gaussian, Gaussian_0_1, Gaussian_0_2, Gaussian_0_5, Gaussian_0_10, Gaussian_0_100, Gaussian_m1_1, Gaussian_m2_2, Gaussian_m5_5, Gaussian_m10_10, Gaussian_m100_100, UnboundedGaussian
     from .Exponential import Exponential, ExponentialFromMean, UnboundedExponential
     from .Gamma import Gamma, GammaFromMean, UnboundedGamma
+    from .DiscreteArm import DiscreteArm
 
     mapping_ARM_TYPE = {
         "Constant": Constant,
@@ -56,6 +57,7 @@ if __name__ != "__main__":
         "Poisson": Poisson, "P": Poisson,
         "Exponential": ExponentialFromMean, "Exp": ExponentialFromMean, "E": ExponentialFromMean,
         "Gamma": GammaFromMean,
+        "DiscreteArm": DiscreteArm,
     }
 
 
