@@ -18,7 +18,10 @@ from enum import Enum  # For the different states
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBalpha import UCBalpha
+try:
+    from .UCBalpha import UCBalpha
+except ImportError:
+    from UCBalpha import UCBalpha
 
 
 #: Different states during the SparseUCB algorithm.

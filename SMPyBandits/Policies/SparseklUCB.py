@@ -20,9 +20,12 @@ from enum import Enum  # For the different states
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-
-from .kullback import klucbBern
-from .klUCB import klUCB
+try:
+    from .kullback import klucbBern
+    from .klUCB import klUCB
+except ImportError:
+    from kullback import klucbBern
+    from klUCB import klUCB
 
 
 #: Different states during the SparseklUCB algorithm.

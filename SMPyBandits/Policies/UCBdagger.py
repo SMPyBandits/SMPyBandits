@@ -12,7 +12,10 @@ import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 _e = np.e
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 #: Default value for the parameter :math:`\alpha > 0` for UCBdagger.
 ALPHA = 1

@@ -20,7 +20,11 @@ __version__ = "0.8"
 
 from enum import Enum  # For the different states
 import numpy as np
-from .BasePolicy import BasePolicy
+
+try:
+    from .BasePolicy import BasePolicy
+except ImportError:
+    from BasePolicy import BasePolicy
 
 
 # --- Functions to compute the optimal choice of Time0 proposed in [Shamir et al., 2015]

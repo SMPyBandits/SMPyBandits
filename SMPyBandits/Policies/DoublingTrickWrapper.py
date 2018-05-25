@@ -37,13 +37,10 @@ __version__ = "0.9"
 import numpy as np
 try:
     from .BasePolicy import BasePolicy
-except ImportError:
-    from BasePolicy import BasePolicy
-try:
     from .UCBH import UCBH
 except ImportError:
+    from BasePolicy import BasePolicy
     from UCBH import UCBH
-
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 except (ValueError, ImportError, SystemError):

@@ -9,8 +9,12 @@ __version__ = "0.1"
 
 import numpy as np
 
-from .kullback import maxEV   # XXX Not detected as in the kullback.py file ?
-from .IndexPolicy import IndexPolicy
+try:
+    from .kullback import maxEV   # XXX Not detected as in the kullback.py file ?
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from kullback import maxEV   # XXX Not detected as in the kullback.py file ?
+    from IndexPolicy import IndexPolicy
 
 
 class KLempUCB(IndexPolicy):

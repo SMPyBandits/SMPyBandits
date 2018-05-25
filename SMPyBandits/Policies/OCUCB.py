@@ -12,7 +12,10 @@ from math import exp, sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCB import UCB
+try:
+    from .UCB import UCB
+except ImportError:
+    from UCB import UCB
 
 #: Default value for parameter :math:`\eta > 1` for OCUCB.
 ETA = 2

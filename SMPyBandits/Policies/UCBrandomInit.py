@@ -8,7 +8,11 @@ __author__ = "Lilian Besson"
 __version__ = "0.2"
 
 import numpy as np
-from .UCB import UCB
+
+try:
+    from .UCB import UCB
+except ImportError:
+    from UCB import UCB
 
 
 class UCBrandomInit(UCB):

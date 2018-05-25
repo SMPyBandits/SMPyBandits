@@ -13,9 +13,13 @@ __version__ = "0.9"
 from random import random
 import numpy as np
 import numpy.random as rn
-from .BasePolicy import BasePolicy
-from .with_proba import with_proba
 
+try:
+    from .BasePolicy import BasePolicy
+    from .with_proba import with_proba
+except ImportError:
+    from BasePolicy import BasePolicy
+    from with_proba import with_proba
 
 
 # --- Class MEGA

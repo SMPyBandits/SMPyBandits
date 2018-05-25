@@ -24,8 +24,12 @@ from enum import Enum  # For the different states
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .BasePolicy import BasePolicy
-from .UCBalpha import UCBalpha
+try:
+    from .BasePolicy import BasePolicy
+    from .UCBalpha import UCBalpha
+except ImportError:
+    from BasePolicy import BasePolicy
+    from UCBalpha import UCBalpha
 
 #: Default horizon-dependent policy
 default_index_policy = UCBalpha

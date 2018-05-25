@@ -199,4 +199,10 @@ klucb_mapping = {
 }
 
 # Experimentals policies
-from .Experimentals import *
+try:
+    from .Experimentals import *
+except ImportError as e:
+    from traceback import print_exc
+    print("Warning: not able to import some policies from Experimentals subpackage.\nError was: {}...".format(e))  # DEBUG
+    print_exc()  # DEBUG
+    del print_exc

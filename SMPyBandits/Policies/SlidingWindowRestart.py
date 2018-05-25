@@ -21,10 +21,16 @@ __version__ = "0.6"
 
 import numpy as np
 
-from .UCB import UCB as DefaultPolicy
-from .UCB import UCB
-from .UCBalpha import UCBalpha, ALPHA
-from .klUCB import klUCB, klucbBern, c
+try:
+    from .UCB import UCB as DefaultPolicy
+    from .UCB import UCB
+    from .UCBalpha import UCBalpha, ALPHA
+    from .klUCB import klUCB, klucbBern, c
+except ImportError:
+    from UCB import UCB as DefaultPolicy
+    from UCB import UCB
+    from UCBalpha import UCBalpha, ALPHA
+    from klUCB import klUCB, klucbBern, c
 
 
 #: Size of the sliding window.

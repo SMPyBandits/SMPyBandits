@@ -11,8 +11,12 @@ from math import log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .kullback import klucbBern
-from .klUCB import klUCB, c
+try:
+    from .kullback import klucbBern
+    from .klUCB import klUCB, c
+except ImportError:
+    from kullback import klucbBern
+    from klUCB import klUCB, c
 
 
 class klUCBH(klUCB):

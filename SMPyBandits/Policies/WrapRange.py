@@ -22,9 +22,14 @@ __version__ = "0.9"
 
 
 import numpy as np
-from .BasePolicy import BasePolicy
 
-from .UCB import UCB
+try:
+    from .BasePolicy import BasePolicy
+    from .UCB import UCB
+except ImportError:
+    from BasePolicy import BasePolicy
+    from UCB import UCB
+
 default_rangeDependent_policy = UCB
 
 

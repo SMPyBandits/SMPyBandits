@@ -11,7 +11,10 @@ from math import log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .klUCB import klUCB
+try:
+    from .klUCB import klUCB
+except ImportError:
+    from klUCB import klUCB
 
 
 class klUCBPlus(klUCB):

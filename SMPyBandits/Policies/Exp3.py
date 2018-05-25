@@ -12,7 +12,10 @@ __version__ = "0.6"
 
 import numpy as np
 import numpy.random as rn
-from .BasePolicy import BasePolicy
+try:
+    from .BasePolicy import BasePolicy
+except ImportError:
+    from BasePolicy import BasePolicy
 
 #: self.unbiased is a flag to know if the rewards are used as biased estimator,
 #: i.e., just :math:`r_t`, or unbiased estimators, :math:`r_t / trusts_t`.

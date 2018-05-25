@@ -14,7 +14,10 @@ from math import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBalpha import UCBalpha
+try:
+    from .UCBalpha import UCBalpha
+except ImportError:
+    from UCBalpha import UCBalpha
 
 #: Default parameter for alpha.
 ALPHA = 4

@@ -6,7 +6,11 @@ __author__ = "Lilian Besson"
 __version__ = "0.1"
 
 import random
-from .BasePolicy import BasePolicy
+
+try:
+    from .BasePolicy import BasePolicy
+except ImportError:
+    from BasePolicy import BasePolicy
 
 
 class Uniform(BasePolicy):

@@ -12,7 +12,10 @@ __version__ = "0.9"
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 #: Default value for the parameter :math:`\alpha > 0` for ApproximatedFHGittins.
 ALPHA = 0.125

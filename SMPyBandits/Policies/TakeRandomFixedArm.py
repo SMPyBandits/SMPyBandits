@@ -9,7 +9,11 @@ __version__ = "0.9"
 
 import numpy as np
 import numpy.random as rn
-from .TakeFixedArm import TakeFixedArm
+
+try:
+    from .TakeFixedArm import TakeFixedArm
+except ImportError:
+    from TakeFixedArm import TakeFixedArm
 
 
 class TakeRandomFixedArm(TakeFixedArm):

@@ -10,7 +10,10 @@ __version__ = "0.9"
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .MOSS import MOSS
+try:
+    from .MOSS import MOSS
+except ImportError:
+    from MOSS import MOSS
 
 
 #: Default value for the parameter :math:`\alpha` for the MOSS-Anytime algorithm.

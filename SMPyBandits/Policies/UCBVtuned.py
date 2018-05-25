@@ -11,7 +11,10 @@ from math import sqrt, log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBV import UCBV
+try:
+    from .UCBV import UCBV
+except ImportError:
+    from UCBV import UCBV
 
 
 class UCBVtuned(UCBV):

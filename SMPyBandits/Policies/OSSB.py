@@ -17,10 +17,13 @@ __version__ = "0.9"
 
 from enum import Enum  # For the different phases
 import numpy as np
-from .BasePolicy import BasePolicy
 
-
-from .kullback import klBern, klGauss
+try:
+    from .BasePolicy import BasePolicy
+    from .kullback import klBern, klGauss
+except ImportError:
+    from BasePolicy import BasePolicy
+    from kullback import klBern, klGauss
 klBern_vect = np.vectorize(klBern)
 
 # WARNING using np.vectorize gave weird result on klGauss

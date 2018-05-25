@@ -7,7 +7,10 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
 __version__ = "0.5"
 
-from .BayesianIndexPolicy import BayesianIndexPolicy
+try:
+  from .BayesianIndexPolicy import BayesianIndexPolicy
+except ImportError:
+  from BayesianIndexPolicy import BayesianIndexPolicy
 
 
 class BayesUCB(BayesianIndexPolicy):

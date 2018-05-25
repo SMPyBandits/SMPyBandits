@@ -8,7 +8,10 @@ __version__ = "0.1"
 
 import random
 
-from .Uniform import Uniform
+try:
+    from .Uniform import Uniform
+except ImportError:
+    from Uniform import Uniform
 
 
 class UniformOnSome(Uniform):

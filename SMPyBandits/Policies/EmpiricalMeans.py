@@ -8,7 +8,10 @@ __version__ = "0.1"
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')  # XXX dangerous in general, controlled here!
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 class EmpiricalMeans(IndexPolicy):

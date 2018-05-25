@@ -62,5 +62,5 @@ except ImportError:
     print("Warning: the 'UCBoost_cython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
     from .UCBoost_faster import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
 
-del path
-del pyximport
+# del path
+# del pyximport

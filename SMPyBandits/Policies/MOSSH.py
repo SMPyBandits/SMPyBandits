@@ -10,7 +10,10 @@ __version__ = "0.5"
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .MOSS import MOSS
+try:
+    from .MOSS import MOSS
+except ImportError:
+    from MOSS import MOSS
 
 
 class MOSSH(MOSS):

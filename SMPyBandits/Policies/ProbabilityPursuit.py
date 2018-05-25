@@ -26,7 +26,10 @@ import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 import numpy.random as rn
 
-from .BasePolicy import BasePolicy
+try:
+    from .BasePolicy import BasePolicy
+except ImportError:
+    from BasePolicy import BasePolicy
 
 #: Default value for the beta parameter
 BETA = 0.5

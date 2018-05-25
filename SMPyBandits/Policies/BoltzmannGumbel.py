@@ -12,7 +12,10 @@ __version__ = "0.6"
 import numpy as np
 import numpy.random as rn
 
-from .IndexPolicy import IndexPolicy
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 #: Default constant :math:`\sigma` assuming the arm distributions are :math:`\sigma^2`-subgaussian. 1 for Bernoulli arms.

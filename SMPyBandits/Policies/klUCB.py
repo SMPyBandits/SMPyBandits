@@ -12,9 +12,12 @@ from math import log
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-
-from .kullback import klucbBern
-from .IndexPolicy import IndexPolicy
+try:
+    from .kullback import klucbBern
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from kullback import klucbBern
+    from IndexPolicy import IndexPolicy
 
 #: Default value for the constant c used in the computation of KL-UCB index.
 c = 1.  #: default value, as it was in pymaBandits v1.0
