@@ -23,7 +23,7 @@ class UCBH(UCBalpha):
 
     def __init__(self, nbArms, horizon=None, alpha=ALPHA, lower=0., amplitude=1.):
         super(UCBH, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
         self.alpha = alpha  #: Parameter alpha
 
     def __str__(self):

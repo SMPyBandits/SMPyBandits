@@ -58,7 +58,7 @@ class klUCBPlusPlus(klUCB):
     def __init__(self, nbArms, horizon=None, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCBPlusPlus, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude)
         self.nbArms = float(self.nbArms)  # Just speed up type casting by forcing it to be a float
-        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         name = "" if self.klucb.__name__[5:] == "Bern" else ", " + self.klucb.__name__[5:]

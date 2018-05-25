@@ -83,7 +83,7 @@ class ETC_RandomStop(EpsilonGreedy):
         super(ETC_RandomStop, self).__init__(nbArms, epsilon=0.5, lower=lower, amplitude=amplitude)
         # Arguments
         assert horizon > 0, "Error: the 'horizon' parameter for ETC_RandomStop class has to be > 0."
-        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
         self.alpha = alpha  #: Parameter :math:`\alpha` in the formula (4 by default).
         self.stillRandom = True  #: Still randomly exploring?
 

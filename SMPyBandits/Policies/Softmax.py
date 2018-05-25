@@ -142,7 +142,7 @@ class SoftmaxWithHorizon(Softmax):
     def __init__(self, nbArms, horizon, lower=0., amplitude=1.):
         super(SoftmaxWithHorizon, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for SoftmaxWithHorizon class has to be > 0."
-        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         return "Softmax($T={}$)".format(self.horizon)

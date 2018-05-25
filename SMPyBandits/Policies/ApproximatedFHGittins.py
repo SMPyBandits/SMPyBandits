@@ -40,7 +40,7 @@ class ApproximatedFHGittins(IndexPolicy):
         self.alpha = alpha  #: Parameter :math:`\alpha > 0`.
         assert distortion_horizon >= 1, "Error: parameter 'distortion_horizon' for ApproximatedFHGittins should be >= 1."  # DEBUG
         self.distortion_horizon = distortion_horizon  #: Parameter :math:`\tau > 0`.
-        self.horizon = int(horizon) if horizon is not None else None  #: Parameter :math:`T` = known horizon of the experiment.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
 
     def __str__(self):
         if self.alpha == ALPHA:

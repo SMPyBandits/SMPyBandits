@@ -2,6 +2,8 @@
 """ The Optimally Confident UCB (OC-UCB) policy for bounded stochastic bandits, with sub-Gaussian noise.
 
 - Reference: [Lattimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
+
+.. warning:: FIXME also implement the horizon-dependent version, from [Lattimore, 2015](https://arxiv.org/pdf/1507.07880.pdf)
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
