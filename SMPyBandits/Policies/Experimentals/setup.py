@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Basic setup.py to compile a Cython extension.
-It is used to compile the ``kullback_cython`` extension, by running::
+It is used to compile the ``UCBoost_faster_cython``, ``UCBoost_cython``, ``UCBcython`` extension, by running::
 
     $ python setup.py build_ext --inplace
 
@@ -16,9 +16,15 @@ from distutils.extension import Extension
 from Cython.Build import cythonize
 
 extensions = [
-    # Extension("kullback_cython", ["kullback_cython.pyx"]),
+    # Extension("UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
     # XXX also build the extension with full name?
-    Extension("SMPyBandits.Policies.kullback_cython", ["kullback_cython.pyx"]),
+    Extension("SMPyBandits.Policies.Experimentals.UCBoost_faster_cython", ["UCBoost_faster_cython.pyx"]),
+    # Extension("UCBoost_cython", ["UCBoost_cython.pyx"]),
+    # XXX also build the extension with full name?
+    Extension("SMPyBandits.Policies.Experimentals.UCBoost_cython", ["UCBoost_cython.pyx"]),
+    # Extension("UCBcython", ["UCBcython.pyx"]),
+    # XXX also build the extension with full name?
+    Extension("SMPyBandits.Policies.Experimentals.UCBcython", ["UCBcython.pyx"]),
 ]
 
 setup(

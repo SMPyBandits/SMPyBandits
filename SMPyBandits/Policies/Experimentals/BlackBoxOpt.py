@@ -12,6 +12,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 import numpy as np
+from sys import path; path.insert(0, '..')
 
 # Ignore the UserWarning skopt/optimizer/optimizer.py:208:
 # UserWarning: The objective has been evaluated at this point before.
@@ -19,10 +20,17 @@ from warnings import simplefilter
 simplefilter("ignore", UserWarning)
 
 # Cf. https://scikit-optimize.github.io/
-import skopt.learning
-from skopt import Optimizer
+try:
+    import skopt.learning
+    from skopt import Optimizer
+except ImportError as e:
+    print("ERROR: the 'scikit-optimize' package is mandatory for BlackBoxOpt policy.\nInstall it with 'pip install skopt' or 'sudo pip install skopt' (or maybe 'pip3').")  # WARNING
+    raise e
 
-from .BasePolicy import BasePolicy
+try:
+    from .BasePolicy import BasePolicy
+except ImportError:
+    from BasePolicy import BasePolicy
 
 
 # --- Default estimator and optimizer

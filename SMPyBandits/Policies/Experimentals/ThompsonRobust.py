@@ -8,8 +8,14 @@ __author__ = "Lilian Besson"
 __version__ = "0.6"
 
 import numpy as np
-from .Thompson import Thompson
-from .Posterior import Beta
+
+from sys import path; path.insert(0, '..')
+try:
+    from .Thompson import Thompson
+    from .Posterior import Beta
+except ImportError:
+    from Thompson import Thompson
+    from Posterior import Beta
 
 
 #: Default value of how many indexes are computed by sampling the posterior

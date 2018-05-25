@@ -25,6 +25,7 @@ from libc.math cimport log, sqrt, exp, ceil, floor
 import numpy as np
 # cimport numpy as np  # WARNING might be deprecated
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+from sys import path; path.insert(0, '..')
 
 try:
     # from IndexPolicy import IndexPolicy

@@ -12,7 +12,11 @@ from math import sqrt, log10
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .UCBlog10 import UCBlog10
+from sys import path; path.insert(0, '..')
+try:
+    from .UCBlog10 import UCBlog10
+except ImportError:
+    from UCBlog10 import UCBlog10
 
 #: Default parameter for alpha
 ALPHA = 4

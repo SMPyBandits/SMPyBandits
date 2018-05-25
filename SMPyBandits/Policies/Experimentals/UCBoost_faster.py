@@ -11,6 +11,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 from math import log, sqrt, exp, ceil, floor
+from sys import path; path.insert(0, '..')
 
 try:
     import pyximport; pyximport.install()

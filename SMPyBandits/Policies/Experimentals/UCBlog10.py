@@ -11,7 +11,11 @@ from math import sqrt, log10
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from .IndexPolicy import IndexPolicy
+from sys import path; path.insert(0, '..')
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 class UCBlog10(IndexPolicy):

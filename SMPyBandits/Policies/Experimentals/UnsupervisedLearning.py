@@ -26,7 +26,11 @@ import scipy.stats as st
 
 
 # Cf. http://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KernelDensity.html#sklearn.neighbors.KernelDensity
-from sklearn.neighbors.kde import KernelDensity
+try:
+    from sklearn.neighbors.kde import KernelDensity
+except ImportError as e:
+    print("ERROR: the 'scikit-learn' package is mandatory for UnsupervisedLearning policy.\nInstall it with 'pip install sklearn' or 'sudo pip install sklearn' (or maybe 'pip3').")  # WARNING
+    raise e
 
 
 # --- Unsupervised fitting models

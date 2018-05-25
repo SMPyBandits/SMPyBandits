@@ -16,7 +16,11 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from .IndexPolicy import IndexPolicy
+from sys import path; path.insert(0, '..')
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
 
 
 class UCBjulia(IndexPolicy):
@@ -33,8 +37,9 @@ class UCBjulia(IndexPolicy):
         # Importing the julia module and creating the bridge
         try:
             import julia
-        except ImportError:
+        except ImportError as :e
             print("Error: unable to load the 'julia' Python module. Install with 'pip install julia', or see https://github.com/JuliaPy/pyjulia/")  # DEBUG
+            raise e
         _j = julia.Julia()
         try:
             self._index_function = _j.evalfile("Policies/UCBjulia.jl")

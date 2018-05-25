@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Policies module : contains various bandits algorithms:
+""" ``Policies`` module : contains all the (single-player) bandits algorithms:
 
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
@@ -9,15 +9,13 @@
 
 - Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
 
-- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`, :class:`UCBimproved`,
+- Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`, :class:`UCBimproved`,
 
 - Index based MOSS algorithms: :class:`MOSS`, :class:`MOSSH`, :class:`MOSSAnytime`, :class:`MOSSExperimental`,
 
-- Bayesian algorithms: :class:`Thompson`, :class:`ThompsonRobust`, :class:`BayesUCB`,
+- Bayesian algorithms: :class:`Thompson`, :class:`BayesUCB`,
 
-- Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBlog10`, :class:`klUCBloglog`, :class:`klUCBloglog10`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`, :class:`klUCBswitch`,
-
-- Empirical KL-UCB algorithm: :class:`KLempUCB` (FIXME),
+- Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBloglog`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`, :class:`klUCBswitch`,
 
 - Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`, :class:`UCBdagger`,
 
@@ -26,10 +24,6 @@
 - Aggregation algorithms: :class:`Aggregator` (mine, it's awesome, go on try it!), and :class:`CORRAL`, :class:`LearnExp`,
 
 - Finite-Horizon Gittins index, approximated version: :class:`ApproximatedFHGittins`,
-
-- An *experimental* policy, using Unsupervised Learning: :class:`UnsupervisedLearning`,
-
-- An *experimental* policy, using Black-box optimization: :class:`BlackBoxOpt`,
 
 - An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB` (my algorithm, unpublished yet),
 
@@ -92,29 +86,13 @@ from .ProbabilityPursuit import ProbabilityPursuit
 from .BoltzmannGumbel import BoltzmannGumbel
 from .Hedge import Hedge, HedgeDecreasing, HedgeWithHorizon
 
-# --- Using unsupervised learning, from scikit-learn
-from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
-
-from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
-
 # --- Simple UCB policies
 from .UCB import UCB
 from .UCBH import UCBH          # With log(T) instead of log(t)
-from .UCBlog10 import UCBlog10  # With log10(t) instead of log(t) = ln(t)
-from .UCBwrong import UCBwrong  # With a volontary typo!
 from .UCBalpha import UCBalpha  # Different indexes
-from .UCBlog10alpha import UCBlog10alpha  # Different indexes
 from .UCBmin import UCBmin      # Different indexes
 from .UCBplus import UCBplus    # Different indexes
 from .UCBrandomInit import UCBrandomInit
-
-from .UCBjulia import UCBjulia  # XXX Experimental!
-try:
-    import pyximport; pyximport.install()
-    from .UCBcython import UCBcython  # XXX Experimental!
-except:
-    print("Warning: the 'UCBcython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
-    from .UCB import UCB as UCBcython
 
 # --- UCB with successive eliminations
 from .UCBimproved import UCBimproved          # Different indexes
@@ -139,22 +117,18 @@ from .MOSSExperimental import MOSSExperimental  # Without knowing the horizon, e
 
 # --- Thompson sampling index policy
 from .Thompson import Thompson
-from .ThompsonRobust import ThompsonRobust
 
 # --- Bayesian index policy
 from .BayesUCB import BayesUCB
 
 # --- Kullback-Leibler based index policy
 from .klUCB import klUCB
-from .klUCBlog10 import klUCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .klUCBloglog import klUCBloglog  # With log(t) + c log(log(t)) and c = 1 (variable)
-from .klUCBloglog10 import klUCBloglog10  # With log10(t) + c log10(log10(t)) and c = 1 (variable)
 from .klUCBPlus import klUCBPlus    # Different indexes
 from .klUCBH import klUCBH          # Knowing the horizon
 from .klUCBHPlus import klUCBHPlus  # Different indexes
 from .klUCBPlusPlus import klUCBPlusPlus  # Different indexes
 from .klUCBswitch import klUCBswitch, klUCBswitchAnytime  # Different indexes
-from .KLempUCB import KLempUCB  # Empirical KL UCB
 
 # From [Honda & Takemura, COLT 2010]
 from .DMED import DMED, DMEDPlus
@@ -173,15 +147,6 @@ from .BESA import BESA
 
 # From [Fang Liu et al, 2018]
 from .UCBoost import UCB_sq, UCB_bq, UCB_h, UCB_lb, UCB_t, UCBoost_bq_h_lb, UCBoost_bq_h_lb_t, UCBoost_bq_h_lb_t_sq, UCBoost, UCBoostEpsilon
-
-from .UCBoost_faster import UCB_sq as UCB_sq_faster, UCB_bq as UCB_bq_faster, UCB_h as UCB_h_faster, UCB_lb as UCB_lb_faster, UCB_t as UCB_t_faster, UCBoost_bq_h_lb as UCBoost_bq_h_lb_faster, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_faster, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_faster, UCBoost as UCBoost_faster, UCBoostEpsilon as UCBoostEpsilon_faster
-
-try:
-    import pyximport; pyximport.install()
-    from .UCBoost_cython import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
-except ImportError:
-    print("Warning: the 'UCBoost_cython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
-    from .UCBoost_faster import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
 
 # From https://github.com/flaviotruzzi/AdBandits/
 from .AdBandits import AdBandits
@@ -232,3 +197,6 @@ klucb_mapping = {
     "Poisson": klucbPoisson,
     "Gamma": klucbGamma,
 }
+
+# Experimentals policies
+from .Experimentals import *
