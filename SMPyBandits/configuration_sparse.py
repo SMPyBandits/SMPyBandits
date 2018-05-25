@@ -354,13 +354,13 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        {
-            "archtype": Thompson,
-            "params": {
-                "posterior": Gauss,   # WARNING Gaussian posterior is still experimental
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
+        # {
+        #     "archtype": Thompson,
+        #     "params": {
+        #         "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
+        #         "lower": LOWER, "amplitude": AMPLITUDE,
+        #     }
+        # },
         # # --- KL algorithms, here only klUCB with different klucb functions
         # {
         #     "archtype": klUCB,
@@ -516,15 +516,15 @@ configuration.update({
         #         "gamma": 0.0,  # XXX test to change these values!
         #     }
         # },
-        # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
-        {
-            "archtype": GaussianOSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "variance": VARIANCE,
-            }
-        },
+        # # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
+        # {
+        #     "archtype": GaussianOSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.0,
+        #         "variance": VARIANCE,
+        #     }
+        # },
         # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
         {
             "archtype": SparseOSSB,
@@ -629,16 +629,17 @@ configuration.update({
 
 
 NON_AGGR_POLICIES_1 = [
-        {
-            "archtype": SparseWrapper,
-            "params": {
-                "policy": klUCB,
-                "sparsity": s,
-                "use_ucb_for_set_J": False, "use_ucb_for_set_K": False,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
+    {
+        "archtype": SparseWrapper,
+        "params": {
+            "policy": klUCB,
+            "sparsity": s,
+            "use_ucb_for_set_J": True, "use_ucb_for_set_K": True,
+            "lower": LOWER, "amplitude": AMPLITUDE,
         }
-        for s in range(1, 1 + NB_ARMS)
+    }
+    for s in [SPARSITY - 1, SPARSITY, SPARSITY + 1]
+    # for s in range(1, 1 + NB_ARMS)
 ]
 
 

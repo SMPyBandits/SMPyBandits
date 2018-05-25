@@ -280,9 +280,16 @@ class DeltaUCB(BasePolicy):
         .. math::
 
             A_{t,\min} &= \arg\min_k N_k(t),\\
-            A_{t,\max} &= \arg\max_k N_k(t),\\
-            A(t) &= \begin{cases}\\
-                A(t) = A_{t,\min} & \text{if} \hat{\mu_{A_{t,\min}}}(t-1) + \sqrt{\alpha \frac{\log(\frac{T}{N_{A_{t,\min}}})}{N_{A_{t,\min}}}} \geq \hat{\mu_{A_{t,\max}}}(t-1) + \Delta - \alpha \varepsilon_T,
+            A_{t,\max} &= \arg\max_k N_k(t).
+
+        .. math::
+
+            UCB_{\min} &= \hat{\mu}_{A_{t,\min}}(t-1) + \sqrt{\alpha \frac{\log(\frac{T}{N_{A_{t,\min}}})}{N_{A_{t,\min}}}} \\
+            UCB_{\max} &= \hat{\mu}_{A_{t,\max}}(t-1) + \Delta - \alpha \varepsilon_T
+
+        .. math::
+            A(t) = \begin{cases}\\
+                A(t) = A_{t,\min} & \text{if  } UCB_{\min} \geq UCB_{\max},\\
                 A(t) = A_{t,\max} & \text{else}.
             \end{cases}
         """

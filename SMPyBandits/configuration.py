@@ -381,68 +381,68 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- Explore-Then-Commit policies
-        {
-            "archtype": ETC_KnownGap,
-            "params": {
-                "horizon": HORIZON,
-                "gap": GAP,
-            }
-        },
+        # # --- Explore-Then-Commit policies
         # {
         #     "archtype": ETC_KnownGap,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.05,
+        #         "gap": GAP,
+        #     }
+        # },
+        # # {
+        # #     "archtype": ETC_KnownGap,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "gap": 0.05,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": ETC_KnownGap,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "gap": 0.01,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": ETC_KnownGap,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "gap": 0.5
+        # #     }
+        # # },
+        # {
+        #     "archtype": ETC_RandomStop,
+        #     "params": {
+        #         "horizon": HORIZON,
         #     }
         # },
         # {
-        #     "archtype": ETC_KnownGap,
+        #     "archtype": ETC_FixedBudget,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.01,
+        #         "gap": GAP,
         #     }
         # },
         # {
-        #     "archtype": ETC_KnownGap,
+        #     "archtype": ETC_SPRT,
         #     "params": {
         #         "horizon": HORIZON,
-        #         "gap": 0.5
+        #         "gap": GAP,
         #     }
         # },
-        {
-            "archtype": ETC_RandomStop,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
-        {
-            "archtype": ETC_FixedBudget,
-            "params": {
-                "horizon": HORIZON,
-                "gap": GAP,
-            }
-        },
-        {
-            "archtype": ETC_SPRT,
-            "params": {
-                "horizon": HORIZON,
-                "gap": GAP,
-            }
-        },
-        {
-            "archtype": ETC_BAI,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
-        {
-            "archtype": DeltaUCB,
-            "params": {
-                "horizon": HORIZON,
-                "gap": GAP,
-            }
-        },
+        # {
+        #     "archtype": ETC_BAI,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": DeltaUCB,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "gap": GAP,
+        #     }
+        # },
         # --- Softmax algorithms
         # {
         #     "archtype": Softmax,   # This basic Softmax is very bad

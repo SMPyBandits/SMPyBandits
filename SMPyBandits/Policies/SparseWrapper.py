@@ -99,15 +99,15 @@ class SparseWrapper(BasePolicy):
 
     def __str__(self):
         ucb_for = ""
-        # FIXME use notations B_cJ, B_cK from my article
+        # FIXME use notations B_cJ, B_cK from my article?
         if self.use_ucb_for_set_K or self.use_ucb_for_set_J:
-            ucb_for = ", UCB for "
+            ucb_for = r", \mathrm{UCB} for "
         if self.use_ucb_for_set_J and self.use_ucb_for_set_K:
-            ucb_for += "K and J"
+            ucb_for += r"$\mathcal{K}$ and $\mathcal{J}$"
         elif self.use_ucb_for_set_K and not self.use_ucb_for_set_J:
-            ucb_for += "K"
+            ucb_for += r"$\mathcal{K}$"
         elif self.use_ucb_for_set_J and not self.use_ucb_for_set_K:
-            ucb_for += "J"
+            ucb_for += r"$\mathcal{J}$"
         return r"Sparse($s={}$)[{}{}]".format(self.sparsity, self.policy, ucb_for)
 
     # --- Start game by creating new underlying policy
@@ -139,13 +139,15 @@ class SparseWrapper(BasePolicy):
 
         .. math::
 
-           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-           U^{\mathcal{K}}_k(t) &= I_k^{P}(t) - \hat{\mu}_k(t),\\
-           U^{\mathcal{J}}_k(t) &= U^{\mathcal{K}}_k(t) \times \sqrt{\frac{\log(N_k(t))}{\log(t)}},\\
-           \mathcal{J}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{J}}_k(t) - \hat{\mu}_k(t) \right\}.
+            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+            U^{\mathcal{K}}_k(t) &= I_k^{P}(t) - \hat{\mu}_k(t),\\
+            U^{\mathcal{J}}_k(t) &= U^{\mathcal{K}}_k(t) \times \sqrt{\frac{\log(N_k(t))}{\log(t)}},\\
+            \mathcal{J}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{J}}_k(t) - \hat{\mu}_k(t) \right\}.
 
         - Yes, this is a nothing but a *hack*, as there is no generic formula to retrieve the indexes used in the set :math:`\mathcal{J}(t)` from the indexes :math:`I_k^{P}(t)` of the underlying index policy :math:`P`.
         - If ``use_ucb_for_set_J`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
+
+        .. warning:: FIXME rewrite the above with LCB and UCB instead of this weird U - mean.
         """
         # assert np.all(self.pulls >= 1), "Error: at least one arm was not already pulled: pulls = {} ...".format(self.pulls)  # DEBUG
         self.force_to_see.fill(False)  # faster than sets
@@ -223,6 +225,7 @@ class SparseWrapper(BasePolicy):
                     return np.random.choice(np.nonzero(diff_of_set)[0])
                 # 3rd case: UCB phase
                 else:
+                    if self.phase != Phase.UCB: print("{}: at time t = {}, the set of good arms was identified as {} for the first time...".format(self, self.t, np.nonzero(self.goods)[0]))  # DEBUG
                     self.phase = Phase.UCB
                     return self.choiceFromSubSet(availableArms=np.nonzero(self.goods)[0])
 
