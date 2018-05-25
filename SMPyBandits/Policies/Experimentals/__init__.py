@@ -22,13 +22,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-# from sys import path; path.insert(0, '..')
-
-# --- Using unsupervised learning, from scikit-learn
-from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
-
-from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
-
 # --- Simple UCB policies
 from .UCBlog10 import UCBlog10  # With log10(t) instead of log(t) = ln(t)
 from .UCBwrong import UCBwrong  # With a volontary typo!
@@ -52,6 +45,11 @@ from .klUCBloglog10 import klUCBloglog10  # With log10(t) + c log10(log10(t)) an
 
 from .KLempUCB import KLempUCB  # Empirical KL UCB
 
+# --- Using unsupervised learning, from scikit-learn
+from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
+
+from .BlackBoxOpt import default_estimator, default_optimizer, BlackBoxOpt
+
 # From [Fang Liu et al, 2018]
 from .UCBoost_faster import UCB_sq as UCB_sq_faster, UCB_bq as UCB_bq_faster, UCB_h as UCB_h_faster, UCB_lb as UCB_lb_faster, UCB_t as UCB_t_faster, UCBoost_bq_h_lb as UCBoost_bq_h_lb_faster, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_faster, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_faster, UCBoost as UCBoost_faster, UCBoostEpsilon as UCBoostEpsilon_faster
 
@@ -62,5 +60,4 @@ except ImportError:
     print("Warning: the 'UCBoost_cython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
     from .UCBoost_faster import UCB_sq as UCB_sq_cython, UCB_bq as UCB_bq_cython, UCB_h as UCB_h_cython, UCB_lb as UCB_lb_cython, UCB_t as UCB_t_cython, UCBoost_bq_h_lb as UCBoost_bq_h_lb_cython, UCBoost_bq_h_lb_t as UCBoost_bq_h_lb_t_cython, UCBoost_bq_h_lb_t_sq as UCBoost_bq_h_lb_t_sq_cython, UCBoost as UCBoost_cython, UCBoostEpsilon as UCBoostEpsilon_cython
 
-# del path
-# del pyximport
+del pyximport

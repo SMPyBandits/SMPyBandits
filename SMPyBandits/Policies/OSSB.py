@@ -8,6 +8,8 @@
 
 - The :class:`OSSB` is for Bernoulli stochastic bandits, and :class:`GaussianOSSB` is for Gaussian stochastic bandits, with a direct application of the result from their paper.
 - The :class:`SparseOSSB` is for sparse Gaussian (or sub-Gaussian) stochastic bandits, of known variance.
+
+- I also added support for non-constant :math:`\varepsilon` and :math:`\gamma` rates, as suggested in a talk given by Combes, 24th of May 2018, Rotterdam (Workshop, "Learning while Earning"). See :class:`OSSB_DecreasingRate` and :class:`OSSB_AutoDecreasingRate`.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -262,3 +264,62 @@ class SparseOSSB(OSSB):
         kwargs.update({'sparsity': sparsity})
         super(SparseOSSB, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, solve_optimization_problem="sparse", lower=lower, amplitude=amplitude, **kwargs)
         self._info_on_solver += ", $s={}$".format(sparsity)
+
+
+#: Default value for the constant for the decreasing rate
+DECREASINGRATE = 1e-6
+
+
+class OSSB_DecreasingRate(OSSB):
+    r""" Optimal Sampling for Structured Bandits (OSSB) algorithm, with decreasing rates for both :math:`\varepsilon` and :math:`\gamma`.
+
+    .. warning:: This is purely experimental, the paper does not talk about how to chose decreasing rates. It is inspired by the rates for Exp3 algorithm, cf [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf).
+    """
+
+    def __init__(self, nbArms, epsilon=EPSILON, gamma=GAMMA, decreasingRate=DECREASINGRATE,
+                 lower=0., amplitude=1., **kwargs):
+        super(OSSB_DecreasingRate, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, lower=lower, amplitude=amplitude, **kwargs)
+        # new parameters
+        self._decreasingRate = self.decreasingRate
+        self._epsilon = self.epsilon
+        del self.epsilon  # FIXME this works?
+        self._gamma = self.gamma
+        del self.gamma  # FIXME this works?
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def epsilon(self):
+        r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 \exp(- t \tau))`."""
+        return min(1, self._epsilon * np.exp(- self.t * self._decreasingRate))
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def gamma(self):
+        r"""Decreasing :math:`\gamma(t) = \min(1, \gamma_0 \exp(- t \tau))`."""
+        return min(1, self._gamma * np.exp(- self.t * self._decreasingRate))
+
+
+class OSSB_AutoDecreasingRate(OSSB):
+    r""" Optimal Sampling for Structured Bandits (OSSB) algorithm, with automatically-tuned decreasing rates for both :math:`\varepsilon` and :math:`\gamma`.
+
+    .. warning:: This is purely experimental, the paper does not talk about how to chose decreasing rates. It is inspired by the rates for Exp3++ algorithm, [[One practical algorithm for both stochastic and adversarial bandits, S.Seldin & A.Slivkins, ICML, 2014](http://www.jmlr.org/proceedings/papers/v32/seldinb14-supp.pdf)].
+    """
+
+    def __init__(self, nbArms, epsilon=EPSILON, gamma=GAMMA,
+                 lower=0., amplitude=1., **kwargs):
+        super(OSSB_AutoDecreasingRate, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, lower=lower, amplitude=amplitude, **kwargs)
+        del self.epsilon  # FIXME this works?
+        del self.gamma  # FIXME this works?
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def epsilon(self):
+        r"""Decreasing :math:`\varepsilon(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
+        return 0.5 * np.sqrt(np.log(self.nbArms) / (max(2, self.t) * self.nbArms))
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    @property
+    def gamma(self):
+        r"""Decreasing :math:`\gamma(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
+        return 0.5 * np.sqrt(np.log(self.nbArms) / (max(2, self.t) * self.nbArms))
+

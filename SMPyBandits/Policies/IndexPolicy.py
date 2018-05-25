@@ -8,7 +8,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.6"
 
-from warnings import warn
 import numpy as np
 
 try:
@@ -96,7 +95,7 @@ class IndexPolicy(BasePolicy):
         # elif len(availableArms) == self.nbArms:
         #     return self.choice()
         elif len(availableArms) == 0:
-            warn("IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)), RuntimeWarning)
+            print("WARNING: IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)))  # DEBUG
             # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
             return self.choice()
         else:

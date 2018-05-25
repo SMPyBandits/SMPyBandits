@@ -7,6 +7,10 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.1"
 
+# WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
+from sys import path
+from os.path import dirname
+path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
 import numpy as np
 
 try:

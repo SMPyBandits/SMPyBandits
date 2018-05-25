@@ -223,4 +223,5 @@ class EpsilonExpDecreasing(EpsilonGreedy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def epsilon(self):
+        r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 \exp(- t \tau))`."""
         return min(1, self._epsilon * np.exp(- self.t * self._decreasingRate))

@@ -353,9 +353,9 @@ except (ValueError, np.AxisError):
 
 configuration["successive_players"] = [
 
-    # XXX stupid version with fixed T0 : cannot adapt to any problem
-    [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
-    # FIXME test this new TrekkingTSN algorithm!
+    # # XXX stupid version with fixed T0 : cannot adapt to any problem
+    # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
+    # # FIXME test this new TrekkingTSN algorithm!
 
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,

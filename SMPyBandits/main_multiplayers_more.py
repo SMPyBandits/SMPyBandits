@@ -122,15 +122,15 @@ if __name__ == '__main__':
                 evaluators[envId][playersId] = evaluation
 
             # Display the final rankings for that env
-            print("\n\nGiving the final ranks ...")
+            print("\nGiving the final ranks ...")
             evaluation.printFinalRanking(envId)
-            print("\n\nGiving the vector of final regrets ...")
+            print("\nGiving the vector of final regrets ...")
             evaluation.printLastRegrets(envId)
-            print("\n\nGiving the mean and std running times ...")
+            print("\nGiving the mean and std running times ...")
             evaluation.printRunningTimes(envId)
+            print("\nGiving the mean and std memory consumption ...")
+            evaluation.printMemoryConsumption(envId)
             if debug_memory:
-                print("\n\nGiving the mean and std memory consumption ...")
-                evaluation.printMemoryConsumption(envId)
                 display_top_tracemalloc()  # DEBUG
 
             # Sub folder with a useful name
@@ -361,15 +361,15 @@ if __name__ == '__main__':
         e0, eothers = evaluators[envId][0], evaluators[envId][1:]
         M = e0.nbPlayers
 
-        print("\n\nGiving all the vector of final regrets ...")
+        print("\nGiving all the vector of final regrets ...")
         e0.printLastRegrets(envId, evaluators=eothers)
-        print("\n\nGiving the final ranking ...")
+        print("\nGiving the final ranking ...")
         e0.printFinalRankingAll(envId, evaluators=eothers)
-        print("\n\nGiving the mean and std running times ...")
+        print("\nGiving the mean and std running times ...")
         e0.printRunningTimes(envId, evaluators=eothers)
+        print("\nGiving the mean and std memory consumption ...")
+        e0.printMemoryConsumption(envId, evaluators=eothers)
         if debug_memory:
-            print("\n\nGiving the mean and std memory consumption ...")
-            e0.printMemoryConsumption(envId, evaluators=eothers)
             display_top_tracemalloc()  # DEBUG
 
         # Get the name of the output file

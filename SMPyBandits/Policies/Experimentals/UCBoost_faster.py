@@ -11,7 +11,11 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 from math import log, sqrt, exp, ceil, floor
-from sys import path; path.insert(0, '..')
+
+# WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
+from sys import path
+from os.path import dirname
+path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
 
 try:
     import pyximport; pyximport.install()
@@ -443,3 +447,5 @@ class UCBoostEpsilon(IndexPolicy):
             ),
             min_solutions
         )
+
+del pyximport

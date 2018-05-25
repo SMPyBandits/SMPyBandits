@@ -125,13 +125,13 @@ class Evaluator(object):
         self.runningTimes = dict()  #: For each env, keep the history of running times
         self.memoryConsumption = dict()  #: For each env, keep the history of running times
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
-        for env in range(len(self.envs)):
-            self.bestArmPulls[env] = np.zeros((self.nbPolicies, self.horizon))
-            self.pulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms))
-            if self.moreAccurate: self.allPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.horizon))
-            self.lastPulls[env] = np.zeros((self.nbPolicies, self.envs[env].nbArms, self.repetitions))
-            self.runningTimes[env] = np.zeros((self.nbPolicies, self.repetitions))
-            self.memoryConsumption[env] = np.zeros((self.nbPolicies, self.repetitions))
+        for envId in range(len(self.envs)):
+            self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon))
+            self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms))
+            if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon))
+            self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions))
+            self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
+            self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -558,7 +558,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_times = [ all_times[i] / float(base) for i in index_of_sorting ]
+        all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_times, labels=labels)
@@ -583,7 +583,7 @@ class Evaluator(object):
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_memories = [ [ memory / float(base) for memory in all_memories[i] ] for i in index_of_sorting ]
+        all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_memories, labels=labels)

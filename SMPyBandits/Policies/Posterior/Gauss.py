@@ -14,7 +14,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from warnings import warn
 import numpy as np
 
 try:
@@ -119,12 +118,12 @@ class Gauss(Posterior):
 
         .. note:: I recommend to NOT use :class:`BayesUCB` with Gauss posteriors...
         """
-        # warn("Gauss.quantile() : Not implemented for a 2 dimensional distribution!", RuntimeWarning)
+        # print("WARNING: Gauss.quantile() : Not implemented for a 2 dimensional distribution!")  # DEBUG
         quantile_on_sigma2 = invgamma.ppf(p, self.alpha, scale=self.beta)
         scale = self.beta / float(self.alpha)  # mean of the Inverse-gamma
         quantile_on_x = norm.ppf(p, loc=self.mu, scale=scale / float(self.nu))
         return quantile_on_x * quantile_on_sigma2
-        raise ValueError("Gauss.quantile() : Not implemented for a 2 dimensional distribution!")
+        # raise ValueError("Gauss.quantile() : Not implemented for a 2 dimensional distribution!")
 
     def mean(self):
         """Compute the mean of the Gauss posterior (should be useless)."""

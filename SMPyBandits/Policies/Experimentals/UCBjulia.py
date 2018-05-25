@@ -16,7 +16,10 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from sys import path; path.insert(0, '..')
+# WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
+from sys import path
+from os.path import dirname
+path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
 try:
     from .IndexPolicy import IndexPolicy
 except ImportError:
@@ -37,7 +40,7 @@ class UCBjulia(IndexPolicy):
         # Importing the julia module and creating the bridge
         try:
             import julia
-        except ImportError as :e
+        except ImportError as e:
             print("Error: unable to load the 'julia' Python module. Install with 'pip install julia', or see https://github.com/JuliaPy/pyjulia/")  # DEBUG
             raise e
         _j = julia.Julia()

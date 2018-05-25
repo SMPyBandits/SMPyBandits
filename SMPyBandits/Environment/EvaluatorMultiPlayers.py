@@ -11,6 +11,7 @@ __version__ = "0.9"
 from copy import deepcopy
 from re import search
 import random
+import time
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,6 +29,7 @@ try:
     from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
     from .MAB import MAB, MarkovianMAB, DynamicMAB
     from .ResultMultiPlayers import ResultMultiPlayers
+    from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
@@ -39,6 +41,7 @@ except ImportError:
     from CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
     from MAB import MAB, MarkovianMAB, DynamicMAB
     from ResultMultiPlayers import ResultMultiPlayers
+    from memory_consumption import getCurrentMemory, sizeof_fmt
 
 REPETITIONS = 1  #: Default nb of repetitions
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
@@ -124,6 +127,8 @@ class EvaluatorMultiPlayers(object):
             self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.runningTimes[envId] = np.zeros((self.nbPlayers, self.repetitions))
+            self.memoryConsumption[envId] = np.zeros((self.nbPlayers, self.repetitions))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
 
@@ -208,7 +213,7 @@ class EvaluatorMultiPlayers(object):
             repeatIdout = 0
             historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
+                delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain, useJoblib=self.useJoblib)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
                 historyOfMeans.append(r._means)
@@ -219,7 +224,7 @@ class EvaluatorMultiPlayers(object):
                 env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                r = delayed_play(env, self.players, self.horizon, self.collisionModel, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain)
+                r = delayed_play(env, self.players, self.horizon, self.collisionModel, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain, useJoblib=self.useJoblib)
                 store(r, repeatId)
 
     # --- Getter methods
@@ -746,47 +751,51 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
 
-    def printRunningTimes(self, envId=0, precision=3):
+    def printRunningTimes(self, envId=0, precision=3, evaluators=()):
         """Print the average+-std running time of the different players."""
         from IPython.core.magics.execution import _format_time
-        means, stds, _ = self.getRunningTimes(envId)
-
-        for playerId in np.argsort(means):
-            player = self.players[playerId]
-            print("\nFor player #{} called '{}' ...".format(playerId, player))
-            mean_time, std_time  = means[playerId], stds[playerId]
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for e in evaluators:
+            means, stds, _ = e.getRunningTimes(envId)
+            mean_time, std_time = np.sum(means), np.mean(stds)
+            print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
             print(u"    {mean} ± {std} per loop (mean ± std. dev. of {runs} run{run_plural})"
                 .format(
-                    runs = self.repetitions,
-                    run_plural = "" if self.repetitions == 1 else "s",
+                    runs = e.repetitions,
+                    run_plural = "" if e.repetitions == 1 else "s",
                     mean = _format_time(mean_time, precision),
                     std = _format_time(std_time, precision)
                 )
             )
 
-    def printMemoryConsumption(self, envId=0):
+    def printMemoryConsumption(self, envId=0, evaluators=()):
         """Print the average+-std memory consumption of the different players."""
-        means, stds, _ = self.getMemoryConsumption(envId)
-
-        for playerId in np.argsort(means):
-            player = self.players[playerId]
-            print("\nFor player #{} called '{}' ...".format(playerId, player))
-            mean_time, std_time = means[playerId], stds[playerId]
-            if self.repetitions <= 1:
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for e in evaluators:
+            means, stds, _ = e.getMemoryConsumption(envId)
+            print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
+            mean_time, std_time = np.sum(means), np.mean(stds)
+            if e.repetitions <= 1:
                 print(u"    {mean} (mean of 1 run)".format(mean=sizeof_fmt(mean_time)))
             else:
-                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=self.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
+                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=e.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
 
     def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
-            base=1, unit="seconds"
+            base=1, unit="seconds", evaluators=()
         ):
-        """Plot the running times of the different players, as a box plot for each."""
-        means, _, all_times = self.getRunningTimes(envId=envId)
+        """Plot the running times of the different players, as a box plot for each evaluators."""
+        means, all_times, labels = [], [], []
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for e in evaluators:
+            _means, _, _all_times = e.getRunningTimes(envId=envId)
+            means.append(np.sum(_means))
+            # all_times.append([ np.sum(times) for times in _all_times ])
+            all_times.append(_all_times)
+            labels.append(e.strPlayers(latex=False, short=True))
         # order by increasing mean time
         index_of_sorting = np.argsort(means)
-        labels = [ player.__cachedstr__ for player in self.players ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_times = [ all_times[i] / float(base) for i in index_of_sorting ]
+        all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_times, labels=labels)
@@ -798,20 +807,26 @@ class EvaluatorMultiPlayers(object):
             plt.boxplot(all_times)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
-        plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
     def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
-            base=1024, unit="KiB"
+            base=1024, unit="KiB", evaluators=()
         ):
         """Plot the memory consumption of the different players, as a box plot for each."""
-        means, _, all_memories = self.getMemoryConsumption(envId=envId)
+        means, all_memories, labels = [], [], []
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for e in evaluators:
+            _means, _, _all_memories = e.getMemoryConsumption(envId=envId)
+            means.append(np.sum(_means))
+            # all_memories.append([ np.sum(memories) for memories in _all_memories ])
+            all_memories.append(_all_memories)
+            labels.append(e.strPlayers(latex=False, short=True))
         # order by increasing mean memory consumption
         index_of_sorting = np.argsort(means)
-        labels = [ player.__cachedstr__ for player in self.players ]
         labels = [ labels[i] for i in index_of_sorting ]
-        all_memories = [ [ memory / float(base) for memory in all_memories[i] ] for i in index_of_sorting ]
+        all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             plt.boxplot(all_memories, labels=labels)
@@ -823,7 +838,7 @@ class EvaluatorMultiPlayers(object):
             plt.boxplot(all_memories)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
-        plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
@@ -866,7 +881,6 @@ class EvaluatorMultiPlayers(object):
             print("\nFor evaluator #{:>2}/{} : {} (players {}) ...".format(1 + evaId, len(evaluators), eva, eva.strPlayers(latex=False, short=True)))
             last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
             print("  Last regrets vector (for all repetitions) is:")
-            print("Shape of  last regrets R_T =", np.shape(last_regrets))
             print("Min of    last regrets R_T =", np.min(last_regrets))
             print("Mean of   last regrets R_T =", np.mean(last_regrets))
             print("Median of last regrets R_T =", np.median(last_regrets))
@@ -957,7 +971,9 @@ class EvaluatorMultiPlayers(object):
 
 
 def delayed_play(env, players, horizon, collisionModel,
-                 seed=None, repeatId=0, count_ranks_markov_chain=False):
+        seed=None, repeatId=0,
+        count_ranks_markov_chain=False,
+        useJoblib=False):
     """Helper function for the parallelization."""
     start_time = time.time()
     start_memory = getCurrentMemory(thread=useJoblib)
@@ -1066,10 +1082,10 @@ def delayed_play(env, players, horizon, collisionModel,
                 order = player.estimatedOrder()
                 print("\nEstimated order by the policy {} after {} steps: {} ...".format(player, horizon, order))
                 print("  ==> Optimal arm identification: {:.2%} (relative success)...".format(weightedDistance(order, env.means, n=nbPlayers)))
-                print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
-                # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
-                # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
-                print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
+                # print("  ==> Manhattan   distance from optimal ordering: {:.2%} (relative success)...".format(manhattan(order)))
+                # # print("  ==> Kendell Tau distance from optimal ordering: {:.2%} (relative success)...".format(kendalltau(order)))
+                # # print("  ==> Spearman    distance from optimal ordering: {:.2%} (relative success)...".format(spearmanr(order)))
+                # print("  ==> Gestalt     distance from optimal ordering: {:.2%} (relative success)...".format(gestalt(order)))
                 print("  ==> Mean distance from optimal ordering: {:.2%} (relative success)...".format(meanDistance(order)))
             except AttributeError:
                 print("Unable to print the estimated ordering, no method estimatedOrder was found!")

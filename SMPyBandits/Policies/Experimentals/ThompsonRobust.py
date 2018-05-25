@@ -9,7 +9,10 @@ __version__ = "0.6"
 
 import numpy as np
 
-from sys import path; path.insert(0, '..')
+# WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
+from sys import path
+from os.path import dirname
+path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
 try:
     from .Thompson import Thompson
     from .Posterior import Beta

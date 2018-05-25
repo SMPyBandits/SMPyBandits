@@ -12,7 +12,10 @@ from math import sqrt, log10
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
-from sys import path; path.insert(0, '..')
+# WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
+from sys import path
+from os.path import dirname
+path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
 try:
     from .UCBlog10 import UCBlog10
 except ImportError:

@@ -143,15 +143,15 @@ if __name__ == '__main__':
         evaluation.startOneEnv(envId, env)
 
         # Display the final regrets and rankings for that env
-        print("\n\nGiving the vector of final regrets ...")
+        print("\nGiving the vector of final regrets ...")
         evaluation.printLastRegrets(envId)
-        print("\n\nGiving the final ranks ...")
+        print("\nGiving the final ranks ...")
         evaluation.printFinalRanking(envId)
-        print("\n\nGiving the mean and std running times ...")
+        print("\nGiving the mean and std running times ...")
         evaluation.printRunningTimes(envId)
+        print("\nGiving the mean and std memory consumption ...")
+        evaluation.printMemoryConsumption(envId)
         if debug_memory:
-            print("\n\nGiving the mean and std memory consumption ...")
-            evaluation.printMemoryConsumption(envId)
             display_top_tracemalloc()  # DEBUG
 
         # Sub folder with a useful name
