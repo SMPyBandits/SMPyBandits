@@ -21,6 +21,8 @@ class ResultMultiPlayers(object):
         self.pulls = np.zeros((nbPlayers, nbArms), dtype=int)  #: Store the pulls of all the players
         self.allPulls = np.zeros((nbPlayers, nbArms, horizon), dtype=int)  #: Store all the pulls of all the players
         self.collisions = np.zeros((nbArms, horizon), dtype=int)  #: Store the collisions on all the arms
+        self.running_time = -1  #: Store the running time of the experiment
+        self.memory_consumption = -1  #: Store the memory consumption of the experiment
 
     def store(self, time, choices, rewards, pulls, collisions):
         """ Store results."""

@@ -10,12 +10,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Local imports
-from .usenumba import jit
-from .usetqdm import tqdm
-from .plotsettings import maximizeWindow, legend
-
-# Local imports
-from Arms import *
+from sys import path; path.insert(0, '..')
+try:
+    from .usenumba import jit
+    from .usetqdm import tqdm
+    from .plotsettings import maximizeWindow, legend
+    from .Arms import *
+except ImportError:
+    from usenumba import jit
+    from usetqdm import tqdm
+    from plotsettings import maximizeWindow, legend
+    from Arms import *
 
 oneLR = Bernoulli.oneLR
 oneHOI = Bernoulli.oneHOI

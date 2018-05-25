@@ -6,7 +6,7 @@ Script to load the config, run the simulations, and plot them, for the multi-pla
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 # Generic imports
 from os import mkdir
@@ -19,7 +19,7 @@ import pickle
 # import h5py
 
 # Local imports
-from Environment import EvaluatorMultiPlayers, notify
+from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
 from configuration_multiplayers import configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
@@ -57,9 +57,16 @@ do_comparison_plots = True
 interactive = True  # XXX dont keep it like this
 interactive = False
 
+#: Debug the memory consumption? Using :func:`Environment.memory_consumption.display_top_tracemalloc`.
+debug_memory = False
+
 if getenv('DEBUG', 'False') == 'True' and __name__ == '__main__':
     print("====> TURNING DEBUG MODE ON <=====")
     saveallfigs, interactive = False, True
+
+if getenv('DEBUGMEMORY', 'False') == 'True' and __name__ == '__main__':
+    print("====> TURNING DEBUGMEMORY MODE ON <=====")
+    debug_memory = True
 
 if getenv('SAVEALL', 'False') == 'True' and __name__ == '__main__':
     print("====> SAVING FIGURES <=====")
@@ -107,6 +114,8 @@ if __name__ == '__main__':
             # if do_simple_plots and interactive:
             #     env.plotHistogram(evaluation.horizon * evaluation.repetitions)
 
+            if debug_memory: start_tracemalloc()  # DEBUG
+
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
             if do_comparison_plots:
@@ -115,9 +124,14 @@ if __name__ == '__main__':
             # Display the final rankings for that env
             print("\n\nGiving the final ranks ...")
             evaluation.printFinalRanking(envId)
-
             print("\n\nGiving the vector of final regrets ...")
             evaluation.printLastRegrets(envId)
+            print("\n\nGiving the mean and std running times ...")
+            evaluation.printRunningTimes(envId)
+            if debug_memory:
+                print("\n\nGiving the mean and std memory consumption ...")
+                evaluation.printMemoryConsumption(envId)
+                display_top_tracemalloc()  # DEBUG
 
             # Sub folder with a useful name
             subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
@@ -151,10 +165,27 @@ if __name__ == '__main__':
             if not do_simple_plots:
                 break
 
+            # --- Also plotting the running times
+            if saveallfigs:
+                savefig = mainfig.replace('main', 'main_RunningTimes')
+                print(" - Plotting the running times, and saving the plot to {} ...".format(savefig))
+                evaluation.plotRunningTimes(envId, savefig=savefig)  # XXX To save the figure
+            else:
+                evaluation.plotRunningTimes(envId)  # XXX To plot without saving
+
+            # --- Also plotting the memory consumption
+            if saveallfigs:
+                savefig = mainfig.replace('main', 'main_MemoryConsumption')
+                print(" - Plotting the memory consumption, and saving the plot to {} ...".format(savefig))
+                evaluation.plotMemoryConsumption(envId, savefig=savefig)  # XXX To save the figure
+            else:
+                evaluation.plotMemoryConsumption(envId)  # XXX To plot without saving
+
             # --- Also plotting the decentralized rewards
             print("\n\n- Plotting the decentralized rewards")
             if saveallfigs:
                 print("  and saving the plot to {} ...".format(savefig))
+                savefig = mainfig
                 evaluation.plotRewards(envId, savefig=savefig)
             else:
                 evaluation.plotRewards(envId)  # XXX To plot without saving
@@ -332,14 +363,35 @@ if __name__ == '__main__':
 
         print("\n\nGiving all the vector of final regrets ...")
         e0.printLastRegrets(envId, evaluators=eothers)
-
         print("\n\nGiving the final ranking ...")
         e0.printFinalRankingAll(envId, evaluators=eothers)
+        print("\n\nGiving the mean and std running times ...")
+        e0.printRunningTimes(envId, evaluators=eothers)
+        if debug_memory:
+            print("\n\nGiving the mean and std memory consumption ...")
+            e0.printMemoryConsumption(envId, evaluators=eothers)
+            display_top_tracemalloc()  # DEBUG
 
         # Get the name of the output file
         imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
+
+        # --- Also plotting the running times
+        if saveallfigs:
+            savefig = mainfig.replace('all', 'all_RunningTimes')
+            print(" - Plotting the running times, and saving the plot to {} ...".format(savefig))
+            e0.plotRunningTimes(envId, savefig=savefig, evaluators=eothers)  # XXX To save the figure
+        else:
+            e0.plotRunningTimes(envId, evaluators=eothers)  # XXX To plot without saving
+
+        # --- Also plotting the memory consumption
+        if saveallfigs:
+            savefig = mainfig.replace('all', 'all_MemoryConsumption')
+            print(" - Plotting the memory consumption, and saving the plot to {} ...".format(savefig))
+            e0.plotMemoryConsumption(envId, savefig=savefig, evaluators=eothers)  # XXX To save the figure
+        else:
+            e0.plotMemoryConsumption(envId, evaluators=eothers)  # XXX To plot without saving
 
         # --- Also plotting the centralized regret
         print("\n\n- Plotting the centralized regret for all 'players' values")

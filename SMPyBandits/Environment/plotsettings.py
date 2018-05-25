@@ -29,7 +29,7 @@ monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
 from os import getenv
 
 # Backup figure objects
-import pickle
+from pickle import dump as pickle_dump
 
 if getenv('DEBUG', 'False') == 'True':
     signature = "\n(By Lilian Besson, {} - Code on https://github.com/SMPyBandits/SMPyBandits - MIT Licensed)".format(monthyear)  #: A small string to use as a signature
@@ -209,7 +209,7 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
             path = "{}.{}".format(savefig, form)
             print("Saving raw figure with format {}, to file '{}'...".format(form, path))  # DEBUG
             with open(path, "bw") as f:
-                pickle.dump(fig, f)
+                pickle_dump(fig, f)
             print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
         for form in formats:
             path = "{}.{}".format(savefig, form)

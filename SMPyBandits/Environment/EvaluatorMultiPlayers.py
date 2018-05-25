@@ -64,7 +64,7 @@ class EvaluatorMultiPlayers(object):
         # Configuration
         self.cfg = configuration  #: Configuration dictionnary
         # Attributes
-        self.nbPlayers = len(self.cfg['players'])  #: Number of policies
+        self.nbPlayers = len(self.cfg['players'])  #: Number of players
         print("Number of players in the multi-players game:", self.nbPlayers)
         self.horizon = self.cfg['horizon']  #: Horizon (number of time steps)
         print("Time horizon:", self.horizon)
@@ -88,12 +88,12 @@ class EvaluatorMultiPlayers(object):
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         self.count_ranks_markov_chain = self.cfg.get('count_ranks_markov_chain', COUNT_RANKS_MARKOV_CHAIN)#: If true, count and then print a lot of statistics for the Markov Chain of the underlying configurations on ranks
 
-        self.change_labels = self.cfg.get('change_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (overwrite their name).
-        self.append_labels = self.cfg.get('append_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (by appending the result from 'append_labels').
+        self.change_labels = self.cfg.get('change_labels', {})  #: Possibly empty dictionary to map 'playerId' to new labels (overwrite their name).
+        self.append_labels = self.cfg.get('append_labels', {})  #: Possibly empty dictionary to map 'playerId' to new labels (by appending the result from 'append_labels').
 
         # Internal object memory
         self.envs = []  #: List of environments
-        self.players = []  #: List of policies
+        self.players = []  #: List of players
         self.__initEnvironments__()
         # Internal vectorial memory
         self.rewards = dict()  #: For each env, history of rewards
@@ -107,6 +107,8 @@ class EvaluatorMultiPlayers(object):
         self.bestArmPulls = dict()  #: For each env, keep the history of best arm pulls
         self.freeTransmissions = dict()  #: For each env, keep the history of successful transmission (1 - collisions, basically)
         self.lastCumRewards = dict()  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
+        self.runningTimes = dict()  #: For each env, keep the history of running times
+        self.memoryConsumption = dict()  #: For each env, keep the history of running times
 
         print("Number of environments to try:", len(self.envs))  # DEBUG
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
@@ -148,7 +150,7 @@ class EvaluatorMultiPlayers(object):
             raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios. FIXME correct this point!")
 
     def __initPlayers__(self, env):
-        """ Create or initialize policies."""
+        """ Create or initialize players."""
         for playerId, player in enumerate(self.cfg['players']):
             print("- Adding player #{:>2} = {} ...".format(playerId + 1, player))  # DEBUG
             if isinstance(player, dict):  # Either the 'player' is a config dict
@@ -186,7 +188,7 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] += np.cumsum(r.rewards, axis=1)  # cumsum on time
             # self.rewardsSquared[envId] += np.cumsum(r.rewards ** 2, axis=1)  # cumsum on time
             # self.rewardsSquared[envId] += np.cumsum(r.rewardsSquared, axis=1)  # cumsum on time
-            self.lastCumRewards[envId][repeatId] = np.sum(r.rewards)  # sum on time and sum on policies
+            self.lastCumRewards[envId][repeatId] = np.sum(r.rewards)  # sum on time and sum on players
             self.pulls[envId] += r.pulls
             self.lastPulls[envId][:, :, repeatId] = r.pulls
             self.allPulls[envId] += r.allPulls
@@ -197,6 +199,8 @@ class EvaluatorMultiPlayers(object):
                 self.bestArmPulls[envId][playerId, :] += np.cumsum(np.in1d(r.choices[playerId, :], indexes_bestarm))
                 # FIXME there is probably a bug in this computation
                 self.freeTransmissions[envId][playerId, :] += np.array([r.choices[playerId, t] not in r.collisions[:, t] for t in range(self.horizon)])
+                self.runningTimes[envId][playerId, repeatId] = r.running_time
+                self.memoryConsumption[envId][playerId, repeatId] = r.memory_consumption
 
         # Start now
         if self.useJoblib:
@@ -370,6 +374,22 @@ class EvaluatorMultiPlayers(object):
             return self.getLastRegrets_MoreAccurate(envId=envId)
         else:
             return self.getLastRegrets_LessAccurate(envId=envId)
+
+    def getRunningTimes(self, envId=0):
+        """Get the means and stds and list of running time of the different players."""
+        all_times = [ self.runningTimes[envId][playerId, :] for playerId in range(self.nbPlayers) ]
+        means = [ np.mean(times) for times in all_times ]
+        stds  = [ np.std(times) for times in all_times ]
+        return means, stds, all_times
+
+    def getMemoryConsumption(self, envId=0):
+        """Get the means and stds and list of memory consumptions of the different players."""
+        all_memories = [ self.memoryConsumption[envId][playerId, :] for playerId in range(self.nbPlayers) ]
+        for playerId in range(self.nbPlayers):
+            all_memories[playerId] = [ m for m in all_memories[playerId] if m > 0 ]
+        means = [ np.mean(memories) for memories in all_memories ]
+        stds  = [ np.std(memories) for memories in all_memories ]
+        return means, stds, all_memories
 
     # --- Plotting methods
 
@@ -726,6 +746,87 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
 
+    def printRunningTimes(self, envId=0, precision=3):
+        """Print the average+-std running time of the different players."""
+        from IPython.core.magics.execution import _format_time
+        means, stds, _ = self.getRunningTimes(envId)
+
+        for playerId in np.argsort(means):
+            player = self.players[playerId]
+            print("\nFor player #{} called '{}' ...".format(playerId, player))
+            mean_time, std_time  = means[playerId], stds[playerId]
+            print(u"    {mean} ± {std} per loop (mean ± std. dev. of {runs} run{run_plural})"
+                .format(
+                    runs = self.repetitions,
+                    run_plural = "" if self.repetitions == 1 else "s",
+                    mean = _format_time(mean_time, precision),
+                    std = _format_time(std_time, precision)
+                )
+            )
+
+    def printMemoryConsumption(self, envId=0):
+        """Print the average+-std memory consumption of the different players."""
+        means, stds, _ = self.getMemoryConsumption(envId)
+
+        for playerId in np.argsort(means):
+            player = self.players[playerId]
+            print("\nFor player #{} called '{}' ...".format(playerId, player))
+            mean_time, std_time = means[playerId], stds[playerId]
+            if self.repetitions <= 1:
+                print(u"    {mean} (mean of 1 run)".format(mean=sizeof_fmt(mean_time)))
+            else:
+                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=self.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
+
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
+            base=1, unit="seconds"
+        ):
+        """Plot the running times of the different players, as a box plot for each."""
+        means, _, all_times = self.getRunningTimes(envId=envId)
+        # order by increasing mean time
+        index_of_sorting = np.argsort(means)
+        labels = [ player.__cachedstr__ for player in self.players ]
+        labels = [ labels[i] for i in index_of_sorting ]
+        all_times = [ all_times[i] / float(base) for i in index_of_sorting ]
+        fig = plt.figure()
+        if len(labels) < maxNbOfLabels:
+            plt.boxplot(all_times, labels=labels)
+            locs, labels = plt.xticks()
+            plt.subplots_adjust(bottom=0.30)
+            legend()
+            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+        else:
+            plt.boxplot(all_times)
+        plt.xlabel("Policies{}".format(self.signature))
+        plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
+        plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        return fig
+
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
+            base=1024, unit="KiB"
+        ):
+        """Plot the memory consumption of the different players, as a box plot for each."""
+        means, _, all_memories = self.getMemoryConsumption(envId=envId)
+        # order by increasing mean memory consumption
+        index_of_sorting = np.argsort(means)
+        labels = [ player.__cachedstr__ for player in self.players ]
+        labels = [ labels[i] for i in index_of_sorting ]
+        all_memories = [ [ memory / float(base) for memory in all_memories[i] ] for i in index_of_sorting ]
+        fig = plt.figure()
+        if len(labels) < maxNbOfLabels:
+            plt.boxplot(all_memories, labels=labels)
+            locs, labels = plt.xticks()
+            plt.subplots_adjust(bottom=0.30)
+            legend()
+            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+        else:
+            plt.boxplot(all_memories)
+        plt.xlabel("Policies{}".format(self.signature))
+        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
+        plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        return fig
+
     def printFinalRanking(self, envId=0, verb=True):
         """Compute and print the ranking of the different players."""
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers class has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
@@ -858,6 +959,8 @@ class EvaluatorMultiPlayers(object):
 def delayed_play(env, players, horizon, collisionModel,
                  seed=None, repeatId=0, count_ranks_markov_chain=False):
     """Helper function for the parallelization."""
+    start_time = time.time()
+    start_memory = getCurrentMemory(thread=useJoblib)
     # Give a unique seed to random & numpy.random for each call of this function
     try:
         if seed is not None:
@@ -971,6 +1074,9 @@ def delayed_play(env, players, horizon, collisionModel,
             except AttributeError:
                 print("Unable to print the estimated ordering, no method estimatedOrder was found!")
 
+    # Finally, store running time and consumed memory
+    result.running_time = time.time() - start_time
+    result.memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
     return result
 
 

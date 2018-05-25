@@ -36,10 +36,10 @@ from .plotsettings import DPI, signature, maximizeWindow, palette, makemarkers, 
 
 from .notify import notify
 
-from .usejoblib import *
-from .usetqdm import *
+from .usejoblib import USE_JOBLIB, Parallel, delayed
+from .usetqdm import USE_TQDM, tqdm
 
-from .sortedDistance import *
-from .fairnessMeasures import *
+from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
+from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mo_walrand_fairness, mean_fairness, fairnessMeasure, fairness_mapping
 
 from .memory_consumption import getCurrentMemory, sizeof_fmt, start_tracemalloc, display_top_tracemalloc

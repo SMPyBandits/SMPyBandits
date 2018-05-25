@@ -3,13 +3,13 @@
 
 Collision models are generic functions, taking:
 
-- the time: 't'
-- the arms of the current environment: 'arms'
-- the list of players: 'players'
-- the numpy array of their choices: 'choices'
-- the numpy array to store their rewards: 'rewards'
-- the numpy array to store their pulls: 'pulls'
-- the numpy array to store their collisions: 'collisions'
+- the time: ``t``
+- the arms of the current environment: ``arms``
+- the list of players: ``players``
+- the numpy array of their choices: ``choices``
+- the numpy array to store their rewards: ``rewards``
+- the numpy array to store their pulls: ``pulls``
+- the numpy array to store their collisions: ``collisions``
 
 As far as now, there is 4 different collision models implemented:
 

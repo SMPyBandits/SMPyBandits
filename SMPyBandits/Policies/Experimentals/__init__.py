@@ -22,7 +22,7 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from sys import path; path.insert(0, '..')
+# from sys import path; path.insert(0, '..')
 
 # --- Using unsupervised learning, from scikit-learn
 from .UnsupervisedLearning import FittingModel, SimpleGaussianKernel, SimpleBernoulliKernel, UnsupervisedLearning
