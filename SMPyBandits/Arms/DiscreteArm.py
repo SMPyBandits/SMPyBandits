@@ -93,8 +93,8 @@ class DiscreteArm(Arm):
         return "DiscreteArm"
 
     def __repr__(self):
-        # return "DiscreteArm({})".format(repr(self._values_to_proba))
-        return "DiscreteArm({}{}{})".format("{", ", ".join("{:.3g}: {:.3g}".format(v, p) for v, p in self._items), "}")
+        # return "D({})".format(repr(self._values_to_proba))
+        return "D({}{}{})".format("{", ", ".join("{:.3g}: {:.3g}".format(v, p) for v, p in self._items), "}")
 
     # --- Lower bound
 
@@ -102,18 +102,18 @@ class DiscreteArm(Arm):
     def kl(x, y):
         """ The kl(x, y) to use for this arm.
 
-        .. warning:: FIXME this is not correctly defined!
+        .. warning:: FIXME this is not correctly defined, except for the special case of having **only** 2 values, a ``DiscreteArm`` is NOT a one-dimensional distribution, and so the kl between two distributions is NOT a function of their mean!
         """
-        # raise NotImplementedError  # FIXME
+        print("WARNING: DiscreteArm.kl({:.3g}, {:.3g}) is not defined, klBern is used but this is WRONG.".format(x, y))  # DEBUG
         return klBern(x, y)
 
     @staticmethod
     def oneLR(mumax, mu):
         """ One term of the Lai & Robbins lower bound for DiscreteArm arms: (mumax - mu) / KL(mu, mumax).
 
-        .. warning:: FIXME this is not correctly defined!
+        .. warning:: FIXME this is not correctly defined, except for the special case of having **only** 2 values, a ``DiscreteArm`` is NOT a one-dimensional distribution, and so the kl between two distributions is NOT a function of their mean!
         """
-        # raise NotImplementedError  # FIXME
+        print("WARNING: DiscreteArm.oneLR({:.3g}, {:.3g}) is not defined, klBern is used but this is WRONG.".format(mumax, mu))  # DEBUG
         return (mumax - mu) / klBern(mu, mumax)
 
 

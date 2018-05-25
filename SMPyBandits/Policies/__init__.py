@@ -156,6 +156,7 @@ from .Aggregator import Aggregator
 # --- Others aggregation algorithms
 from .CORRAL import CORRAL
 from .LearnExp import LearnExp
+from .GenericAggregation import GenericAggregation
 
 # --- Gittins index policy
 from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-Horizon Gittins index

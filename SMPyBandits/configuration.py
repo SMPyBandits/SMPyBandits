@@ -292,6 +292,22 @@ configuration = {
     #         "params": [(-40, VARIANCE), (-30, VARIANCE), (-20, VARIANCE), (-VARIANCE, VARIANCE), (0, VARIANCE), (VARIANCE, VARIANCE), (20, VARIANCE), (30, VARIANCE), (40, VARIANCE)]
     #     },
     # ],
+    # "environment": [  # XXX DiscreteArm arms
+    #     {   # An example problem with 9 arms
+    #         "arm_type": DiscreteArm,
+    #         "params": [  # 3-values discrete arms. XXX NOT one-dimensional, NOT parametrized by their means
+    #             [{0: 0.45, 0.5: 0.45, 1: 0.1}],
+    #             [{0: 0.4,  0.5: 0.4,  1: 0.2}],
+    #             [{0: 0.35, 0.5: 0.35, 1: 0.3}],
+    #             [{0: 0.3,  0.5: 0.3,  1: 0.4}],
+    #             [{0: 0.25, 0.5: 0.25, 1: 0.5}],
+    #             [{0: 0.2,  0.5: 0.2,  1: 0.6}],
+    #             [{0: 0.15, 0.5: 0.15, 1: 0.7}],
+    #             [{0: 0.1,  0.5: 0.1,  1: 0.8}],
+    #             [{0: 0.05, 0.5: 0.05, 1: 0.9}],
+    #         ]
+    #     },
+    # ],
 }
 
 if ENVIRONMENT_BAYESIAN:
@@ -331,7 +347,7 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 #: (for d in MEGA's parameters, and epsilon for MusicalChair's parameters)
 try:
     GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
-except (ValueError, np.AxisError):
+except (ValueError, np.AxisError, TypeError):
     print("Warning: using the default value for the GAP (Bayesian environment maybe?)")  # DEBUG
     GAP = 1. / (3 * NB_ARMS)
 
@@ -671,25 +687,25 @@ configuration.update({
         #         "alpha": 1.,
         #     }
         # },
-        # --- MOSS algorithm, like UCB
-        {
-            "archtype": MOSS,
-            "params": {}
-        },
-        # --- MOSS-H algorithm, like UCB-H
-        {
-            "archtype": MOSSH,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
-        # --- MOSS-Anytime algorithm, extension of MOSS
-        {
-            "archtype": MOSSAnytime,
-            "params": {
-                "alpha": 1.35,
-            }
-        },
+        # # --- MOSS algorithm, like UCB
+        # {
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
+        # # --- MOSS-H algorithm, like UCB-H
+        # {
+        #     "archtype": MOSSH,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # # --- MOSS-Anytime algorithm, extension of MOSS
+        # {
+        #     "archtype": MOSSAnytime,
+        #     "params": {
+        #         "alpha": 1.35,
+        #     }
+        # },
         # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
         # {
         #     "archtype": MOSSExperimental,
@@ -830,41 +846,52 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        # --- FIXME new klUCBswitch algorithm!
-        {
-            "archtype": klUCBswitch,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb,
-                "threshold": "best"
-            }
-        },
-        {
-            "archtype": klUCBswitch,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb,
-                "threshold": "delayed"
-            }
-        },
-        {
-            "archtype": klUCBswitchAnytime,
-            "params": {
-                "klucb": klucb,
-                "threshold": "best"
-            }
-        },
-        {
-            "archtype": klUCBswitchAnytime,
-            "params": {
-                "klucb": klucb,
-                "threshold": "delayed"
-            }
-        },
-        # # --- Empirical KL-UCB algorithm
+        # # --- new klUCBswitch algorithm!
         # {
-        #     "archtype": KLempUCB,
-        #     "params": {}
+        #     "archtype": klUCBswitch,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb,
+        #         "threshold": "best"
+        #     }
+        # },
+        # {
+        #     "archtype": klUCBswitch,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb,
+        #         "threshold": "delayed"
+        #     }
+        # },
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "best"
+            }
+        },
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "delayed"
+            }
+        },
+        # # DONE Compare klUCBSwitch with Aggregator[klUCB, MOSS]
+        # {
+        #     "archtype": Aggregator,
+        #     "params": {
+        #         "unbiased": UNBIASED,
+        #         "update_all_children": UPDATE_ALL_CHILDREN,
+        #         "decreaseRate": DECREASE_RATE,
+        #         "learningRate": LEARNING_RATE,
+        #         "children": [
+        #             { "archtype": klUCB, "params": {} },
+        #             { "archtype": MOSS, "params": {} },
+        #         ],
+        #         "update_like_exp4": UPDATE_LIKE_EXP4,
+        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+        #     },
         # },
         # --- Bayes UCB algorithms
         {
@@ -887,6 +914,22 @@ configuration.update({
                 "horizon": HORIZON,
             }
         },
+        # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
+        # {
+        #     "archtype": Aggregator,
+        #     "params": {
+        #         "unbiased": UNBIASED,
+        #         "update_all_children": UPDATE_ALL_CHILDREN,
+        #         "decreaseRate": DECREASE_RATE,
+        #         "learningRate": LEARNING_RATE,
+        #         "children": [
+        #             { "archtype": BayesUCB, "params": {} },
+        #             { "archtype": Thompson, "params": {} },
+        #         ],
+        #         "update_like_exp4": UPDATE_LIKE_EXP4,
+        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+        #     },
+        # },
         # # --- Horizon-dependent algorithm ApproximatedFHGittins
         {
             "archtype": ApproximatedFHGittins,
@@ -902,36 +945,36 @@ configuration.update({
         #     "archtype": BlackBoxOpt,
         #     "params": {}
         # },
-        # --- The new OSSB algorithm
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.0,
-            }
-        },
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.001,
-                "gamma": 0.0,
-            }
-        },
-        {
-            "archtype": OSSB,
-            "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-            }
-        },
-        {
-            "archtype": OSSB_DecreasingRate,
-            "params": {}
-        },
-        {
-            "archtype": OSSB_AutoDecreasingRate,
-            "params": {}
-        },
+        # # --- The new OSSB algorithm
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.01,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.001,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        # {
+        #     "archtype": OSSB,
+        #     "params": {
+        #         "epsilon": 0.0,
+        #         "gamma": 0.0,
+        #     }
+        # },
+        # {
+        #     "archtype": OSSB_DecreasingRate,
+        #     "params": {}
+        # },
+        # {
+        #     "archtype": OSSB_AutoDecreasingRate,
+        #     "params": {}
+        # },
         # # --- The awesome BESA algorithm
         # {
         #     "archtype": BESA,
@@ -1036,6 +1079,27 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # }
+        # DONE Compare Generic Aggregation
+        {
+            "archtype": GenericAggregation,
+            "params": {
+                "master": { "archtype": Thompson, "params": {} },
+                "children": [
+                    # # Aggregating fixed-arm policies == playing the master algorithm (just more inefficient regarding time and storage, but same regret)
+                    # { "archtype": TakeFixedArm, "params": { "armIndex": armId } }
+                    # for armId in range(NB_ARMS)
+                    # Confuse it with stupid algorithms
+                    { "archtype": Uniform, "params": {} },
+                    { "archtype": EmpiricalMeans, "params": {} },
+                    # And use some smart algorithms
+                    { "archtype": UCB_lb, "params": {} },
+                    { "archtype": Thompson, "params": {} },
+                    { "archtype": klUCB, "params": {} },
+                    { "archtype": BayesUCB, "params": {} },
+                    # { "archtype": ApproximatedFHGittins, "params": { "alpha": 1, "horizon": HORIZON } },
+                ],
+            },
+        },
     ]
 })
 
@@ -1064,7 +1128,7 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
         }, ],
     })
-elif not ENVIRONMENT_BAYESIAN:
+elif ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYESIAN:
     configuration.update({
         "environment": [ {
             "arm_type": ARM_TYPE,
@@ -1407,14 +1471,14 @@ if TEST_Aggregator:
 # XXX Huge hack! Use this if you want to modify the legends
 configuration.update({
     "append_labels": {
-        policyId: cfgpolicy.get("append_label", "")
-        for policyId, cfgpolicy in enumerate(configuration["policies"])
-        if "append_label" in cfgpolicy
+        policyId: cfg_policy.get("append_label", "")
+        for policyId, cfg_policy in enumerate(configuration["policies"])
+        if "append_label" in cfg_policy
     },
     "change_labels": {
-        policyId: cfgpolicy.get("change_label", "")
-        for policyId, cfgpolicy in enumerate(configuration["policies"])
-        if "change_label" in cfgpolicy
+        policyId: cfg_policy.get("change_label", "")
+        for policyId, cfg_policy in enumerate(configuration["policies"])
+        if "change_label" in cfg_policy
     }
 })
 
