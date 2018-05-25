@@ -280,11 +280,13 @@ class OSSB_DecreasingRate(OSSB):
                  lower=0., amplitude=1., **kwargs):
         super(OSSB_DecreasingRate, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, lower=lower, amplitude=amplitude, **kwargs)
         # new parameters
-        self._decreasingRate = self.decreasingRate
-        self._epsilon = self.epsilon
-        del self.epsilon  # FIXME this works?
-        self._gamma = self.gamma
-        del self.gamma  # FIXME this works?
+        self._decreasingRate = decreasingRate
+        self._epsilon = epsilon
+        self._gamma = gamma
+
+    def __str__(self):
+        """ -> str"""
+        return r"OSSB(decreasing $\varepsilon(t),\gamma(t)${})".format(self._info_on_solver)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -292,11 +294,21 @@ class OSSB_DecreasingRate(OSSB):
         r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 \exp(- t \tau))`."""
         return min(1, self._epsilon * np.exp(- self.t * self._decreasingRate))
 
+    # https://docs.python.org/3/library/functions.html#property
+    @epsilon.setter
+    def epsilon(self, value):
+        pass
+
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def gamma(self):
         r"""Decreasing :math:`\gamma(t) = \min(1, \gamma_0 \exp(- t \tau))`."""
         return min(1, self._gamma * np.exp(- self.t * self._decreasingRate))
+
+    # https://docs.python.org/3/library/functions.html#property
+    @gamma.setter
+    def gamma(self, value):
+        pass
 
 
 class OSSB_AutoDecreasingRate(OSSB):
@@ -305,11 +317,13 @@ class OSSB_AutoDecreasingRate(OSSB):
     .. warning:: This is purely experimental, the paper does not talk about how to chose decreasing rates. It is inspired by the rates for Exp3++ algorithm, [[One practical algorithm for both stochastic and adversarial bandits, S.Seldin & A.Slivkins, ICML, 2014](http://www.jmlr.org/proceedings/papers/v32/seldinb14-supp.pdf)].
     """
 
-    def __init__(self, nbArms, epsilon=EPSILON, gamma=GAMMA,
+    def __init__(self, nbArms,
                  lower=0., amplitude=1., **kwargs):
-        super(OSSB_AutoDecreasingRate, self).__init__(nbArms, epsilon=epsilon, gamma=gamma, lower=lower, amplitude=amplitude, **kwargs)
-        del self.epsilon  # FIXME this works?
-        del self.gamma  # FIXME this works?
+        super(OSSB_AutoDecreasingRate, self).__init__(nbArms, epsilon=EPSILON, gamma=GAMMA, lower=lower, amplitude=amplitude, **kwargs)
+
+    def __str__(self):
+        """ -> str"""
+        return r"OSSB(auto decreasing $\varepsilon(t),\gamma(t)${})".format(self._info_on_solver)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
@@ -317,9 +331,19 @@ class OSSB_AutoDecreasingRate(OSSB):
         r"""Decreasing :math:`\varepsilon(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
         return 0.5 * np.sqrt(np.log(self.nbArms) / (max(2, self.t) * self.nbArms))
 
+    # https://docs.python.org/3/library/functions.html#property
+    @epsilon.setter
+    def epsilon(self, value):
+        pass
+
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
     @property
     def gamma(self):
         r"""Decreasing :math:`\gamma(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
         return 0.5 * np.sqrt(np.log(self.nbArms) / (max(2, self.t) * self.nbArms))
+
+    # https://docs.python.org/3/library/functions.html#property
+    @gamma.setter
+    def gamma(self, value):
+        pass
 

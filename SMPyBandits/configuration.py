@@ -902,28 +902,36 @@ configuration.update({
         #     "archtype": BlackBoxOpt,
         #     "params": {}
         # },
-        # # --- The new OSSB algorithm
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.001,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.0,
-        #         "gamma": 0.0,
-        #     }
-        # },
+        # --- The new OSSB algorithm
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.01,
+                "gamma": 0.0,
+            }
+        },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.001,
+                "gamma": 0.0,
+            }
+        },
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+            }
+        },
+        {
+            "archtype": OSSB_DecreasingRate,
+            "params": {}
+        },
+        {
+            "archtype": OSSB_AutoDecreasingRate,
+            "params": {}
+        },
         # # --- The awesome BESA algorithm
         # {
         #     "archtype": BESA,

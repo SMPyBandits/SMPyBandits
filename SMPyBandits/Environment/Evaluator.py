@@ -565,7 +565,7 @@ class Evaluator(object):
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
         plt.xlabel("Policies{}".format(self.signature))
@@ -590,7 +590,7 @@ class Evaluator(object):
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)
         plt.xlabel("Policies{}".format(self.signature))

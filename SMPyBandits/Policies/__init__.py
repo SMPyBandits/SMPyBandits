@@ -140,7 +140,7 @@ from .OCUCB import OCUCB
 from .UCBdagger import UCBdagger
 
 # From [Combes et al, 2017] and my own work on the OSSB algorithm
-from .OSSB import OSSB, GaussianOSSB, SparseOSSB
+from .OSSB import OSSB, GaussianOSSB, SparseOSSB, OSSB_DecreasingRate, OSSB_AutoDecreasingRate
 
 # From [Baransi et al, 2014]
 from .BESA import BESA

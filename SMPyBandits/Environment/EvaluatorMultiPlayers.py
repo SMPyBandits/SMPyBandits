@@ -789,8 +789,7 @@ class EvaluatorMultiPlayers(object):
         for e in evaluators:
             _means, _, _all_times = e.getRunningTimes(envId=envId)
             means.append(np.sum(_means))
-            # all_times.append([ np.sum(times) for times in _all_times ])
-            all_times.append(_all_times)
+            all_times.append(np.sum(_all_times, axis=0))
             labels.append(e.strPlayers(latex=False, short=True))
         # order by increasing mean time
         index_of_sorting = np.argsort(means)
@@ -802,12 +801,12 @@ class EvaluatorMultiPlayers(object):
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
-        plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
@@ -820,8 +819,7 @@ class EvaluatorMultiPlayers(object):
         for e in evaluators:
             _means, _, _all_memories = e.getMemoryConsumption(envId=envId)
             means.append(np.sum(_means))
-            # all_memories.append([ np.sum(memories) for memories in _all_memories ])
-            all_memories.append(_all_memories)
+            all_memories.append(np.sum(_all_memories, axis=0))
             labels.append(e.strPlayers(latex=False, short=True))
         # order by increasing mean memory consumption
         index_of_sorting = np.argsort(means)
@@ -833,12 +831,12 @@ class EvaluatorMultiPlayers(object):
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
             legend()
-            plt.xticks(locs, labels, rotation=30)  # See https://stackoverflow.com/a/37708190/
+            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
-        plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
