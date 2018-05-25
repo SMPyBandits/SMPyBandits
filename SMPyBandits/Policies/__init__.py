@@ -3,7 +3,8 @@
 
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
-- Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`,
+- Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`, :class:`EpsilonDecreasingMEGA`,
+:class:`EpsilonExpDecreasing`,
 - And variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`, :class:`ExploreThenCommit.ETC_FixedBudget`, :class:`ExploreThenCommit.ETC_SPRT`, :class:`ExploreThenCommit.ETC_BAI`, :class:`ExploreThenCommit.DeltaUCB`,
 
 - Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
@@ -75,13 +76,9 @@ from .UniformOnSome import UniformOnSome
 from .TakeFixedArm import TakeFixedArm
 from .TakeRandomFixedArm import TakeRandomFixedArm
 
+# --- Naive or less naive epsilon-greedy policies
+from .EpsilonGreedy import EpsilonGreedy, EpsilonFirst, EpsilonDecreasing, EpsilonDecreasingMEGA, EpsilonExpDecreasing
 # --- Mine, simple exploratory policies
-from .EpsilonGreedy import EpsilonGreedy
-from .EpsilonFirst import EpsilonFirst
-# --- Mine, simple exploratory policies
-from .EpsilonDecreasing import EpsilonDecreasing
-from .EpsilonDecreasingMEGA import EpsilonDecreasingMEGA
-from .EpsilonExpDecreasing import EpsilonExpDecreasing
 from .EmpiricalMeans import EmpiricalMeans
 
 # --- Variants on EpsilonFirst, Explore-Then-Commit from E.Kaufmann's slides at IEEE ICC 2017
