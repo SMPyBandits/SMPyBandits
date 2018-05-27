@@ -1083,7 +1083,7 @@ configuration.update({
         {
             "archtype": GenericAggregation,
             "params": {
-                "master": { "archtype": Thompson, "params": {} },
+                "master": { "archtype": BayesUCB, "params": {} },
                 "children": [
                     # # Aggregating fixed-arm policies == playing the master algorithm (just more inefficient regarding time and storage, but same regret)
                     # { "archtype": TakeFixedArm, "params": { "armIndex": armId } }
@@ -1091,6 +1091,7 @@ configuration.update({
                     # Confuse it with stupid algorithms
                     { "archtype": Uniform, "params": {} },
                     { "archtype": EmpiricalMeans, "params": {} },
+                    { "archtype": Exp3PlusPlus, "params": {} },
                     # And use some smart algorithms
                     { "archtype": UCB_lb, "params": {} },
                     { "archtype": Thompson, "params": {} },
