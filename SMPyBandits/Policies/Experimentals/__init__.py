@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ ``Policies.Experimentals`` module : contains experimental or unfinished (single-player) bandits algorithms:
 
-- Index based UCB algorithms: :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBcython`, :classl:`UCBjulia`,
+- Index based UCB algorithms: :class:`UCBlog10`, :class:`UCBwrong`, :class:`UCBlog10alpha`, :class:`UCBcython`, :class:`UCBjulia`,
 
 - Based on Kullback-Leibler divergence: :class:`klUCBlog10`, :class:`klUCBloglog10`,
 
@@ -13,10 +13,11 @@
 
 - Bayesian algorithms: :class:`ThompsonRobust`,
 
-- **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting: :class:`UCB_sq_faster`, :class:`UCB_bq_faster`, :class:`UCB_h_faster`, :class:`UCB_lb_faster`, :class:`UCB_t_faster`, and then the ones with non-adaptive boosting: :class:`UCBoost_bq_h_lb_faster`, :class:`UCBoost_bq_h_lb_t_faster`, :class:`UCBoost_bq_h_lb_t_sq_faster`, :class:`UCBoost_faster`, and finally the epsilon-approximation boosting with :class:`UCBoostEpsilon_faster`. These versions use Cython for some functions.
+- **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting, in module :mod:`UCBoost_faster`: :class:`UCBoost_faster.UCB_sq`, :class:`UCBoost_faster.UCB_bq`, :class:`UCBoost_faster.UCB_h`, :class:`UCBoost_faster.UCB_lb`, :class:`UCBoost_faster.UCB_t`, and then the ones with non-adaptive boosting: :class:`UCBoost_faster.UCBoost_bq_h_lb`, :class:`UCBoost_faster.UCBoost_bq_h_lb_t`, :class:`UCBoost_faster.UCBoost_bq_h_lb_t_sq`, :class:`UCBoost_faster.UCBoost`, and finally the epsilon-approximation boosting with :class:`UCBoost_faster.UCBoostEpsilon`. These versions use Cython for some functions.
 
-- **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting: :class:`UCB_sq_cython`, :class:`UCB_bq_cython`, :class:`UCB_h_cython`, :class:`UCB_lb_cython`, :class:`UCB_t_cython`, and then the ones with non-adaptive boosting: :class:`UCBoost_bq_h_lb_cython`, :class:`UCBoost_bq_h_lb_t_cython`, :class:`UCBoost_bq_h_lb_t_sq_cython`, :class:`UCBoost_cython`, and finally the epsilon-approximation boosting with :class:`UCBoostEpsilon_cython`. These versions use Cython for the whole code.
+- **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting, in module :mod:`UCBoost_cython`: :class:`UCBoost_cython.UCB_sq`, :class:`UCBoost_cython.UCB_bq`, :class:`UCBoost_cython.UCB_h`, :class:`UCBoost_cython.UCB_lb`, :class:`UCBoost_cython.UCB_t`, and then the ones with non-adaptive boosting: :class:`UCBoost_cython.UCBoost_bq_h_lb`, :class:`UCBoost_cython.UCBoost_bq_h_lb_t`, :class:`UCBoost_cython.UCBoost_bq_h_lb_t_sq`, :class:`UCBoost_cython.UCBoost`, and finally the epsilon-approximation boosting with :class:`UCBoost_cython.UCBoostEpsilon`. These versions use Cython for the whole code.
 """
+
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"

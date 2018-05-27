@@ -1,7 +1,7 @@
 # [Single-Player policies](https://smpybandits.github.io/docs/Policies.html)
 > See here the documentation: [docs/Policies](https://smpybandits.github.io/docs/Policies.html)
 
-## List of Policies
+## List of policies
 `Policies` module : contains various (single-player) bandits algorithms:
 
 - "Stupid" algorithms: [`Uniform`](Uniform.py), [`UniformOnSome`](UniformOnSome.py), [`TakeFixedArm`](TakeFixedArm.py), [`TakeRandomFixedArm`](TakeRandomFixedArm.py),
