@@ -17,7 +17,7 @@
 
 - Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBloglog`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`, :class:`klUCBswitch`,
 
-- Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCB`, :class:`UCBdagger`,
+- Other index algorithms: :class:`DMED`, :class:`DMED.DMEDPlus`, :class:`OCUCBH`, :class:`OCUCBH.AOCUCBH`, :class:`OCUCB`, :class:`UCBdagger`,
 
 - Hybrids algorithms, mixing Bayesian and UCB indexes: :class:`AdBandits`,
 
@@ -133,6 +133,8 @@ from .klUCBswitch import klUCBswitch, klUCBswitchAnytime  # Different indexes
 # From [Honda & Takemura, COLT 2010]
 from .DMED import DMED, DMEDPlus
 
+# From [Lattimore, 2015]
+from .OCUCBH import OCUCBH, AOCUCBH
 # From [Lattimore, 2016]
 from .OCUCB import OCUCB
 

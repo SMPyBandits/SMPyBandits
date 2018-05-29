@@ -2,13 +2,12 @@
 """ The Optimally Confident UCB (OC-UCB) policy for bounded stochastic bandits, with sub-Gaussian noise.
 
 - Reference: [Lattimore, 2016](https://arxiv.org/pdf/1603.08661.pdf).
-
-.. warning:: FIXME also implement the horizon-dependent version, from [Lattimore, 2015](https://arxiv.org/pdf/1507.07880.pdf)
+- There is also a horizon-dependent version, :class:`OCUCBH.OCUCBH`, from [Lattimore, 2015](https://arxiv.org/pdf/1507.07880.pdf).
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from math import exp, sqrt, log
 import numpy as np
@@ -47,8 +46,8 @@ class OCUCB(UCB):
 
         .. math::
 
-           B_k(t) &= \max\Big\{ \exp(1), \log(t), t \log(t) / C_k(t) \Big\},\\
-           \text{where}\; C_k(t) &= \sum_{j=1}^{K} \min\left\{ T_k(t), T_j(t)^{\rho} T_k(t)^{1 - \rho} \right\}
+            B_k(t) &= \max\Big\{ \exp(1), \log(t), t \log(t) / C_k(t) \Big\},\\
+            \text{where}\; C_k(t) &= \sum_{j=1}^{K} \min\left\{ T_k(t), T_j(t)^{\rho} T_k(t)^{1 - \rho} \right\}
         """
         t = self.t
         T_ = self.pulls
@@ -72,7 +71,7 @@ class OCUCB(UCB):
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt(2 * self.eta * log(self._Bterm(arm)) / self.pulls[arm])
 
-    # FIXME it does not work so far?! Why?!!
+    # FIXME it does not work so far!
     # def computeAllIndex(self):
     #     """ Compute the current indexes for all arms, in a vectorized manner."""
     #     indexes = (self.rewards / self.pulls) + np.sqrt(2 * self.eta * np.log(self._Bterms()) / self.pulls)
