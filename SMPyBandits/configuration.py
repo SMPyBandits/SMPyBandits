@@ -711,42 +711,57 @@ configuration.update({
         #     "archtype": MOSSExperimental,
         #     "params": {}
         # },
-        # # --- Optimally-Confident UCB algorithm
+        # --- Optimally-Confident UCB algorithm
+        {
+            "archtype": OCUCB,
+            "params": {
+                "eta": 1.1,
+                "rho": 1,
+            }
+        },
         # {
         #     "archtype": OCUCB,
         #     "params": {
         #         "eta": 1.1,
-        #         "rho": 1,
+        #         "rho": 0.9,
         #     }
         # },
-        # # {
-        # #     "archtype": OCUCB,
-        # #     "params": {
-        # #         "eta": 1.1,
-        # #         "rho": 0.9,
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": OCUCB,
-        # #     "params": {
-        # #         "eta": 1.1,
-        # #         "rho": 0.8,
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": OCUCB,
-        # #     "params": {
-        # #         "eta": 1.1,
-        # #         "rho": 0.7,
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": OCUCB,
-        # #     "params": {
-        # #         "eta": 1.1,
-        # #         "rho": 0.6,
-        # #     }
-        # # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.8,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.7,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.6,
+        #     }
+        # },
+        # --- Optimally-Confident UCB algorithm, horizon dependent
+        {
+            "archtype": OCUCBH,
+            "params": {
+                "psi": 2,
+                "alpha": 4,
+                "horizon": HORIZON,
+            }
+        },
+        {
+            "archtype": AOCUCBH,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # --- CPUCB algorithm, other variant of UCB
         # {
         #     "archtype": CPUCB,
@@ -761,6 +776,11 @@ configuration.update({
         #     "archtype": DMED,
         #     "params": {}
         # },
+        # --- IMED algorithm, similar to DMED
+        {
+            "archtype": IMED,
+            "params": {}
+        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,

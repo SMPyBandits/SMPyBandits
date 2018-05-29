@@ -8,19 +8,15 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Olivier Cappé, Aurélien Garivier, Lilian Besson"
 __version__ = "0.6"
 
-
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
-
 
 try:
     from .kullback import klBern
     from .BasePolicy import BasePolicy
-    from .with_proba import with_proba
 except ImportError:
     from kullback import klBern
     from BasePolicy import BasePolicy
-    from with_proba import with_proba
 
 
 #: Variant: with this set to false, use a less aggressive list pruning criterion corresponding to the version called DMED in [Garivier & Cappé, COLT 2011]; the default is the original proposal of [Honda & Takemura, COLT 2010] (called DMED+ in [Garivier & Cappé, COLT 2011])

@@ -9,7 +9,7 @@ r""" An experimental "on-line" policy, using algorithms from black-box Bayesian 
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 # WARNING: this is a HUGE hack to fix a mystery bug on importing this policy
 from sys import path
@@ -19,8 +19,9 @@ import numpy as np
 
 # Ignore the UserWarning skopt/optimizer/optimizer.py:208:
 # UserWarning: The objective has been evaluated at this point before.
-from warnings import simplefilter
-simplefilter("ignore", UserWarning)
+from warnings import filterwarnings
+# simplefilter("ignore", UserWarning)
+filterwarnings("ignore", message="The objective has been evaluated at this point before", category=UserWarning)
 
 # Cf. https://scikit-optimize.github.io/
 try:

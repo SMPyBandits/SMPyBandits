@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ The UCB policy for bounded bandits.
-Reference: [Lai & Robbins, 1985].
+
+- Reference: [Lai & Robbins, 1985].
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -19,14 +20,8 @@ except ImportError:
 
 class UCB(IndexPolicy):
     """ The UCB policy for bounded bandits.
-    Reference: [Lai & Robbins, 1985].
 
-    >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
-    >>> policy = UCB(10)
-    >>> policy.choice()
-    5
-    >>> policy.computeAllIndex(); policy.index
-    array([inf, inf, inf, inf, inf, inf, inf, inf, inf, inf])
+    - Reference: [Lai & Robbins, 1985].
     """
 
     def computeIndex(self, arm):

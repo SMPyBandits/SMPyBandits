@@ -58,11 +58,12 @@ class OCUCBH(OCUCB):
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt((self.alpha / self.pulls[arm]) * log(self.psi * self.horizon / self.t) )
 
-    def computeAllIndex(self):
-        """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha / self.pulls) * np.log(self.psi * self.horizon / self.t) )
-        indexes[self.pulls < 1] = float('+inf')
-        self.index[:] = indexes
+    # XXX Error : division by zero ?
+    # def computeAllIndex(self):
+    #     """ Compute the current indexes for all arms, in a vectorized manner."""
+    #     indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha / self.pulls) * np.log(self.psi * self.horizon / self.t) )
+    #     indexes[self.pulls < 1] = float('+inf')
+    #     self.index[:] = indexes
 
 
 # --- AOCUCB
@@ -82,18 +83,17 @@ class AOCUCBH(OCUCBH):
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 
-        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha}{N_k(t)} \log(\frac{\psi T}{t})}.
-
-        - Where :math:`\alpha` is the parameter of the algorithm.
+        .. math:: I_k(t) = \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{2}{N_k(t)} \log(\frac{T}{N_k(t)})}.
         """
         if self.pulls[arm] < 1:
             return float('+inf')
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt((2 / self.pulls[arm]) * log(self.horizon / self.pulls[arm]) )
 
-    def computeAllIndex(self):
-        """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = (self.rewards / self.pulls) + np.sqrt((2 / self.pulls) * np.log(self.horizon / self.pulls[arm]) )
-        indexes[self.pulls < 1] = float('+inf')
-        self.index[:] = indexes
+    # XXX Error : division by zero ?
+    # def computeAllIndex(self):
+    #     """ Compute the current indexes for all arms, in a vectorized manner."""
+    #     indexes = (self.rewards / self.pulls) + np.sqrt((2 / self.pulls) * np.log(self.horizon / self.pulls) )
+    #     indexes[self.pulls < 1] = float('+inf')
+    #     self.index[:] = indexes
 

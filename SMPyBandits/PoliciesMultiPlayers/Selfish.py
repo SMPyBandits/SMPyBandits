@@ -9,8 +9,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.5"
 
-from warnings import warn
-
 try:
     from .BaseMPPolicy import BaseMPPolicy
     from .ChildPointer import ChildPointer
@@ -79,7 +77,7 @@ class Selfish(BaseMPPolicy):
             self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)  # Create it here!
             self.children[playerId] = SelfishChildPointer(self, playerId)
             if hasattr(self._players[playerId], 'handleCollision'):  # XXX they should not have such method!
-                warn("Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId), RuntimeWarning)
+                print("Warning: Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId))  # DEBUG
                 # raise ValueError("Invalid child policy {} for Selfish algorithm! It should not have a collision avoidance protocol!".format(self._players[playerId]))
 
     def __str__(self):

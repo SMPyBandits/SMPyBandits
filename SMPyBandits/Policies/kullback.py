@@ -356,15 +356,22 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
 # --- KL functions, for the KL-UCB policy
 
 @jit
-def klucb(x, d, kl, upperbound, lowerbound=float('-inf'), precision=1e-6, max_iterations=50):
-    """ The generic KL-UCB index computation.
+def klucb(x, d, kl,
+        upperbound, lowerbound=float('-inf'),
+        precision=1e-6, max_iterations=50
+    ):
+    r""" The generic KL-UCB index computation.
 
-    - x: value of the cum reward,
-    - d: upper bound on the divergence,
-    - kl: the KL divergence to be used (:func:`klBern`, :func:`klGauss`, etc),
-    - upperbound, lowerbound=float('-inf'): the known bound of the values x,
-    - precision=1e-6: the threshold from where to stop the research,
-    - max_iterations: max number of iterations of the loop (safer to bound it to reduce time complexity).
+    - ``x``: value of the cum reward,
+    - ``d``: upper bound on the divergence,
+    - ``kl``: the KL divergence to be used (:func:`klBern`, :func:`klGauss`, etc),
+    - ``upperbound``, ``lowerbound=float('-inf')``: the known bound of the values ``x``,
+    - ``precision=1e-6``: the threshold from where to stop the research,
+    - ``max_iterations``: max number of iterations of the loop (safer to bound it to reduce time complexity).
+
+    .. math::
+
+        \mathrm{klucb}(x, d) \simeq \sup_{\mathrm{lowerbound} \leq y \leq \mathrm{upperbound}} \{ y : \mathrm{kl}(x, y) < d \}.
 
     .. note:: It uses a **bisection search**, and one call to ``kl`` for each step of the bisection search.
 
