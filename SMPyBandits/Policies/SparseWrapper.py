@@ -105,7 +105,7 @@ class SparseWrapper(BasePolicy):
         ucb_for = ""
         # FIXME use notations B_cJ, B_cK from my article?
         if self.use_ucb_for_set_K or self.use_ucb_for_set_J:
-            ucb_for = r", \mathrm{UCB} for "
+            ucb_for = r", UCB for "
         if self.use_ucb_for_set_J and self.use_ucb_for_set_K:
             ucb_for += r"$\mathcal{K}$ and $\mathcal{J}$"
         elif self.use_ucb_for_set_K and not self.use_ucb_for_set_J:

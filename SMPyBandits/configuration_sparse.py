@@ -376,14 +376,14 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # # --- BayesUCB algorithm
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {
-        #         "posterior": Beta,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
+        # --- BayesUCB algorithm
+        {
+            "archtype": BayesUCB,
+            "params": {
+                # "posterior": Beta,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # # {
         # #     "archtype": BayesUCB,
         # #     "params": {
@@ -421,23 +421,23 @@ configuration.update({
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
-                "policy": BayesUCB,
+                "policy": Thompson,
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": True,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # {
-        #     "archtype": SparseWrapper,
-        #     "params": {
-        #         "sparsity": SPARSITY,
-        #         "policy": klUCB,
-        #         "klucb": klucbGauss,
-        #         "use_ucb_for_set_J": True,
-        #         "use_ucb_for_set_K": True,
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": BayesUCB,
+                # "klucb": klucbGauss,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # {
         #     "archtype": SparseWrapper,
         #     "params": {

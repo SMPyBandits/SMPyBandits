@@ -9,8 +9,8 @@ Usage:
     policy_server.py --version
 
 Options:
-    -h --help   Show this screen.
-    --version   Show version.
+    -h --help       Show this screen.
+    --version       Show version.
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
     --means=<MEANS> Means of arms used by the environment, to print regret [default: None].
@@ -18,8 +18,8 @@ Options:
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
-version = "MAB Policy server v{}".format(__version__)
+__version__ = "0.9"
+version = "SMPyBandits MAB policy server v{}".format(__version__)
 
 import json
 import socket
@@ -113,17 +113,17 @@ def server(policy, host, port, means=None):
                         reward = float(message)
 
                         if chosen_arm is not None:
-                            print("Passing reward {} on arm {} to the policy".format(reward, chosen_arm))
+                            print("Passing reward {} on arm {} to the policy...".format(reward, chosen_arm))
                             policy.getReward(chosen_arm, reward)
                     except ValueError:
-                        print("Unable to convert message = {!r} to a float reward...".format(message))  # DEBUG
+                        print("Unable to convert message = '{!r}' to a float reward...".format(message))  # DEBUG
                     try:
                         chosen_arm = policy.choice()
                     except ValueError:
-                        print("Unable to use policy's choice() method... playing the (t+1)%K-th arm...")  # DEBUG
                         chosen_arm = (policy.t + 1) % policy.nbArms
+                        print("Unable to use policy's choice() method... playing the (t+1)%K-th = {} arm...".format(chosen_arm))  # DEBUG
                     message = str(chosen_arm)
-                    print("Send: {!r}".format(message))
+                    print("Sending: '{!r}'...".format(message))
                     connection.sendall(message.encode())
 
             except ConnectionResetError:

@@ -1,28 +1,27 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Client to play multi-armed bandits problem against.
-Many distribution of arms are supported, default to Bernoulli.
+Client to play multi-armed bandits problem against. Many distribution of arms are supported, default to Bernoulli.
 
 Usage:
-    env_client.py [markovian | dynamic] [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] <json_configuration>
+    env_client.py [--markovian | --dynamic] [--port=<PORT>] [--host=<HOST>] [--speed=<SPEED>] <json_configuration>
     env_client.py (-h|--help)
     env_client.py --version
 
 Options:
-    -h --help   Show this screen.
-    --version   Show version.
-    markovian   Whether to use a Markovian MAB problem (default is simple MAB problems).
-    dynamic     Whether to use a Dynamic MAB problem (default is simple MAB problems).
+    -h --help       Show this screen.
+    --version       Show version.
+    --markovian     Whether to use a Markovian MAB problem (default is simple MAB problems).
+    --dynamic       Whether to use a Dynamic MAB problem (default is simple MAB problems).
     --port=<PORT>   Port to use for the TCP connection [default: 10000].
     --host=<HOST>   Address to use for the TCP connection [default: 0.0.0.0].
-    --speed=<SPEED>   Speed of emission in milliseconds [default: 1000].
+    --speed=<SPEED> Speed of emission, in milliseconds [default: 1000].
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
-version = "MAB environment client v{}".format(__version__)
+__version__ = "0.9"
+version = "SMPyBandits MAB environment client v{}".format(__version__)
 
 import json
 import socket
@@ -56,7 +55,7 @@ def read_configuration_env(a_string):
 
 def send_message(sock, message):
     """ Send this message to the socket."""
-    print("sending {!r}".format(message))
+    print("Sending '{!r}'...".format(message))
     return sock.sendall(message)
 
 
@@ -131,8 +130,8 @@ def main(arguments):
     host = arguments['--host']
     port = int(arguments['--port'])
     speed = float(arguments['--speed']) / 1000.0
-    is_markovian = arguments['markovian']
-    is_dynamic = arguments['dynamic']
+    is_markovian = arguments['--markovian']
+    is_dynamic = arguments['--dynamic']
     json_configuration = arguments['<json_configuration>']
     configuration = read_configuration_env(json_configuration)
     transform_str(configuration)
