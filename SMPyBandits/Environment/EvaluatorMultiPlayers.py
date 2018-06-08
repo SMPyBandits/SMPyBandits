@@ -905,7 +905,7 @@ class EvaluatorMultiPlayers(object):
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
-                n, returned_bins, patches = plt.hist(last_regrets, normed=normed, color=colors[evaId], bins=nbbins)
+                n, returned_bins, patches = plt.hist(last_regrets, density=normed, color=colors[evaId], bins=nbbins)
                 addTextForWorstCases(plt, n, returned_bins, patches, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N), fig=fig, pickleit=PICKLE_IT)
@@ -929,7 +929,7 @@ class EvaluatorMultiPlayers(object):
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 # print("evaId = {}, i = {}, j = {}, nrows = {}, ncols = {}, ax = {} ...".format(evaId, i, j, nrows, ncols, ax))  # DEBUG
                 last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
-                n, returned_bins, patches = ax.hist(last_regrets, normed=normed, color=colors[evaId], bins=nbbins, log=log)
+                n, returned_bins, patches = ax.hist(last_regrets, density=normed, color=colors[evaId], bins=nbbins, log=log)
                 addTextForWorstCases(ax, n, returned_bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(eva.strPlayers(short=True), fontdict={'fontsize': 'small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
@@ -944,7 +944,7 @@ class EvaluatorMultiPlayers(object):
             for evaId, eva in enumerate(evaluators):
                 all_last_regrets.append(eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate))
                 labels.append(eva.strPlayers(short=True))
-            ns, returned_bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=nbbins)
+            ns, returned_bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, returned_bins, patches, normed=normed)
             legend()

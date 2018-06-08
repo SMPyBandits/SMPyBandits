@@ -103,11 +103,16 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None, only_stron
     gaps = best_theta - sorted_thetas
     # assert np.all(gaps >= 0), "Error in the computation of gaps = {}, they should be > 0.".format(gaps)  # DEBUG
 
-    strong_sparsity = lambda k: (d - sparsity)/float(best_theta) - sum(gaps[i]/(sorted_thetas[i]**2) for i in range(k, sparsity))
+    def strong_sparsity(k):
+        left_term = (d - sparsity) / float(best_theta) if best_theta != 0 else 0
+        right_term = 0
+        for i in range(k, sparsity):
+            right_term += gaps[i] / (sorted_thetas[i]**2) if sorted_thetas[i] != 0 else 0
+        return left_term - right_term
+
     ci = np.zeros(d)
 
     # # DEBUG
-    # print()
     # print("    We have d =", d, "sparsity =", sparsity, "permutation =", permutation)  # DEBUG
     # print("    and sorted_thetas =", sorted_thetas, "with best_theta =", best_theta)  # DEBUG
     # print("    gaps =", gaps)  # DEBUG
@@ -176,7 +181,7 @@ class OSSB(BasePolicy):
         # WARNING the option is a string to keep the configuration hashable and pickable
         if solve_optimization_problem == "sparse":
             # self._info_on_solver = ", sparse Gauss"  # XXX
-            self._info_on_solver = ", Gauss"
+            self._info_on_solver = ", sGauss"
             self._solve_optimization_problem = solve_optimization_problem__sparse_bandits
         elif solve_optimization_problem == "gaussian":
             self._info_on_solver = ", Gauss"
@@ -224,7 +229,11 @@ class OSSB(BasePolicy):
             # we don't just take argmin because of possible non-uniqueness
             least_explored = np.random.choice(np.nonzero(self.pulls == np.min(self.pulls))[0])
             ratios = self.pulls / values_c_x_mt
-            least_probable = np.random.choice(np.nonzero(ratios == np.min(ratios))[0])
+            min_ratios_non_inf = np.nanmin(ratios[~np.isinf(ratios)])
+            if np.isnan(min_ratios_non_inf):
+                least_probable = np.random.choice(self.nbArms)
+            else:
+                least_probable = np.random.choice(np.nonzero(ratios == min_ratios_non_inf)[0])
             # print("Using ratio of pulls / values_c_x_mt = {}, and least probable arm(s) are {}...".format(ratios, least_probable))  # DEBUG
 
             if self.pulls[least_explored] <= self.epsilon * self.counter_s_no_exploitation_phase:

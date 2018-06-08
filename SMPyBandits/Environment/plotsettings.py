@@ -312,15 +312,12 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0.85, normed=False, fontsize
     assert 0 <= rate <= 1, "Error: 'rate' = {:.3g} should be in [0, 1].".format(rate)  # DEBUG
     if not isinstance(n, list) and not isinstance(n, np.ndarray):
         n = [n]
-    # if not isinstance(bins, list):
-    #     bins = [None, bins]
     if hasattr(patches, 'patches'):
         # assert isinstance(patches, mpl.container.BarContainer)  # DEBUG
         patches = patches.patches
     if not isinstance(patches, list):
         patches = [patches]
     max_x = max(p.xy[0] for p in patches)
-    # for nx, b, p in zip(n, bins[1:], patches):
     for nx, p in zip(n, patches):
         text = "{:.3%}".format(nx) if normed else "{:.3g}".format(nx)
         x, y = p.xy[0], 1.015 * nx  # 1.5% higher than the top of the patch rectangle

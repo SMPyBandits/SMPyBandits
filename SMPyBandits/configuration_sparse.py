@@ -152,6 +152,14 @@ ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeansWithSparsity(nbArms=NB_ARMS, sparsity=SPARSITY, delta=0.005, lower=LOWER, lowerNonZero=LOWERNONZERO, amplitude=AMPLITUDE, isSorted=True)
 
+import numpy as np
+# MEANS = [0.05] * (NB_ARMS - SPARSITY) + list(np.linspace(LOWERNONZERO, LOWER + AMPLITUDE, num=SPARSITY))
+# more parametric? Read from cli?
+MEANS_STR = getenv('MEANS', '')
+if MEANS_STR:
+    MEANS_STR = MEANS_STR.replace('[', '').replace(']', '')
+    MEANS = np.asarray([ float(m) for m in MEANS_STR.split(',') ], dtype=float)
+
 #: Whether to sort the means of the problems or not.
 ISSORTED = False
 ISSORTED = True
@@ -508,36 +516,36 @@ configuration.update({
         #         "lower": LOWER, "amplitude": AMPLITUDE,
         #     }
         # },
-        # # --- The new OSSB algorithm
+        # --- The new OSSB algorithm
+        {
+            "archtype": OSSB,
+            "params": {
+                "epsilon": 0.0,  # XXX test to change these values!
+                "gamma": 0.0,  # XXX test to change these values!
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
+        {
+            "archtype": GaussianOSSB,
+            "params": {
+                "epsilon": 0.0,
+                "gamma": 0.0,
+                "variance": VARIANCE,
+            }
+        },
+        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
         # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.0,  # XXX test to change these values!
-        #         "gamma": 0.0,  # XXX test to change these values!
-        #     }
-        # },
-        # # --- FIXME The new OSSB algorithm, tuned for Gaussian bandits
-        # {
-        #     "archtype": GaussianOSSB,
+        #     "archtype": SparseOSSB,
         #     "params": {
         #         "epsilon": 0.0,
         #         "gamma": 0.0,
-        #         "variance": VARIANCE,
+        #         "sparsity": SPARSITY,
         #     }
         # },
-        # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
         {
             "archtype": SparseOSSB,
             "params": {
-                "epsilon": 0.0,
-                "gamma": 0.0,
-                "sparsity": SPARSITY,
-            }
-        },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
+                "epsilon": 0.001,
                 "gamma": 0.0,
                 "sparsity": SPARSITY,
             }
@@ -546,18 +554,18 @@ configuration.update({
             "archtype": SparseOSSB,
             "params": {
                 "epsilon": 0.0,
-                "gamma": 0.1,
+                "gamma": 0.01,
                 "sparsity": SPARSITY,
             }
         },
-        {
-            "archtype": SparseOSSB,
-            "params": {
-                "epsilon": 0.01,
-                "gamma": 0.1,
-                "sparsity": SPARSITY,
-            }
-        },
+        # {
+        #     "archtype": SparseOSSB,
+        #     "params": {
+        #         "epsilon": 0.001,
+        #         "gamma": 0.01,
+        #         "sparsity": SPARSITY,
+        #     }
+        # },
         # # --- FIXME The new OSSB algorithm, tuned for Sparse bandits
         # {
         #     "archtype": SparseOSSB,

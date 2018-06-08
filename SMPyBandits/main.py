@@ -68,7 +68,7 @@ semilogx = False  #: Plot in semilogx by default?
 semilogy = False  #: Plot in semilogy by default?
 loglog   = False  #: Plot in loglog   by default?
 meanRegret = True  #: Plot mean regret ?
-normalizedRegret = False  #: Plot instantaneous regret?
+normalizedRegret = True  #: Plot instantaneous regret?
 
 plotSTD = True   #: Plot regret with a STD?
 plotSTD = False  #: Plot regret with a STD?

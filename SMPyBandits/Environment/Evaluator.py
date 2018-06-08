@@ -448,12 +448,14 @@ class Evaluator(object):
             else:
                 Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
                 if normalizedRegret:
-                    Y /= np.log(2 + X)   # XXX prevent /0
+                    Y /= np.log(X + 2)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
             lw = 4 if ('$N=' in policy.__cachedstr__ or 'Aggr' in policy.__cachedstr__ or 'CORRAL' in policy.__cachedstr__ or 'LearnExp' in policy.__cachedstr__ or 'Exp4' in policy.__cachedstr__) else 2
             if semilogx or loglog:
                 # FIXED for semilogx plots, truncate to only show t >= 100
-                plt.semilogx(X[X >= 100][::self.delta_t_plot], Y[X >= 100][::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
+                X_to_plot_here = X[X >= 100]
+                Y_to_plot_here = Y[X >= 100]
+                plot_method(X_to_plot_here[::self.delta_t_plot], Y_to_plot_here[::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             else:
                 plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
             if semilogx or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
@@ -502,7 +504,7 @@ class Evaluator(object):
             plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         else:
-            if drawUpperBound and not semilogx:
+            if drawUpperBound and not (semilogx or loglog):
                 # Experiment to print also an upper bound: it is CRAZILY huge!!
                 lower_amplitudes = np.asarray([arm.lower_amplitude for arm in self.envs[envId].arms])
                 amplitude = np.max(lower_amplitudes[:, 1])
@@ -679,7 +681,7 @@ class Evaluator(object):
                 plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                n, bins, patches = plt.hist(last_regrets, normed=normed, color=colors[policyId], bins=nbbins)
+                n, bins, patches = plt.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins)
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=True)
@@ -700,7 +702,7 @@ class Evaluator(object):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                n, bins, patches = ax.hist(last_regrets, normed=normed, color=colors[policyId], bins=nbbins, log=log)
+                n, bins, patches = ax.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins, log=log)
                 addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
@@ -715,7 +717,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(policy.__cachedstr__)
-            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, normed=normed, color=colors, bins=nbbins)
+            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
             legend()

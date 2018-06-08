@@ -229,7 +229,7 @@ class SparseWrapper(BasePolicy):
                     return np.random.choice(np.nonzero(diff_of_set)[0])
                 # 3rd case: UCB phase
                 else:
-                    if self.phase != Phase.UCB: print("{}: at time t = {}, the set of good arms was identified as {} for the first time...".format(self, self.t, np.nonzero(self.goods)[0]))  # DEBUG
+                    # if self.phase != Phase.UCB: print("{}: at time t = {}, the set of good arms was identified as {} for the first time...".format(self, self.t, np.nonzero(self.goods)[0]))  # DEBUG
                     self.phase = Phase.UCB
                     return self.choiceFromSubSet(availableArms=np.nonzero(self.goods)[0])
 
