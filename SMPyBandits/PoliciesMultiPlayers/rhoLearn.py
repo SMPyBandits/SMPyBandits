@@ -5,7 +5,7 @@
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
 - At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is given by a second learning algorithm, playing on arms = ranks from [1, .., M], where M is the number of player.
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy, it *might* be better! Warning: no theoretical guarantees exist!
-- Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
+- Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 
 
 .. note:: This is not fully decentralized: as each child player needs to know the (fixed) number of players.
@@ -52,7 +52,7 @@ except ImportError:
 
 
 #: Should oneRhoLearn players select a (possibly new) rank *at each step* ?
-#: The algorithm P2 from https://dx.doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
+#: The algorithm P2 from https://doi.org/10.4108/eai.5-9-2016.151647 suggests to do so.
 #: But I found it works better **without** this trick.
 CHANGE_RANK_EACH_STEP = True
 CHANGE_RANK_EACH_STEP = False
@@ -91,7 +91,7 @@ class oneRhoLearn(oneRhoRand):
 
         # First give a reward to the rank selection learning algorithm (== collision avoidance)
         self.rankSelection.getReward(self.rank - 1, 1)
-        # Note: this is NOTHING BUT a heuristic! See equation (13) in https://dx.doi.org/10.4108/eai.5-9-2016.151647
+        # Note: this is NOTHING BUT a heuristic! See equation (13) in https://doi.org/10.4108/eai.5-9-2016.151647
 
         # Then, use the rankSelection algorithm to select a (possibly new) rank
         if self.change_rank_each_step:  # That's new! rhoLearn (can) change its rank at ALL steps!

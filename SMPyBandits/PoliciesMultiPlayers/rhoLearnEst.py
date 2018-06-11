@@ -6,7 +6,7 @@ r""" rhoLearnEst: implementation of the multi-player policy from [Distributed Al
 - But instead of aiming at the best (the 1-st best) arm, player i aims at the rank_i-th best arm,
 - At first, every player has a random rank_i from 1 to M, and when a collision occurs, rank_i is given by a second learning algorithm, playing on arms = ranks from [1, .., M], where M is the number of player.
 - If rankSelection = Uniform, this is like rhoRand, but if it is a smarter policy, it *might* be better! Warning: no theoretical guarantees exist!
-- Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://dx.doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
+- Reference: [Proof-of-Concept System for Opportunistic Spectrum Access in Multi-user Decentralized Networks, S.J.Darak, C.Moy, J.Palicot, EAI 2016](https://doi.org/10.4108/eai.5-9-2016.151647), algorithm 2. (for BayesUCB only)
 
 .. note:: This is fully decentralized: each child player does *not* need to know the (fixed) number of players, it will learn to select ranks only in :math:`\{1,\dots,M\}` instead of :math:`\{1,\dots,K\}`.
 
