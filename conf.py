@@ -218,7 +218,6 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
         extensions += [
             # From https://bitbucket.org/birkenfeld/sphinx-contrib/
             'sphinxcontrib.googleanalytics',
-            # 'sphinxcontrib.autorun',
         ]
     except ImportError:
         print("'sphinxcontrib.googleanalytics' was not found, try to install it manually from 'https://bitbucket.org/birkenfeld/sphinx-contrib/'...")  # DEBUG

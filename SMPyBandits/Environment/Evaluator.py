@@ -491,7 +491,7 @@ class Evaluator(object):
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isDynamic:
-                plt.ylim(1.06 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
+                plt.ylim(0.94 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             if self.plot_lowerbound:
@@ -544,7 +544,6 @@ class Evaluator(object):
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
-        # plt.ylim(-0.03, 1.03)  # Don't force to view on [0%, 100%]
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel(r"Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
@@ -566,7 +565,6 @@ class Evaluator(object):
             plt.boxplot(all_times, labels=labels)
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
-            legend()
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
@@ -591,7 +589,6 @@ class Evaluator(object):
             plt.boxplot(all_memories, labels=labels)
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
-            legend()
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)

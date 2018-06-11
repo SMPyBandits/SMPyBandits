@@ -566,6 +566,8 @@ class DynamicMAB(MAB):
         print(" - with 'function' =", self.function)  # DEBUG
         self.args = params["args"]  #: Args to give to function
         print(" - with 'args' =", self.args)  # DEBUG
+        # XXX try to read sparsity
+        self._sparsity = configuration["sparsity"] if "sparsity" in configuration else None
         print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
         # Keep track of the successive mean vectors
         self._historyOfMeans = []  # Historic of the means vectors
@@ -591,10 +593,15 @@ class DynamicMAB(MAB):
         # print("reprarms of a DynamicMAB object...")  # DEBUG
         # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         # print("  It has self.means =\n{}".format(self.means))  # DEBUG
-        if latex:
-            text = r"%s, %s with uniform means on $[%.3g, %.3g]$%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap$=%.3g$" % self.args["mingap"])
-        else:
-            text = r"%s, %s with uniform means on [%.3g, %.3g]%s" % ("Bayesian MAB", str(self._arms[0]), self.args["lower"], self.args["lower"] + self.args["amplitude"], "" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=%.3g" % self.args["mingap"])
+        text = "{text}, {K} with uniform means on [{dollar}{lower:.3g}, {upper:.3g}{dollar}]{mingap}{sparsity}".format(
+            text="Bayesian MAB",
+            K=str(self._arms[0]),
+            lower=self.args["lower"],
+            upper=self.args["lower"] + self.args["amplitude"],
+            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r",min gap=%.3g" % self.args["mingap"],
+            sparsity="" if self._sparsity is None else ", sparsity = {dollar}{s}{dollar}".format(s=self._sparsity, dollar="$" if latex else ""),
+            dollar="$" if latex else "",
+        )
         return wraptext(text)
 
     #

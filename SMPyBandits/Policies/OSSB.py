@@ -83,7 +83,7 @@ def solve_optimization_problem__sparse_bandits(thetas, sparsity=None, only_stron
 
     - I recomputed suboptimal solution to the optimization problem, and found the same as in [["Sparse Stochastic Bandits", by J. Kwon, V. Perchet & C. Vernade, COLT 2017](https://arxiv.org/abs/1706.01383)].
 
-    - If only_strong_or_weak is True, the solution :math:`c_i` are not returned, but instead ``strong_or_weak, k`` is returned (to know if the problem is strongly sparse or not, and if not, the k that satisfy the required constraint).
+    - If only_strong_or_weak is ``True``, the solution :math:`c_i` are not returned, but instead ``strong_or_weak, k`` is returned (to know if the problem is strongly sparse or not, and if not, the k that satisfy the required constraint).
     """
     # print("Calling 'solve_optimization_problem__sparse_bandits' with thetas = {} and sparsity = {}...".format(thetas, sparsity))  # DEBUG
 
