@@ -102,7 +102,10 @@ class IndexPolicy(BasePolicy):
             for arm in availableArms:
                 self.index[arm] = self.computeIndex(arm)
             # Uniform choice among the best arms
-            return availableArms[np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms]))[0])]
+            try:
+                return availableArms[np.random.choice(np.nonzero(self.index[availableArms] == np.max(self.index[availableArms]))[0])]
+            except ValueError:
+                return np.random.choice(availableArms)
 
     def choiceMultiple(self, nb=1):
         """ In an index policy, choose nb arms with maximal indexes (uniformly at random)."""

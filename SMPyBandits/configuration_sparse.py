@@ -456,21 +456,34 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # {
-        #     "archtype": Thompson,
-        #     "params": {
-        #         "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
         # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
                 "policy": Thompson,
+                "posterior": Beta,
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "policy": Thompson,
+                "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": Thompson,
+            "params": {
+                "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
@@ -478,21 +491,33 @@ configuration.update({
         {
             "archtype": BayesUCB,
             "params": {
-                # "posterior": Beta,
+                "posterior": Beta,
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {
-        #         "posterior": Gauss,  # XXX does not work yet!
-        #         "lower": LOWER, "amplitude": AMPLITUDE,
-        #     }
-        # },
         {
             "archtype": SparseWrapper,
             "params": {
                 "sparsity": SPARSITY,
+                "policy": BayesUCB,
+                "posterior": Beta,
+                "use_ucb_for_set_J": True,
+                "use_ucb_for_set_K": True,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "posterior": Gauss,  # XXX does not work yet!
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
+        {
+            "archtype": SparseWrapper,
+            "params": {
+                "sparsity": SPARSITY,
+                "posterior": Gauss,  # XXX does not work yet!
                 "policy": BayesUCB,
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": True,
