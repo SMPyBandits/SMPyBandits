@@ -1,5 +1,5 @@
 ---
-title: "*SMPyBandits*: a Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
+title: "*SMPyBandits*: an Experimental Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python"
 fancyhdrtitle: SMPyBandits
 author-meta: Lilian Besson
 authors:
@@ -38,10 +38,10 @@ fontfamily: palatino
 
 # Summary
 
-*SMPyBandits* is a package for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms [@Bubeck12], written in [Python (2 or 3)](https://www.python.org/) [@python].
-*SMPyBandits* is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
-It aims at being extensive, simple to use and maintain, with a clean and perfectly documented codebase.
-It allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments while starting them (see below for an example).
+*SMPyBandits* is a package for numerical simulations on *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms, written in [Python (2 or 3)](https://www.python.org/).
+This library is the most complete open-source implementation of state-of-the-art algorithms tackling various kinds of sequential learning problems referred to as Multi-Armed Bandits.
+It aims at being extensive, simple to use and maintain, with a clean and well documented codebase.
+It allows fast prototyping of simulations and experiments, with an easy configuration system and command-line options to customize experiments.
 
 ---
 
@@ -49,89 +49,113 @@ It allows fast prototyping of simulations and experiments, with an easy configur
 ## Presentation
 
 ### Single-Player MAB
-Multi-Armed Bandit (MAB) problems are well-studied sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52], [@LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization (news article recommendation [@Li10], online advertising [@LiChapelle11] or A/B Testing [@Kaufmann14], [@Jamieson17]), or portfolio optimization [@Sani12].
+Multi-Armed Bandit (MAB) problems are famous sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52], [@LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization (news article recommendation [@Li10], online advertising [@LiChapelle11] or A/B Testing [@Kaufmann14], [@Jamieson17]), or portfolio optimization [@Sani12].
 
-*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms ([over 65!](https://smpybandits.github.io/docs/Policies.html)).
-We use a well-designed hierarchical structure and [class inheritance scheme](https://smpybandits.github.io/uml_diagrams/README.html) to minimize redundancy in the codebase.
-Most existing algorithms are index-based, and can be written very shortly by inheriting from the [`IndexPolicy`](https://smpybandits.github.io/docs/Policies.IndexPolicy.html) class.
+More formally, a stochastic MAB is defined by $K>1$ distributions $\nu_k$ (arms),
+and *i.i.d.* rewards $r_k(t) \sim \nu_k, \forall t$.
+An agent choose arm $A(t)\in\{1,\dots,K\}$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
+Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms,
+and she essentially has to try find and exploit the best one as fast as possible.
+This library tackle one dimensional distributions,
+and supports [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html), [`binomial`](https://smpybandits.github.io/docs/Arms.Binomial.html), [`Poisson`](https://smpybandits.github.io/docs/Arms.Poisson.html), and a generic [`discrete`](https://smpybandits.github.io/docs/Arms.DiscreteArm.html) distributions,
+as well as [`exponential`](https://smpybandits.github.io/docs/Arms.Exponential.html), [`gamma`](https://smpybandits.github.io/docs/Arms.Gamma.html), [`Gaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html) and [`uniform`](https://smpybandits.github.io/docs/Arms.Uniform.html) continuous distributions,
+which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
+
+
+*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms,
+containing [over 65](https://SMPyBandits.GitHub.io/docs/Policies.html) algorithms.
+It uses a well-designed hierarchical structure and [class inheritance scheme](https://SMPyBandits.GitHub.io/uml_diagrams/README.html) to minimize redundancy in the codebase.
+For instance, most existing algorithms are index-based, and new ones can be written easily by inheriting from the [`IndexPolicy`](https://SMPyBandits.GitHub.io/docs/Policies.IndexPolicy.html) class.
+An index-based algorithm computes an index $I_k(t)\in\mathbb{R}$ for each arm $k$ at time $t$ and simply play $A(t) = \arg\max_k I_k(t)$.
 
 ### Multi-Players MAB
 
-For Cognitive Radio applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
+For Cognitive Radio and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
 Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
-
-*SMPyBandits* implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years or so (including [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html) from 2016, and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html)) from [@BessonALT2018].
+*SMPyBandits* implements [all collision models](https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years (including [`rhoRand`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html), [`MusicalChair`](https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html), and our state-of-the-art algorithms [`RandTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html)) from @BessonALT2018.
+For comparison, realistic or full-knowledge centralized algorithms are also implemented.
 
 ---
 
 ## Features
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib [@joblib],
-and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article), using matplotlib [@matplotlib] and seaborn [@seaborn].
-Making new simulations is very easy, one only needs to write a configuration script and no knowledge of the internal code architecture.
+and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib [@matplotlib] and seaborn [@seaborn].
+Making new simulations is very easy, one only needs to write a configuration script (`configuration.py`), without needing a complete knowledge of the internal code architecture.
 
-### Documentation
+A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here: [`SMPyBandits.GitHub.io`](https://SMPyBandits.GitHub.io/).
 
-A complete sphinx [@sphinx] documentation for each algorithms and every piece of code, included the constants in the different configuration files, is available here: [`https://SMPyBandits.GitHub.io`](https://smpybandits.github.io/).
+### How to run experiments?
 
-### How to run the experiments ?
-
-For example, this short bash snippet [^docforconf] shows how to clone the code [^alsoonpypi], install the requirements for Python 3 (in a virtualenv [@virtualenv]), and starts some simulation for $N=1000$ repetitions of the default non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs [^speedofsimu].
-Using environment variables (`N=1000`) when launching the simulation is not required but it is convenient.
-
-[^docforconf]:  $\;$ See [this page of the documentation](https://smpybandits.github.io/How_to_run_the_code.html) for more details.
-[^alsoonpypi]:  $\;$ SMPyBandits is also available on Pypi, see [pypi.org/project/SMPyBandits](https://pypi.org/project/SMPyBandits/). You can install it directly with `sudo pip install SMPyBandits`.
-[^speedofsimu]:  $\;$ It takes about $20$ to $40$ minutes for each simulation, on a standard $4$-cores $64$ bits GNU/Linux laptop.
+We show how to install *SMPyBandits*, and an example of how to run a simple experiment.
+This bash snippet [^docforconf] shows how to clone the code [^alsoonpypi],
+and install the requirements for Python 3:
 
 ```bash
-# 1. get the code in /tmp/, or wherever you want
-cd /tmp/
-git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
-cd SMPyBandits.git
-# 2. just be sure you have the latest virtualenv from Python 3
-sudo pip3 install --upgrade virtualenv
-# 3. create and active the virtualenv
-virtualenv venv
-. venv/bin/activate
-# 4. install the requirements in the virtualenv
-pip install -r requirements.txt
-# Alternative to 1 and 4: pip install SMPyBandits in the virtualenv
-# 5. run a single-player simulation!
-N=1000 T=10000 K=9 N_JOBS=4 make single
+# 1. get the code in the folder you want
+$ git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
+$ cd SMPyBandits.git
+# 2. install the requirements
+$ pip install -r requirements.txt
 ```
 
-### Example of simulation and illustration
+Launching simulations is easy, for instance this snippet shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
+It takes about $20$ to $40$ minutes for each simulation, on a standard $4$-cores $64$ bits GNU/Linux laptop.
+Using environment variables (`N=1000` etc) in the command line is not required, but it is convenient:
 
-A small script [`configuration.py`](https://smpybandits.github.io/docs/configuration.html) is used to import the [arm classes](https://smpybandits.github.io/docs/Arms.html), the [policy classes](https://smpybandits.github.io/docs/Policies.html) and define the problems and the experiments.
-For instance, we can compare the standard anytime [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) algorithm, as well as [`UCB`](https://smpybandits.github.io/docs/Policies.UCBalpha.html) (with $\alpha=1$) and [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) (with [Beta posterior](https://smpybandits.github.io/docs/Policies.Posterior.Beta.html)).
-Figure \ref{fig:plot1} below shows the average regret [^regret] for these $4$ algorithms.
+[^docforconf]:  $\;$ See [`SMPyBandits.GitHub.io/How_to_run_the_code.html`](https://SMPyBandits.GitHub.io/How_to_run_the_code.html) for more details.
+[^alsoonpypi]:  $\;$ SMPyBandits is also available on Pypi, see [`pypi.org/project/SMPyBandits`](https://pypi.org/project/SMPyBandits/). You can install it directly with `sudo pip install SMPyBandits`, or from a `virtualenv` [@virtualenv].
 
-[^regret]:  $\;$ The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits) and the cumulated rewards of the considered algorithms.
+```bash
+# 3. run a single-player simulation
+$ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
+  MEANS=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] python3 main.py configuration.py
+```
 
-![Single-player simulation showing the regret of $4$ algorithms, and the asymptotic lower-bound from [@LaiRobbins85]. They all perform very well, and at finite time they are empirically *below* the asymptotic lower-bound. Each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound).\label{fig:plot1}](plots/paper/1.png){ width=85% }
+### Example of a simulation and illustration
+
+A small script [`configuration.py`](https://SMPyBandits.GitHub.io/docs/configuration.html) is used to import the [arm classes](https://SMPyBandits.GitHub.io/docs/Arms.html), the [policy classes](https://SMPyBandits.GitHub.io/docs/Policies.html) and define the problems and the experiments.
+Choosing the algorithms is easy by customizing the `configuration["policies"]` list in the `configuration.py` file.
+For instance, one can compare the standard anytime [`klUCB`](https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html) algorithm, and also [`UCB`](https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html) (with $\alpha=1$) and [`Thompson`](https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html) (with [Beta posterior](https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html)).
+
+```python
+configuration["policies"] = [
+  { "archtype": klUCB, "params": { "klucb": klucbBern } },
+  { "archtype": klUCBPlusPlus, "params": { "horizon": HORIZON, "klucb": klucbBern } },
+  { "archtype": UCBalpha, "params": { "alpha": 1 } },
+  { "archtype": Thompson, "params": { "posterior": Beta } }
+]
+```
+
+Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in HD5 files.
+Figure \ref{fig:plot1} below shows the average regret for these $4$ algorithms.
+The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
+
+![Example of a single-player simulation showing the regret of $4$ algorithms. They all perform very well. Each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound).\label{fig:plot1}](plots/paper/3.png){ width=85% }
 
 ---
 
-## Research using *SMPyBandits*
+## Research papers using *SMPyBandits*
 
 *SMPyBandits* was used for the following research articles since $2017$:
 
-- For [@BessonALT2018], we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) and [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html)).
+- For @BessonALT2018, we used *SMPyBandits* for all the simulations for multi-player bandit algorithms [^article1]. We designed the two [`RandTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html) algorithms and proved than they enjoy logarithmic regret in the usual setting, and outperform significantly the previous state-of-the-art solutions (*i.e.*, [`rhoRand`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html) and [`MusicalChair`](https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html)).
 
-[^article1]:  $\;$ See the page [`MultiPlayers`](https://smpybandits.github.io/MultiPlayers.html) on the documentation.
+[^article1]:  $\;$ See the page [`SMPyBandits.GitHub.io/MultiPlayers.html`](https://SMPyBandits.GitHub.io/MultiPlayers.html) on the documentation.
 
-- In [@BessonWCNC2018], we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
+- In @BessonWCNC2018, we used *SMPyBandits* to illustrate and compare different aggregation algorithms [^article2]. We designed a variant of the Exp3 algorithm for online aggregation of experts [@Bubeck12], called [`Aggregator`](https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html). Aggregating experts is a well-studied idea in sequential learning and in machine learning in general. We showed that it can be used in practice to select on the run the best bandit algorithm for a certain problem from a fixed pool of experts. This idea and algorithm can have interesting impact for Opportunistic Spectrum Access applications [@Jouini09] that use multi-armed bandits algorithms for sequential learning and network efficiency optimization.
 
-[^article2]:  $\;$ See the page [`Aggregation`](https://smpybandits.github.io/Aggregation.html) on the documentation.
+[^article2]:  $\;$ See the page [`SMPyBandits.GitHub.io/Aggregation.html`](https://SMPyBandits.GitHub.io/Aggregation.html) on the documentation.
 
-- In [@Besson2018c], we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+- In @Besson2018c, we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
-[^article3]:  $\;$ See the page [`DoublingTrick`](https://smpybandits.github.io/DoublingTrick.html) on the documentation.
+[^article3]:  $\;$ See the page [`SMPyBandits.GitHub.io/DoublingTrick.html`](https://SMPyBandits.GitHub.io/DoublingTrick.html) on the documentation.
 
 
 ## Dependencies
-Written in Python [@python] (versions *2.7+* or *3.4+*), using `matplotlib` [@matplotlib] for 2D plotting, `numpy` [@numpy] for data storing, random number generations and and operations on arrays, `scipy` [@scipy] for statistical and special functions, and `seaborn` [@seaborn] for pretty plotting and colorblind-aware colormaps.
-Optional dependencies include `joblib` [@joblib] for parallel simulations, `numba` [@numba] for automatic speed-up on small functions, `sphinx` [@sphinx] for generating the documentations, `virtualenv` [@virtualenv] for launching simulations in isolated environments, and `jupyter` [@jupyter] used with `ipython` [@ipython] to experiment with the code.
+
+This library is written in Python [@python] (versions *2.7+* or *3.4+*), using `matplotlib` [@matplotlib] for 2D plotting, `numpy` [@numpy] for data storing, random number generations and operations on arrays, `scipy` [@scipy] for statistical and special functions, and `seaborn` [@seaborn] for pretty plotting and colorblind-aware colormaps.
+Optional dependencies include `joblib` [@joblib] for parallel simulations, `numba` [@numba] for automatic speed-up on small functions, `sphinx` [@sphinx] for generating the documentation, `virtualenv` [@virtualenv] for launching simulations in isolated environments, and `jupyter` [@jupyter] used with `ipython` [@ipython] to experiment with the code.
 
 # References

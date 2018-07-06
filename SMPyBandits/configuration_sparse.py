@@ -468,6 +468,14 @@ configuration.update({
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },
+        # --- Thompson algorithm, with Gaussian posterior
+        {
+            "archtype": Thompson,
+            "params": {
+                "posterior": Gauss,
+                "lower": LOWER, "amplitude": AMPLITUDE,
+            }
+        },
         # --- SparseWrapper algorithm, 4 different versions whether using old UCB for sets J(t) and K(t) or not
         {
             "archtype": SparseWrapper,
@@ -477,13 +485,6 @@ configuration.update({
                 "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
                 "use_ucb_for_set_J": True,
                 "use_ucb_for_set_K": True,
-                "lower": LOWER, "amplitude": AMPLITUDE,
-            }
-        },
-        {
-            "archtype": Thompson,
-            "params": {
-                "posterior": Gauss,   # WARNING Gaussian posterior is still experimental and VERY slow
                 "lower": LOWER, "amplitude": AMPLITUDE,
             }
         },

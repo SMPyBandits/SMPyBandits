@@ -53,6 +53,7 @@
     \rfoot{Lilian Besson}
 
 % \usepackage{graphicx}
+\usepackage{subcaption}
 \graphicspath{{../}}
 \DeclareGraphicsExtensions{.jpg,.pdf,.mps,.eps,.png}
 
@@ -138,7 +139,7 @@
 % -----------------------------------------------------------------
 \begin{document}
 
-\title{\emph{SMPyBandits}: a Research Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python}
+\title{\emph{SMPyBandits}: an Experimental Framework for Single and Multi-Players Multi-Arms Bandits Algorithms in Python}
 
 % -----------------------------------------------------------------
 % \author{
@@ -161,26 +162,26 @@
 % \date{}  % remove date
 
 % -----------------------------------------------------------------
-\editor{?}
+% \editor{?}
 
 \maketitle
 
-\vspace*{15pt}
+\vspace*{10pt}
 
 % -----------------------------------------------------------------
 \begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
   \emph{SMPyBandits} is a package for numerical simulations on
   \emph{single}-player and \emph{multi}-players
   \href{https://en.wikipedia.org/wiki/Multi-armed_bandit}{Multi-Armed
-  Bandits (MAB)} algorithms \citep{Bubeck12}, written in
-  \href{https://www.python.org/}{Python (2 or 3)} \citep{python}.
-  \emph{SMPyBandits} is the most complete open-source implementation of
+  Bandits (MAB)} algorithms, written in
+  \href{https://www.python.org/}{Python (2 or 3)}.
+  This library is the most complete open-source implementation of
   state-of-the-art algorithms tackling various kinds of sequential
   learning problems referred to as Multi-Armed Bandits. It aims at being
   extensive, simple to use and maintain, with a clean and perfectly
   documented codebase. It allows fast prototyping of simulations and
   experiments, with an easy configuration system and command-line options
-  to customize experiments while starting them (see below for an example).
+  to customize experiments.
 \end{abstract}
 
 
@@ -190,7 +191,7 @@
 
 \subsection{Single-Player MAB}\label{single-player-mab}
 
-Multi-Armed Bandit (MAB) problems are well-studied sequential decision
+Multi-Armed Bandit (MAB) problems are famous sequential decision
 making problems in which an agent repeatedly chooses an action (the
 ``\emph{arm}'' of a one-armed bandit) in order to maximize some total
 reward \citep{Robbins52}, \citep{LaiRobbins85}. Initial motivation for
@@ -203,20 +204,34 @@ optimization (news article recommendation \citep{Li10}, online
 advertising \citep{LiChapelle11} or A/B Testing \citep{Kaufmann14},
 \citep{Jamieson17}), or portfolio optimization \citep{Sani12}.
 
+
+More formally, a stochastic MAB is defined by $K>1$ distributions $\nu_k$ (arms),
+and \emph{i.i.d.} rewards $r_k(t) \sim \nu_k, \forall t$.
+An agent choose arm $A(t)\in\{1,\dots,K\}$ at time $t$ and
+observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
+Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms,
+and she essentially has to try find and exploit the best one as fast as possible.
+This library tackle one dimensional distributions,
+and supports \href{https://SMPyBandits.GitHub.io/docs/Arms.Bernoulli.html}{\texttt{Bernoulli}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Binomial.html}{\texttt{binomial}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Poisson.html}{\texttt{Poisson}}, and a generic \href{https://SMPyBandits.GitHub.io/docs/Arms.DiscreteArm.html}{\texttt{discrete}} distributions,
+as well as \href{https://SMPyBandits.GitHub.io/docs/Arms.Exponential.html}{\texttt{exponential}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gamma.html}{\texttt{gamma}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gaussian.html}{\texttt{Gaussian}} and \href{https://SMPyBandits.GitHub.io/docs/Arms.Uniform.html}{\texttt{uniform}} continuous distributions,
+which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
+
 \emph{SMPyBandits} is the most complete open-source implementation of
-single-player (classical) bandit algorithms
-(\href{https://smpybandits.github.io/docs/Policies.html}{over 65!}). We
-use a well-designed hierarchical structure and
-\href{https://smpybandits.github.io/uml_diagrams/README.html}{class
-inheritance scheme} to minimize redundancy in the codebase. Most
-existing algorithms are index-based, and can be written very shortly by
-inheriting from the
-\href{https://smpybandits.github.io/docs/Policies.IndexPolicy.html}{\texttt{IndexPolicy}}
-class.
+single-player bandit algorithms,
+containing \href{https://SMPyBandits.GitHub.io/docs/Policies.html}{over 65} algorithms.
+It uses a well-designed hierarchical structure and
+\href{https://SMPyBandits.GitHub.io/uml_diagrams/README.html}{class
+inheritance scheme} to minimize redundancy in the codebase.
+For example, many existing algorithms are index-based:
+they compute an index $I_k(t)\in\mathbb{R}$ for each arm $k$ and simply play $A(t) = \arg\max_k I_k(t)$ at time $t$.
+As such, it is easy to write new index-based algorithms by inheriting from the
+\href{https://SMPyBandits.GitHub.io/docs/Policies.IndexPolicy.html}{\texttt{IndexPolicy}}
+class, and simply defining one method \texttt{computeIndex(k)} to compute the index $I_k(t)$.
+
 
 \subsection{Multi-Players MAB}\label{multi-players-mab}
 
-For Cognitive Radio applications, a well-studied extension is to
+For Cognitive Radio and other applications, a well-studied extension is to
 consider \(M\geq2\) players, interacting on the \emph{same} \(K\) arms.
 Whenever two or more players select the same arm at the same time, they
 all suffer from a collision. Different collision models has been
@@ -224,75 +239,66 @@ proposed, and the simplest one consist in giving a \(0\) reward to each
 colliding players. Without any centralized supervision or coordination
 between players, they must learn to access the \(M\) best resources
 (\emph{i.e.}, arms with highest means) without collisions.
-
 \emph{SMPyBandits} implements
-\href{https://smpybandits.github.io/docs/Environment.CollisionModels.html}{all
-the collision models} found in the literature, as well as all the
-algorithms from the last 10 years or so (including
-\href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html}{\texttt{rhoRand}}
-from 2009,
-\href{https://smpybandits.github.io/docs/Policies.MEGA.html}{\texttt{MEGA}}
-from 2015,
-\href{https://smpybandits.github.io/docs/Policies.MusicalChair.html}{\texttt{MusicalChair}}
-from 2016, and our state-of-the-art algorithms
-\href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html}{\texttt{RandTopM}}
+\href{https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html}{all
+collision models} found in the literature, as well as all the
+algorithms from the last 10 years (including
+\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{\texttt{rhoRand}},
+\href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{\texttt{MEGA}},
+\href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{\texttt{MusicalChair}}, and our state-of-the-art algorithms
+\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{\texttt{RandTopM}}
 and
-\href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}})
+\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}})
 from \citet{BessonALT2018}.
+For comparison, realistic or full-knowledge centralized algorithms are also implemented.
 
 % \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \section{Features}\label{features}
 
 With this numerical framework, simulations can run on a single CPU or a
-multi-core machine using joblib \citep{joblib}, and summary plots are
-automatically saved as high-quality PNG, PDF and EPS (ready for being
-used in research article), using matplotlib \citep{matplotlib} and
+single multi-core machine using joblib \citep{joblib}, and summary plots are
+automatically saved as high-quality PNG, PDF and EPS, using matplotlib \citep{matplotlib} and
 seaborn \citep{seaborn}. Making new simulations is very easy, one only
-needs to write a configuration script and no knowledge of the internal
-code architecture.
+needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
 
-\subsection{Documentation}\label{documentation}
+A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here:
+\href{SMPyBandits.GitHub.io/}{\texttt{https://SMPyBandits.GitHub.io}}.
 
-A complete sphinx \citep{sphinx} documentation for each algorithms and
-every piece of code, included the constants in the different
-configuration files, is available here:
-\href{https://smpybandits.github.io/}{\texttt{https://SMPyBandits.GitHub.io}}.
+\subsection{How to run experiments?}\label{how-to-run-the-experiments}
 
-\subsection{How to run the experiments
-?}\label{how-to-run-the-experiments}
-
-For example, this short bash snippet\footnote{~See
-  \href{https://smpybandits.github.io/How_to_run_the_code.html}{this
-  page of the documentation} for more details.} shows how to clone the
-code\footnote{~SMPyBandits is also available on Pypi, see
-  \href{https://pypi.org/project/SMPyBandits/}{pypi.org/project/SMPyBandits}.
-  You can install it directly with
-  \texttt{sudo\ pip\ install\ SMPyBandits}.}, install the requirements
-for Python 3 (in a virtualenv \citep{virtualenv}), and starts some
-simulation for \(N=1000\) repetitions of the default non-Bayesian
-Bernoulli-distributed problem, for \(K=9\) arms, an horizon of
-\(T=10000\) and on \(4\) CPUs\footnote{~It takes about \(20\) to
-  \(40\) minutes for each simulation, on a standard \(4\)-cores \(64\)
-  bits GNU/Linux laptop.}. Using environment variables (\texttt{N=1000})
-when launching the simulation is not required but it is convenient.
+We show how to install \emph{SMPyBandits}, and an example of how to run
+a simple experiment. This bash snippet\footnote{~See
+\href{https://SMPyBandits.GitHub.io/How_to_run_the_code.html}{\texttt{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}}
+for more details.} shows how to clone the code\footnote{~SMPyBandits is also available on Pypi, see
+\href{https://pypi.org/project/SMPyBandits/}{\texttt{pypi.org/project/SMPyBandits}}.
+You can install it directly with
+\texttt{sudo\ pip\ install\ SMPyBandits}, or from a
+\texttt{virtualenv}.}, and install the requirements for Python 3:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# 1. get the code in /tmp/, or wherever you want}
-\BuiltInTok{cd}\NormalTok{ /tmp/}
-\FunctionTok{git}\NormalTok{ clone https://GitHub.com/SMPyBandits/SMPyBandits.git}
-\BuiltInTok{cd}\NormalTok{ SMPyBandits.git}
-\CommentTok{# 2. just be sure you have the latest virtualenv from Python 3}
-\FunctionTok{sudo}\NormalTok{ pip3 install --upgrade virtualenv}
-\CommentTok{# 3. create and active the virtualenv}
-\ExtensionTok{virtualenv}\NormalTok{ venv}
-\BuiltInTok{.} \ExtensionTok{venv/bin/activate}
-\CommentTok{# 4. install the requirements in the virtualenv}
-\ExtensionTok{pip}\NormalTok{ install -r requirements.txt}
-\CommentTok{# Alternative to 1 and 4: pip install SMPyBandits in the virtualenv}
-\CommentTok{# 5. run a single-player simulation!}
-\VariableTok{N=}\NormalTok{1000 }\VariableTok{T=}\NormalTok{10000 }\VariableTok{K=}\NormalTok{9 }\VariableTok{N_JOBS=}\NormalTok{4 }\FunctionTok{make}\NormalTok{ single}
+\CommentTok{# 1. get the code in the folder you want}
+\NormalTok{\textdollar }\FunctionTok{git}\NormalTok{ clone https://GitHub.com/SMPyBandits/SMPyBandits.git}
+\NormalTok{\textdollar }\BuiltInTok{cd}\NormalTok{ SMPyBandits.git}
+\CommentTok{# 2. install the requirements}
+\NormalTok{\textdollar }\ExtensionTok{pip}\NormalTok{ install -r requirements.txt}
+\end{Highlighting}
+\end{Shaded}
+
+Launching simulations is easy, for instance this snippet shows how to
+start \(N=1000\) repetitions of a simple non-Bayesian
+Bernoulli-distributed problem, for \(K=9\) arms, an horizon of
+\(T=10000\) and on \(4\) CPUs. Such simulation takes about \(20\) to \(40\) minutes
+for each simulation, on a standard \(4\)-cores \(64\) bits GNU/Linux
+laptop. Using environment variables (\texttt{N=1000} etc) in the command
+line is not required, but it is convenient:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 3. run a single-player simulation}
+\NormalTok{\textdollar }\VariableTok{BAYES=}\NormalTok{False }\VariableTok{ARM_TYPE=}\NormalTok{Bernoulli }\VariableTok{N=}\NormalTok{1000 }\VariableTok{T=}\NormalTok{10000 }\VariableTok{K=}\NormalTok{9 }\VariableTok{N_JOBS=}\NormalTok{4 }\KeywordTok{\textbackslash{}}
+  \VariableTok{MEANS=}\NormalTok{[}\ExtensionTok{0.1}\NormalTok{,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] python3 main.py configuration.py}
 \end{Highlighting}
 \end{Shaded}
 
@@ -300,36 +306,65 @@ when launching the simulation is not required but it is convenient.
 illustration}\label{example-of-simulation-and-illustration}
 
 A small script
-\href{https://smpybandits.github.io/docs/configuration.html}{\texttt{configuration.py}}
+\href{https://SMPyBandits.GitHub.io/docs/configuration.html}{\texttt{configuration.py}}
 is used to import the
-\href{https://smpybandits.github.io/docs/Arms.html}{arm classes}, the
-\href{https://smpybandits.github.io/docs/Policies.html}{policy classes}
-and define the problems and the experiments. For instance, we can
-compare the standard anytime
-\href{https://smpybandits.github.io/docs/Policies.klUCB.html}{\texttt{klUCB}}
+\href{https://SMPyBandits.GitHub.io/docs/Arms.html}{arm classes}, the
+\href{https://SMPyBandits.GitHub.io/docs/Policies.html}{policy classes}
+and define the problems and the experiments. Choosing the algorithms is
+easy by customizing the \texttt{configuration{[}"policies"{]}} list in
+the \texttt{configuration.py} file. For instance, one can compare the
+standard anytime
+\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html}{\texttt{klUCB}}
 algorithm against the non-anytime variant
-\href{https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html}{\texttt{klUCBPlusPlus}}
-algorithm, as well as
-\href{https://smpybandits.github.io/docs/Policies.UCBalpha.html}{\texttt{UCB}}
+\href{https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html}{\texttt{klUCBPlusPlus}}
+algorithm, and also
+\href{https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html}{\texttt{UCB}}
 (with \(\alpha=1\)) and
-\href{https://smpybandits.github.io/docs/Policies.Thompson.html}{\texttt{Thompson}}
+\href{https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html}{\texttt{Thompson}}
 (with
-\href{https://smpybandits.github.io/docs/Policies.Posterior.Beta.html}{Beta
-posterior}). Figure \ref{fig:plot1} below shows the average regret\footnote{~The regret is the difference between the cumulated
-  rewards of the best fixed-armed strategy (which is the oracle strategy
-  for stationary bandits) and the cumulated rewards of the considered
-  algorithms.} for these \(4\) algorithms, and the asymptotic lower-bound from \citep{LaiRobbins85}.
+\href{https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html}{Beta
+posterior}).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{configuration[}\StringTok{"policies"}\NormalTok{] }\OperatorTok{=}\NormalTok{ [}
+\NormalTok{  \{}\StringTok{"archtype"}\NormalTok{: klUCB, }\StringTok{"params"}\NormalTok{: \{}\StringTok{"klucb"}\NormalTok{: klucbBern\}\},}
+\NormalTok{  \{}\StringTok{"archtype"}\NormalTok{: klUCBPlusPlus, }\StringTok{"params"}\NormalTok{: \{}\StringTok{"horizon"}\NormalTok{: HORIZON, }\StringTok{"klucb"}\NormalTok{: klucbBern\}\},}
+\NormalTok{  \{}\StringTok{"archtype"}\NormalTok{: UCBalpha, }\StringTok{"params"}\NormalTok{: \{}\StringTok{"alpha"}\NormalTok{: }\DecValTok{1.0}\NormalTok{\}\},}
+\NormalTok{  \{}\StringTok{"archtype"}\NormalTok{: Thompson, }\StringTok{"params"}\NormalTok{: \{}\StringTok{"posterior"}\NormalTok{: Beta\}\}}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Running the simulation as shown above will save figures in a sub-folder,
+as well as save data (pulls, rewards and regret) in HD5 files. Figure
+\ref{fig:plot1} below shows the average regret for these \(4\)
+algorithms. The regret is the difference between the cumulated rewards
+of the best fixed-armed strategy (which is the oracle strategy for
+stationary bandits), and the cumulated rewards of the considered
+algorithms.
 
 \begin{figure}
 \centering
-\includegraphics[width=0.95\textwidth]{plots/paper/1.png}
-\caption{\small Single-player simulation showing the regret of $4$ algorithms. They all perform very well, and at finite time they are empirically \emph{below} the asymptotic lower-bound. Each algorithm is known to be order-optimal (\emph{i.e.}, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (\emph{i.e.} with the constant matching the lower-bound).}
-\label{fig:plot1}
+\begin{subfigure}[b]{0.49\textwidth}
+  \includegraphics[width=\textwidth]{plots/paper/3.pdf}
+\end{subfigure}
+% ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+  %(or a blank line to force the subfigure onto a new line)
+\begin{subfigure}[b]{0.49\textwidth}
+  \includegraphics[width=\textwidth]{plots/paper/3_hist.pdf}
+\end{subfigure}
+\caption{Example of a single-player simulation showing the average regret of
+\(4\) algorithms. They all perform very well. Each algorithm is known to
+be order-optimal (\emph{i.e.}, its regret is proved to match the
+lower-bound up-to a constant), and each but UCB is known to be optimal
+(\emph{i.e.} with the constant matching the
+lower-bound).\label{fig:plot1}}
 \end{figure}
 
 % \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\section{\texorpdfstring{Research using \emph{SMPyBandits}}{Research using SMPyBandits}}\label{research-using-smpybandits}
+\section{\texorpdfstring{Research papers using \emph{SMPyBandits}}{Research using SMPyBandits}}\label{research-using-smpybandits}
 
 \emph{SMPyBandits} was used for the following research articles since
 \(2017\):
@@ -340,18 +375,18 @@ posterior}). Figure \ref{fig:plot1} below shows the average regret\footnote{~The
   For \citet{BessonALT2018}, we used \emph{SMPyBandits} for all the
   simulations for multi-player bandit algorithms\footnote{~See
     the page
-    \href{https://smpybandits.github.io/MultiPlayers.html}{\texttt{MultiPlayers}}
+    \href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{\texttt{SMPyBandits.GitHub.io/MultiPlayers}}
     on the documentation.}. We designed the two
-  \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html}{\texttt{RandTopM}}
+  \href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{\texttt{RandTopM}}
   and
-  \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}}
+  \href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}}
   algorithms and proved than they enjoy logarithmic regret in the usual
   setting, and outperform significantly the previous state-of-the-art
   solutions (\emph{i.e.},
-  \href{https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html}{\texttt{rhoRand}},
-  \href{https://smpybandits.github.io/docs/Policies.MEGA.html}{\texttt{MEGA}}
+  \href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html}{\texttt{rhoRand}},
+  \href{https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html}{\texttt{MEGA}}
   and
-  \href{https://smpybandits.github.io/docs/Policies.MusicalChair.html}{\texttt{MusicalChair}}).
+  \href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{\texttt{MusicalChair}}).
 \end{itemize}
 
 \begin{itemize}
@@ -359,10 +394,10 @@ posterior}). Figure \ref{fig:plot1} below shows the average regret\footnote{~The
 \item
   In \citet{BessonWCNC2018}, we used \emph{SMPyBandits} to illustrate and
   compare different aggregation algorithms\footnote{~See the page
-    \href{https://smpybandits.github.io/Aggregation.html}{\texttt{Aggregation}}
+    \href{https://SMPyBandits.GitHub.io/Aggregation.html}{\texttt{SMPyBandits.GitHub.io/Aggregation}}
     on the documentation.}. We designed a variant of the Exp3 algorithm
   for online aggregation of experts \citep{Bubeck12}, called
-  \href{https://smpybandits.github.io/docs/Policies.Aggregator.html}{\texttt{Aggregator}}.
+  \href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{\texttt{Aggregator}}.
   Aggregating experts is a well-studied idea in sequential learning and
   in machine learning in general. We showed that it can be used in
   practice to select on the run the best bandit algorithm for a certain
@@ -378,7 +413,7 @@ posterior}). Figure \ref{fig:plot1} below shows the average regret\footnote{~The
   In \citet{Besson2018c}, we used \emph{SMPyBandits} to illustrate and
   compare different ``doubling trick'' schemes\footnote{~See the
     page
-    \href{https://smpybandits.github.io/DoublingTrick.html}{\texttt{DoublingTrick}}
+    \href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{\texttt{SMPyBandits.GitHub.io/DoublingTrick}}
     on the documentation.}. In sequential learning, an algorithm is
   \emph{anytime} if it does not need to know the horizon \(T\) of the
   experiments. A well-known trick for transforming any non-anytime
@@ -399,20 +434,22 @@ posterior}). Figure \ref{fig:plot1} below shows the average regret\footnote{~The
 
 \section{Dependencies}\label{dependencies}
 
-Written in Python \citep{python} (versions \emph{2.7+} or \emph{3.4+}),
+This library is written in Python \citep{python} (versions \emph{2.7+} or \emph{3.4+}),
 using \texttt{matplotlib} \citep{matplotlib} for 2D plotting,
 \texttt{numpy} \citep{numpy} for data storing, random number generations
-and and operations on arrays, \texttt{scipy} \citep{scipy} for
+and operations on arrays, \texttt{scipy} \citep{scipy} for
 statistical and special functions, and \texttt{seaborn} \citep{seaborn}
 for pretty plotting and colorblind-aware colormaps. Optional
 dependencies include \texttt{joblib} \citep{joblib} for parallel
 simulations, \texttt{numba} \citep{numba} for automatic speed-up on small
 functions, \texttt{sphinx} \citep{sphinx} for generating the
-documentations, \texttt{virtualenv} \citep{virtualenv} for launching
-simulations in isolated environments, and \texttt{jupyter}
+documentation, and \texttt{jupyter}
 \citep{jupyter} used with \texttt{ipython} \citep{ipython} to experiment
 with the code.
 
-\bibliography{paper.bib}
+% ---------------------------------------------
+\begin{normalsize}
+  \bibliography{paper.bib}
+\end{normalsize}
 
 \end{document}
