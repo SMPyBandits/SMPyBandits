@@ -42,6 +42,9 @@ old_paper: paper.tex paper.md
 	-latexmk -c
 	-rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 
+clean:
+	latexmk -c
+
 longpaper.tex: longpaper.md
 	pandoc $(PANDOCOPTIONS) --toc $(MARKDOWNOPTIONS) $< -o $@
 %.tex: %.md

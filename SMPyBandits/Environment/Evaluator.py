@@ -14,7 +14,7 @@ import time
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-# import h5py
+import h5py
 
 try:
     # Local imports, libraries
@@ -245,60 +245,73 @@ class Evaluator(object):
 
     # --- Save to disk methods
 
-    def saveondisk(self, filepath='/tmp/saveondiskEvaluator.hdf5'):
-        """ Save the content of the internal date to into a HDF5 file on the disk."""
-        # 1) create the shape of what will be store
-        # FIXME write it !
-        # 2) store it
-        with open(filepath, 'r') as hdf:
-            hdf.configuration = self.hdf_configuration
-            hdf.rewards = self.rewards
-            try:
-                hdf.minCumRewards = self.minCumRewards
-            except (TypeError, AttributeError, KeyError):
-                pass
-            try:
-                hdf.maxCumRewards = self.maxCumRewards
-            except (TypeError, AttributeError, KeyError):
-                pass
-            try:
-                hdf.rewardsSquared = self.rewardsSquared
-            except (TypeError, AttributeError, KeyError):
-                pass
-            try:
-                hdf.allRewards = self.allRewards
-            except (TypeError, AttributeError, KeyError):
-                pass
-            hdf.bestArmPulls = self.bestArmPulls
-            hdf.pulls = self.pulls
-        raise ValueError("FIXME finish to write this function saveondisk() for Evaluator!")
+    def saveondisk(self, filepath="saveondisk_Evaluator.hdf5"):
+        """ Save the content of the internal data to into a HDF5 file on the disk.
 
-    def loadfromdisk(self, hdf, useConfig=False):
+        - See http://docs.h5py.org/en/stable/quick.html if needed.
+        """
+        # 1. create the h5py file
+        h5file = h5py.File(filepath, "w")
+
+        # 2. store main attributes
+        for name_of_attr in ["horizon", "repetitions", "nbPolicies"]:
+            if hasattr(self, name_of_attr):
+                h5file.attrs[name_of_attr] = getattr(self, name_of_attr)
+
+        # 3. store all other attributes, if they exist
+        for name_of_attr in ["delta_t_plot", "random_shuffle", "random_invert", "nb_random_events", "plot_lowerbound", "signature", "nb_random_events", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"]:
+            if hasattr(self, name_of_attr):
+                try:
+                    h5file.attrs[name_of_attr] = getattr(self, name_of_attr)
+                except (ValueError, TypeError):
+                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, getattr(self, name_of_attr), type(getattr(self, name_of_attr))))  # DEBUG
+                    pass
+
+
+        # 4. store some arrays that are shared between envs?
+        for name_of_dataset in ["rewards", "lastCumRewards", "minCumRewards", "maxCumRewards", "rewardsSquared", "allRewards"]:
+            if hasattr(self, name_of_dataset):
+                data = getattr(self, name_of_dataset)
+                if np.ndim(data) > 1 and 1 in np.shape(data):
+                    data = data.flatten()
+                try:
+                    h5file.create_dataset(name_of_dataset, data)
+                except (ValueError, TypeError):
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), np.shape(data)))  # DEBUG
+                    pass
+
+        # 5. for each environment
+        h5file.attrs["number_of_envs"] = len(self.envs)
+        for envId in range(len(self.envs)):
+            # 5.a. create subgroup for this env
+            sbgrp = h5file.create_group("env_{}".format(envId))
+            # 5.b. store attribute of the MAB problem
+            mab = self.envs[envId]
+            for name_of_attr in [ "isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
+                if hasattr(mab, name_of_attr):
+                    try:
+                        sbgrp.attrs[name_of_attr] = getattr(mab, name_of_attr)
+                    except (ValueError, TypeError):
+                        print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, getattr(mab, name_of_attr), type(getattr(mab, name_of_attr))))  # DEBUG
+                        pass
+            # 5.c. store data for that env
+            for name_of_dataset in ["bestArmPulls", "pulls", "allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
+                if hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset):
+                    data = getattr(self, name_of_dataset)[envId]
+                    if np.ndim(data) > 1 and 1 in np.shape(data):
+                        data = data.flatten()
+                    try:
+                        sbgrp.create_dataset(name_of_dataset, data)
+                    except (ValueError, TypeError):
+                        print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), np.shape(data)))  # DEBUG
+                        pass
+
+        # 6. when done, close the file
+        h5file.close()
+
+    def loadfromdisk(self, filepath):
         """ Update internal memory of the Evaluator object by loading data the opened HDF5 file."""
         # FIXME I just have to fill all the internal matrices from the HDF5 file ?
-        # 1) load configuration
-        if useConfig:
-            self.__init__(hdf.configuration)
-        # 2) load internal matrix memory
-        self.rewards = hdf.rewards
-        try:
-            self.minCumRewards = hdf.minCumRewards
-        except (TypeError, AttributeError, KeyError):
-            pass
-        try:
-            self.maxCumRewards = hdf.maxCumRewards
-        except (TypeError, AttributeError, KeyError):
-            pass
-        try:
-            self.rewardsSquared = hdf.rewardsSquared
-        except (TypeError, AttributeError, KeyError):
-            pass
-        try:
-            self.allRewards = hdf.allRewards
-        except (TypeError, AttributeError, KeyError):
-            pass
-        self.bestArmPulls = hdf.BestArmPulls
-        self.pulls = hdf.pulls
         raise ValueError("FIXME finish to write this function loadfromdisk() for Evaluator!")
 
     def getPulls(self, policyId, envId=0):

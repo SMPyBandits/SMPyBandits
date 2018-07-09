@@ -193,7 +193,8 @@ def maximizeWindow():
 
 #: List of formats to use for saving the figures, by default.
 #: It is a smart idea to save in both a raster and vectorial formats
-FORMATS = ('png', 'pdf', 'eps')
+FORMATS = ('png', 'pdf')
+# FORMATS = ('png', 'pdf', 'eps')
 # FORMATS = ('png', 'pdf', 'eps', 'svg')
 
 
