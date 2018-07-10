@@ -126,10 +126,10 @@ class Evaluator(object):
         self.memoryConsumption = dict()  #: For each env, keep the history of running times
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):
-            self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon))
-            self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms))
-            if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon))
-            self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions))
+            self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon), dtype=int)
+            self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms), dtype=int)
+            if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon), dtype=int)
+            self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=int)
             self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
             self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
@@ -253,66 +253,71 @@ class Evaluator(object):
         # 1. create the h5py file
         h5file = h5py.File(filepath, "w")
 
-        # 2. store main attributes
-        for name_of_attr in ["horizon", "repetitions", "nbPolicies"]:
+        # 2. store main attributes and all other attributes, if they exist
+        for name_of_attr in [
+                "horizon", "repetitions", "nbPolicies",
+                "delta_t_plot", "random_shuffle", "random_invert", "nb_random_events", "plot_lowerbound", "signature", "nb_random_events", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"
+            ]:
             if hasattr(self, name_of_attr):
-                h5file.attrs[name_of_attr] = getattr(self, name_of_attr)
-
-        # 3. store all other attributes, if they exist
-        for name_of_attr in ["delta_t_plot", "random_shuffle", "random_invert", "nb_random_events", "plot_lowerbound", "signature", "nb_random_events", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"]:
-            if hasattr(self, name_of_attr):
-                try:
-                    h5file.attrs[name_of_attr] = getattr(self, name_of_attr)
+                value = getattr(self, name_of_attr)
+                if isinstance(value, str): value = np.string_(value)
+                try: h5file.attrs[name_of_attr] = value
                 except (ValueError, TypeError):
-                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, getattr(self, name_of_attr), type(getattr(self, name_of_attr))))  # DEBUG
-                    pass
+                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
 
-
-        # 4. store some arrays that are shared between envs?
+        # 3. store some arrays that are shared between envs?
         for name_of_dataset in ["rewards", "lastCumRewards", "minCumRewards", "maxCumRewards", "rewardsSquared", "allRewards"]:
             if hasattr(self, name_of_dataset):
                 data = getattr(self, name_of_dataset)
-                if np.ndim(data) > 1 and 1 in np.shape(data):
-                    data = data.flatten()
-                try:
-                    h5file.create_dataset(name_of_dataset, data)
-                except (ValueError, TypeError):
-                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), np.shape(data)))  # DEBUG
-                    pass
+                try: h5file.create_dataset(name_of_dataset, data=data)
+                except (ValueError, TypeError) as e:
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                    print("Exception:\n", e)  # DEBUG
 
-        # 5. for each environment
+        # 4. for each environment
         h5file.attrs["number_of_envs"] = len(self.envs)
         for envId in range(len(self.envs)):
-            # 5.a. create subgroup for this env
+            # 4.a. create subgroup for this env
             sbgrp = h5file.create_group("env_{}".format(envId))
-            # 5.b. store attribute of the MAB problem
+            # 4.b. store attribute of the MAB problem
             mab = self.envs[envId]
-            for name_of_attr in [ "isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
+            for name_of_attr in ["isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
                 if hasattr(mab, name_of_attr):
-                    try:
-                        sbgrp.attrs[name_of_attr] = getattr(mab, name_of_attr)
+                    value = getattr(mab, name_of_attr)
+                    if isinstance(value, str): value = np.string_(value)
+                    try: sbgrp.attrs[name_of_attr] = value
                     except (ValueError, TypeError):
-                        print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, getattr(mab, name_of_attr), type(getattr(mab, name_of_attr))))  # DEBUG
-                        pass
-            # 5.c. store data for that env
+                        print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
+            # 4.c. store data for that env
             for name_of_dataset in ["bestArmPulls", "pulls", "allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
                 if hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset):
                     data = getattr(self, name_of_dataset)[envId]
-                    if np.ndim(data) > 1 and 1 in np.shape(data):
-                        data = data.flatten()
-                    try:
-                        sbgrp.create_dataset(name_of_dataset, data)
-                    except (ValueError, TypeError):
-                        print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), np.shape(data)))  # DEBUG
-                        pass
+                    try: sbgrp.create_dataset(name_of_dataset, data=data)
+                    except (ValueError, TypeError) as e:
+                        print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                        print("Exception:\n", e)  # DEBUG
 
-        # 6. when done, close the file
+            # 4.d. compute and store data for that env
+            for methodName in ["getCumulatedRegret_LessAccurate", "getCumulatedRegret_MoreAccurate", "getLastRegrets_MoreAccurate", "getLastRegrets_LessAccurate", "getAverageRewards"]:
+                name_of_dataset = methodName.replace("get", "")
+                data = np.array([getattr(self, methodName)(policyId, envId=envId) for policyId in range(len(self.policies))])
+                try: sbgrp.create_dataset(name_of_dataset, data=data)
+                except (ValueError, TypeError) as e:
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                    print("Exception:\n", e)  # DEBUG
+
+        # 5. when done, close the file
         h5file.close()
 
     def loadfromdisk(self, filepath):
-        """ Update internal memory of the Evaluator object by loading data the opened HDF5 file."""
+        """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
+
+        .. warning:: FIXME this is not implemented!
+        """
         # FIXME I just have to fill all the internal matrices from the HDF5 file ?
-        raise ValueError("FIXME finish to write this function loadfromdisk() for Evaluator!")
+        raise NotImplementedError
+
+    # --- Get data
 
     def getPulls(self, policyId, envId=0):
         """Extract mean pulls."""

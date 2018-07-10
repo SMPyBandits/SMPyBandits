@@ -119,14 +119,14 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] = np.zeros((self.nbPlayers, self.horizon))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.lastCumRewards[envId] = np.zeros(self.repetitions)
-            self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms))
-            self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions))
-            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon))
+            self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms), dtype=int)
+            self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions), dtype=int)
+            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon), dtype=int)
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
-            self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions))
-            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon))
-            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon))
-            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon))
+            self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions), dtype=int)
+            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
+            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
+            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
             self.runningTimes[envId] = np.zeros((self.nbPlayers, self.repetitions))
             self.memoryConsumption[envId] = np.zeros((self.nbPlayers, self.repetitions))
         # To speed up plotting
@@ -226,6 +226,28 @@ class EvaluatorMultiPlayers(object):
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain, useJoblib=self.useJoblib)
                 store(r, repeatId)
+
+    # --- Save to disk methods
+
+    def saveondisk(self, filepath="saveondisk_EvaluatorMultiPlayers.hdf5"):
+        """ Save the content of the internal data to into a HDF5 file on the disk.
+
+        - See http://docs.h5py.org/en/stable/quick.html if needed.
+        """
+        raise NotImplementedError
+        # 1. create the h5py file
+        h5file = h5py.File(filepath, "w")
+
+        # 6. when done, close the file
+        h5file.close()
+
+    def loadfromdisk(self, filepath):
+        """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
+
+        .. warning:: FIXME this is not implemented!
+        """
+        # FIXME I just have to fill all the internal matrices from the HDF5 file ?
+        raise NotImplementedError
 
     # --- Getter methods
 

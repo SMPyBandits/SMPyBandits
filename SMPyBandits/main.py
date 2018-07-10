@@ -180,8 +180,6 @@ if __name__ == '__main__':
                 with open(picklename, 'wb') as picklefile:
                     print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
                     pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
-
-            # FIXME debug this, is it working?
             if USE_HD5:
                 evaluation.saveondisk(h5pyname)
 
