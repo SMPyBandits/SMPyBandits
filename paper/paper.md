@@ -71,7 +71,7 @@ An index-based algorithm computes an index $I_k(t)\in\mathbb{R}$ for each arm $k
 ### Multi-Players MAB
 
 For Cognitive Radio and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
-Different collision models has been proposed, and the simplest one consist in giving a $0$ reward to each colliding players.
+Different collision models has been proposed, and the simplest one consists in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
 *SMPyBandits* implements [all collision models](https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years (including [`rhoRand`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html), [`MusicalChair`](https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html), and our state-of-the-art algorithms [`RandTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html)) from @BessonALT2018.
 For comparison, realistic or full-knowledge centralized algorithms are also implemented.
@@ -82,6 +82,7 @@ For comparison, realistic or full-knowledge centralized algorithms are also impl
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine using joblib [@joblib],
 and summary plots are automatically saved as high-quality PNG, PDF and EPS, using matplotlib [@matplotlib] and seaborn [@seaborn].
+Raw data from each simulation is also saved in a HDF5® file using h5py [@h5py], an efficient and compressed binary format, to allow easy post-mortem exploration of simulation results.
 Making new simulations is very easy, one only needs to write a configuration script (`configuration.py`), without needing a complete knowledge of the internal code architecture.
 
 A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here: [`SMPyBandits.GitHub.io`](https://SMPyBandits.GitHub.io/).
@@ -101,7 +102,7 @@ $ pip install -r requirements.txt
 ```
 
 Launching simulations is easy, for instance this snippet shows how to start $N=1000$ repetitions of a simple non-Bayesian Bernoulli-distributed problem, for $K=9$ arms, an horizon of $T=10000$ and on $4$ CPUs.
-It takes about $20$ to $40$ minutes for each simulation, on a standard $4$-cores $64$ bits GNU/Linux laptop.
+It takes about $20$ minutes, on a standard $4$-cores $64$ bits GNU/Linux laptop.
 Using environment variables (`N=1000` etc) in the command line is not required, but it is convenient:
 
 [^docforconf]:  $\;$ See [`SMPyBandits.GitHub.io/How_to_run_the_code.html`](https://SMPyBandits.GitHub.io/How_to_run_the_code.html) for more details.
@@ -128,11 +129,14 @@ configuration["policies"] = [
 ]
 ```
 
-Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in HD5 files.
+Running the simulation as shown above will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in [a HDF5 file](http://docs.h5py.org/en/stable/high/file.html) [^HDF5 example].
 Figure \ref{fig:plot1} below shows the average regret for these $4$ algorithms.
 The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
 
-![Example of a single-player simulation showing the regret of $4$ algorithms. They all perform very well. Each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound).\label{fig:plot1}](plots/paper/3.png){ width=85% }
+[^HDF5 example]: E.g., this simulation produces this HDF5 file, [GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5](https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5).
+
+![Example of a single-player simulation showing the average regret and histogram of regrets of $4$ algorithms. They all perform very well: each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound). For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).\label{fig:plot1}](plots/paper/3.png){ width=85% }
+![](plots/paper/3_hist.png){ width=85% }
 
 ---
 
@@ -148,14 +152,15 @@ The regret is the difference between the cumulated rewards of the best fixed-arm
 
 [^article2]:  $\;$ See the page [`SMPyBandits.GitHub.io/Aggregation.html`](https://SMPyBandits.GitHub.io/Aggregation.html) on the documentation.
 
-- In @Besson2018c, we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds or weak minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
+- In @Besson2018c, we used *SMPyBandits* to illustrate and compare different "doubling trick" schemes [^article3]. In sequential learning, an algorithm is *anytime* if it does not need to know the horizon $T$ of the experiments. A well-known trick for transforming any non-anytime algorithm to an anytime variant is the "Doubling Trick": start with an horizon $T_0\in\mathbb{N}^*$, and when $t > T_i$, use $T_{i+1} = 2 T_i$. We studied two generic sequences of growing horizons (geometric and exponential), and we proved two theorems that generalized previous results. A geometric sequence suffices to conserve minimax regret bounds (in $R_T = \mathcal{O}(\sqrt{T})$), with a constant multiplicative loss $\ell \leq 4$, but cannot be used to conserve a logarithmic regret bound (in $R_T = \mathcal{O}(\log(T))$). And an exponential sequence can be used to conserve logarithmic bounds, with a constant multiplicative loss also $\ell \leq 4$ in the usual setting. It is still an open question to know if a well-tuned exponential sequence can conserve minimax bounds, or "weak" minimax bounds (in $R_T = \mathcal{O}(\sqrt{T \log(T)})$).
 
 [^article3]:  $\;$ See the page [`SMPyBandits.GitHub.io/DoublingTrick.html`](https://SMPyBandits.GitHub.io/DoublingTrick.html) on the documentation.
 
 
 ## Dependencies
 
-This library is written in Python [@python] (versions *2.7+* or *3.4+*), using `matplotlib` [@matplotlib] for 2D plotting, `numpy` [@numpy] for data storing, random number generations and operations on arrays, `scipy` [@scipy] for statistical and special functions, and `seaborn` [@seaborn] for pretty plotting and colorblind-aware colormaps.
+This library is written in Python [@python], for versions *2.7+* or *3.4+*, using `matplotlib` [@matplotlib] for 2D plotting, `numpy` [@numpy] for data storing, random number generations and operations on arrays, `scipy` [@scipy] for statistical and special functions, and `seaborn` [@seaborn] for pretty plotting and colorblind-aware colormaps.
+
 Optional dependencies include `joblib` [@joblib] for parallel simulations, `numba` [@numba] for automatic speed-up on small functions, `sphinx` [@sphinx] for generating the documentation, `virtualenv` [@virtualenv] for launching simulations in isolated environments, and `jupyter` [@jupyter] used with `ipython` [@ipython] to experiment with the code.
 
 # References

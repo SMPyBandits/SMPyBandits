@@ -1,19 +1,16 @@
 \documentclass[a4paper,10pt,]{article}
 
-  % http://www.jmlr.org/format/format.html
-  %
-  % See http://jmlr.org/papers/v18/ for example of JMLR papers from last year
-  %
-  % Any additional packages needed should be included after jmlr2e.
-  % Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
-  % and defines many common macros, such as 'proof' and 'example'.
-  % It also sets the bibliographystyle to plainnat; for more information on
-  % natbib citation styles, see the natbib documentation, a copy of which
-  % is archived at http://www.jmlr.org/format/natbib.pdf
+% http://www.jmlr.org/format/format.html
+%
+% See http://jmlr.org/papers/v18/ for example of JMLR papers from last year
+%
+% Any additional packages needed should be included after jmlr2e.
+% Note that jmlr2e.sty includes epsfig, amssymb, natbib and graphicx,
+% and defines many common macros, such as 'proof' and 'example'.
+% It also sets the bibliographystyle to plainnat; for more information on
+% natbib citation styles, see the natbib documentation, a copy of which
+% is archived at http://www.jmlr.org/format/natbib.pdf
 \usepackage{jmlr2e}
-
-% \usepackage[]{palatino}
-% \usepackage{amssymb}
 \usepackage{amsmath}
 
 \usepackage{ifxetex,ifluatex}
@@ -41,8 +38,6 @@
 \definecolor{darkgreen}{rgb}{0.00,0.70,0.00}  % Define a new color rgb(0,178,0)
 \definecolor{gold}{RGB}{255,184,0}  % rgb(255,184,0)
 
-% \usepackage[scale=0.71]{geometry}
-
 \usepackage{lastpage,fancyhdr}     % customize the headers and footers
 \pagestyle{fancy}
     \renewcommand{\headrulewidth}{0.2pt}
@@ -57,7 +52,6 @@
 \usepackage{subcaption}
 \graphicspath{{../}}
 \DeclareGraphicsExtensions{.jpg,.pdf,.mps,.eps,.png}
-
 
 \IfFileExists{parskip.sty}{%
 \usepackage{parskip}
@@ -160,10 +154,10 @@
 
 % -----------------------------------------------------------------
 % \date{23 March 2018}
-% \date{}  % remove date
+\date{}  % remove date
 
 % -----------------------------------------------------------------
-% \editor{?}
+\editor{?}
 
 \maketitle
 
@@ -178,11 +172,13 @@
   \href{https://www.python.org/}{Python (2 or 3)}.
   This library is the most complete open-source implementation of
   state-of-the-art algorithms tackling various kinds of sequential
-  learning problems referred to as Multi-Armed Bandits. It aims at being
-  extensive, simple to use and maintain, with a clean and perfectly
-  documented codebase. It allows fast prototyping of simulations and
-  experiments, with an easy configuration system and command-line options
+  learning problems referred to as Multi-Armed Bandits. It is
+  extensive, simple to use and maintain, with a clean and well
+  documented codebase. It allows fast prototyping of experiments,
+  with an easy configuration system and command-line options
   to customize experiments.
+
+  \textbf{Keywords:} sequential learning; multi-armed bandit; reinforcement learning; python.
 \end{abstract}
 
 
@@ -236,7 +232,7 @@ For Cognitive Radio and other applications, a well-studied extension is to
 consider \(M\geq2\) players, interacting on the \emph{same} \(K\) arms.
 Whenever two or more players select the same arm at the same time, they
 all suffer from a collision. Different collision models has been
-proposed, and the simplest one consist in giving a \(0\) reward to each
+proposed, and the simplest one consists in giving a \(0\) reward to each
 colliding players. Without any centralized supervision or coordination
 between players, they must learn to access the \(M\) best resources
 (\emph{i.e.}, arms with highest means) without collisions.
@@ -259,8 +255,9 @@ For comparison, realistic or full-knowledge centralized algorithms are also impl
 
 With this numerical framework, simulations can run on a single CPU or a
 single multi-core machine using joblib \citep{joblib}, and summary plots are
-automatically saved as high-quality PNG, PDF and EPS, using matplotlib \citep{matplotlib} and
-seaborn \citep{seaborn}. Making new simulations is very easy, one only
+automatically saved as high-quality PNG, PDF and EPS, using matplotlib \citep{matplotlib} and seaborn \citep{seaborn}.
+Raw data from each simulation is also saved in a HDF5\textsuperscript{®} file using h5py \citep{h5py}, an efficient and compressed binary format, to allow easy post-mortem exploration of simulation results.
+Making new simulations is very easy, one only
 needs to write a configuration script (\texttt{configuration.py}), without needing a complete knowledge of the internal code architecture.
 
 A complete Sphinx documentation, for each algorithm and all parts of the codebase, even including the constants in the different configuration files, is available here:
@@ -269,9 +266,9 @@ A complete Sphinx documentation, for each algorithm and all parts of the codebas
 \subsection{How to run experiments?}\label{how-to-run-the-experiments}
 
 We show how to install \emph{SMPyBandits}, and an example of how to run
-a simple experiment. This bash snippet\footnote{~See
+a simple experiment. This bash snippet\footnote{See
 \href{https://SMPyBandits.GitHub.io/How_to_run_the_code.html}{\texttt{SMPyBandits.GitHub.io/How\_to\_run\_the\_code.html}}
-for more details.} shows how to clone the code\footnote{~SMPyBandits is also available on Pypi, see
+for more details.} shows how to clone the code\footnote{SMPyBandits is also available on Pypi, see
 \href{https://pypi.org/project/SMPyBandits/}{\texttt{pypi.org/project/SMPyBandits}}.
 You can install it directly with
 \texttt{sudo\ pip\ install\ SMPyBandits}, or from a
@@ -290,8 +287,7 @@ You can install it directly with
 Launching simulations is easy, for instance this snippet shows how to
 start \(N=1000\) repetitions of a simple non-Bayesian
 Bernoulli-distributed problem, for \(K=9\) arms, an horizon of
-\(T=10000\) and on \(4\) CPUs. Such simulation takes about \(20\) to \(40\) minutes
-for each simulation, on a standard \(4\)-cores \(64\) bits GNU/Linux
+\(T=10000\) and on \(4\) CPUs. Such simulation takes about \(20\) minutes, on a standard \(4\)-cores \(64\) bits GNU/Linux
 laptop. Using environment variables (\texttt{N=1000} etc) in the command
 line is not required, but it is convenient:
 
@@ -338,8 +334,8 @@ posterior}).
 \end{Shaded}
 
 Running the simulation as shown above will save figures in a sub-folder,
-as well as save data (pulls, rewards and regret) in HD5 files. Figure
-\ref{fig:plot1} below shows the average regret for these \(4\)
+as well as save data (pulls, rewards and regret) in a \href{http://docs.h5py.org/en/stable/high/file.html}{HDF5 file}\footnote{E.g., this simulation produces \href{https://GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}{\texttt{GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5}}.}.
+Figure~\ref{fig:plot1} below shows the average regret for these \(4\)
 algorithms. The regret is the difference between the cumulated rewards
 of the best fixed-armed strategy (which is the oracle strategy for
 stationary bandits), and the cumulated rewards of the considered
@@ -348,19 +344,19 @@ algorithms.
 \begin{figure}
 \centering
 \begin{subfigure}[b]{0.49\textwidth}
-  \includegraphics[width=\textwidth]{plots/paper/3.pdf}
+  \includegraphics[width=1.15\textwidth]{plots/paper/3.pdf}
 \end{subfigure}
 % ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
   %(or a blank line to force the subfigure onto a new line)
 \begin{subfigure}[b]{0.49\textwidth}
-  \includegraphics[width=\textwidth]{plots/paper/3_hist.pdf}
+  \includegraphics[width=1.15\textwidth]{plots/paper/3_hist.pdf}
 \end{subfigure}
 \caption{Example of a single-player simulation showing the average regret and histogram of regrets of
-\(4\) algorithms. They all perform very well. Each algorithm is known to
+\(4\) algorithms. They all perform very well: each algorithm is known to
 be order-optimal (\emph{i.e.}, its regret is proved to match the
 lower-bound up-to a constant), and each but UCB is known to be optimal
 (\emph{i.e.} with the constant matching the
-lower-bound). For instance, Thomson sampling is very efficient in average (in \textcolor{gold}{yellow}), and UCB shows a much larger variance (in \textcolor{red}{red}).\label{fig:plot1}}
+lower-bound). For instance, Thomson sampling is very efficient in average (in \textcolor{gold}{yellow}), and UCB shows a larger variance (in \textcolor{red}{red}).\label{fig:plot1}}
 \end{figure}
 
 % \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
@@ -374,7 +370,7 @@ lower-bound). For instance, Thomson sampling is very efficient in average (in \t
 \tightlist
 \item
   For \citet{BessonALT2018}, we used \emph{SMPyBandits} for all the
-  simulations for multi-player bandit algorithms\footnote{~See
+  simulations for multi-player bandit algorithms\footnote{See
     the page
     \href{https://SMPyBandits.GitHub.io/MultiPlayers.html}{\texttt{SMPyBandits.GitHub.io/MultiPlayers}}
     on the documentation.}. We designed the two
@@ -394,10 +390,10 @@ lower-bound). For instance, Thomson sampling is very efficient in average (in \t
 \tightlist
 \item
   In \citet{BessonWCNC2018}, we used \emph{SMPyBandits} to illustrate and
-  compare different aggregation algorithms\footnote{~See the page
+  compare different aggregation algorithms\footnote{See the page
     \href{https://SMPyBandits.GitHub.io/Aggregation.html}{\texttt{SMPyBandits.GitHub.io/Aggregation}}
     on the documentation.}. We designed a variant of the Exp3 algorithm
-  for online aggregation of experts \citep{Bubeck12}, called
+  for online aggregation (or boosting) of experts \citep{Bubeck12}, called
   \href{https://SMPyBandits.GitHub.io/docs/Policies.Aggregator.html}{\texttt{Aggregator}}.
   Aggregating experts is a well-studied idea in sequential learning and
   in machine learning in general. We showed that it can be used in
@@ -412,7 +408,7 @@ lower-bound). For instance, Thomson sampling is very efficient in average (in \t
 \tightlist
 \item
   In \citet{Besson2018c}, we used \emph{SMPyBandits} to illustrate and
-  compare different ``doubling trick'' schemes\footnote{~See the
+  compare different ``doubling trick'' schemes\footnote{See the
     page
     \href{https://SMPyBandits.GitHub.io/DoublingTrick.html}{\texttt{SMPyBandits.GitHub.io/DoublingTrick}}
     on the documentation.}. In sequential learning, an algorithm is
@@ -422,26 +418,27 @@ lower-bound). For instance, Thomson sampling is very efficient in average (in \t
   an horizon \(T_0\in\mathbb{N}^*\), and when \(t > T_i\), use
   \(T_{i+1} = 2 T_i\). We studied two generic sequences of growing
   horizons (geometric and exponential), and we proved two theorems that
-  generalized previous results. A geometric sequence suffices to minimax
+  generalized previous results. A geometric sequence suffices to conserve minimax
   regret bounds (in \(R_T = \mathcal{O}(\sqrt{T})\)), with a constant
   multiplicative loss \(\ell \leq 4\), but cannot be used to conserve a
   logarithmic regret bound (in \(R_T = \mathcal{O}(\log(T))\)). And an
   exponential sequence can be used to conserve logarithmic bounds, with
   a constant multiplicative loss also \(\ell \leq 4\) in the usual
   setting. It is still an open question to know if a well-tuned
-  exponential sequence can conserve minimax bounds or weak minimax
+  exponential sequence can conserve minimax bounds, or even ``weak'' minimax
   bounds (in \(R_T = \mathcal{O}(\sqrt{T \log(T)})\)).
 \end{itemize}
 
 \section{Dependencies}\label{dependencies}
 
-This library is written in Python \citep{python} (versions \emph{2.7+} or \emph{3.4+}),
+This library is written in Python \citep{python}, for versions \emph{2.7+} or \emph{3.4+},
 using \texttt{matplotlib} \citep{matplotlib} for 2D plotting,
 \texttt{numpy} \citep{numpy} for data storing, random number generations
 and operations on arrays, \texttt{scipy} \citep{scipy} for
 statistical and special functions, and \texttt{seaborn} \citep{seaborn}
-for pretty plotting and colorblind-aware colormaps. Optional
-dependencies include \texttt{joblib} \citep{joblib} for parallel
+for pretty plotting and colorblind-aware colormaps.
+
+Optional dependencies include \texttt{joblib} \citep{joblib} for parallel
 simulations, \texttt{numba} \citep{numba} for automatic speed-up on small
 functions, \texttt{sphinx} \citep{sphinx} for generating the
 documentation, and \texttt{jupyter}
