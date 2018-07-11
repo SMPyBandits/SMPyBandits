@@ -44,6 +44,7 @@ Comparison with two other "state-of-the-art" algorithms ([MusicalChair](../SMPyB
 ## Other illustrations
 ### Piece-wise stationary problems
 Comparing [Sliding-Window UCB](../SMPyBandits/Policies/SlidingWindowUCB.py) and [Discounted UCB](../SMPyBandits/Policies/DiscountedUCB.py) and [UCB](../SMPyBandits/Policies/UCB.py), on a simple Bernoulli problem which regular random shuffling of the arm.
+
 ![Demo_of_DiscountedUCB2.png](Demo_of_DiscountedUCB2.png)
 
 ### Sparse problem and Sparsity-aware algorithms
@@ -54,14 +55,62 @@ Comparing regular [UCB](../SMPyBandits/Policies/UCB.py), [klUCB](../SMPyBandits/
 ---
 
 ## Demonstration of the [Doubling Trick policy](../DoublingTrick.md)
-On a fixed problem with full restart:
-![main____env1-1_3633169128724378553.png](main____env1-1_3633169128724378553.png)
+- On a fixed problem with full restart:
+  ![main____env1-1_3633169128724378553.png](main____env1-1_3633169128724378553.png)
 
-On a fixed problem with no restart:
-![main____env1-1_5972568793654673752.png](main____env1-1_5972568793654673752.png)
+- On a fixed problem with no restart:
+  ![main____env1-1_5972568793654673752.png](main____env1-1_5972568793654673752.png)
 
-On random problems with full restart:
-![main____env1-1_1217677871459230631.png](main____env1-1_1217677871459230631.png)
+- On random problems with full restart:
+  ![main____env1-1_1217677871459230631.png](main____env1-1_1217677871459230631.png)
 
-On random problems with no restart:
-![main____env1-1_5964629015089571121.png](main____env1-1_5964629015089571121.png)
+- On random problems with no restart:
+  ![main____env1-1_5964629015089571121.png](main____env1-1_5964629015089571121.png)
+
+---
+
+## Plots for the [JMLR MLOSS](http://jmlr.org/mloss/) paper
+
+In [the JMLR MLOSS paper](../paper/paper.md) I wrote to present SMPyBandits,
+an example of a simulation is presented, where we compare the standard anytime [`klUCB`](https://SMPyBandits.GitHub.io/docs/Policies.klUCB.html) algorithm against the non-anytime variant [`klUCBPlusPlus`](https://SMPyBandits.GitHub.io/docs/Policies.klUCBPlusPlus.html) algorithm, and also [`UCB`](https://SMPyBandits.GitHub.io/docs/Policies.UCBalpha.html) (with \(\alpha=1\)) and [`Thompson`](https://SMPyBandits.GitHub.io/docs/Policies.Thompson.html) (with [Beta posterior](https://SMPyBandits.GitHub.io/docs/Policies.Posterior.Beta.html)).
+
+```python
+configuration["policies"] = [
+  { "archtype": klUCB, "params": { "klucb": klucbBern } },
+  { "archtype": klUCBPlusPlus, "params": { "horizon": HORIZON, "klucb": klucbBern } },
+  { "archtype": UCBalpha, "params": { "alpha": 1 } },
+  { "archtype": Thompson, "params": { "posterior": Beta } }
+]
+```
+
+Running this simulation as shown below will save figures in a sub-folder, as well as save data (pulls, rewards and regret) in [HDF5 files](http://docs.h5py.org/en/stable/high/file.html).
+
+```bash
+# 3. run a single-player simulation
+$ BAYES=False ARM_TYPE=Bernoulli N=1000 T=10000 K=9 N_JOBS=4 \
+  MEANS=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] python3 main.py configuration.py
+```
+
+The two plots below shows the average regret for these 4 algorithms.
+The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits), and the cumulated rewards of the considered algorithms.
+
+- Average regret:
+  ![paper/3.png](paper/3.png)
+
+- Histogram of regrets:
+  ![paper/3_hist.png](paper/3_hist.png)
+
+> Example of a single-player simulation showing the average regret and histogram of regrets of 4 algorithms. They all perform very well: each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound). For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).
+
+### Saving simulation data to HDF5 file
+
+This simulation produces this example HDF5 file,
+which contains attributes (*e.g.*, `horizon=10000`, `repetitions=1000`, `nbPolicies=4`),
+and a collection of different datasets for each environment.
+Only one environment was tested, and for `env_0` the HDF5 stores some attributes (*e.g.*, `nbArms=9` and `means=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]`)
+and datasets (*e.g.*, `bestArmPulls` of shape `(4, 10000)`, `cumulatedRegret` of shape `(4, 10000)`, `lastRegrets` of shape `(4, 1000)`, `averageRewards` of shape `(4, 10000)`).
+See the example:
+[GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5](https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5).
+
+> Note: [HDFCompass](https://github.com/HDFGroup/hdf-compass) is recommended to explore the file from a nice and easy to use GUI. Or use it from a Python script with [h5py](http://docs.h5py.org/en/stable/index.html) or a Julia script with [HDF5.jl](https://github.com/JuliaIO/HDF5.jl).
+> ![Example of exploring this 'example.hdf5' file using HDFCompass](paper/example_HDF5_exploration_with_HDFCompass.png)

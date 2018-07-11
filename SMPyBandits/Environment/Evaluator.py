@@ -16,6 +16,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 
+import inspect
+def _nbOfArgs(function):
+    try:
+        return len(inspect.signature(functions).parameters)
+    except NameError:
+        return len(inspect.getargspec(function).args)
+
 try:
     # Local imports, libraries
     from .usejoblib import USE_JOBLIB, Parallel, delayed
@@ -126,10 +133,10 @@ class Evaluator(object):
         self.memoryConsumption = dict()  #: For each env, keep the history of running times
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):
-            self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon), dtype=int)
-            self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms), dtype=int)
-            if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon), dtype=int)
-            self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=int)
+            self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon), dtype=np.int32)
+            self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms), dtype=np.int32)
+            if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon), dtype=np.int32)
+            self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
             self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
             self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
@@ -266,7 +273,7 @@ class Evaluator(object):
                     print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
 
         # 3. store some arrays that are shared between envs?
-        for name_of_dataset in ["rewards", "lastCumRewards", "minCumRewards", "maxCumRewards", "rewardsSquared", "allRewards"]:
+        for name_of_dataset in ["rewards", "rewardsSquared", "allRewards"]:
             if hasattr(self, name_of_dataset):
                 data = getattr(self, name_of_dataset)
                 try: h5file.create_dataset(name_of_dataset, data=data)
@@ -289,7 +296,7 @@ class Evaluator(object):
                     except (ValueError, TypeError):
                         print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
             # 4.c. store data for that env
-            for name_of_dataset in ["bestArmPulls", "pulls", "allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
+            for name_of_dataset in ["allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
                 if hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset):
                     data = getattr(self, name_of_dataset)[envId]
                     try: sbgrp.create_dataset(name_of_dataset, data=data)
@@ -298,9 +305,21 @@ class Evaluator(object):
                         print("Exception:\n", e)  # DEBUG
 
             # 4.d. compute and store data for that env
-            for methodName in ["getCumulatedRegret_LessAccurate", "getCumulatedRegret_MoreAccurate", "getLastRegrets_MoreAccurate", "getLastRegrets_LessAccurate", "getAverageRewards"]:
+            for methodName in ["getRunningTimes", "getMemoryConsumption", "getBestArmPulls", "getPulls", "getRewards", "getCumulatedRegret", "getLastRegrets", "getAverageRewards"]:
                 name_of_dataset = methodName.replace("get", "")
-                data = np.array([getattr(self, methodName)(policyId, envId=envId) for policyId in range(len(self.policies))])
+                name_of_dataset = name_of_dataset[0].lower() + name_of_dataset[1:]
+                if name_of_dataset in sbgrp: name_of_dataset = methodName  # XXX be sure to not use twice the same name, e.g., for getRunningTimes and runningTimes
+                method = getattr(self, methodName)
+                if _nbOfArgs(method) > 2:
+                    if isinstance(method(0, envId=envId), tuple):
+                        data = np.array([method(policyId, envId=envId)[0] for policyId in range(len(self.policies))])
+                    else:
+                        data = np.array([method(policyId, envId=envId) for policyId in range(len(self.policies))])
+                else:
+                    if isinstance(method(envId), tuple):
+                        data = method(envId)[0]
+                    else:
+                        data = method(envId)
                 try: sbgrp.create_dataset(name_of_dataset, data=data)
                 except (ValueError, TypeError) as e:
                     print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG

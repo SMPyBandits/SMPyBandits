@@ -119,14 +119,14 @@ class EvaluatorMultiPlayers(object):
             self.rewards[envId] = np.zeros((self.nbPlayers, self.horizon))
             # self.rewardsSquared[envId] = np.zeros((self.nbPlayers, self.horizon))
             self.lastCumRewards[envId] = np.zeros(self.repetitions)
-            self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms), dtype=int)
-            self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions), dtype=int)
-            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon), dtype=int)
+            self.pulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms), dtype=np.int32)
+            self.lastPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
+            self.allPulls[envId] = np.zeros((self.nbPlayers, self.envs[envId].nbArms, self.horizon), dtype=np.int32)
             self.collisions[envId] = np.zeros((self.envs[envId].nbArms, self.horizon))
-            self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions), dtype=int)
-            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
-            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
-            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=int)
+            self.lastCumCollisions[envId] = np.zeros((self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
+            self.nbSwitchs[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=np.int32)
+            self.bestArmPulls[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=np.int32)
+            self.freeTransmissions[envId] = np.zeros((self.nbPlayers, self.horizon), dtype=np.int32)
             self.runningTimes[envId] = np.zeros((self.nbPlayers, self.repetitions))
             self.memoryConsumption[envId] = np.zeros((self.nbPlayers, self.repetitions))
         # To speed up plotting
@@ -1017,9 +1017,9 @@ def delayed_play(env, players, horizon, collisionModel,
     # Store results
     result = ResultMultiPlayers(env.nbArms, horizon, nbPlayers, means=means)
     rewards = np.zeros(nbPlayers)
-    choices = np.zeros(nbPlayers, dtype=int)
-    pulls = np.zeros((nbPlayers, nbArms), dtype=int)
-    collisions = np.zeros(nbArms, dtype=int)
+    choices = np.zeros(nbPlayers, dtype=np.int32)
+    pulls = np.zeros((nbPlayers, nbArms), dtype=np.int32)
+    collisions = np.zeros(nbArms, dtype=np.int32)
 
     # print the ranks if possible  # DEBUG
     all_players_have_ranks = count_ranks_markov_chain and (repeatId == 0) and all([hasattr(p, 'rank') for p in players])  # DEBUG
