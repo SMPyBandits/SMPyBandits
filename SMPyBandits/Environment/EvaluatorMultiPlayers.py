@@ -15,7 +15,13 @@ import time
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-# import h5py
+
+import h5py
+import inspect
+def _nbOfArgs(function):
+    try: return len(inspect.signature(functions).parameters)
+    except NameError: return len(inspect.getargspec(function).args)
+
 
 # Local imports, libraries
 try:
@@ -234,17 +240,80 @@ class EvaluatorMultiPlayers(object):
 
         - See http://docs.h5py.org/en/stable/quick.html if needed.
         """
-        raise NotImplementedError
         # 1. create the h5py file
         h5file = h5py.File(filepath, "w")
 
-        # 6. when done, close the file
+        # 2. store main attributes and all other attributes, if they exist
+        for name_of_attr in [
+                "nbPlayers", "horizon", "repetitions",
+                "delta_t_plot", "collisionModel", "full_lost_if_collision", "signature", "plot_lowerbound", "moreAccurate", "finalRanksOnAverage", "useJoblib", "showplot", "count_ranks_markov_chain", "cache_rewards", "showplot", "change_labels", "append_labels"
+            ]:
+            if not hasattr(self, name_of_attr): continue
+            value = getattr(self, name_of_attr)
+            if inspect.isfunction(value): value = value.__name__
+            if isinstance(value, str): value = np.string_(value)
+            try: h5file.attrs[name_of_attr] = value
+            except (ValueError, TypeError):
+                print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
+
+        # 3. for each environment
+        h5file.attrs["number_of_envs"] = len(self.envs)
+        for envId in range(len(self.envs)):
+            # 3.a. create subgroup for this env
+            sbgrp = h5file.create_group("env_{}".format(envId))
+            # 3.b. store attribute of the MAB problem
+            mab = self.envs[envId]
+            for name_of_attr in ["isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
+                if not hasattr(mab, name_of_attr): continue
+                value = getattr(mab, name_of_attr)
+                if isinstance(value, str): value = np.string_(value)
+                try: sbgrp.attrs[name_of_attr] = value
+                except (ValueError, TypeError):
+                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
+            # 3.c. store data for that env
+            for name_of_dataset in [ "rewards", "lastCumRewards", "pulls", "lastPulls", "allPulls", "collisions", "lastCumCollisions", "nbSwitchs", "bestArmPulls", "freeTransmissions", "runningTimes", "memoryConsumption"]:
+                if not (hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset)): continue
+                data = getattr(self, name_of_dataset)[envId]
+                try: sbgrp.create_dataset(name_of_dataset, data=data)
+                except (ValueError, TypeError) as e:
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                    print("Exception:\n", e)  # DEBUG
+
+            # 3.d. compute and store data for that env
+            for methodName in ["getRunningTimes", "getMemoryConsumption", "getPulls", "getNbSwitchs", "getBestArmPulls", "getfreeTransmissions", "getCollisions", "getRewards", "getFirstRegretTerm", "getSecondRegretTerm", "getThirdRegretTerm", "getCentralizedRegret", "getLastRegrets"]:
+                if not hasattr(self, methodName): continue
+                name_of_dataset = methodName.replace("get", "")
+                name_of_dataset = name_of_dataset[0].lower() + name_of_dataset[1:]
+                if name_of_dataset in sbgrp: name_of_dataset = methodName  # XXX be sure to not use twice the same name, e.g., for getRunningTimes and runningTimes
+                method = getattr(self, methodName)
+                try:
+                    if _nbOfArgs(method) > 2:
+                        if isinstance(method(0, envId=envId), tuple):
+                            data = np.array([method(playerId, envId=envId)[0] for playerId in range(len(self.players))])
+                        else:
+                            data = np.array([method(playerId, envId=envId) for playerId in range(len(self.players))])
+                    else:
+                        if isinstance(method(envId), tuple):
+                            data = method(envId)[0]
+                        else:
+                            data = method(envId)
+                except TypeError:
+                    if isinstance(method(envId), tuple):
+                        data = method(envId)[0]
+                    else:
+                        data = method(envId)
+                try: sbgrp.create_dataset(name_of_dataset, data=data)
+                except (ValueError, TypeError) as e:
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                    print("Exception:\n", e)  # DEBUG
+
+        # 4. when done, close the file
         h5file.close()
 
     def loadfromdisk(self, filepath):
         """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
 
-        .. warning:: FIXME this is not implemented!
+        .. warning:: FIXME this is not YET implemented!
         """
         # FIXME I just have to fill all the internal matrices from the HDF5 file ?
         raise NotImplementedError
@@ -433,7 +502,7 @@ class EvaluatorMultiPlayers(object):
             label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(player.__cachedstr__))
             Y = self.getRewards(playerId, envId)
             cumRewards[playerId, :] = Y
-            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            ymin = min(ymin, np.min(Y))
             if semilogx:
                 plt.semilogx(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
             else:
@@ -490,8 +559,6 @@ class EvaluatorMultiPlayers(object):
         moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         X0 = X = self._times - 1
         fig = plt.figure()
-        # if subTerms or len(list(evaluators)) == 0:  # XXX
-        #     moreAccurate = False  # if no other guys, the three terms are also plotted, and their sum also, so we use the "real empirical regret"
         evaluators = [self] + list(evaluators)  # Default to only [self]
         colors = palette(5 if len(evaluators) == 1 and subTerms else len(evaluators))
         markers = makemarkers(5 if len(evaluators) == 1 and subTerms else len(evaluators))
@@ -582,7 +649,7 @@ class EvaluatorMultiPlayers(object):
             Y = self.getNbSwitchs(playerId, envId)
             if cumulated:
                 Y = np.cumsum(Y)
-            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            ymin = min(ymin, np.min(Y))
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -607,7 +674,7 @@ class EvaluatorMultiPlayers(object):
             Y = eva.getCentralizedNbSwitchs(envId)
             if cumulated:
                 Y = np.cumsum(Y)
-            ymin = min(ymin, np.min(Y))  # XXX Should be smarter
+            ymin = min(ymin, np.min(Y))
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
         if len(evaluators) > 1:
             legend()
@@ -758,7 +825,7 @@ class EvaluatorMultiPlayers(object):
             plt.axis('equal')
             plt.pie(Y, labels=labels, colors=colors, explode=[0.07] * len(Y), startangle=45)
         else:
-            if semilogy:  # XXX is it perfectly working?
+            if semilogy:
                 Y = np.log10(Y)  # use semilogy scale!
                 Y -= np.min(Y)   # project back to [0, oo)
                 Y /= np.sum(Y)   # project back to [0, 1)
@@ -998,12 +1065,9 @@ def delayed_play(env, players, horizon, collisionModel,
     start_time = time.time()
     start_memory = getCurrentMemory(thread=useJoblib)
     # Give a unique seed to random & numpy.random for each call of this function
-    try:
-        if seed is not None:
-            np.random.seed(seed)
-            random.seed(seed)
-    except (ValueError, SystemError):
-        print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
+    if seed is not None:
+        np.random.seed(seed)
+        random.seed(seed)
     means = env.means
     if env.isDynamic:
         means = env.newRandomArms()

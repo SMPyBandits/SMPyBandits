@@ -17,7 +17,6 @@ from itertools import product
 
 # Backup evaluation object
 import pickle
-# import h5py
 
 # Local imports
 try:
@@ -152,8 +151,7 @@ if __name__ == '__main__':
         evaluation.printRunningTimes(envId)
         print("\nGiving the mean and std memory consumption ...")
         evaluation.printMemoryConsumption(envId)
-        if debug_memory:
-            display_top_tracemalloc()  # DEBUG
+        if debug_memory: display_top_tracemalloc()  # DEBUG
 
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))

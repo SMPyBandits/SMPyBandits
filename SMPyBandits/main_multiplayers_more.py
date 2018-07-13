@@ -16,7 +16,6 @@ from itertools import product
 
 # Backup evaluation object
 import pickle
-# import h5py
 
 # Local imports
 from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
@@ -32,6 +31,7 @@ if getenv('SLEEP', 'False') != 'False':
     print("Done Sleeping for", SLEEP, "seconds... Now I can start the simulation...")
 
 USE_PICKLE = False   #: Should we save the Evaluator object to a .pickle file at the end of the simulation?
+USE_HD5 = True   #: Should we save the data to a .hdf5 file at the end of the simulation?
 
 # Parameters for the plots (where to save them) and what to draw
 PLOT_DIR = getenv('PLOT_DIR', 'plots')  #: Directory for the plots
@@ -130,8 +130,7 @@ if __name__ == '__main__':
             evaluation.printRunningTimes(envId)
             print("\nGiving the mean and std memory consumption ...")
             evaluation.printMemoryConsumption(envId)
-            if debug_memory:
-                display_top_tracemalloc()  # DEBUG
+            if debug_memory: display_top_tracemalloc()  # DEBUG
 
             # Sub folder with a useful name
             subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
@@ -143,9 +142,7 @@ if __name__ == '__main__':
             mainfig = os.path.join(plot_dir, imagename)
             savefig = mainfig
             picklename = mainfig + '.pickle'
-            # FIXME finish this to also save result in a HDF5 file!
-            # h5pyname = mainfig + '.hdf5'
-            # h5pyfile = h5py.File(h5pyname, 'w')
+            h5pyname = mainfig + '.hdf5'
 
             if saveallfigs:
                 if os.path.isdir(plot_dir):
@@ -155,12 +152,12 @@ if __name__ == '__main__':
                 else:
                     mkdir(plot_dir)
 
-                # Save it to a pickle file
-                # TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed
                 if USE_PICKLE:
                     with open(picklename, 'wb') as picklefile:
                         print("Saving the EvaluatorMultiPlayers 'evaluation' objet to", picklename, "...")
                         pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+                if USE_HD5:
+                    evaluation.saveondisk(h5pyname)
 
             if not do_simple_plots:
                 break
@@ -369,8 +366,7 @@ if __name__ == '__main__':
         e0.printRunningTimes(envId, evaluators=eothers)
         print("\nGiving the mean and std memory consumption ...")
         e0.printMemoryConsumption(envId, evaluators=eothers)
-        if debug_memory:
-            display_top_tracemalloc()  # DEBUG
+        if debug_memory: display_top_tracemalloc()  # DEBUG
 
         # Get the name of the output file
         imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)

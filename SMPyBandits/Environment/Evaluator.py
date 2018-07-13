@@ -14,14 +14,13 @@ import time
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-import h5py
 
+# H5PY
+import h5py
 import inspect
 def _nbOfArgs(function):
-    try:
-        return len(inspect.signature(functions).parameters)
-    except NameError:
-        return len(inspect.getargspec(function).args)
+    try: return len(inspect.signature(functions).parameters)
+    except NameError: return len(inspect.getargspec(function).args)
 
 try:
     # Local imports, libraries
@@ -265,21 +264,21 @@ class Evaluator(object):
                 "horizon", "repetitions", "nbPolicies",
                 "delta_t_plot", "random_shuffle", "random_invert", "nb_random_events", "plot_lowerbound", "signature", "nb_random_events", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"
             ]:
-            if hasattr(self, name_of_attr):
-                value = getattr(self, name_of_attr)
-                if isinstance(value, str): value = np.string_(value)
-                try: h5file.attrs[name_of_attr] = value
-                except (ValueError, TypeError):
-                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
+            if not hasattr(self, name_of_attr): continue
+            value = getattr(self, name_of_attr)
+            if isinstance(value, str): value = np.string_(value)
+            try: h5file.attrs[name_of_attr] = value
+            except (ValueError, TypeError):
+                print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
 
         # 3. store some arrays that are shared between envs?
         for name_of_dataset in ["rewards", "rewardsSquared", "allRewards"]:
-            if hasattr(self, name_of_dataset):
-                data = getattr(self, name_of_dataset)
-                try: h5file.create_dataset(name_of_dataset, data=data)
-                except (ValueError, TypeError) as e:
-                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
-                    print("Exception:\n", e)  # DEBUG
+            if not hasattr(self, name_of_dataset): continue
+            data = getattr(self, name_of_dataset)
+            try: h5file.create_dataset(name_of_dataset, data=data)
+            except (ValueError, TypeError) as e:
+                print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                print("Exception:\n", e)  # DEBUG
 
         # 4. for each environment
         h5file.attrs["number_of_envs"] = len(self.envs)
@@ -289,23 +288,24 @@ class Evaluator(object):
             # 4.b. store attribute of the MAB problem
             mab = self.envs[envId]
             for name_of_attr in ["isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
-                if hasattr(mab, name_of_attr):
-                    value = getattr(mab, name_of_attr)
-                    if isinstance(value, str): value = np.string_(value)
-                    try: sbgrp.attrs[name_of_attr] = value
-                    except (ValueError, TypeError):
-                        print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
+                if not hasattr(mab, name_of_attr): continue
+                value = getattr(mab, name_of_attr)
+                if isinstance(value, str): value = np.string_(value)
+                try: sbgrp.attrs[name_of_attr] = value
+                except (ValueError, TypeError):
+                    print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
             # 4.c. store data for that env
             for name_of_dataset in ["allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
-                if hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset):
-                    data = getattr(self, name_of_dataset)[envId]
-                    try: sbgrp.create_dataset(name_of_dataset, data=data)
-                    except (ValueError, TypeError) as e:
-                        print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
-                        print("Exception:\n", e)  # DEBUG
+                if not ( hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset) ): continue
+                data = getattr(self, name_of_dataset)[envId]
+                try: sbgrp.create_dataset(name_of_dataset, data=data)
+                except (ValueError, TypeError) as e:
+                    print("Error: when saving the Evaluator object to a HDF5 file, the dataset named {} (value of type {} and shape {} and dtype {}) couldn't be saved. Skipping...".format(name_of_dataset, type(data), data.shape, data.dtype))  # DEBUG
+                    print("Exception:\n", e)  # DEBUG
 
             # 4.d. compute and store data for that env
             for methodName in ["getRunningTimes", "getMemoryConsumption", "getBestArmPulls", "getPulls", "getRewards", "getCumulatedRegret", "getLastRegrets", "getAverageRewards"]:
+                if not hasattr(self, methodName): continue
                 name_of_dataset = methodName.replace("get", "")
                 name_of_dataset = name_of_dataset[0].lower() + name_of_dataset[1:]
                 if name_of_dataset in sbgrp: name_of_dataset = methodName  # XXX be sure to not use twice the same name, e.g., for getRunningTimes and runningTimes
@@ -331,7 +331,7 @@ class Evaluator(object):
     def loadfromdisk(self, filepath):
         """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
 
-        .. warning:: FIXME this is not implemented!
+        .. warning:: FIXME this is not YET implemented!
         """
         # FIXME I just have to fill all the internal matrices from the HDF5 file ?
         raise NotImplementedError
@@ -770,12 +770,9 @@ def delayed_play(env, policy, horizon,
     start_time = time.time()
     start_memory = getCurrentMemory(thread=useJoblib)
     # Give a unique seed to random & numpy.random for each call of this function
-    try:
-        if seed is not None:
-            random.seed(seed)
-            np.random.seed(seed)
-    except (ValueError, SystemError):
-        print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
+    if seed is not None:
+        random.seed(seed)
+        np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
     if random_shuffle or random_invert:
         env = deepcopy(env)    # XXX this uses a LOT of RAM memory!!!
@@ -800,7 +797,6 @@ def delayed_play(env, policy, horizon,
     for t in prettyRange:
         choice = policy.choice()
 
-        # XXX do this quicker!?
         if allrewards is None:
             reward = env.draw(choice, t)
         else:
