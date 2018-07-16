@@ -20,9 +20,6 @@ __version__ = "0.9"
 from sys import path
 from os.path import dirname
 path.insert(0, '/'.join(dirname(__file__).split('/')[:-1]))
-path.insert(0, '..')
-path.insert(0, '.')
-
 try:
     from .IndexPolicy import IndexPolicy
 except ImportError:

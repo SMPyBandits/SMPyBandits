@@ -12,7 +12,7 @@ import numpy as np
 
 try:
     from .BasePolicy import BasePolicy
-except ImportError:
+except (ImportError, SystemError):
     from BasePolicy import BasePolicy
 
 

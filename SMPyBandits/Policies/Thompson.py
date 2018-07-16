@@ -9,7 +9,7 @@ __version__ = "0.5"
 
 try:
     from .BayesianIndexPolicy import BayesianIndexPolicy
-except ImportError:
+except (ImportError, SystemError):
     from BayesianIndexPolicy import BayesianIndexPolicy
 
 

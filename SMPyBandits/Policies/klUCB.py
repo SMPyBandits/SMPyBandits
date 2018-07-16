@@ -15,7 +15,7 @@ np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 try:
     from .kullback import klucbBern
     from .IndexPolicy import IndexPolicy
-except ImportError:
+except (ImportError, SystemError):
     from kullback import klucbBern
     from IndexPolicy import IndexPolicy
 
