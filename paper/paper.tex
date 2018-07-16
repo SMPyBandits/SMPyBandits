@@ -188,7 +188,7 @@
 
 \subsection{Single-Player MAB}\label{single-player-mab}
 
-Multi-Armed Bandit (MAB) problems are famous sequential decision
+Multi-Armed Bandit (MAB) problems are well-studied sequential decision
 making problems in which an agent repeatedly chooses an action (the
 ``\emph{arm}'' of a one-armed bandit) in order to maximize some total
 reward \citep{Robbins52}, \citep{LaiRobbins85}. Initial motivation for
@@ -197,9 +197,8 @@ with the seminal work of Thompson \citep{Thompson33}, where arms
 correspond to different treatments with unknown, random effect. Since
 then, MAB models have been proved useful for many more applications,
 that range from cognitive radio \citep{Jouini09} to online content
-optimization (news article recommendation \citep{Li10}, online
-advertising \citep{LiChapelle11} or A/B Testing \citep{Kaufmann14},
-\citep{Jamieson17}), or portfolio optimization \citep{Sani12}.
+optimization like news article recommendation \citep{Li10}, online
+advertising \citep{LiChapelle11}, A/B Testing \citep{Kaufmann14,Jamieson17}, or portfolio optimization \citep{Sani12}.
 
 
 More formally, a stochastic MAB is defined by $K>1$ distributions $\nu_k$ (arms),
@@ -207,13 +206,13 @@ and \emph{i.i.d.} rewards $r_k(t) \sim \nu_k, \forall t$.
 An agent choose arm $A(t)\in\{1,\dots,K\}$ at time $t$ and
 observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
 Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms,
-and she essentially has to try find and exploit the best one as fast as possible.
-This library tackle one dimensional distributions,
+and she essentially has to find and exploit the best one as fast as possible.
+This library tackles one dimensional distributions,
 and supports \href{https://SMPyBandits.GitHub.io/docs/Arms.Bernoulli.html}{\texttt{Bernoulli}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Binomial.html}{\texttt{binomial}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Poisson.html}{\texttt{Poisson}}, and a generic \href{https://SMPyBandits.GitHub.io/docs/Arms.DiscreteArm.html}{\texttt{discrete}} distributions,
-as well as \href{https://SMPyBandits.GitHub.io/docs/Arms.Exponential.html}{\texttt{exponential}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gamma.html}{\texttt{gamma}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gaussian.html}{\texttt{Gaussian}} and \href{https://SMPyBandits.GitHub.io/docs/Arms.Uniform.html}{\texttt{uniform}} continuous distributions,
+as well as \href{https://SMPyBandits.GitHub.io/docs/Arms.Exponential.html}{\texttt{exponential}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gamma.html}{\texttt{gamma}}, \href{https://SMPyBandits.GitHub.io/docs/Arms.Gaussian.html}{\texttt{Gaussian}} (of known scale or variance) and \href{https://SMPyBandits.GitHub.io/docs/Arms.Uniform.html}{\texttt{uniform}} continuous distributions,
 which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
 
-\emph{SMPyBandits} is the most complete open-source implementation of
+\emph{SMPyBandits} is a complete open-source implementation of
 single-player bandit algorithms,
 containing \href{https://SMPyBandits.GitHub.io/docs/Policies.html}{over 65} algorithms.
 It uses a well-designed hierarchical structure and
@@ -245,8 +244,8 @@ algorithms from the last 10 years (including
 \href{https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html}{\texttt{MusicalChair}}, and our state-of-the-art algorithms
 \href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html}{\texttt{RandTopM}}
 and
-\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}})
-from \citet{BessonALT2018}.
+\href{https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html}{\texttt{MCTopM}}
+from \citet{BessonALT2018}).
 For comparison, realistic or full-knowledge centralized algorithms are also implemented.
 
 % \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
@@ -272,7 +271,7 @@ for more details.} shows how to clone the code\footnote{SMPyBandits is also avai
 \href{https://pypi.org/project/SMPyBandits/}{\texttt{pypi.org/project/SMPyBandits}}.
 You can install it directly with
 \texttt{sudo\ pip\ install\ SMPyBandits}, or from a
-\texttt{virtualenv}.}, and install the requirements for Python 3:
+\texttt{virtualenv}.}, and install the requirements for Python 3 (once):
 
 \begin{Shaded}
 \begin{Highlighting}[]

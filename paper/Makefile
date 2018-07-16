@@ -31,7 +31,8 @@ longpaper: longpaper.tex longpaper.md
 paper:
 	-latexmk -c
 	-rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
-	latexmk -f -gg -pdf -xelatex paper.tex
+	# latexmk -f -gg -pdf -xelatex paper.tex
+	latexmk -f -gg -pdf paper.tex
 	-latexmk -c
 	-rm -vf paper.bbl paper.synctex.gz .paper_template.aux .paper_template.fls .paper_template.log .paper_template.fdb_latexmk
 

@@ -49,20 +49,20 @@ It allows fast prototyping of simulations and experiments, with an easy configur
 ## Presentation
 
 ### Single-Player MAB
-Multi-Armed Bandit (MAB) problems are famous sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52], [@LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization (news article recommendation [@Li10], online advertising [@LiChapelle11] or A/B Testing [@Kaufmann14], [@Jamieson17]), or portfolio optimization [@Sani12].
+Multi-Armed Bandit (MAB) problems are well-studied sequential decision making problems in which an agent repeatedly chooses an action (the "*arm*" of a one-armed bandit) in order to maximize some total reward [@Robbins52], [@LaiRobbins85]. Initial motivation for their study came from the modeling of clinical trials, as early as 1933 with the seminal work of Thompson  [@Thompson33], where arms correspond to different treatments with unknown, random effect. Since then, MAB models have been proved useful for many more applications, that range from cognitive radio [@Jouini09] to online content optimization like news article recommendation [@Li10], online advertising [@LiChapelle11], A/B Testing [@Kaufmann14], [@Jamieson17], or portfolio optimization [@Sani12].
 
 More formally, a stochastic MAB is defined by $K>1$ distributions $\nu_k$ (arms),
 and *i.i.d.* rewards $r_k(t) \sim \nu_k, \forall t$.
 An agent choose arm $A(t)\in\{1,\dots,K\}$ at time $t$ and observes the reward $r_{A(t)}(t)$ without knowing the other (hidden) rewards.
 Her goal is to maximize $\sum_{t=1}^T r_{A(t)}(t)$ by sequentially exploring the $K$ arms,
-and she essentially has to try find and exploit the best one as fast as possible.
-This library tackle one dimensional distributions,
+and she essentially has to find and exploit the best one as fast as possible.
+This library tackles one dimensional distributions,
 and supports [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html), [`binomial`](https://smpybandits.github.io/docs/Arms.Binomial.html), [`Poisson`](https://smpybandits.github.io/docs/Arms.Poisson.html), and a generic [`discrete`](https://smpybandits.github.io/docs/Arms.DiscreteArm.html) distributions,
 as well as [`exponential`](https://smpybandits.github.io/docs/Arms.Exponential.html), [`gamma`](https://smpybandits.github.io/docs/Arms.Gamma.html), [`Gaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html) and [`uniform`](https://smpybandits.github.io/docs/Arms.Uniform.html) continuous distributions,
 which can be truncated to an interval $[a,b]$ or have unbounded support ($\mathbb{R}$).
 
 
-*SMPyBandits* is the most complete open-source implementation of single-player (classical) bandit algorithms,
+*SMPyBandits* is a complete open-source implementation of single-player (classical) bandit algorithms,
 containing [over 65](https://SMPyBandits.GitHub.io/docs/Policies.html) algorithms.
 It uses a well-designed hierarchical structure and [class inheritance scheme](https://SMPyBandits.GitHub.io/uml_diagrams/README.html) to minimize redundancy in the codebase.
 For instance, most existing algorithms are index-based, and new ones can be written easily by inheriting from the [`IndexPolicy`](https://SMPyBandits.GitHub.io/docs/Policies.IndexPolicy.html) class.
@@ -73,7 +73,7 @@ An index-based algorithm computes an index $I_k(t)\in\mathbb{R}$ for each arm $k
 For Cognitive Radio and other applications, a well-studied extension is to consider $M\geq2$ players, interacting on the *same* $K$ arms. Whenever two or more players select the same arm at the same time, they all suffer from a collision.
 Different collision models has been proposed, and the simplest one consists in giving a $0$ reward to each colliding players.
 Without any centralized supervision or coordination between players, they must learn to access the $M$ best resources (*i.e.*, arms with highest means) without collisions.
-*SMPyBandits* implements [all collision models](https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years (including [`rhoRand`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html), [`MusicalChair`](https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html), and our state-of-the-art algorithms [`RandTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html)) from @BessonALT2018.
+*SMPyBandits* implements [all collision models](https://SMPyBandits.GitHub.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years (including [`rhoRand`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.rhoRand.html), [`MEGA`](https://SMPyBandits.GitHub.io/docs/Policies.MEGA.html), [`MusicalChair`](https://SMPyBandits.GitHub.io/docs/Policies.MusicalChair.html), and our state-of-the-art algorithms [`RandTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://SMPyBandits.GitHub.io/docs/PoliciesMultiPlayers.MCTopM.html) from @BessonALT2018).
 For comparison, realistic or full-knowledge centralized algorithms are also implemented.
 
 ---
@@ -91,7 +91,7 @@ A complete Sphinx documentation, for each algorithm and all parts of the codebas
 
 We show how to install *SMPyBandits*, and an example of how to run a simple experiment.
 This bash snippet [^docforconf] shows how to clone the code [^alsoonpypi],
-and install the requirements for Python 3:
+and install the requirements for Python 3 (once):
 
 ```bash
 # 1. get the code in the folder you want
