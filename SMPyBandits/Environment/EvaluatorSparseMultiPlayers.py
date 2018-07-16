@@ -15,7 +15,7 @@ from random import random as uniform_in_zero_one
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
-# import h5py
+
 try:
     # Local imports, libraries
     from .usejoblib import USE_JOBLIB, Parallel, delayed

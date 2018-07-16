@@ -16,7 +16,6 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-import h5py
 import inspect
 def _nbOfArgs(function):
     try: return len(inspect.signature(functions).parameters)
@@ -241,6 +240,7 @@ class EvaluatorMultiPlayers(object):
         - See http://docs.h5py.org/en/stable/quick.html if needed.
         """
         # 1. create the h5py file
+        import h5py
         h5file = h5py.File(filepath, "w")
 
         # 2. store main attributes and all other attributes, if they exist

@@ -15,8 +15,6 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-# H5PY
-import h5py
 import inspect
 def _nbOfArgs(function):
     try: return len(inspect.signature(functions).parameters)
@@ -256,6 +254,7 @@ class Evaluator(object):
 
         - See http://docs.h5py.org/en/stable/quick.html if needed.
         """
+        import h5py
         # 1. create the h5py file
         h5file = h5py.File(filepath, "w")
 
