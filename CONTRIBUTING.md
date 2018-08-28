@@ -57,7 +57,7 @@ Here's a quick guide to submitting your improvements:
 
 4. Write examples, and try your code in some non-trivial bandit problems.
 
-5. I use PEP8 syntax conventions, but I aren't dogmatic when it comes to line length. Make sure your lines stay reasonably sized, though. To make your life easier, I recommend running a PEP8 linter:
+5. I use PEP8 syntax conventions, but I am not dogmatic when it comes to line length. Make sure your lines stay reasonably sized, though. To make your life easier, I recommend running a PEP8 linter:
     - Install PEP8 packages: `pip install pep8 pytest-pep8 autopep8`
     - Run a standalone PEP8 check: `py.test --pep8 -m pep8`
     - You can automatically fix some PEP8 error by running: `autopep8 -i --select <errors> <FILENAME>` for example: `autopep8 -i --select E128 Policies/newAlgorithm.py`
