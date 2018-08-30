@@ -418,7 +418,7 @@ configuration["successive_players"] = [
     # # MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
 
     # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
-    [ MusicalChairNoSensing(NB_PLAYERS, nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
 
     # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
@@ -433,16 +433,16 @@ configuration["successive_players"] = [
     # # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
     # [ MEGA(nbArms, p0=0.1, alpha=0.1, beta=0.5, c=0.1, d=0.99*GAP) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
 
-    # # # # XXX stupid version with fixed T0 : cannot adapt to any problem
-    # # # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
-    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],
-    # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
-    [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
+    # # # XXX stupid version with fixed T0 : cannot adapt to any problem
+    # # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
+    # [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    # [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    # [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    # # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
+    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
+    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],
+    # # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
+    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
 
     # --- 1) CentralizedMultiplePlay
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
