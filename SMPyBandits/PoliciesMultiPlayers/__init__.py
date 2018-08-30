@@ -31,7 +31,7 @@ in order to use them in any experiment with the following approach: ::
             players_who_played_k = [ k_t[i] for i in range(nbPlayers) if k_t[i] == k ]
             reward = reward_t[k] = sampled from the arm k     # sample a reward
             if len(players_who_played_k) > 1:
-               reward = 0
+                reward = 0
             for i in players_who_played_k:
                 children[i].getReward(k, reward)
 """

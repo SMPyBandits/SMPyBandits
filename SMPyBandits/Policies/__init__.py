@@ -44,7 +44,7 @@
 - **New!** The UCBoost (Upper Confidence bounds with Boosting) policies, first with no boosting: :class:`UCBoost.UCB_sq`, :class:`UCBoost.UCB_bq`, :class:`UCBoost.UCB_h`, :class:`UCBoost.UCB_lb`, :class:`UCBoost.UCB_t`, and then the ones with non-adaptive boosting: :class:`UCBoost.UCBoost_bq_h_lb`, :class:`UCBoost.UCBoost_bq_h_lb_t`, :class:`UCBoost.UCBoost_bq_h_lb_t_sq`, :class:`UCBoost.UCBoost`, and finally the epsilon-approximation boosting with :class:`UCBoost.UCBoostEpsilon`,
 
 
-- Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`, :class:`TrekkingTSN`...
+- Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`, :class:`TrekkingTSN`, :class:`MusicalChairNoSensing`...
 
 
 All policies have the same interface, as described in :class:`BasePolicy`,
@@ -180,6 +180,7 @@ from .WrapRange import WrapRange
 
 from .MusicalChair import MusicalChair, optimalT0  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
 # from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
+from .MusicalChairNoSensing import MusicalChairNoSensing  # Cf. [Lugosi et Mehrabian, 2018](https://arxiv.org/abs/1808.08416)
 
 from .TrekkingTSN import TrekkingTSN  # Cf. [R.Kumar, A.Yadav, S.J.Darak, M.K.Hanawal, Trekking based Distributed Algorithm for Opportunistic Spectrum Access in Infrastructure-less Network, 2018](XXX)
 
