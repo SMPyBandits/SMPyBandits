@@ -31,14 +31,15 @@ def parameter_g(K=9, m=3, T=1000):
     .. math:: g = 128 K \log(3 K m^2 T^2).
 
     Examples:
-    >>> parameter_g(m=2, K=2, T=100)
-    XXX
-    >>> parameter_g(m=2, K=2, T=1000)
-    XXX
-    >>> parameter_g(m=2, K=3, T=100)
-    XXX
-    >>> parameter_g(m=3, K=3, T=100)
-    XXX
+
+    >>> parameter_g(m=2, K=2, T=100)  # DOCTEST: +ELLIPSIS
+    3171.428...
+    >>> parameter_g(m=2, K=2, T=1000)  # DOCTEST: +ELLIPSIS
+    4350.352...
+    >>> parameter_g(m=2, K=3, T=100)  # DOCTEST: +ELLIPSIS
+    4912.841...
+    >>> parameter_g(m=3, K=3, T=100)  # DOCTEST: +ELLIPSIS
+    5224.239...
     """
     return (np.log(3) + np.log(K) + 2*np.log(m) + 2*np.log(T)) * ConstantC * K
 
@@ -47,19 +48,20 @@ def estimate_length_phases_12(K=3, m=9, Delta=0.1, T=1000):
     """ Estimate the length of phase 1 and 2 from the parameters of the problem.
 
     Examples:
+
     >>> estimate_length_phases_12(m=2, K=2, Delta=0.1, T=100)
-    XXX
+    198214307
     >>> estimate_length_phases_12(m=2, K=2, Delta=0.01, T=100)
-    XXX
+    19821430723
     >>> estimate_length_phases_12(m=2, K=2, Delta=0.1, T=1000)
-    XXX
+    271897030
     >>> estimate_length_phases_12(m=2, K=3, Delta=0.1, T=100)
-    XXX
+    307052623
     >>> estimate_length_phases_12(m=2, K=5, Delta=0.1, T=100)
-    XXX
+    532187397
     """
     assert Delta > 0, "Error: estimate_length_phases_12 needs a non zero gap."  # DEBUG
-    return 625/128 * ConstantC * parameter_g(K=K, m=m, T=T) / Delta**2
+    return int(625/128 * ConstantC * parameter_g(K=K, m=m, T=T) / Delta**2)
 
 
 def smallest_T_from_where_length_phases_12_is_larger(K=3, m=9, Delta=0.1, Tmax=1e9):
@@ -68,28 +70,32 @@ def smallest_T_from_where_length_phases_12_is_larger(K=3, m=9, Delta=0.1, Tmax=1
     Examples:
 
     >>> smallest_T_from_where_length_phases_12_is_larger(K=2, m=1)
-    4799
+    687194767
     >>> smallest_T_from_where_length_phases_12_is_larger(K=3, m=2)
-    8308
+    1009317314
     >>> smallest_T_from_where_length_phases_12_is_larger(K=3, m=3)
-    8650
+    1009317314
 
     Examples with even longer phase 1:
 
     >>> smallest_T_from_where_length_phases_12_is_larger(K=10, m=5)
-    35280
+    1009317314
     >>> smallest_T_from_where_length_phases_12_is_larger(K=10, m=10)
-    37189
+    1009317314
 
     With :math:`K=100` arms, it starts to be crazy:
 
     >>> smallest_T_from_where_length_phases_12_is_larger(K=100, m=10)
-    466090
+    1009317314
     """
     T = 1
     while estimate_length_phases_12(K=K, m=m, Delta=Delta, T=T) > T and T < Tmax:
         T *= 2
-    return T
+    maxT = T
+    T /= 2
+    while estimate_length_phases_12(K=K, m=m, Delta=Delta, T=T) > T and T < Tmax:
+        T += maxT/100
+    return int(T)
 
 
 #: Different states during the Musical Chair with no sensing algorithm
