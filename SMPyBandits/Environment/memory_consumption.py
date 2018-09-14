@@ -53,16 +53,19 @@ def getCurrentMemory(thread=False, both=False):
     Consumed 63.9 KiB more memory
 
     .. warning:: This is still experimental for multi-threaded code.
+    .. warning:: It can break on some systems, see for instance [the issue #142](https://github.com/SMPyBandits/SMPyBandits/issues/142).
     """
     if thread:
         try:
+            # https://docs.python.org/3/library/resource.html#resource.RUSAGE_THREAD
             return resource.getrusage(resource.RUSAGE_THREAD).ru_maxrss
-        except ValueError:
+        except (ValueError, AttributeError):
             print("Warning: resource.RUSAGE_THREAD is not available.")  # DEBUG
     if both:
         try:
+            # https://docs.python.org/3/library/resource.html#resource.RUSAGE_BOTH
             return resource.getrusage(resource.RUSAGE_BOTH).ru_maxrss
-        except ValueError:
+        except (ValueError, AttributeError):
             print("Warning: resource.RUSAGE_BOTH is not available.")  # DEBUG
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
