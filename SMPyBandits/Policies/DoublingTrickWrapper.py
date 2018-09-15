@@ -2,7 +2,7 @@
 r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick":
 
 - starts to assume that :math:`T=T_0=1000`, and run the policy :math:`P(T_0)`, from :math:`t=1` to :math:`t=T_0`,
-- if :math:`t > T_0`, then the "doubling trick" is performed, by either reinitializing or just changing the parameter `horizon` of the policy P, for instance with :math:`T_2 = 10 \times T_0`,
+- if :math:`t > T_0`, then the "doubling trick" is performed, by either re-initializing or just changing the parameter `horizon` of the policy P, for instance with :math:`T_2 = 10 \times T_0`,
 - and keep doing this until :math:`t = T`.
 
 .. note::
@@ -258,17 +258,17 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
 # and controlling the last term u_{L_T} as a function of T.
 
 
-def function_f__for_geometric_sequences(i, c=1.0):
+def function_f__for_geometric_sequences(i, c=0.5):
     r""" For the *geometric* doubling sequences, :math:`f(i) = c \times \log(i)`."""
     return c * np.log(i)
 
 
-def function_f__for_exponential_sequences(i, c=1.0):
+def function_f__for_exponential_sequences(i, c=0.5):
     r""" For the *exponential* doubling sequences, :math:`f(i) = c \times i`."""
     return c * i
 
 
-def function_f__for_generic_sequences(i, c=1.0, d=0.5, e=0.0):
+def function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.0):
     r""" For a certain *generic* family of doubling sequences, :math:`f(i) = c \times i^{d} \times (\log(i))^{e}`.
 
     - ``d, e = 0, 1`` gives :func:`function_f__for_geometric_sequences`,
@@ -278,13 +278,35 @@ def function_f__for_generic_sequences(i, c=1.0, d=0.5, e=0.0):
 
     .. warning:: ``d`` should most probably be smaller than 1.
     """
+    i = float(i)
+    if i <= 0: return 0.0
+    if e == 0:
+        assert d > 0, "Error: invalid value of d = {} for function_f__for_generic_sequences.".format(d)  # DEBUG
+        return c * (i ** d)
+    assert e > 0, "Error: invalid value of e = {} for function_f__for_generic_sequences.".format(e)  # DEBUG
+    if d == 0:
+        return c * ((np.log(i)) ** e)
     return c * (i ** d) * ((np.log(i)) ** e)
 
 
+def function_f__for_intermediate_sequences(i):
+    return function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.0)
+
+def function_f__for_intermediate2_sequences(i):
+    return function_f__for_generic_sequences(i, c=0.5, d=0.3333, e=0.0)
+
+def function_f__for_intermediate3_sequences(i):
+    return function_f__for_generic_sequences(i, c=0.5, d=0.6667, e=0.0)
+
+def function_f__for_intermediate4_sequences(i):
+    return function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.5)
+
+
 #: Value of the parameter :math:`\alpha` for the :func:`Ti_from_f` function.
+alpha_for_Ti = 0.1
 alpha_for_Ti = 1.0
 alpha_for_Ti = 0.5
-alpha_for_Ti = 0.1
+
 
 def Ti_from_f(f, alpha=alpha_for_Ti, *args, **kwargs):
     r""" For any non-negative and increasing function :math:`f: i \mapsto f(i)`, the corresponding sequence is defined by:
@@ -298,7 +320,8 @@ def Ti_from_f(f, alpha=alpha_for_Ti, *args, **kwargs):
     # WARNING don't forget the floor!
     def Ti(i):
         this_Ti = np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
-        if not np.isinf(this_Ti): this_Ti = int(this_Ti)
+        if not np.isinf(this_Ti) and not np.isnan(this_Ti):
+            this_Ti = int(this_Ti)
         # print("    For f = {}, i = {} gives Ti = {}".format(f, i, this_Ti))  # DEBUG
         return this_Ti
     return Ti
@@ -318,7 +341,7 @@ def last_term_operator_LT(Ti, max_i=10000):
             if i >= max_i:
                 raise ValueError("LT(T={T}) was unable to find a i <= {max_i} such that T_i >= T.".format(T=T, max_i=max_i))  # DEBUG
         assert Ti(i - 1) < T <= Ti(i), "Error: i = {} was computed as LT for T = {} and Ti = {} but does not satisfy T_(i-1) < T <= T(i)".format(i, T, Ti)  # DEBUG
-        print("  For LT: i = {} was computed as LT for T = {} and Ti = {} but does not satisfy T(i-1) < T <= T(i)".format(i, T, Ti))  # DEBUG
+        print("  For LT: i = {} was computed as LT for T = {} and Ti = {} and satisfies T(i-1) = {} < T <= T(i) = {}".format(i, T, Ti, Ti(i-1), Ti(i)))  # DEBUG
         return i
     return LT
 
@@ -331,13 +354,19 @@ def plot_doubling_sequences(
         i_min=1, i_max=30,
         list_of_f=(
             function_f__for_geometric_sequences,
-            function_f__for_generic_sequences,
+            function_f__for_intermediate_sequences,
+            function_f__for_intermediate2_sequences,
+            function_f__for_intermediate3_sequences,
+            function_f__for_intermediate4_sequences,
             function_f__for_exponential_sequences,
             ),
         label_of_f=(
-            "Geometric doubling",
-            "Intermediate doubling",
-            "Exponential doubling",
+            "Geometric    doubling (d=0, e=1)",
+            "Intermediate doubling (d=1/2, e=0)",
+            "Intermediate doubling (d=1/3, e=0)",
+            "Intermediate doubling (d=2/3, e=0)",
+            "Intermediate doubling (d=1/2, e=1/2)",
+            "Exponential  doubling (d=1, e=0)",
             ),
         *args, **kwargs,
     ):
@@ -346,7 +375,7 @@ def plot_doubling_sequences(
     - Can accept many functions f (and labels).
     """
     # Make unique markers
-    nb = 1 + len(list_of_f)
+    nb = len(list_of_f)
     allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     markers = longlist[:nb]  # Truncate
@@ -363,7 +392,7 @@ def plot_doubling_sequences(
 
         Ti = Ti_from_f(f)
         values_of_Ti = np.array([ Ti(i) for i in i_s ])
-        plt.plot(i_s, values_of_Ti, label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
+        plt.plot(i_s, values_of_Ti, label=la, lw=3, ms=5, color=colors[num_f], marker=markers[num_f])
     plt.legend()
     plt.xlabel(r"Value of the time horizon $i = {},...,{}$".format(i_min, i_max))
     plt.title(r"Comparison of the values of $T_i$")
@@ -373,21 +402,27 @@ def plot_doubling_sequences(
 
 def plot_quality_first_upper_bound(
         Tmin=10, Tmax=int(1e7), nbTs=50,
-        gamma=0.5, delta=0.0,  # bound in RT <= sqrt(T)
-        # gamma=0.0, delta=1.0,  # bound in RT <= log(T)
-        # gamma=0.5, delta=0.5,  # bound in RT <= sqrt(T * log(T))
+        gamma=0.0, delta=1.0,  # XXX bound in RT <= log(T)
+        # gamma=0.5, delta=0.0,  # XXX bound in RT <= sqrt(T)
+        # gamma=0.5, delta=0.5,  # XXX bound in RT <= sqrt(T * log(T))
         list_of_f=(
             function_f__for_geometric_sequences,
-            function_f__for_generic_sequences,
+            function_f__for_intermediate_sequences,
+            function_f__for_intermediate2_sequences,
+            function_f__for_intermediate3_sequences,
+            function_f__for_intermediate4_sequences,
             function_f__for_exponential_sequences,
             ),
         label_of_f=(
-            "Geometric doubling",
-            "Intermediate doubling",
-            "Exponential doubling",
+            "Geometric    doubling (d=0, e=1)",
+            "Intermediate doubling (d=1/2, e=0)",
+            "Intermediate doubling (d=1/3, e=0)",
+            "Intermediate doubling (d=2/3, e=0)",
+            "Intermediate doubling (d=1/2, e=1/2)",
+            "Exponential  doubling (d=1, e=0)",
             ),
-        # show_Ti_m_Tim1=True,
-        show_Ti_m_Tim1=False,  # DEBUG
+        show_Ti_m_Tim1=True,
+        # show_Ti_m_Tim1=False,  # DEBUG
         *args, **kwargs,
     ):
     r""" Display a plot to compare numerically between the following sum :math:`S` and the upper-bound we hope to have, :math:`T^{\gamma} (\log T)^{\delta}`, as a function of :math:`T` for some values between :math:`T_{\min}` and :math:`T_{\max}`:
@@ -400,7 +435,7 @@ def plot_quality_first_upper_bound(
     .. warning:: This is still ON GOING WORK.
     """
     # Make unique markers
-    nb = 1 + len(list_of_f)
+    nb = len(list_of_f)
     allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     markers = longlist[:nb]  # Truncate
@@ -412,8 +447,8 @@ def plot_quality_first_upper_bound(
 
     Ts = np.linspace(Tmin, Tmax, num=nbTs)
     the_bound_we_want = (Ts ** gamma) * (np.log(Ts) ** delta)
-    # FIXME after this first trial, plot the ratio of the sum by the bound, rather than plotting both
-    plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=5, color=colors[0], marker=markers[0])
+
+    # plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=5, color=colors[0], marker=markers[0])
     # compute the sequence lengths to use, either T_i or T_i - T_{i-1}
     Ts_for_f = np.copy(Ts)
     if show_Ti_m_Tim1: Ts_for_f[1:] = np.diff(Ts)
@@ -432,11 +467,12 @@ def plot_quality_first_upper_bound(
             )
             print("For j = {}, Tj = {}, dTj = {}, gives LTj = {}, and the value of the sum from i=0 to LTj is = {}.".format(j, Tj, dTj, LTj, the_sum_we_have[j]))  # DEBUG
         print("the_sum_we_have =", the_sum_we_have)  # DEBUG
-        plt.plot(Ts, the_sum_we_have, label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
+        plt.plot(Ts, the_sum_we_have / the_bound_we_want, label=la, lw=3, ms=5, color=colors[num_f], marker=markers[num_f])
 
     plt.legend()
     plt.xlabel(r"Value of the time horizon $T = {},...,{}$".format(Tmin, Tmax))
-    plt.title(r"Comparison of the sum $\sum_{i=0}^{L_T} (T_i - T_{i-1})^{\gamma} (\log(T_i - T_{i-1}))^{\delta}$ and the upper-bound $T^{\gamma} \log(T)^{\delta}$, for $\gamma=%.3g$, $\delta=%.3g$." % (gamma, delta))
+    str_of_Tj_or_dTj = "T_i - T_{i-1}" if show_Ti_m_Tim1 else "T_i"
+    plt.title(r"Ratio of the sum $\sum_{i=0}^{L_T} (%s)^{\gamma} (\log(%s))^{\delta}$ and the upper-bound $T^{\gamma} \log(T)^{\delta}$, for $\gamma=%.3g$, $\delta=%.3g$." % (str_of_Tj_or_dTj, str_of_Tj_or_dTj, gamma, delta))  # DEBUG
     plt.show()
     return fig
 
@@ -585,13 +621,14 @@ class DoublingTrickWrapper(BasePolicy):
 
 # # --- Debugging
 
-# if __name__ == "__main__":
-#     # Code for debugging purposes.
-#     from doctest import testmod
-#     print("\nTesting automatically all the docstring written in each functions of this module :")
-#     testmod(verbose=True)
-
 if __name__ == "__main__":
+    import sys
+    if "plot" in sys.argv[1:]:
+        # plot_doubling_sequences()
+        plot_quality_first_upper_bound()
+        sys.exit(0)
+
     # Code for debugging purposes.
-    # plot_doubling_sequences()
-    plot_quality_first_upper_bound()
+    from doctest import testmod
+    print("\nTesting automatically all the docstring written in each functions of this module :")
+    testmod(verbose=True)
