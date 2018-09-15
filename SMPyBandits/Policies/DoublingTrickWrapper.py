@@ -258,17 +258,24 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
 # and controlling the last term u_{L_T} as a function of T.
 
 
-def function_f__for_geometric_sequences(i, c=0.5):
+#: The constant c in front of the function f.
+constant_c_for_the_functions_f = 1.0
+constant_c_for_the_functions_f = 0.1
+constant_c_for_the_functions_f = 0.5
+
+
+def function_f__for_geometric_sequences(i, c=constant_c_for_the_functions_f):
     r""" For the *geometric* doubling sequences, :math:`f(i) = c \times \log(i)`."""
+    if i <= 0: return 0.0
     return c * np.log(i)
 
 
-def function_f__for_exponential_sequences(i, c=0.5):
+def function_f__for_exponential_sequences(i, c=constant_c_for_the_functions_f):
     r""" For the *exponential* doubling sequences, :math:`f(i) = c \times i`."""
     return c * i
 
 
-def function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.0):
+def function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.5, e=0.0):
     r""" For a certain *generic* family of doubling sequences, :math:`f(i) = c \times i^{d} \times (\log(i))^{e}`.
 
     - ``d, e = 0, 1`` gives :func:`function_f__for_geometric_sequences`,
@@ -290,16 +297,16 @@ def function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.0):
 
 
 def function_f__for_intermediate_sequences(i):
-    return function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.0)
+    return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.5, e=0.0)
 
 def function_f__for_intermediate2_sequences(i):
-    return function_f__for_generic_sequences(i, c=0.5, d=0.3333, e=0.0)
+    return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.3333, e=0.0)
 
 def function_f__for_intermediate3_sequences(i):
-    return function_f__for_generic_sequences(i, c=0.5, d=0.6667, e=0.0)
+    return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.6667, e=0.0)
 
 def function_f__for_intermediate4_sequences(i):
-    return function_f__for_generic_sequences(i, c=0.5, d=0.5, e=0.5)
+    return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.5, e=0.5)
 
 
 #: Value of the parameter :math:`\alpha` for the :func:`Ti_from_f` function.
@@ -320,7 +327,7 @@ def Ti_from_f(f, alpha=alpha_for_Ti, *args, **kwargs):
     # WARNING don't forget the floor!
     def Ti(i):
         this_Ti = np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
-        if not np.isinf(this_Ti) and not np.isnan(this_Ti):
+        if not (np.isinf(this_Ti) or np.isnan(this_Ti)):
             this_Ti = int(this_Ti)
         # print("    For f = {}, i = {} gives Ti = {}".format(f, i, this_Ti))  # DEBUG
         return this_Ti
@@ -339,9 +346,9 @@ def last_term_operator_LT(Ti, max_i=10000):
         while Ti(i) < T:
             i += 1
             if i >= max_i:
-                raise ValueError("LT(T={T}) was unable to find a i <= {max_i} such that T_i >= T.".format(T=T, max_i=max_i))  # DEBUG
+                raise ValueError("LT(T={T}) was unable to find a i <= {max_i} such that T_i >= T.".format(T, max_i))  # DEBUG
         assert Ti(i - 1) < T <= Ti(i), "Error: i = {} was computed as LT for T = {} and Ti = {} but does not satisfy T_(i-1) < T <= T(i)".format(i, T, Ti)  # DEBUG
-        print("  For LT: i = {} was computed as LT for T = {} and Ti = {} and satisfies T(i-1) = {} < T <= T(i) = {}".format(i, T, Ti, Ti(i-1), Ti(i)))  # DEBUG
+        # print("  For LT: i = {} was computed as LT for T = {} and Ti = {} and satisfies T(i-1) = {} < T <= T(i) = {}".format(i, T, Ti, Ti(i-1), Ti(i)))  # DEBUG
         return i
     return LT
 
@@ -392,7 +399,7 @@ def plot_doubling_sequences(
 
         Ti = Ti_from_f(f)
         values_of_Ti = np.array([ Ti(i) for i in i_s ])
-        plt.plot(i_s, values_of_Ti, label=la, lw=3, ms=5, color=colors[num_f], marker=markers[num_f])
+        plt.plot(i_s, values_of_Ti, label=la, lw=3, ms=3, color=colors[num_f], marker=markers[num_f])
     plt.legend()
     plt.xlabel(r"Value of the time horizon $i = {},...,{}$".format(i_min, i_max))
     plt.title(r"Comparison of the values of $T_i$")
@@ -401,10 +408,11 @@ def plot_doubling_sequences(
 
 
 def plot_quality_first_upper_bound(
-        Tmin=10, Tmax=int(1e7), nbTs=50,
+        Tmin=10, Tmax=int(1e8), nbTs=100,
         gamma=0.0, delta=1.0,  # XXX bound in RT <= log(T)
         # gamma=0.5, delta=0.0,  # XXX bound in RT <= sqrt(T)
         # gamma=0.5, delta=0.5,  # XXX bound in RT <= sqrt(T * log(T))
+        # gamma=0.66667, delta=1.0,  # XXX another weird bound in RT <= T^2/3 * log(T)
         list_of_f=(
             function_f__for_geometric_sequences,
             function_f__for_intermediate_sequences,
@@ -445,10 +453,10 @@ def plot_quality_first_upper_bound(
     fig = plt.figure()
     # plt.hold(True)
 
-    Ts = np.linspace(Tmin, Tmax, num=nbTs)
+    Ts = np.floor(np.linspace(Tmin, Tmax, num=nbTs))
     the_bound_we_want = (Ts ** gamma) * (np.log(Ts) ** delta)
 
-    # plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=5, color=colors[0], marker=markers[0])
+    # plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=3, color=colors[0], marker=markers[0])
     # compute the sequence lengths to use, either T_i or T_i - T_{i-1}
     Ts_for_f = np.copy(Ts)
     if show_Ti_m_Tim1: Ts_for_f[1:] = np.diff(Ts)
@@ -467,7 +475,7 @@ def plot_quality_first_upper_bound(
             )
             print("For j = {}, Tj = {}, dTj = {}, gives LTj = {}, and the value of the sum from i=0 to LTj is = {}.".format(j, Tj, dTj, LTj, the_sum_we_have[j]))  # DEBUG
         print("the_sum_we_have =", the_sum_we_have)  # DEBUG
-        plt.plot(Ts, the_sum_we_have / the_bound_we_want, label=la, lw=3, ms=5, color=colors[num_f], marker=markers[num_f])
+        plt.plot(Ts, the_sum_we_have / the_bound_we_want, label=la, lw=3, ms=3, color=colors[num_f], marker=markers[num_f])
 
     plt.legend()
     plt.xlabel(r"Value of the time horizon $T = {},...,{}$".format(Tmin, Tmax))
@@ -624,8 +632,16 @@ class DoublingTrickWrapper(BasePolicy):
 if __name__ == "__main__":
     import sys
     if "plot" in sys.argv[1:]:
+        plt.ion()
         # plot_doubling_sequences()
-        plot_quality_first_upper_bound()
+        for gamma, delta in [
+            (0.0, 1.0),  # XXX bound in RT <= log(T)
+            (0.5, 0.0),  # XXX bound in RT <= sqrt(T)
+            (0.5, 0.5),  # XXX bound in RT <= sqrt(T * log(T))
+            (0.66667, 1.0),  # XXX another weird bound in RT <= T^2/3 * log(T)
+        ]:
+            plot_quality_first_upper_bound(gamma=gamma, delta=delta, show_Ti_m_Tim1=True)
+            plot_quality_first_upper_bound(gamma=gamma, delta=delta, show_Ti_m_Tim1=False)
         sys.exit(0)
 
     # Code for debugging purposes.
