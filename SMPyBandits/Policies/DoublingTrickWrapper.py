@@ -281,7 +281,12 @@ def function_f__for_generic_sequences(i, c=1.0, d=0.5, e=0.0):
     return c * (i ** d) * ((np.log(i)) ** e)
 
 
-def Ti_from_f(f, alpha=1.0, *args, **kwargs):
+#: Value of the parameter :math:`\alpha` for the :func:`Ti_from_f` function.
+alpha_for_Ti = 1.0
+alpha_for_Ti = 0.5
+alpha_for_Ti = 0.1
+
+def Ti_from_f(f, alpha=alpha_for_Ti, *args, **kwargs):
     r""" For any non-negative and increasing function :math:`f: i \mapsto f(i)`, the corresponding sequence is defined by:
 
     .. math:: \forall i\in\mathbb{N},\; T_i := \lfloor \exp(\alpha \times \exp(f(i))) \rfloor.
@@ -292,13 +297,14 @@ def Ti_from_f(f, alpha=1.0, *args, **kwargs):
     """
     # WARNING don't forget the floor!
     def Ti(i):
-        this_Ti = int(np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs)))))
-        print("    For f = {}, i = {} gives Ti = {}".format(f, i, this_Ti))  # DEBUG
+        this_Ti = np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+        if not np.isinf(this_Ti): this_Ti = int(this_Ti)
+        # print("    For f = {}, i = {} gives Ti = {}".format(f, i, this_Ti))  # DEBUG
         return this_Ti
     return Ti
 
 
-def last_term_operator_LT(Ti, max_i=100000):
+def last_term_operator_LT(Ti, max_i=10000):
     r""" For a certain function representing a doubling sequence, :math:`T: i \mapsto T_i`, this :func:`last_term_operator_LT` function returns the function :math:`L: T \mapsto L_T`, defined as:
 
     .. math:: \forall T\in\mathbb{N},\; L_T := \min\{ i \in\mathbb{N},\; T \leq T_i \}.
@@ -322,16 +328,16 @@ import seaborn as sns
 
 
 def plot_doubling_sequences(
-        i_min=1, i_max=50,
+        i_min=1, i_max=30,
         list_of_f=(
             function_f__for_geometric_sequences,
-            function_f__for_exponential_sequences,
             function_f__for_generic_sequences,
+            function_f__for_exponential_sequences,
             ),
         label_of_f=(
             "Geometric doubling",
-            "Exponential doubling",
             "Intermediate doubling",
+            "Exponential doubling",
             ),
         *args, **kwargs,
     ):
@@ -340,7 +346,7 @@ def plot_doubling_sequences(
     - Can accept many functions f (and labels).
     """
     # Make unique markers
-    nb = len(list_of_f)
+    nb = 1 + len(list_of_f)
     allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
     longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
     markers = longlist[:nb]  # Truncate
@@ -348,15 +354,16 @@ def plot_doubling_sequences(
     colors = sns.hls_palette(nb + 1)[:nb]
 
     fig = plt.figure()
+    # plt.hold(True)
+
     i_s = np.arange(i_min, i_max)
     # now for each function f
     for num_f, (f, la) in enumerate(zip(list_of_f, label_of_f)):
         print("\n\nThe {}th function is referred to as {} and is {}".format(num_f, la, f))  # DEBUG
 
         Ti = Ti_from_f(f)
-        c = colors[1 + num_f]
-        m = markers[1 + num_f]
-        plt.plot(Ts, Ti(i_s), label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
+        values_of_Ti = np.array([ Ti(i) for i in i_s ])
+        plt.plot(i_s, values_of_Ti, label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
     plt.legend()
     plt.xlabel(r"Value of the time horizon $i = {},...,{}$".format(i_min, i_max))
     plt.title(r"Comparison of the values of $T_i$")
@@ -365,21 +372,22 @@ def plot_doubling_sequences(
 
 
 def plot_quality_first_upper_bound(
-        Tmin=10, Tmax=int(1e3), nbTs=50,
-        # gamma=0.5, delta=0.0, cste=1.0,  # bound in RT <= sqrt(T)
-        gamma=0.0, delta=1.0, cste=1.0,  # bound in RT <= log(T)
-        # gamma=0.5, delta=0.5, cste=1.0,  # bound in RT <= sqrt(T * log(T))
+        Tmin=10, Tmax=int(1e7), nbTs=50,
+        gamma=0.5, delta=0.0,  # bound in RT <= sqrt(T)
+        # gamma=0.0, delta=1.0,  # bound in RT <= log(T)
+        # gamma=0.5, delta=0.5,  # bound in RT <= sqrt(T * log(T))
         list_of_f=(
             function_f__for_geometric_sequences,
-            function_f__for_exponential_sequences,
             function_f__for_generic_sequences,
+            function_f__for_exponential_sequences,
             ),
         label_of_f=(
             "Geometric doubling",
-            "Exponential doubling",
             "Intermediate doubling",
+            "Exponential doubling",
             ),
-        show_Ti_m_Tim1=True,
+        # show_Ti_m_Tim1=True,
+        show_Ti_m_Tim1=False,  # DEBUG
         *args, **kwargs,
     ):
     r""" Display a plot to compare numerically between the following sum :math:`S` and the upper-bound we hope to have, :math:`T^{\gamma} (\log T)^{\delta}`, as a function of :math:`T` for some values between :math:`T_{\min}` and :math:`T_{\max}`:
@@ -400,8 +408,10 @@ def plot_quality_first_upper_bound(
     colors = sns.hls_palette(nb + 1)[:nb]
 
     fig = plt.figure()
+    # plt.hold(True)
+
     Ts = np.linspace(Tmin, Tmax, num=nbTs)
-    the_bound_we_want = cste * (Ts ** gamma) * (np.log(Ts) ** delta)
+    the_bound_we_want = (Ts ** gamma) * (np.log(Ts) ** delta)
     # FIXME after this first trial, plot the ratio of the sum by the bound, rather than plotting both
     plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=5, color=colors[0], marker=markers[0])
     # compute the sequence lengths to use, either T_i or T_i - T_{i-1}
@@ -417,12 +427,10 @@ def plot_quality_first_upper_bound(
         for j, (Tj, dTj) in enumerate(zip(Ts, Ts_for_f)):
             LTj = LT(Tj)
             the_sum_we_have[j] = sum(
-                cste * (dTj ** gamma) * (np.log(dTj) ** delta)
+                (dTj ** gamma) * (np.log(dTj) ** delta)
                 for i in range(0, LTj + 1)
             )
             print("For j = {}, Tj = {}, dTj = {}, gives LTj = {}, and the value of the sum from i=0 to LTj is = {}.".format(j, Tj, dTj, LTj, the_sum_we_have[j]))  # DEBUG
-        c = colors[1 + num_f]
-        m = markers[1 + num_f]
         print("the_sum_we_have =", the_sum_we_have)  # DEBUG
         plt.plot(Ts, the_sum_we_have, label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
 
@@ -585,4 +593,5 @@ class DoublingTrickWrapper(BasePolicy):
 
 if __name__ == "__main__":
     # Code for debugging purposes.
+    # plot_doubling_sequences()
     plot_quality_first_upper_bound()
