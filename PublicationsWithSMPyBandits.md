@@ -25,7 +25,7 @@ The basic difference is about **collisions** : at each time `t`, if two or more 
 ## 3rd article, using [**Doubling Trick for Multi-Armed Bandits**](DoublingTrick.md)
 I studied what Doubling Trick can and can't do to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
 
-> **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this research article](https://hal.inria.fr/hal-XXX).
+> **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this research article](https://hal.inria.fr/hal-01736357).
 
 ----
 

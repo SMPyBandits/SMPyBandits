@@ -19,7 +19,7 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 
 .. seealso::
 
-   Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
+   Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-01736357), to be presented soon.
 
 .. warning::
 
@@ -257,7 +257,7 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
 class DoublingTrickWrapper(BasePolicy):
     r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick".
 
-    - Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX), to be presented soon.
+    - Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-01736357), to be presented soon.
     """
 
     def __init__(self, nbArms,
