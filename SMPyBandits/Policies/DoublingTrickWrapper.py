@@ -252,6 +252,187 @@ def breakpoints(next_horizon, first_horizon, horizon, debug=False):
     return times, gap
 
 
+# --- Experimental code to plot some doubling sequences and
+# check numerically some inequalities :
+# like controlling a sum Sigma_i=0^n u_i by a constant times to last term u_n
+# and controlling the last term u_{L_T} as a function of T.
+
+
+def function_f__for_geometric_sequences(i, c=1.0):
+    r""" For the *geometric* doubling sequences, :math:`f(i) = c \times \log(i)`."""
+    return c * np.log(i)
+
+
+def function_f__for_exponential_sequences(i, c=1.0):
+    r""" For the *exponential* doubling sequences, :math:`f(i) = c \times i`."""
+    return c * i
+
+
+def function_f__for_generic_sequences(i, c=1.0, d=0.5, e=0.0):
+    r""" For a certain *generic* family of doubling sequences, :math:`f(i) = c \times i^{d} \times (\log(i))^{e}`.
+
+    - ``d, e = 0, 1`` gives :func:`function_f__for_geometric_sequences`,
+    - ``d, e = 1, 0`` gives :func:`function_f__for_geometric_sequences`,
+    - ``d, e = 0.5, 0`` gives an intermediate sequence, growing faster than any geometric sequence and slower than any exponential sequence,
+    - any other combination has not been studied yet.
+
+    .. warning:: ``d`` should most probably be smaller than 1.
+    """
+    return c * (i ** d) * ((np.log(i)) ** e)
+
+
+def Ti_from_f(f, alpha=1.0, *args, **kwargs):
+    r""" For any non-negative and increasing function :math:`f: i \mapsto f(i)`, the corresponding sequence is defined by:
+
+    .. math:: \forall i\in\mathbb{N},\; T_i := \lfloor \exp(\alpha \times \exp(f(i))) \rfloor.
+
+    .. warning:: :math:`f(i)` can need other parameters, see the examples above. They can be given as ``*args`` or ``**kwargs`` to :func:`Ti_from_f`.
+
+    .. warning:: it should be computed otherwise, I should give :math:`i \mapsto \exp(f(i))` instead of :math:`f: i \mapsto f(i)`. I need to try as much as possible to reduce the risk of overflow errors!
+    """
+    # WARNING don't forget the floor!
+    def Ti(i):
+        this_Ti = int(np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs)))))
+        print("    For f = {}, i = {} gives Ti = {}".format(f, i, this_Ti))  # DEBUG
+        return this_Ti
+    return Ti
+
+
+def last_term_operator_LT(Ti, max_i=100000):
+    r""" For a certain function representing a doubling sequence, :math:`T: i \mapsto T_i`, this :func:`last_term_operator_LT` function returns the function :math:`L: T \mapsto L_T`, defined as:
+
+    .. math:: \forall T\in\mathbb{N},\; L_T := \min\{ i \in\mathbb{N},\; T \leq T_i \}.
+
+    :math:`L_T` is the only integer which satisfies :math:`T_{L_T - 1} < T \leq T_{L_T}`.
+    """
+    def LT(T, max_i=max_i):
+        i = 0
+        while Ti(i) < T:
+            i += 1
+            if i >= max_i:
+                raise ValueError("LT(T={T}) was unable to find a i <= {max_i} such that T_i >= T.".format(T=T, max_i=max_i))  # DEBUG
+        assert Ti(i - 1) < T <= Ti(i), "Error: i = {} was computed as LT for T = {} and Ti = {} but does not satisfy T_(i-1) < T <= T(i)".format(i, T, Ti)  # DEBUG
+        print("  For LT: i = {} was computed as LT for T = {} and Ti = {} but does not satisfy T(i-1) < T <= T(i)".format(i, T, Ti))  # DEBUG
+        return i
+    return LT
+
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def plot_doubling_sequences(
+        i_min=1, i_max=50,
+        list_of_f=(
+            function_f__for_geometric_sequences,
+            function_f__for_exponential_sequences,
+            function_f__for_generic_sequences,
+            ),
+        label_of_f=(
+            "Geometric doubling",
+            "Exponential doubling",
+            "Intermediate doubling",
+            ),
+        *args, **kwargs,
+    ):
+    r""" Display a plot to illustrate the values of the :math:`T_i` as a function of :math:`i` for some i.
+
+    - Can accept many functions f (and labels).
+    """
+    # Make unique markers
+    nb = len(list_of_f)
+    allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
+    longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
+    markers = longlist[:nb]  # Truncate
+    # Make unique colors
+    colors = sns.hls_palette(nb + 1)[:nb]
+
+    fig = plt.figure()
+    i_s = np.arange(i_min, i_max)
+    # now for each function f
+    for num_f, (f, la) in enumerate(zip(list_of_f, label_of_f)):
+        print("\n\nThe {}th function is referred to as {} and is {}".format(num_f, la, f))  # DEBUG
+
+        Ti = Ti_from_f(f)
+        c = colors[1 + num_f]
+        m = markers[1 + num_f]
+        plt.plot(Ts, Ti(i_s), label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
+    plt.legend()
+    plt.xlabel(r"Value of the time horizon $i = {},...,{}$".format(i_min, i_max))
+    plt.title(r"Comparison of the values of $T_i$")
+    plt.show()
+    return fig
+
+
+def plot_quality_first_upper_bound(
+        Tmin=10, Tmax=int(1e3), nbTs=50,
+        # gamma=0.5, delta=0.0, cste=1.0,  # bound in RT <= sqrt(T)
+        gamma=0.0, delta=1.0, cste=1.0,  # bound in RT <= log(T)
+        # gamma=0.5, delta=0.5, cste=1.0,  # bound in RT <= sqrt(T * log(T))
+        list_of_f=(
+            function_f__for_geometric_sequences,
+            function_f__for_exponential_sequences,
+            function_f__for_generic_sequences,
+            ),
+        label_of_f=(
+            "Geometric doubling",
+            "Exponential doubling",
+            "Intermediate doubling",
+            ),
+        show_Ti_m_Tim1=True,
+        *args, **kwargs,
+    ):
+    r""" Display a plot to compare numerically between the following sum :math:`S` and the upper-bound we hope to have, :math:`T^{\gamma} (\log T)^{\delta}`, as a function of :math:`T` for some values between :math:`T_{\min}` and :math:`T_{\max}`:
+
+    .. math:: S := \sum_{i=0}^{L_T} (T_i - T_{i-1})^{\gamma} (\log (T_i - T_{i-1}))^{\delta}.
+
+    - Can accept many functions f (and labels).
+    - Can use :math:`T_i` instead of :math:`T_i - T_{i-1}` if ``show_Ti_m_Tim1=False`` (default is to use the smaller possible bound, with difference of sequence lengths, :math:`T_i - T_{i-1}`).
+
+    .. warning:: This is still ON GOING WORK.
+    """
+    # Make unique markers
+    nb = 1 + len(list_of_f)
+    allmarkers = ['o', 'D', 'v', 'p', '<', 's', '^', '*', 'h', '>']
+    longlist = allmarkers * (1 + int(nb / float(len(allmarkers))))  # Cycle the good number of time
+    markers = longlist[:nb]  # Truncate
+    # Make unique colors
+    colors = sns.hls_palette(nb + 1)[:nb]
+
+    fig = plt.figure()
+    Ts = np.linspace(Tmin, Tmax, num=nbTs)
+    the_bound_we_want = cste * (Ts ** gamma) * (np.log(Ts) ** delta)
+    # FIXME after this first trial, plot the ratio of the sum by the bound, rather than plotting both
+    plt.plot(Ts, the_bound_we_want, label=r"$T^{\gamma} (\log T)^{\delta}$", lw=3, ms=5, color=colors[0], marker=markers[0])
+    # compute the sequence lengths to use, either T_i or T_i - T_{i-1}
+    Ts_for_f = np.copy(Ts)
+    if show_Ti_m_Tim1: Ts_for_f[1:] = np.diff(Ts)
+
+    # now for each function f
+    for num_f, (f, la) in enumerate(zip(list_of_f, label_of_f)):
+        print("\n\nThe {}th function is referred to as {} and is {}".format(num_f, la, f))  # DEBUG
+        Ti = Ti_from_f(f)
+        LT = last_term_operator_LT(Ti)
+        the_sum_we_have = np.zeros_like(Ts_for_f)
+        for j, (Tj, dTj) in enumerate(zip(Ts, Ts_for_f)):
+            LTj = LT(Tj)
+            the_sum_we_have[j] = sum(
+                cste * (dTj ** gamma) * (np.log(dTj) ** delta)
+                for i in range(0, LTj + 1)
+            )
+            print("For j = {}, Tj = {}, dTj = {}, gives LTj = {}, and the value of the sum from i=0 to LTj is = {}.".format(j, Tj, dTj, LTj, the_sum_we_have[j]))  # DEBUG
+        c = colors[1 + num_f]
+        m = markers[1 + num_f]
+        print("the_sum_we_have =", the_sum_we_have)  # DEBUG
+        plt.plot(Ts, the_sum_we_have, label=la, lw=3, ms=5, color=colors[1+num_f], marker=markers[1+num_f])
+
+    plt.legend()
+    plt.xlabel(r"Value of the time horizon $T = {},...,{}$".format(Tmin, Tmax))
+    plt.title(r"Comparison of the sum $\sum_{i=0}^{L_T} (T_i - T_{i-1})^{\gamma} (\log(T_i - T_{i-1}))^{\delta}$ and the upper-bound $T^{\gamma} \log(T)^{\delta}$, for $\gamma=%.3g$, $\delta=%.3g$." % (gamma, delta))
+    plt.show()
+    return fig
+
+
 # --- The interesting class
 
 class DoublingTrickWrapper(BasePolicy):
@@ -396,8 +577,12 @@ class DoublingTrickWrapper(BasePolicy):
 
 # # --- Debugging
 
+# if __name__ == "__main__":
+#     # Code for debugging purposes.
+#     from doctest import testmod
+#     print("\nTesting automatically all the docstring written in each functions of this module :")
+#     testmod(verbose=True)
+
 if __name__ == "__main__":
     # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)
+    plot_quality_first_upper_bound()
