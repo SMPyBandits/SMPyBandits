@@ -375,7 +375,7 @@ def plot_doubling_sequences(
             "Intermediate doubling (d=1/2, e=1/2)",
             "Exponential  doubling (d=1, e=0)",
             ),
-        *args, **kwargs,
+        *args, **kwargs
     ):
     r""" Display a plot to illustrate the values of the :math:`T_i` as a function of :math:`i` for some i.
 
