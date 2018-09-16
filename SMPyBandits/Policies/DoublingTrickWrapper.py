@@ -12,9 +12,9 @@ r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horiz
 
 .. note::
 
-   My guess is that this "doubling trick" wrapping policy can only be efficient if:
+   My guess is that this "doubling trick" wrapping policy can only be efficient (for stochastic problems) if:
 
-   - the underlying policy `P` is a very efficient horizon-dependent algorithm, e.g., the :class:`Policies.DoublingTrickWrapper`,
+   - the underlying policy `P` is a very efficient horizon-dependent algorithm, e.g., the :class:`Policies.ApproximatedFHGittins`,
    - the growth function `next_horizon` is growing faster than any geometric rate, so that the number of refresh is :math:`o(\log T)` and not :math:`O(\log T)`.
 
 .. seealso::
