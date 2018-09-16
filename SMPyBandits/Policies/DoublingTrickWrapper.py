@@ -431,7 +431,7 @@ def plot_quality_first_upper_bound(
             ),
         show_Ti_m_Tim1=True,
         # show_Ti_m_Tim1=False,  # DEBUG
-        *args, **kwargs,
+        *args, **kwargs
     ):
     r""" Display a plot to compare numerically between the following sum :math:`S` and the upper-bound we hope to have, :math:`T^{\gamma} (\log T)^{\delta}`, as a function of :math:`T` for some values between :math:`T_{\min}` and :math:`T_{\max}`:
 
