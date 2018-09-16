@@ -1,7 +1,7 @@
 # **Doubling Trick for Multi-Armed Bandits**
 I studied what [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) can and can't do for multi-armed bandits, to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
 
-The [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) algorithm, denoted $DT(A, (T_i))$ for a diverging increasing sequence $T_i$, is the following algorithm:
+The [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) algorithm, denoted DT(A, (Ti)) for a diverging increasing sequence Ti, is the following algorithm:
 
 ![Policies/DoublingTrick.py](plots/DoublingTrick_algo1.png)
 
