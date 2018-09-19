@@ -5,6 +5,8 @@ Defines one useful function :func:`notify()` to (try to) send a desktop notifica
 
 - Only tested on Ubuntu and Debian desktops.
 - Should work on any FreeDesktop compatible desktop, see https://wiki.ubuntu.com/NotifyOSD.
+
+.. warning:: Experimental support of Mac OS X has been added since #143 (https://github.com/SMPyBandits/SMPyBandits/issues/143).
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -70,9 +72,11 @@ except ImportError:
 
 
 # Define the first notify function, with gi.repository.Notify
-def notify_gi(body, summary=PROGRAM_NAME, icon="terminal",
-              timeout=5  # In seconds
-              ):
+def notify_gi(body,
+        summary=PROGRAM_NAME,
+        icon="terminal",
+        timeout=5  # In seconds
+    ):
     """ Send a notification, with gi.repository.Notify.
 
     - icon can be "dialog-information", "dialog-warn", "dialog-error".
@@ -109,26 +113,39 @@ def notify_gi(body, summary=PROGRAM_NAME, icon="terminal",
 
 
 # Define the second notify function, with a subprocess call to 'notify-send'
-def notify_cli(body, summary=PROGRAM_NAME, icon="terminal",
-               timeout=5  # In seconds
-               ):
+def notify_cli(body,
+        summary=PROGRAM_NAME,
+        icon="terminal",
+        timeout=5,  # In seconds,
+        gnulinux=True
+    ):
     """ Send a notification, with a subprocess call to 'notify-send'."""
     try:
         print("notify.notify(): Trying to use the command line program 'notify-send' ...")
         icon = join(getcwd(), icon)
-        Popen(["notify-send", "--expire-time=%s" % (timeout * 1000), "--icon=%s" % icon, summary, body])
-        print("notify.notify(): A notification have been sent, with summary = '%s', body = '%s', expire-time='%s' and icon='%s'." % (summary, body, timeout * 1000, icon))
+        if gnulinux:
+            Popen(["notify-send", "--expire-time=%s" % (timeout * 1000), "--icon=%s" % icon, summary, body])
+            print("notify.notify(): A notification have been sent, with summary = '%s', body = '%s', expire-time='%s' and icon='%s'." % (summary, body, timeout * 1000, icon))
+        else:
+            # Cf. https://superuser.com/a/345455
+            Popen(["osascript", "-e", "'tell Application \"Finder\" to display dialog \"%s\"'" % body])
+            print("notify.notify(): A notification have been sent, with body = '%s'." % body)
         return 0
     # Ugly! XXX Catches too general exception
     except Exception as e:
         print("\nnotify.notify(): notify-send : not-found ! Returned exception is %s." % e)
-        return -1
+        try:
+            return notify_cli(body, summary=summary, icon=icon, timeout=timeout, name_of_the_cli_program="terminal-notifier")
+        except Exception as e:
+            return -1
 
 
 # Define the unified notify.notify() function
-def notify(body, summary=PROGRAM_NAME, icon="terminal",
-           timeout=5  # In seconds
-           ):
+def notify(body,
+        summary=PROGRAM_NAME,
+        icon="terminal",
+        timeout=5  # In seconds
+    ):
     """ Send a notification, using one of the previously defined method, until it works. Usually it works."""
     # print("Notification: '{}', from '{}' with icon '{}'.".format(body, summary, icon))  # DEBUG
     if not has_Notify:
