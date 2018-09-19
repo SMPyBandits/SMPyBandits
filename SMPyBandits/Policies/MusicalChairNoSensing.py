@@ -22,7 +22,12 @@ except ImportError:
 
 # --- Utility functions
 
+#: A *crazy* large constant to get all the theoretical results working. The paper suggests :math:`C = 128`.
+#:
+#: .. warning:: One can choose a much smaller value in order to (try to) have reasonable empirical performances! I have tried :math:`C = 1`. *BUT* the algorithm DOES NOT work better with a much smaller constant: every single simulations I tried end up with a linear regret for :class:`MusicalChairNoSensing`.
 ConstantC = 128
+ConstantC = 10
+ConstantC = 1
 
 
 def parameter_g(K=9, m=3, T=1000):
@@ -177,7 +182,7 @@ class MusicalChairNoSensing(BasePolicy):
             # If the player is already sit, nothing to do
             self.state = State.Sitted  # We can stay sitted: no collision right after we sit
             # If we can choose this chair like this, it's because we were already sitted, without seeing a collision
-            print("\n- A MusicalChairNoSensing player chose arm {} because it's his chair, and time t = {} ...".format(self.chair, self.t))  # DEBUG
+            # print("\n- A MusicalChairNoSensing player chose arm {} because it's his chair, and time t = {} ...".format(self.chair, self.t))  # DEBUG
             return self.chair
         elif self.state == State.InitialPhase or self.state == State.UniformWaitPhase2:
             # Play as initial phase: choose a random arm, uniformly among all the K arms
@@ -188,7 +193,7 @@ class MusicalChairNoSensing(BasePolicy):
             # Play as musical chair: choose a random arm, among the M bests
             i = np.random.choice(self.A)  # Random arm among the M bests
             self.chair = i  # Assume that it would be a good chair
-            print("\n- A MusicalChairNoSensing player chose a random arm i={} among the {}-best arms in [1,...,{}] as it is in state MusicalChairNoSensing, and time t = {} ...".format(i, self.nbPlayers, self.nbArms, self.t))  # DEBUG
+            # print("\n- A MusicalChairNoSensing player chose a random arm i={} among the {}-best arms in [1,...,{}] as it is in state MusicalChairNoSensing, and time t = {} ...".format(i, self.nbPlayers, self.nbArms, self.t))  # DEBUG
             return i
         else:
             raise ValueError("MusicalChairNoSensing.choice() should never be in this case. Fix this code, quickly!")
@@ -198,7 +203,7 @@ class MusicalChairNoSensing(BasePolicy):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        print("- A MusicalChairNoSensing player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
+        # print("- A MusicalChairNoSensing player receive reward = {} on arm {}, in state {} and time t = {}...".format(reward, arm, self.state, self.t))  # DEBUG
         # If not collision, receive a reward after pulling the arm
         if self.state == State.InitialPhase:
             # Count the observation, update arm cumulated reward
@@ -208,11 +213,11 @@ class MusicalChairNoSensing(BasePolicy):
             # we sort the empirical means, and compare the m-th and (m+1)-th ones
             empiricalMeans = self.cumulatedRewards / self.nbObservations
             sortedMeans = np.sort(empiricalMeans)[::-1]  # XXX decreasing order!
-            print("Sorting empirical means… sortedMeans = {}".format(sortedMeans))  # DEBUG
+            # print("Sorting empirical means… sortedMeans = {}".format(sortedMeans))  # DEBUG
             gap_Mbest_Mworst = abs(sortedMeans[self.nbPlayers] - sortedMeans[self.nbPlayers + 1])
-            print("Gap between M-best and M-worst set (with M = {}) is {}, compared to {}...".format(self.nbPlayers, gap_Mbest_Mworst, self.constant_in_testing_the_gap / np.sqrt(self.t)))
+            # print("Gap between M-best and M-worst set (with M = {}) is {}, compared to {}...".format(self.nbPlayers, gap_Mbest_Mworst, self.constant_in_testing_the_gap / np.sqrt(self.t)))
             if gap_Mbest_Mworst >= self.constant_in_testing_the_gap / np.sqrt(self.t):
-                print("Gap was larger than the threshold, so this player switch to uniform phase 2!")
+                # print("Gap was larger than the threshold, so this player switch to uniform phase 2!")
                 self.state = State.UniformWaitPhase2
                 self.tau_phase_2 = self.t
 
@@ -226,7 +231,7 @@ class MusicalChairNoSensing(BasePolicy):
 
     def _endPhase2(self):
         """ Small computation needed at the end of the initial random exploration phase."""
-        print("\n- A MusicalChairNoSensing player has to switch from InitialPhase to MusicalChairNoSensing ...")  # DEBUG
+        # print("\n- A MusicalChairNoSensing player has to switch from InitialPhase to MusicalChairNoSensing ...")  # DEBUG
         self.state = State.MusicalChair  # Switch ONCE to phase 3
 
         # First, we compute the empirical means mu_i
