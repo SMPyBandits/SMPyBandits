@@ -116,8 +116,8 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tested.
-TEST_Doubling_Trick = True
 TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
+TEST_Doubling_Trick = True  # FIXME
 
 #: To know if my WrapRange policy is tested.
 TEST_WrapRange = True
@@ -208,8 +208,8 @@ configuration = {
     "random_invert": RANDOM_INVERT,
     "nb_random_events": NB_RANDOM_EVENTS,
     # --- Should we plot the lower-bounds or not?
-    # "plot_lowerbound": True,  # XXX Default
-    "plot_lowerbound": False,
+    "plot_lowerbound": True,  # XXX Default
+    # "plot_lowerbound": False,
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
     # --- Arms
@@ -873,7 +873,7 @@ configuration.update({
             "archtype": klUCBPlusPlus,
             "params": {
                 "horizon": HORIZON,
-                "klucb": klucb
+                "klucb": klucb,
             }
         },
         # # --- new klUCBswitch algorithm!
@@ -1238,17 +1238,35 @@ if TEST_Doubling_Trick:
             # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
             # UCBH,
             # MOSSH,
-            # klUCBPlusPlus,
-            ApproximatedFHGittins,
+            klUCBPlusPlus,
+            # ApproximatedFHGittins,
         ]
     # Just add the klUCB or UCB baseline
     configuration["policies"] = [
         {
-            # "archtype": klUCB,
             "archtype": UCB,
+            "params": {}
+        },
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": klUCBPlusPlus,
             "params": {
+                "horizon": HORIZON,
+                "klucb": klucb,
             }
-        }
+        },
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 0.5,
+                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+            }
+        },
     ]
     # Smart way of adding list of Doubling Trick versions
     for policy in POLICIES_FOR_DOUBLING_TRICK:
@@ -1287,13 +1305,21 @@ if TEST_Doubling_Trick:
                 # False,
             ]
             for next_horizon in [
-                # next_horizon__arithmetic,
-                next_horizon__geometric,
-                # next_horizon__exponential,
-                next_horizon__exponential_fast,
-                next_horizon__exponential_slow,
-                next_horizon__exponential_generic
+                Ti_exponential,
+                Ti_geometric,
+                Ti_intermediate_sqrti,
+                Ti_intermediate_i13,
+                Ti_intermediate_i23,
+                Ti_intermediate_i12_logi12,
             ]
+            # for next_horizon in [
+            #     # next_horizon__arithmetic,
+            #     next_horizon__geometric,
+            #     # next_horizon__exponential,
+            #     next_horizon__exponential_fast,
+            #     next_horizon__exponential_slow,
+            #     next_horizon__exponential_generic,
+            # ]
         ]
 
 
