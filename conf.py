@@ -123,15 +123,17 @@ source_suffix = ['.rst']
 
 # The recommonmark Sphinx extension adds support for Markdown files
 # https://github.com/rtfd/recommonmark (and it works very well)
+AutoStructify = None
+has_AutoStructify = False
 try:
     from recommonmark.parser import CommonMarkParser
-    from recommonmark.transform import AutoStructify
     source_parsers = {
         '.md': CommonMarkParser,  # README.md is the only concerned file
     }
     source_suffix = ['.rst', '.md']
+    from recommonmark.transform import AutoStructify
+    has_AutoStructify = False
 except ImportError:
-    AutoStructify = None
     print("recommonmark.parser.CommonMarkParser was not found.\nrecommonmark can be installed with 'pip install recommonmark' (from https://github.com/rtfd/recommonmark)")
 
 # The master toctree document.
@@ -275,7 +277,8 @@ html_static_path = ['_static']
 # It is placed at the top of the sidebar; its width should therefore not exceed 200 pixels. Default: None.
 html_logo = 'logo.png'
 
-if AutoStructify is not None:
+# Cf. https://recommonmark.readthedocs.io/en/latest/auto_structify.html#inline-math
+if has_AutoStructify and AutoStructify is not None:
     # At the bottom of conf.py
     def setup(app):
         app.add_config_value('recommonmark_config', {
