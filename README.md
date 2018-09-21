@@ -3,6 +3,8 @@
 
 <img width="50%" src="logo_large.png" align="right"/>
 
+[![Build Status](https://travis-ci.org/guilgautier/SMPyBandits.svg?branch=master)](https://travis-ci.org/guilgautier/SMPyBandits)
+
 This repository contains the code of [Lilian Besson's](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
 A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
