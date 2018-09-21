@@ -133,9 +133,9 @@ def notify_cli(body,
         return 0
     # Ugly! XXX Catches too general exception
     except Exception as e:
-        print("\nnotify.notify(): notify-send : not-found ! Returned exception is %s." % e)
+        print("\nnotify.notify(): %s : not-found ! Returned exception is %s." % ("notify-send" if gnulinux else "osascript", e))
         try:
-            return notify_cli(body, summary=summary, icon=icon, timeout=timeout, name_of_the_cli_program="terminal-notifier")
+            return notify_cli(body, summary=summary, icon=icon, timeout=timeout, gnulinux=False)
         except Exception as e:
             return -1
 

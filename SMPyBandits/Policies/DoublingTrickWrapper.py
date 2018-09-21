@@ -334,6 +334,55 @@ def Ti_from_f(f, alpha=alpha_for_Ti, *args, **kwargs):
     return Ti
 
 
+def Ti_geometric(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_geometric_sequences`."""
+    f = function_f__for_geometric_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_geometric.__latex_name__                 = r"$f(i)=\log(i)$"
+
+def Ti_exponential(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_exponential_sequences`."""
+    f = function_f__for_exponential_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_exponential.__latex_name__             = r"$f(i)=i$"
+
+def Ti_intermediate_sqrti(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate_sequences`."""
+    f = function_f__for_intermediate_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_intermediate_sqrti.__latex_name__      = r"$f(i)=\sqrt{i}$"
+
+def Ti_intermediate_i13(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate2_sequences`."""
+    f = function_f__for_intermediate2_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_intermediate_i13.__latex_name__        = r"$f(i)=i^{1/3}$"
+
+def Ti_intermediate_i23(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate3_sequences`."""
+    f = function_f__for_intermediate3_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_intermediate_i23.__latex_name__        = r"$f(i)=i^{2/3}$"
+
+def Ti_intermediate_i12_logi12(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate4_sequences`."""
+    f = function_f__for_intermediate4_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_intermediate_i12_logi12.__latex_name__ = r"$f(i)=\sqrt{i \log(i)}$"
+
+
 def last_term_operator_LT(Ti, max_i=10000):
     r""" For a certain function representing a doubling sequence, :math:`T: i \mapsto T_i`, this :func:`last_term_operator_LT` function returns the function :math:`L: T \mapsto L_T`, defined as:
 
@@ -487,6 +536,10 @@ def plot_quality_first_upper_bound(
 
 # --- The interesting class
 
+#: If the sequence Ti does not grow enough, artificially increase i until T_inext > T_i
+MAX_NB_OF_TRIALS = 500
+
+
 class DoublingTrickWrapper(BasePolicy):
     r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick".
 
@@ -558,6 +611,13 @@ class DoublingTrickWrapper(BasePolicy):
         if self.t > self.horizon:
             self._i += 1
             new_horizon = self._next_horizon(self._i, self.horizon)
+            # XXX <!-- small hack if the sequence is not growing fast enough
+            nb_of_trials = 1
+            while nb_of_trials < MAX_NB_OF_TRIALS and new_horizon <= self.horizon:
+                self._i += 1
+                nb_of_trials += 1
+                new_horizon = self._next_horizon(self._i, self.horizon)
+            # XXX end of small hack -->
             assert new_horizon > self.horizon, "Error: the new_horizon = {} is not > the current horizon = {} ...".format(new_horizon, self.horizon)  # DEBUG
             # print("  - At time t = {}, a DoublingTrickWrapper class was running with current horizon T_i = {} and decided to use {} as a new horizon...".format(self.t, self.horizon, new_horizon))  # DEBUG
             self.horizon = new_horizon
