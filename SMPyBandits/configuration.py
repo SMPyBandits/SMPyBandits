@@ -1238,8 +1238,8 @@ if TEST_Doubling_Trick:
             # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
             # UCBH,
             # MOSSH,
-            klUCBPlusPlus,
-            # ApproximatedFHGittins,
+            # klUCBPlusPlus,
+            ApproximatedFHGittins,
         ]
     # Just add the klUCB or UCB baseline
     configuration["policies"] = [
@@ -1259,14 +1259,14 @@ if TEST_Doubling_Trick:
                 "klucb": klucb,
             }
         },
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 0.5,
-                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-            }
-        },
+        # # --- Horizon-dependent algorithm ApproximatedFHGittins
+        # {
+        #     "archtype": ApproximatedFHGittins,
+        #     "params": {
+        #         "alpha": 0.5,
+        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+        #     }
+        # },
     ]
     # Smart way of adding list of Doubling Trick versions
     for policy in POLICIES_FOR_DOUBLING_TRICK:
