@@ -4,23 +4,23 @@
 
 ## Idea
 
-The basic idea of a policy aggregation algorithm is to run in parallel some online learning algorithms, denoted `A_1`,...,`A_N` (`A_i`), and make them all vote at each step, and use some probabilistic scheme to select a decision from their votes.
+The basic idea of a policy aggregation algorithm is to run in parallel some online learning algorithms, denoted `$A_1,\ldots,A_N$` (`$A_i$`), and make them all vote at each step, and use some probabilistic scheme to select a decision from their votes.
 
-Hopefully, if all the algorithms `A_i` are not too bad and at least one of them is efficient for the problem at hand, the aggregation algorithm will learn to mainly trust the efficient one(s) and discard the votes from the others.
-An efficient aggregation algorithm should have performances similar to the best child algorithm `A_i`, in any problem.
+Hopefully, if all the algorithms `$A_i$` are not too bad and at least one of them is efficient for the problem at hand, the aggregation algorithm will learn to mainly trust the efficient one(s) and discard the votes from the others.
+An efficient aggregation algorithm should have performances similar to the best child algorithm `$A_i$`, in any problem.
 
 The [Exp4 algorithm](http://sbubeck.com/SurveyBCB12.pdf) by [Auer et al, 2002] is the first aggregation algorithm for online bandit algorithms, and recently other algorithms include [LearnExp](SMPyBandits/Policies/LearnExp.py) ([[Singla et al, 2017](https://arxiv.org/abs/1702.04825)]) and [CORRAL](SMPyBandits/Policies/CORRAL.py) ([[Agarwal et al, 2017](https://arxiv.org/abs/1612.06246v2)]).
 
 ---
 
 ### Mathematical explanations
-Initially, every child algorithms `A_i` has the same "trust" probability `p_i`, and at every step, the aggregated bandit first listen to the decision from all its children `A_i` (`a_{i,t}` in `1 .. K`), and then decide which arm to select by a probabilistic vote: the probability of selecting arm `k` is the sum of the trust probability of the children who voted for arm `k`.
+Initially, every child algorithms `$A_i$` has the same "trust" probability `$p_i$`, and at every step, the aggregated bandit first listen to the decision from all its children `$A_i$` (`$a_{i,t}$` in `$\{1,\ldots,K\}`), and then decide which arm to select by a probabilistic vote: the probability of selecting arm `$k$` is the sum of the trust probability of the children who voted for arm `$k$`.
 It could also be done the other way: the aggregated bandit could first decide which children to listen to, then trust him.
 
 But we want to update the trust probability of all the children algorithms, not only one, when it was wised to trust them.
-Mathematically, when the aggregated arm choose to pull the arm `k` at step `t`, if it yielded a positive reward `r_{k,t}`, then the probability of all children algorithms `A_i` who decided (independently) to chose `k` (i.e., `a_{i,t} = k`) are increased multiplicatively: `p_i <- p_i * exp(+ beta * r_{k,t})` where `beta` is a positive *learning rate*, e.g., `beta = 0.1`.
+Mathematically, when the aggregated arm choose to pull the arm `$k$` at step `$t$`, if it yielded a positive reward `$r_{k,t}$`, then the probability of all children algorithms `$A_i$` who decided (independently) to chose `$k$` (i.e., `a_{i,t} = k`) are increased multiplicatively: `$p_i \leftarrow p_i * \exp(+ \beta * r_{k,t})$` where `$\beta$` is a positive *learning rate*, e.g., `$\beta = 0.1$`.
 
-It is also possible to decrease multiplicatively the trust of all the children algorithms who did not decided to chose the arm `k` at every step `t`: if `a_{i,t} != k` then `p_i <- p_i * exp(- beta * r_{k,t})`. I did not observe any difference of behavior between these two options (implemented with the Boolean parameter `updateAllChildren`).
+It is also possible to decrease multiplicatively the trust of all the children algorithms who did not decided to chose the arm `$k$` at every step `$t$`: if `$a_{i,t} \neq k$` then `$p_i \leftarrow p_i * \exp(- \beta * r_{k,t})$`. I did not observe any difference of behavior between these two options (implemented with the Boolean parameter `updateAllChildren`).
 
 ### Ensemble voting for MAB algorithms
 This algorithm can be seen as the Multi-Armed Bandits (i.e., sequential reinforcement learning) counterpart of an *ensemble voting* technique, as used for classifiers or regression algorithm in usual supervised machine learning (see, e.g., [`sklearn.ensemble.VotingClassifier`](http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html#sklearn.ensemble.VotingClassifier) in [scikit-learn](http://scikit-learn.org/)).
@@ -77,7 +77,7 @@ configuration["policies"] = current_policies +
     }]
 ```
 
-The learning rate can be tuned automatically, by using the heuristic proposed by [[Bubeck and Cesa-Bianchi](http://sbubeck.com/SurveyBCB12.pdf), Theorem 4.2], without knowledge of the horizon, a decreasing learning rate `\eta_t = sqrt(log(N) / (t * K))`.
+The learning rate can be tuned automatically, by using the heuristic proposed by [[Bubeck and Cesa-Bianchi](http://sbubeck.com/SurveyBCB12.pdf), Theorem 4.2], without knowledge of the horizon, a decreasing learning rate `$\eta_t = \sqrt(\frac{\log(N)}{t * K})$`.
 
 ----
 

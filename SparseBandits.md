@@ -76,9 +76,7 @@ Here are some plots illustrating the performances of the different [policies](SM
 
 FIXME run some simulations and explain them!
 
-
-
-> These illustrations come from my article, [[Structure and Sparsity of Stochastic Multi-Arm Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX).
+> These illustrations come from my (work in progress) article, [[Structure and Sparsity of Stochastic Multi-Arm Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-XXX).
 
 
 ----

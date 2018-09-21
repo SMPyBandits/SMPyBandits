@@ -111,7 +111,7 @@ class MyPolicy(object):
 
 ----
 
-### For a **new multi-users policy** - FIXME finish this doc
+### For a **new multi-users policy**
 1. Make a new file, e.g., `MyPolicyMultiPlayers.py`
 2. Save it in [`PoliciesMultiPlayers/`](PoliciesMultiPlayers/)
 3. The file should contain a class, of the same name, e.g., like this, `class MyPoliciesMultiPlayers(object):`

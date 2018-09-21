@@ -5,15 +5,15 @@
 
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play *against each other*, in a multi-player setting.
 
-The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
+The basic difference is about **collisions** : at each time `$t$`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
 ### Collision models
 For example, I implemented these different collision models, in [`CollisionModels.py`](SMPyBandits/Environment/CollisionModels.py):
 
- - `noCollision` is a limited model *where* all players can sample an arm with collision. It corresponds to the single-player simulation: each player is a policy, compared without collision. This is for testing only, not so interesting.
- - `onlyUniqUserGetsReward` is a simple collision model where only the players alone on one arm sample it and receive the reward. This is the default collision model in the literature, for instance cf. [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3) collision model 1 or cf [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3). [Our article](https://hal.inria.fr/hal-01629733) also focusses on this model.
- - `rewardIsSharedUniformly` is similar: the players alone on one arm sample it and receive the reward, and in case of more than one player on one arm, only one player (uniform choice, chosen by the base station) can sample it and receive the reward.
- - `closerUserGetsReward` is similar but uses another approach to chose who can emit. Instead of randomly choosing the lucky player, it uses a given (or random) vector indicating the *distance* of each player to the base station (it can also indicate the quality of the communication), and when two (or more) players are colliding, only the one who is closer to the base station can transmit. It is the more physically plausible.
+- `noCollision` is a limited model *where* all players can sample an arm with collision. It corresponds to the single-player simulation: each player is a policy, compared without collision. This is for testing only, not so interesting.
+- `onlyUniqUserGetsReward` is a simple collision model where only the players alone on one arm sample it and receive the reward. This is the default collision model in the literature, for instance cf. [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3) collision model 1 or cf [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3). [Our article](https://hal.inria.fr/hal-01629733) also focusses on this model.
+- `rewardIsSharedUniformly` is similar: the players alone on one arm sample it and receive the reward, and in case of more than one player on one arm, only one player (uniform choice, chosen by the base station) can sample it and receive the reward.
+- `closerUserGetsReward` is similar but uses another approach to chose who can emit. Instead of randomly choosing the lucky player, it uses a given (or random) vector indicating the *distance* of each player to the base station (it can also indicate the quality of the communication), and when two (or more) players are colliding, only the one who is closer to the base station can transmit. It is the more physically plausible.
 
 ----
 
@@ -55,35 +55,35 @@ configuration["successive_players"] = [
 
 ![plots/MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized____env1-1_8318947830261751207.png](plots/MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized____env1-1_8318947830261751207.png)
 
-> Figure 1 : Regret, M=6 players, K=9 arms, horizon T=5000, against 500 problems µ uniformly sampled in [0,1]^K. rhoRand (top blue curve) is outperformed by the other algorithms (and the gain increases with M). MCTopM (bottom yellow) outperforms all the other algorithms is most cases.
+> Figure 1 : Regret, `$M=6$` players, `$K=9$` arms, horizon `$T=5000$`, against `$500$` problems `$\mu$` uniformly sampled in `$[0,1]^K$`. rhoRand (top blue curve) is outperformed by the other algorithms (and the gain increases with `$M$`). MCTopM (bottom yellow) outperforms all the other algorithms is most cases.
 
 ![plots/MP__K9_M6_T10000_N1000__4_algos__all_RegretCentralized_loglog____env1-1_8200873569864822246.png](plots/MP__K9_M6_T10000_N1000__4_algos__all_RegretCentralized_loglog____env1-1_8200873569864822246.png)
 ![plots/MP__K9_M6_T10000_N1000__4_algos__all_HistogramsRegret____env1-1_8200873569864822246.png](plots/MP__K9_M6_T10000_N1000__4_algos__all_HistogramsRegret____env1-1_8200873569864822246.png)
 
 
-> Figure 2 : Regret (in loglog scale), for M=6 players for K=9 arms, horizon T=5000, for 1000 repetitions on problem µ=[0.1,…,0.9]. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The x axis on the regret histograms have different scale for each algorithm.
+> Figure 2 : Regret (in loglog scale), for `$M=6$` players for `$K=9$` arms, horizon `$T=5000$`, for `$1000$` repetitions on problem `$\mu=[0.1,\ldots,0.9]$`. RandTopM (yellow curve) outperforms Selfish (green), both clearly outperform rhoRand. The regret of MCTopM is logarithmic, empirically with the same slope as the lower bound. The `$x$` axis on the regret histograms have different scale for each algorithm.
 
 
 [plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png](plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png)
 
-> Figure 3 : Regret (in logy scale) for M=3 players for K=9 arms, horizon T=123456, for 100 repetitions on problem µ=[0.1,…,0.9]. With the parameters from their respective article, MEGA and MusicalChair fail completely, even with knowing the horizon for MusicalChair.
+> Figure 3 : Regret (in logy scale) for `$M=3`$ players for `$K=9`$ arms, horizon `$T=123456`$, for `$100`$ repetitions on problem `$\mu=[0.1,\ldots,0.9]`$. With the parameters from their respective article, MEGA and MusicalChair fail completely, even with knowing the horizon for MusicalChair.
 
 > These illustrations come from my article, [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 
 ----
 
 ### Fairness vs. unfairness
-For a multi-player policy, being fair means that on *every* simulation with `M` players, each player access any of the `M` best arms (about) the same amount of time.
+For a multi-player policy, being fair means that on *every* simulation with `$M$` players, each player access any of the `$M$` best arms (about) the same amount of time.
 It is important to highlight that it has to be verified on each run of the MP policy, having this property in average is NOT enough.
 
-- For instance, the oracle policy [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py) affects each of the `M` players to one of the `M` best arms, orthogonally, but once they are affected they always pull this arm. It's unfair because one player will be lucky and affected to the best arm, the others are unlucky. The centralized regret is optimal (null, in average), but it is not fair.
-- And the other oracle policy [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) affects an offset to each of the `M` players corresponding to one of the `M` best arms, orthogonally, and once they are affected they will cycle among the best `M` arms. It's fair because every player will pull the `M` best arms an equal number of time. And the centralized regret is also optimal (null, in average).
+- For instance, the oracle policy [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py) affects each of the `$M$` players to one of the `$M$` best arms, orthogonally, but once they are affected they always pull this arm. It's unfair because one player will be lucky and affected to the best arm, the others are unlucky. The centralized regret is optimal (null, in average), but it is not fair.
+- And the other oracle policy [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) affects an offset to each of the `$M$` players corresponding to one of the `$M$` best arms, orthogonally, and once they are affected they will cycle among the best `$M$` arms. It's fair because every player will pull the `$M$` best arms an equal number of time. And the centralized regret is also optimal (null, in average).
 
-- Usually, the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `M` best arms.
+- Usually, the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `$M$` best arms.
 
-- Conversely, the [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `M` best arms.
+- Conversely, the [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `$M$` best arms.
 
-- The [`MEGA`](SMPyBandits/Policies/MEGA.py) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `M` best arms equally.
+- The [`MEGA`](SMPyBandits/Policies/MEGA.py) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `$M$` best arms equally.
 
 - The [`rhoRand`](SMPyBandits/PoliciesMultiPlayers/rhoRand.py) policy is not designed to be fair for every run, but it is fair in average.
 - Similarly for our algorithms `RandTopM` and `MCTopM`, defined in [`RandTopM`](SMPyBandits/PoliciesMultiPlayers/RandTopM.py).

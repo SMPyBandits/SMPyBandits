@@ -60,7 +60,7 @@ The paper can be consulted [here on my website](https://perso.crans.org/besson/a
 I designed and added the [`Aggregator`](SMPyBandits/Policies/Aggregator.py) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
-Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
+Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `$A_1,\ldots, A_N$`, each running in "parallel".
 
 > **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md) and [this research article](https://hal.inria.fr/hal-01705292).
 
@@ -68,14 +68,14 @@ Basically, it behaves like a simple MAB bandit just based on empirical means (ev
 
 ### 2nd article, using [**Multi-players simulation environment**](MultiPlayers.md)
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
-The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
+The basic difference is about **collisions** : at each time `$t$`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view. The simpler collision model implies that each colliding user get a `$0$` reward instead of the actual reward.
 
 > **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md) and [this research article](https://hal.inria.fr/hal-01629733).
 
 ----
 
 ### 3rd article, using [**Doubling Trick for Multi-Armed Bandits**](DoublingTrick.md)
-I studied what Doubling Trick can and can't do to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms.
+I studied what Doubling Trick can and can't do to obtain efficient anytime version of non-anytime optimal Multi-Armed Bandits algorithms. It's an interesting work, go check it out!
 
 > **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this research article](https://hal.inria.fr/hal-01736357).
 

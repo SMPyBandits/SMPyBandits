@@ -125,11 +125,13 @@ source_suffix = ['.rst']
 # https://github.com/rtfd/recommonmark (and it works very well)
 try:
     from recommonmark.parser import CommonMarkParser
+    from recommonmark.transform import AutoStructify
     source_parsers = {
         '.md': CommonMarkParser,  # README.md is the only concerned file
     }
     source_suffix = ['.rst', '.md']
 except ImportError:
+    AutoStructify = None
     print("recommonmark.parser.CommonMarkParser was not found.\nrecommonmark can be installed with 'pip install recommonmark' (from https://github.com/rtfd/recommonmark)")
 
 # The master toctree document.
@@ -272,3 +274,14 @@ html_static_path = ['_static']
 # (path relative to the configuration directory) that is the logo of the docs.
 # It is placed at the top of the sidebar; its width should therefore not exceed 200 pixels. Default: None.
 html_logo = 'logo.png'
+
+if AutoStructify is not None:
+    # At the bottom of conf.py
+    def setup(app):
+        app.add_config_value('recommonmark_config', {
+                # 'url_resolver': lambda url: github_doc_root + url,
+                # 'auto_toc_tree_section': 'Contents',
+                'enable_math': True,
+                'enable_inline_math': True,
+            }, True)
+        app.add_transform(AutoStructify)
