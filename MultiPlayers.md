@@ -66,7 +66,7 @@ configuration["successive_players"] = [
 
 [plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png](plots/MP__K9_M3_T123456_N100__8_algos__all_RegretCentralized_semilogy____env1-1_7803645526012310577.png)
 
-> Figure 3 : Regret (in logy scale) for `$M=3`$ players for `$K=9`$ arms, horizon `$T=123456`$, for `$100`$ repetitions on problem `$\mu=[0.1,\ldots,0.9]`$. With the parameters from their respective article, MEGA and MusicalChair fail completely, even with knowing the horizon for MusicalChair.
+> Figure 3 : Regret (in logy scale) for `$M=3$` players for `$K=9$` arms, horizon `$T=123456$`, for `$100$` repetitions on problem `$\mu=[0.1,\ldots,0.9]$`. With the parameters from their respective article, MEGA and MusicalChair fail completely, even with knowing the horizon for MusicalChair.
 
 > These illustrations come from my article, [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
 

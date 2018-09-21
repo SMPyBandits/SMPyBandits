@@ -8,12 +8,12 @@ The [Doubling Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) algorithm, de
 Long story short, we proved the two following theorems.
 
 ### For geometric sequences
-> It works for minimax regret bounds (in `$R_T = \mathcal{O}(\sqrt(T)))$`, with a constant multiplicative loss `$\leq 4$, but not for logarithmic regret bounds (in `$R_T = \mathcal{O}(\log(T)))$`.
+> It works for minimax regret bounds (in `$R_T = \mathcal{O}(\sqrt{T}))$`, with a constant multiplicative loss `$\leq 4$`, but not for logarithmic regret bounds (in `$R_T = \mathcal{O}(\log T))$`.
 
 ![https://hal.inria.fr/hal-01736357](plots/DoublingTrick_theorem1.png)
 
 ### For exponential sequences
-> It works for logarithmic regret bounds (in `$R_T = \mathcal{O}(\log(T)))$`, but not for minimax regret bounds (in `$R_T = \mathcal{O}(\sqrt(T)))$`.
+> It works for logarithmic regret bounds (in `$R_T = \mathcal{O}(\log T))$`, but not for minimax regret bounds (in `$R_T = \mathcal{O}(\sqrt{T}))$`.
 
 ![https://hal.inria.fr/hal-01736357](plots/DoublingTrick_theorem2.png)
 
@@ -94,8 +94,8 @@ Here are some plots illustrating the performances of the different [policies](SM
 
 Regret for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py), for `$K=9$` [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py), horizon `$T=45678$`, `$n=1000$` repetitions and `$\mu_1,\ldots,\mu_K$` taken uniformly in `$[0,1]^K$`.
 Geometric doubling (`$b=2$`) and slow exponential doubling (`$b=1.1$`) are too slow, and short first sequences make the regret blow up in the beginning of the experiment.
-At `$t=40000$` we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (`$T_i = 200 x 2^i$`).
-As expected, [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) outperforms [kl-UCB](SMPyBandits/Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py)(SMPyBandits/[kl-UCB++](Policies/klUCBPlusPlus.py)) can perform as well as [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) (see for `$t < 40000$`).
+At `$t=40000$` we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (`$T_i = 200 \times 2^i$`).
+As expected, [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) outperforms [kl-UCB](SMPyBandits/Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py)([kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py)) can perform as well as [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) (see for `$t < 40000$`).
 
 ### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with restart, on randomly taken Bernoulli problems
 ![Doubling-Trick with restart, on randomly taken Bernoulli problems](plots/main____env1-1_3633169128724378553.png)
@@ -116,7 +116,7 @@ As before we check that geometric doubling (`$b=2$`) and slow exponential doubli
 ![Doubling-Trick with restart, on an easy Gaussian problems with variance V=1](plots/main____env1-1_6979515539977716717.png)
 
 Regret for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py), for `$K=9$` [Gaussian arms](SMPyBandits/Arms/Gaussian.py) `$\mathcal{N}(\mu, 1)$`, horizon `$T=45678$`, `$n=1000$` repetitions and `$\mu_1,\ldots,\mu_K$` uniformly spaced in `$[-5,5]^K$`.
-On "easy" problems like this one, both [UCB](SMPyBandits/Policies/UCB.py) and [AFHG](SMPyBandits/Policies/ApproximatedFHGittins.py) perform similarly and attain near constant regret (SMPyBandits/identifying the best [Gaussian arm](Arms/Gaussian.py) is very easy here as they are sufficiently distinct).
+On "easy" problems like this one, both [UCB](SMPyBandits/Policies/UCB.py) and [AFHG](SMPyBandits/Policies/ApproximatedFHGittins.py) perform similarly and attain near constant regret (identifying the best [Gaussian arm](SMPyBandits/Arms/Gaussian.py) is very easy here as they are sufficiently distinct).
 Each [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) also appear to attain near constant regret, but geometric doubling (`$b=2$`) and slow exponential doubling (`$b=1.1$`) are slower to converge and thus less efficient.
 
 
@@ -125,7 +125,7 @@ Each [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) also appear 
 
 Regret for `$K=9$` [Bernoulli arms](SMPyBandits/Arms/Bernoulli.py), horizon `$T=45678$`, `$n=1000$` repetitions and `$\mu_1,\ldots,\mu_K$` taken uniformly in `$[0,1]^K$`, for [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart.
 Geometric doubling (\eg, `$b=2$`) and slow exponential doubling (\eg, `$b=1.1$`) are too slow, and short first sequences make the regret blow up in the beginning of the experiment.
-At `$t=40000$` we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (`$T_i = 200 x 2^i$`).
+At `$t=40000$` we see clearly the effect of a new sequence for the best [doubling trick](SMPyBandits/Policies/DoublingTrickWrapper.py) (`$T_i = 200 \times 2^i$`).
 As expected, [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) outperforms [kl-UCB](SMPyBandits/Policies/klUCB.py), and if the doubling sequence is growing fast enough then [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) no-restart for [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py) can perform as well as [kl-UCB++](SMPyBandits/Policies/klUCBPlusPlus.py).
 
 ### [Doubling-Trick](SMPyBandits/Policies/DoublingTrickWrapper.py) with no restart, on an "simple" Bernoulli problems
