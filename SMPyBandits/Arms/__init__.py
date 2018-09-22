@@ -2,16 +2,16 @@
 """ Arms : contains different types of bandit arms:
 :class:`Constant`, :class:`UniformArm`, :class:`Bernoulli`, :class:`Binomial`, :class:`Poisson`, :class:`Gaussian`, :class:`Exponential`, :class:`Gamma`, :class:`DiscreteArm`.
 
-Each arm class follows the same interface:
+Each arm class follows the same interface::
 
->>> my_arm = Arm(params)  #: doctest: +SKIP
->>> my_arm.mean  #: doctest: +SKIP
-0.5
->>> my_arm.draw()  # one random draw  #: doctest: +SKIP
-0.0
->>> my_arm.draw_nparray(20)  # or ((3, 10)), many draw  #: doctest: +SKIP
-array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
-        1.,  0.,  0.,  0.,  1.,  1.,  1.])
+    > my_arm = Arm(params)
+    > my_arm.mean
+    0.5
+    > my_arm.draw()  # one random draw
+    0.0
+    > my_arm.draw_nparray(20)  # or ((3, 10)), many draw
+    array([ 0.,  1.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  0.,  1.,  0.,  0.,
+            1.,  0.,  0.,  0.,  1.,  1.,  1.])
 
 
 Also contains:
@@ -89,11 +89,11 @@ def uniformMeans(nbArms=3, delta=0.05, lower=0., amplitude=1., isSorted=True):
     - and there is nbArms arms.
 
     >>> np.array(uniformMeans(2, 0.1))
-    array([ 0.1,  0.9])
+    array([0.1, 0.9])
     >>> np.array(uniformMeans(3, 0.1))
-    array([ 0.1,  0.5,  0.9])
+    array([0.1, 0.5, 0.9])
     >>> np.array(uniformMeans(9, 1 / (1. + 9)))
-    array([ 0.1,  0.2,  0.3,  0.4,  0.5,  0.6,  0.7,  0.8,  0.9])
+    array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
     assert amplitude > 0, "Error: 'amplitude' = {:.3g} has to be > 0.".format(amplitude)  # DEBUG
@@ -148,15 +148,15 @@ def randomMeans(nbArms=3, mingap=None, lower=0., amplitude=1., isSorted=True):
     >>> import numpy as np; np.random.seed(1234)  # reproducible results
     >>> randomMeans(nbArms=3, mingap=0.05)  # doctest: +ELLIPSIS
     [0.191..., 0.437..., 0.622...]
-    >>> randomMeans(nbArms=3, mingap=0.1)  # doctest: +ELLIPSIS
+    >>> randomMeans(nbArms=3, mingap=0.01)  # doctest: +ELLIPSIS
     [0.276..., 0.801..., 0.958...]
 
     - Means are sorted, except if ``isSorted=False``.
 
     >>> import random; random.seed(1234)  # reproducible results
-    >>> randomMeans(nbArms=5, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+    >>> randomMeans(nbArms=5, mingap=0.01, isSorted=True)  # doctest: +ELLIPSIS
     [0.006..., 0.229..., 0.416..., 0.535..., 0.899...]
-    >>> randomMeans(nbArms=5, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+    >>> randomMeans(nbArms=5, mingap=0.01, isSorted=False)  # doctest: +ELLIPSIS
     [0.419..., 0.932..., 0.072..., 0.755..., 0.650...]
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
@@ -206,15 +206,15 @@ def randomMeansWithSparsity(nbArms=10, sparsity=3, mingap=0.01, delta=0.05, lowe
     >>> import numpy as np; np.random.seed(1234)  # reproducible results
     >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
-    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.01)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
 
     - Means are sorted, except if ``isSorted=False``.
 
     >>> import random; random.seed(1234)  # reproducible results
-    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.01, isSorted=True)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
-    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity(nbArms=6, sparsity=2, mingap=0.01, isSorted=False)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
@@ -255,15 +255,15 @@ def randomMeansWithSparsity2(nbArms=10, sparsity=3, mingap=0.01, lower=-1.0, low
     >>> import numpy as np; np.random.seed(1234)  # reproducible results
     >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.05)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.595..., 0.811...]
-    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.01)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.718..., 0.892...]
 
     - Means are sorted, except if ``isSorted=False``.
 
     >>> import random; random.seed(1234)  # reproducible results
-    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=True)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.01, isSorted=True)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.0, 0.0, 0.636..., 0.889...]
-    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.1, isSorted=False)  # doctest: +ELLIPSIS
+    >>> randomMeansWithSparsity2(nbArms=6, sparsity=2, mingap=0.01, isSorted=False)  # doctest: +ELLIPSIS
     [0.0, 0.0, 0.900..., 0.638..., 0.0, 0.0]
     """
     assert nbArms >= 1, "Error: 'nbArms' = {} has to be >= 1.".format(nbArms)  # DEBUG
@@ -298,11 +298,11 @@ def array_from_str(my_str):
     """Convert a string like "[0.1, 0.2, 0.3]" to a numpy array `[0.1, 0.2, 0.3]`, using safe `json.loads` instead of `exec`.
 
     >>> array_from_str("[0.1, 0.2, 0.3]")
-    array([ 0.1,  0.2,  0.3])
+    array([0.1,  0.2,  0.3])
     >>> array_from_str("0.1, 0.2, 0.3")
-    array([ 0.1,  0.2,  0.3])
+    array([0.1,  0.2,  0.3])
     >>> array_from_str("0.9")
-    array(0.9)
+    array([0.9])
     """
     # print("array_from_str called with my_str =", my_str)  # DEBUG
     if my_str is None or isinstance(my_str, np.ndarray):
@@ -378,16 +378,16 @@ def optimal_selection_probabilities(M, mu):
     Example:
 
     >>> optimal_selection_probabilities(3, [0.1,0.1,0.1])
-    array([ 0.33333333,  0.33333333,  0.33333333])
+    array([0.33333333,  0.33333333,  0.33333333])
 
     >>> optimal_selection_probabilities(3, [0.1,0.2,0.3])  # weird ? not really...
-    array([ 0.        ,  0.43055556,  0.56944444])
+    array([0.        ,  0.43055556,  0.56944444])
 
     >>> optimal_selection_probabilities(3, [0.1,0.3,0.9])  # weird ? not really...
-    array([ 0.        ,  0.45061728,  0.54938272])
+    array([0.        ,  0.45061728,  0.54938272])
 
     >>> optimal_selection_probabilities(3, [0.7,0.8,0.9])
-    array([ 0.15631866,  0.35405647,  0.48962487])
+    array([0.15631866,  0.35405647,  0.48962487])
 
     .. note:: These results may sound counter-intuitive, but again they use a different collision models: in my usual collision model, it makes no sense to completely drop an arm when K=M=3, no matter the probabilities :math:`\mu_i`, but in their collision model, a player wins more (in average) if she has a :math:`50\%` chance of being alone on an arm with mean :math:`0.3` than if she is sure to be alone on an arm with mean :math:`0.1` (see examples 3 and 4).
     """

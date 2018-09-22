@@ -7,7 +7,7 @@ Example of creating an arm:
 >>> random.seed(0); np.random.seed(0)
 >>> D3values = DiscreteArm({-1: 0.25, 0: 0.5, 1: 0.25})
 >>> D3values
-DiscreteArm({-1: 0.25, 0: 0.5, 1: 0.25})
+D({-1: 0.25, 0: 0.5, 1: 0.25})
 >>> D3values.mean
 0.0
 
@@ -23,7 +23,7 @@ array([ 0,  0,  0,  0,  0,  0,  1,  1,  0,  1,  0,  0,  1, -1, -1, -1,  1,
 
 >>> D5values = DiscreteArm({-1000: 0.001, 0: 0.5, 1: 0.25, 2:0.25, 1000: 0.001})
 >>> D5values
-DiscreteArm({-1000: 0.001, 0: 0.5, 1: 0.25, 2:0.25, 1000: 0.001})
+D({-1000: 0.001, 0: 0.5, 1: 0.25, 2:0.25, 1000: 0.001})
 >>> D5values.mean
 0.75
 

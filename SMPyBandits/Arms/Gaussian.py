@@ -7,7 +7,7 @@ Example of creating an arm:
 >>> random.seed(0); np.random.seed(0)
 >>> Gauss03 = Gaussian(0.3, 0.05)  # small variance
 >>> Gauss03
-G(0.3, 0.05)
+N(0.3, 0.05)
 >>> Gauss03.mean
 0.3
 
