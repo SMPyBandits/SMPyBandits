@@ -40,9 +40,9 @@ script:
   - cd ..
   - cd Policies/
   - python kullback.py
-  # - cd ..
-  # - python main.py
-  # - python main_multiplayers.py
-  # - python main_multiplayers_more.py
+  - cd ..
+  - python main.py
+  - python main_multiplayers.py
+  - python main_multiplayers_more.py
   # - . ./run_test_simulations.sh
   # - pytest
