@@ -135,7 +135,10 @@ def notify_cli(body,
     except Exception as e:
         print("\nnotify.notify(): %s : not-found ! Returned exception is %s." % ("notify-send" if gnulinux else "osascript", e))
         try:
-            return notify_cli(body, summary=summary, icon=icon, timeout=timeout, gnulinux=False)
+            if gnulinux:
+                return notify_cli(body, summary=summary, icon=icon, timeout=timeout, gnulinux=False)
+            else:
+                return -1
         except Exception as e:
             return -1
 

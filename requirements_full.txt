@@ -9,8 +9,8 @@ matplotlib>=2     # Required for the plots in Environment/Evaluator*.py
 # --- Optionnal, improve performance
 ipython           # to launch the experiments with better debugging
 joblib            # Required for parallel computing. Note: it only speeds up by an almost constant factor = nb of CPU cores. And the code works if joblib is not installed (just slower!).
-numba       # Not required, but can help to speed up some functions
-# h5py      # TODO: add support to h5py in order to constantly save the numerical values computed in the simulations?
+numba             # Not required, but can help to speed up some functions
+h5py              # There is support of h5py
 
 # --- Better plots!
 seaborn           # Required for bar plots, and better colors

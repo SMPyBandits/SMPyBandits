@@ -476,7 +476,7 @@ def klucbGauss(x, d, sig2x=0.25, precision=0.):
 
     .. warning:: Using :class:`Policies.klUCB` (and variants) with :func:`klucbGauss` is equivalent to use :class:`Policies.UCB`, so prefer the simpler version.
     """
-    return x + sqrt(2 * sig2x * d)
+    return x + sqrt(abs(2 * sig2x * d))
 
 
 @jit
