@@ -1,0 +1,41 @@
+# The configurations you want to execute
+# That is, a combination of operating system and python version
+# Please add or remove for your needs.
+# Check all possible values for python in here: https://docs.travis-ci.com/user/languages/python/
+# See how to further configure the matrix of combinations in here: https://docs.travis-ci.com/user/multi-os/
+language: python
+
+sudo: require
+
+matrix:
+    include:
+        # - os: linux
+        #   python: 2.7
+        # - os: osx
+        #   language: generic
+        #   env: PYTHON=2.7
+        - os: linux
+          python: 3.4
+        - os: osx
+          language: generic
+          env: PYTHON=3.4.6
+
+# Command to install dependencies for each configuration.
+before_install:
+# For OSX, you may want to call a script installing virtual env and so on.
+  - . ./scripts/install.sh
+
+install:
+  - python -m pip install -U pip
+  - python -m easy_install -U setuptools
+  # - pip install -U pytest
+  # - pip install sphinx
+  - pip install .
+
+script:
+  - python --version
+  - cd SMPyBandits
+  - python main.py
+  - cd Environment
+  - python notify.py
+  # - pytest
