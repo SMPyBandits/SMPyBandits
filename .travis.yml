@@ -30,7 +30,7 @@ install:
   - python -m easy_install -U setuptools
   # - pip install -U pytest
   # - pip install sphinx
-  - pip install --user -r requirements_full.txt
+  - pip install -r requirements_full.txt
 
 script:
   - python --version
