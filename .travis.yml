@@ -35,14 +35,10 @@ install:
 script:
   - python --version
   - cd SMPyBandits/
-  - cd Environment/
-  - python notify.py
+  - N=10 T=1000 python main.py
+  - N=10 T=1000 python main_multiplayers.py
   - cd ..
   - cd Policies/
   - python kullback.py
-  - cd ..
-  - python main.py
-  - python main_multiplayers.py
-  - python main_multiplayers_more.py
   # - . ./run_test_simulations.sh
   # - pytest
