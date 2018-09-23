@@ -37,8 +37,8 @@ script:
   - cd SMPyBandits/
   - N=10 T=1000 python main.py
   - N=10 T=1000 python main_multiplayers.py
-  - cd ..
+  - N=10 T=1000 python main_multiplayers_more.py
+  # - . ./run_test_simulations.sh
   - cd Policies/
   - python kullback.py
-  # - . ./run_test_simulations.sh
   # - pytest

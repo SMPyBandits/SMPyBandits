@@ -142,7 +142,7 @@ class MusicalChairNoSensing(BasePolicy):
         >>> configuration["players"] = [ MusicalChairNoSensing(nbPlayers=nbPlayers, nbArms=nbArms, horizon=horizon) for _ in range(NB_PLAYERS) ]
         """
         super(MusicalChairNoSensing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0 < nbPlayers <= nbArms, "Error, the parameter 'nbPlayers' for MusicalChairNoSensing class has to be None or > 0."
+        assert 0 < nbPlayers <= nbArms, "Error, the parameter 'nbPlayers' = {} for MusicalChairNoSensing class has to be None or > 0.".format(nbPlayers)  # DEBUG
         self.state = State.NotStarted  #: Current state
         # Store parameters
         self.nbPlayers = nbPlayers  #: Number of players
@@ -214,7 +214,10 @@ class MusicalChairNoSensing(BasePolicy):
             empiricalMeans = self.cumulatedRewards / self.nbObservations
             sortedMeans = np.sort(empiricalMeans)[::-1]  # XXX decreasing order!
             # print("Sorting empirical means… sortedMeans = {}".format(sortedMeans))  # DEBUG
-            gap_Mbest_Mworst = abs(sortedMeans[self.nbPlayers] - sortedMeans[self.nbPlayers + 1])
+            if self.nbPlayers < self.nbArms:
+                gap_Mbest_Mworst = abs(sortedMeans[self.nbPlayers] - sortedMeans[self.nbPlayers + 1])
+            else:
+                gap_Mbest_Mworst = 0
             # print("Gap between M-best and M-worst set (with M = {}) is {}, compared to {}...".format(self.nbPlayers, gap_Mbest_Mworst, self.constant_in_testing_the_gap / np.sqrt(self.t)))
             if gap_Mbest_Mworst >= self.constant_in_testing_the_gap / np.sqrt(self.t):
                 # print("Gap was larger than the threshold, so this player switch to uniform phase 2!")

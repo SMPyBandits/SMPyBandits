@@ -455,8 +455,8 @@ class Evaluator(object):
         all_memories = [ self.memoryConsumption[envId][policyId, :] for policyId in range(self.nbPolicies) ]
         for policyId in range(self.nbPolicies):
             all_memories[policyId] = [ m for m in all_memories[policyId] if m > 0 ]
-        means = [ np.mean(memories) for memories in all_memories ]
-        stds  = [ np.std(memories) for memories in all_memories ]
+        means = [np.mean(memories) if len(memories) > 0 else 0 for memories in all_memories]
+        stds  = [np.std(memories)  if len(memories) > 0 else 0 for memories in all_memories]
         return means, stds, all_memories
 
     # --- Plotting methods
@@ -727,7 +727,7 @@ class Evaluator(object):
             # XXX See https://stackoverflow.com/a/36542971/
             ax0 = fig.add_subplot(111, frame_on=False)  # add a big axes, hide frame
             ax0.grid(False)  # hide grid
-            ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
+            ax0.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
             ax0.set_ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))

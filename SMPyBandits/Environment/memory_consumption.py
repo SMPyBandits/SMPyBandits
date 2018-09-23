@@ -15,7 +15,9 @@ Starting to trace memory allocations...
 Top 10 lines ranked by memory consumption:
 ...
 
-.. warning:: this is automatically used (for ``main.py`` at least) when ``DEBUGMEMORY=True`` (cli env).
+.. warning:: This is automatically used (for ``main.py`` at least) when ``DEBUGMEMORY=True`` (cli env).
+
+.. warning:: This is experimental and does *not* work as well on Mac OS X and Windows as it works on GNU/Linux systems.
 """
 
 from __future__ import division, print_function  # Python 2 compatibility

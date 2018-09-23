@@ -20,17 +20,15 @@ if __name__ == '__main__':
     print("Warning: this script 'configuration.py' is NOT executable. Use 'main.py' or 'make single' ...")  # DEBUG
     exit(0)
 
-# Import arms
+# Import arms and algorithms
 try:
     from Arms import *
+    from Policies import *
+    from Policies.Experimentals import *
 except ImportError:
     from SMPyBandits.Arms import *
-
-# Import algorithms
-try:
-    from Policies import *
-except ImportError:
     from SMPyBandits.Policies import *
+    from SMPyBandits.Policies.Experimentals import *
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".

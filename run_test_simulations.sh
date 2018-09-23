@@ -12,9 +12,9 @@
 # More details at http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -euo pipefail
 
-export K=9
+export K=6
 export N=4
-export T=1000  # FIXME increase
+export T=10  # FIXME increase
 export DEBUG=False
 export DEBUGMEMORY=False
 export PLOT_DIR="/tmp/SMPyBandits/plots/"
@@ -29,64 +29,64 @@ export ARM_TYPE=Bernoulli
 export M=3
 export S=3
 
-# all_singleplayer test
-clear
-echo -e "\n\n\nLaunching 'make all_singleplayer'"
-N=4 T=20 make all_singleplayer
-# read  # DEBUG
+# # all_singleplayer test
+# clear
+# echo -e "\n\n\nLaunching 'make all_singleplayer'"
+# N=4 T=100 make all_singleplayer
+# # read  # DEBUG
 
-# all_singleplayer test
-clear
-echo -e "\n\n\nLaunching 'make all_singleplayer'"
-N=4 T=20 BAYES=True make all_singleplayer
-# read  # DEBUG
+# # all_singleplayer test
+# clear
+# echo -e "\n\n\nLaunching 'make all_singleplayer'"
+# N=4 T=100 BAYES=True make all_singleplayer
+# # read  # DEBUG
 
-# single test
-clear
-echo -e "\n\n\nLaunching 'make single'"
-make single
-# read  # DEBUG
+# # single test
+# clear
+# echo -e "\n\n\nLaunching 'make single'"
+# make single
+# # read  # DEBUG
 
-# single test
-clear
-echo -e "\n\n\nLaunching 'make single'"
-ARM_TYPE=Gaussian make single
-# read  # DEBUG
+# # single test
+# clear
+# echo -e "\n\n\nLaunching 'make single'"
+# ARM_TYPE=Gaussian make single
+# # read  # DEBUG
 
-# multi test
+# # multi test
+# clear
+# echo -e "\n\n\nLaunching 'make multi'"
+# make multi
+# # read  # DEBUG
+
+# moremulti test
 clear
-echo -e "\n\n\nLaunching 'make multi'"
-make multi
+echo -e "\n\n\nLaunching 'make moremulti'"
+K=9 M=3 make moremulti
 # read  # DEBUG
 
 # moremulti test
 clear
 echo -e "\n\n\nLaunching 'make moremulti'"
-M=3 make moremulti
+K=9 M=6 make moremulti
 # read  # DEBUG
 
 # moremulti test
 clear
 echo -e "\n\n\nLaunching 'make moremulti'"
-M=6 make moremulti
+K=9 M=9 make moremulti
 # read  # DEBUG
 
 # moremulti test
 clear
 echo -e "\n\n\nLaunching 'make moremulti'"
-M=9 make moremulti
-# read  # DEBUG
-
-# moremulti test
-clear
-echo -e "\n\n\nLaunching 'make moremulti'"
-LOWER=-10 AMPLITUDE=20 ARM_TYPE=Gaussian M=3 make moremulti
+LOWER=-10 AMPLITUDE=20 ARM_TYPE=Gaussian M=3 K=9 make moremulti
 # read  # DEBUG
 
 # sparsemulti test
 clear
 echo -e "\n\n\nLaunching 'make sparsemulti'"
-M=12 make sparsemulti
+M=12 K=9 make sparsemulti
 # read  # DEBUG
 
 # comparing_aggregation_algorithms test

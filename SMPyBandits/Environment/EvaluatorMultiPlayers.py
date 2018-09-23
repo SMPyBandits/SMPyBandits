@@ -1008,7 +1008,7 @@ class EvaluatorMultiPlayers(object):
             # XXX See https://stackoverflow.com/a/36542971/
             ax0 = fig.add_subplot(111, frame_on=False)  # add a big axes, hide frame
             ax0.grid(False)  # hide grid
-            ax0.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')  # hide tick and tick label of the big axes
+            ax0.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
             ax0.set_ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
