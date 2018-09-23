@@ -29,35 +29,35 @@ export ARM_TYPE=Bernoulli
 export M=3
 export S=3
 
-# # all_singleplayer test
-# clear
-# echo -e "\n\n\nLaunching 'make all_singleplayer'"
-# N=4 T=100 make all_singleplayer
-# # read  # DEBUG
+# all_singleplayer test
+clear
+echo -e "\n\n\nLaunching 'make all_singleplayer'"
+N=4 T=100 make all_singleplayer
+# read  # DEBUG
 
-# # all_singleplayer test
-# clear
-# echo -e "\n\n\nLaunching 'make all_singleplayer'"
-# N=4 T=100 BAYES=True make all_singleplayer
-# # read  # DEBUG
+# all_singleplayer test
+clear
+echo -e "\n\n\nLaunching 'make all_singleplayer'"
+N=4 T=100 BAYES=True make all_singleplayer
+# read  # DEBUG
 
-# # single test
-# clear
-# echo -e "\n\n\nLaunching 'make single'"
-# make single
-# # read  # DEBUG
+# single test
+clear
+echo -e "\n\n\nLaunching 'make single'"
+make single
+# read  # DEBUG
 
-# # single test
-# clear
-# echo -e "\n\n\nLaunching 'make single'"
-# ARM_TYPE=Gaussian make single
-# # read  # DEBUG
+# single test
+clear
+echo -e "\n\n\nLaunching 'make single'"
+ARM_TYPE=Gaussian make single
+# read  # DEBUG
 
-# # multi test
-# clear
-# echo -e "\n\n\nLaunching 'make multi'"
-# make multi
-# # read  # DEBUG
+# multi test
+clear
+echo -e "\n\n\nLaunching 'make multi'"
+make multi
+# read  # DEBUG
 
 # moremulti test
 clear
