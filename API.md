@@ -112,15 +112,15 @@ class MyPolicy(object):
 ----
 
 ### For a **new multi-users policy**
-1. Make a new file, e.g., `MyPolicyMultiPlayers.py`
+1. Make a new file, e.g., `MyPoliciesMultiPlayers.py`
 2. Save it in [`PoliciesMultiPlayers/`](PoliciesMultiPlayers/)
 3. The file should contain a class, of the same name, e.g., like this, `class MyPoliciesMultiPlayers(object):`
 4. This class `MyPoliciesMultiPlayers` has to **have at least** an `__init__` method to create the arm; a `__str__` method to print it as a string; and a `children` **attribute** that gives a list of *players* ([single-player policies](#for-a-new-single-user-policy)).
 5. Finally, add it to the [`PoliciesMultiPlayers/__init__.py`](SMPyBandits/PoliciesMultiPlayers/__init__.py) file: `from .MyPoliciesMultiPlayers import MyPoliciesMultiPlayers`
 
-> For examples, see [`PolicyMultiPlayers.OracleNotFair`](SMPyBandits/PolicyMultiPlayers/OracleNotFair.py) and [`PolicyMultiPlayers.OracleFair`](SMPyBandits/PolicyMultiPlayers/OracleFair.py) for full-knowledge centralized policies (fair or not), [`PolicyMultiPlayers.CentralizedFixed`](SMPyBandits/PolicyMultiPlayers/CentralizedFixed.py) and [`PolicyMultiPlayers.CentralizedCycling`](SMPyBandits/PolicyMultiPlayers/CentralizedCycling.py) for non-full-knowledge centralized policies (fair or not). There is also the [`PolicyMultiPlayers.Selfish`](SMPyBandits/PolicyMultiPlayers/Selfish.py) decentralized policy, where all players runs in without any knowledge on the number of players, and no communication (decentralized).
+> For examples, see [`PoliciesMultiPlayers.OracleNotFair`](SMPyBandits/PoliiesyMultiPlayers/OracleNotFair.py) and [`PoliciesMultiPlayers.OracleFair`](SMPyBandits/PoliiesyMultiPlayers/OracleFair.py) for full-knowledge centralized policies (fair or not), [`PoliciesMultiPlayers.CentralizedFixed`](SMPyBandits/PoliiesyMultiPlayers/CentralizedFixed.py) and [`PoliciesMultiPlayers.CentralizedCycling`](SMPyBandits/PoliiesyMultiPlayers/CentralizedCycling.py) for non-full-knowledge centralized policies (fair or not). There is also the [`PoliciesMultiPlayers.Selfish`](SMPyBandits/PoliiesyMultiPlayers/Selfish.py) decentralized policy, where all players runs in without any knowledge on the number of players, and no communication (decentralized).
 
-> [`PolicyMultiPlayers.Selfish`](SMPyBandits/PolicyMultiPlayers/Selfish.py) is the simplest possible example I could give as a template.
+> [`PoliciesMultiPlayers.Selfish`](SMPyBandits/PoliiesyMultiPlayers/Selfish.py) is the simplest possible example I could give as a template.
 
 ----
 
