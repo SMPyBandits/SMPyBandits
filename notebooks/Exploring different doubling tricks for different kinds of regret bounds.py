@@ -540,13 +540,13 @@ plot_quality_first_upper_bound(gamma=gamma, delta=delta, show_Ti_m_Tim1=False)
 gamma, delta = (_f(0.66667), _f(1.0))
 
 
-# In[ ]:
+# In[31]:
 
 
 plot_quality_first_upper_bound(gamma=gamma, delta=delta, show_Ti_m_Tim1=True)
 
 
-# In[ ]:
+# In[32]:
 
 
 plot_quality_first_upper_bound(gamma=gamma, delta=delta, show_Ti_m_Tim1=False)
