@@ -210,29 +210,81 @@ NPROC = `getconf _NPROCESSORS_ONLN`
 
 tests:	alldoctest testsimulations
 alldoctest:
-	-./run_all_doctest.sh | tee ./logs/run_all_doctest.txt
+	-./other_scripts/run_all_doctest.sh | tee ./logs/run_all_doctest.txt
 testsimulations:
-	-./run_test_simulations.sh | tee ./logs/run_test_simulations.txt
+	-./other_scripts/run_test_simulations.sh | tee ./logs/run_test_simulations.txt
 
 lint:
 	-pylint -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint_log.txt
 lint3:
 	-pylint --py3k -j $(NPROC) ./*.py ./*/*.py | tee ./logs/main_pylint3_log.txt
 
-uml:
+uml:	generate_uml uml2others
+
+generate_uml:
 	-mkdir uml_diagrams/
-	pyreverse -o dot -my -f ALL -p SMPyBandits ./*.py ./*/*.py
-	-mv -vf packages_SMPyBandits.dot classes_SMPyBandits.dot uml_diagrams/
+	# pyreverse -o dot -my -f ALL -p SMPyBandits ./SMPyBandits/*.py ./SMPyBandits/*/*.py ./SMPyBandits/*/*/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits ./SMPyBandits/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.Arms ./SMPyBandits/Arms/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.Environment ./SMPyBandits/Environment/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.PoliciesMultiPlayers ./SMPyBandits/PoliciesMultiPlayers/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.Policies ./SMPyBandits/Policies/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.Policies.Experimentals ./SMPyBandits/Policies/Experimentals/*.py
+	pyreverse -o dot -my -f ALL -p SMPyBandits.Policies.Posterior ./SMPyBandits/Policies/Posterior/*.py
+	-mv -vf packages_SMPyBandits*.dot classes_SMPyBandits*.dot uml_diagrams/
+
+uml2others:	uml2png	uml2svg	uml2pdf
+uml2png:
 	# Output packages and classes graphs to PNG...
 	dot -Tpng uml_diagrams/packages_SMPyBandits.dot   > uml_diagrams/packages_SMPyBandits.png
 	dot -Tpng uml_diagrams/classes_SMPyBandits.dot    > uml_diagrams/classes_SMPyBandits.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.Arms.dot   > uml_diagrams/packages_SMPyBandits.Arms.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.Arms.dot    > uml_diagrams/classes_SMPyBandits.Arms.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.Environment.dot   > uml_diagrams/packages_SMPyBandits.Environment.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.Environment.dot    > uml_diagrams/classes_SMPyBandits.Environment.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.dot   > uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.dot    > uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.Policies.dot   > uml_diagrams/packages_SMPyBandits.Policies.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.Policies.dot    > uml_diagrams/classes_SMPyBandits.Policies.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.Policies.Experimentals.dot   > uml_diagrams/packages_SMPyBandits.Policies.Experimentals.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.Policies.Experimentals.dot    > uml_diagrams/classes_SMPyBandits.Policies.Experimentals.png
+	dot -Tpng uml_diagrams/packages_SMPyBandits.Policies.Posterior.dot   > uml_diagrams/packages_SMPyBandits.Policies.Posterior.png
+	dot -Tpng uml_diagrams/classes_SMPyBandits.Policies.Posterior.dot    > uml_diagrams/classes_SMPyBandits.Policies.Posterior.png
 	-advpng -z -2 ./uml_diagrams/*.png
+
+uml2svg:
 	# Output packages and classes graphs to SVG...
 	dot -Tsvg uml_diagrams/packages_SMPyBandits.dot   > uml_diagrams/packages_SMPyBandits.svg
 	dot -Tsvg uml_diagrams/classes_SMPyBandits.dot    > uml_diagrams/classes_SMPyBandits.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.Arms.dot   > uml_diagrams/packages_SMPyBandits.Arms.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.Arms.dot    > uml_diagrams/classes_SMPyBandits.Arms.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.Environment.dot   > uml_diagrams/packages_SMPyBandits.Environment.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.Environment.dot    > uml_diagrams/classes_SMPyBandits.Environment.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.dot   > uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.dot    > uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.Policies.dot   > uml_diagrams/packages_SMPyBandits.Policies.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.Policies.dot    > uml_diagrams/classes_SMPyBandits.Policies.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.Policies.Experimentals.dot   > uml_diagrams/packages_SMPyBandits.Policies.Experimentals.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.Policies.Experimentals.dot    > uml_diagrams/classes_SMPyBandits.Policies.Experimentals.svg
+	dot -Tsvg uml_diagrams/packages_SMPyBandits.Policies.Posterior.dot   > uml_diagrams/packages_SMPyBandits.Policies.Posterior.svg
+	dot -Tsvg uml_diagrams/classes_SMPyBandits.Policies.Posterior.dot    > uml_diagrams/classes_SMPyBandits.Policies.Posterior.svg
+
+uml2pdf:
 	# Output packages and classes graphs to PDF...
 	dot -Tpdf uml_diagrams/packages_SMPyBandits.dot > uml_diagrams/packages_SMPyBandits.pdf
 	dot -Tpdf uml_diagrams/classes_SMPyBandits.dot  > uml_diagrams/classes_SMPyBandits.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.Arms.dot   > uml_diagrams/packages_SMPyBandits.Arms.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.Arms.dot    > uml_diagrams/classes_SMPyBandits.Arms.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.Environment.dot   > uml_diagrams/packages_SMPyBandits.Environment.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.Environment.dot    > uml_diagrams/classes_SMPyBandits.Environment.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.dot   > uml_diagrams/packages_SMPyBandits.PoliciesMultiPlayers.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.dot    > uml_diagrams/classes_SMPyBandits.PoliciesMultiPlayers.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.Policies.dot   > uml_diagrams/packages_SMPyBandits.Policies.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.Policies.dot    > uml_diagrams/classes_SMPyBandits.Policies.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.Policies.Experimentals.dot   > uml_diagrams/packages_SMPyBandits.Policies.Experimentals.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.Policies.Experimentals.dot    > uml_diagrams/classes_SMPyBandits.Policies.Experimentals.pdf
+	dot -Tpdf uml_diagrams/packages_SMPyBandits.Policies.Posterior.dot   > uml_diagrams/packages_SMPyBandits.Policies.Posterior.pdf
+	dot -Tpdf uml_diagrams/classes_SMPyBandits.Policies.Posterior.dot    > uml_diagrams/classes_SMPyBandits.Policies.Posterior.pdf
 	-PDFCompress -f ./uml_diagrams/*.pdf
 
 ignorelogs:
@@ -295,7 +347,7 @@ html:
 	-rm -rvf $(BUILDDIR)/html/SMPyBandits/ $(BUILDDIR)/html/_modules/SMPyBandits/
 	#-rm -rvf $(BUILDDIR)/html/_sources/SMPyBandits/
 	-./notebooks/symlinks.sh
-	-./.fixes_html_in_doc.sh
+	-./other_scripts/.fixes_html_in_doc.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
 	\cp logs/*.txt "$(BUILDDIR)"/html/logs/
 	-mv -vf /tmp/SMPyBandits/*.so ./SMPyBandits/Policies/

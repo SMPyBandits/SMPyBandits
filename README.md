@@ -53,7 +53,7 @@ If you use this package for your own work, please consider citing it with [this 
 I also wrote a small paper to present *SMPyBandits*, and I will send it to [JMLR MLOSS](http://jmlr.org/mloss/).
 The paper can be consulted [here on my website](https://perso.crans.org/besson/articles/SMPyBandits.pdf).
 
-> A DOI will arrive as soon as possible! I will try to publish [a paper](paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
+> A DOI will arrive as soon as possible! I will try to publish [a paper](docs/paper/paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
 
 ## [List of research publications using SMPyBandits](PublicationsWithSMPyBandits.md)
 

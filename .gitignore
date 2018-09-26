@@ -28,7 +28,6 @@ dist
 build
 *.egg-info
 *.so
-*.dot
 *.lprof
 *.gdf
 *.log

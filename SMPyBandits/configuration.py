@@ -1267,6 +1267,21 @@ if TEST_Doubling_Trick:
                 "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
             }
         },
+        # --- klUCB-Switch-Anytime
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "best"
+            }
+        },
+        # {
+        #     "archtype": klUCBswitchAnytime,
+        #     "params": {
+        #         "klucb": klucb,
+        #         "threshold": "delayed"
+        #     }
+        # },
     ]
     # Smart way of adding list of Doubling Trick versions
     for policy in POLICIES_FOR_DOUBLING_TRICK:
@@ -1311,6 +1326,7 @@ if TEST_Doubling_Trick:
                 Ti_intermediate_i13,
                 Ti_intermediate_i23,
                 Ti_intermediate_i12_logi12,
+                Ti_intermediate_i_by_logi,
             ]
             # for next_horizon in [
             #     # next_horizon__arithmetic,

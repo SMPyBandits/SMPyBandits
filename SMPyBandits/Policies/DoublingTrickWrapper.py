@@ -308,6 +308,9 @@ def function_f__for_intermediate3_sequences(i):
 def function_f__for_intermediate4_sequences(i):
     return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.5, e=0.5)
 
+def function_f__for_intermediate5_sequences(i):
+    return function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=1, e=-1)
+
 
 #: Value of the parameter :math:`\alpha` for the :func:`Ti_from_f` function.
 alpha_for_Ti = 0.1
@@ -381,6 +384,14 @@ def Ti_intermediate_i12_logi12(i, horizon, alpha=alpha_for_Ti, first_horizon=DEF
     if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
     return this_Ti
 Ti_intermediate_i12_logi12.__latex_name__ = r"$f(i)=\sqrt{i \log(i)}$"
+
+def Ti_intermediate_i_by_logi(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
+    """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate5_sequences`."""
+    f = function_f__for_intermediate5_sequences
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
+    return this_Ti
+Ti_intermediate_i23.__latex_name__        = r"$f(i)=i / \log(i)$"
 
 
 def last_term_operator_LT(Ti, max_i=10000):

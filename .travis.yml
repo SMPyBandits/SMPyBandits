@@ -23,7 +23,7 @@ matrix:
 # Command to install dependencies for each configuration.
 before_install:
 # For OSX, you may want to call a script installing virtual env and so on.
-  - . ./.travis_install.sh
+  - . ./other_scripts/.travis_install.sh
 
 install:
   - python -m pip install -U pip
@@ -38,7 +38,6 @@ script:
   - N=10 T=1000 python main.py
   - N=10 T=1000 python main_multiplayers.py
   - N=10 T=1000 python main_multiplayers_more.py
-  # - . ./run_test_simulations.sh
+  # - . ./other_scripts/run_test_simulations.sh
   - cd Policies/
   - python kullback.py
-  # - pytest

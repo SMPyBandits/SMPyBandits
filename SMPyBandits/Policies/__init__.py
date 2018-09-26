@@ -172,7 +172,7 @@ from .SlidingWindowUCB import SWUCB, SWUCBPlus
 
 from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
-from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints, Ti_geometric, Ti_exponential, Ti_intermediate_sqrti, Ti_intermediate_i13, Ti_intermediate_i23, Ti_intermediate_i12_logi12
+from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints, Ti_geometric, Ti_exponential, Ti_intermediate_sqrti, Ti_intermediate_i13, Ti_intermediate_i23, Ti_intermediate_i12_logi12, Ti_intermediate_i_by_logi
 
 from .WrapRange import WrapRange
 
