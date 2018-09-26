@@ -3,7 +3,7 @@
 
 <img width="50%" src="logo_large.png" align="right"/>
 
-This repository contains the code of [Lilian Besson's](http://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
+This repository contains the code of [Lilian Besson's](https://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
 A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
 
@@ -12,6 +12,7 @@ A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://
 It contains the most complete collection of single-player (classical) bandit algorithms on the Internet ([over 65!](SMPyBandits/Policies/)), as well as implementation of all the state-of-the-art [multi-player algorithms](SMPyBandits/PoliciesMultiPlayers/).
 
 I follow very actively the latest publications related to Multi-Armed Bandits (MAB) research, and usually implement quite quickly the new algorithms (see for instance, [Exp3++](https://smpybandits.github.io/docs/Policies.Exp3PlusPlus.html), [CORRAL](https://smpybandits.github.io/docs/Policies.CORRAL.html) and [SparseUCB](https://smpybandits.github.io/docs/Policies.SparseUCB.html) were each introduced by articles ([for Exp3++](https://arxiv.org/pdf/1702.06103), [for CORRAL](https://arxiv.org/abs/1612.06246v2), [for SparseUCB](https://arxiv.org/abs/1706.01383)) presented at COLT in July 2017, [LearnExp](https://smpybandits.github.io/docs/Policies.LearnExp.html) comes from a [NIPS 2017 paper](https://arxiv.org/abs/1702.04825), and [kl-UCB++](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) from an [ALT 2017 paper](https://hal.inria.fr/hal-01475078).).
+More recent examples are [klUCBSwitch](https://smpybandits.github.io/docs/Policies.klUCBSwitch.html) from [a paper from May 2018](https://arxiv.org/abs/1805.05071), and also [MusicalChairNoSensing](https://smpybandits.github.io/docs/Policies.MusicalChairNoSensing.html) from [a paper from August 2018](https://arxiv.org/abs/1808.08416).
 
 - Classical MAB have a lot of applications, from clinical trials, A/B testing, game tree exploration, and online content recommendation (my framework does *not* implement contextual bandit - yet).
 - [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](SMPyBandits/Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](SMPyBandits/PoliciesMultiPlayers/rhoRand.py) from 2009, [`MEGA`](SMPyBandits/Policies/MEGA.py) from 2015, [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](SMPyBandits/PoliciesMultiPlayers/RandTopM.py) and [`MCTopM`](SMPyBandits/PoliciesMultiPlayers/MCTopM.py)).
@@ -29,7 +30,7 @@ A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms an
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master)](https://travis-ci.org/SMPyBandits/SMPyBandits)
 
-> [I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research since December 2016.
+> [I (Lilian Besson)](https://perso.crans.org/besson/) have [started my PhD](https://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research since December 2016.
 >
 > I launched the [documentation](https://smpybandits.github.io/) on March 2017, I wrote my first research articles using this framework in 2017 and decided to (finally) open-source my project in February 2018.
 
@@ -152,7 +153,7 @@ pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[f
 
 Contributions (issues, questions, pull requests) are of course welcome, but this project is and will stay a personal environment designed for quick research experiments, and will never try to be an industry-ready module for applications of Multi-Armed Bandits algorithms.
 
-If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) file.
+If you want to contribute, please have a look to the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md) file.
 
 - You are welcome to [submit an issue](https://github.com/SMPyBandits/SMPyBandits/issues/new), if it was not previously answered,
 - If you have interesting example of use of SMPyBandits, please share it! ([Jupyter Notebooks](https://www.jupyter.org/) are preferred). And fill a pull request to [add it to the notebooks examples](notebooks/).
@@ -165,7 +166,7 @@ If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUT
 ## :scroll: License ? [![GitHub license](https://img.shields.io/github/license/SMPyBandits/SMPyBandits.svg)](https://github.com/SMPyBandits/SMPyBandits/blob/master/LICENSE)
 [MIT Licensed](https://lbesson.mit-license.org/) (file [LICENSE](LICENSE)).
 
-© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
+© 2016-2018 [Lilian Besson](https://GitHub.com/Naereen), with help [from contributors](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors).
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
@@ -174,8 +175,9 @@ If you want to contribute, please have a look to the [CONTRIBUTING.md](CONTRIBUT
 ![PyPI implementation](https://img.shields.io/pypi/implementation/smpybandits.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master)](https://travis-ci.org/SMPyBandits/SMPyBandits)
+
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
-
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 [![ForTheBadge built-with-science](http://ForTheBadge.com/images/badges/built-with-science.svg)](https://GitHub.com/Naereen/)

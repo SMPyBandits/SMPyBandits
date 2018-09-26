@@ -1722,7 +1722,7 @@
 <polygon fill="none" stroke="#000000" points="13081,-1461.5 13081,-1875.5 13377,-1875.5 13377,-1461.5 13081,-1461.5"/>
 <text text-anchor="middle" x="13229" y="-1860.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.TrekkingTSN.TrekkingTSN</text>
 <polyline fill="none" stroke="#000000" points="13081,-1852.5 13377,-1852.5 "/>
-<text text-anchor="start" x="13089" y="-1837.3" font-family="Times,serif" font-size="14.00" fill="#000000">J : NoneType, int</text>
+<text text-anchor="start" x="13089" y="-1837.3" font-family="Times,serif" font-size="14.00" fill="#000000">J : int, NoneType</text>
 <text text-anchor="start" x="13089" y="-1822.3" font-family="Times,serif" font-size="14.00" fill="#000000">M</text>
 <text text-anchor="start" x="13089" y="-1807.3" font-family="Times,serif" font-size="14.00" fill="#000000">T_CC</text>
 <text text-anchor="start" x="13089" y="-1792.3" font-family="Times,serif" font-size="14.00" fill="#000000">T_RH : int</text>
@@ -2078,7 +2078,7 @@
 <text text-anchor="middle" x="6019" y="-1161.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.UCBoost.UCBoost</text>
 <polyline fill="none" stroke="#000000" points="5895.5,-1154 6142.5,-1154 "/>
 <text text-anchor="start" x="5903.5" y="-1138.8" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
-<text text-anchor="start" x="5903.5" y="-1123.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, int, NoneType</text>
+<text text-anchor="start" x="5903.5" y="-1123.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : int, list, NoneType</text>
 <polyline fill="none" stroke="#000000" points="5895.5,-1116 6142.5,-1116 "/>
 <text text-anchor="start" x="5903.5" y="-1100.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
 <text text-anchor="start" x="5903.5" y="-1085.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
@@ -2220,7 +2220,7 @@
 <polygon fill="none" stroke="#000000" points="14161.5,-1063 14161.5,-1177 14498.5,-1177 14498.5,-1063 14161.5,-1063"/>
 <text text-anchor="middle" x="14330" y="-1161.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.UniformOnSome.UniformOnSome</text>
 <polyline fill="none" stroke="#000000" points="14161.5,-1154 14498.5,-1154 "/>
-<text text-anchor="start" x="14169.5" y="-1138.8" font-family="Times,serif" font-size="14.00" fill="#000000">armIndexes : NoneType, list</text>
+<text text-anchor="start" x="14169.5" y="-1138.8" font-family="Times,serif" font-size="14.00" fill="#000000">armIndexes : list, NoneType</text>
 <text text-anchor="start" x="14169.5" y="-1123.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
 <polyline fill="none" stroke="#000000" points="14161.5,-1116 14498.5,-1116 "/>
 <text text-anchor="start" x="14169.5" y="-1100.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>

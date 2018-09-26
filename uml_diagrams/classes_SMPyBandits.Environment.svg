@@ -283,9 +283,9 @@
 <polygon fill="none" stroke="#000000" points="1116,-465.5 1116,-609.5 1410,-609.5 1410,-465.5 1116,-465.5"/>
 <text text-anchor="middle" x="1263" y="-594.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.IncreasingMAB</text>
 <polyline fill="none" stroke="#000000" points="1116,-586.5 1410,-586.5 "/>
-<text text-anchor="start" x="1124" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitudes : recarray, list</text>
+<text text-anchor="start" x="1124" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitudes : list, recarray</text>
 <text text-anchor="start" x="1124" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">_change_lower_amplitude</text>
-<text text-anchor="start" x="1124" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">_first_amplitudes : recarray, list</text>
+<text text-anchor="start" x="1124" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">_first_amplitudes : list, recarray</text>
 <text text-anchor="start" x="1124" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">_first_lowers : recarray, list</text>
 <text text-anchor="start" x="1124" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">_lowers : recarray, list</text>
 <polyline fill="none" stroke="#000000" points="1116,-503.5 1410,-503.5 "/>

@@ -17,14 +17,14 @@ Runs on Python 2 and 3, open-source under the `MIT License <https://lbeson.mit-l
     The project is also hosted on `Inria GForge <https://gforge.inria.fr/project/admin/?group_id=9477>`_, and the documentation can be seen online at `<https://smpybandits.github.io/>`_ or `<http://http://banditslilian.gforge.inria.fr/>`_ or `<https://smpybandits.readthedocs.io/>`_.
     |Website up|
 
-This repository contains the code of `my <http://perso.crans.org/besson/>`_ numerical environment, written in `Python <https://www.python.org/>`_, in order to perform numerical
+This repository contains the code of `my <https://perso.crans.org/besson/>`_ numerical environment, written in `Python <https://www.python.org/>`_, in order to perform numerical
 simulations on *single*-player and *multi*-players `Multi-Armed Bandits
 (MAB) <https://en.wikipedia.org/wiki/Multi-armed_bandit>`_ algorithms.
 
 |PyPI implementation| |PyPI pyversions| |MIT license|
 
-`I (Lilian Besson) <http://perso.crans.org/besson/>`_ have `started my
-PhD <http://perso.crans.org/besson/phd/>`_ in October 2016, and this is
+`I (Lilian Besson) <https://perso.crans.org/besson/>`_ have `started my
+PhD <https://perso.crans.org/besson/phd/>`_ in October 2016, and this is
 a part of my **on going** research since December 2016.
 
 |Maintenance| |Ask Me Anything|

@@ -1,6 +1,6 @@
 # List of research publications using Lilian Besson's SMPyBandits project
 
-[I (Lilian Besson)](http://perso.crans.org/besson/) have [started my PhD](http://perso.crans.org/besson/phd/) in October 2016, and [this project](https://github.com/SMPyBandits/SMPyBandits/) is a part of my **on going** research since December 2016.
+[I (Lilian Besson)](https://perso.crans.org/besson/) have [started my PhD](https://perso.crans.org/besson/phd/) in October 2016, and [this project](https://github.com/SMPyBandits/SMPyBandits/) is a part of my **on going** research since December 2016.
 
 ----
 

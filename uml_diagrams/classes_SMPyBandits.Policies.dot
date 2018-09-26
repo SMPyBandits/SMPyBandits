@@ -75,7 +75,7 @@ rankdir=BT
 "71" [label="{SMPyBandits.Policies.TakeFixedArm.TakeFixedArm|armIndex : int, NoneType\lnbArms\l|__init__()\l__str__()\lchoice()\lchoiceWithRank()\lgetReward()\lstartGame()\l}", shape="record"];
 "72" [label="{SMPyBandits.Policies.TakeRandomFixedArm.TakeRandomFixedArm|armIndexes : list\lnbArms\l|__init__()\l__str__()\lchoice()\l}", shape="record"];
 "73" [label="{SMPyBandits.Policies.Thompson.Thompson|\l|computeIndex()\l}", shape="record"];
-"74" [label="{SMPyBandits.Policies.TrekkingTSN.TrekkingTSN|J : NoneType, int\lM\lT_CC\lT_RH : int\lT_SH : int\lT_TR : int\lY\lcumulatedRewards\ldelta : float\lepsilon : float\lindex_sort : NoneType\llast_choice : int, NoneType\llast_was_successful : bool\llock_channel : bool\lnbObservations\lstate\lt : int\ltheta : float\l|__init__()\l__str__()\l_endCCPhase()\lchoice()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
+"74" [label="{SMPyBandits.Policies.TrekkingTSN.TrekkingTSN|J : int, NoneType\lM\lT_CC\lT_RH : int\lT_SH : int\lT_TR : int\lY\lcumulatedRewards\ldelta : float\lepsilon : float\lindex_sort : NoneType\llast_choice : int, NoneType\llast_was_successful : bool\llock_channel : bool\lnbObservations\lstate\lt : int\ltheta : float\l|__init__()\l__str__()\l_endCCPhase()\lchoice()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
 "75" [label="{SMPyBandits.Policies.UCB.UCB|amplitude\llower\l|computeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "76" [label="{SMPyBandits.Policies.UCBH.UCBH|alpha : int\lhorizon : int\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "77" [label="{SMPyBandits.Policies.UCBV.UCBV|rewardsSquared\l|__init__()\lcomputeAllIndex()\lcomputeIndex()\lgetReward()\lstartGame()\l}", shape="record"];
@@ -89,7 +89,7 @@ rankdir=BT
 "85" [label="{SMPyBandits.Policies.UCBoost.UCB_lb|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "86" [label="{SMPyBandits.Policies.UCBoost.UCB_sq|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "87" [label="{SMPyBandits.Policies.UCBoost.UCB_t|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
-"88" [label="{SMPyBandits.Policies.UCBoost.UCBoost|c : float\lset_D : list, int, NoneType\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
+"88" [label="{SMPyBandits.Policies.UCBoost.UCBoost|c : float\lset_D : int, list, NoneType\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "89" [label="{SMPyBandits.Policies.UCBoost.UCBoostEpsilon|c : float\lepsilon : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "90" [label="{SMPyBandits.Policies.UCBoost.UCBoost_bq_h_lb|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "91" [label="{SMPyBandits.Policies.UCBoost.UCBoost_bq_h_lb_t|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
@@ -97,7 +97,7 @@ rankdir=BT
 "93" [label="{SMPyBandits.Policies.UCBplus.UCBplus|\l|computeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "94" [label="{SMPyBandits.Policies.UCBrandomInit.UCBrandomInit|_initial_exploration\l|__init__()\lchoice()\l}", shape="record"];
 "95" [label="{SMPyBandits.Policies.Uniform.Uniform|nbArms\l|__init__()\l__str__()\lchoice()\lchoiceWithRank()\lgetReward()\lstartGame()\l}", shape="record"];
-"96" [label="{SMPyBandits.Policies.UniformOnSome.UniformOnSome|armIndexes : NoneType, list\lnbArms\l|__init__()\l__str__()\lchoice()\l}", shape="record"];
+"96" [label="{SMPyBandits.Policies.UniformOnSome.UniformOnSome|armIndexes : list, NoneType\lnbArms\l|__init__()\l__str__()\lchoice()\l}", shape="record"];
 "97" [label="{SMPyBandits.Policies.WrapRange.WrapRange|_args : tuple\l_i : int\l_kwargs : dict\l_policy\lamplitude\lindex\llower\lpolicy : NoneType\lpulls\lrewards\lt : int\l|__init__()\l__str__()\lchoice()\lchoiceFromSubSet()\lchoiceIMP()\lchoiceMultiple()\lchoiceWithRank()\lcomputeAllIndex()\lcomputeIndex()\lestimatedBestArms()\lestimatedOrder()\lgetReward()\lstartGame()\l}", shape="record"];
 "98" [label="{SMPyBandits.Policies.klUCB.klUCB|c : float\lklucb : vectorize\ltolerance : float\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "99" [label="{SMPyBandits.Policies.klUCBH.klUCBH|horizon : int\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
