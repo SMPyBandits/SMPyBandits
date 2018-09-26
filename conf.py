@@ -187,8 +187,8 @@ exclude_patterns = [
     '.vscode', '_static', '_templates',
     'Thumbs.db', '.DS_Store',
     '**.ipynb_checkpoints',
-    'paper.md', 'longpaper.md',
-    'paper',
+    'paper.md', 'longpaper.md', 'paper',
+    'docs/paper/paper.md', 'docs/paper/longpaper.md', 'docs/paper',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
