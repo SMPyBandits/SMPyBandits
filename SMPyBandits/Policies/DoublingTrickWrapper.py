@@ -290,8 +290,8 @@ def function_f__for_generic_sequences(i, c=constant_c_for_the_functions_f, d=0.5
     if e == 0:
         assert d > 0, "Error: invalid value of d = {} for function_f__for_generic_sequences.".format(d)  # DEBUG
         return c * (i ** d)
-    assert e > 0, "Error: invalid value of e = {} for function_f__for_generic_sequences.".format(e)  # DEBUG
     if d == 0:
+        assert e > 0, "Error: invalid value of e = {} for function_f__for_generic_sequences.".format(e)  # DEBUG
         return c * ((np.log(i)) ** e)
     return c * (i ** d) * ((np.log(i)) ** e)
 
@@ -388,10 +388,10 @@ Ti_intermediate_i12_logi12.__latex_name__ = r"$f(i)=\sqrt{i \log(i)}$"
 def Ti_intermediate_i_by_logi(i, horizon, alpha=alpha_for_Ti, first_horizon=DEFAULT_FIRST_HORIZON, *args, **kwargs):
     """ Sequence :math:`T_i` generated from the function :math:`f` = :func:`function_f__for_intermediate5_sequences`."""
     f = function_f__for_intermediate5_sequences
-    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i), *args, **kwargs))))
+    this_Ti = first_horizon + np.floor(np.exp(alpha * np.exp(f(float(i + 1), *args, **kwargs))))
     if not (np.isinf(this_Ti) or np.isnan(this_Ti)): this_Ti = int(this_Ti)
     return this_Ti
-Ti_intermediate_i23.__latex_name__        = r"$f(i)=i / \log(i)$"
+Ti_intermediate_i_by_logi.__latex_name__  = r"$f(i)=i / \log(i)$"
 
 
 def last_term_operator_LT(Ti, max_i=10000):

@@ -1320,13 +1320,13 @@ if TEST_Doubling_Trick:
                 # False,
             ]
             for next_horizon in [
+                Ti_intermediate_i_by_logi,
                 Ti_exponential,
                 Ti_geometric,
                 Ti_intermediate_sqrti,
                 Ti_intermediate_i13,
                 Ti_intermediate_i23,
                 Ti_intermediate_i12_logi12,
-                Ti_intermediate_i_by_logi,
             ]
             # for next_horizon in [
             #     # next_horizon__arithmetic,

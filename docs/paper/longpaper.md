@@ -227,9 +227,9 @@ The two simulations above produce these plots showing the average cumulated regr
 
 [^regret]:  The regret is the difference between the cumulated rewards of the best fixed-armed strategy (which is the oracle strategy for stationary bandits) and the cumulated rewards of the considered algorithms.
 
-![Single-player simulation showing the regret of $4$ algorithms, and the asymptotic lower-bound from [@LaiRobbins85]. They all perform very well, and at finite time they are empirically *below* the asymptotic lower-bound. Each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound).\label{fig:plot1}](plots/paper/1.png){ width=95% }
+![Single-player simulation showing the regret of $4$ algorithms, and the asymptotic lower-bound from [@LaiRobbins85]. They all perform very well, and at finite time they are empirically *below* the asymptotic lower-bound. Each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound).\label{fig:plot1}](../plots/paper/1.png){ width=95% }
 
-![Multi-player simulation showing the regret of $6$ algorithms, and the asymptotic lower-bound from [@BessonALT2018]. The best algorithm is the centralized version, but for decentralized algorithms, our proposals outperform the previous state-of-the-art [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) policy.\label{fig:plot2}](plots/paper/2.png){ width=95% }
+![Multi-player simulation showing the regret of $6$ algorithms, and the asymptotic lower-bound from [@BessonALT2018]. The best algorithm is the centralized version, but for decentralized algorithms, our proposals outperform the previous state-of-the-art [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) policy.\label{fig:plot2}](../plots/paper/2.png){ width=95% }
 
 ---
 

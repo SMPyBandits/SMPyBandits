@@ -135,8 +135,8 @@ The regret is the difference between the cumulated rewards of the best fixed-arm
 
 [^HDF5 example]: E.g., this simulation produces this HDF5 file, [GitHub.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5](https://github.com/SMPyBandits/SMPyBandits/blob/master/plots/paper/example.hdf5).
 
-![Example of a single-player simulation showing the average regret and histogram of regrets of $4$ algorithms. They all perform very well: each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound). For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).\label{fig:plot1}](plots/paper/3.png){ width=85% }
-![](plots/paper/3_hist.png){ width=85% }
+![Example of a single-player simulation showing the average regret and histogram of regrets of $4$ algorithms. They all perform very well: each algorithm is known to be order-optimal (*i.e.*, its regret is proved to match the lower-bound up-to a constant), and each but UCB is known to be optimal (*i.e.* with the constant matching the lower-bound). For instance, Thomson sampling is very efficient in average (in yellow), and UCB shows a larger variance (in red).\label{fig:plot1}](../plots/paper/3.png){ width=85% }
+![](../plots/paper/3_hist.png){ width=85% }
 
 ---
 
