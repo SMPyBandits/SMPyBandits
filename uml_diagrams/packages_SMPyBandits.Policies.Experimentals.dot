@@ -1,0 +1,29 @@
+digraph "packages_SMPyBandits.Policies.Experimentals" {
+charset="utf-8"
+rankdir=BT
+"0" [label="SMPyBandits.Policies.Experimentals", shape="box"];
+"1" [label="SMPyBandits.Policies.Experimentals.BlackBoxOpt", shape="box"];
+"2" [label="SMPyBandits.Policies.Experimentals.KLempUCB", shape="box"];
+"3" [label="SMPyBandits.Policies.Experimentals.ThompsonRobust", shape="box"];
+"4" [label="SMPyBandits.Policies.Experimentals.UCBjulia", shape="box"];
+"5" [label="SMPyBandits.Policies.Experimentals.UCBlog10", shape="box"];
+"6" [label="SMPyBandits.Policies.Experimentals.UCBlog10alpha", shape="box"];
+"7" [label="SMPyBandits.Policies.Experimentals.UCBoost_faster", shape="box"];
+"8" [label="SMPyBandits.Policies.Experimentals.UCBwrong", shape="box"];
+"9" [label="SMPyBandits.Policies.Experimentals.UnsupervisedLearning", shape="box"];
+"10" [label="SMPyBandits.Policies.Experimentals.klUCBlog10", shape="box"];
+"11" [label="SMPyBandits.Policies.Experimentals.klUCBloglog10", shape="box"];
+"12" [label="SMPyBandits.Policies.Experimentals.setup", shape="box"];
+"0" -> "1" [arrowhead="open", arrowtail="none"];
+"0" -> "2" [arrowhead="open", arrowtail="none"];
+"0" -> "3" [arrowhead="open", arrowtail="none"];
+"0" -> "4" [arrowhead="open", arrowtail="none"];
+"0" -> "5" [arrowhead="open", arrowtail="none"];
+"0" -> "6" [arrowhead="open", arrowtail="none"];
+"0" -> "7" [arrowhead="open", arrowtail="none"];
+"0" -> "8" [arrowhead="open", arrowtail="none"];
+"0" -> "9" [arrowhead="open", arrowtail="none"];
+"0" -> "10" [arrowhead="open", arrowtail="none"];
+"0" -> "11" [arrowhead="open", arrowtail="none"];
+"6" -> "5" [arrowhead="open", arrowtail="none"];
+}
