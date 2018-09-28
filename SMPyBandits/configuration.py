@@ -185,9 +185,9 @@ MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUD
 import numpy as np
 # more parametric? Read from cli?
 MEANS_STR = getenv('MEANS', '')
-if MEANS_STR:
-    MEANS_STR = MEANS_STR.replace('[', '').replace(']', '')
-    MEANS = np.asarray([ float(m) for m in MEANS_STR.split(',') ], dtype=float)
+if MEANS_STR != '':
+    MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
+    print("Using cli env variable to use MEANS = {}.".format(MEANS))  # DEBUG
 
 #: True to use full-restart Doubling Trick
 USE_FULL_RESTART = True
@@ -233,11 +233,15 @@ configuration = {
         # {   # Another very easy problem: 3 arms, two very bad, one bad
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
-        # },
-        {   # XXX A very easy problem, but it is used in a lot of articles
+        # },np.asarray(
+        {   # Use vector from command line
             "arm_type": Bernoulli,
-            "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+            "params": MEANS
         },
+        # {   # XXX A very easy problem, but it is used in a lot of articles
+        #     "arm_type": Bernoulli,
+        #     "params": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+        # },
         # # XXX Default! FIXME always bring this back as default after experimenting
         # {   # A very easy problem (X arms), but it is used in a lot of articles
         #     "arm_type": ARM_TYPE,
@@ -1159,7 +1163,7 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
         }, ],
     })
-elif ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYESIAN:
+elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYESIAN:
     configuration.update({
         "environment": [ {
             "arm_type": ARM_TYPE,
@@ -1172,19 +1176,22 @@ if TEST_WrapRange:
         # Policies that should be simulated, and their parameters.
         "policies": [
             # --- UCB
-            {"archtype": UCB, "append_label": " on $[0,1]$",
+            {
+                "archtype": UCB, "append_label": " on $[0,1]$",
                 "params": {
                     "lower": 0.0,
                     "amplitude": 1.0,
                 }
             },
-            {"archtype": WrapRange,
+            {
+                "archtype": WrapRange,
                 "params": {
                     "policy": UCB
                 }
             },
             # Reference policy knowing the range
-            {"archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
+            {
+                "archtype": UCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
@@ -1192,38 +1199,44 @@ if TEST_WrapRange:
             },
             # --- Thompson
             # # Thompson (and any BayesianIndexPolicy) fails when receiving a reward outside its range, so the first Thompson should fail!
-            # {"archtype": Thompson, "append_label": " on $[0,1]$",
+            # {
+            #     "archtype": Thompson, "append_label": " on $[0,1]$",
             #     "params": {
             #         "lower": 0.0,
             #         "amplitude": 1.0,
             #     }
             # },
-            {"archtype": WrapRange,
+            {
+                "archtype": WrapRange,
                 "params": {
                     "policy": Thompson
                 }
             },
             # Reference policy knowing the range
-            {"archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
+            {
+                "archtype": Thompson, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
                 }
             },
             # --- klUCB
-            {"archtype": klUCB, "append_label": " on $[0,1]$",
+            {
+                "archtype": klUCB, "append_label": " on $[0,1]$",
                 "params": {
                     "lower": 0.0,
                     "amplitude": 1.0,
                 }
             },
-            {"archtype": WrapRange,
+            {
+                "archtype": WrapRange,
                 "params": {
                     "policy": klUCB
                 }
             },
             # Reference policy knowing the range
-            {"archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
+            {
+                "archtype": klUCB, "append_label": " on $[{:.3g},{:.3g}]$".format(LOWER, LOWER + AMPLITUDE),
                 "params": {
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
@@ -1320,13 +1333,13 @@ if TEST_Doubling_Trick:
                 # False,
             ]
             for next_horizon in [
-                Ti_intermediate_i_by_logi,
                 Ti_exponential,
                 Ti_geometric,
                 Ti_intermediate_sqrti,
                 Ti_intermediate_i13,
                 Ti_intermediate_i23,
                 Ti_intermediate_i12_logi12,
+                Ti_intermediate_i_by_logi,
             ]
             # for next_horizon in [
             #     # next_horizon__arithmetic,
