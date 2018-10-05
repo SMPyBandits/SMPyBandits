@@ -58,6 +58,8 @@ The paper can be consulted `here on my website <https://perso.crans.org/besson/a
     Aggregation.md
     MultiPlayers.md
     DoublingTrick.md
+    SparseBandits.md
+    NonStationaryBandits.md
     API.md
     TODO.md
     plots/README.md

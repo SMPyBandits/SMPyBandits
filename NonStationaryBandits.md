@@ -126,7 +126,7 @@ configuration = {
 You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
 make install         # install the requirements ONLY ONCE
-make nonstationary   # run and log the main.py script
+make nonstationary   # run and log the main.py script FIXME
 ```
 
 ----
