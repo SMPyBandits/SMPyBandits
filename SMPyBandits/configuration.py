@@ -363,7 +363,7 @@ if ENVIRONMENT_NONSTATIONARY:
             "params": {
                 "newMeans": randomMeans,
                 # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
                 "args": {
                     "nbArms": NB_ARMS,
@@ -384,14 +384,11 @@ if ENVIRONMENT_NONSTATIONARY:
             "params": {
                 "newMeans": continuouslyVaryingMeans,
                 # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
                     "isSorted": True,
@@ -408,14 +405,11 @@ if ENVIRONMENT_NONSTATIONARY:
             "params": {
                 "newMeans": randomContinuouslyVaryingMeans,
                 # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
                     "isSorted": True,
