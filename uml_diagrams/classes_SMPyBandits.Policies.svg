@@ -67,7 +67,7 @@
 <text text-anchor="start" x="288.5" y="-1882.3" font-family="Times,serif" font-size="14.00" fill="#000000">children : list</text>
 <text text-anchor="start" x="288.5" y="-1867.3" font-family="Times,serif" font-size="14.00" fill="#000000">children_cumulated_losses</text>
 <text text-anchor="start" x="288.5" y="-1852.3" font-family="Times,serif" font-size="14.00" fill="#000000">choices</text>
-<text text-anchor="start" x="288.5" y="-1837.3" font-family="Times,serif" font-size="14.00" fill="#000000">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="288.5" y="-1837.3" font-family="Times,serif" font-size="14.00" fill="#000000">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="288.5" y="-1822.3" font-family="Times,serif" font-size="14.00" fill="#000000">extra_str : str</text>
 <text text-anchor="start" x="288.5" y="-1807.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon</text>
 <text text-anchor="start" x="288.5" y="-1792.3" font-family="Times,serif" font-size="14.00" fill="#000000">index</text>
@@ -1097,7 +1097,7 @@
 <text text-anchor="middle" x="9407" y="-1792.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.MusicalChair.MusicalChair</text>
 <polyline fill="none" stroke="#000000" points="9259.5,-1785 9554.5,-1785 "/>
 <text text-anchor="start" x="9267.5" y="-1769.8" font-family="Times,serif" font-size="14.00" fill="#000000">A</text>
-<text text-anchor="start" x="9267.5" y="-1754.8" font-family="Times,serif" font-size="14.00" fill="#000000">Time0 : float, int</text>
+<text text-anchor="start" x="9267.5" y="-1754.8" font-family="Times,serif" font-size="14.00" fill="#000000">Time0 : int, float</text>
 <text text-anchor="start" x="9267.5" y="-1739.8" font-family="Times,serif" font-size="14.00" fill="#000000">chair : NoneType</text>
 <text text-anchor="start" x="9267.5" y="-1724.8" font-family="Times,serif" font-size="14.00" fill="#000000">cumulatedRewards</text>
 <text text-anchor="start" x="9267.5" y="-1709.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbCollision : int</text>
@@ -1947,7 +1947,7 @@
 <text text-anchor="start" x="9185.5" y="-695.3" font-family="Times,serif" font-size="14.00" fill="#000000">activeArms : list</text>
 <text text-anchor="start" x="9185.5" y="-680.3" font-family="Times,serif" font-size="14.00" fill="#000000">alpha : float</text>
 <text text-anchor="start" x="9185.5" y="-665.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_m : int</text>
-<text text-anchor="start" x="9185.5" y="-650.3" font-family="Times,serif" font-size="14.00" fill="#000000">estimate_delta : int, float</text>
+<text text-anchor="start" x="9185.5" y="-650.3" font-family="Times,serif" font-size="14.00" fill="#000000">estimate_delta : float, int</text>
 <text text-anchor="start" x="9185.5" y="-635.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : int</text>
 <text text-anchor="start" x="9185.5" y="-620.3" font-family="Times,serif" font-size="14.00" fill="#000000">max_m : int</text>
 <text text-anchor="start" x="9185.5" y="-605.3" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_of_exploration : int</text>
@@ -2078,7 +2078,7 @@
 <text text-anchor="middle" x="6019" y="-1161.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.UCBoost.UCBoost</text>
 <polyline fill="none" stroke="#000000" points="5895.5,-1154 6142.5,-1154 "/>
 <text text-anchor="start" x="5903.5" y="-1138.8" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
-<text text-anchor="start" x="5903.5" y="-1123.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : int, list, NoneType</text>
+<text text-anchor="start" x="5903.5" y="-1123.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, NoneType, int</text>
 <polyline fill="none" stroke="#000000" points="5895.5,-1116 6142.5,-1116 "/>
 <text text-anchor="start" x="5903.5" y="-1100.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
 <text text-anchor="start" x="5903.5" y="-1085.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>

@@ -2,7 +2,7 @@ digraph "classes_SMPyBandits.Policies" {
 charset="utf-8"
 rankdir=BT
 "0" [label="{SMPyBandits.Policies.AdBandits.AdBandits|alpha : int\lepsilon\lhorizon : int\lposterior\l|__init__()\l__str__()\lchoice()\lchoiceWithRank()\lgetReward()\lstartGame()\l}", shape="record"];
-"1" [label="{SMPyBandits.Policies.Aggregator.Aggregator|amplitude : float\lchildren : list\lchildren_cumulated_losses\lchoices\ldecreaseRate : str, NoneType\lextra_str : str\lhorizon\lindex\llearningRate : NoneType\llower : float\lnbArms\lnbChildren\lrate\lt : int\ltrusts : str\lunbiased : bool\lupdate_all_children : bool\lupdate_like_exp4 : bool\l|__init__()\l__str__()\l_makeChildrenChoose()\lchoice()\lchoiceFromSubSet()\lchoiceIMP()\lchoiceMultiple()\lchoiceWithRank()\lcomputeAllIndex()\lcomputeIndex()\lestimatedBestArms()\lestimatedOrder()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
+"1" [label="{SMPyBandits.Policies.Aggregator.Aggregator|amplitude : float\lchildren : list\lchildren_cumulated_losses\lchoices\ldecreaseRate : NoneType, str\lextra_str : str\lhorizon\lindex\llearningRate : NoneType\llower : float\lnbArms\lnbChildren\lrate\lt : int\ltrusts : str\lunbiased : bool\lupdate_all_children : bool\lupdate_like_exp4 : bool\l|__init__()\l__str__()\l_makeChildrenChoose()\lchoice()\lchoiceFromSubSet()\lchoiceIMP()\lchoiceMultiple()\lchoiceWithRank()\lcomputeAllIndex()\lcomputeIndex()\lestimatedBestArms()\lestimatedOrder()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
 "2" [label="{SMPyBandits.Policies.ApproximatedFHGittins.ApproximatedFHGittins|alpha : float\ldistortion_horizon : float\lhorizon : int\lm\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "3" [label="{SMPyBandits.Policies.BESA.BESA|_actions\l_has_horizon\l_left : int\l_right\l_subsample_function\lall_rewards\lhorizon : NoneType\lindex\lminPullsOfEachArm\lnon_binary : bool\lnon_recursive : bool\lrandom_subsample : bool\lrandomized_tournament : bool\l|__init__()\l__str__()\lchoice()\lchoiceFromSubSet()\lchoiceMultiple()\lchoiceWithRank()\lcomputeAllIndex()\lcomputeIndex()\lgetReward()\lhandleCollision()\l}", shape="record"];
 "4" [label="{SMPyBandits.Policies.BasePolicy.BasePolicy|amplitude : float\llower : float\lnbArms\lpulls\lrewards\lt : int\l|__init__()\l__str__()\lchoice()\lchoiceFromSubSet()\lchoiceIMP()\lchoiceMultiple()\lchoiceWithRank()\lestimatedOrder()\lgetReward()\lstartGame()\l}", shape="record"];
@@ -47,7 +47,7 @@ rankdir=BT
 "43" [label="{SMPyBandits.Policies.MOSSAnytime.MOSSAnytime|alpha : float\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "44" [label="{SMPyBandits.Policies.MOSSExperimental.MOSSExperimental|\l|__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "45" [label="{SMPyBandits.Policies.MOSSH.MOSSH|horizon : int\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
-"46" [label="{SMPyBandits.Policies.MusicalChair.MusicalChair|A\lTime0 : float, int\lchair : NoneType\lcumulatedRewards\lnbCollision : int\lnbObservations\lnbPlayers : int, NoneType\lstate\lt : int\l|__init__()\l__str__()\l_endInitialPhase()\lchoice()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
+"46" [label="{SMPyBandits.Policies.MusicalChair.MusicalChair|A\lTime0 : int, float\lchair : NoneType\lcumulatedRewards\lnbCollision : int\lnbObservations\lnbPlayers : int, NoneType\lstate\lt : int\l|__init__()\l__str__()\l_endInitialPhase()\lchoice()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
 "47" [label="{SMPyBandits.Policies.MusicalChairNoSensing.MusicalChairNoSensing|A\lchair : NoneType\lconstant_in_testing_the_gap\lcumulatedRewards\lhorizon : int\lnbArms : int\lnbObservations\lnbPlayers : int\lstate\lt : int\ltau_phase_2 : int\l|__init__()\l__str__()\l_endPhase2()\lchoice()\lgetReward()\lhandleCollision()\lstartGame()\l}", shape="record"];
 "48" [label="{SMPyBandits.Policies.OCUCB.OCUCB|eta : int\lrho : int\l|_Bterm()\l_Bterms()\l__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "49" [label="{SMPyBandits.Policies.OCUCBH.AOCUCBH|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
@@ -82,14 +82,14 @@ rankdir=BT
 "78" [label="{SMPyBandits.Policies.UCBVtuned.UCBVtuned|\l|computeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "79" [label="{SMPyBandits.Policies.UCBalpha.UCBalpha|alpha : int\l|__init__()\l__str__()\lcomputeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "80" [label="{SMPyBandits.Policies.UCBdagger.UCBdagger|alpha : int\lhorizon : int\l|__init__()\l__str__()\lcomputeIndex()\lgetReward()\l}", shape="record"];
-"81" [label="{SMPyBandits.Policies.UCBimproved.UCBimproved|activeArms : list\lalpha : float\lcurrent_m : int\lestimate_delta : int, float\lhorizon : int\lmax_m : int\lmax_nb_of_exploration : int\lwhen_did_it_leave\l|__init__()\l__str__()\lchoice()\lcomputeIndex()\lupdate_activeArms()\l}", shape="record"];
+"81" [label="{SMPyBandits.Policies.UCBimproved.UCBimproved|activeArms : list\lalpha : float\lcurrent_m : int\lestimate_delta : float, int\lhorizon : int\lmax_m : int\lmax_nb_of_exploration : int\lwhen_did_it_leave\l|__init__()\l__str__()\lchoice()\lcomputeIndex()\lupdate_activeArms()\l}", shape="record"];
 "82" [label="{SMPyBandits.Policies.UCBmin.UCBmin|\l|computeAllIndex()\lcomputeIndex()\l}", shape="record"];
 "83" [label="{SMPyBandits.Policies.UCBoost.UCB_bq|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "84" [label="{SMPyBandits.Policies.UCBoost.UCB_h|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "85" [label="{SMPyBandits.Policies.UCBoost.UCB_lb|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "86" [label="{SMPyBandits.Policies.UCBoost.UCB_sq|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "87" [label="{SMPyBandits.Policies.UCBoost.UCB_t|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
-"88" [label="{SMPyBandits.Policies.UCBoost.UCBoost|c : float\lset_D : int, list, NoneType\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
+"88" [label="{SMPyBandits.Policies.UCBoost.UCBoost|c : float\lset_D : list, NoneType, int\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "89" [label="{SMPyBandits.Policies.UCBoost.UCBoostEpsilon|c : float\lepsilon : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "90" [label="{SMPyBandits.Policies.UCBoost.UCBoost_bq_h_lb|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "91" [label="{SMPyBandits.Policies.UCBoost.UCBoost_bq_h_lb_t|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
