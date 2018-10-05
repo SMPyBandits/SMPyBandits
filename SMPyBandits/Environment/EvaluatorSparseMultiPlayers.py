@@ -26,7 +26,7 @@ try:
     from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from .CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
-    from .MAB import MAB, MarkovianMAB, DynamicMAB
+    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
     from .ResultMultiPlayers import ResultMultiPlayers
     # Inheritance
     from .EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
@@ -40,7 +40,7 @@ except ImportError:
     from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from CollisionModels import onlyUniqUserGetsRewardSparse, full_lost_if_collision
-    from MAB import MAB, MarkovianMAB, DynamicMAB
+    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
     from ResultMultiPlayers import ResultMultiPlayers
     # Inheritance
     from EvaluatorMultiPlayers import EvaluatorMultiPlayers, _extract
@@ -103,17 +103,14 @@ class EvaluatorSparseMultiPlayers(EvaluatorMultiPlayers):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             repeatIdout = 0
-            historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                 delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, self.activations, seed=seeds[repeatId], repeatId=repeatId)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
-                historyOfMeans.append(r._means)
                 store(r, repeatIdout)
                 repeatIdout += 1
-            if env.isDynamic:
+            if env.isChangingAtEachRepetition:
                 env._t += self.repetitions  # new self.repetitions draw!
-                env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, self.activations, repeatId=repeatId)
@@ -259,7 +256,7 @@ def delayed_play(env, players, horizon, collisionModel, activations,
     except (ValueError, SystemError):
         print("Warning: setting random.seed and np.random.seed seems to not be available. Are you using Windows?")  # XXX
     means = env.means
-    if env.isDynamic:
+    if env.isChangingAtEachRepetition:
         means = env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms

@@ -62,15 +62,26 @@ W: 12, 0: Unused find_packages imported from setuptools (unused-import)
 C: 14, 0: standard import "from codecs import open" should be placed before "from setuptools import setup, find_packages" (wrong-import-order)
 C: 15, 0: standard import "from os import path" should be placed before "from setuptools import setup, find_packages" (wrong-import-order)
 ************* Module conf
-W:139, 0: Redefining built-in 'copyright' (redefined-builtin)
-C:219, 8: Missing function docstring (missing-docstring)
-W:219,35: Unused argument 'pagename' (unused-argument)
-W:219,45: Unused argument 'templatename' (unused-argument)
-W:219,68: Unused argument 'doctree' (unused-argument)
-C:238, 8: Missing function docstring (missing-docstring)
-C:242, 8: Missing function docstring (missing-docstring)
-W:209, 8: Unused import sphinxcontrib.googleanalytics (unused-import)
-C:217, 8: Imports from package sphinx are not grouped (ungrouped-imports)
+C:285, 0: Wrong hanging indentation (remove 4 spaces).
+                # 'url_resolver': lambda url: github_doc_root + url,
+            |   ^ (bad-continuation)
+C:287, 0: Wrong hanging indentation (remove 4 spaces).
+                'enable_math': True,
+            |   ^ (bad-continuation)
+C:288, 0: Wrong hanging indentation (remove 4 spaces).
+                'enable_inline_math': True,
+            |   ^ (bad-continuation)
+W:144, 0: Redefining built-in 'copyright' (redefined-builtin)
+C:230, 8: Missing function docstring (missing-docstring)
+W:230,35: Unused argument 'pagename' (unused-argument)
+W:230,45: Unused argument 'templatename' (unused-argument)
+W:230,68: Unused argument 'doctree' (unused-argument)
+C:249, 8: Missing function docstring (missing-docstring)
+C:253, 8: Missing function docstring (missing-docstring)
+E:283, 4: function already defined line 253 (function-redefined)
+C:283, 4: Missing function docstring (missing-docstring)
+W:221, 8: Unused import sphinxcontrib.googleanalytics (unused-import)
+C:228, 8: Imports from package sphinx are not grouped (ungrouped-imports)
 ************* Module my_small_slack_bot
 C: 32, 0: Import "from numpy.random import poisson" should be placed at the top of the module (wrong-import-position)
 E: 33, 0: Unable to import 'slackclient' (import-error)
@@ -100,6 +111,107 @@ W:265,21: Use % formatting in logging functions and pass the % parameters as arg
 W:276,21: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
 W:235, 4: Unused variable 'full_list_channels' (unused-variable)
 C: 22, 0: Imports from package os are not grouped (ungrouped-imports)
+************* Module test_compute_and_plot_regret_bounds
+C:  1, 0: Missing module docstring (missing-docstring)
+W:  8, 6: Unused argument 'T' (unused-argument)
+W: 21,16: Redefining name 'a' from outer scope (line 8) (redefined-outer-name)
+W: 21,21: Redefining name 'b' from outer scope (line 12) (redefined-outer-name)
+W: 21,26: Redefining name 'f' from outer scope (line 17) (redefined-outer-name)
+************* Module Exploring different doubling tricks for different kinds of regret bounds
+W:217, 0: WARNING don't forget the floor! (fixme)
+W:335, 0: XXX bound in RT <= log(T) (fixme)
+W:336, 0: XXX bound in RT <= sqrt(T) (fixme)
+W:337, 0: XXX bound in RT <= sqrt(T * log(T)) (fixme)
+W:338, 0: XXX another weird bound in RT <= T^2/3 * log(T) (fixme)
+C:  8, 0: Trailing whitespace (trailing-whitespace)
+C: 14, 0: Trailing whitespace (trailing-whitespace)
+C: 18, 0: Trailing whitespace (trailing-whitespace)
+C: 20, 0: Trailing whitespace (trailing-whitespace)
+C: 22, 0: Trailing whitespace (trailing-whitespace)
+C: 26, 0: Trailing whitespace (trailing-whitespace)
+C: 30, 0: Trailing whitespace (trailing-whitespace)
+C: 32, 0: Trailing whitespace (trailing-whitespace)
+C: 78, 0: Trailing whitespace (trailing-whitespace)
+C: 80, 0: Trailing whitespace (trailing-whitespace)
+C:112, 0: Trailing whitespace (trailing-whitespace)
+C:125, 0: Trailing whitespace (trailing-whitespace)
+C:137, 0: Trailing whitespace (trailing-whitespace)
+C:165, 0: Trailing whitespace (trailing-whitespace)
+C:269, 0: Trailing whitespace (trailing-whitespace)
+C:271, 0: Trailing whitespace (trailing-whitespace)
+C:273, 0: Trailing whitespace (trailing-whitespace)
+C:280, 0: Trailing whitespace (trailing-whitespace)
+C:287, 0: Wrong hanging indentation (remove 4 spaces).
+        i_min=1, i_max=30,
+    |   ^ (bad-continuation)
+C:288, 0: Wrong hanging indentation (remove 4 spaces).
+        list_of_f=(
+    |   ^ (bad-continuation)
+C:296, 0: Wrong hanging indentation (remove 4 spaces).
+        label_of_f=(
+    |   ^ (bad-continuation)
+C:304, 0: Wrong hanging indentation (remove 4 spaces).
+        *args, **kwargs
+    |   ^ (bad-continuation)
+C:334, 0: Wrong hanging indentation (remove 4 spaces).
+        Tmin=2, Tmax=int(1e8), nbTs=100,
+    |   ^ (bad-continuation)
+C:335, 0: Wrong hanging indentation (remove 4 spaces).
+        gamma=_f(0.0), delta=_f(1.0),  # XXX bound in RT <= log(T)
+    |   ^ (bad-continuation)
+C:336, 0: Wrong hanging indentation.
+        # gamma=_f(0.5), delta=_f(0.0),  # XXX bound in RT <= sqrt(T)
+    |   ^                              | (bad-continuation)
+C:339, 0: Wrong hanging indentation (remove 4 spaces).
+        list_of_f=(
+    |   ^ (bad-continuation)
+C:347, 0: Wrong hanging indentation (remove 4 spaces).
+        label_of_f=(
+    |   ^ (bad-continuation)
+C:355, 0: Wrong hanging indentation (remove 4 spaces).
+        show_Ti_m_Tim1=True,
+    |   ^ (bad-continuation)
+C:356, 0: Wrong hanging indentation (remove 4 spaces).
+        *args, **kwargs
+    |   ^ (bad-continuation)
+C:563, 0: Trailing whitespace (trailing-whitespace)
+C:565, 0: Trailing whitespace (trailing-whitespace)
+C:569, 0: Trailing whitespace (trailing-whitespace)
+C:573, 0: Trailing whitespace (trailing-whitespace)
+C:577, 0: Trailing whitespace (trailing-whitespace)
+C:  1, 0: Missing module docstring (missing-docstring)
+E: 44, 0: Undefined variable 'get_ipython' (undefined-variable)
+E: 45, 0: Undefined variable 'get_ipython' (undefined-variable)
+W: 51, 0: __future__ import is not the first non docstring statement (misplaced-future)
+C: 51, 0: Import "from __future__ import division, print_function" should be placed at the top of the module (wrong-import-position)
+C: 55, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+C: 56, 0: Import "import matplotlib as mpl" should be placed at the top of the module (wrong-import-position)
+C: 57, 0: Import "import matplotlib.pyplot as plt" should be placed at the top of the module (wrong-import-position)
+C: 58, 0: Import "import seaborn as sns" should be placed at the top of the module (wrong-import-position)
+E: 73, 5: Module 'numpy' has no 'float128' member (no-member)
+C:101, 0: Missing function docstring (missing-docstring)
+C:120,15: More than one statement on a single line (multiple-statements)
+C:154,15: More than one statement on a single line (multiple-statements)
+C:171, 0: Missing function docstring (missing-docstring)
+C:180, 0: Missing function docstring (missing-docstring)
+C:183, 0: Missing function docstring (missing-docstring)
+C:186, 0: Missing function docstring (missing-docstring)
+C:218, 4: Missing function docstring (missing-docstring)
+C:241, 4: Missing function docstring (missing-docstring)
+W:246,33: Missing keyword argument 'T' for format string (missing-format-argument-key)
+W:246,33: Missing keyword argument 'max_i' for format string (missing-format-argument-key)
+E:313,40: Module 'numpy' has no 'float128' member (no-member)
+W:287, 0: Unused argument 'args' (unused-argument)
+W:287, 0: Unused argument 'kwargs' (unused-argument)
+W:311, 4: Unused variable 'fig' (unused-variable)
+W:335, 8: Redefining name 'gamma' from outer scope (line 463) (redefined-outer-name)
+W:335,23: Redefining name 'delta' from outer scope (line 463) (redefined-outer-name)
+R:333, 0: Too many local variables (25/15) (too-many-locals)
+E:370,66: Module 'numpy' has no 'float128' member (no-member)
+E:378,50: Module 'numpy' has no 'float128' member (no-member)
+W:334, 0: Unused argument 'args' (unused-argument)
+W:334, 0: Unused argument 'kwargs' (unused-argument)
+W:368, 4: Unused variable 'fig' (unused-variable)
 ************* Module test_compute_and_plot_regret_bounds2
 W: 12, 0: XXX dangerous in general, controlled here! (fixme)
 W: 30, 0: FIXME Change here the values (fixme)
@@ -136,182 +248,6 @@ W:155, 8: Unused variable 'r1' (unused-variable)
 W:155,12: Unused variable 'r2' (unused-variable)
 W:155,16: Unused variable 'r3' (unused-variable)
 W:  7, 0: Unused matplotlib.pyplot imported as plt (unused-import)
-************* Module test_compute_and_plot_regret_bounds
-C:  1, 0: Missing module docstring (missing-docstring)
-W:  8, 6: Unused argument 'T' (unused-argument)
-W: 21,16: Redefining name 'a' from outer scope (line 8) (redefined-outer-name)
-W: 21,21: Redefining name 'b' from outer scope (line 12) (redefined-outer-name)
-W: 21,26: Redefining name 'f' from outer scope (line 17) (redefined-outer-name)
-************* Module SMPyBandits.configuration_all_singleplayer
-W: 51, 0: XXX To profile the code, turn down parallel computing (fixme)
-W: 62, 0: XXX do not let this = False (fixme)
-W: 99, 0: WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values... (fixme)
-W:134, 0: XXX Default (fixme)
-W:139, 0: XXX Bernoulli arms (fixme)
-W:160, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
-W:164, 0: XXX Default! (fixme)
-W:202, 0: XXX Exponential arms (fixme)
-W:208, 0: XXX Gaussian arms (fixme)
-W:218, 0: XXX Unbounded Gaussian arms (fixme)
-W:227, 0: XXX Bernoulli arms (fixme)
-W:360, 0: XXX Efficient parameter-free Softmax (fixme)
-W:460, 0: WARNING (fixme)
-W:488, 0: XXX experimental sliding window algorithm (fixme)
-W:492, 0: XXX experimental sliding window algorithm (fixme)
-W:496, 0: XXX experimental discounted reward algorithm (fixme)
-W:500, 0: XXX experimental discounted reward algorithm (fixme)
-W:504, 0: XXX experimental sliding window algorithm (fixme)
-W:508, 0: XXX experimental sliding window algorithm (fixme)
-W:600, 0: XXX experimental sliding window algorithm (fixme)
-W:665, 0: XXX does not work yet! (fixme)
-W:711, 0: XXX Very inefficient! (fixme)
-W:713, 0: XXX Very inefficient! (fixme)
-W:741, 0: XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB (fixme)
-W:753, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
-C:101, 0: Wrong hanging indentation (remove 8 spaces).
-            "UnboundedGaussian",
-    |       ^ (bad-continuation)
-C:102, 0: Wrong hanging indentation (remove 8 spaces).
-            # "Gaussian",
-    |       ^ (bad-continuation)
-C:103, 0: Wrong hanging indentation.
-        ]:
-|   |   ^ (bad-continuation)
-C:734, 0: No space allowed after bracket
-        "environment": [ {
-                       ^ (bad-whitespace)
-C:735, 0: Wrong hanging indentation (remove 4 spaces).
-                "arm_type": ARM_TYPE,
-            |   ^ (bad-continuation)
-C:736, 0: Wrong hanging indentation (remove 4 spaces).
-                "params": [
-            |   ^ (bad-continuation)
-C:741, 0: Wrong hanging indentation (remove 4 spaces).
-                # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
-            |   ^ (bad-continuation)
-C:746, 0: No space allowed after bracket
-        "environment": [ {
-                       ^ (bad-whitespace)
-C:747, 0: Wrong hanging indentation (remove 4 spaces).
-                "arm_type": ARM_TYPE,
-            |   ^ (bad-continuation)
-C:748, 0: Wrong hanging indentation (remove 4 spaces).
-                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
-            |   ^ (bad-continuation)
-W: 25, 4: Wildcard import Arms (wildcard-import)
-W: 27, 4: Wildcard import SMPyBandits.Arms (wildcard-import)
-W: 31, 4: Wildcard import Policies (wildcard-import)
-W: 33, 4: Wildcard import SMPyBandits.Policies (wildcard-import)
-E:252, 0: Sequence index is not an int, slice, or instance with __index__ (invalid-sequence-index)
-W: 27, 4: Unused import json from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import np from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import uniformMeansWithSparsity from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithGapBetweenMbestMworst from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithSparsity from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithSparsity2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import array_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import list_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import tuple_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import optimal_selection_probabilities from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import copy from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Constant from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UniformArm from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Binomial from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Poisson from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_1 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_5 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_10 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_100 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m1_1 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m2_2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m5_5 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m10_10 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m100_100 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gamma from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import FittingModel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SimpleGaussianKernel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SimpleBernoulliKernel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import default_estimator from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import default_optimizer from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBH from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBjulia from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseWrapper from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import GaussianOSSB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseOSSB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Aggregator from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import CORRAL from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import LearnExp from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SlidingWindowRestart from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import DoublingTrickWrapper from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__arithmetic from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__geometric from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__exponential from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__exponential_fast from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__exponential_slow from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import next_horizon__exponential_generic from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import breakpoints from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import WrapRange from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import optimalT0 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import jit from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbExp from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbGauss from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbGamma from wildcard import (unused-wildcard-import)
-C: 33, 4: Imports from package SMPyBandits are not grouped (ungrouped-imports)
-************* Module SMPyBandits.configuration_comparing_doubling_algorithms
-W: 36, 0: XXX To profile the code, turn down parallel computing (fixme)
-W: 42, 0: XXX do not let this = False (fixme)
-W: 87, 0: XXX Bernoulli arms (fixme)
-W: 88, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
-W: 92, 0: XXX Default! (fixme)
-W:123, 0: XXX Don't need the horizon, but suffer from the restart (to compare) (fixme)
-C:123, 0: Wrong hanging indentation (remove 4 spaces).
-        # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
-    |   ^ (bad-continuation)
-C:126, 0: Wrong hanging indentation (remove 4 spaces).
-        klUCBPlusPlus,
-    |   ^ (bad-continuation)
-C:127, 0: Wrong hanging indentation (remove 4 spaces).
-        # ApproximatedFHGittins,
-    |   ^ (bad-continuation)
-E: 24, 0: Unable to import 'Arms' (import-error)
-W: 24, 0: Wildcard import Arms (wildcard-import)
-C: 24, 0: Import "from Arms import *" should be placed at the top of the module (wrong-import-position)
-E: 27, 0: Unable to import 'Policies' (import-error)
-W: 27, 0: Wildcard import Policies (wildcard-import)
-C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
-E: 74,11: Undefined variable 'mapping_ARM_TYPE' (undefined-variable)
-E: 89,24: Undefined variable 'Bernoulli' (undefined-variable)
-E: 95,22: Undefined variable 'uniformMeans' (undefined-variable)
-E:100,28: Undefined variable 'randomMeans' (undefined-variable)
-E:118, 8: Undefined variable 'klucb_mapping' (undefined-variable)
-E:118,76: Undefined variable 'klucbBern' (undefined-variable)
-E:126, 8: Undefined variable 'klUCBPlusPlus' (undefined-variable)
-W:132, 4: Duplicate key 'archtype' in dictionary (duplicate-key)
-E:133,20: Undefined variable 'klUCB' (undefined-variable)
-E:134,20: Undefined variable 'UCB' (undefined-variable)
-E:162,24: Undefined variable 'DoublingTrickWrapper' (undefined-variable)
-E:175,12: Undefined variable 'next_horizon__arithmetic' (undefined-variable)
-E:176,12: Undefined variable 'next_horizon__geometric' (undefined-variable)
-E:178,12: Undefined variable 'next_horizon__exponential_fast' (undefined-variable)
-E:179,12: Undefined variable 'next_horizon__exponential_slow' (undefined-variable)
-E:180,12: Undefined variable 'next_horizon__exponential_generic' (undefined-variable)
 ************* Module SMPyBandits.configuration_comparing_aggregation_algorithms
 W: 44, 0: XXX To profile the code, turn down parallel computing (fixme)
 W: 54, 0: XXX do not let this = False  # To profile the code, turn down parallel computing (fixme)
@@ -352,6 +288,44 @@ E:375,28: Undefined variable 'CORRAL' (undefined-variable)
 E:398,28: Undefined variable 'Aggregator' (undefined-variable)
 W:336, 0: Unused product imported from itertools (unused-import)
 C:336, 0: standard import "from itertools import product" should be placed before "from Arms import *" (wrong-import-order)
+************* Module SMPyBandits.configuration_comparing_doubling_algorithms
+W: 36, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 42, 0: XXX do not let this = False (fixme)
+W: 87, 0: XXX Bernoulli arms (fixme)
+W: 88, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
+W: 92, 0: XXX Default! (fixme)
+W:123, 0: XXX Don't need the horizon, but suffer from the restart (to compare) (fixme)
+C:123, 0: Wrong hanging indentation (remove 4 spaces).
+        # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
+    |   ^ (bad-continuation)
+C:126, 0: Wrong hanging indentation (remove 4 spaces).
+        klUCBPlusPlus,
+    |   ^ (bad-continuation)
+C:127, 0: Wrong hanging indentation (remove 4 spaces).
+        # ApproximatedFHGittins,
+    |   ^ (bad-continuation)
+E: 24, 0: Unable to import 'Arms' (import-error)
+W: 24, 0: Wildcard import Arms (wildcard-import)
+C: 24, 0: Import "from Arms import *" should be placed at the top of the module (wrong-import-position)
+E: 27, 0: Unable to import 'Policies' (import-error)
+W: 27, 0: Wildcard import Policies (wildcard-import)
+C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
+E: 74,11: Undefined variable 'mapping_ARM_TYPE' (undefined-variable)
+E: 89,24: Undefined variable 'Bernoulli' (undefined-variable)
+E: 95,22: Undefined variable 'uniformMeans' (undefined-variable)
+E:100,28: Undefined variable 'randomMeans' (undefined-variable)
+E:118, 8: Undefined variable 'klucb_mapping' (undefined-variable)
+E:118,76: Undefined variable 'klucbBern' (undefined-variable)
+E:126, 8: Undefined variable 'klUCBPlusPlus' (undefined-variable)
+W:132, 4: Duplicate key 'archtype' in dictionary (duplicate-key)
+E:133,20: Undefined variable 'klUCB' (undefined-variable)
+E:134,20: Undefined variable 'UCB' (undefined-variable)
+E:162,24: Undefined variable 'DoublingTrickWrapper' (undefined-variable)
+E:175,12: Undefined variable 'next_horizon__arithmetic' (undefined-variable)
+E:176,12: Undefined variable 'next_horizon__geometric' (undefined-variable)
+E:178,12: Undefined variable 'next_horizon__exponential_fast' (undefined-variable)
+E:179,12: Undefined variable 'next_horizon__exponential_slow' (undefined-variable)
+E:180,12: Undefined variable 'next_horizon__exponential_generic' (undefined-variable)
 ************* Module SMPyBandits.configuration_markovian
 W: 40, 0: XXX To profile the code, turn down parallel computing (fixme)
 W: 48, 0: XXX do not let this = False (fixme)
@@ -382,6 +356,186 @@ E:187,24: Undefined variable 'BayesUCB' (undefined-variable)
 E:192,24: Undefined variable 'ApproximatedFHGittins' (undefined-variable)
 E:199,24: Undefined variable 'ApproximatedFHGittins' (undefined-variable)
 E:215,24: Undefined variable 'Aggregator' (undefined-variable)
+************* Module SMPyBandits.configuration_all_singleplayer
+W: 49, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 60, 0: XXX do not let this = False (fixme)
+W: 97, 0: WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values... (fixme)
+W:132, 0: XXX Default (fixme)
+W:137, 0: XXX Bernoulli arms (fixme)
+W:158, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
+W:162, 0: XXX Default! (fixme)
+W:200, 0: XXX Exponential arms (fixme)
+W:206, 0: XXX Gaussian arms (fixme)
+W:216, 0: XXX Unbounded Gaussian arms (fixme)
+W:225, 0: XXX Bernoulli arms (fixme)
+W:358, 0: XXX Efficient parameter-free Softmax (fixme)
+W:474, 0: WARNING (fixme)
+W:478, 0: WARNING (fixme)
+W:490, 0: XXX experimental sliding window algorithm (fixme)
+W:494, 0: XXX experimental sliding window algorithm (fixme)
+W:498, 0: XXX experimental discounted reward algorithm (fixme)
+W:502, 0: XXX experimental discounted reward algorithm (fixme)
+W:506, 0: XXX experimental sliding window algorithm (fixme)
+W:510, 0: XXX experimental sliding window algorithm (fixme)
+W:602, 0: XXX experimental sliding window algorithm (fixme)
+W:667, 0: XXX does not work yet! (fixme)
+W:713, 0: XXX Very inefficient! (fixme)
+W:715, 0: XXX Very inefficient! (fixme)
+W:835, 0: XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB (fixme)
+W:847, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
+C: 99, 0: Wrong hanging indentation (remove 8 spaces).
+            "UnboundedGaussian",
+    |       ^ (bad-continuation)
+C:100, 0: Wrong hanging indentation (remove 8 spaces).
+            # "Gaussian",
+    |       ^ (bad-continuation)
+C:101, 0: Wrong hanging indentation.
+        ]:
+|   |   ^ (bad-continuation)
+C:828, 0: No space allowed after bracket
+        "environment": [ {
+                       ^ (bad-whitespace)
+C:829, 0: Wrong hanging indentation (remove 4 spaces).
+                "arm_type": ARM_TYPE,
+            |   ^ (bad-continuation)
+C:830, 0: Wrong hanging indentation (remove 4 spaces).
+                "params": [
+            |   ^ (bad-continuation)
+C:835, 0: Wrong hanging indentation (remove 4 spaces).
+                # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
+            |   ^ (bad-continuation)
+C:840, 0: No space allowed after bracket
+        "environment": [ {
+                       ^ (bad-whitespace)
+C:841, 0: Wrong hanging indentation (remove 4 spaces).
+                "arm_type": ARM_TYPE,
+            |   ^ (bad-continuation)
+C:842, 0: Wrong hanging indentation (remove 4 spaces).
+                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
+            |   ^ (bad-continuation)
+W: 25, 4: Wildcard import Arms (wildcard-import)
+W: 26, 4: Wildcard import Policies (wildcard-import)
+W: 27, 4: Wildcard import Policies.Experimentals (wildcard-import)
+W: 29, 4: Wildcard import SMPyBandits.Arms (wildcard-import)
+W: 30, 4: Wildcard import SMPyBandits.Policies (wildcard-import)
+W: 31, 4: Wildcard import SMPyBandits.Policies.Experimentals (wildcard-import)
+E:250, 0: Sequence index is not an int, slice, or instance with __index__ (invalid-sequence-index)
+W: 29, 4: Unused import json from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import np from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import uniformMeansWithSparsity from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import randomMeansWithGapBetweenMbestMworst from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import randomMeansWithSparsity from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import randomMeansWithSparsity2 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import array_from_str from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import list_from_str from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import tuple_from_str from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import optimal_selection_probabilities from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import geometricChangePoints from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import shuffle from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import copy from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Constant from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import UniformArm from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_0_1 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_0_2 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_0_5 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_0_10 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_0_100 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_m1_1 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_m2_2 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_m5_5 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_m10_10 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gaussian_m100_100 from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Exponential from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import DiscreteArm from wildcard import (unused-wildcard-import)
+W: 29, 4: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import ETC_FixedBudget from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import ETC_SPRT from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import ETC_BAI from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import DeltaUCB from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCBH from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCBimproved from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import SparseWrapper from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klUCBswitch from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klUCBswitchAnytime from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import IMED from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import OCUCBH from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import AOCUCBH from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import GaussianOSSB from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import SparseOSSB from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import OSSB_DecreasingRate from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import OSSB_AutoDecreasingRate from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCB_sq from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCB_t from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCBoost_bq_h_lb_t from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCBoost_bq_h_lb_t_sq from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import UCBoost from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Aggregator from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import CORRAL from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import LearnExp from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import GenericAggregation from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import SlidingWindowRestart from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import DoublingTrickWrapper from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__arithmetic from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__geometric from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__exponential from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__exponential_fast from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__exponential_slow from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import next_horizon__exponential_generic from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import breakpoints from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_geometric from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_exponential from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_intermediate_sqrti from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_intermediate_i13 from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_intermediate_i23 from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_intermediate_i12_logi12 from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import Ti_intermediate_i_by_logi from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import WrapRange from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import optimalT0 from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import MusicalChairNoSensing from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import TrekkingTSN from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import with_proba from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import jit from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klucbExp from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klucbGauss from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
+W: 30, 4: Unused import klucbGamma from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import pyximport from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBjulia from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import KLempUCB from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import FittingModel from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import SimpleGaussianKernel from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import SimpleBernoulliKernel from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import default_estimator from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import default_optimizer from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_sq_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_bq_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_h_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_lb_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_t_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_bq_h_lb_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_bq_h_lb_t_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_bq_h_lb_t_sq_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoostEpsilon_faster from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_sq_cython from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCB_t_cython from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_bq_h_lb_t_cython from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_bq_h_lb_t_sq_cython from wildcard import (unused-wildcard-import)
+W: 31, 4: Unused import UCBoost_cython from wildcard import (unused-wildcard-import)
 ************* Module SMPyBandits.configuration_multiplayers
 W: 36, 0: XXX do better for these imports (fixme)
 W: 55, 0: XXX To profile the code, turn down parallel computing (fixme)
@@ -400,68 +554,76 @@ W:250, 0: XXX To only test the orthogonalization (collision avoidance) protocol 
 W:288, 0: XXX Default! (fixme)
 W:307, 0: XXX What happens if arms in Mbest are non unique? (fixme)
 W:316, 0: XXX Bernoulli arms (fixme)
-W:359, 0: XXX Not efficient! (fixme)
-W:380, 0: XXX Not efficient! (fixme)
-W:386, 0: FIXME experimental! (fixme)
-W:388, 0: FIXME experimental! (fixme)
-W:404, 0: XXX Not efficient! (fixme)
-W:410, 0: FIXME experimental! (fixme)
-W:413, 0: FIXME experimental! (fixme)
+W:356, 0: XXX stupid version with fixed T0 : cannot adapt to any problem (fixme)
+W:358, 0: FIXME test this new TrekkingTSN algorithm! (fixme)
+W:363, 0: XXX Not efficient! (fixme)
+W:384, 0: XXX Not efficient! (fixme)
+W:390, 0: FIXME experimental! (fixme)
+W:392, 0: FIXME experimental! (fixme)
+W:408, 0: XXX Not efficient! (fixme)
 W:414, 0: FIXME experimental! (fixme)
-W:422, 0: XXX don't work so well (fixme)
-W:424, 0: FIXME how to chose the 5 parameters for MEGA policy ? (fixme)
-W:425, 0: XXX By trial and error?? (fixme)
-W:427, 0: XXX always linear regret! (fixme)
-W:429, 0: XXX stupid version with fixed T0 : cannot adapt to any problem (fixme)
-W:434, 0: XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% ! (fixme)
-W:437, 0: XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) ! (fixme)
-W:572, 0: XXX against stochastic algorithms (fixme)
-W:637, 0: XXX it is *failing* with RandTopM[BayesUCB] (fixme)
-W:662, 0: XXX Comparing different rhoRand approaches (fixme)
-W:676, 0: XXX Comparing different ALOHA approaches (fixme)
-W:677, 0: XXX If needed! (fixme)
-W:689, 0: XXX Comparing different centralized approaches (fixme)
-W:707, 0: XXX each player needs to now the number of players (fixme)
-W:742, 0: XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all (fixme)
-W:754, 0: FIXME how to chose the 5 parameters ?? (fixme)
-W:758, 0: FIXME how to chose the 2 parameters p0 and alpha_p0 ? (fixme)
-W:760, 0: TODO try this one! (fixme)
-W:761, 0: TODO try this one! (fixme)
-W:762, 0: TODO try this one! (fixme)
-W:763, 0: TODO try this one! (fixme)
-W:764, 0: TODO try this one! (fixme)
-W:765, 0: TODO try this one! (fixme)
-W:766, 0: TODO try this one! (fixme)
-W:800, 0: TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies (fixme)
-W:803, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
-C:728, 0: Wrong continued indentation (add 11 spaces).
+W:417, 0: FIXME experimental! (fixme)
+W:418, 0: FIXME experimental! (fixme)
+W:429, 0: XXX don't work so well (fixme)
+W:431, 0: FIXME how to chose the 5 parameters for MEGA policy ? (fixme)
+W:432, 0: XXX By trial and error?? (fixme)
+W:434, 0: XXX always linear regret! (fixme)
+W:436, 0: XXX stupid version with fixed T0 : cannot adapt to any problem (fixme)
+W:441, 0: XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% ! (fixme)
+W:444, 0: XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) ! (fixme)
+W:579, 0: XXX against stochastic algorithms (fixme)
+W:644, 0: XXX it is *failing* with RandTopM[BayesUCB] (fixme)
+W:669, 0: XXX Comparing different rhoRand approaches (fixme)
+W:683, 0: XXX Comparing different ALOHA approaches (fixme)
+W:684, 0: XXX If needed! (fixme)
+W:696, 0: XXX Comparing different centralized approaches (fixme)
+W:714, 0: XXX each player needs to now the number of players (fixme)
+W:749, 0: XXX they need a perfect knowledge on the arms, OF COURSE this is not physically plausible at all (fixme)
+W:761, 0: FIXME how to chose the 5 parameters ?? (fixme)
+W:765, 0: FIXME how to chose the 2 parameters p0 and alpha_p0 ? (fixme)
+W:767, 0: TODO try this one! (fixme)
+W:768, 0: TODO try this one! (fixme)
+W:769, 0: TODO try this one! (fixme)
+W:770, 0: TODO try this one! (fixme)
+W:771, 0: TODO try this one! (fixme)
+W:772, 0: TODO try this one! (fixme)
+W:773, 0: TODO try this one! (fixme)
+W:807, 0: TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies (fixme)
+W:810, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
+C:421, 0: No space allowed after bracket
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
+    ^ (bad-whitespace)
+C:421, 0: No space allowed before bracket
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
+                                                                                                             ^ (bad-whitespace)
+C:735, 0: Wrong continued indentation (add 11 spaces).
     # "players": Selfish(NB_PLAYERS, nbArms, UCBalpha, alpha=0.25).children  # This one is efficient!
     ^          | (bad-continuation)
-C:741, 0: Wrong continued indentation (add 11 spaces).
+C:748, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using multi-player Oracle policy
     ^          | (bad-continuation)
-C:746, 0: Wrong continued indentation (add 11 spaces).
+C:753, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player Musical Chair policy
     ^          | (bad-continuation)
-C:753, 0: Wrong continued indentation (add 11 spaces).
+C:760, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player MEGA policy
     ^          | (bad-continuation)
-C:757, 0: Wrong continued indentation (add 11 spaces).
+C:764, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player ALOHA policy
     ^          | (bad-continuation)
-C:768, 0: Wrong continued indentation (add 11 spaces).
+C:775, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player rhoRand policy
     ^          | (bad-continuation)
-C:778, 0: Wrong continued indentation (add 11 spaces).
+C:785, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player rhoEst policy
     ^          | (bad-continuation)
-C:784, 0: Wrong continued indentation (add 11 spaces).
+C:791, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player rhoLearn policy, with same MAB learning algorithm for selecting the ranks
     ^          | (bad-continuation)
-C:791, 0: Wrong continued indentation (add 11 spaces).
+C:798, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player stupid rhoRandRand policy
     ^          | (bad-continuation)
-C:794, 0: Wrong continued indentation (add 11 spaces).
+C:801, 0: Wrong continued indentation (add 11 spaces).
     # --- DONE Using single-player rhoRandSticky policy
     ^          | (bad-continuation)
 E: 25, 0: Unable to import 'Arms' (import-error)
@@ -484,255 +646,22 @@ E:115,17: Undefined variable 'onlyUniqUserGetsReward' (undefined-variable)
 E:150,11: Undefined variable 'mapping_ARM_TYPE' (undefined-variable)
 E:291,22: Undefined variable 'uniformMeans' (undefined-variable)
 E:320,28: Undefined variable 'randomMeans' (undefined-variable)
-E:357, 4: Undefined variable 'rhoRand' (undefined-variable)
-E:357,32: Undefined variable 'klUCB' (undefined-variable)
-E:376, 4: Undefined variable 'RandTopM' (undefined-variable)
-E:376,33: Undefined variable 'klUCB' (undefined-variable)
-E:393, 4: Undefined variable 'Selfish' (undefined-variable)
-E:393,32: Undefined variable 'klUCB' (undefined-variable)
-E:399, 4: Undefined variable 'MCTopM' (undefined-variable)
-E:399,31: Undefined variable 'klUCB' (undefined-variable)
-E:420, 4: Undefined variable 'CentralizedMultiplePlay' (undefined-variable)
-E:420,48: Undefined variable 'klUCB' (undefined-variable)
-E:727,15: Undefined variable 'Selfish' (undefined-variable)
-E:727,43: Undefined variable 'UCB' (undefined-variable)
+E:361, 4: Undefined variable 'rhoRand' (undefined-variable)
+E:361,32: Undefined variable 'klUCB' (undefined-variable)
+E:380, 4: Undefined variable 'RandTopM' (undefined-variable)
+E:380,33: Undefined variable 'klUCB' (undefined-variable)
+E:397, 4: Undefined variable 'Selfish' (undefined-variable)
+E:397,32: Undefined variable 'klUCB' (undefined-variable)
+E:403, 4: Undefined variable 'MCTopM' (undefined-variable)
+E:403,31: Undefined variable 'klUCB' (undefined-variable)
+E:421, 6: Undefined variable 'MusicalChairNoSensing' (undefined-variable)
+E:427, 4: Undefined variable 'CentralizedMultiplePlay' (undefined-variable)
+E:427,48: Undefined variable 'klUCB' (undefined-variable)
+E:734,15: Undefined variable 'Selfish' (undefined-variable)
+E:734,43: Undefined variable 'UCB' (undefined-variable)
 W: 28, 0: Unused MAB imported from Environment (unused-import)
 W: 36, 0: Unused tnext_beta imported from PoliciesMultiPlayers.ALOHA (unused-import)
 W: 36, 0: Unused tnext_log imported from PoliciesMultiPlayers.ALOHA (unused-import)
-************* Module SMPyBandits.configuration
-W: 51, 0: XXX To profile the code, turn down parallel computing (fixme)
-W: 62, 0: XXX do not let this = False (fixme)
-W:116, 0: XXX do not let this = False if you want to test my Aggregator policy (fixme)
-W:120, 0: XXX do not let this = False if you want to test my Doubling Trick policy (fixme)
-W:124, 0: XXX do not let this = False if you want to test my WrapRange policy (fixme)
-W:128, 0: XXX to manually enable this feature? (fixme)
-W:129, 0: XXX to manually disable this feature? (fixme)
-W:133, 0: XXX do not let this = False (fixme)
-W:162, 0: WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values... (fixme)
-W:201, 0: XXX Default (fixme)
-W:206, 0: XXX Bernoulli arms (fixme)
-W:227, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
-W:231, 0: XXX Default! (fixme)
-W:269, 0: XXX Exponential arms (fixme)
-W:275, 0: XXX Gaussian arms (fixme)
-W:285, 0: XXX Unbounded Gaussian arms (fixme)
-W:294, 0: XXX Bernoulli arms (fixme)
-W:414, 0: XXX Efficient parameter-free Softmax (fixme)
-W:600, 0: XXX Below the theoretically acceptable value! (fixme)
-W:604, 0: XXX experimental sliding window algorithm (fixme)
-W:612, 0: XXX Below the theoretically acceptable value! (fixme)
-W:618, 0: XXX Below the theoretically acceptable value! (fixme)
-W:624, 0: XXX Below the theoretically acceptable value! (fixme)
-W:722, 0: XXX experimental sliding window algorithm (fixme)
-W:801, 0: XXX does not work yet! (fixme)
-W:884, 0: XXX Very inefficient! (fixme)
-W:886, 0: XXX Very inefficient! (fixme)
-W:939, 0: XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB (fixme)
-W:1018, 0: XXX Don't need the horizon, but suffer from the restart (to compare) (fixme)
-W:1080, 0: XXX If needed! (fixme)
-W:1117, 0: XXX old code to test different static learning rates, not any more (fixme)
-W:1118, 0: XXX to test between biased or unabiased estimators (fixme)
-W:1119, 0: XXX If needed! (fixme)
-W:1120, 0: XXX If needed! (fixme)
-W:1134, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
-W:1138, 0: XXX Only test with fixed arms (fixme)
-W:1156, 0: XXX to test just a few algorithms (fixme)
-W:1187, 0: XXX compare different values of the experimental sliding window algorithm (fixme)
-W:1206, 0: XXX experimental sliding window algorithm (fixme)
-W:1218, 0: XXX experimental other version of the sliding window algorithm (fixme)
-W:1230, 0: XXX experimental other version of the sliding window algorithm, knowing the horizon (fixme)
-W:1241, 0: XXX experimental discounted UCB algorithm (fixme)
-W:1253, 0: XXX experimental discounted UCB algorithm, knowing the horizon (fixme)
-W:1274, 0: XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011] (fixme)
-W:1275, 0: XXX remove after testing once (fixme)
-W:1282, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
-C:164, 0: Wrong hanging indentation (remove 8 spaces).
-            "UnboundedGaussian",
-    |       ^ (bad-continuation)
-C:165, 0: Wrong hanging indentation (remove 8 spaces).
-            # "Gaussian",
-    |       ^ (bad-continuation)
-C:166, 0: Wrong hanging indentation.
-        ]:
-|   |   ^ (bad-continuation)
-C:932, 0: No space allowed after bracket
-        "environment": [ {
-                       ^ (bad-whitespace)
-C:933, 0: Wrong hanging indentation (remove 4 spaces).
-                "arm_type": ARM_TYPE,
-            |   ^ (bad-continuation)
-C:934, 0: Wrong hanging indentation (remove 4 spaces).
-                "params": [
-            |   ^ (bad-continuation)
-C:939, 0: Wrong hanging indentation (remove 4 spaces).
-                # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
-            |   ^ (bad-continuation)
-C:944, 0: No space allowed after bracket
-        "environment": [ {
-                       ^ (bad-whitespace)
-C:945, 0: Wrong hanging indentation (remove 4 spaces).
-                "arm_type": ARM_TYPE,
-            |   ^ (bad-continuation)
-C:946, 0: Wrong hanging indentation (remove 4 spaces).
-                "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
-            |   ^ (bad-continuation)
-C:956, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:962, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:968, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:982, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:988, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:995, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:1001, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:1007, 0: Wrong continued indentation (remove 3 spaces).
-                "params": {
-             |  ^ (bad-continuation)
-C:1018, 0: Wrong hanging indentation (remove 4 spaces).
-            # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
-        |   ^ (bad-continuation)
-C:1022, 0: Wrong hanging indentation (remove 4 spaces).
-            ApproximatedFHGittins,
-        |   ^ (bad-continuation)
-C:  1, 0: Too many lines in module (1297/1000) (too-many-lines)
-W: 25, 4: Wildcard import Arms (wildcard-import)
-W: 27, 4: Wildcard import SMPyBandits.Arms (wildcard-import)
-W: 31, 4: Wildcard import Policies (wildcard-import)
-W: 33, 4: Wildcard import SMPyBandits.Policies (wildcard-import)
-C:1080, 0: Import "from itertools import product" should be placed at the top of the module (wrong-import-position)
-W: 27, 4: Unused import json from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import np from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import shuffled from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import uniformMeansWithSparsity from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithGapBetweenMbestMworst from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithSparsity from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import randomMeansWithSparsity2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import array_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import list_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import tuple_from_str from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import optimal_selection_probabilities from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import shuffle from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import copy from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Constant from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UniformArm from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Bernoulli from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Binomial from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Poisson from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_1 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_5 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_10 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_0_100 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m1_1 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m2_2 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m5_5 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m10_10 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gaussian_m100_100 from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Exponential from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import Gamma from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
-W: 27, 4: Unused import testmod from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Gauss from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Uniform from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import ETC_KnownGap from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import ETC_RandomStop from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Softmax from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SoftMix from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3ELM from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Exp3PlusPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import BoltzmannGumbel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import Hedge from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import HedgeDecreasing from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import HedgeWithHorizon from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import FittingModel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SimpleGaussianKernel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SimpleBernoulliKernel from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UnsupervisedLearning from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import default_estimator from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import default_optimizer from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import BlackBoxOpt from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBH from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBlog10 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBwrong from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBlog10alpha from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBmin from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBplus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBjulia from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBV from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseklUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseWrapper from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import CPUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import MOSSExperimental from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import ThompsonRobust from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBlog10 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBloglog10 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBH from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import KLempUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import DMED from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import OSSB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import GaussianOSSB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SparseOSSB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import CORRAL from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import LearnExp from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SlidingWindowRestart from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SWR_UCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SWR_UCBalpha from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SWR_klUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SWUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import SWUCBPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import DiscountedUCB from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import DiscountedUCBPlus from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import MusicalChair from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import optimalT0 from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import MEGA from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import jit from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbExp from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbGauss from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
-W: 33, 4: Unused import klucbGamma from wildcard import (unused-wildcard-import)
-W:1080, 0: Unused product imported from itertools (unused-import)
-C: 33, 4: Imports from package SMPyBandits are not grouped (ungrouped-imports)
 ************* Module SMPyBandits.configuration_sparse_multiplayers
 W: 49, 0: XXX do not let this = False  # To profile the code, turn down parallel computing (fixme)
 W:133, 0: XXX Default! (fixme)
@@ -775,16 +704,19 @@ W: 44, 0: XXX To profile the code, turn down parallel computing (fixme)
 W: 54, 0: XXX do not let this = False  # To profile the code, turn down parallel computing (fixme)
 W: 71, 0: XXX do not let this = False (fixme)
 W: 92, 0: XXX do not let this = False if you want to test my Aggregator policy (fixme)
-W: 96, 0: XXX to disable manually this feature (fixme)
+W: 95, 0: XXX to disable manually this feature (fixme)
 W:131, 0: WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values... (fixme)
-W:226, 0: XXX Bernoulli arms (fixme)
-W:374, 0: XXX does not work yet! (fixme)
-W:476, 0: XXX It fails completely! (fixme)
-W:486, 0: XXX It fails completely! (fixme)
-W:499, 0: XXX test to change these values! (fixme)
-W:500, 0: XXX test to change these values! (fixme)
-W:542, 0: XXX Very simulation-specific settings! (fixme)
-W:563, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
+W:241, 0: XXX Bernoulli arms (fixme)
+W:367, 0: XXX It fails completely! (fixme)
+W:377, 0: XXX It fails completely! (fixme)
+W:397, 0: XXX exactly like UCB ! (fixme)
+W:485, 0: WARNING Gaussian posterior is still experimental and VERY slow (fixme)
+W:513, 0: XXX does not work yet! (fixme)
+W:521, 0: XXX does not work yet! (fixme)
+W:532, 0: XXX test to change these values! (fixme)
+W:533, 0: XXX test to change these values! (fixme)
+W:600, 0: XXX Very simulation-specific settings! (fixme)
+W:621, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
 C:133, 0: Wrong hanging indentation (remove 8 spaces).
             "UnboundedGaussian",
     |       ^ (bad-continuation)
@@ -794,25 +726,28 @@ C:134, 0: Wrong hanging indentation (remove 8 spaces).
 C:135, 0: Wrong hanging indentation.
         ]:
 |   |   ^ (bad-continuation)
-C:246, 0: No space allowed after bracket
+C:161, 0: No space allowed after bracket
+    MEANS = np.asarray([ float(m) for m in MEANS_STR.split(',') ], dtype=float)
+                       ^ (bad-whitespace)
+C:161, 0: No space allowed before bracket
+    MEANS = np.asarray([ float(m) for m in MEANS_STR.split(',') ], dtype=float)
+                                                                ^ (bad-whitespace)
+C:269, 0: No space allowed after bracket
         "environment": [ {
                        ^ (bad-whitespace)
-C:247, 0: Wrong hanging indentation (remove 4 spaces).
+C:270, 0: Wrong hanging indentation (remove 4 spaces).
                 "arm_type": ARM_TYPE,
             |   ^ (bad-continuation)
-C:248, 0: Wrong hanging indentation (remove 4 spaces).
+C:271, 0: Wrong hanging indentation (remove 4 spaces).
                 "params": [
             |   ^ (bad-continuation)
-C:526, 0: Wrong hanging indentation (remove 4 spaces).
-        {
-    |   ^ (bad-continuation)
-C:535, 0: Wrong hanging indentation (remove 4 spaces).
-        for s in range(1, 1 + NB_ARMS)
-    |   ^ (bad-continuation)
-C:546, 0: Wrong hanging indentation (remove 4 spaces).
+C:275, 0: Wrong hanging indentation (remove 4 spaces).
+                "sparsity": SPARSITY,
+            |   ^ (bad-continuation)
+C:604, 0: Wrong hanging indentation (remove 4 spaces).
             [NON_AGGR_POLICIES_0, NON_AGGR_POLICIES_1],
         |   ^ (bad-continuation)
-C:547, 0: Wrong hanging indentation (remove 4 spaces).
+C:605, 0: Wrong hanging indentation (remove 4 spaces).
             EXTRA_STRS
         |   ^ (bad-continuation)
 E: 24, 0: Unable to import 'Arms' (import-error)
@@ -823,158 +758,398 @@ W: 27, 0: Wildcard import Policies (wildcard-import)
 C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
 E:146,11: Undefined variable 'mapping_ARM_TYPE' (undefined-variable)
 E:153, 8: Undefined variable 'uniformMeansWithSparsity' (undefined-variable)
-E:230,28: Undefined variable 'randomMeans' (undefined-variable)
-E:251,20: Undefined variable 'uniformMeansWithSparsity' (undefined-variable)
-W:287, 7: Catching too general exception Exception (broad-except)
-W:295,21: Unused argument 'precision' (unused-argument)
-W:304,21: Unused argument 'precision' (unused-argument)
-E:313,24: Undefined variable 'EmpiricalMeans' (undefined-variable)
-E:327,24: Undefined variable 'UCBalpha' (undefined-variable)
-E:335,24: Undefined variable 'Thompson' (undefined-variable)
-E:337,29: Undefined variable 'Beta' (undefined-variable)
-E:342,24: Undefined variable 'Thompson' (undefined-variable)
-E:344,29: Undefined variable 'Gauss' (undefined-variable)
-E:350,24: Undefined variable 'klUCB' (undefined-variable)
-E:352,25: Undefined variable 'klucbBern' (undefined-variable)
-E:357,24: Undefined variable 'klUCB' (undefined-variable)
-E:365,24: Undefined variable 'BayesUCB' (undefined-variable)
-E:367,29: Undefined variable 'Beta' (undefined-variable)
-E:380,24: Undefined variable 'ApproximatedFHGittins' (undefined-variable)
-E:388,24: Undefined variable 'ApproximatedFHGittins' (undefined-variable)
-E:396,24: Undefined variable 'ApproximatedFHGittins' (undefined-variable)
-E:405,24: Undefined variable 'SparseWrapper' (undefined-variable)
-E:408,26: Undefined variable 'BayesUCB' (undefined-variable)
-E:460,24: Undefined variable 'SparseklUCB' (undefined-variable)
-E:468,24: Undefined variable 'SparseUCB' (undefined-variable)
-E:497,24: Undefined variable 'OSSB' (undefined-variable)
-E:505,24: Undefined variable 'GaussianOSSB' (undefined-variable)
-E:514,24: Undefined variable 'SparseOSSB' (undefined-variable)
-E:527,24: Undefined variable 'SparseWrapper' (undefined-variable)
-E:529,26: Undefined variable 'klUCB' (undefined-variable)
-E:554,28: Undefined variable 'Aggregator' (undefined-variable)
+C:155, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+E:245,28: Undefined variable 'randomMeansWithSparsity' (undefined-variable)
+E:263, 4: Unable to import 'Policies.OSSB' (import-error)
+E:264,12: Undefined variable 'uniformMeansWithSparsity' (undefined-variable)
+W:311, 7: Catching too general exception Exception (broad-except)
+W:319,21: Unused argument 'precision' (unused-argument)
+W:328,21: Unused argument 'precision' (unused-argument)
+E:337,24: Undefined variable 'EmpiricalMeans' (undefined-variable)
+E:351,24: Undefined variable 'UCBalpha' (undefined-variable)
+E:359,24: Undefined variable 'SparseUCB' (undefined-variable)
+E:388,24: Undefined variable 'klUCB' (undefined-variable)
+E:390,25: Undefined variable 'klucbBern' (undefined-variable)
+E:412,24: Undefined variable 'SparseklUCB' (undefined-variable)
+E:453,24: Undefined variable 'Thompson' (undefined-variable)
+E:455,29: Undefined variable 'Beta' (undefined-variable)
+E:461,24: Undefined variable 'SparseWrapper' (undefined-variable)
+E:464,26: Undefined variable 'Thompson' (undefined-variable)
+E:465,29: Undefined variable 'Beta' (undefined-variable)
+E:473,24: Undefined variable 'Thompson' (undefined-variable)
+E:475,29: Undefined variable 'Gauss' (undefined-variable)
+E:481,24: Undefined variable 'SparseWrapper' (undefined-variable)
+E:484,26: Undefined variable 'Thompson' (undefined-variable)
+E:485,29: Undefined variable 'Gauss' (undefined-variable)
+E:493,24: Undefined variable 'BayesUCB' (undefined-variable)
+E:495,29: Undefined variable 'Beta' (undefined-variable)
+E:500,24: Undefined variable 'SparseWrapper' (undefined-variable)
+E:503,26: Undefined variable 'BayesUCB' (undefined-variable)
+E:504,29: Undefined variable 'Beta' (undefined-variable)
+E:511,24: Undefined variable 'BayesUCB' (undefined-variable)
+E:513,29: Undefined variable 'Gauss' (undefined-variable)
+E:518,24: Undefined variable 'SparseWrapper' (undefined-variable)
+E:521,29: Undefined variable 'Gauss' (undefined-variable)
+E:522,26: Undefined variable 'BayesUCB' (undefined-variable)
+E:530,24: Undefined variable 'OSSB' (undefined-variable)
+E:538,24: Undefined variable 'GaussianOSSB' (undefined-variable)
+E:547,24: Undefined variable 'SparseOSSB' (undefined-variable)
+E:555,24: Undefined variable 'SparseOSSB' (undefined-variable)
+E:563,24: Undefined variable 'SparseOSSB' (undefined-variable)
+E:571,24: Undefined variable 'SparseOSSB' (undefined-variable)
+E:584,20: Undefined variable 'SparseWrapper' (undefined-variable)
+E:586,22: Undefined variable 'klUCB' (undefined-variable)
+E:612,28: Undefined variable 'Aggregator' (undefined-variable)
+C:263, 4: Imports from package Policies are not grouped (ungrouped-imports)
+************* Module SMPyBandits.configuration
+W: 51, 0: XXX To profile the code, turn down parallel computing (fixme)
+W: 62, 0: XXX do not let this = False (fixme)
+W:119, 0: XXX do not let this = False if you want to test my Aggregator policy (fixme)
+W:123, 0: XXX do not let this = False if you want to test my Doubling Trick policy (fixme)
+W:127, 0: XXX do not let this = False if you want to test my WrapRange policy (fixme)
+W:132, 0: XXX do not let this = False if you want to test my WrapRange policy (fixme)
+W:135, 0: XXX to manually enable this feature? (fixme)
+W:136, 0: XXX to manually disable this feature? (fixme)
+W:141, 0: XXX do not let this = False (fixme)
+W:170, 0: WARNING That's nonsense, rewards of unbounded distributions just don't have lower, amplitude values... (fixme)
+W:223, 0: XXX Default (fixme)
+W:228, 0: XXX Bernoulli arms (fixme)
+W:253, 0: XXX A very easy problem, but it is used in a lot of articles (fixme)
+W:257, 0: XXX Default! FIXME always bring this back as default after experimenting (fixme)
+W:299, 0: XXX Exponential arms (fixme)
+W:305, 0: XXX Gaussian arms (fixme)
+W:315, 0: XXX Unbounded Gaussian arms (fixme)
+W:321, 0: XXX DiscreteArm arms (fixme)
+W:340, 0: XXX Bernoulli arms (fixme)
+W:361, 0: XXX Bernoulli arms (fixme)
+W:365, 0: FIXME try different newMeans VALUES (fixme)
+W:366, 0: TODO (fixme)
+W:368, 0: FIXME try different changePoints VALUES (fixme)
+W:522, 0: XXX Efficient parameter-free Softmax (fixme)
+W:708, 0: XXX Below the theoretically acceptable value! (fixme)
+W:712, 0: XXX experimental sliding window algorithm (fixme)
+W:720, 0: XXX Below the theoretically acceptable value! (fixme)
+W:726, 0: XXX Below the theoretically acceptable value! (fixme)
+W:732, 0: XXX Below the theoretically acceptable value! (fixme)
+W:857, 0: XXX experimental sliding window algorithm (fixme)
+W:965, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
+W:1002, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
+W:1057, 0: XXX Very inefficient! (fixme)
+W:1059, 0: XXX Very inefficient! (fixme)
+W:1201, 0: XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB (fixme)
+W:1290, 0: XXX Don't need the horizon, but suffer from the restart (to compare) (fixme)
+W:1394, 0: XXX If needed! (fixme)
+W:1431, 0: XXX old code to test different static learning rates, not any more (fixme)
+W:1432, 0: XXX to test between biased or unabiased estimators (fixme)
+W:1433, 0: XXX If needed! (fixme)
+W:1434, 0: XXX If needed! (fixme)
+W:1448, 0: XXX uncomment to give the value of horizon to have a better learning rate (fixme)
+W:1452, 0: XXX Only test with fixed arms (fixme)
+W:1470, 0: XXX to test just a few algorithms (fixme)
+W:1502, 0: XXX compare different values of the experimental sliding window algorithm (fixme)
+W:1521, 0: XXX experimental sliding window algorithm (fixme)
+W:1533, 0: XXX experimental other version of the sliding window algorithm (fixme)
+W:1545, 0: XXX experimental other version of the sliding window algorithm, knowing the horizon (fixme)
+W:1556, 0: XXX experimental discounted UCB algorithm (fixme)
+W:1568, 0: XXX experimental discounted UCB algorithm, knowing the horizon (fixme)
+W:1589, 0: XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011] (fixme)
+W:1590, 0: XXX remove after testing once (fixme)
+W:1597, 0: XXX Huge hack! Use this if you want to modify the legends (fixme)
+C:172, 0: Wrong hanging indentation (remove 4 spaces).
+        "UnboundedGaussian",
+    |   ^ (bad-continuation)
+C:173, 0: Wrong hanging indentation (remove 4 spaces).
+        # "Gaussian",
+    |   ^ (bad-continuation)
+C:201, 0: No space allowed after bracket
+    MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
+            ^ (bad-whitespace)
+C:201, 0: No space allowed before bracket
+    MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
+                                                                                       ^ (bad-whitespace)
+C:1194, 0: No space allowed after bracket
+        "environment": [ {
+                       ^ (bad-whitespace)
+C:1195, 0: Wrong hanging indentation (remove 4 spaces).
+                "arm_type": ARM_TYPE,
+            |   ^ (bad-continuation)
+C:1196, 0: Wrong hanging indentation (remove 4 spaces).
+                "params": [
+            |   ^ (bad-continuation)
+C:1201, 0: Wrong hanging indentation (remove 4 spaces).
+                # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
+            |   ^ (bad-continuation)
+C:1206, 0: No space allowed after bracket
+        "environment": [ {
+                       ^ (bad-whitespace)
+C:1290, 0: Wrong hanging indentation (remove 4 spaces).
+            # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
+        |   ^ (bad-continuation)
+C:1293, 0: Wrong hanging indentation (remove 4 spaces).
+            klUCBPlusPlus,
+        |   ^ (bad-continuation)
+C:1294, 0: Wrong hanging indentation (remove 4 spaces).
+            # ApproximatedFHGittins,
+        |   ^ (bad-continuation)
+C:1503, 0: Exactly one space required before assignment
+    EPSS   = [0.1, 0.05]
+           ^ (bad-whitespace)
+C:1508, 0: Exactly one space required before assignment
+    TAUS   = [
+           ^ (bad-whitespace)
+C:1509, 0: Wrong hanging indentation (remove 4 spaces).
+            500, 1000, 2000,
+        |   ^ (bad-continuation)
+C:1510, 0: Wrong hanging indentation (remove 4 spaces).
+            # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
+        |   ^ (bad-continuation)
+C:1513, 0: Wrong hanging indentation (remove 4 spaces).
+            # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
+        |   ^ (bad-continuation)
+C:1514, 0: Wrong hanging indentation (remove 4 spaces).
+            0.8, 0.9, 0.95, 0.99, 0.999999,
+        |   ^ (bad-continuation)
+C:  1, 0: Too many lines in module (1612/1000) (too-many-lines)
+W: 25, 4: Wildcard import Arms (wildcard-import)
+W: 27, 4: Wildcard import SMPyBandits.Arms (wildcard-import)
+W: 31, 4: Wildcard import Policies (wildcard-import)
+W: 33, 4: Wildcard import SMPyBandits.Policies (wildcard-import)
+C:197, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+C:1394, 0: Import "from itertools import product" should be placed at the top of the module (wrong-import-position)
+W: 27, 4: Unused import json from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import shuffled from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import uniformMeansWithSparsity from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import randomMeansWithGapBetweenMbestMworst from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import randomMeansWithSparsity from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import randomMeansWithSparsity2 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import array_from_str from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import list_from_str from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import tuple_from_str from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import optimal_selection_probabilities from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import geometricChangePoints from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import shuffle from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import copy from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Constant from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import UniformArm from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Binomial from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Poisson from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import UnboundedPoisson from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_0_1 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_0_2 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_0_5 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_0_10 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_0_100 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_m1_1 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_m2_2 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_m5_5 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_m10_10 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gaussian_m100_100 from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import UnboundedGaussian from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Exponential from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import ExponentialFromMean from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import UnboundedExponential from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import Gamma from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import GammaFromMean from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import UnboundedGamma from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import DiscreteArm from wildcard import (unused-wildcard-import)
+W: 27, 4: Unused import testmod from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Gauss from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Uniform from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UniformOnSome from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import TakeFixedArm from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import TakeRandomFixedArm from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EpsilonGreedy from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EpsilonFirst from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EpsilonDecreasing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EpsilonDecreasingMEGA from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EpsilonExpDecreasing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import EmpiricalMeans from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ETC_KnownGap from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ETC_RandomStop from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ETC_FixedBudget from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ETC_SPRT from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ETC_BAI from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import DeltaUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Softmax from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SoftmaxDecreasing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SoftMix from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SoftmaxWithHorizon from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3 from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3Decreasing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3SoftMix from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3WithHorizon from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3ELM from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Exp3PlusPlus from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import ProbabilityPursuit from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import BoltzmannGumbel from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import Hedge from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import HedgeDecreasing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import HedgeWithHorizon from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBH from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBmin from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBplus from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBrandomInit from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBimproved from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBV from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBVtuned from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SparseUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SparseklUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SparseWrapper from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import CPUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MOSS from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MOSSH from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MOSSAnytime from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MOSSExperimental from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import BayesUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klUCBloglog from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klUCBPlus from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klUCBH from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klUCBHPlus from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klUCBswitch from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import DMED from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import DMEDPlus from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import IMED from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import OCUCBH from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import AOCUCBH from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import OCUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBdagger from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import OSSB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import GaussianOSSB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SparseOSSB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import OSSB_DecreasingRate from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import OSSB_AutoDecreasingRate from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import BESA from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCB_sq from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCB_bq from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCB_h from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCB_lb from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCB_t from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBoost_bq_h_lb from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBoost_bq_h_lb_t from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBoost_bq_h_lb_t_sq from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBoost from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import UCBoostEpsilon from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import AdBandits from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import CORRAL from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import LearnExp from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import GenericAggregation from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SlidingWindowRestart from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SWR_UCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SWR_UCBalpha from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import SWR_klUCB from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import next_horizon__exponential_generic from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MusicalChair from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import optimalT0 from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MusicalChairNoSensing from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import TrekkingTSN from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import MEGA from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import with_proba from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import jit from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klucbExp from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klucbGauss from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klucbPoisson from wildcard import (unused-wildcard-import)
+W: 33, 4: Unused import klucbGamma from wildcard import (unused-wildcard-import)
+W:1394, 0: Unused product imported from itertools (unused-import)
+C:1394, 0: standard import "from itertools import product" should be placed before "import numpy as np" (wrong-import-order)
+C: 33, 4: Imports from package SMPyBandits are not grouped (ungrouped-imports)
 ************* Module SMPyBandits.env_client
-C: 39, 0: Wrong hanging indentation (remove 4 spaces).
+C: 41, 0: Wrong hanging indentation (remove 4 spaces).
         "arm_type": "Bernoulli",
     |   ^ (bad-continuation)
-C: 40, 0: Wrong hanging indentation (remove 4 spaces).
+C: 42, 0: Wrong hanging indentation (remove 4 spaces).
         "params": {
     |   ^ (bad-continuation)
-C:149, 0: Final newline missing (missing-final-newline)
-C: 27, 0: Import "import json" should be placed at the top of the module (wrong-import-position)
-C: 28, 0: Import "import socket" should be placed at the top of the module (wrong-import-position)
-C: 29, 0: Import "import time" should be placed at the top of the module (wrong-import-position)
-C: 30, 0: Import "from docopt import docopt" should be placed at the top of the module (wrong-import-position)
-E: 32, 0: Unable to import 'Environment' (import-error)
-C: 32, 0: Import "from Environment import MAB, MarkovianMAB, DynamicMAB" should be placed at the top of the module (wrong-import-position)
-E: 33, 0: Unable to import 'Arms' (import-error)
-W: 33, 0: Wildcard import Arms (wildcard-import)
-C: 33, 0: Import "from Arms import *" should be placed at the top of the module (wrong-import-position)
-C: 53, 0: Missing function docstring (missing-docstring)
-W:123, 9: Redefining name 'arguments' from outer scope (line 147) (redefined-outer-name)
+C: 26, 0: Import "import json" should be placed at the top of the module (wrong-import-position)
+C: 27, 0: Import "import socket" should be placed at the top of the module (wrong-import-position)
+C: 28, 0: Import "import time" should be placed at the top of the module (wrong-import-position)
+E: 34, 0: Unable to import 'Environment' (import-error)
+C: 34, 0: Import "from Environment import MAB, MarkovianMAB, ChangingAtEachRepMAB" should be placed at the top of the module (wrong-import-position)
+E: 35, 0: Unable to import 'Arms' (import-error)
+W: 35, 0: Wildcard import Arms (wildcard-import)
+C: 35, 0: Import "from Arms import *" should be placed at the top of the module (wrong-import-position)
+W:126, 9: Redefining name 'arguments' from outer scope (line 150) (redefined-outer-name)
 ************* Module SMPyBandits.main_multiplayers
-W: 46, 0: XXX dont keep it like this (fixme)
-W: 52, 0: XXX dont keep it like this (fixme)
-W: 65, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
-W:111, 0: FIXME finish this to also save result in a HDF5 file! (fixme)
-W:125, 0: TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed (fixme)
-W:140, 0: XXX To plot without saving (fixme)
-W:150, 0: XXX To plot without saving (fixme)
-W:159, 0: XXX To plot without saving (fixme)
-W:168, 0: XXX To plot without saving (fixme)
-W:177, 0: XXX To plot without saving (fixme)
-W:186, 0: XXX To plot without saving (fixme)
-W:195, 0: XXX To plot without saving (fixme)
-W:204, 0: XXX To plot without saving (fixme)
-W:213, 0: XXX To plot without saving (fixme)
-W:222, 0: XXX To plot without saving (fixme)
-W:231, 0: XXX To plot without saving (fixme)
-W:240, 0: XXX To plot without saving (fixme)
-W:249, 0: XXX To plot without saving (fixme)
-W:258, 0: XXX To plot without saving (fixme)
-W:260, 0: XXX Also plotting the cumulative number of pulls of all arms (fixme)
-W:267, 0: XXX To plot without saving (fixme)
-W:276, 0: XXX To plot without saving (fixme)
-W:285, 0: XXX To plot without saving (fixme)
-W:295, 0: XXX To plot without saving (fixme)
-E: 22, 0: Unable to import 'Environment' (import-error)
-W: 15, 0: Unused product imported from itertools (unused-import)
+W: 44, 0: XXX dont keep it like this (fixme)
+W: 50, 0: XXX dont keep it like this (fixme)
+W: 70, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
+W:147, 0: XXX To save the figure (fixme)
+W:149, 0: XXX To plot without saving (fixme)
+W:155, 0: XXX To save the figure (fixme)
+W:157, 0: XXX To plot without saving (fixme)
+W:166, 0: XXX To plot without saving (fixme)
+W:176, 0: XXX To plot without saving (fixme)
+W:185, 0: XXX To plot without saving (fixme)
+W:194, 0: XXX To plot without saving (fixme)
+W:203, 0: XXX To plot without saving (fixme)
+W:212, 0: XXX To plot without saving (fixme)
+W:221, 0: XXX To plot without saving (fixme)
+W:230, 0: XXX To plot without saving (fixme)
+W:239, 0: XXX To plot without saving (fixme)
+W:248, 0: XXX To plot without saving (fixme)
+W:257, 0: XXX To plot without saving (fixme)
+W:266, 0: XXX To plot without saving (fixme)
+W:275, 0: XXX To plot without saving (fixme)
+W:284, 0: XXX To plot without saving (fixme)
+W:286, 0: XXX Also plotting the cumulative number of pulls of all arms (fixme)
+W:293, 0: XXX To plot without saving (fixme)
+W:302, 0: XXX To plot without saving (fixme)
+W:311, 0: XXX To plot without saving (fixme)
+W:321, 0: XXX To plot without saving (fixme)
+E: 19, 0: Unable to import 'Environment' (import-error)
+C: 96,25: More than one statement on a single line (multiple-statements)
+C:110,25: More than one statement on a single line (multiple-statements)
 ************* Module SMPyBandits.main_multiplayers_more
 W: 46, 0: XXX dont keep it like this (fixme)
 W: 57, 0: XXX dont keep it like this (fixme)
-W: 70, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
-W:132, 0: FIXME finish this to also save result in a HDF5 file! (fixme)
-W:145, 0: TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed (fixme)
-W:160, 0: XXX To plot without saving (fixme)
-W:170, 0: XXX To plot without saving (fixme)
+W: 77, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
+W:169, 0: XXX To save the figure (fixme)
+W:171, 0: XXX To plot without saving (fixme)
+W:177, 0: XXX To save the figure (fixme)
 W:179, 0: XXX To plot without saving (fixme)
 W:188, 0: XXX To plot without saving (fixme)
-W:197, 0: XXX To plot without saving (fixme)
-W:206, 0: XXX To plot without saving (fixme)
-W:215, 0: XXX To plot without saving (fixme)
-W:224, 0: XXX To plot without saving (fixme)
-W:233, 0: XXX To plot without saving (fixme)
-W:242, 0: XXX To plot without saving (fixme)
-W:252, 0: XXX To plot without saving (fixme)
-W:253, 0: XXX To plot without saving (fixme)
-W:262, 0: XXX To plot without saving (fixme)
-W:271, 0: XXX To plot without saving (fixme)
-W:280, 0: XXX To plot without saving (fixme)
-W:282, 0: XXX Also plotting the cumulative number of pulls of all arms (fixme)
-W:289, 0: XXX To plot without saving (fixme)
-W:298, 0: XXX To plot without saving (fixme)
-W:307, 0: XXX To plot without saving (fixme)
-W:317, 0: XXX To plot without saving (fixme)
-W:351, 0: XXX To plot without saving (fixme)
-W:360, 0: XXX To plot without saving (fixme)
-W:369, 0: XXX To plot without saving (fixme)
-W:378, 0: XXX To plot without saving (fixme)
-W:388, 0: XXX To plot without saving (fixme)
-W:397, 0: XXX To plot without saving (fixme)
-W:406, 0: XXX To plot without saving (fixme)
-W:415, 0: XXX To plot without saving (fixme)
-W:427, 0: XXX To save the figure (fixme)
-W:431, 0: XXX To save the figure (fixme)
-W:433, 0: XXX To plot without saving (fixme)
-W:435, 0: XXX To plot without saving (fixme)
-W:436, 0: XXX To plot without saving (fixme)
-E: 22, 0: Unable to import 'Environment' (import-error)
-C:420,24: More than one statement on a single line (multiple-statements)
-C:433,24: More than one statement on a single line (multiple-statements)
-************* Module SMPyBandits.main
-W: 80, 0: XXX dont keep it like this when experimenting (fixme)
-W: 90, 0: XXX dont keep it like this (fixme)
-W:103, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
-W:149, 0: FIXME finish this to also save result in a HDF5 file! (fixme)
-W:163, 0: TODO use numpy.savez_compressed instead ? https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez_compressed.html#numpy.savez_compressed (fixme)
-W:181, 0: XXX To save the figure (fixme)
-W:183, 0: XXX To save the figure (fixme)
-W:185, 0: XXX To save the figure (fixme)
-W:187, 0: XXX To save the figure (fixme)
-W:191, 0: XXX To save the figure (fixme)
-W:194, 0: XXX To save the figure (fixme)
-W:196, 0: XXX To plot without saving (fixme)
-W:197, 0: XXX To plot without saving (fixme)
 W:198, 0: XXX To plot without saving (fixme)
-W:202, 0: XXX To plot without saving (fixme)
-W:204, 0: XXX To plot without saving (fixme)
-W:210, 0: XXX To save the figure (fixme)
-W:212, 0: XXX To plot without saving (fixme)
-W:218, 0: XXX To save the figure (fixme)
-W:222, 0: XXX To save the figure (fixme)
-W:225, 0: XXX To save the figure (fixme)
-W:227, 0: XXX To plot without saving (fixme)
-W:230, 0: XXX To plot without saving (fixme)
-W:232, 0: XXX To plot without saving (fixme)
-W:238, 0: XXX To save the figure (fixme)
-W:240, 0: XXX To plot without saving (fixme)
-W:253, 0: XXX To save the figure (fixme)
-W:257, 0: XXX To save the figure (fixme)
-W:259, 0: XXX To plot without saving (fixme)
+W:207, 0: XXX To plot without saving (fixme)
+W:216, 0: XXX To plot without saving (fixme)
+W:225, 0: XXX To plot without saving (fixme)
+W:234, 0: XXX To plot without saving (fixme)
+W:243, 0: XXX To plot without saving (fixme)
+W:252, 0: XXX To plot without saving (fixme)
 W:261, 0: XXX To plot without saving (fixme)
-W:262, 0: XXX To plot without saving (fixme)
-C: 69, 0: Exactly one space required before assignment
-loglog   = False  #: Plot in loglog   by default?
-         ^ (bad-whitespace)
+W:270, 0: XXX To plot without saving (fixme)
+W:280, 0: XXX To plot without saving (fixme)
+W:281, 0: XXX To plot without saving (fixme)
+W:290, 0: XXX To plot without saving (fixme)
+W:299, 0: XXX To plot without saving (fixme)
+W:308, 0: XXX To plot without saving (fixme)
+W:310, 0: XXX Also plotting the cumulative number of pulls of all arms (fixme)
+W:317, 0: XXX To plot without saving (fixme)
+W:326, 0: XXX To plot without saving (fixme)
+W:335, 0: XXX To plot without saving (fixme)
+W:345, 0: XXX To plot without saving (fixme)
+W:380, 0: XXX To save the figure (fixme)
+W:382, 0: XXX To plot without saving (fixme)
+W:388, 0: XXX To save the figure (fixme)
+W:390, 0: XXX To plot without saving (fixme)
+W:399, 0: XXX To plot without saving (fixme)
+W:408, 0: XXX To plot without saving (fixme)
+W:417, 0: XXX To plot without saving (fixme)
+W:426, 0: XXX To plot without saving (fixme)
+W:436, 0: XXX To plot without saving (fixme)
+W:445, 0: XXX To plot without saving (fixme)
+W:454, 0: XXX To plot without saving (fixme)
+W:463, 0: XXX To plot without saving (fixme)
+W:475, 0: XXX To save the figure (fixme)
+W:479, 0: XXX To save the figure (fixme)
+W:481, 0: XXX To plot without saving (fixme)
+W:483, 0: XXX To plot without saving (fixme)
+W:484, 0: XXX To plot without saving (fixme)
+E: 21, 0: Unable to import 'Environment' (import-error)
+C:117,29: More than one statement on a single line (multiple-statements)
+C:133,29: More than one statement on a single line (multiple-statements)
+C:369,25: More than one statement on a single line (multiple-statements)
+C:468,24: More than one statement on a single line (multiple-statements)
+C:481,24: More than one statement on a single line (multiple-statements)
 ************* Module SMPyBandits.main_sparse_multiplayers
 W: 46, 0: XXX dont keep it like this (fixme)
 W: 57, 0: XXX dont keep it like this (fixme)
@@ -1016,25 +1191,72 @@ E: 22, 0: Unable to import 'Environment' (import-error)
 C:416,24: More than one statement on a single line (multiple-statements)
 C:429,24: More than one statement on a single line (multiple-statements)
 C: 19, 0: standard import "import pickle" should be placed before "import numpy as np" (wrong-import-order)
+************* Module SMPyBandits.main
+W: 80, 0: XXX dont keep it like this when experimenting (fixme)
+W: 94, 0: XXX dont keep it like this (fixme)
+W:114, 0: XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details (fixme)
+W:191, 0: XXX To save the figure (fixme)
+W:193, 0: XXX To plot without saving (fixme)
+W:199, 0: XXX To save the figure (fixme)
+W:201, 0: XXX To plot without saving (fixme)
+W:207, 0: XXX To save the figure (fixme)
+W:210, 0: XXX To save the figure (fixme)
+W:212, 0: XXX To save the figure (fixme)
+W:215, 0: XXX To save the figure (fixme)
+W:219, 0: XXX To save the figure (fixme)
+W:222, 0: XXX To save the figure (fixme)
+W:224, 0: XXX To plot without saving (fixme)
+W:226, 0: XXX To plot without saving (fixme)
+W:227, 0: XXX To plot without saving (fixme)
+W:232, 0: XXX To plot without saving (fixme)
+W:234, 0: XXX To plot without saving (fixme)
+W:240, 0: XXX To save the figure (fixme)
+W:242, 0: XXX To plot without saving (fixme)
+W:248, 0: XXX To save the figure (fixme)
+W:252, 0: XXX To save the figure (fixme)
+W:255, 0: XXX To save the figure (fixme)
+W:257, 0: XXX To plot without saving (fixme)
+W:260, 0: XXX To plot without saving (fixme)
+W:262, 0: XXX To plot without saving (fixme)
+W:268, 0: XXX To save the figure (fixme)
+W:270, 0: XXX To plot without saving (fixme)
+W:283, 0: XXX To save the figure (fixme)
+W:287, 0: XXX To save the figure (fixme)
+W:289, 0: XXX To plot without saving (fixme)
+W:291, 0: XXX To plot without saving (fixme)
+W:292, 0: XXX To plot without saving (fixme)
+C: 69, 0: Exactly one space required before assignment
+loglog   = False  #: Plot in loglog   by default?
+         ^ (bad-whitespace)
+C:140,25: More than one statement on a single line (multiple-statements)
+C:154,25: More than one statement on a single line (multiple-statements)
 ************* Module SMPyBandits.policy_server
-C: 33, 0: Wrong hanging indentation (remove 4 spaces).
+C: 38, 0: Wrong hanging indentation (remove 4 spaces).
         "nbArms": 10,
     |   ^ (bad-continuation)
-C: 34, 0: Wrong hanging indentation (remove 4 spaces).
+C: 39, 0: Wrong hanging indentation (remove 4 spaces).
         "archtype": "UCBalpha",   # This basic UCB is very worse than the other
     |   ^ (bad-continuation)
-C: 35, 0: Wrong hanging indentation (remove 4 spaces).
+C: 40, 0: Wrong hanging indentation (remove 4 spaces).
         "params": {
     |   ^ (bad-continuation)
-C:156, 0: Final newline missing (missing-final-newline)
-C: 23, 0: Import "import json" should be placed at the top of the module (wrong-import-position)
-C: 24, 0: Import "import socket" should be placed at the top of the module (wrong-import-position)
-C: 25, 0: Import "from docopt import docopt" should be placed at the top of the module (wrong-import-position)
-E: 27, 0: Unable to import 'Policies' (import-error)
-W: 27, 0: Wildcard import Policies (wildcard-import)
-C: 27, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
-R: 70, 4: Too many nested blocks (7/5) (too-many-nested-blocks)
-R: 70, 4: Too many nested blocks (6/5) (too-many-nested-blocks)
+C:169, 0: No space allowed after bracket
+        means = [ float(m) for m in means.split(',') ]
+                ^ (bad-whitespace)
+C:169, 0: No space allowed before bracket
+        means = [ float(m) for m in means.split(',') ]
+                                                     ^ (bad-whitespace)
+C: 24, 0: Import "import json" should be placed at the top of the module (wrong-import-position)
+C: 25, 0: Import "import socket" should be placed at the top of the module (wrong-import-position)
+C: 26, 0: Import "import numpy as np" should be placed at the top of the module (wrong-import-position)
+E: 32, 0: Unable to import 'Policies' (import-error)
+W: 32, 0: Wildcard import Policies (wildcard-import)
+C: 32, 0: Import "from Policies import *" should be placed at the top of the module (wrong-import-position)
+R: 52, 0: Too many local variables (22/15) (too-many-locals)
+R: 80, 4: Too many nested blocks (7/5) (too-many-nested-blocks)
+R: 80, 4: Too many nested blocks (6/5) (too-many-nested-blocks)
+R: 52, 0: Too many branches (13/12) (too-many-branches)
+R: 52, 0: Too many statements (59/50) (too-many-statements)
 ************* Module SMPyBandits.complete_tree_exploration_for_MP_bandits
 W: 60, 0: XXX (fixme)
 W: 65, 0: XXX (fixme)
@@ -1299,7 +1521,7 @@ C: 19, 0: standard import "from collections import Counter" should be placed bef
 
 Report
 ======
-2897 statements analysed.
+3196 statements analysed.
 
 Statistics by type
 ------------------
@@ -1307,13 +1529,13 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |22     |22         |=          |90.91       |4.55     |
+|module   |23     |23         |=          |86.96       |8.70     |
 +---------+-------+-----------+-----------+------------+---------+
 |class    |2      |2          |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 |method   |26     |26         |=          |96.15       |7.69     |
 +---------+-------+-----------+-----------+------------+---------+
-|function |115    |115        |=          |74.78       |40.00    |
+|function |131    |131        |=          |72.52       |43.51    |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -1353,6 +1575,7 @@ External dependencies
       \-random (my_small_slack_bot)
     recommonmark 
       \-parser (conf)
+      \-transform (conf)
     seaborn (simulate_musical_chair_orthogonalization_process)
     setuptools (setup)
     sphinx (conf)
@@ -1374,13 +1597,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |3725   |42.98 |3728     |-3.00      |
+|code      |4157   |42.05 |4097     |+60.00     |
 +----------+-------+------+---------+-----------+
-|docstring |1068   |12.32 |1072     |-4.00      |
+|docstring |1217   |12.31 |1179     |+38.00     |
 +----------+-------+------+---------+-----------+
-|comment   |2881   |33.24 |2874     |+7.00      |
+|comment   |3316   |33.54 |3365     |-49.00     |
 +----------+-------+------+---------+-----------+
-|empty     |993    |11.46 |993      |=          |
+|empty     |1197   |12.11 |1193     |+4.00      |
 +----------+-------+------+---------+-----------+
 
 
@@ -1404,13 +1627,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |232    |232      |=          |
+|convention |294    |296      |-2.00      |
 +-----------+-------+---------+-----------+
-|refactor   |38     |38       |=          |
+|refactor   |42     |42       |=          |
 +-----------+-------+---------+-----------+
-|warning    |652    |652      |=          |
+|warning    |753    |751      |+2.00      |
 +-----------+-------+---------+-----------+
-|error      |136    |137      |-1.00      |
+|error      |156    |157      |-1.00      |
 +-----------+-------+---------+-----------+
 
 
@@ -1418,51 +1641,53 @@ Messages by category
 % errors / warnings by module
 -----------------------------
 
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|module                                                     |error |warning |refactor |convention |
-+===========================================================+======+========+=========+===========+
-|SMPyBandits.configuration_sparse                           |22.06 |2.91    |0.00     |5.17       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_multiplayers                     |16.18 |8.90    |0.00     |6.90       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_sparse_multiplayers              |16.18 |1.38    |0.00     |2.16       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_comparing_doubling_algorithms    |12.50 |1.38    |0.00     |2.16       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_comparing_aggregation_algorithms |11.03 |2.61    |0.00     |2.16       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_markovian                        |11.03 |1.84    |0.00     |0.86       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.complete_tree_exploration_for_MP_bandits       |2.94  |10.43   |84.21    |17.67      |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|my_small_slack_bot                                         |2.94  |1.99    |7.89     |3.45       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.env_client                                     |1.47  |0.31    |0.00     |4.31       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration_all_singleplayer                 |0.74  |15.18   |0.00     |4.74       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.main_multiplayers_more                         |0.74  |5.83    |0.00     |0.86       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.main_sparse_multiplayers                       |0.74  |5.52    |0.00     |1.29       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.main_multiplayers                              |0.74  |3.83    |0.00     |0.00       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.policy_server                                  |0.74  |0.15    |5.26     |3.45       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.configuration                                  |0.00  |26.07   |0.00     |9.91       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|SMPyBandits.main                                           |0.00  |4.75    |0.00     |0.43       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|simulate_musical_chair_orthogonalization_process           |0.00  |3.68    |0.00     |12.50      |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|test_compute_and_plot_regret_bounds2                       |0.00  |1.38    |2.63     |10.78      |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|conf                                                       |0.00  |0.77    |0.00     |1.72       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|test_compute_and_plot_regret_bounds                        |0.00  |0.61    |0.00     |0.43       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
-|setup                                                      |0.00  |0.46    |0.00     |9.05       |
-+-----------------------------------------------------------+------+--------+---------+-----------+
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|module                                                                   |error |warning |refactor |convention |
++=========================================================================+======+========+=========+===========+
+|SMPyBandits.configuration_sparse                                         |26.92 |2.92    |0.00     |5.10       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_multiplayers                                   |14.74 |7.97    |0.00     |6.12       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_sparse_multiplayers                            |14.10 |1.20    |0.00     |1.70       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_comparing_doubling_algorithms                  |10.90 |1.20    |0.00     |1.70       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_comparing_aggregation_algorithms               |9.62  |2.26    |0.00     |1.70       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_markovian                                      |9.62  |1.59    |0.00     |0.68       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|Exploring different doubling tricks for different kinds of regret bounds |3.85  |2.12    |2.38     |16.67      |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.complete_tree_exploration_for_MP_bandits                     |2.56  |9.03    |76.19    |13.95      |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|my_small_slack_bot                                                       |2.56  |1.73    |7.14     |2.72       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.env_client                                                   |1.28  |0.27    |0.00     |2.38       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration_all_singleplayer                               |0.64  |19.65   |0.00     |3.40       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.main_multiplayers_more                                       |0.64  |5.84    |0.00     |1.70       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.main_sparse_multiplayers                                     |0.64  |4.78    |0.00     |1.02       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.main_multiplayers                                            |0.64  |3.45    |0.00     |0.68       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|conf                                                                     |0.64  |0.66    |0.00     |2.72       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.policy_server                                                |0.64  |0.13    |11.90    |3.06       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.configuration                                                |0.00  |25.50   |0.00     |7.82       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|SMPyBandits.main                                                         |0.00  |4.38    |0.00     |1.02       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|simulate_musical_chair_orthogonalization_process                         |0.00  |3.19    |0.00     |9.86       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|test_compute_and_plot_regret_bounds2                                     |0.00  |1.20    |2.38     |8.50       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|test_compute_and_plot_regret_bounds                                      |0.00  |0.53    |0.00     |0.34       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
+|setup                                                                    |0.00  |0.40    |0.00     |7.14       |
++-------------------------------------------------------------------------+------+--------+---------+-----------+
 
 
 
@@ -1472,73 +1697,83 @@ Messages
 +------------------------------+------------+
 |message id                    |occurrences |
 +==============================+============+
-|fixme                         |320         |
+|fixme                         |348         |
 +------------------------------+------------+
-|unused-wildcard-import        |189         |
+|unused-wildcard-import        |250         |
 +------------------------------+------------+
-|undefined-variable            |104         |
+|undefined-variable            |118         |
 +------------------------------+------------+
-|bad-continuation              |79          |
+|bad-continuation              |86          |
 +------------------------------+------------+
-|redefined-outer-name          |52          |
+|redefined-outer-name          |54          |
 +------------------------------+------------+
-|wrong-import-position         |37          |
+|multiple-statements           |45          |
 +------------------------------+------------+
-|multiple-statements           |36          |
+|wrong-import-position         |43          |
 +------------------------------+------------+
-|missing-docstring             |32          |
+|missing-docstring             |40          |
 +------------------------------+------------+
-|bad-whitespace                |30          |
+|bad-whitespace                |40          |
 +------------------------------+------------+
-|import-error                  |29          |
+|import-error                  |30          |
++------------------------------+------------+
+|wildcard-import               |28          |
 +------------------------------+------------+
 |no-else-return                |27          |
 +------------------------------+------------+
-|wildcard-import               |26          |
+|trailing-whitespace           |23          |
 +------------------------------+------------+
-|unused-argument               |17          |
+|unused-argument               |21          |
 +------------------------------+------------+
-|unused-variable               |13          |
+|unused-variable               |15          |
 +------------------------------+------------+
-|unused-import                 |11          |
+|unused-import                 |10          |
 +------------------------------+------------+
 |cell-var-from-loop            |9           |
 +------------------------------+------------+
+|too-many-locals               |7           |
++------------------------------+------------+
 |logging-format-interpolation  |7           |
 +------------------------------+------------+
-|wrong-import-order            |5           |
-+------------------------------+------------+
-|too-many-locals               |5           |
+|wrong-import-order            |6           |
 +------------------------------+------------+
 |ungrouped-imports             |4           |
 +------------------------------+------------+
 |redefined-builtin             |4           |
 +------------------------------+------------+
-|missing-final-newline         |3           |
+|no-member                     |4           |
++------------------------------+------------+
+|too-many-branches             |3           |
 +------------------------------+------------+
 |broad-except                  |3           |
++------------------------------+------------+
+|too-many-statements           |2           |
 +------------------------------+------------+
 |too-many-nested-blocks        |2           |
 +------------------------------+------------+
 |too-many-lines                |2           |
 +------------------------------+------------+
-|too-many-branches             |2           |
+|missing-format-argument-key   |2           |
 +------------------------------+------------+
 |logging-too-many-args         |2           |
 +------------------------------+------------+
 |unneeded-not                  |1           |
 +------------------------------+------------+
-|too-many-statements           |1           |
-+------------------------------+------------+
 |too-many-instance-attributes  |1           |
 +------------------------------+------------+
 |superfluous-parens            |1           |
++------------------------------+------------+
+|missing-final-newline         |1           |
++------------------------------+------------+
+|misplaced-future              |1           |
 +------------------------------+------------+
 |misplaced-comparison-constant |1           |
 +------------------------------+------------+
 |len-as-condition              |1           |
 +------------------------------+------------+
 |invalid-sequence-index        |1           |
++------------------------------+------------+
+|function-redefined            |1           |
 +------------------------------+------------+
 |duplicate-key                 |1           |
 +------------------------------+------------+
@@ -1547,5 +1782,5 @@ Messages
 
 
 ------------------------------------------------------------------
-Your code has been rated at 4.47/10 (previous run: 4.45/10, +0.02)
+Your code has been rated at 4.15/10 (previous run: 4.10/10, +0.05)
 

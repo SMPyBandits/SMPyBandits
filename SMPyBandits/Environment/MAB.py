@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-""" MAB, MarkovianMAB, DynamicMAB, and IncreasingMAB classes to wrap the arms of some Multi-Armed Bandit problems.
+""" :class:`MAB`, :class:`MarkovianMAB`, :class:`ChangingAtEachRepMAB`, :class:`IncreasingMAB`, and :class:`NonStationaryMAB` classes to wrap the arms of some Multi-Armed Bandit problems.
 
 Such class has to have *at least* these methods:
 
 - ``draw(armId, t)`` to draw *one* sample from that ``armId`` at time ``t``,
 - and ``reprarms()`` to pretty print the arms (for titles of a plot),
 - and more, see below.
+
+.. warning:: FIXME it is still a work in progress, I need to add piecewise stationary environments, as well as continuously varying environments. See https://github.com/SMPyBandits/SMPyBandits/issues/71
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -61,6 +63,7 @@ class MAB(object):
     def __init__(self, configuration):
         """New MAB."""
         print("\n\nCreating a new MAB problem ...")  # DEBUG
+        self.isChangingAtEachRepetition   = False  #: Flag to know if the problem is changing at each repetition or not.
         self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = False  #: Flag to know if the problem is Markovian or not.
         self.arms = []  #: List of arms
@@ -101,8 +104,10 @@ class MAB(object):
     def new_order_of_arm(self, arms):
         """ Feed a new order of the arms to the environment.
 
-        - Updates self.means correctly.
+        - Updates ``self.means`` correctly.
         - Return the new position(s) of the best arm (to count and plot ``BestArmPulls`` correctly).
+
+        .. warning:: This is a very limited support of non-stationary environment: only permutations of the arms are allowed, see :class:`NonStationaryMAB` for more.
         """
         assert sorted([arm.mean for arm in self.arms]) == sorted([arm.mean for arm in arms]), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
         assert set(self.arms) == set(arms), "Error: the new list of arms = {} does not have the same means as the previous ones."  # DEBUG
@@ -239,7 +244,7 @@ class MAB(object):
         return sum(a.oneHOI(self.maxArm, a.mean) for a in self.arms if a.mean != self.maxArm) / float(self.nbArms)
 
     def lowerbound_multiplayers(self, nbPlayers=1):
-        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
         sortedMeans = sorted(self.means)
         assert nbPlayers <= len(sortedMeans), "Error: this lowerbound_multiplayers() for a MAB problem is only valid when there is less users than arms. Here M = {} > K = {} ...".format(nbPlayers, len(sortedMeans))  # DEBUG
         # FIXME it is highly suboptimal to have a lowerbound = 0 if nbPlayers == nbArms ! We have to finish the theoretical analysis!
@@ -351,6 +356,8 @@ class MAB(object):
         return fig
 
 
+# --- MarkovianMAB
+
 RESTED = True  #: Default is rested Markovian.
 
 
@@ -373,9 +380,9 @@ def transition_matrix_of_dict(dic):
 class MarkovianMAB(MAB):
     """ Classic MAB problem but the rewards are drawn from a rested/restless Markov chain.
 
-    - configuration is a dict with 'rested' and 'transitions' keys.
-    - 'rested' is a Boolean. See [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) page 2 for a description.
-    - 'transitions' is list of K transition matrices *or* dictionary (to specify non-integer states), one for each arm.
+    - configuration is a dict with ``rested`` and ``transitions`` keys.
+    - ``rested`` is a Boolean. See [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) page 2 for a description.
+    - ``transitions`` is list of K transition matrices *or* dictionary (to specify non-integer states), one for each arm.
 
     Example::
 
@@ -404,7 +411,6 @@ class MarkovianMAB(MAB):
     def __init__(self, configuration):
         """ New MarkovianMAB."""
         print("\n\nCreating a new MarkovianMAB problem ...")  # DEBUG
-        self.isDynamic   = False  #: Flag to know if the problem is static or not.
         self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
         self._sparsity = None
 
@@ -533,37 +539,39 @@ class MarkovianMAB(MAB):
         return float(nextState)
 
 
+# --- ChangingAtEachRepMAB
+
 VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic MAB
 
-class DynamicMAB(MAB):
-    """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the newRandomArms() method.
+class ChangingAtEachRepMAB(MAB):
+    """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the :meth:`newRandomArms` method.
 
-    - M.arms and M.means is changed after each call to ``newRandomArms()``, but not nbArm. All the other methods are carefully written to still make sense (Mbest, Mworst, minArm, maxArm).
+    - ``M.arms`` and ``M.means`` is changed after each call to :meth:`newRandomArms`, but not ``nbArm``. All the other methods are carefully written to still make sense (``Mbest``, ``Mworst``, ``minArm``, ``maxArm``).
 
-    .. warning:: It works but it is still experimental, be careful when using this feature.
+    .. warning:: It works perfectly fine, but it is still experimental, be careful when using this feature.
 
-    .. note:: When testing bandit algorithms against randomly generated problems at each repetitions is usually referred to as *"Bayesian problems"* in the literature: a prior is set on problems (eg. uniform on :math:`[0,1]^K` or less obvious for instance if a ``mingap`` is set), and the performance is assessed against this prior. It differs from the *frequentist* point of view of having one fixed problem and doing eg. 1000 repetitions on the same problem.
+    .. note:: Testing bandit algorithms against randomly generated problems at each repetitions is usually referred to as *"Bayesian problems"* in the literature: a prior is set on problems (eg. uniform on :math:`[0,1]^K` or less obvious for instance if a ``mingap`` is set), and the performance is assessed against this prior. It differs from the *frequentist* point of view of having one fixed problem and doing eg. ``n=1000`` repetitions on the same problem.
     """
 
     def __init__(self, configuration, verbose=VERBOSE):
-        """New DynamicMAB."""
-        self.isDynamic = True  #: Flag to know if the problem is static or not.
+        """New ChangingAtEachRepMAB."""
+        self.isChangingAtEachRepetition = True  #: Flag to know if the problem is changing at each repetition or not.
         self._sparsity = None
 
         assert isinstance(configuration, dict) \
             and "arm_type" in configuration and "params" in configuration \
-            and "function" in configuration["params"] and "args" in configuration["params"], \
-            "Error: this DynamicMAB is not really a dynamic MAB, you should use a simple MAB instead!"  # DEBUG
+            and "newMeans" in configuration["params"] and "args" in configuration["params"], \
+            "Error: this ChangingAtEachRepMAB is not really a dynamic MAB, you should use a simple MAB instead!"  # DEBUG
         self._verbose = verbose
 
         print("  Special MAB problem, changing at every repetitions, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
 
-        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (DynamicMAB are homogeneous)
+        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (ChangingAtEachRepMAB are homogeneous)
         print(" - with 'arm_type' =", arm_type)  # DEBUG
         params = configuration["params"]
         print(" - with 'params' =", params)  # DEBUG
-        self.function = params["function"]  #: Function to generate the means
-        print(" - with 'function' =", self.function)  # DEBUG
+        self.newMeans = params["newMeans"]  #: Function to generate the means
+        print(" - with 'newMeans' =", self.newMeans)  # DEBUG
         self.args = params["args"]  #: Args to give to function
         print(" - with 'args' =", self.args)  # DEBUG
         # XXX try to read sparsity
@@ -571,7 +579,7 @@ class DynamicMAB(MAB):
         print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
         # Keep track of the successive mean vectors
         self._historyOfMeans = []  # Historic of the means vectors
-        self._t = 0  # nb of calls to
+        self._t = 0  # nb of calls to the function for generating new arms
         # Generate a first mean vector
         self.newRandomArms()
         print("   - drawing a random set of arms")
@@ -589,8 +597,8 @@ class DynamicMAB(MAB):
             return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
-        """Cannot represent the dynamic arms, so print the DynamicMAB object"""
-        # print("reprarms of a DynamicMAB object...")  # DEBUG
+        """Cannot represent the dynamic arms, so print the ChangingAtEachRepMAB object"""
+        # print("reprarms of a ChangingAtEachRepMAB object...")  # DEBUG
         # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         # print("  It has self.means =\n{}".format(self.means))  # DEBUG
         text = "{text}, {K} with uniform means on [{dollar}{lower:.3g}, {upper:.3g}{dollar}]{mingap}{sparsity}".format(
@@ -607,15 +615,15 @@ class DynamicMAB(MAB):
     #
     # --- Dynamic arms and means
 
-    def newRandomArms(self, verbose=VERBOSE):
-        """Generate a new list of arms, from ``arm_type(params['function](*params['args']))``."""
-        one_draw_of_means = self.function(**self.args)
+    def newRandomArms(self, t=None, verbose=VERBOSE):
+        """Generate a new list of arms, from ``arm_type(params['newMeans'](*params['args']))``."""
+        one_draw_of_means = self.newMeans(**self.args)
         self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless
         self._t += 1  # new draw!
         self._historyOfMeans.append(one_draw_of_means)
         if verbose or self._verbose:
-            print("\n  - Creating a new dynamic set of means = {} for arms: DynamicMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
+            print("\n  - Creating a new dynamic list of means = {} for arms: ChangingAtEachRepMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
             # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
         return one_draw_of_means
 
@@ -628,7 +636,7 @@ class DynamicMAB(MAB):
 
     @property
     def means(self):
-        """ Return the list of means of arms for this DynamicMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
+        """ Return the list of means of arms for this ChangingAtEachRepMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
 
         .. warning:: Highly experimental!
         """
@@ -650,22 +658,18 @@ class DynamicMAB(MAB):
     @property
     def minArm(self):
         """Return the smallest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        # XXX equivalent to np.mean(np.min(means) for means in ...) ? NOPE
-        # return np.min(self.means)
         return np.mean(np.min(np.array(self._historyOfMeans)))
 
     @property
     def maxArm(self):
         """Return the largest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        # XXX equivalent to np.mean(np.max(means) for means in ...) ? NOPE
-        # return np.max(self.means)
         return np.mean(np.max(np.array(self._historyOfMeans)))
 
     #
     # --- Compute lower bounds
 
     def lowerbound(self):
-        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from kullback.py or kullback.so (averaged on all the draws of new means)."""
+        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
         oneLR = self.arms[0].oneLR
         return np.mean([
                         sum(
@@ -689,7 +693,7 @@ class DynamicMAB(MAB):
                         ])
 
     def lowerbound_multiplayers(self, nbPlayers=1):
-        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from kullback.py or kullback.so. """
+        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
         oneLR = self.arms[0].oneLR
         kl = self.arms[0].kl
 
@@ -730,6 +734,162 @@ class DynamicMAB(MAB):
             print("Error, our lower bound is worse than the one in Theorem 6 from [Anandkumar et al., 2010], but it should always be better...")
 
         return avg_our_lowerbound, avg_anandkumar_lowerbound, avg_centralized_lowerbound
+
+
+# --- NonStationaryMAB
+
+class NonStationaryMAB(MAB):
+    """Like a static MAB problem, but the arms *can* be modified *at each time step*, with the :meth:`newRandomArms` method.
+
+    - ``M.arms`` and ``M.means`` is changed after each call to :meth:`newRandomArms`, but not ``nbArm``. All the other methods are carefully written to still make sense (``Mbest``, ``Mworst``, ``minArm``, ``maxArm``).
+
+    .. note:: This is a generic class to implement different kinds of non-stationary bandits:
+
+        - Abruptly changing non-stationary bandits, in different variants: changepoints are fixed and decided in advanced, or changepoints are randomly drawn (once for all ``n`` repetitions or at different location fo each repetition).
+        - Slowly varying non-stationary bandits, where the underlying mean of each arm is slowing randomly modified and a bound on the speed of change (e.g., Lipschitz constant of :math:`t \mapsto \mu_i(t)`) is known.
+
+    .. warning:: FIXME finish this! It works fine, but it is still experimental, be careful when using this feature.
+
+    .. warning:: The number of arms is fixed, see https://github.com/SMPyBandits/SMPyBandits/issues/TODO if you are curious about bandit problems with a varying number of arms (or sleeping bandits where some arms can be enabled or disabled at each time).
+    """
+
+    def __init__(self, configuration, verbose=VERBOSE):
+        """New ChangingAtEachRepMAB."""
+        self.isDynamic = True  #: Flag to know if the problem is static or not.
+        self._sparsity = None
+
+        assert isinstance(configuration, dict) \
+            and "arm_type" in configuration and "params" in configuration \
+            and "newMeans" in configuration["params"] \
+            and "changePoints" in configuration["params"] \
+            and "args" in configuration["params"], \
+            "Error: this ChangingAtEachRepMAB is not really a non-stationary MAB, you should use a simple MAB instead!"  # DEBUG
+        self._verbose = verbose
+
+        print("  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
+
+        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (ChangingAtEachRepMAB are homogeneous)
+        print(" - with 'arm_type' =", arm_type)  # DEBUG
+        params = configuration["params"]
+        print(" - with 'params' =", params)  # DEBUG
+        self.newMeans = params["newMeans"]  #: Function to generate the means
+        print(" - with 'newMeans' =", self.newMeans)  # DEBUG
+        self.changePoints = params["changePoints"]  #: Function to generate the means
+        print(" - with 'changePoints' =", self.changePoints)  # DEBUG
+        self.args = params["args"]  #: Args to give to function
+        print(" - with 'args' =", self.args)  # DEBUG
+        # XXX try to read sparsity
+        self._sparsity = configuration["sparsity"] if "sparsity" in configuration else None
+        print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
+        # Keep track of the successive mean vectors
+        self._historyOfMeans = dict()  # Historic of the means vectors, storing time of {changepoint: newMeans}
+        self._t = 0  # nb of calls to the function for generating new arms
+        # Generate a first mean vector
+        self.newRandomArms()
+        print("   - drawing a random set of arms")
+        self.nbArms = len(self.arms)  #: Means of arms
+        print("   - with 'nbArms' =", self.nbArms)  # DEBUG
+        print("   - with 'arms' =", self.arms)  # DEBUG
+        print(" - Example of initial draw of 'means' =", self.means)  # DEBUG
+        print("   - with 'maxArm' =", self.maxArm)  # DEBUG
+        print("   - with 'minArm' =", self.minArm)  # DEBUG
+
+    def __repr__(self):
+        if self._arms is not None:
+            return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self._arms, self.minArm, self.maxArm)
+        else:
+            return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
+
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
+        """Cannot represent the dynamic arms, so print the ChangingAtEachRepMAB object"""
+        # print("reprarms of a ChangingAtEachRepMAB object...")  # DEBUG
+        # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
+        # print("  It has self.means =\n{}".format(self.means))  # DEBUG
+        text = "{text}, {K} with uniform means on [{dollar}{lower:.3g}, {upper:.3g}{dollar}]{mingap}{sparsity}".format(
+            text="Non-Stationary MAB",
+            K=str(self._arms[0]),
+            lower=self.args["lower"],
+            upper=self.args["lower"] + self.args["amplitude"],
+            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r",min gap=%.3g" % self.args["mingap"],
+            sparsity="" if self._sparsity is None else ", sparsity = {dollar}{s}{dollar}".format(s=self._sparsity, dollar="$" if latex else ""),
+            dollar="$" if latex else "",
+        )
+        return wraptext(text)
+
+    #
+    # --- Dynamic arms and means
+
+    def newRandomArms(self, t=None, verbose=VERBOSE):
+        """Generate a new list of arms, from ``arm_type(params['newMeans'](t, **params['args']))``.
+
+        .. warning:: FIXME
+        """
+        if t not in self.changePoints: return self.means
+        one_draw_of_means = self.newMeans(**self.args)
+        self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
+        self.nbArms = len(self._arms)  # useless
+        self._t += 1  # new draw!
+        self._historyOfMeans[t] = one_draw_of_means
+        if verbose or self._verbose:
+            print("\n  - Creating a new dynamic list of means = {} for arms: ChangingAtEachRepMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
+            # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
+        return one_draw_of_means
+
+    # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
+
+    @property
+    def arms(self):
+        """Return the *current* list of arms."""
+        return self._arms
+
+    @property
+    def means(self):
+        """ Return the list of means of arms for this ChangingAtEachRepMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
+
+        .. warning:: Highly experimental!
+        """
+        return np.mean(np.array(self._historyOfMeans), axis=0)
+
+    #
+    # --- Helper to compute sets Mbest and Mworst
+
+    def Mbest(self, M=1):
+        """ Set of M best means (averaged on all the draws of new means)."""
+        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans.values()), axis=1), axis=0)
+        return sortedMeans[-M:]
+
+    def Mworst(self, M=1):
+        """ Set of M worst means (averaged on all the draws of new means)."""
+        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans.values()), axis=1), axis=0)
+        return sortedMeans[:-M]
+
+    @property
+    def minArm(self):
+        """Return the smallest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
+        return np.mean(np.min(np.array(self._historyOfMeans.values())))
+
+    @property
+    def maxArm(self):
+        """Return the largest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
+        return np.mean(np.max(np.array(self._historyOfMeans.values())))
+
+    #
+    # --- Compute lower bounds
+    # TODO
+
+    def lowerbound(self):
+        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
+        raise NotImplementedError
+
+    def hoifactor(self):
+        """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
+        raise NotImplementedError
+
+    def lowerbound_multiplayers(self, nbPlayers=1):
+        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
+        raise NotImplementedError
+
+
 
 
 # --- IncreasingMAB
@@ -790,6 +950,7 @@ class IncreasingMAB(MAB):
         """New MAB."""
         super(IncreasingMAB, self).__init__(configuration)
         # XXX Expects a function of (t, lower, amplitude) that gives the new (lower, amplitude)
+        self.isDynamic   = True  #: Flag to know if the problem is static or not.
         # WARNING the hash function used on configuration dictionary don't like to have non-hashable part in the dictionary keys, I need to fix that
         if isinstance(configuration, dict):
             self._change_lower_amplitude = configuration.get("change_lower_amplitude", default_change_lower_amplitude)

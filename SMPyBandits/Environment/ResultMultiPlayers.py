@@ -14,7 +14,7 @@ class ResultMultiPlayers(object):
     # , delta_t_save=1
     def __init__(self, nbArms, horizon, nbPlayers, means=None):
         """ Create ResultMultiPlayers."""
-        self._means = means  # Keep the means for DynamicMAB cases
+        # self._means = means  # Keep the means for ChangingAtEachRepMAB cases
         self.choices = np.zeros((nbPlayers, horizon), dtype=int)  #: Store all the choices of all the players
         self.rewards = np.zeros((nbPlayers, horizon))  #: Store all the rewards of all the players, to compute the mean
         # self.rewardsSquared = np.zeros((nbPlayers, horizon))  #: Store all the rewards**2 of all the players, to compute the variance  # XXX uncomment if needed
@@ -32,9 +32,3 @@ class ResultMultiPlayers(object):
         self.pulls += pulls
         self.allPulls[:, :, time] = pulls
         self.collisions[:, time] = collisions
-
-    # def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
-    #     """ Save the content of the result files into a HDF5 file on the disk."""
-    #     if delta_t_save is None:
-    #         delta_t_save = self.delta_t_save
-    #     raise ValueError("FIXME finish to write this function saveondisk() for ResultMultiPlayers!")

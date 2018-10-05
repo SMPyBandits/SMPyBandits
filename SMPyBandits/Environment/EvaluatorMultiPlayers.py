@@ -32,7 +32,7 @@ try:
     from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-    from .MAB import MAB, MarkovianMAB, DynamicMAB
+    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
     from .ResultMultiPlayers import ResultMultiPlayers
     from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
@@ -44,7 +44,7 @@ except ImportError:
     from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-    from MAB import MAB, MarkovianMAB, DynamicMAB
+    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
     from ResultMultiPlayers import ResultMultiPlayers
     from memory_consumption import getCurrentMemory, sizeof_fmt
 
@@ -144,14 +144,14 @@ class EvaluatorMultiPlayers(object):
         nbArms = []
         for configuration_arms in self.cfg['environment']:
             if isinstance(configuration_arms, dict) \
-               and "arm_type" in configuration_arms and "params" in configuration_arms \
-               and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
-                MB = DynamicMAB(configuration_arms)
+                and "arm_type" in configuration_arms and "params" in configuration_arms \
+                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
+                    MB = ChangingAtEachRepMAB(configuration_arms)
             elif isinstance(configuration_arms, dict) \
-               and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
-               and "params" in configuration_arms \
-               and "transitions" in configuration_arms["params"]:
-                self.envs.append(MarkovianMAB(configuration_arms))
+                and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
+                and "params" in configuration_arms \
+                and "transitions" in configuration_arms["params"]:
+                    self.envs.append(MarkovianMAB(configuration_arms))
             else:
                 MB = MAB(configuration_arms)
             self.envs.append(MB)
@@ -216,17 +216,14 @@ class EvaluatorMultiPlayers(object):
         if self.useJoblib:
             seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
             repeatIdout = 0
-            historyOfMeans = []
             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
                 delayed(delayed_play)(env, self.players, self.horizon, self.collisionModel, seed=seeds[repeatId], repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain, useJoblib=self.useJoblib)
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
             ):
-                historyOfMeans.append(r._means)
                 store(r, repeatIdout)
                 repeatIdout += 1
-            if env.isDynamic:
+            if env.isChangingAtEachRepetition:
                 env._t += self.repetitions  # new self.repetitions draw!
-                env._historyOfMeans = historyOfMeans
         else:
             for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
                 r = delayed_play(env, self.players, self.horizon, self.collisionModel, repeatId=repeatId, count_ranks_markov_chain=self.count_ranks_markov_chain, useJoblib=self.useJoblib)
@@ -263,7 +260,7 @@ class EvaluatorMultiPlayers(object):
             sbgrp = h5file.create_group("env_{}".format(envId))
             # 3.b. store attribute of the MAB problem
             mab = self.envs[envId]
-            for name_of_attr in ["isDynamic", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
+            for name_of_attr in ["isChangingAtEachRepetition", "isMarkovian", "_sparsity", "means", "nbArms", "maxArm", "minArm"]:
                 if not hasattr(mab, name_of_attr): continue
                 value = getattr(mab, name_of_attr)
                 if isinstance(value, str): value = np.string_(value)
@@ -608,13 +605,13 @@ class EvaluatorMultiPlayers(object):
                         if semilogy or loglog:  # Manual fix for issue https://github.com/SMPyBandits/SMPyBandits/issues/38
                             plt.yscale('log')
         # We also plot our lower bound
-        if not self.envs[envId].isDynamic:
+        if not self.envs[envId].isChangingAtEachRepetition:
             try:
                 # XXX In fact, the lower-bound is also true for Bayesian policies! Finite means ARE ALWAYS linear! I should write the proof, but I convinced myself that the lower-bound is still correct (in a certain sense) and at least it gives an overview of the (average) complexity of the problem (randomly drawn and) used for the experiments.
                 lowerbound, anandkumar_lowerbound, centralized_lowerbound = self.envs[envId].lowerbound_multiplayers(self.nbPlayers)
                 if not (semilogx or semilogy or loglog):
                     print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem ... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(self.envs[envId].lowerbound(), self.envs[envId].hoifactor()))  # DEBUG
-                if self.envs[envId].isDynamic:
+                if self.envs[envId].isChangingAtEachRepetition:
                     print("WARNING this env is in fact dynamic, this complexity term and H_OI factor do not have much sense... (they are computed from the average of the complexity for all mean vectors drawn in the repeted experiments...)")  # DEBUG
                 print(" - [Anandtharam et al] centralized lower-bound = {:.3g},\n - [Anandkumar et al] decentralized lower-bound = {:.3g}\n - Our better (larger) decentralized lower-bound = {:.3g},".format(centralized_lowerbound, anandkumar_lowerbound, lowerbound))  # DEBUG
                 if normalized:
@@ -1069,7 +1066,7 @@ def delayed_play(env, players, horizon, collisionModel,
         np.random.seed(seed)
         random.seed(seed)
     means = env.means
-    if env.isDynamic:
+    if env.isChangingAtEachRepetition:
         means = env.newRandomArms()
     players = deepcopy(players)
     nbArms = env.nbArms

@@ -14,7 +14,7 @@ class Result(object):
     # , delta_t_save=1):
     def __init__(self, nbArms, horizon, indexes_bestarm=-1, means=None):
         """ Create ResultMultiPlayers."""
-        self._means = means  # Keep the means for DynamicMAB cases
+        # self._means = means  # Keep the means for ChangingAtEachRepMAB cases
         # self.delta_t_save = delta_t_save  #: Sample rate for saving
         self.choices = np.zeros(horizon, dtype=int)  #: Store all the choices
         self.rewards = np.zeros(horizon)  #: Store all the rewards, to compute the mean
@@ -38,12 +38,8 @@ class Result(object):
         """ Store the position of the best arm from this list of arm.
 
         - From that time t **and after**, the index of the best arm is stored as ``indexes_bestarm``.
+
+        .. warning:: This is still experimental!
         """
         for t in range(time, len(self.indexes_bestarm)):
             self.indexes_bestarm[t] = indexes_bestarm
-
-    # def saveondisk(self, filepath='/tmp/saveondisk.hdf5', delta_t_save=None):
-    #     """ Save the content of the Result object into a HDF5 file on the disk."""
-    #     if delta_t_save is None:
-    #         delta_t_save = self.delta_t_save
-    #     raise ValueError("FIXME finish to write this function saveondisk() for Result!")

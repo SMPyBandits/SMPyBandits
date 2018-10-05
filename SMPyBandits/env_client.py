@@ -31,7 +31,7 @@ try:
 except ImportError:
     print("ERROR: the 'docopt' module is needed for this script 'env_client.py'.\nPlease install it with 'sudo pip install docopt' (or pip3), and try again!\nIf the issue persists, please fill a ticket here: https://github.com/SMPyBandits/SMPyBandits/issues/new")  # DEBUG
 
-from Environment import MAB, MarkovianMAB, DynamicMAB
+from Environment import MAB, MarkovianMAB, ChangingAtEachRepMAB
 from Arms import *
 
 
@@ -136,7 +136,7 @@ def main(arguments):
     configuration = read_configuration_env(json_configuration)
     transform_str(configuration)
     if is_dynamic:
-        env = DynamicMAB(configuration)
+        env = ChangingAtEachRepMAB(configuration)
     elif is_markovian:
         env = MarkovianMAB(configuration)
     else:

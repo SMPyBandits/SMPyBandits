@@ -74,12 +74,15 @@ if REPETITIONS == -1:
 # Random events
 RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
 # RANDOM_SHUFFLE = True  #: The arms will be shuffled (``shuffle(arms)``).
+RANDOM_SHUFFLE = getenv('RANDOM_SHUFFLE', str(RANDOM_SHUFFLE)) == 'True'
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
+RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
 NB_RANDOM_EVENTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_RANDOM_EVENTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_RANDOM_EVENTS = 10  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 NB_RANDOM_EVENTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+NB_RANDOM_EVENTS = int(getenv('NB_RANDOM_EVENTS', NB_RANDOM_EVENTS))
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -116,12 +119,16 @@ TEST_Aggregator = True
 TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
 
 #: To know if my Doubling Trick policy is tested.
+TEST_Doubling_Trick = True
 TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
-TEST_Doubling_Trick = True  # FIXME
 
 #: To know if my WrapRange policy is tested.
 TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
+
+#: To know if the sliding window policies is tested.
+TEST_SlidingWindow = True
+TEST_SlidingWindow = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = True  # XXX to manually enable this feature?
@@ -178,6 +185,10 @@ ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 #: True to use bayesian problem
 ENVIRONMENT_BAYESIAN = False
 ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
+
+#: True to use non-stationary problem
+ENVIRONMENT_NONSTATIONARY = False
+ENVIRONMENT_NONSTATIONARY = getenv('NONSTATIONARY', str(ENVIRONMENT_NONSTATIONARY)) == 'True'
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUDE, isSorted=True)
@@ -267,10 +278,10 @@ configuration = {
         #     "arm_type": Bernoulli,
         #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
         # },
-        # {   # A Bayesian problem: every repetition use a different mean vectors!
+        # {   # A Bayesian problem: every repetition use a different means vector!
         #     "arm_type": ARM_TYPE,
         #     "params": {
-        #         "function": randomMeans,
+        #         "newMeans": randomMeans,
         #         "args": {
         #             "nbArms": NB_ARMS,
         #             "mingap": None,
@@ -326,10 +337,79 @@ configuration = {
 
 if ENVIRONMENT_BAYESIAN:
     configuration["environment"] = [  # XXX Bernoulli arms
-        {   # A Bayesian problem: every repetition use a different mean vectors!
+        {   # A Bayesian problem: every repetition use a different means vector!
             "arm_type": ARM_TYPE,
             "params": {
-                "function": randomMeans,
+                "newMeans": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
+
+
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A non stationary problem: every step of the same repetition use a different mean vector!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "newMeans": randomMeans,
+                # FIXME try different changePoints VALUES
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
+
+
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A non stationary problem: every step of the same repetition use a different mean vector!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "newMeans": continuouslyVaryingMeans,
+                # FIXME try different changePoints VALUES
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+                "args": {
+                    "nbArms": NB_ARMS,
+                    "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    # "mingap": 1. / (3 * NB_ARMS),
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
+
+
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A non stationary problem: every step of the same repetition use a different mean vector!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "newMeans": randomContinuouslyVaryingMeans,
+                # FIXME try different changePoints VALUES
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=HORIZON/NB_RANDOM_EVENTS),
+                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
@@ -1171,6 +1251,7 @@ elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYES
         }, ],
     })
 
+# Dynamic hack
 if TEST_WrapRange:
     configuration.update({
         # Policies that should be simulated, and their parameters.
@@ -1458,93 +1539,94 @@ if TEST_Aggregator:
 #     ]
 # })
 
+# Dynamic hack
+if TEST_SlidingWindow:
+    # XXX compare different values of the experimental sliding window algorithm
+    EPSS   = [0.1, 0.05]
+    ALPHAS = [2, 1, 0.5, 0.1]
+    ALPHAS = [2, 0.5, 0.1]
+    ALPHAS = [0.5]
+    ALPHAS = [1]
+    TAUS   = [
+            500, 1000, 2000,
+            # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
+        ]
+    GAMMAS = [
+            # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
+            0.8, 0.9, 0.95, 0.99, 0.999999,
+        # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
+        ]
 
-# # XXX compare different values of the experimental sliding window algorithm
-# EPSS   = [0.1, 0.05]
-# ALPHAS = [2, 1, 0.5, 0.1]
-# ALPHAS = [2, 0.5, 0.1]
-# ALPHAS = [0.5]
-# ALPHAS = [1]
-# TAUS   = [
-#         500, 1000, 2000,
-#         # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
-#     ]
-# GAMMAS = [
-#         # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
-#         0.8, 0.9, 0.95, 0.99, 0.999999,
-#        # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
-#     ]
-
-# configuration.update({
-#     "policies":
-#     # [
-#     #     # --- # XXX experimental sliding window algorithm
-#     #     {
-#     #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
-#     #         "params": {
-#     #             "alpha": alpha
-#     #         }
-#     #     }
-#     #     for tau in TAUS
-#     #     for eps in EPSS
-#     #     for alpha in ALPHAS
-#     # # ] +
-#     [
-#         # --- # XXX experimental other version of the sliding window algorithm
-#         {
-#             "archtype": SWUCB,
-#             "params": {
-#                 "alpha": alpha,
-#                 "tau": tau
-#             }
-#         }
-#         for alpha in ALPHAS
-#         for tau in TAUS
-#     ] +
-#     [
-#         # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-#         {
-#             "archtype": SWUCBPlus,
-#             "params": {
-#                 "horizon": HORIZON,
-#                 "alpha": alpha
-#             }
-#         }
-#         for alpha in ALPHAS
-#     ] +
-#     [
-#         # --- # XXX experimental discounted UCB algorithm
-#         {
-#             "archtype": DiscountedUCB,
-#             "params": {
-#                 "alpha": alpha,
-#                 "gamma": gamma
-#             }
-#         }
-#         for gamma in GAMMAS
-#         for alpha in ALPHAS
-#     ] +
-#     [
-#         # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-#         {
-#             "archtype": DiscountedUCBPlus,
-#             "params": {
-#                 "alpha": alpha,
-#                 "horizon": HORIZON
-#             }
-#         }
-#         for alpha in ALPHAS
-#     ] +
-#     [
-#         {
-#             "archtype": UCBalpha,
-#             "params": {
-#                 "alpha": alpha
-#             }
-#         }
-#         for alpha in ALPHAS
-#     ]
-# })
+    configuration.update({
+        "policies":
+        # [
+        #     # --- # XXX experimental sliding window algorithm
+        #     {
+        #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
+        #         "params": {
+        #             "alpha": alpha
+        #         }
+        #     }
+        #     for tau in TAUS
+        #     for eps in EPSS
+        #     for alpha in ALPHAS
+        # # ] +
+        [
+            # --- # XXX experimental other version of the sliding window algorithm
+            {
+                "archtype": SWUCB,
+                "params": {
+                    "alpha": alpha,
+                    "tau": tau
+                }
+            }
+            for alpha in ALPHAS
+            for tau in TAUS
+        ] +
+        [
+            # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+            {
+                "archtype": SWUCBPlus,
+                "params": {
+                    "horizon": HORIZON,
+                    "alpha": alpha
+                }
+            }
+            for alpha in ALPHAS
+        ] +
+        [
+            # --- # XXX experimental discounted UCB algorithm
+            {
+                "archtype": DiscountedUCB,
+                "params": {
+                    "alpha": alpha,
+                    "gamma": gamma
+                }
+            }
+            for gamma in GAMMAS
+            for alpha in ALPHAS
+        ] +
+        [
+            # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+            {
+                "archtype": DiscountedUCBPlus,
+                "params": {
+                    "alpha": alpha,
+                    "horizon": HORIZON
+                }
+            }
+            for alpha in ALPHAS
+        ] +
+        [
+            {
+                "archtype": UCBalpha,
+                "params": {
+                    "alpha": alpha
+                }
+            }
+            for alpha in ALPHAS
+        ]
+    })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
 # from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once

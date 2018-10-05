@@ -20,10 +20,12 @@ Also contains:
 - :func:`uniformMeansWithSparsity`, to generate uniformly spaced means of arms, with sparsity constraints.
 - :func:`randomMeans`, to generate randomly spaced means of arms.
 - :func:`randomMeansWithGapBetweenMbestMworst`, to generate randomly spaced means of arms, with a constraint on the gap between the M-best arms and the (K-M)-worst arms.
-- :func:`randomMeans`, to generate randomly spaced means of arms.
+- :func:`randomMeansWithSparsity`, to generate randomly spaced means of arms with sparsity constraint.
 - :func:`shuffled`, to return a shuffled version of a list.
 - Utility functions :func:`array_from_str` :func:`list_from_str` and :func:`tuple_from_str` to obtain a `numpy.ndarray`, a `list` or a `tuple` from a string (used for the CLI env variables interface).
 - :func:`optimal_selection_probabilities`.
+- :func:`geometricChangePoints`, to obtain randomly spaced change points.
+- :func:`continuouslyVaryingMeans` and :func:`randomContinuouslyVaryingMeans`, to get new random means for continuously varying non-stationary MAB problems.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -399,6 +401,51 @@ def optimal_selection_probabilities(M, mu):
     c /= np.sum(c)
     return c
 
+
+# --- Randomized changepoints
+
+def geometricChangePoints(horizon=10000, proba=1e-3):
+    r"""Change points following a geometric distribution: at each time, the probability of having a change point at the next step is ``proba``.
+
+    >>> np.random.seed(0)
+    >>> geometricChangePoints(100, 0.1)
+    array([ 8, 20, 29, 37, 43, 53, 59, 81])
+    >>> geometricChangePoints(100, 0.2)
+    array([ 6,  8, 14, 29, 31, 35, 40, 44, 46, 60, 63, 72, 78, 80, 88, 91])
+    """
+    distances = np.random.geometric(proba, size=horizon)
+    points = np.cumsum(distances)
+    return points[points < horizon]
+
+
+def continuouslyVaryingMeans(means, sign=+1, maxSlowChange=0.1, horizon=None, lower=0., amplitude=1., isSorted=True):
+    r"""New means, slightly modified from the previous ones.
+
+    - The change and the sign of change are constants.
+    """
+    slowChange = sign * maxSlowChange / float(horizon)
+    mus = means + slowChange
+    mus = np.maximum(np.minimum(mus, lower + amplitude), lower)
+    if isSorted:
+        return sorted(list(mus))
+    else:
+        np.random.shuffle(mus)  # Useless
+        return list(mus)
+
+
+def randomContinuouslyVaryingMeans(means, maxSlowChange=0.1, horizon=None, lower=0., amplitude=1., isSorted=True):
+    r"""New means, slightly modified from the previous ones.
+
+    - The amplitude ``c`` of the change is constant, but it is randomly sampled in :math:`\mathcal{U}([-c,c])`.
+    """
+    slowChange = maxSlowChange / float(horizon)
+    mus = means + (2 * np.random.random() - 1) * slowChange
+    mus = np.maximum(np.minimum(mus, lower + amplitude), lower)
+    if isSorted:
+        return sorted(list(mus))
+    else:
+        np.random.shuffle(mus)  # Useless
+        return list(mus)
 
 # --- Debugging
 
