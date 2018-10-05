@@ -22,13 +22,19 @@ Making new simulations is very easy, one only needs to write a configuration scr
 
 A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [SMPyBandits.GitHub.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, but I won't use any *continuous integration*, don't even think of it!)
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
+[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
+[![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
 ![PyPI version](https://img.shields.io/pypi/v/smpybandits.svg)
 ![PyPI implementation](https://img.shields.io/pypi/implementation/smpybandits.svg)
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
-[![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master)](https://travis-ci.org/SMPyBandits/SMPyBandits)
+[![Stars of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/stars/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/stargazers)
+[![Releases of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/release/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/releases)
+[![Commits of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/commits/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/commits/master) / [![Date of last commit of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/last-commit/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/commits/master)
+[![Issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/issues/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/issues) : [![Open issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/open-issues/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aopen+is%3Aissue) / [![Closed issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/closed-issues/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aclosed+is%3Aissue)
+
 
 > [I (Lilian Besson)](https://perso.crans.org/besson/) have [started my PhD](https://perso.crans.org/besson/phd/) in October 2016, and this is a part of my **on going** research since December 2016.
 >
@@ -54,7 +60,7 @@ If you use this package for your own work, please consider citing it with [this 
 I also wrote a small paper to present *SMPyBandits*, and I will send it to [JMLR MLOSS](http://jmlr.org/mloss/).
 The paper can be consulted [here on my website](https://perso.crans.org/besson/articles/SMPyBandits.pdf).
 
-> A DOI will arrive as soon as possible! I will try to publish [a paper](docs/paper/paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
+> A DOI will arrive as soon as possible! I tried to publish [a paper](docs/paper/paper.md) on both [JOSS](http://joss.theoj.org/) and [MLOSS](http://mloss.org/software/).
 
 ## [List of research publications using SMPyBandits](PublicationsWithSMPyBandits.md)
 
@@ -176,6 +182,15 @@ If you want to contribute, please have a look to the [CONTRIBUTING.md](.github/C
 ![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
 [![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
 [![Build Status](https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master)](https://travis-ci.org/SMPyBandits/SMPyBandits)
+
+[![Stars of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/stars/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/stargazers) [![Contributors of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/contributors/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors) [![Watchers of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/watchers/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/watchers) [![Forks of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/forks/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/network/members)
+
+[![Releases of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/release/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/releases)
+[![Commits of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/commits/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/commits/master) / [![Date of last commit of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/last-commit/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/commits/master)
+
+[![Issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/issues/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/issues) : [![Open issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/open-issues/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aopen+is%3Aissue) / [![Closed issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/closed-issues/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aclosed+is%3Aissue)
+
+[![Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/prs/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/pulls) : [![Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/open-prs/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/issues?q=is%3Aopen+is%3Apr) / [![Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/closed-prs/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/issues?q=is%3Aclose+is%3Apr)
 
 [![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
 [![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)

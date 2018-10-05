@@ -750,7 +750,7 @@ class NonStationaryMAB(MAB):
 
     .. warning:: FIXME finish this! It works fine, but it is still experimental, be careful when using this feature.
 
-    .. warning:: The number of arms is fixed, see https://github.com/SMPyBandits/SMPyBandits/issues/TODO if you are curious about bandit problems with a varying number of arms (or sleeping bandits where some arms can be enabled or disabled at each time).
+    .. warning:: The number of arms is fixed, see https://github.com/SMPyBandits/SMPyBandits/issues/123 if you are curious about bandit problems with a varying number of arms (or sleeping bandits where some arms can be enabled or disabled at each time).
     """
 
     def __init__(self, configuration, verbose=VERBOSE):
