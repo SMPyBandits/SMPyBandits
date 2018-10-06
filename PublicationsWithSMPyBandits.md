@@ -59,7 +59,7 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 Note: I have worked on other topics during [my PhD](https://perso.crans.org/besson/phd/), you can find my research articles [on my website](https://perso.crans.org/besson/articles/), or have a look to [my Google Scholar profile](https://scholar.google.com/citations?hl=en&user=bt3upq8AAAAJ) or [résumé on HAL](https://cv.archives-ouvertes.fr/lilian-besson).
 
-[[Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/SMPyBandits/SMPyBandits/)
+[![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/SMPyBandits/SMPyBandits/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)

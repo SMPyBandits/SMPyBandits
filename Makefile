@@ -26,6 +26,8 @@ sparsemulti:
 alllint:	lint lint3 uml stats doc
 doc:	ignorelogs
 	make html clean send
+pushdoctogithub:
+	cd ~/SMPyBandits.github.io/ ; git add . ; git commit -m "Automated update of the docs from 'make pushdoctogithub'." ; git push
 
 # Runners
 singleplayer:	singleplayer3

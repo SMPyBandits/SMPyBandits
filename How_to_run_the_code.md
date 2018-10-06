@@ -52,6 +52,13 @@ python main.py configuration_markovian
 make markovian
 ```
 
+#### [Single player, with non-stationary problem](SMPyBandits/configuration_nonstationary.py)
+```bash
+python main.py configuration_nonstationary
+# or
+make nonstationary
+```
+
 ### Multi-Player
 #### [Multi-Player, one algorithm](SMPyBandits/main_multiplayers.py)
 ```bash
@@ -130,7 +137,7 @@ It is also used to clean the code, build the doc, send the doc, etc. (This shoul
 
 © 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
 
-[[Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/SMPyBandits/SMPyBandits/)
+[![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/SMPyBandits/SMPyBandits/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
