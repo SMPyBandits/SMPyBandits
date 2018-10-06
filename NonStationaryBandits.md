@@ -1,7 +1,7 @@
 # **Non-Stationary Stochastic Multi-Armed Bandits**
 
 A well-known and well-studied variant of the [stochastic Multi-Armed Bandits](https://en.wikipedia.org/wiki/Multi-armed_bandit) is the so-called **Non-Stationary Stochastic Multi-Armed Bandits**.
-I give here a short introduction, with references below. If you are in a hurry, please read the first two pages of [this article instead](https://arxiv.org/pdf/1802.08380).
+I give here a short introduction, with references below. If you are in a hurry, please read the first two pages of [this recent article instead (arXiv:1802.08380)](https://arxiv.org/pdf/1802.08380).
 
 - The first studied variant considers *piece-wise* stationary problems, also referred to as **abruptly changing**, where the distributions of the `$K$` arms are stationary on some intervals `$[T_i,\ldots,T_{i+1}]$` with some abrupt change points `$(T_i)$`.
     + It is always assumed that the location of the change points are unknown to the user, otherwise the problem is not harder: just play your [favorite algorithm](docs/Policies.html), and restart it at each change point.
@@ -14,13 +14,13 @@ I give here a short introduction, with references below. If you are in a hurry, 
 
 - Other variants include harder settings.
     + For instance, we can consider that an adversarial is deciding the change points, by being adaptative to the user's actions. I consider it harder, as always with adversarial problems, and not very useful to model real-world problems.
-    + Another harder setting is a "pseudo-Markovian rested" point-of-view: the mean (or parameters) of an arm's distribution can change only when it is sampled, either from time to time or at each time step. It makes sense for some applications (see [Julien's work](https://www.linkedin.com/in/julien-seznec-29364a104/)), but for others it doesn't really make sense (e.g., cognitive radio applications).
+    + Another harder setting is a "pseudo-Markovian rested" point-of-view: the mean (or parameters) of an arm's distribution can change only when it is sampled, either from time to time or at each time step. It makes sense for some applications, for instance [Julien's work (in SequeL Inria team)](https://www.linkedin.com/in/julien-seznec-29364a104/), but for others it doesn't really make sense (e.g., cognitive radio applications).
 
 TODO fix notations more!
 
 ## Applications
 
-TL;DR: the world is non stationary, so it makes sense to study this!
+*TL;DR*: the world is non stationary, so it makes sense to study this!
 
 TODO write more justifications about applications, mainly for IoT networks (like when I studied [multi-player bandits](MultiPlayers)).
 
@@ -29,7 +29,8 @@ TODO write more justifications about applications, mainly for IoT networks (like
 Here is a partial list of references on this topic. For more, a good starting point is to read the references given in the mentioned article, as always.
 
 ### Main references
-1. [["The Non-Stochastic Multi-Armed Bandit Problem". P. Auer, N. Cesa-Bianchi, Y. Freund and R. Schapire. SIAM journal on computing, 32(1), 48-77, 2002](https://epubs.siam.org/doi/pdf/10.1137/S0097539701398375)] is apparently the first reference (historically).
+
+1. It is not on non-stationary but on non-stochastic (i.e., adversary) bandits, but it can be a good reading for the curious reader. [["The Non-Stochastic Multi-Armed Bandit Problem". P. Auer, N. Cesa-Bianchi, Y. Freund and R. Schapire. SIAM journal on computing, 32(1), 48-77, 2002](https://epubs.siam.org/doi/pdf/10.1137/S0097539701398375)].
 
 2. The Sliding-Window and Discounted UCB algorithms were given in [["On Upper-Confidence Bound Policies for Non-Stationary Bandit Problems". Aurélien Garivier and Éric Moulines, ALT 2011](https://arxiv.org/pdf/0805.3415.pdf)].
     + They are implemented in [`Policies.SlidingWindowUCB.SWUCB`](docs/Policies.SlidingWindowUCB.html#Policies.SlidingWindowUCB.SWUCB) and [`Policies.DiscountedUCB`](docs/Policies.DiscountedUCB.html).
@@ -44,30 +45,39 @@ Here is a partial list of references on this topic. For more, a good starting po
 
 
 ### Recent references
+
 More recent articles include the following:
 
 1. [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems". L. Wei and V. Srivastav. arXiv preprint arXiv:1802.08380, 2018](https://arxiv.org/pdf/1802.08380)], introduced the first algorithms that can (try to) tackle the two problems simultaneously, [`LM-DSEE`](XXX) and [`SW-UCB#`](XXX).
+    + They require to know the rate of change but not the number of changes. They either assume that the number of break points `$\Upsilon_T$` is `$\mathcal{O}(T^\nu)$` for some `$\nu\in(0,1)$` (for abruptly-changing), or that the rate of change is `$\max_t |\mu_{t+1} - \mu_{t}| \leq \varepsilon_T = \mathcal{O}(T^{-\kappa})$`. In both cases, their model assumes to know `$\nu$` or `$\kappa$`, or an upper-bound on it.
+    + One advantage of their algorithms is their simplicity and ability to tackle both cases!
     + TODO code it!
 
 2. [["Adaptively Tracking the Best Arm with an Unknown Number of Distribution Changes". Peter Auer, Pratik Gajane and Ronald Ortner. EWRL 2018, Lille](https://ewrl.files.wordpress.com/2018/09/ewrl_14_2018_paper_28.pdf)], introduced the [`AdSwitch`](XXX) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
     + TODO code it!
+    + Be sure how to adapt it to `$K\geq2$` arms and not just `$K=2$` (it shouldn't be hard).
     + TODO adapt it to unknown horizon (using [doubling tricks?](DoublingTrick.html)!
 
 3. [["Memory Bandits: a Bayesian approach for the Switching Bandit Problem". Réda Alami, Odalric Maillard, Raphaël Féraud. 31st Conference on Neural Information Processing Systems (NIPS 2017), hal-01811697](https://hal.archives-ouvertes.fr/hal-01811697/document)], introduced the [`MemoryBandit`](XXX) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
+    + They use a generic idea of [expert aggregation](Aggregation.md) with [an efficient tracking of a growing number of expert](https://hal.archives-ouvertes.fr/hal-01615424/). The basic idea is the following: a new expert is started *at every time*, and at a breakpoint, the expert started just after the breakpoint will essentially be the most efficient one (and we need efficient tracking to know it).
+    + Their `MemoryBandit` algorithm is very efficient empirically, but not easy to implement and it requires a large memory (although some discussion is given in their article's appendix, as they evoke an heuristic that reduces the storage requirement).
     + TODO code it!
 
-4. 🇫🇷 [["Algorithme de bandit et obsolescence : un modèle pour la recommandation". Jonhathan Louëdec, Laurent Rossi, Max Chevalier, Aurélien Garivier and Josiane Mothe. 18ème Conférence francophone sur l'Apprentissage Automatique, 2016 (Marseille, France)](http://oatao.univ-toulouse.fr/17130/1/louedec_17130.pdf)] (🇫🇷 *in French*), introduces and justifies the possible applications of slowly-varying to recommender systems. They studies and present a model with exponential decrease of the means, and the [`FadingUCB`](XXX) that is efficient if a bound on the speed of the exponential decrease is known.
+4. 🇫🇷 [["Algorithme de bandit et obsolescence : un modèle pour la recommandation". Jonhathan Louëdec, Laurent Rossi, Max Chevalier, Aurélien Garivier and Josiane Mothe. 18ème Conférence francophone sur l'Apprentissage Automatique, 2016 (Marseille, France)](http://oatao.univ-toulouse.fr/17130/1/louedec_17130.pdf)] (🇫🇷 *in French*), introduces and justifies the possible applications of slowly-varying to recommender systems. They studies and present a model with an exponential decrease of the means, and the [`FadingUCB`](XXX) that is efficient if a bound on the speed of the exponential decrease is known.
 
 - FIXME give more!
 
 
 References that seem interesting but I haven't read them yet:
 
-1. [["The non-stationary stochastic multi-armed bandit problem". R. Allesiardo, Raphaël Féraud and Odalric-Ambrym Maillard. International Journal of Data Science and Analytics, 3(4), 267-283. 2017](https://hal.archives-ouvertes.fr/hal-01575000/document)]
+1. [["The Non-Stationary Stochastic Multi Armed Bandit Problem". R. Allesiardo, Raphaël Féraud and Odalric-Ambrym Maillard. International Journal of Data Science and Analytics, 3(4), 267-283. 2017](https://hal.archives-ouvertes.fr/hal-01575000/document)]
+    + It is a long journal article, I'm sure there is so many interesting to discover in it!
 
-2. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)]
+2. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)]
+    + TODO A shorter arXiv paper, I need to read it!
 
-3. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)]
+3. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)]
+    + TODO A second short arXiv paper.
 
 ----
 
@@ -95,7 +105,8 @@ configuration = {
             "arm_type": Bernoulli,
             "params": {
                 "newMeans": randomContinuouslyVaryingMeans,
-                "changePoints": geometricChangePoints(horizon=horizon, proba=nb_random_events/horizon),
+                "changePoints": geometricChangePoints(
+                    horizon=horizon, proba=nb_random_events/horizon),
                 "args": {
                     "nbArms": 9,
                     "lower": 0, "amplitude": 1,
@@ -152,11 +163,14 @@ FIXME do some plots!
 
 © 2016-2018 [Lilian Besson](https://GitHub.com/Naereen).
 
+[[Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/SMPyBandits/SMPyBandits/)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity)
 [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://GitHub.com/Naereen/ama)
 [![Analytics](https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel)](https://GitHub.com/SMPyBandits/SMPyBandits/)
 ![PyPI version](https://img.shields.io/pypi/v/smpybandits.svg)
-![PyPI implementation](https://img.shields.io/pypi/implementation/SMPyBandits.svg)
-![PyPI pyversions](https://img.shields.io/pypi/pyversions/SMPyBandits.svg)
-[![ForTheBadge uses-badges](http://ForTheBadge.com/images/badges/uses-badges.svg)](http://ForTheBadge.com)
-[![ForTheBadge uses-git](http://ForTheBadge.com/images/badges/uses-git.svg)](https://GitHub.com/)
+![PyPI implementation](https://img.shields.io/pypi/implementation/smpybandits.svg)
+![PyPI pyversions](https://img.shields.io/pypi/pyversions/smpybandits.svg)
+[![Documentation Status](https://readthedocs.org/projects/smpybandits/badge/?version=latest)](https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master)](https://travis-ci.org/SMPyBandits/SMPyBandits)
+[![Stars of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/stars/SMPyBandits/SMPyBandits)](https://GitHub.com/SMPyBandits/SMPyBandits/stargazers)
+[![Releases of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/release/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/releases)
