@@ -128,7 +128,7 @@ has_AutoStructify = False
 try:
     from recommonmark.parser import CommonMarkParser
     source_parsers = {
-        '.md': CommonMarkParser,  # README.md is the only concerned file
+        '.md': CommonMarkParser,  # *.md are the concerned files
     }
     source_suffix = ['.rst', '.md']
     from recommonmark.transform import AutoStructify

@@ -21,7 +21,7 @@ This repository contains the code of `my <https://perso.crans.org/besson/>`_ num
 simulations on *single*-player and *multi*-players `Multi-Armed Bandits
 (MAB) <https://en.wikipedia.org/wiki/Multi-armed_bandit>`_ algorithms.
 
-|Maintenance| |Ask Me Anything !| |Analytics| |PyPI version| |PyPI implementation| |PyPI pyversions| |Documentation Status| |Build Status|
+|Open Source? Yes!| |Maintenance| |Ask Me Anything !| |Analytics| |PyPI version| |PyPI implementation| |PyPI pyversions| |Documentation Status| |Build Status|
 
 
 `I (Lilian Besson) <https://perso.crans.org/besson/>`_ have `started my
@@ -114,6 +114,8 @@ of https://github.com/SMPyBandits/SMPyBandits/|
 |forthebadge made-with-python| |ForTheBadge built-with-science|
 
 
+.. |Open Source? Yes!| image:: https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github
+    :target: https://github.com/Naereen/badges/
 .. |Maintenance| image:: https://img.shields.io/badge/Maintained%3F-yes-green.svg
     :target: https://GitHub.com/SMPyBandits/SMPyBandits/graphs/commit-activity
 .. |Ask Me Anything !| image:: https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg
