@@ -127,8 +127,8 @@ TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: To know if the sliding window policies is tested.
-TEST_SlidingWindow = True
 TEST_SlidingWindow = False  # XXX do not let this = False if you want to test my WrapRange policy
+TEST_SlidingWindow = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = True  # XXX to manually enable this feature?
@@ -189,6 +189,7 @@ ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 #: True to use non-stationary problem
 ENVIRONMENT_NONSTATIONARY = False
 ENVIRONMENT_NONSTATIONARY = getenv('NONSTATIONARY', str(ENVIRONMENT_NONSTATIONARY)) == 'True'
+ENVIRONMENT_BAYESIAN = False if ENVIRONMENT_NONSTATIONARY else ENVIRONMENT_BAYESIAN
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUDE, isSorted=True)
@@ -336,7 +337,7 @@ configuration = {
 }
 
 if ENVIRONMENT_BAYESIAN:
-    configuration["environment"] = [  # XXX Bernoulli arms
+    configuration["environment"] = [
         {   # A Bayesian problem: every repetition use a different means vector!
             "arm_type": ARM_TYPE,
             "params": {
@@ -357,66 +358,73 @@ if ENVIRONMENT_BAYESIAN:
 
 
 if ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] = [  # XXX Bernoulli arms
+    configuration["environment"] = [
         {   # A non stationary problem: every step of the same repetition use a different mean vector!
             "arm_type": ARM_TYPE,
             "params": {
                 "newMeans": randomMeans,
                 # FIXME try different changePoints VALUES
                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int, endpoint=False),
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
-                    "isSorted": True,
-                }
+                    "isSorted": False,
+                },
+                # XXX None by default, but can be "uniform" to only change *one* arm at each change point.
+                "onlyOneArm": None,
+                # "onlyOneArm": "uniform",
             }
         },
     ]
 
 
-if ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] = [  # XXX Bernoulli arms
-        {   # A non stationary problem: every step of the same repetition use a different mean vector!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "newMeans": continuouslyVaryingMeans,
-                # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    "lower": LOWER,
-                    "amplitude": AMPLITUDE,
-                    "isSorted": True,
-                }
-            }
-        },
-    ]
+# if ENVIRONMENT_NONSTATIONARY:
+#     configuration["environment"] = [  # XXX Bernoulli arms
+#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
+#             "arm_type": ARM_TYPE,
+#             "params": {
+#                 "newMeans": continuouslyVaryingMeans,
+#                 # FIXME try different changePoints VALUES
+#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+#                 "args": {
+#                     "maxSlowChange": 0.1,
+#                     "sign": +1,
+#                     "nbArms": NB_ARMS,
+#                     "mingap": None,
+#                     "lower": LOWER,
+#                     "amplitude": AMPLITUDE,
+#                     "isSorted": False,
+#                 }
+#             }
+#         },
+#     ]
 
 
-if ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] = [  # XXX Bernoulli arms
-        {   # A non stationary problem: every step of the same repetition use a different mean vector!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "newMeans": randomContinuouslyVaryingMeans,
-                # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "mingap": None,
-                    "lower": LOWER,
-                    "amplitude": AMPLITUDE,
-                    "isSorted": True,
-                }
-            }
-        },
-    ]
+# if ENVIRONMENT_NONSTATIONARY:
+#     configuration["environment"] = [  # XXX Bernoulli arms
+#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
+#             "arm_type": ARM_TYPE,
+#             "params": {
+#                 "newMeans": randomContinuouslyVaryingMeans,
+#                 # FIXME try different changePoints VALUES
+#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+#                 "args": {
+#                     "maxSlowChange": 0.1,
+#                     "horizon": HORIZON,
+#                     "nbArms": NB_ARMS,
+#                     "mingap": None,
+#                     "lower": LOWER,
+#                     "amplitude": AMPLITUDE,
+#                     "isSorted": False,
+#                 }
+#             }
+#         },
+#     ]
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -1237,7 +1245,8 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
         }, ],
     })
-elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYESIAN:
+elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and \
+    not ENVIRONMENT_BAYESIAN and not ENVIRONMENT_NONSTATIONARY:
     configuration.update({
         "environment": [ {
             "arm_type": ARM_TYPE,
@@ -1543,12 +1552,13 @@ if TEST_SlidingWindow:
     ALPHAS = [1]
     TAUS   = [
             500, 1000, 2000,
-            # 2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))  # "optimal" value according to [Garivier & Moulines, 2008]
+            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS)))  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
     GAMMAS = [
-            # 0.1, 0.2, 0.3, 0.4, 0.5, 0.7,
-            0.8, 0.9, 0.95, 0.99, 0.999999,
-        # (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.  # "optimal" value according to [Garivier & Moulines, 2008]
+            # 0.1, 0.3, 0.5, 0.7, 0.9,
+            0.2, 0.4, 0.6, 0.8,
+            0.95, 0.99,
+            max(min(1, (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.), 0)  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
 
     configuration.update({
@@ -1646,3 +1656,4 @@ configuration.update({
 
 print("Loaded experiments configuration from 'configuration.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
+print("configuration['environment'] =", configuration["environment"])  # DEBUG

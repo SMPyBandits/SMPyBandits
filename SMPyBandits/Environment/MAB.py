@@ -409,9 +409,11 @@ class MarkovianMAB(MAB):
     """
 
     def __init__(self, configuration):
-        """ New MarkovianMAB."""
+        """New MarkovianMAB."""
         print("\n\nCreating a new MarkovianMAB problem ...")  # DEBUG
-        self.isMarkovian = True  #: Flag to know if the problem is Markovian or not.
+        self.isChangingAtEachRepetition   = False  #: The problem is not changing at each repetition.
+        self.isDynamic   = False  #: The problem is static.
+        self.isMarkovian = True  #: The problem is Markovian.
         self._sparsity = None
 
         assert isinstance(configuration, dict), "Error: 'configuration' for a MarkovianMAB must be a dictionary."  # DEBUG
@@ -542,6 +544,7 @@ class MarkovianMAB(MAB):
 # --- ChangingAtEachRepMAB
 
 VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic MAB
+VERBOSE = True  #: FIXME remove this
 
 class ChangingAtEachRepMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the :meth:`newRandomArms` method.
@@ -555,7 +558,9 @@ class ChangingAtEachRepMAB(MAB):
 
     def __init__(self, configuration, verbose=VERBOSE):
         """New ChangingAtEachRepMAB."""
-        self.isChangingAtEachRepetition = True  #: Flag to know if the problem is changing at each repetition or not.
+        self.isChangingAtEachRepetition   = True  #: The problem is changing at each repetition or not.
+        self.isDynamic   = False  #: The problem is static.
+        self.isMarkovian = False  #: The problem is not Markovian.
         self._sparsity = None
 
         assert isinstance(configuration, dict) \
@@ -623,7 +628,7 @@ class ChangingAtEachRepMAB(MAB):
         self._t += 1  # new draw!
         self._historyOfMeans.append(one_draw_of_means)
         if verbose or self._verbose:
-            print("\n  - Creating a new dynamic list of means = {} for arms: ChangingAtEachRepMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
+            print("\n  - Creating a new dynamic list of means = {} for arms: ChangingAtEachRepMAB = {} ...".format(np.array(one_draw_of_means), repr(self)))  # DEBUG
             # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
         return one_draw_of_means
 
@@ -754,8 +759,10 @@ class NonStationaryMAB(MAB):
     """
 
     def __init__(self, configuration, verbose=VERBOSE):
-        """New ChangingAtEachRepMAB."""
-        self.isDynamic = True  #: Flag to know if the problem is static or not.
+        """New NonStationaryMAB."""
+        self.isChangingAtEachRepetition   = False  #: The problem is not changing at each repetition.
+        self.isDynamic   = True  #: The problem is dynamic.
+        self.isMarkovian = False  #: The problem is not Markovian.
         self._sparsity = None
 
         assert isinstance(configuration, dict) \
@@ -774,7 +781,9 @@ class NonStationaryMAB(MAB):
         print(" - with 'params' =", params)  # DEBUG
         self.newMeans = params["newMeans"]  #: Function to generate the means
         print(" - with 'newMeans' =", self.newMeans)  # DEBUG
-        self.changePoints = params["changePoints"]  #: Function to generate the means
+        self.changePoints = params["changePoints"]  #: List of the change points
+        print(" - with 'changePoints' =", self.changePoints)  # DEBUG
+        self.onlyOneArm = params.get("onlyOneArm", None)  #: None by default, but can be "uniform" to only change *one* arm at each change point.
         print(" - with 'changePoints' =", self.changePoints)  # DEBUG
         self.args = params["args"]  #: Args to give to function
         print(" - with 'args' =", self.args)  # DEBUG
@@ -783,9 +792,10 @@ class NonStationaryMAB(MAB):
         print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
         # Keep track of the successive mean vectors
         self._historyOfMeans = dict()  # Historic of the means vectors, storing time of {changepoint: newMeans}
+        self._historyOfChangePoints = []  # Historic of the change points
         self._t = 0  # nb of calls to the function for generating new arms
         # Generate a first mean vector
-        self.newRandomArms()
+        self.newRandomArms(0)
         print("   - drawing a random set of arms")
         self.nbArms = len(self.arms)  #: Means of arms
         print("   - with 'nbArms' =", self.nbArms)  # DEBUG
@@ -819,19 +829,35 @@ class NonStationaryMAB(MAB):
     #
     # --- Dynamic arms and means
 
-    def newRandomArms(self, t=None, verbose=VERBOSE):
+    def newRandomArms(self, t=None, onlyOneArm=None, verbose=VERBOSE):
         """Generate a new list of arms, from ``arm_type(params['newMeans'](t, **params['args']))``.
 
-        .. warning:: FIXME
+        - If ``onlyOneArm`` is given and is an integer, the change of mean only occurs for this arm and the others stay the same.
+        - If ``onlyOneArm="uniform"``, the change of mean only occurs for one arm and the others stay the same, and the changing arm is chosen uniformly at random.
+
+        .. note:: Only the *means* of the arms change (and so, their order), not their family.
+
+        .. warning:: TODO? So far the only change points we consider is when the means of arms change, but the family of distributions stay the same. I could implement a more generic way, for instance to be able to test algorithms that detect change between different families of distribution (e.g., from a Gaussian of variance=1 to a Gaussian of variance=2, with different or not means).
         """
-        if t not in self.changePoints: return self.means
+        if t > 0 and t not in self.changePoints:
+            # return self.means
+            return self._historyOfMeans[self._historyOfChangePoints[-1] ]
+        self._historyOfChangePoints.append(t)
         one_draw_of_means = self.newMeans(**self.args)
+        self._t += 1  # new draw!
+        # Handling the option to change only one arm
+        if onlyOneArm == "uniform":
+            onlyOneArm = np.random.randint(self.nbArms)
+        # If only one arm, and not the first random means, change only one
+        if onlyOneArm is not None and len(self._historyOfMeans) > 0:
+            for arm in range(self.nbArms):
+                if arm != onlyOneArm:
+                    one_draw_of_means[arm] = self._historyOfMeans[t-1][arm]
+        self._historyOfMeans[t] = one_draw_of_means
         self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless
-        self._t += 1  # new draw!
-        self._historyOfMeans[t] = one_draw_of_means
         if verbose or self._verbose:
-            print("\n  - Creating a new dynamic list of means = {} for arms: ChangingAtEachRepMAB = {} ...".format(one_draw_of_means, repr(self)))  # DEBUG
+            print("\n  - Creating a new dynamic list of means = {} for arms: NonStationaryMAB = {} ...".format(np.array(one_draw_of_means), repr(self)))  # DEBUG
             # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
         return one_draw_of_means
 
@@ -844,50 +870,50 @@ class NonStationaryMAB(MAB):
 
     @property
     def means(self):
-        """ Return the list of means of arms for this ChangingAtEachRepMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
+        """ Return the list of means of arms for this NonStationaryMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
 
         .. warning:: Highly experimental!
         """
-        return np.mean(np.array(self._historyOfMeans), axis=0)
+        return np.mean(np.array(list(self._historyOfMeans.values())), axis=0)
 
     #
     # --- Helper to compute sets Mbest and Mworst
 
     def Mbest(self, M=1):
         """ Set of M best means (averaged on all the draws of new means)."""
-        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans.values()), axis=1), axis=0)
+        sortedMeans = np.mean(np.sort(np.array(list(self._historyOfMeans.values())), axis=1), axis=0)
         return sortedMeans[-M:]
 
     def Mworst(self, M=1):
         """ Set of M worst means (averaged on all the draws of new means)."""
-        sortedMeans = np.mean(np.sort(np.array(self._historyOfMeans.values()), axis=1), axis=0)
+        sortedMeans = np.mean(np.sort(np.array(list(self._historyOfMeans.values())), axis=1), axis=0)
         return sortedMeans[:-M]
 
     @property
     def minArm(self):
         """Return the smallest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        return np.mean(np.min(np.array(self._historyOfMeans.values())))
+        return np.mean(np.min(np.array(list(self._historyOfMeans.values()))))
 
     @property
     def maxArm(self):
         """Return the largest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        return np.mean(np.max(np.array(self._historyOfMeans.values())))
+        return np.mean(np.max(np.array(list(self._historyOfMeans.values()))))
 
     #
     # --- Compute lower bounds
     # TODO
 
-    def lowerbound(self):
-        """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
-        raise NotImplementedError
+    # def lowerbound(self):
+    #     """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
+    #     raise NotImplementedError
 
-    def hoifactor(self):
-        """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
-        raise NotImplementedError
+    # def hoifactor(self):
+    #     """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
+    #     raise NotImplementedError
 
-    def lowerbound_multiplayers(self, nbPlayers=1):
-        """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
-        raise NotImplementedError
+    # def lowerbound_multiplayers(self, nbPlayers=1):
+    #     """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
+    #     raise NotImplementedError
 
 
 

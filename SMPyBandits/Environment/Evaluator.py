@@ -28,7 +28,7 @@ try:
     from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
-    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, IncreasingMAB
+    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, IncreasingMAB
     from .Result import Result
     from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
@@ -39,7 +39,7 @@ except ImportError:
     from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
-    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, IncreasingMAB
+    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, IncreasingMAB
     from Result import Result
     from memory_consumption import getCurrentMemory, sizeof_fmt
 
@@ -89,11 +89,6 @@ class Evaluator(object):
         self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)  #: How many random events?
         self.plot_lowerbound = self.cfg.get('plot_lowerbound', plot_lowerbound)  #: Should we plot the lower-bound?
         self.signature = signature
-        if self.nb_random_events > 0:
-            if self.random_shuffle:
-                self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_random_events - 1)) + self.signature
-            elif self.random_invert:
-                self.signature = (r", $\Upsilon_T={}$ arms inversion".format(self.nb_random_events - 1)) + self.signature
         # Flags
         self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
         self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
@@ -110,6 +105,15 @@ class Evaluator(object):
         self.envs = []  #: List of environments
         self.policies = []  #: List of policies
         self.__initEnvironments__()
+
+        # Update signature for non stationary problems
+        if self.nb_random_events > 0:
+            changePoints = getattr(self.envs[0], 'changePoints', [])
+            self.signature = (r", $\Upsilon_T={}$ random change points{}".format(self.nb_random_events - 1, " (${}$)".format(list(changePoints[1:])) if len(changePoints) > 1 else "") + self.signature)
+            if self.random_shuffle:
+                self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_random_events - 1)) + self.signature
+            elif self.random_invert:
+                self.signature = (r", $\Upsilon_T={}$ arms inversion".format(self.nb_random_events - 1)) + self.signature
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
@@ -145,22 +149,28 @@ class Evaluator(object):
     def __initEnvironments__(self):
         """ Create environments."""
         for configuration_arms in self.cfg['environment']:
+            print("Using this dictionary to create a new environment:\n", configuration_arms)  # DEBUG
+            # new_mab_problem = None
             if isinstance(configuration_arms, dict) \
-               and "arm_type" in configuration_arms and "params" in configuration_arms \
-               and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
-                self.envs.append(ChangingAtEachRepMAB(configuration_arms))
-            elif isinstance(configuration_arms, dict) \
-               and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
-               and "params" in configuration_arms \
-               and "transitions" in configuration_arms["params"]:
-                self.envs.append(MarkovianMAB(configuration_arms))
-            elif isinstance(configuration_arms, dict) \
-               and "arm_type" in configuration_arms and "params" in configuration_arms \
-               and "change_lower_amplitude" in configuration_arms:
-                self.envs.append(IncreasingMAB(configuration_arms))
-                IncreasingMAB
-            else:
-                self.envs.append(MAB(configuration_arms))
+                and "arm_type" in configuration_arms \
+                and "params" in configuration_arms:
+                # NonStationaryMAB or ChangingAtEachRepMAB
+                if "newMeans" in configuration_arms["params"] \
+                    and "args" in configuration_arms["params"]:
+                    if "changePoints" in configuration_arms["params"]:
+                        new_mab_problem = NonStationaryMAB(configuration_arms)
+                    else:
+                        new_mab_problem = ChangingAtEachRepMAB(configuration_arms)
+                # MarkovianMAB
+                elif configuration_arms["arm_type"] == "Markovian" \
+                    and "transitions" in configuration_arms["params"]:
+                    new_mab_problem = MarkovianMAB(configuration_arms)
+                # IncreasingMAB
+                elif "change_lower_amplitude" in configuration_arms:
+                    new_mab_problem = IncreasingMAB(configuration_arms)
+            if new_mab_problem is None:
+                new_mab_problem = MAB(configuration_arms)
+            self.envs.append(new_mab_problem)
 
     def __initPolicies__(self, env):
         """ Create or initialize policies."""
