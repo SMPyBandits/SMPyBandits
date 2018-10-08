@@ -22,18 +22,36 @@ if __name__ == '__main__':
     exit(0)
 
 # Import arms
-from Arms import *
+try:
+    from Arms import *
+except ImportError:
+    from SMPyBandits.Arms import *
 
 # Import contained classes
-from Environment import MAB
+try:
+    from Environment import MAB
+except ImportError:
+    from SMPyBandits.Environment import MAB
 
 # Collision Models
-from Environment.CollisionModels import *
+try:
+    from Environment.CollisionModels import *
+except ImportError:
+    from SMPyBandits.Environment.CollisionModels import *
 
 # Import algorithms, both single-player and multi-player
-from Policies import *
-from PoliciesMultiPlayers import *
-from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better for these imports
+try:
+    from Policies import *
+except ImportError:
+    from SMPyBandits.Policies import *
+try:
+    from PoliciesMultiPlayers import *
+except ImportError:
+    from SMPyBandits.PoliciesMultiPlayers import *
+try:
+    from PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better for these i
+except ImportError:
+    from SMPyBandits.PoliciesMultiPlayers.ALOHA import tnext_beta, tnext_log  # XXX do better for these imports
 
 
 #: HORIZON : number of time steps of the experiments.
@@ -153,6 +171,16 @@ ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 ENVIRONMENT_BAYESIAN = False
 ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
 
+#: Means of arms for non-hard-coded problems (non Bayesian)
+MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUDE, isSorted=True)
+
+import numpy as np
+# more parametric? Read from cli?
+MEANS_STR = getenv('MEANS', '')
+if MEANS_STR != '':
+    MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
+    print("Using cli env variable to use MEANS = {}.".format(MEANS))  # DEBUG
+
 
 #: This dictionary configures the experiments
 configuration = {
@@ -169,8 +197,8 @@ configuration = {
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Should we plot the lower-bounds or not?
-    "plot_lowerbounds": True,  # XXX Default
-    # "plot_lowerbounds": False,  # FIXME comment this line!
+    # "plot_lowerbounds": True,  # XXX Default
+    "plot_lowerbounds": False,  # FIXME comment this line!
     # --- Arms
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -285,11 +313,15 @@ configuration = {
         #         }
         #     }
         # },
-        # XXX Default!
-        {   # A very easy problem (X arms), but it is used in a lot of articles
+        # # XXX Default!
+        # {   # A very easy problem (X arms), but it is used in a lot of articles
+        #     "arm_type": ARM_TYPE,
+        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # },
+        {   # Use vector from command line
             "arm_type": ARM_TYPE,
-            "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        }
+            "params": MEANS
+        },
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
         #     "params": {

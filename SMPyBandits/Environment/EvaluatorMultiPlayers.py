@@ -161,7 +161,7 @@ class EvaluatorMultiPlayers(object):
 
     def __initPlayers__(self, env):
         """ Create or initialize players."""
-        playersId = self.cfg['playersId']
+        playersId = self.cfg.get('playersId', '0')
         for playerId, player in enumerate(self.cfg['players']):
             print("- Adding player #{:>2} = {} ...".format(playerId + 1, player))  # DEBUG
             if isinstance(player, dict):  # Either the 'player' is a config dict
@@ -1047,6 +1047,8 @@ class EvaluatorMultiPlayers(object):
                 text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
             else:
                 text = r'{} x {}'.format(self.nbPlayers, listStrPlayers[0])
+            # FIXME change this after this week simulations
+            text = listStrPlayers[0]
         else:
             text = ', '.join(listStrPlayers)
         text = wraptext(text)

@@ -5,7 +5,7 @@
 #
 # Change the links from .md to .html in the documentation html pages
 #
-# Usage: ./.fixes_html_in_doc.sh
+# Usage: ./fixes_html_in_doc.sh
 #
 
 EMOJIZE=emojize.py

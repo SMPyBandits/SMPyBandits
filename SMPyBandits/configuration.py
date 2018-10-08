@@ -247,7 +247,7 @@ configuration = {
         #     "params": [0.04, 0.05, 0.1]
         # },np.asarray(
         {   # Use vector from command line
-            "arm_type": Bernoulli,
+            "arm_type": ARM_TYPE,
             "params": MEANS
         },
         # {   # XXX A very easy problem, but it is used in a lot of articles

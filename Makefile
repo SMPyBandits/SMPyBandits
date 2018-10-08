@@ -355,7 +355,7 @@ html:
 	-rm -rvf $(BUILDDIR)/html/SMPyBandits/ $(BUILDDIR)/html/_modules/SMPyBandits/
 	#-rm -rvf $(BUILDDIR)/html/_sources/SMPyBandits/
 	-./notebooks/symlinks.sh
-	-./other_scripts/.fixes_html_in_doc.sh
+	-./other_scripts/fixes_html_in_doc.sh
 	\cp uml_diagrams/*.svg "$(BUILDDIR)"/html/uml_diagrams/
 	\cp logs/*.txt "$(BUILDDIR)"/html/logs/
 	-mv -vf /tmp/SMPyBandits/*.so ./SMPyBandits/Policies/

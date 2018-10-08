@@ -23,7 +23,7 @@ matrix:
 # Command to install dependencies for each configuration.
 before_install:
 # For OSX, you may want to call a script installing virtual env and so on.
-  - . ./other_scripts/.travis_install.sh
+  - . ./other_scripts/travis_install.sh
 
 install:
   - python -m pip install -U pip
