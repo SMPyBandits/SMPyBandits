@@ -99,6 +99,7 @@ if __name__ == '__main__':
 
     for playersId, players in enumerate(configuration["successive_players"]):
         print("\n\n\nConsidering the list of players :\n", players)  # DEBUG
+        configuration['playersId'] = playersId
         configuration['players'] = players
 
         # (almost) unique hash from the configuration

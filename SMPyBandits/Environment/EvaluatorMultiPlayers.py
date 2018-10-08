@@ -161,6 +161,7 @@ class EvaluatorMultiPlayers(object):
 
     def __initPlayers__(self, env):
         """ Create or initialize players."""
+        playersId = self.cfg['playersId']
         for playerId, player in enumerate(self.cfg['players']):
             print("- Adding player #{:>2} = {} ...".format(playerId + 1, player))  # DEBUG
             if isinstance(player, dict):  # Either the 'player' is a config dict
@@ -171,10 +172,10 @@ class EvaluatorMultiPlayers(object):
                 self.players.append(player)
         for playerId in range(len(self.players)):
             self.players[playerId].__cachedstr__ = str(self.players[playerId])
-            if playerId in self.append_labels:
-                self.players[playerId].__cachedstr__ += self.append_labels[playerId]
-            if playerId in self.change_labels:
-                self.players[playerId].__cachedstr__ = self.append_labels[playerId]
+            if playersId in self.append_labels:
+                self.players[playerId].__cachedstr__ += self.append_labels[playersId]
+            if playersId in self.change_labels:
+                self.players[playerId].__cachedstr__ = self.change_labels[playersId]
 
     # --- Start computation
 

@@ -187,7 +187,7 @@ class Evaluator(object):
             if policyId in self.append_labels:
                 self.policies[policyId].__cachedstr__ += self.append_labels[policyId]
             if policyId in self.change_labels:
-                self.policies[policyId].__cachedstr__ = self.append_labels[policyId]
+                self.policies[policyId].__cachedstr__ = self.change_labels[policyId]
 
 
     # --- Start computation

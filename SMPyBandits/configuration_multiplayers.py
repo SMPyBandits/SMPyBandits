@@ -170,7 +170,7 @@ configuration = {
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Should we plot the lower-bounds or not?
     "plot_lowerbounds": True,  # XXX Default
-    # "plot_lowerbounds": False,
+    # "plot_lowerbounds": False,  # FIXME comment this line!
     # --- Arms
     # DONE I tried with other arms distribution: Exponential, it works similarly
     # "environment": [  # Exponential arms
@@ -351,14 +351,69 @@ except (ValueError, np.AxisError):
     GAP = 1. / (3 * NB_ARMS)
 
 
+# FIXME very simulation dependent! Change and remove when finished
+configuration["change_labels"] = {
+    0: "Aggr(rhoRand, RandTopM, MCTopM) UCB",
+    1: "Aggr(rhoRand, RandTopM, MCTopM) kl-UCB",
+    2: "Aggr(rhoRand, RandTopM, MCTopM) MOSS",
+    3: "rhoRand UCB",
+    4: "rhoRand kl-UCB",
+    5: "rhoRand MOSS",
+    6: "rhoRand Aggr(UCB, kl-UCB, MOSS)",
+    7: "RandTopM UCB",
+    8: "RandTopM kl-UCB",
+    9: "RandTopM MOSS",
+    10: "RandTopM Aggr(UCB, kl-UCB, MOSS)",
+    11: "MCTopM UCB",
+    12: "MCTopM kl-UCB",
+    13: "MCTopM MOSS",
+    14: "MCTopM Aggr(UCB, kl-UCB, MOSS)",
+    # 15: "Selfish UCB",
+    # 16: "Selfish kl-UCB",
+    # 17: "Selfish MOSS",
+    # 18: "Selfish Aggr(UCB, kl-UCB, MOSS)",
+}
+
+
 configuration["successive_players"] = [
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
     # # FIXME test this new TrekkingTSN algorithm!
 
+    # ---- Aggregating for the multi-user parts
+    [
+        Aggregator(nbArms, children=[
+            rhoRand(NB_PLAYERS, nbArms, UCB).children[j],
+            RandTopM(NB_PLAYERS, nbArms, UCB).children[j],
+            MCTopM(NB_PLAYERS, nbArms, UCB).children[j],
+            # Selfish(NB_PLAYERS, nbArms, UCB).children[j],
+        ])
+        for j in range(NB_PLAYERS)
+    ],
+    [
+        Aggregator(nbArms, children=[
+            rhoRand(NB_PLAYERS, nbArms, klUCB).children[j],
+            RandTopM(NB_PLAYERS, nbArms, klUCB).children[j],
+            MCTopM(NB_PLAYERS, nbArms, klUCB).children[j],
+            # Selfish(NB_PLAYERS, nbArms, klUCB).children[j],
+        ])
+        for j in range(NB_PLAYERS)
+    ],
+    [
+        Aggregator(nbArms, children=[
+            rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children[j],
+            RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children[j],
+            MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children[j],
+            # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children[j],
+        ])
+        for j in range(NB_PLAYERS)
+    ],
     # ---- rhoRand etc
+    rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
+    rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    rhoRand(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
     # # rhoRand(NB_PLAYERS, nbArms, BESA).children,
     # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
     # #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
@@ -377,7 +432,10 @@ configuration["successive_players"] = [
     # # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
     # # ---- RandTopM
+    RandTopM(NB_PLAYERS, nbArms, UCB).children,
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
+    RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    RandTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
     # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -391,16 +449,11 @@ configuration["successive_players"] = [
     # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
     # # RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
 
-    # # ---- Selfish
-    # # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    # # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
-    Selfish(NB_PLAYERS, nbArms, klUCB).children,
-    # # Selfish(NB_PLAYERS, nbArms, BESA).children,
-    # # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
-    # # [ Aggregator(nbArms, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
-
     # ---- MCTopM
+    MCTopM(NB_PLAYERS, nbArms, UCB).children,
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
+    MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    MCTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
     # MCTopM(NB_PLAYERS, nbArms, BESA).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
@@ -417,16 +470,27 @@ configuration["successive_players"] = [
     # # MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
     # # MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
 
-    # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
-    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
+    # # # ---- Selfish
+    # # # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # # # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
+    # Selfish(NB_PLAYERS, nbArms, UCB).children,
+    # Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    # # # Selfish(NB_PLAYERS, nbArms, BESA).children,
+    # # # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
+    # # [ Aggregator(nbArms, children=[UCB, klUCB, Thompson]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
 
-    # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
+    # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
+    # [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
+
+    # # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
+    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
+    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
+    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
     # # FIXME how to chose the 5 parameters for MEGA policy ?
     # # XXX By trial and error??
@@ -806,20 +870,19 @@ configuration.update({
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
-
-# XXX Huge hack! Use this if you want to modify the legends
-configuration.update({
-    "append_labels": {
-        playerId: cfgplayer.get("append_label", "")
-        for playerId, cfgplayer in enumerate(configuration["successive_players"])
-        if "append_label" in cfgplayer
-    },
-    "change_labels": {
-        playerId: cfgplayer.get("change_label", "")
-        for playerId, cfgplayer in enumerate(configuration["successive_players"])
-        if "change_label" in cfgplayer
-    }
-})
+# # XXX Huge hack! Use this if you want to modify the legends
+# configuration.update({
+#     "append_labels": {
+#         playerId: cfgplayer.get("append_label", "")
+#         for playerId, cfgplayer in enumerate(configuration["successive_players"])
+#         if "append_label" in cfgplayer
+#     },
+#     "change_labels": {
+#         playerId: cfgplayer.get("change_label", "")
+#         for playerId, cfgplayer in enumerate(configuration["successive_players"])
+#         if "change_label" in cfgplayer
+#     }
+# })
 
 
 # DONE

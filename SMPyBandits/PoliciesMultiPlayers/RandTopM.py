@@ -106,7 +106,10 @@ class oneRandTopM(ChildPointer):
             if self.t > 1:  print("WARNING for the MCTopM variant using the 'pickPrevWorstFirst' optimization, it should ever find an empty set 'prev_WorstThenChair' ...")  # DEBUG
             return current_Mbest
         else:
-            return np.intersect1d(current_Mbest, prev_WorstThenChair)
+            intersection = np.intersect1d(current_Mbest, prev_WorstThenChair)
+            if len(intersection) == 0:
+                return current_Mbest
+            return intersection
 
     def handleCollision(self, arm, reward=None):
         """ Get a new random arm from the current estimate of Mbest, and give reward to the algorithm if not None."""
