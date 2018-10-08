@@ -150,7 +150,7 @@ class Evaluator(object):
         """ Create environments."""
         for configuration_arms in self.cfg['environment']:
             print("Using this dictionary to create a new environment:\n", configuration_arms)  # DEBUG
-            # new_mab_problem = None
+            new_mab_problem = None
             if isinstance(configuration_arms, dict) \
                 and "arm_type" in configuration_arms \
                 and "params" in configuration_arms:

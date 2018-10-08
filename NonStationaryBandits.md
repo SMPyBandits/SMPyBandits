@@ -16,7 +16,8 @@ I give here a short introduction, with references below. If you are in a hurry, 
     + For instance, we can consider that an adversarial is deciding the change points, by being adaptative to the user's actions. I consider it harder, as always with adversarial problems, and not very useful to model real-world problems.
     + Another harder setting is a "pseudo-Markovian rested" point-of-view: the mean (or parameters) of an arm's distribution can change only when it is sampled, either from time to time or at each time step. It makes sense for some applications, for instance [Julien's work (in SequeL Inria team)](https://www.linkedin.com/in/julien-seznec-29364a104/), but for others it doesn't really make sense (e.g., cognitive radio applications).
 
-TODO fix notations more!
+TODO fix notations more precisely, include definitions!
+TODO what are the lower-bounds given in the more recent articles?
 
 ## Applications
 
@@ -65,19 +66,26 @@ More recent articles include the following:
 
 4. 🇫🇷 [["Algorithme de bandit et obsolescence : un modèle pour la recommandation". Jonhathan Louëdec, Laurent Rossi, Max Chevalier, Aurélien Garivier and Josiane Mothe. 18ème Conférence francophone sur l'Apprentissage Automatique, 2016 (Marseille, France)](http://oatao.univ-toulouse.fr/17130/1/louedec_17130.pdf)] (🇫🇷 *in French*), introduces and justifies the possible applications of slowly-varying to recommender systems. They studies and present a model with an exponential decrease of the means, and the [`FadingUCB`](XXX) that is efficient if a bound on the speed of the exponential decrease is known.
 
-- FIXME give more!
-
+### References to read
 
 References that seem interesting but I haven't read them yet:
 
 1. [["The Non-Stationary Stochastic Multi Armed Bandit Problem". R. Allesiardo, Raphaël Féraud and Odalric-Ambrym Maillard. International Journal of Data Science and Analytics, 3(4), 267-283. 2017](https://hal.archives-ouvertes.fr/hal-01575000/document)]
     + It is a long journal article, I'm sure there is so many interesting to discover in it!
+    + TODO I need to read it!
+    + TODO code it!
 
 2. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)]
     + TODO A shorter arXiv paper, I need to read it!
+    + TODO code it!
 
 3. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)]
-    + TODO A second short arXiv paper.
+    + TODO A second short arXiv paper, I need to read it!
+    + TODO code it!
+
+4. [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018](https://arxiv.org/pdf/1802.03692)]
+    + TODO A third short arXiv paper, I need to read it!
+    + TODO code it!
 
 ----
 
