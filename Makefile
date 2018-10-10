@@ -20,6 +20,8 @@ multi:
 	make clean ; clear ; make multiplayers3
 moremulti:
 	make clean ; clear ; make moremultiplayers3
+moremulti_with_aggregation:
+	make clean ; clear ; make moremultiplayers_with_aggregation3
 sparsemulti:
 	make clean ; clear ; make sparsemultiplayers3
 
@@ -54,6 +56,7 @@ comparing_doubling_algorithms3:
 comparing_doubling_algorithms2:
 	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
 
+# FIXME
 nonstationary:	nonstationary3
 nonstationary3:
 	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_py3_log.txt
@@ -83,6 +86,12 @@ moremultiplayers3:
 	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 moremultiplayers2:
 	time nice -n 19 python2 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
+
+moremultiplayers_with_aggregation: moremultiplayers_with_aggregation3
+moremultiplayers_with_aggregation3:
+	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers_more.py configuration_multiplayers_with_aggregation | tee ./logs/main_multiplayers_with_aggregation_py3_log.txt
+moremultiplayers_with_aggregation2:
+	time nice -n 19 python2 ./SMPyBandits/main_multiplayers_more.py configuration_multiplayers_with_aggregation | tee ./logs/main_multiplayers_with_aggregation_py2_log.txt
 
 sparsemultiplayers: sparsemultiplayers3
 sparsemultiplayers3:

@@ -9,6 +9,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 # Generic imports
+import sys
 from os import mkdir
 import os.path
 from os import getenv
@@ -18,8 +19,18 @@ from itertools import product
 import pickle
 
 # Local imports
-from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-from configuration_multiplayers import configuration
+try:
+    from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
+    if 'configuration_multiplayers_with_aggregation' in sys.argv:
+        from configuration_multiplayers_with_aggregation import configuration
+    else:
+        from configuration_multiplayers import configuration
+except ImportError:
+    from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
+    if 'configuration_multiplayers_with_aggregation' in sys.argv:
+        from SMPyBandits.configuration_multiplayers_with_aggregation import configuration
+    else:
+        from SMPyBandits.configuration_multiplayers import configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours

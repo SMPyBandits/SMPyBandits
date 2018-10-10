@@ -505,7 +505,7 @@ class EvaluatorMultiPlayers(object):
                 plt.semilogx(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
             else:
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("Cumulative personal reward {}".format(r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : Personal reward for each player, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -536,7 +536,7 @@ class EvaluatorMultiPlayers(object):
             fairness = fairnessFunction(cumRewards)
             plot_method(X[::self.delta_t_plot][2:], fairness[::self.delta_t_plot][2:], markers[evaId] + '-', label=label, markevery=(evaId / 50., 0.1), color=colors[evaId], lw=2)
         if len(evaluators) > 1:
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         add_percent_formatter("yaxis", 1.0)
         # plt.ylim(0, 1)
@@ -627,7 +627,7 @@ class EvaluatorMultiPlayers(object):
             except AssertionError:
                 print("Error: Unable to compute and display the lower-bound...")  # DEBUG
         # Labels and legends
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : {}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -649,7 +649,7 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             ymin = min(ymin, np.min(Y))
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylim(ymin, max(plt.ylim()[1], 1))
         if not cumulated: add_percent_formatter("yaxis", 1.0)
@@ -675,7 +675,7 @@ class EvaluatorMultiPlayers(object):
             ymin = min(ymin, np.min(Y))
             plot_method(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[evaId], marker=markers[evaId], markevery=(evaId / 50., 0.1), linestyle='-' if cumulated else '', lw=2)
         if len(evaluators) > 1:
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
         if not cumulated: add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{} of switches (changes of arms)".format("Cumulated number" if cumulated else "Frequency"))
@@ -696,7 +696,7 @@ class EvaluatorMultiPlayers(object):
             label = 'Player #{:>2}: {}'.format(playerId + 1, _extract(player.__cachedstr__))
             Y = self.getBestArmPulls(playerId, envId)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=label, color=colors[playerId], marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
@@ -720,7 +720,7 @@ class EvaluatorMultiPlayers(object):
                 if normalized:
                     Y /= 1 + X
                 plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=player.__cachedstr__, color=colors[playerId], linestyle='', marker=markers[playerId], markevery=(playerId / 50., 0.1), lw=2)
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
             plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
             s = ("Normalized " if normalized else "") + ("Cumulated number" if cumulated else "Frequency")
             plt.ylabel("{} of pulls of the arm #{}".format(s, armId + 1))
@@ -744,7 +744,7 @@ class EvaluatorMultiPlayers(object):
                 Y = np.cumsum(Y)
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], '.', label=player.__cachedstr__, color=colors[playerId], markersize=1, lw=2)
             # should only plot with markers
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
@@ -787,7 +787,7 @@ class EvaluatorMultiPlayers(object):
         # Start the figure
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         plt.ylabel("{} of collisions on all arms".format("Cumulated number" if cumulated else "Frequency"))
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.title("Multi-players $M = {}$ : {}of collisions, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated number " if cumulated else "Frequency ", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
@@ -833,7 +833,7 @@ class EvaluatorMultiPlayers(object):
             plt.ylabel("Frequency of collision, in logarithmic scale" if semilogy else "Frequency of collision")
             if not semilogy:
                 add_percent_formatter("yaxis", 1.0)
-        legend()
+        legend() if True else print("FIXME no legend!")  # DEBUG
         plt.title("Multi-players $M = {}$ : Frequency of collision for each arm, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
@@ -887,7 +887,7 @@ class EvaluatorMultiPlayers(object):
             plt.boxplot(all_times, labels=labels)
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
@@ -917,7 +917,7 @@ class EvaluatorMultiPlayers(object):
             plt.boxplot(all_memories, labels=labels)
             locs, labels = plt.xticks()
             plt.subplots_adjust(bottom=0.30)
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)
@@ -994,7 +994,7 @@ class EvaluatorMultiPlayers(object):
                 last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
                 n, returned_bins, patches = plt.hist(last_regrets, density=normed, color=colors[evaId], bins=nbbins)
                 addTextForWorstCases(plt, n, returned_bins, patches, normed=normed)
-                legend()
+                legend() if True else print("FIXME no legend!")  # DEBUG
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + evaId, 1 + N), fig=fig, pickleit=PICKLE_IT)
                 figs.append(fig)
             return figs
@@ -1034,7 +1034,7 @@ class EvaluatorMultiPlayers(object):
             ns, returned_bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, returned_bins, patches, normed=normed)
-            legend()
+            legend() if True else print("FIXME no legend!")  # DEBUG
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
