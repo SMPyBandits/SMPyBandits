@@ -1552,13 +1552,13 @@ if TEST_SlidingWindow:
     ALPHAS = [1]
     TAUS   = [
             500, 1000, 2000,
-            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS)))  # "optimal" value according to [Garivier & Moulines, 2008]
+            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
     GAMMAS = [
             # 0.1, 0.3, 0.5, 0.7, 0.9,
             0.2, 0.4, 0.6, 0.8,
             0.95, 0.99,
-            max(min(1, (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.), 0)  # "optimal" value according to [Garivier & Moulines, 2008]
+            max(min(1, (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.), 0),  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
 
     configuration.update({
@@ -1568,7 +1568,7 @@ if TEST_SlidingWindow:
         #     {
         #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
         #         "params": {
-        #             "alpha": alpha
+        #             "alpha": alpha,
         #         }
         #     }
         #     for tau in TAUS
@@ -1581,7 +1581,7 @@ if TEST_SlidingWindow:
                 "archtype": SWUCB,
                 "params": {
                     "alpha": alpha,
-                    "tau": tau
+                    "tau": tau,
                 }
             }
             for alpha in ALPHAS
@@ -1593,7 +1593,7 @@ if TEST_SlidingWindow:
                 "archtype": SWUCBPlus,
                 "params": {
                     "horizon": HORIZON,
-                    "alpha": alpha
+                    "alpha": alpha,
                 }
             }
             for alpha in ALPHAS
@@ -1604,11 +1604,13 @@ if TEST_SlidingWindow:
                 "archtype": DiscountedUCB,
                 "params": {
                     "alpha": alpha,
-                    "gamma": gamma
+                    "gamma": gamma,
+                    "useRealDiscount": useRealDiscount,
                 }
             }
             for gamma in GAMMAS
             for alpha in ALPHAS
+            for useRealDiscount in [True, False]
         ] +
         [
             # --- # XXX experimental discounted UCB algorithm, knowing the horizon
@@ -1616,7 +1618,7 @@ if TEST_SlidingWindow:
                 "archtype": DiscountedUCBPlus,
                 "params": {
                     "alpha": alpha,
-                    "horizon": HORIZON
+                    "horizon": HORIZON,
                 }
             }
             for alpha in ALPHAS
@@ -1625,7 +1627,7 @@ if TEST_SlidingWindow:
             {
                 "archtype": UCBalpha,
                 "params": {
-                    "alpha": alpha
+                    "alpha": alpha,
                 }
             }
             for alpha in ALPHAS

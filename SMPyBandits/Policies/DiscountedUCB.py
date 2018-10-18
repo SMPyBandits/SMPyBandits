@@ -8,7 +8,7 @@ r""" The Discounted-UCB index policy, with a discount factor of :math:`\gamma\in
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from math import sqrt, log
 import numpy as np
@@ -35,6 +35,7 @@ class DiscountedUCB(UCBalpha):
 
     def __init__(self, nbArms,
                  alpha=ALPHA, gamma=GAMMA,
+                 useRealDiscount=True,
                  lower=0., amplitude=1., *args, **kwargs):
         super(DiscountedUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
@@ -43,9 +44,14 @@ class DiscountedUCB(UCBalpha):
         if np.isclose(gamma, 1):
             print("Warning: using DiscountedUCB with 'gamma' too close to 1 will result in UCBalpha, you should rather use it...")  # DEBUG
         self.gamma = gamma  #: Parameter gamma
+        self.delta_time_steps = np.zeros(self.nbArms, dtype=int)  #: Keep memory of the :math:`\Delta_k(t)` for each time step.
+        self.useRealDiscount = useRealDiscount  #: Flag to know if the real update should be used, the one with a multiplication by :math:`\gamma^{1+\Delta_k(t)}` and not simply a multiplication by :math:`\gamma`.
 
     def __str__(self):
-        return r"D-UCB($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)
+        return r"D-UCB({}$\alpha={:.3g}$, $\gamma={:.5g}$)".format(
+            "no delay, " if not self.useRealDiscount else "",
+            self.alpha, self.gamma
+        )
 
     def getReward(self, arm, reward):
         r""" Give a reward: increase t, pulls, and update cumulated sum of rewards for that arm (normalized in [0, 1]).
@@ -54,29 +60,34 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-           N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} N_k(s), \\
-           X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} X_k(s).
+            N_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} N_k(s), \\
+            X_{k,\gamma}(t+1) &:= \sum_{s=1}^{t} \gamma^{t - s} X_k(s).
 
-        - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from `s=0` to `s=t`, because updating it is easy (2 operations instead of just 1 for classical :class:`Policies.UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically).
+        - Instead of keeping the whole history of rewards, as expressed in the math formula, we keep the sum of discounted rewards from ``s=0`` to ``s=t``, because updating it is easy (2 operations instead of just 1 for classical :class:`Policies.UCBalpha.UCBalpha`, and 2 operations instead of :math:`\mathcal{O}(t)` as expressed mathematically). Denote :math:`\Delta_k(t)` the number of time steps during which the arm ``k`` was *not* selected (maybe 0 if it is selected twice in a row). Then the update can be done easily by multiplying by :math:`\gamma^{1+\Delta_k(t)}`:
 
         .. math::
 
-           N_{k,\gamma}(t+1) &= \gamma \times N_{k,\gamma}(t) + \mathbb{1}(A(t+1) = k), \\
-           X_{k,\gamma}(t+1) &= \gamma \times X_{k,\gamma}(t) + X_k(t+1).
+            N_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times N_{k,\gamma}(t) + \mathbb{1}(A(t+1) = k), \\
+            X_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times X_{k,\gamma}(t) + X_k(t+1).
         """
         self.t += 1
-        self.pulls[arm] = (self.gamma * self.pulls[arm]) + 1
+        # FIXED we should multiply by gamma^delta where delta is the number of time steps where we didn't play this arm, +1
+        self.pulls[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.pulls[arm]) + 1
         # XXX self.pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
         reward = (reward - self.lower) / self.amplitude
-        self.rewards[arm] = (self.gamma * self.rewards[arm]) + reward
+        self.rewards[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.rewards[arm]) + reward
+        # Ok and we saw this arm so no delta now
+        if self.useRealDiscount:
+            self.delta_time_steps += 1  # increase delay for each algorithms
+            self.delta_time_steps[arm] = 0
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time :math:`t` and after :math:`N_{k,\gamma}(t)` *"discounted"* pulls of arm k, and :math:`n_{\gamma}(t)` *"discounted"* pulls of all arms:
 
         .. math::
 
-           I_k(t) &:= \frac{X_{k,\gamma}(t)}{N_{k,\gamma}(t)} + \sqrt{\frac{\alpha \log(n_{\gamma}(t))}{2 N_{k,\gamma}(t)}}, \\
-           \text{where}\;\; n_{\gamma}(t) &:= \sum_{k=1}^{K} N_{k,\gamma}(t).
+            I_k(t) &:= \frac{X_{k,\gamma}(t)}{N_{k,\gamma}(t)} + \sqrt{\frac{\alpha \log(n_{\gamma}(t))}{2 N_{k,\gamma}(t)}}, \\
+            \text{where}\;\; n_{\gamma}(t) &:= \sum_{k=1}^{K} N_{k,\gamma}(t).
         """
         if self.pulls[arm] < 1:
             return float('+inf')

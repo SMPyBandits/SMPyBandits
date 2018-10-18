@@ -182,26 +182,29 @@ except (ValueError, np.AxisError):
 
 # FIXME very simulation dependent! Change
 list_of_change_labels = [
-    "Aggr(rhoRand, RandTopM, MCTopM, Selfish) UCB",
-    # "Aggr(rhoRand, RandTopM, MCTopM, Selfish) kl-UCB",
+    # "Aggr(rhoRand, RandTopM, MCTopM, Selfish) UCB",
+    "Aggr(rhoRand, RandTopM, MCTopM, Selfish) kl-UCB",
     # "Aggr(rhoRand, RandTopM, MCTopM, Selfish) MOSS",
-    "rhoRand UCB",
-    # "rhoRand kl-UCB",
+    # "rhoRand UCB",
+    "rhoRand kl-UCB",
     # "rhoRand MOSS",
     # "rhoRand Aggr(UCB, kl-UCB, MOSS)",
-    "RandTopM UCB",
-    # "RandTopM kl-UCB",
+    # "RandTopM UCB",
+    "RandTopM kl-UCB",
     # "RandTopM MOSS",
     # "RandTopM Aggr(UCB, kl-UCB, MOSS)",
-    "MCTopM UCB",
-    # "MCTopM kl-UCB",
+    # "MCTopM UCB",
+    "MCTopM kl-UCB",
     # "MCTopM MOSS",
     # "MCTopM Aggr(UCB, kl-UCB, MOSS)",
-    "Selfish UCB",
-    # "Selfish kl-UCB",
+    # "Selfish UCB",
+    "Selfish kl-UCB",
     # "Selfish MOSS",
     # "Selfish Aggr(UCB, kl-UCB, MOSS)",
-    "Centralized UCB",
+    # "Centralized UCB",
+    "Centralized kl-UCB",
+    # "Centralized MOSS",
+    # "Centralized Aggr(UCB, kl-UCB, MOSS)",
 ]
 
 configuration["change_labels"] = {
@@ -212,15 +215,15 @@ configuration["change_labels"] = {
 configuration["successive_players"] = [
 
     # ---- Aggregating for the multi-user parts
-    [
-        Aggregator(nbArms, children=[
-            rhoRand(NB_PLAYERS, nbArms, UCB).children[j],
-            RandTopM(NB_PLAYERS, nbArms, UCB).children[j],
-            MCTopM(NB_PLAYERS, nbArms, UCB).children[j],
-            Selfish(NB_PLAYERS, nbArms, UCB).children[j],
-        ])
-        for j in range(NB_PLAYERS)
-    ],
+    # [
+    #     Aggregator(nbArms, children=[
+    #         rhoRand(NB_PLAYERS, nbArms, UCB).children[j],
+    #         RandTopM(NB_PLAYERS, nbArms, UCB).children[j],
+    #         MCTopM(NB_PLAYERS, nbArms, UCB).children[j],
+    #         Selfish(NB_PLAYERS, nbArms, UCB).children[j],
+    #     ])
+    #     for j in range(NB_PLAYERS)
+    # ],
     # [
     #     Aggregator(nbArms, children=[
     #         rhoRand(NB_PLAYERS, nbArms, klUCB).children[j],
@@ -239,34 +242,43 @@ configuration["successive_players"] = [
     #     ])
     #     for j in range(NB_PLAYERS)
     # ],
+    [
+        Aggregator(nbArms, children=[
+            rhoRand(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children[j],
+            RandTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children[j],
+            MCTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children[j],
+            # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children[j],
+        ])
+        for j in range(NB_PLAYERS)
+    ],
     # ---- rhoRand etc
-    rhoRand(NB_PLAYERS, nbArms, UCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, UCB).children,
     # rhoRand(NB_PLAYERS, nbArms, klUCB).children,
     # rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # rhoRand(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    rhoRand(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
 
     # # ---- RandTopM
-    RandTopM(NB_PLAYERS, nbArms, UCB).children,
+    # RandTopM(NB_PLAYERS, nbArms, UCB).children,
     # RandTopM(NB_PLAYERS, nbArms, klUCB).children,
     # RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # RandTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    RandTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
 
     # ---- MCTopM
-    MCTopM(NB_PLAYERS, nbArms, UCB).children,
+    # MCTopM(NB_PLAYERS, nbArms, UCB).children,
     # MCTopM(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # MCTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    MCTopM(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
 
     # ---- Selfish
-    Selfish(NB_PLAYERS, nbArms, UCB).children,
+    # Selfish(NB_PLAYERS, nbArms, UCB).children,
     # Selfish(NB_PLAYERS, nbArms, klUCB).children,
     # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
 
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
 ]
 
 
