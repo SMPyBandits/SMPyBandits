@@ -44,7 +44,7 @@ def handleCollision_or_getZeroReward(player, arm, lower=0):
     """
     # player.handleCollision(arm) is called to inform the user that there were a collision
     if hasattr(player, 'handleCollision'):
-        player.handleCollision(arm)
+        player.handleCollision(arm, lower)
     else:
         # XXX Should player.getReward() be called with a reward = 0 when there is collisions (to change the internals memory of the player) ?
         player.getReward(arm, lower)  # XXX Strong assumption on the model
@@ -140,7 +140,7 @@ def allGetRewardsAndUseCollision(t, arms, players, choices, rewards, pulls, coll
         if nbCollisions[choices[i]] >= 1:  # If collision
             # print("  - 1 collision on channel {} : {} other users chose it at time t = {} ...".format(choices[i], nbCollisions[choices[i]], t))  # DEBUG
             collisions[choices[i]] += 1  # Should be counted here, allGetRewardsAndUseCollision
-            player.handleCollision(choices[i])  # FIXED
+            player.handleCollision(choices[i], rewards[i])  # FIXED
 
 
 def noCollision(t, arms, players, choices, rewards, pulls, collisions):

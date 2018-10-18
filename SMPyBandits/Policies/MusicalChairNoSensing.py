@@ -176,7 +176,7 @@ class MusicalChairNoSensing(BasePolicy):
         self.state = State.InitialPhase
 
     def choice(self):
-        """ Chose an arm, as described by the Musical Chair with no Sensing algorithm."""
+        """ Choose an arm, as described by the Musical Chair with no Sensing algorithm."""
         self.t += 1
         if self.chair is not None:  # and self.state == State.Sitted:
             # If the player is already sit, nothing to do

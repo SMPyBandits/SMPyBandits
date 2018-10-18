@@ -25,5 +25,5 @@ class BaseCentralizedPolicy(object):
         raise NotImplementedError("This method getReward(arm, reward) has to be implemented in the child class inheriting from BaseCentralizedPolicy.")
 
     def choice(self):
-        """ Chose an arm."""
+        """ Choose an arm."""
         raise NotImplementedError("This method choice() has to be implemented in the child class inheriting from BaseCentralizedPolicy.")

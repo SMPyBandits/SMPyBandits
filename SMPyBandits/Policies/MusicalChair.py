@@ -6,7 +6,7 @@ r""" MusicalChair: implementation of the decentralized multi-player policy from 
     + Every player tries uniformly an arm for :math:`T_0` steps, counting the empirical means of each arm, and the number of observed collisions :math:`C_{T_0}`
     + Finally, :math:`N^* = M` = ``nbPlayers`` is estimated based on nb of collisions :math:`C_{T_0}`, and the :math:`N^*` best arms are computed from their empirical means
 - 2nd step:
-    + Every player chose an arm uniformly, among the :math:`N^*` best arms, until she does not encounter collision right after choosing it
+    + Every player Choose an arm uniformly, among the :math:`N^*` best arms, until she does not encounter collision right after choosing it
     + When an arm was chosen by only one player, she decides to sit on this chair (= arm)
 - 3rd step:
     + Every player stays sitted on her chair for the rest of the game
@@ -156,7 +156,7 @@ class MusicalChair(BasePolicy):
             self.state = State.MusicalChair
 
     def choice(self):
-        """ Chose an arm, as described by the Musical Chair algorithm."""
+        """ Choose an arm, as described by the Musical Chair algorithm."""
         self.t += 1
         if self.chair is not None:  # and self.state == State.Sitted:
             # If the player is already sit, nothing to do

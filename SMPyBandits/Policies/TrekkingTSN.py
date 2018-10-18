@@ -175,7 +175,7 @@ class TrekkingTSN(BasePolicy):
         self.state = State.ChannelCharacterization
 
     def choice(self):
-        """ Chose an arm, as described by the Musical Chair algorithm."""
+        """ Choose an arm, as described by the Musical Chair algorithm."""
         self.t += 1
         i = self.last_choice  # by default, stay on the current arm
 

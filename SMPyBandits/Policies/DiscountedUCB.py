@@ -67,8 +67,8 @@ class DiscountedUCB(UCBalpha):
 
         .. math::
 
-            N_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times N_{k,\gamma}(t) + \mathbb{1}(A(t+1) = k), \\
-            X_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times X_{k,\gamma}(t) + X_k(t+1).
+            N_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times N_{k,\gamma}(\text{last pull}) + \mathbb{1}(A(t+1) = k), \\
+            X_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times X_{k,\gamma}(\text{last pull}) + X_k(t+1).
         """
         self.t += 1
         # FIXED we should multiply by gamma^delta where delta is the number of time steps where we didn't play this arm, +1

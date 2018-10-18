@@ -250,6 +250,9 @@ except (ValueError, np.AxisError):
 
 
 configuration["successive_players"] = [
+    # FIXME test this new SIC_MMAB algorithm
+    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
     # # FIXME test this new TrekkingTSN algorithm!
@@ -257,7 +260,7 @@ configuration["successive_players"] = [
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-    rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
     # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
     # #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
     # #         for x in range(NB_ARMS)
@@ -277,7 +280,7 @@ configuration["successive_players"] = [
     # # ---- RandTopM
     RandTopM(NB_PLAYERS, nbArms, UCB).children,
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-    RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
     # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -294,7 +297,7 @@ configuration["successive_players"] = [
     # ---- MCTopM
     MCTopM(NB_PLAYERS, nbArms, UCB).children,
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
-    MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
     # MCTopM(NB_PLAYERS, nbArms, BESA).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
@@ -314,8 +317,8 @@ configuration["successive_players"] = [
     # # # ---- Selfish
     # # # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # # # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
-    # Selfish(NB_PLAYERS, nbArms, UCB).children,
-    # Selfish(NB_PLAYERS, nbArms, klUCB).children,
+    Selfish(NB_PLAYERS, nbArms, UCB).children,
+    Selfish(NB_PLAYERS, nbArms, klUCB).children,
     # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
     # # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
     # # # Selfish(NB_PLAYERS, nbArms, BESA).children,
@@ -330,7 +333,7 @@ configuration["successive_players"] = [
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
@@ -339,11 +342,11 @@ configuration["successive_players"] = [
     # # d should be smaller than the gap Delta = mu_M* - mu_(M-1)* (gap between Mbest and Mworst)
     # [ MEGA(nbArms, p0=0.1, alpha=0.1, beta=0.5, c=0.1, d=0.99*GAP) for _ in range(NB_PLAYERS) ],  # XXX always linear regret!
 
-    # # # XXX stupid version with fixed T0 : cannot adapt to any problem
-    # # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
-    # [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    # [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    # [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    # # XXX stupid version with fixed T0 : cannot adapt to any problem
+    # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
     # # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],
