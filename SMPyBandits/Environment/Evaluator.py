@@ -138,8 +138,8 @@ class Evaluator(object):
             self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms), dtype=np.int32)
             if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon), dtype=np.int32)
             self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
-            self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
-            self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
+            self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions), dtype=np.int32)
+            self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions), dtype=np.int32)
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -236,9 +236,9 @@ class Evaluator(object):
             self.bestArmPulls[envId][policyId, :] += np.cumsum(np.in1d(r.choices, r.indexes_bestarm))
             self.pulls[envId][policyId, :] += r.pulls
             if self.moreAccurate: self.allPulls[envId][policyId, :, :] += np.array([1 * (r.choices == armId) for armId in range(env.nbArms)])  # XXX consumes a lot of zeros but it is not so costly
+            self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
             self.runningTimes[envId][policyId, repeatId] = r.running_time
-            self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):

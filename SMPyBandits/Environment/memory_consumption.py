@@ -56,6 +56,8 @@ def getCurrentMemory(thread=False, both=False):
 
     .. warning:: This is still experimental for multi-threaded code.
     .. warning:: It can break on some systems, see for instance [the issue #142](https://github.com/SMPyBandits/SMPyBandits/issues/142).
+
+    .. warning:: FIXME even on my own system, when no multi-threading is used, it works for the *last* few policies I test, but fails for the first??
     """
     if thread:
         try:

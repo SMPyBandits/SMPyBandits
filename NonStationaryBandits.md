@@ -6,7 +6,7 @@ I give here a short introduction, with references below. If you are in a hurry, 
 - The first studied variant considers *piece-wise* stationary problems, also referred to as **abruptly changing**, where the distributions of the `$K$` arms are stationary on some intervals `$[T_i,\ldots,T_{i+1}]$` with some abrupt change points `$(T_i)$`.
     + It is always assumed that the location of the change points are unknown to the user, otherwise the problem is not harder: just play your [favorite algorithm](docs/Policies.html), and restart it at each change point.
     + The change points can be fixed or randomly generated, but it is assumed that they are generated with a random source being oblivious of the user's actions, so we can always consider that they were already generated before the game starts.
-    + For instance, [`Arms.geometricChangePoints()`](docs/Arms.html#Arms.geometricChangePoints) generate some change point if we assume that at every time step `$t=1,\ldots,T]$`, there is a (small) probability p to have a change point.
+    + For instance, [`Arms.geometricChangePoints()`](docs/Arms.html#Arms.geometricChangePoints) generates some change point if we assume that at every time step `$t=1,\ldots,T]$`, there is a (small) probability p to have a change point.
     + The number of change points is usually denoted `$L$` or `$\Upsilon_T$`, and should not be a constant w.r.t. `$T$` (otherwise when `$T\to\infty$` only the last section counts and give a stationary problem so it is not harder). Some algorithms require to know the value of `$\Upsilon_T$`, or at least an upper-bound, and some algorithms try to be efficient without knowing it (this is what we want!).
     + The goal is to have an efficient algorithm, but of course if `$\Upsilon_T = \mathcal{O}(T)$` the problem is too hard to hope to be efficient and any algorithm will suffer a linear regret (i.e., be as efficient as a naive random strategy).
 
@@ -95,9 +95,9 @@ FIXME finish implementation!
 
 > See [issue #71](https://github.com/SMPyBandits/SMPyBandits/issues/71) and [issue #146](https://github.com/SMPyBandits/SMPyBandits/issues/146).
 
-A simple python file, [`configuration_sparse.py`](SMPyBandits/configuration_sparse.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_nonstationary.py`](SMPyBandits/configuration_nonstationary.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-For example, we can compare the standard [`UCB`](SMPyBandits/Policies/UCB.py) and  [`BayesUCB`](SMPyBandits/Policies/BayesUCB.py) algorithms, non aware of the sparsity, against the sparsity-aware [`SparseUCB`](SMPyBandits/Policies/SparseUCB.py) algorithm, as well as 4 versions of [`SparseWrapper`](SMPyBandits/Policies/SparseWrapper.py) applied to [`BayesUCB`](SMPyBandits/Policies/BayesUCB.py).
+For example, we can compare the standard [`UCB`](SMPyBandits/Policies/UCB.py) and  [`Thompson`](SMPyBandits/Policies/Thompson.py) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](SMPyBandits/Policies/DiscountedUCB.py) and [`SWUCB`](SMPyBandits/Policies/SlidingWindowUCB.py) algorithms.
 
 ```python
 horizon = 10000
@@ -127,6 +127,7 @@ configuration = {
     # Policies that should be simulated, and their parameters.
     "policies": [
         {"archtype": UCB, "params": {} },
+        {"archtype": Thompson, "params": {} },
         {"archtype": SWUCB, "params": { "tau": 100 } },
         {"archtype": SWUCB, "params": { "tau": 500 } },
         {"archtype": SWUCB, "params": { "tau": 1000 } },
@@ -147,14 +148,14 @@ configuration = {
 You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
 make install         # install the requirements ONLY ONCE
-make nonstationary   # run and log the main.py script FIXME
+make nonstationary   # run and log the main.py script
 ```
 
 ----
 
 ## Some illustrations
 
-Here are some plots illustrating the performances of the different [policies](SMPyBandits/Policies/) implemented in this project, against various sparse problems (with [`Bernoulli`](Arms/Bernoulli.py) or [`UnboundedGaussian`](SMPyBandits/Arms/Gaussian.py) arms only):
+Here are some plots illustrating the performances of the different [policies](SMPyBandits/Policies/) implemented in this project, against various non-stationary problems (with [`Bernoulli`](Arms/Bernoulli.py) only).
 
 FIXME do some plots!
 
