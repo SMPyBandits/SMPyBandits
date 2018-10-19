@@ -207,33 +207,35 @@
 <!-- 3 -->
 <g id="node4" class="node">
 <title>3</title>
-<polygon fill="none" stroke="#000000" points="809.5,-345.5 809.5,-729.5 1162.5,-729.5 1162.5,-345.5 809.5,-345.5"/>
-<text text-anchor="middle" x="986" y="-714.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.ChangingAtEachRepMAB</text>
-<polyline fill="none" stroke="#000000" points="809.5,-706.5 1162.5,-706.5 "/>
-<text text-anchor="start" x="817.5" y="-691.3" font-family="Times,serif" font-size="14.00" fill="#000000">_arms</text>
-<text text-anchor="start" x="817.5" y="-676.3" font-family="Times,serif" font-size="14.00" fill="#000000">_historyOfMeans : list</text>
-<text text-anchor="start" x="817.5" y="-661.3" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
-<text text-anchor="start" x="817.5" y="-646.3" font-family="Times,serif" font-size="14.00" fill="#000000">_t : int</text>
-<text text-anchor="start" x="817.5" y="-631.3" font-family="Times,serif" font-size="14.00" fill="#000000">_verbose : bool</text>
-<text text-anchor="start" x="817.5" y="-616.3" font-family="Times,serif" font-size="14.00" fill="#000000">args</text>
-<text text-anchor="start" x="817.5" y="-601.3" font-family="Times,serif" font-size="14.00" fill="#000000">arm_type</text>
-<text text-anchor="start" x="817.5" y="-586.3" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
-<text text-anchor="start" x="817.5" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">isChangingAtEachRepetition : bool</text>
-<text text-anchor="start" x="817.5" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
-<text text-anchor="start" x="817.5" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">means</text>
-<text text-anchor="start" x="817.5" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
-<text text-anchor="start" x="817.5" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
-<text text-anchor="start" x="817.5" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">newMeans</text>
-<polyline fill="none" stroke="#000000" points="809.5,-488.5 1162.5,-488.5 "/>
-<text text-anchor="start" x="817.5" y="-473.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mbest()</text>
-<text text-anchor="start" x="817.5" y="-458.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mworst()</text>
-<text text-anchor="start" x="817.5" y="-443.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="817.5" y="-428.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
-<text text-anchor="start" x="817.5" y="-413.3" font-family="Times,serif" font-size="14.00" fill="#000000">hoifactor()</text>
-<text text-anchor="start" x="817.5" y="-398.3" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound()</text>
-<text text-anchor="start" x="817.5" y="-383.3" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound_multiplayers()</text>
-<text text-anchor="start" x="817.5" y="-368.3" font-family="Times,serif" font-size="14.00" fill="#000000">newRandomArms()</text>
-<text text-anchor="start" x="817.5" y="-353.3" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
+<polygon fill="none" stroke="#000000" points="809.5,-330.5 809.5,-744.5 1162.5,-744.5 1162.5,-330.5 809.5,-330.5"/>
+<text text-anchor="middle" x="986" y="-729.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.ChangingAtEachRepMAB</text>
+<polyline fill="none" stroke="#000000" points="809.5,-721.5 1162.5,-721.5 "/>
+<text text-anchor="start" x="817.5" y="-706.3" font-family="Times,serif" font-size="14.00" fill="#000000">_arms</text>
+<text text-anchor="start" x="817.5" y="-691.3" font-family="Times,serif" font-size="14.00" fill="#000000">_historyOfMeans : list</text>
+<text text-anchor="start" x="817.5" y="-676.3" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
+<text text-anchor="start" x="817.5" y="-661.3" font-family="Times,serif" font-size="14.00" fill="#000000">_t : int</text>
+<text text-anchor="start" x="817.5" y="-646.3" font-family="Times,serif" font-size="14.00" fill="#000000">_verbose : bool</text>
+<text text-anchor="start" x="817.5" y="-631.3" font-family="Times,serif" font-size="14.00" fill="#000000">args</text>
+<text text-anchor="start" x="817.5" y="-616.3" font-family="Times,serif" font-size="14.00" fill="#000000">arm_type</text>
+<text text-anchor="start" x="817.5" y="-601.3" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
+<text text-anchor="start" x="817.5" y="-586.3" font-family="Times,serif" font-size="14.00" fill="#000000">isChangingAtEachRepetition : bool</text>
+<text text-anchor="start" x="817.5" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
+<text text-anchor="start" x="817.5" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">isMarkovian : bool</text>
+<text text-anchor="start" x="817.5" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
+<text text-anchor="start" x="817.5" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">means</text>
+<text text-anchor="start" x="817.5" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
+<text text-anchor="start" x="817.5" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
+<text text-anchor="start" x="817.5" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">newMeans</text>
+<polyline fill="none" stroke="#000000" points="809.5,-473.5 1162.5,-473.5 "/>
+<text text-anchor="start" x="817.5" y="-458.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mbest()</text>
+<text text-anchor="start" x="817.5" y="-443.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mworst()</text>
+<text text-anchor="start" x="817.5" y="-428.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="817.5" y="-413.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
+<text text-anchor="start" x="817.5" y="-398.3" font-family="Times,serif" font-size="14.00" fill="#000000">hoifactor()</text>
+<text text-anchor="start" x="817.5" y="-383.3" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound()</text>
+<text text-anchor="start" x="817.5" y="-368.3" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound_multiplayers()</text>
+<text text-anchor="start" x="817.5" y="-353.3" font-family="Times,serif" font-size="14.00" fill="#000000">newRandomArms()</text>
+<text text-anchor="start" x="817.5" y="-338.3" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
 </g>
 <!-- 5 -->
 <g id="node6" class="node">
@@ -275,7 +277,7 @@
 <!-- 3&#45;&gt;5 -->
 <g id="edge2" class="edge">
 <title>3&#45;&gt;5</title>
-<path fill="none" stroke="#000000" d="M1046.9163,-729.6566C1081.0723,-833.0038 1125.9782,-962.0669 1172,-1075 1229.2665,-1215.5265 1301.025,-1368.9645 1361.3822,-1492.8577"/>
+<path fill="none" stroke="#000000" d="M1051.8628,-744.5756C1085.3472,-845.2465 1128.1675,-967.4392 1172,-1075 1229.2665,-1215.5265 1301.025,-1368.9645 1361.3822,-1492.8577"/>
 <polygon fill="none" stroke="#000000" points="1358.3619,-1494.6494 1365.8917,-1502.1028 1364.6534,-1491.5806 1358.3619,-1494.6494"/>
 </g>
 <!-- 4 -->
@@ -284,11 +286,11 @@
 <polygon fill="none" stroke="#000000" points="1181,-458 1181,-617 1475,-617 1475,-458 1181,-458"/>
 <text text-anchor="middle" x="1328" y="-601.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.IncreasingMAB</text>
 <polyline fill="none" stroke="#000000" points="1181,-594 1475,-594 "/>
-<text text-anchor="start" x="1189" y="-578.8" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitudes : list, recarray</text>
+<text text-anchor="start" x="1189" y="-578.8" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitudes : recarray, list</text>
 <text text-anchor="start" x="1189" y="-563.8" font-family="Times,serif" font-size="14.00" fill="#000000">_change_lower_amplitude</text>
 <text text-anchor="start" x="1189" y="-548.8" font-family="Times,serif" font-size="14.00" fill="#000000">_first_amplitudes : recarray, list</text>
 <text text-anchor="start" x="1189" y="-533.8" font-family="Times,serif" font-size="14.00" fill="#000000">_first_lowers : recarray, list</text>
-<text text-anchor="start" x="1189" y="-518.8" font-family="Times,serif" font-size="14.00" fill="#000000">_lowers : recarray, list</text>
+<text text-anchor="start" x="1189" y="-518.8" font-family="Times,serif" font-size="14.00" fill="#000000">_lowers : list, recarray</text>
 <text text-anchor="start" x="1189" y="-503.8" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
 <polyline fill="none" stroke="#000000" points="1181,-496 1475,-496 "/>
 <text text-anchor="start" x="1189" y="-480.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
@@ -303,70 +305,73 @@
 <!-- 6 -->
 <g id="node7" class="node">
 <title>6</title>
-<polygon fill="none" stroke="#000000" points="1493,-390.5 1493,-684.5 1791,-684.5 1791,-390.5 1493,-390.5"/>
-<text text-anchor="middle" x="1642" y="-669.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.MarkovianMAB</text>
-<polyline fill="none" stroke="#000000" points="1493,-661.5 1791,-661.5 "/>
-<text text-anchor="start" x="1501" y="-646.3" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
-<text text-anchor="start" x="1501" y="-631.3" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
-<text text-anchor="start" x="1501" y="-616.3" font-family="Times,serif" font-size="14.00" fill="#000000">chains</text>
-<text text-anchor="start" x="1501" y="-601.3" font-family="Times,serif" font-size="14.00" fill="#000000">dict_transitions : list</text>
-<text text-anchor="start" x="1501" y="-586.3" font-family="Times,serif" font-size="14.00" fill="#000000">isMarkovian : bool</text>
-<text text-anchor="start" x="1501" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">matrix_transitions : list</text>
-<text text-anchor="start" x="1501" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
-<text text-anchor="start" x="1501" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">means : recarray</text>
-<text text-anchor="start" x="1501" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
-<text text-anchor="start" x="1501" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
-<text text-anchor="start" x="1501" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">rested</text>
-<text text-anchor="start" x="1501" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">states</text>
-<text text-anchor="start" x="1501" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">steadys</text>
-<polyline fill="none" stroke="#000000" points="1493,-458.5 1791,-458.5 "/>
-<text text-anchor="start" x="1501" y="-443.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="1501" y="-428.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
-<text text-anchor="start" x="1501" y="-413.3" font-family="Times,serif" font-size="14.00" fill="#000000">draw()</text>
-<text text-anchor="start" x="1501" y="-398.3" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
+<polygon fill="none" stroke="#000000" points="1493,-375.5 1493,-699.5 1791,-699.5 1791,-375.5 1493,-375.5"/>
+<text text-anchor="middle" x="1642" y="-684.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.MarkovianMAB</text>
+<polyline fill="none" stroke="#000000" points="1493,-676.5 1791,-676.5 "/>
+<text text-anchor="start" x="1501" y="-661.3" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
+<text text-anchor="start" x="1501" y="-646.3" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
+<text text-anchor="start" x="1501" y="-631.3" font-family="Times,serif" font-size="14.00" fill="#000000">chains</text>
+<text text-anchor="start" x="1501" y="-616.3" font-family="Times,serif" font-size="14.00" fill="#000000">dict_transitions : list</text>
+<text text-anchor="start" x="1501" y="-601.3" font-family="Times,serif" font-size="14.00" fill="#000000">isChangingAtEachRepetition : bool</text>
+<text text-anchor="start" x="1501" y="-586.3" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
+<text text-anchor="start" x="1501" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">isMarkovian : bool</text>
+<text text-anchor="start" x="1501" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">matrix_transitions : list</text>
+<text text-anchor="start" x="1501" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
+<text text-anchor="start" x="1501" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">means : recarray</text>
+<text text-anchor="start" x="1501" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
+<text text-anchor="start" x="1501" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
+<text text-anchor="start" x="1501" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">rested</text>
+<text text-anchor="start" x="1501" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">states</text>
+<text text-anchor="start" x="1501" y="-451.3" font-family="Times,serif" font-size="14.00" fill="#000000">steadys</text>
+<polyline fill="none" stroke="#000000" points="1493,-443.5 1791,-443.5 "/>
+<text text-anchor="start" x="1501" y="-428.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="1501" y="-413.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
+<text text-anchor="start" x="1501" y="-398.3" font-family="Times,serif" font-size="14.00" fill="#000000">draw()</text>
+<text text-anchor="start" x="1501" y="-383.3" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
 </g>
 <!-- 6&#45;&gt;5 -->
 <g id="edge4" class="edge">
 <title>6&#45;&gt;5</title>
-<path fill="none" stroke="#000000" d="M1622.7487,-684.7662C1596.4908,-885.6306 1549.0881,-1248.2468 1517.3283,-1491.199"/>
-<polygon fill="none" stroke="#000000" points="1513.8425,-1490.8629 1516.0167,-1501.2323 1520.7835,-1491.7703 1513.8425,-1490.8629"/>
+<path fill="none" stroke="#000000" d="M1620.7855,-699.7843C1594.1839,-903.2781 1548.3168,-1254.147 1517.3335,-1491.159"/>
+<polygon fill="none" stroke="#000000" points="1513.8336,-1490.9314 1516.0077,-1501.3007 1520.7745,-1491.8388 1513.8336,-1490.9314"/>
 </g>
 <!-- 7 -->
 <g id="node8" class="node">
 <title>7</title>
-<polygon fill="none" stroke="#000000" points="1809.5,-338 1809.5,-737 2126.5,-737 2126.5,-338 1809.5,-338"/>
-<text text-anchor="middle" x="1968" y="-721.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.NonStationaryMAB</text>
-<polyline fill="none" stroke="#000000" points="1809.5,-714 2126.5,-714 "/>
-<text text-anchor="start" x="1817.5" y="-698.8" font-family="Times,serif" font-size="14.00" fill="#000000">_arms</text>
-<text text-anchor="start" x="1817.5" y="-683.8" font-family="Times,serif" font-size="14.00" fill="#000000">_historyOfMeans : dict</text>
-<text text-anchor="start" x="1817.5" y="-668.8" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
-<text text-anchor="start" x="1817.5" y="-653.8" font-family="Times,serif" font-size="14.00" fill="#000000">_t : int</text>
-<text text-anchor="start" x="1817.5" y="-638.8" font-family="Times,serif" font-size="14.00" fill="#000000">_verbose : bool</text>
-<text text-anchor="start" x="1817.5" y="-623.8" font-family="Times,serif" font-size="14.00" fill="#000000">args</text>
-<text text-anchor="start" x="1817.5" y="-608.8" font-family="Times,serif" font-size="14.00" fill="#000000">arm_type</text>
-<text text-anchor="start" x="1817.5" y="-593.8" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
-<text text-anchor="start" x="1817.5" y="-578.8" font-family="Times,serif" font-size="14.00" fill="#000000">changePoints</text>
-<text text-anchor="start" x="1817.5" y="-563.8" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
-<text text-anchor="start" x="1817.5" y="-548.8" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
-<text text-anchor="start" x="1817.5" y="-533.8" font-family="Times,serif" font-size="14.00" fill="#000000">means</text>
-<text text-anchor="start" x="1817.5" y="-518.8" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
-<text text-anchor="start" x="1817.5" y="-503.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
-<text text-anchor="start" x="1817.5" y="-488.8" font-family="Times,serif" font-size="14.00" fill="#000000">newMeans</text>
-<polyline fill="none" stroke="#000000" points="1809.5,-481 2126.5,-481 "/>
-<text text-anchor="start" x="1817.5" y="-465.8" font-family="Times,serif" font-size="14.00" fill="#000000">Mbest()</text>
-<text text-anchor="start" x="1817.5" y="-450.8" font-family="Times,serif" font-size="14.00" fill="#000000">Mworst()</text>
-<text text-anchor="start" x="1817.5" y="-435.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="1817.5" y="-420.8" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
-<text text-anchor="start" x="1817.5" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">hoifactor()</text>
-<text text-anchor="start" x="1817.5" y="-390.8" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound()</text>
-<text text-anchor="start" x="1817.5" y="-375.8" font-family="Times,serif" font-size="14.00" fill="#000000">lowerbound_multiplayers()</text>
-<text text-anchor="start" x="1817.5" y="-360.8" font-family="Times,serif" font-size="14.00" fill="#000000">newRandomArms()</text>
-<text text-anchor="start" x="1817.5" y="-345.8" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
+<polygon fill="none" stroke="#000000" points="1809.5,-330.5 1809.5,-744.5 2126.5,-744.5 2126.5,-330.5 1809.5,-330.5"/>
+<text text-anchor="middle" x="1968" y="-729.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Environment.MAB.NonStationaryMAB</text>
+<polyline fill="none" stroke="#000000" points="1809.5,-721.5 2126.5,-721.5 "/>
+<text text-anchor="start" x="1817.5" y="-706.3" font-family="Times,serif" font-size="14.00" fill="#000000">_arms</text>
+<text text-anchor="start" x="1817.5" y="-691.3" font-family="Times,serif" font-size="14.00" fill="#000000">_historyOfChangePoints : list</text>
+<text text-anchor="start" x="1817.5" y="-676.3" font-family="Times,serif" font-size="14.00" fill="#000000">_historyOfMeans : dict</text>
+<text text-anchor="start" x="1817.5" y="-661.3" font-family="Times,serif" font-size="14.00" fill="#000000">_sparsity : NoneType</text>
+<text text-anchor="start" x="1817.5" y="-646.3" font-family="Times,serif" font-size="14.00" fill="#000000">_t : int</text>
+<text text-anchor="start" x="1817.5" y="-631.3" font-family="Times,serif" font-size="14.00" fill="#000000">_verbose : bool</text>
+<text text-anchor="start" x="1817.5" y="-616.3" font-family="Times,serif" font-size="14.00" fill="#000000">args</text>
+<text text-anchor="start" x="1817.5" y="-601.3" font-family="Times,serif" font-size="14.00" fill="#000000">arm_type</text>
+<text text-anchor="start" x="1817.5" y="-586.3" font-family="Times,serif" font-size="14.00" fill="#000000">arms</text>
+<text text-anchor="start" x="1817.5" y="-571.3" font-family="Times,serif" font-size="14.00" fill="#000000">changePoints</text>
+<text text-anchor="start" x="1817.5" y="-556.3" font-family="Times,serif" font-size="14.00" fill="#000000">isChangingAtEachRepetition : bool</text>
+<text text-anchor="start" x="1817.5" y="-541.3" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
+<text text-anchor="start" x="1817.5" y="-526.3" font-family="Times,serif" font-size="14.00" fill="#000000">isMarkovian : bool</text>
+<text text-anchor="start" x="1817.5" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxArm</text>
+<text text-anchor="start" x="1817.5" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">means</text>
+<text text-anchor="start" x="1817.5" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">minArm</text>
+<text text-anchor="start" x="1817.5" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
+<text text-anchor="start" x="1817.5" y="-451.3" font-family="Times,serif" font-size="14.00" fill="#000000">newMeans</text>
+<text text-anchor="start" x="1817.5" y="-436.3" font-family="Times,serif" font-size="14.00" fill="#000000">onlyOneArm</text>
+<polyline fill="none" stroke="#000000" points="1809.5,-428.5 2126.5,-428.5 "/>
+<text text-anchor="start" x="1817.5" y="-413.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mbest()</text>
+<text text-anchor="start" x="1817.5" y="-398.3" font-family="Times,serif" font-size="14.00" fill="#000000">Mworst()</text>
+<text text-anchor="start" x="1817.5" y="-383.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="1817.5" y="-368.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
+<text text-anchor="start" x="1817.5" y="-353.3" font-family="Times,serif" font-size="14.00" fill="#000000">newRandomArms()</text>
+<text text-anchor="start" x="1817.5" y="-338.3" font-family="Times,serif" font-size="14.00" fill="#000000">reprarms()</text>
 </g>
 <!-- 7&#45;&gt;5 -->
 <g id="edge5" class="edge">
 <title>7&#45;&gt;5</title>
-<path fill="none" stroke="#000000" d="M1912.9034,-737.0045C1882.8449,-839.2563 1843.0307,-965.0669 1800,-1075 1743.8306,-1218.4994 1670.4946,-1374.3774 1608.7174,-1498.9675"/>
+<path fill="none" stroke="#000000" d="M1910.645,-744.6687C1880.8646,-845.4979 1841.9616,-967.7982 1800,-1075 1743.8306,-1218.4994 1670.4946,-1374.3774 1608.7174,-1498.9675"/>
 <polygon fill="none" stroke="#000000" points="1605.4149,-1497.7485 1604.1016,-1508.2616 1611.6843,-1500.8621 1605.4149,-1497.7485"/>
 </g>
 <!-- 8 -->

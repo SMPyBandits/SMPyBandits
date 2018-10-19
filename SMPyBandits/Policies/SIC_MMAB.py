@@ -46,7 +46,7 @@ class SIC_MMAB(BasePolicy):
 
     def __init__(self, nbArms, horizon,
             lower=0., amplitude=1.,
-            alpha=4.0, verbose=True,
+            alpha=4.0, verbose=False,
         ):  # Named argument to give them in any order
         r"""
         - nbArms: number of arms,
@@ -297,7 +297,8 @@ class SIC_MMAB(BasePolicy):
     def handleCollision(self, arm, reward=None):
         """ Handle a collision, on arm of index 'arm'. """
         assert reward is not None, "Error: a SIC_MMAB player got a collision on arm {} at time {} with reward = None but it should also see the reward.".format(arm, self.t)  # DEBUG
-        print("A SIC_MMAB player got a collision on arm {} at time {} with reward = {}.".format(arm, self.t, reward))  # DEBUG
+        if self.verbose:
+            print("A SIC_MMAB player got a collision on arm {} at time {} with reward = {}.".format(arm, self.t, reward))  # DEBUG
         return self.getReward(arm, reward, collision=True)
 
 
@@ -338,7 +339,7 @@ class SIC_MMAB_klUCB(SIC_MMAB):
 
     def __init__(self, nbArms, horizon,
             lower=0., amplitude=1.,
-            alpha=4.0, verbose=True,
+            alpha=4.0, verbose=False,
             tolerance=TOLERANCE, klucb=klucbBern, c=c,
         ):  # Named argument to give them in any order
         super(SIC_MMAB_klUCB, self).__init__(nbArms, horizon, lower=lower, amplitude=amplitude, alpha=alpha, verbose=verbose)
@@ -374,9 +375,10 @@ class SIC_MMAB_klUCB(SIC_MMAB):
 
         - Other possibilities include UCB-H (the default, see :class:`SIC_MMAB`) and klUCB (see :class:`SIC_MMAB_klUCB`).
         """
-        means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
-        upper_confidence_bound = self.klucb(means, self.c * np.log(self.t) / self.pulls[self.active_arms], self.tolerance)
-        upper_confidence_bound[self.pulls < 1] = float('+inf')
+        rewards, pulls = self.rewards[self.active_arms], self.pulls[self.active_arms]
+        means = rewards / pulls
+        upper_confidence_bound = self.klucb(means, self.c * np.log(self.t) / pulls, self.tolerance)
+        upper_confidence_bound[pulls < 1] = float('+inf')
         bias = upper_confidence_bound - means
         lower_confidence_bound = means - bias
         return upper_confidence_bound, lower_confidence_bound
