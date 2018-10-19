@@ -2,6 +2,8 @@
 
 Found a bug? Have a new feature to suggest? Want to contribute changes to the codebase? Make sure to read this first.
 
+You can read this [document to learn how to do your first contributions](https://github.com/firstcontributions/first-contributions#first-contributions) (🇫🇷 aussi [disponible en français](https://github.com/firstcontributions/first-contributions/blob/master/translations/README.fr.md)).
+
 ## Bug reporting
 
 Your code doesn't work, and you have determined that the issue lies with SMPyBandits? Follow these steps to report a bug.

@@ -252,6 +252,8 @@ except (ValueError, np.AxisError):
 configuration["successive_players"] = [
     # FIXME test this new SIC_MMAB algorithm
     [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
@@ -430,7 +432,10 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, nbArms, TakeRandomFixedArm).children
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children
-    "players": Selfish(NB_PLAYERS, nbArms, UCB).children
+    # "players": Selfish(NB_PLAYERS, nbArms, UCB).children
+
+    # --- TODO play with SIC_MMAB
+    "players": [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ]
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 

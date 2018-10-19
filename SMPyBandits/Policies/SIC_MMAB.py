@@ -14,8 +14,18 @@ import numpy as np
 
 try:
     from .BasePolicy import BasePolicy
-except ImportError:
+    from .kullback import klucbBern
+except (ImportError, SystemError):
     from BasePolicy import BasePolicy
+    from kullback import klucbBern
+
+#: Default value for the constant c used in the computation of KL-UCB index.
+c = 1.  #: default value, as it was in pymaBandits v1.0
+# c = 1.  #: as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
+
+
+#: Default value for the tolerance for computing numerical approximations of the kl-UCB indexes.
+TOLERANCE = 1e-4
 
 
 #: Different states during the Musical Chair algorithm
@@ -35,11 +45,13 @@ class SIC_MMAB(BasePolicy):
     """
 
     def __init__(self, nbArms, horizon,
-            lower=0., amplitude=1., verbose=True,
+            lower=0., amplitude=1.,
+            alpha=4.0, verbose=True,
         ):  # Named argument to give them in any order
         r"""
         - nbArms: number of arms,
-        - horizon: to compute the time :math:`T_0 = \lceil K \log(T) \rceil`.
+        - horizon: to compute the time :math:`T_0 = \lceil K \log(T) \rceil`,
+        - alpha: for the UCB/LCB computations.
 
         Example:
 
@@ -54,6 +66,7 @@ class SIC_MMAB(BasePolicy):
         self._nbArms = self.nbArms
         self.phase = State.Fixation  #: Current state
         self.horizon = horizon  #: Horizon T of the experiment.
+        self.alpha = float(alpha)  #: Parameter :math:`\alpha` for the UCB/LCB computations.
         self.Time0 = int(np.ceil(self.nbArms * np.e * np.log(horizon)))  #: Parameter :math:`T_0 = \lceil K \log(T) \rceil`.
         # Store parameters
         self.ext_rank = -1  #: External rank, -1 until known
@@ -67,7 +80,7 @@ class SIC_MMAB(BasePolicy):
         self.verbose = verbose
 
     def __str__(self):
-        return r"SIC-MMAB($T_0={}$)".format(self.Time0)  # Use current estimate
+        return r"SIC-MMAB(UCB-H, $T_0={}$)".format(self.Time0)
 
     def startGame(self):
         """ Just reinitialize all the internal memory, and decide how to start (state 1 or 2)."""
@@ -81,7 +94,28 @@ class SIC_MMAB(BasePolicy):
         self.t_phase = 0
         self.round_number = 0
         self.last_phase_stats.fill(0)
-        self.active_arms.fill(0)
+        self.active_arms = np.arange(0, self.nbArms)
+
+    def compute_ucb_lcb(self):
+        r""" Compute the Upper-Confidence Bound and Lower-Confidence Bound for active arms, at the current time step.
+
+        - By default, the SIC-MMAB algorithm uses the UCB-H confidence bounds:
+
+        .. math::
+
+            \mathrm{UCB}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha \log(T)}{2 N_k(t)}},\\
+            \mathrm{LCB}_k(t) &= \frac{X_k(t)}{N_k(t)} - \sqrt{\frac{\alpha \log(T)}{2 N_k(t)}}.
+
+        - Reference: [Audibert et al. 09].
+
+        - Other possibilities include UCB (see :class:`SIC_MMAB_UCB`) and klUCB (see :class:`SIC_MMAB_klUCB`).
+        """
+        # FIXME do this for any sigle player policy ??
+        means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
+        bias = np.sqrt(self.alpha * np.log(self.horizon) / (2 * self.pulls[self.active_arms]))
+        upper_confidence_bound = means + bias
+        lower_confidence_bound = means - bias
+        return upper_confidence_bound, lower_confidence_bound
 
     def choice(self):
         """ Choose an arm, as described by the SIC-MMAB algorithm."""
@@ -148,7 +182,7 @@ class SIC_MMAB(BasePolicy):
 
         - If not collision, receive a reward after pulling the arm.
         """
-        print("A SIC_MMAB player got a reward = {} on arm {} at time {}.".format(reward, arm, self.t))  # DEBUG
+        # print("A SIC_MMAB player got a reward = {} on arm {} at time {}.".format(reward, arm, self.t))  # DEBUG
         self.last_action = arm
         reward = (reward - self.lower) / self.amplitude  # DONE adapt to any [lower, lower + amplitude]
 
@@ -223,11 +257,7 @@ class SIC_MMAB(BasePolicy):
                 for k in self.active_arms:
                     self.pulls[k] += (2 << self.round_number) * self.nbPlayers
 
-                # FIXME do this for any sigle player policy ??
-                means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
-                bias = np.sqrt(2*np.log(self.horizon) / (self.pulls[self.active_arms]))
-                upper_confidence_bound = means + bias
-                lower_confidence_bound = means - bias
+                upper_confidence_bound, lower_confidence_bound = self.compute_ucb_lcb()
 
                 reject = []
                 accept = []
@@ -261,11 +291,92 @@ class SIC_MMAB(BasePolicy):
                     self.round_number += 1
                     self.last_phase_stats.fill(0)
                     self.t_phase = 0
-
+        # End of all the cases
         self.t += 1
 
     def handleCollision(self, arm, reward=None):
-        """ Handle a collision, on arm of index 'arm'.
-        """
+        """ Handle a collision, on arm of index 'arm'. """
+        assert reward is not None, "Error: a SIC_MMAB player got a collision on arm {} at time {} with reward = None but it should also see the reward.".format(arm, self.t)  # DEBUG
         print("A SIC_MMAB player got a collision on arm {} at time {} with reward = {}.".format(arm, self.t, reward))  # DEBUG
         return self.getReward(arm, reward, collision=True)
+
+
+
+# --- Class SIC_MMAB_UCB
+
+class SIC_MMAB_UCB(SIC_MMAB):
+    """ SIC_MMAB_UCB: SIC-MMAB with the simple UCB-1 confidence bounds."""
+
+    def __str__(self):
+        return r"SIC-MMAB(UCB, $T_0={}$)".format(self.Time0)
+
+    def compute_ucb_lcb(self):
+        r""" Compute the Upper-Confidence Bound and Lower-Confidence Bound for active arms, at the current time step.
+
+        - :class:`SIC_MMAB_UCB` uses the simple UCB-1 confidence bounds:
+
+        .. math::
+
+            \mathrm{UCB}_k(t) &= \frac{X_k(t)}{N_k(t)} + \sqrt{\frac{\alpha \log(t)}{2 N_k(t)}},\\
+            \mathrm{LCB}_k(t) &= \frac{X_k(t)}{N_k(t)} - \sqrt{\frac{\alpha \log(t)}{2 N_k(t)}}.
+
+        - Reference: [Auer et al. 02].
+
+        - Other possibilities include UCB-H (the default, see :class:`SIC_MMAB`) and klUCB (see :class:`SIC_MMAB_klUCB`).
+        """
+        means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
+        bias = np.sqrt(self.alpha * np.log(self.t) / (2 * self.pulls[self.active_arms]))
+        upper_confidence_bound = means + bias
+        lower_confidence_bound = means - bias
+        return upper_confidence_bound, lower_confidence_bound
+
+
+# --- Class SIC_MMAB_klUCB
+
+class SIC_MMAB_klUCB(SIC_MMAB):
+    """ SIC_MMAB_klUCB: SIC-MMAB with the kl-UCB confidence bounds."""
+
+    def __init__(self, nbArms, horizon,
+            lower=0., amplitude=1.,
+            alpha=4.0, verbose=True,
+            tolerance=TOLERANCE, klucb=klucbBern, c=c,
+        ):  # Named argument to give them in any order
+        super(SIC_MMAB_klUCB, self).__init__(nbArms, horizon, lower=lower, amplitude=amplitude, alpha=alpha, verbose=verbose)
+        self.c = c  #: Parameter c
+        self.klucb = np.vectorize(klucb)  #: kl function to use
+        self.klucb.__name__ = klucb.__name__
+        self.tolerance = tolerance  #: Numerical tolerance
+
+    def __str__(self):
+        name = self.klucb.__name__[5:]
+        if name == "Bern": name = ""
+        complement = "{}{}".format(name, "" if self.c == 1 else r"$c={:.3g}$".format(self.c))
+        if complement != "": complement = "({})".format(complement)
+        name_of_kl = "kl-UCB{}".format(complement)
+        return r"SIC-MMAB({}, $T_0={}$)".format(name_of_kl, self.Time0)
+
+    def compute_ucb_lcb(self):
+        r""" Compute the Upper-Confidence Bound and Lower-Confidence Bound for active arms, at the current time step.
+
+        - :class:`SIC_MMAB_klUCB` uses the simple kl-UCB confidence bounds:
+
+        .. math::
+
+            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+            \mathrm{UCB}_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t)}{N_k(t)} \right\},\\
+            \mathrm{Biais}_k(t) &= \mathrm{UCB}_k(t) - \hat{\mu}_k(t),\\
+            \mathrm{LCB}_k(t) &= \hat{\mu}_k(t) - \mathrm{Biais}_k(t).
+
+        - If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
+        and c is the parameter (default to 1).
+
+        - Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
+
+        - Other possibilities include UCB-H (the default, see :class:`SIC_MMAB`) and klUCB (see :class:`SIC_MMAB_klUCB`).
+        """
+        means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
+        upper_confidence_bound = self.klucb(means, self.c * np.log(self.t) / self.pulls[self.active_arms], self.tolerance)
+        upper_confidence_bound[self.pulls < 1] = float('+inf')
+        bias = upper_confidence_bound - means
+        lower_confidence_bound = means - bias
+        return upper_confidence_bound, lower_confidence_bound

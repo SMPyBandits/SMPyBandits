@@ -27,6 +27,8 @@ def weightedDistance(choices, weights, n=None):
     >>> weightedDistance(choices, weights)  # worst choice!  # doctest: +ELLIPSIS
     0.3333...
     """
+    if len(choices) == 0 or len(weights) == 0:
+        return 0
     choices = np.asarray(choices)
     weights = np.asarray(weights)
     if n is None:
@@ -55,6 +57,8 @@ def manhattan(permutation, comp=None):
     >>> manhattan(perm)
     0.72
     """
+    if len(permutation) == 0:
+        return 0
     if comp is None:
         comp = sorted(permutation)
     return 1 - (2 * sum(abs(comp[index] - element) for index, element in enumerate(permutation))) / (len(permutation) ** 2)
@@ -79,6 +83,8 @@ def kendalltau(permutation, comp=None):
     >>> kendalltau(perm)  # doctest: +ELLIPSIS
     0.984...
     """
+    if len(permutation) == 0:
+        return 0
     if comp is None:
         comp = sorted(permutation)
     res = 1 - scipy.stats.kendalltau(permutation, comp).pvalue
@@ -106,6 +112,8 @@ def spearmanr(permutation, comp=None):
     >>> spearmanr(perm)  # doctest: +ELLIPSIS
     0.986...
     """
+    if len(permutation) == 0:
+        return 0
     if comp is None:
         comp = sorted(permutation)
     res = 1 - scipy.stats.spearmanr(permutation, comp).pvalue
@@ -139,6 +147,8 @@ def gestalt(permutation, comp=None):
     >>> gestalt(ratings)  # doctest: +ELLIPSIS
     8e-05...
     """
+    if len(permutation) == 0:
+        return 0
     if comp is None:
         comp = sorted(permutation)
     return SequenceMatcher(None, permutation, comp).ratio()
