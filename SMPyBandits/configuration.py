@@ -78,11 +78,11 @@ RANDOM_SHUFFLE = getenv('RANDOM_SHUFFLE', str(RANDOM_SHUFFLE)) == 'True'
 RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
 # RANDOM_INVERT = True  #: The arms will be inverted (``arms = arms[::-1]``).
 RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
-NB_RANDOM_EVENTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-# NB_RANDOM_EVENTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-# NB_RANDOM_EVENTS = 10  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-NB_RANDOM_EVENTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-NB_RANDOM_EVENTS = int(getenv('NB_RANDOM_EVENTS', NB_RANDOM_EVENTS))
+NB_BREAK_POINTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+# NB_BREAK_POINTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+NB_BREAK_POINTS = 10  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+# NB_BREAK_POINTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
@@ -218,7 +218,7 @@ configuration = {
     # --- Random events
     "random_shuffle": RANDOM_SHUFFLE,
     "random_invert": RANDOM_INVERT,
-    "nb_random_events": NB_RANDOM_EVENTS,
+    "nb_break_points": NB_BREAK_POINTS,
     # --- Should we plot the lower-bounds or not?
     "plot_lowerbound": True,  # XXX Default
     # "plot_lowerbound": False,
@@ -364,18 +364,20 @@ if ENVIRONMENT_NONSTATIONARY:
             "params": {
                 "newMeans": randomMeans,
                 # FIXME try different changePoints VALUES
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-                "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int, endpoint=False),
+                # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
+                "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
+                # "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
                 "args": {
                     "nbArms": NB_ARMS,
-                    "mingap": None,
-                    "lower": LOWER,
-                    "amplitude": AMPLITUDE,
-                    "isSorted": False,
+                    "lower": LOWER, "amplitude": AMPLITUDE,
+                    "mingap": None, "isSorted": False,
                 },
-                # XXX None by default, but can be "uniform" to only change *one* arm at each change point.
+                # XXX onlyOneArm is None by default,
                 "onlyOneArm": None,
+                # XXX but onlyOneArm can be "uniform" to only change *one* arm at each change point,
                 # "onlyOneArm": "uniform",
+                # XXX onlyOneArm can also be an integer to only change n arms at each change point,
+                # "onlyOneArm": 3,
             }
         },
     ]
@@ -388,16 +390,13 @@ if ENVIRONMENT_NONSTATIONARY:
 #             "params": {
 #                 "newMeans": continuouslyVaryingMeans,
 #                 # FIXME try different changePoints VALUES
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
 #                 "args": {
-#                     "maxSlowChange": 0.1,
-#                     "sign": +1,
-#                     "nbArms": NB_ARMS,
-#                     "mingap": None,
-#                     "lower": LOWER,
-#                     "amplitude": AMPLITUDE,
-#                     "isSorted": False,
+#                    "nbArms": NB_ARMS,
+#                    "maxSlowChange": 0.1, "sign": +1,
+#                    "mingap": None, "isSorted": False,
+#                    "lower": LOWER, "amplitude": AMPLITUDE,
 #                 }
 #             }
 #         },
@@ -411,16 +410,13 @@ if ENVIRONMENT_NONSTATIONARY:
 #             "params": {
 #                 "newMeans": randomContinuouslyVaryingMeans,
 #                 # FIXME try different changePoints VALUES
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_RANDOM_EVENTS/HORIZON),
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_RANDOM_EVENTS, dtype=int),
+#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
 #                 "args": {
-#                     "maxSlowChange": 0.1,
-#                     "horizon": HORIZON,
 #                     "nbArms": NB_ARMS,
-#                     "mingap": None,
-#                     "lower": LOWER,
-#                     "amplitude": AMPLITUDE,
-#                     "isSorted": False,
+#                     "maxSlowChange": 0.1, "horizon": HORIZON,
+#                     "mingap": None, "isSorted": False,
+#                     "lower": LOWER, "amplitude": AMPLITUDE,
 #                 }
 #             }
 #         },
@@ -636,11 +632,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # # --- Exp3PlusPlus algorithm
-        # {
-        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-        #     "params": {}
-        # },
+        # --- Exp3PlusPlus algorithm
+        {
+            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+            "params": {}
+        },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -1552,85 +1548,55 @@ if TEST_SlidingWindow:
     ALPHAS = [1]
     TAUS   = [
             500, 1000, 2000,
-            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_RANDOM_EVENTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
+            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
     GAMMAS = [
             # 0.1, 0.3, 0.5, 0.7, 0.9,
             0.2, 0.4, 0.6, 0.8,
             0.95, 0.99,
-            max(min(1, (1 - np.sqrt((1 + NB_RANDOM_EVENTS) / HORIZON)) / 4.), 0),  # "optimal" value according to [Garivier & Moulines, 2008]
+            max(min(1, (1 - np.sqrt((1 + NB_BREAK_POINTS) / HORIZON)) / 4.), 0),  # "optimal" value according to [Garivier & Moulines, 2008]
         ]
 
     configuration.update({
         "policies":
-        # [
-        #     # --- # XXX experimental sliding window algorithm
-        #     {
-        #         "archtype": SlidingWindowRestart(Policy=UCBalpha, tau=tau, threshold=eps, full_restart_when_refresh=True),
-        #         "params": {
-        #             "alpha": alpha,
-        #         }
-        #     }
-        #     for tau in TAUS
-        #     for eps in EPSS
-        #     for alpha in ALPHAS
-        # # ] +
         [
-            # --- # XXX experimental other version of the sliding window algorithm
-            {
-                "archtype": SWUCB,
-                "params": {
-                    "alpha": alpha,
-                    "tau": tau,
-                }
-            }
-            for alpha in ALPHAS
-            for tau in TAUS
+            # --- # XXX experimental sliding window algorithm
+            { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
+            for tau in TAUS for eps in EPSS
+            for policy in [UCB, klUCB, Thompson, BESA, BayesUCB]
         ] +
+        # [
+        #     # --- # XXX experimental other version of the sliding window algorithm
+        #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+        #     for alpha in ALPHAS for tau in TAUS
+        # ] +
         [
             # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-            {
-                "archtype": SWUCBPlus,
-                "params": {
-                    "horizon": HORIZON,
-                    "alpha": alpha,
-                }
-            }
+            { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
             for alpha in ALPHAS
         ] +
-        [
-            # --- # XXX experimental discounted UCB algorithm
-            {
-                "archtype": DiscountedUCB,
-                "params": {
-                    "alpha": alpha,
-                    "gamma": gamma,
-                    "useRealDiscount": useRealDiscount,
-                }
-            }
-            for gamma in GAMMAS
-            for alpha in ALPHAS
-            for useRealDiscount in [True, False]
-        ] +
+        # [
+        #     # --- # XXX experimental discounted UCB algorithm
+        #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
+        #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
+        # ] +
         [
             # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-            {
-                "archtype": DiscountedUCBPlus,
-                "params": {
-                    "alpha": alpha,
-                    "horizon": HORIZON,
-                }
-            }
+            { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
             for alpha in ALPHAS
+            for max_nb_random_events in [10 * NB_BREAK_POINTS, 3 * NB_BREAK_POINTS, 2 * NB_BREAK_POINTS, NB_BREAK_POINTS, 2]
         ] +
         [
-            {
-                "archtype": UCBalpha,
-                "params": {
-                    "alpha": alpha,
-                }
-            }
+            { "archtype": UCBalpha, "params": { "alpha": alpha, } }
             for alpha in ALPHAS
+        ] + [
+            { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
+            { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+            { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+            { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            { "archtype": klUCB, "params": { "klucb": klucb, } },
+            { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
+            { "archtype": Thompson, "params": { "posterior": Beta, } },
         ]
     })
 

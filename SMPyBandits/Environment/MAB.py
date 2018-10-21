@@ -330,7 +330,7 @@ class MAB(object):
         plt.xlabel("Number $M$ of players in the multi-players game{}".format(signature))
         plt.ylabel("Lowerbound on the centralized cumulative normalized regret")
         plt.title("Comparison of our lowerbound and the one from [Anandkumar et al., 2010].\n{} arms: {}".format(self.nbArms, self.reprarms(0, latex=True)))
-        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=True)
+        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
         return fig
 
     def plotHistogram(self, horizon=10000, savefig=None):
@@ -352,7 +352,7 @@ class MAB(object):
         plt.xlabel("Rewards")
         plt.ylabel("Mass repartition of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: {}{}".format(horizon, self.nbArms, self.reprarms(latex=True), signature))
-        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=True)
+        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
         return fig
 
 
@@ -839,20 +839,26 @@ class NonStationaryMAB(MAB):
 
         .. warning:: TODO? So far the only change points we consider is when the means of arms change, but the family of distributions stay the same. I could implement a more generic way, for instance to be able to test algorithms that detect change between different families of distribution (e.g., from a Gaussian of variance=1 to a Gaussian of variance=2, with different or not means).
         """
-        if t > 0 and t not in self.changePoints:
-            # return self.means
-            return self._historyOfMeans[self._historyOfChangePoints[-1] ]
+        if ((t > 0 and t not in self.changePoints) or (t in self._historyOfChangePoints)):
+            # return the latest generate means
+            return self._historyOfMeans[self._historyOfChangePoints[-1]]
         self._historyOfChangePoints.append(t)
         one_draw_of_means = self.newMeans(**self.args)
         self._t += 1  # new draw!
-        # Handling the option to change only one arm
-        if onlyOneArm == "uniform":
-            onlyOneArm = np.random.randint(self.nbArms)
-        # If only one arm, and not the first random means, change only one
         if onlyOneArm is not None and len(self._historyOfMeans) > 0:
+            if onlyOneArm == "uniform":  # - Handling the option to change only one arm
+                onlyOneArm = np.random.randint(self.nbArms)
+            elif isinstance(onlyOneArm, int):  # - Or a set of arms
+                onlyOneArm = np.random.choice(self.nbArms, min(onlyOneArm, self.nbArms), False)
+            if np.ndim(onlyOneArm) == 0:
+                onlyOneArm = [onlyOneArm]
+            elif np.ndim(onlyOneArm) == 1 and np.size(onlyOneArm) == 1:
+                onlyOneArm = [onlyOneArm[0]]  # force to extract the list then wrap it back
+            # - If only one arm, and not the first random means, change only one
+            # print("onlyOneArm =", onlyOneArm)  # DEBUG
             for arm in range(self.nbArms):
-                if arm != onlyOneArm:
-                    one_draw_of_means[arm] = self._historyOfMeans[t-1][arm]
+                if arm not in onlyOneArm:
+                    one_draw_of_means[arm] = self._historyOfMeans[self._historyOfChangePoints[-2]][arm]
         self._historyOfMeans[t] = one_draw_of_means
         self._arms = [self.arm_type(mean) for mean in one_draw_of_means]
         self.nbArms = len(self._arms)  # useless

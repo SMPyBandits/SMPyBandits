@@ -52,7 +52,7 @@ plot_lowerbound = True  #: Default is to plot the lower-bound
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
-nb_random_events = 5  #: Default nb of random events
+nb_break_points = 5  #: Default nb of random events
 
 # Flag for experimental aspects
 STORE_ALL_REWARDS = True       #: Store all rewards?
@@ -86,7 +86,7 @@ class Evaluator(object):
         # Parameters for the random events
         self.random_shuffle = self.cfg.get('random_shuffle', random_shuffle)  #: Random shuffling of arms?
         self.random_invert = self.cfg.get('random_invert', random_invert)  #: Random inversion of arms?
-        self.nb_random_events = self.cfg.get('nb_random_events', nb_random_events)  #: How many random events?
+        self.nb_break_points = self.cfg.get('nb_break_points', nb_break_points)  #: How many random events?
         self.plot_lowerbound = self.cfg.get('plot_lowerbound', plot_lowerbound)  #: Should we plot the lower-bound?
         self.signature = signature
         # Flags
@@ -107,13 +107,13 @@ class Evaluator(object):
         self.__initEnvironments__()
 
         # Update signature for non stationary problems
-        if self.nb_random_events > 0:
+        if self.nb_break_points > 0:
             changePoints = getattr(self.envs[0], 'changePoints', [])
-            self.signature = (r", $\Upsilon_T={}$ random change points{}".format(self.nb_random_events - 1, " (${}$)".format(list(changePoints[1:])) if len(changePoints) > 1 else "") + self.signature)
+            self.signature = (r", $\Upsilon_T={}$ random change points{}".format(self.nb_break_points - 1, " (${}$)".format(list(changePoints[1:])) if len(changePoints) > 1 else "") + self.signature)
             if self.random_shuffle:
-                self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_random_events - 1)) + self.signature
+                self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_break_points - 1)) + self.signature
             elif self.random_invert:
-                self.signature = (r", $\Upsilon_T={}$ arms inversion".format(self.nb_random_events - 1)) + self.signature
+                self.signature = (r", $\Upsilon_T={}$ arms inversion".format(self.nb_break_points - 1)) + self.signature
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
@@ -247,14 +247,14 @@ class Evaluator(object):
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 repeatIdout = 0
                 for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
-                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId, useJoblib=self.useJoblib)
+                    delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_break_points=self.nb_break_points, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId, useJoblib=self.useJoblib)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
                     store(r, policyId, repeatIdout)
                     repeatIdout += 1
             else:
                 for repeatId in tqdm(range(self.repetitions), desc="Repeat"):
-                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_random_events=self.nb_random_events, allrewards=allrewards, repeatId=repeatId, useJoblib=self.useJoblib)
+                    r = delayed_play(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_break_points=self.nb_break_points, allrewards=allrewards, repeatId=repeatId, useJoblib=self.useJoblib)
                     store(r, policyId, repeatId)
 
     # --- Save to disk methods
@@ -271,7 +271,7 @@ class Evaluator(object):
         # 2. store main attributes and all other attributes, if they exist
         for name_of_attr in [
                 "horizon", "repetitions", "nbPolicies",
-                "delta_t_plot", "random_shuffle", "random_invert", "nb_random_events", "plot_lowerbound", "signature", "nb_random_events", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"
+                "delta_t_plot", "random_shuffle", "random_invert", "nb_break_points", "plot_lowerbound", "signature", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"
             ]:
             if not hasattr(self, name_of_attr): continue
             value = getattr(self, name_of_attr)
@@ -779,7 +779,7 @@ class Evaluator(object):
 # Helper function for the parallelization
 
 def delayed_play(env, policy, horizon,
-                    random_shuffle=random_shuffle, random_invert=random_invert, nb_random_events=nb_random_events,
+                    random_shuffle=random_shuffle, random_invert=random_invert, nb_break_points=nb_break_points,
                     seed=None, allrewards=None, repeatId=0,
                     useJoblib=False):
     """Helper function for the parallelization."""
@@ -790,14 +790,12 @@ def delayed_play(env, policy, horizon,
         random.seed(seed)
         np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
-    if random_shuffle or random_invert:
-        env = deepcopy(env)
+    env = deepcopy(env)
+    policy = deepcopy(policy)
     means = env.means
     if env.isChangingAtEachRepetition:
         means = env.newRandomArms()
-    policy = deepcopy(policy)
-
-    indexes_bestarm = np.nonzero(np.isclose(env.means, env.maxArm))[0]
+    indexes_bestarm = np.nonzero(np.isclose(means, max(means)))[0]
 
     # Start game
     policy.startGame()
@@ -805,30 +803,33 @@ def delayed_play(env, policy, horizon,
 
     # FIXME remove these two special cases when the NonStationaryMAB is ready!
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
-    t_events = [i * int(horizon / float(nb_random_events)) for i in range(nb_random_events)]
-    if nb_random_events is None or nb_random_events <= 0:
+    t_events = [i * int(horizon / float(nb_break_points)) for i in range(nb_break_points)]
+    if nb_break_points is None or nb_break_points <= 0:
         random_shuffle = False
         random_invert = False
 
     prettyRange = tqdm(range(horizon), desc="Time t") if repeatId == 0 else range(horizon)
     for t in prettyRange:
+        # 1. The player's policy choose an arm
         choice = policy.choice()
 
+        # 2. A random reward is drawn, from this arm at this time
         if allrewards is None:
             reward = env.draw(choice, t)
         else:
             reward = allrewards[choice, repeatId, t]
 
+        # 3. The policy sees the reward
         policy.getReward(choice, reward)
 
-        # Finally we store the results
+        # 4. Finally we store the results
         result.store(t, choice, reward)
 
         # FIXME add support for non stationary problems
         if env.isDynamic:
             if t in env.changePoints:
                 means = env.newRandomArms(t)
-                indexes_bestarm = np.nonzero(np.isclose(env.means, np.max(env.means)))[0]
+                indexes_bestarm = np.nonzero(np.isclose(means, np.max(means)))[0]
                 result.change_in_arms(t, indexes_bestarm)
 
         # FIXME remove these two special cases when the NonStationaryMAB is ready!

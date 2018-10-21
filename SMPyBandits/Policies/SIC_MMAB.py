@@ -110,7 +110,6 @@ class SIC_MMAB(BasePolicy):
 
         - Other possibilities include UCB (see :class:`SIC_MMAB_UCB`) and klUCB (see :class:`SIC_MMAB_klUCB`).
         """
-        # FIXME do this for any sigle player policy ??
         means = self.rewards[self.active_arms] / self.pulls[self.active_arms]
         bias = np.sqrt(self.alpha * np.log(self.horizon) / (2 * self.pulls[self.active_arms]))
         upper_confidence_bound = means + bias
