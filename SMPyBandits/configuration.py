@@ -1562,8 +1562,11 @@ if TEST_SlidingWindow:
         [
             # --- # XXX experimental sliding window algorithm
             { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-            for tau in TAUS for eps in EPSS
-            for policy in [UCB, klUCB, Thompson, BESA, BayesUCB]
+            # for tau in TAUS for eps in EPSS
+            # for tau in [TAUS[0]] for eps in EPSS
+            # for tau in TAUS for eps in [EPSS[0]]
+            for tau in [TAUS[0]] for eps in [EPSS[0]]
+            for policy in [UCB, klUCB, Thompson, BayesUCB]
         ] +
         # [
         #     # --- # XXX experimental other version of the sliding window algorithm

@@ -543,8 +543,8 @@ class MarkovianMAB(MAB):
 
 # --- ChangingAtEachRepMAB
 
+VERBOSE = True
 VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic MAB
-VERBOSE = True  #: FIXME remove this
 
 class ChangingAtEachRepMAB(MAB):
     """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the :meth:`newRandomArms` method.

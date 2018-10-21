@@ -36,10 +36,10 @@ __version__ = "0.9"
 
 import numpy as np
 try:
-    from .BasePolicy import BasePolicy
+    from .BaseWrapperPolicy import BaseWrapperPolicy
     from .UCBH import UCBH
 except ImportError:
-    from BasePolicy import BasePolicy
+    from BaseWrapperPolicy import BaseWrapperPolicy
     from UCBH import UCBH
 try:
     from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
@@ -551,7 +551,7 @@ def plot_quality_first_upper_bound(
 MAX_NB_OF_TRIALS = 500
 
 
-class DoublingTrickWrapper(BasePolicy):
+class DoublingTrickWrapper(BaseWrapperPolicy):
     r""" A policy that acts as a wrapper on another policy `P`, assumed to be *horizon dependent* (has to known :math:`T`), by implementing a "doubling trick".
 
     - Reference: [[What the Doubling Trick Can or Can't Do for Multi-Armed Bandits, Lilian Besson and Emilie Kaufmann, 2018]](https://hal.inria.fr/hal-01736357), to be presented soon.
@@ -564,16 +564,8 @@ class DoublingTrickWrapper(BasePolicy):
                  first_horizon=DEFAULT_FIRST_HORIZON,
                  lower=0., amplitude=1.,
                  *args, **kwargs):
-        super(DoublingTrickWrapper, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        super(DoublingTrickWrapper, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude)
         self.full_restart = full_restart  #: Constant to know how to refresh the underlying policy.
-        # --- Policy
-        self._policy = policy  # Class to create the underlying policy
-        self._args = args  # To keep them
-        if 'params' in kwargs:
-            kwargs.update(kwargs['params'])
-            del kwargs['params']
-        self._kwargs = kwargs  # To keep them
-        self.policy = None  #: Underlying policy
         # --- Horizon
         self._i = 0
         self._next_horizon = next_horizon  # Function for the growing horizon
@@ -596,7 +588,8 @@ class DoublingTrickWrapper(BasePolicy):
 
     def startGame(self):
         """ Initialize the policy for a new game."""
-        super(DoublingTrickWrapper, self).startGame()
+        super(BaseWrapperPolicy, self).startGame()
+        # super(DoublingTrickWrapper, self).startGame()  # WARNING no
         self._i = 0  # reinitialize this
         self.horizon = self._first_horizon  #: Last guess for the horizon
         try:
@@ -606,8 +599,6 @@ class DoublingTrickWrapper(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
-        self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
-        self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
 
     # --- Pass the call to the subpolicy
 
@@ -652,50 +643,6 @@ class DoublingTrickWrapper(BasePolicy):
                     # print("   ==> Just updating the horizon parameter of the underlying policy... Now it is = {} ...".format(self.policy))  # DEBUG
                 # else:
                 #     print("   ==> Nothing to do, as the underlying policy DOES NOT have a 'horizon' or '_horizon' parameter that could have been updated... Maybe you are not using a good policy? I suggest UCBH or ApproximatedFHGittins.")  # DEBUG
-
-    # --- Sub methods
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def index(self):
-        r""" Get attribute ``index`` from the underlying policy."""
-        return self.policy.index
-
-    def choice(self):
-        r""" Pass the call to ``choice`` of the underlying policy."""
-        return self.policy.choice()
-
-    def choiceWithRank(self, rank=1):
-        r""" Pass the call to ``choiceWithRank`` of the underlying policy."""
-        return self.policy.choiceWithRank(rank=rank)
-
-    def choiceFromSubSet(self, availableArms='all'):
-        r""" Pass the call to ``choiceFromSubSet`` of the underlying policy."""
-        return self.policy.choiceFromSubSet(availableArms=availableArms)
-
-    def choiceMultiple(self, nb=1):
-        r""" Pass the call to ``choiceMultiple`` of the underlying policy."""
-        return self.policy.choiceMultiple(nb=nb)
-
-    def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        r""" Pass the call to ``choiceIMP`` of the underlying policy."""
-        return self.policy.choiceIMP(nb=nb, startWithChoiceMultiple=startWithChoiceMultiple)
-
-    def estimatedOrder(self):
-        r""" Pass the call to ``estimatedOrder`` of the underlying policy."""
-        return self.policy.estimatedOrder()
-
-    def estimatedBestArms(self, M=1):
-        r""" Pass the call to ``estimatedBestArms`` of the underlying policy."""
-        return self.policy.estimatedBestArms(M=M)
-
-    def computeIndex(self, arm):
-        r""" Pass the call to ``computeIndex`` of the underlying policy."""
-        return self.policy.computeIndex(arm)
-
-    def computeAllIndex(self):
-        r""" Pass the call to ``computeAllIndex`` of the underlying policy."""
-        return self.policy.computeAllIndex()
 
 
 # # --- Debugging

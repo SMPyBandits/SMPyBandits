@@ -17,7 +17,7 @@
 """
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.9"
 
 from math import sqrt, log
 from enum import Enum  # For the different states
@@ -25,10 +25,10 @@ import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
 try:
-    from .BasePolicy import BasePolicy
+    from .BaseWrapperPolicy import BaseWrapperPolicy
     from .UCBalpha import UCBalpha
 except ImportError:
-    from BasePolicy import BasePolicy
+    from BaseWrapperPolicy import BaseWrapperPolicy
     from UCBalpha import UCBalpha
 
 #: Default horizon-dependent policy
@@ -62,20 +62,22 @@ ALPHA = 1
 # --- The interesting class
 
 
-class SparseWrapper(BasePolicy):
+class SparseWrapper(BaseWrapperPolicy):
     """ The SparseWrapper policy, designed to tackle sparse stochastic bandit problems.
 
     - By default, assume ``sparsity`` = ``nbArms``.
     """
 
-    def __init__(self, nbArms, sparsity=None,
-                 use_ucb_for_set_K=USE_UCB_FOR_SET_K,
-                 use_ucb_for_set_J=USE_UCB_FOR_SET_J,
-                 alpha=ALPHA,
-                 policy=default_index_policy,
-                 lower=0., amplitude=1.,
-                 *args, **kwargs):
-        super(SparseWrapper, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+    def __init__(self, nbArms,
+            sparsity=None,
+            use_ucb_for_set_K=USE_UCB_FOR_SET_K,
+            use_ucb_for_set_J=USE_UCB_FOR_SET_J,
+            alpha=ALPHA,
+            policy=default_index_policy,
+            lower=0., amplitude=1.,
+            *args, **kwargs
+        ):
+        super(SparseWrapper, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude)
         if sparsity is None or sparsity == nbArms:
             sparsity = nbArms
             print("Warning: regular klUCB should be used instead of SparseWrapper if 'sparsity' = 'nbArms' = {} ...".format(nbArms))  # DEBUG
@@ -85,14 +87,6 @@ class SparseWrapper(BasePolicy):
         self.use_ucb_for_set_J = use_ucb_for_set_J  #: Whether the usual UCB indexes are used for the set :math:`\mathcal{J}(t)`.
         self.alpha = alpha  #: Parameter :math:`\alpha` for the UCB indexes for the two sets, if not using the indexes of the underlying policy.
         self.phase = Phase.RoundRobin  #: Current phase of the algorithm.
-        # --- Policy
-        self._policy = policy  # Class to create the underlying policy
-        self._args = args  # To keep them
-        if 'params' in kwargs:
-            kwargs.update(kwargs['params'])
-            del kwargs['params']
-        self._kwargs = kwargs  # To keep them
-        self.policy = None  #: Underlying policy
         # --- internal memory
         self.force_to_see = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{J}(t)`.
         self.goods = np.full(nbArms, True)  #: Binary array for the set :math:`\mathcal{K}(t)`.
@@ -123,18 +117,6 @@ class SparseWrapper(BasePolicy):
         self.force_to_see.fill(True)  # faster than sets
         self.goods.fill(True)  # faster than sets
         self.offset = -1
-        # now for the underlying policy
-        self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
-        # now also start game for the underlying policy
-        self.policy.startGame()
-
-    # --- Pass the call to the subpolicy
-
-    def getReward(self, arm, reward):
-        """ Pass the reward, as usual, update t and sometimes restart the underlying policy."""
-        # print(" - At time t = {}, got a reward = {} from arm {} ...".format(self.t, arm, reward))  # DEBUG
-        super(SparseWrapper, self).getReward(arm, reward)
-        self.policy.getReward(arm, reward)
 
     # --- Update the two sets
 
@@ -232,43 +214,3 @@ class SparseWrapper(BasePolicy):
                     # if self.phase != Phase.UCB: print("{}: at time t = {}, the set of good arms was identified as {} for the first time...".format(self, self.t, np.nonzero(self.goods)[0]))  # DEBUG
                     self.phase = Phase.UCB
                     return self.choiceFromSubSet(availableArms=np.nonzero(self.goods)[0])
-
-    # --- Sub methods
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
-    @property
-    def index(self):
-        r""" Get attribute ``index`` from the underlying policy."""
-        return self.policy.index
-
-    def choiceWithRank(self, rank=1):
-        r""" Pass the call to ``choiceWithRank`` of the underlying policy."""
-        return self.policy.choiceWithRank(rank=rank)
-
-    def choiceFromSubSet(self, availableArms='all'):
-        r""" Pass the call to ``choiceFromSubSet`` of the underlying policy."""
-        return self.policy.choiceFromSubSet(availableArms=availableArms)
-
-    def choiceMultiple(self, nb=1):
-        r""" Pass the call to ``choiceMultiple`` of the underlying policy."""
-        return self.policy.choiceMultiple(nb=nb)
-
-    def choiceIMP(self, nb=1, startWithChoiceMultiple=True):
-        r""" Pass the call to ``choiceIMP`` of the underlying policy."""
-        return self.policy.choiceIMP(nb=nb, startWithChoiceMultiple=startWithChoiceMultiple)
-
-    def estimatedOrder(self):
-        r""" Pass the call to ``estimatedOrder`` of the underlying policy."""
-        return self.policy.estimatedOrder()
-
-    def estimatedBestArms(self, M=1):
-        r""" Pass the call to ``estimatedBestArms`` of the underlying policy."""
-        return self.policy.estimatedBestArms(M=M)
-
-    def computeIndex(self, arm):
-        r""" Pass the call to ``computeIndex`` of the underlying policy."""
-        return self.policy.computeIndex(arm)
-
-    def computeAllIndex(self):
-        r""" Pass the call to ``computeAllIndex`` of the underlying policy."""
-        return self.policy.computeAllIndex()
