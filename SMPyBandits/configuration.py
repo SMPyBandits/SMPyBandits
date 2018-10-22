@@ -1559,6 +1559,28 @@ if TEST_SlidingWindow:
 
     configuration.update({
         "policies":
+        # FIXME try LM_DSEE!
+        [
+            { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
+        ] +
+        # FIXME try CUSUM_IndexPolicy!
+        [
+            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
+        ] +
+        # FIXME try PHT_IndexPolicy!
+        [
+            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
+        ] +
+        # FIXME try Monitored_IndexPolicy!
+        [
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, } }
+        ] +
+        # FIXME try SW_UCB_Hash!
+        [
+            { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
+            for alpha in [0.5]  # ALPHAS
+            for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+        ] +
         # [
         #     # --- # XXX experimental sliding window algorithm
         #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
@@ -1588,24 +1610,6 @@ if TEST_SlidingWindow:
             { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
             for alpha in ALPHAS
             for max_nb_random_events in [10 * NB_BREAK_POINTS, 3 * NB_BREAK_POINTS, 2 * NB_BREAK_POINTS, NB_BREAK_POINTS, 2]
-        ] +
-        # FIXME try SW_UCB_Hash!
-        [
-            { "archtype": SW_UCB_Hash, "params": { "alpha": alpha, "lmbda": lmbda, } }
-            for alpha in [0.5]  # ALPHAS
-            for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
-        ] +
-        # FIXME try LM_DSEE!
-        [
-            { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
-        ] +
-        # FIXME try CUSUM_IndexPolicy!
-        [
-            { "archtype": CUSUM_IndexPolicy, "params": {  } }
-        ] +
-        # FIXME try PHT_IndexPolicy!
-        [
-            { "archtype": PHT_IndexPolicy, "params": {  } }
         ] +
         [
             { "archtype": UCBalpha, "params": { "alpha": 1, } },

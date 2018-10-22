@@ -7,9 +7,9 @@ r""" The CD-UCB generic policy and CUSUM-UCB and PHT-UCB policies for non-statio
     >>> policy = CUSUM_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
 
-- It uses an additional :math:`\mathcal{O}(\tau)` memory.
+- It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
-.. warning:: This is very experimental!
+.. warning:: This implementation is still experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -37,25 +37,26 @@ PROBA_RANDOM_EXPLORATION = 0.1
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test.
-EPSILON = 1e-3
+EPSILON = 0.1
 
 #: Default value of :math:`\lambda`.
 LAMBDA = 1
 
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
-MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 10
+MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 
 
 from scipy.special import comb
 
 def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M):
     r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""
+    # print("horizon = {}, max_nb_random_events = {}, nbArms = {}, epsilon = {}, lmbda = {}, M = {}".format(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M))  # DEBUG
     T = horizon
-    UpsilonT = max_nb_random_events
+    UpsilonT = max(1, max_nb_random_events)
     K = nbArms
     C2 = np.log(3) + 2 * np.exp(- 2 * epsilon**2 * M) / lmbda
-    C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
-    C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
+    C1_minus = np.log((4 * epsilon) / (1-epsilon)**2 * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
+    C1_plus = np.log((4 * epsilon) / (1+epsilon)**2 * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
@@ -81,13 +82,12 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         alpha = max(0, min(1, proba_random_exploration))  # crop to [0, 1]
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
-
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD({}, $\varepsilon={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.h, self.proba_random_exploration)
+        return r"CD({}, $\varepsilon={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.proba_random_exploration)
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -167,11 +167,15 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         ):
         super(CUSUM_IndexPolicy, self).__init__(nbArms, epsilon=epsilon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
+        self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
         h, alpha = compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms, epsilon, lmbda, min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
         alpha = max(0, min(1, alpha))  # crop to [0, 1]
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+
+    def __str__(self):
+        return r"CUSUM({}, $\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
         """ Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954]."""
@@ -191,6 +195,9 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
 class PHT_IndexPolicy(CUSUM_IndexPolicy):
     r""" The PHT-UCB generic policy for non-stationary bandits, from [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539).
     """
+
+    def __str__(self):
+        return r"PHT({}, $\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
         """ Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971]."""

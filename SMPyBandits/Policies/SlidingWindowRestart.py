@@ -98,6 +98,8 @@ class SlidingWindowRestart(BaseWrapperPolicy):
 
 class SWR_UCB(UCB):
     r""" An experimental policy, using a sliding window of for instance :math:`\tau=100` draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+
+    .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
     def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, lower=0., amplitude=1., *args, **kwargs):
@@ -144,6 +146,8 @@ class SWR_UCB(UCB):
 
 class SWR_UCBalpha(UCBalpha):
     r""" An experimental policy, using a sliding window of for instance :math:`\tau=100` draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+
+    .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
     def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, alpha=ALPHA, lower=0., amplitude=1., *args, **kwargs):
@@ -190,6 +194,8 @@ class SWR_UCBalpha(UCBalpha):
 
 class SWR_klUCB(klUCB):
     r""" An experimental policy, using a sliding window of for instance :math:`\tau=100` draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible).
+
+    .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
     def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1., *args, **kwargs):

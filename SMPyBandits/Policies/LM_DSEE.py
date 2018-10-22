@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 r""" The LM-DSEE policy for non-stationary bandits, from [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems", by Lai Wei, Vaibhav Srivastava, 2018, arXiv:1802.08380]](https://arxiv.org/pdf/1802.08380)
 
-.. warning:: This is very experimental! TODO finish!
+- It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
+
+.. warning:: This implementation is still experimental!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -29,11 +31,12 @@ class LM_DSEE(BasePolicy):
     """
 
     def __init__(self, nbArms,
-            nu=0.05, DeltaMin=0.1, a=1, b=2,
+            nu=0.05, DeltaMin=0.5, a=1, b=2,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(LM_DSEE, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
         # Parameters
+        self.a = a  #: Parameter :math:`a` for the LM-DSEE algorithm.
         self.b = b  #: Parameter :math:`b` for the LM-DSEE algorithm.
         assert 0 < DeltaMin < 1, "Error: for a LM_DSEE policy, the parameter 'DeltaMin' should be in (0,1) but was = {}".format(DeltaMin)  # DEBUG
         gamma = 2 / DeltaMin**2
@@ -92,20 +95,19 @@ class LM_DSEE(BasePolicy):
             self.all_rewards[arm].append(reward)
 
     def choice(self):
-        """ Chose an arm."""
-        print("For a {} policy: t = {}, current_exploration_arm = {}, current_exploitation_arm = {}, batch_number = {}, length_of_current_phase = {}, step_of_current_phase = {}".format(self, self.t, self.current_exploration_arm, self.current_exploitation_arm, self.batch_number, self.length_of_current_phase, self.step_of_current_phase))  # DEBUG
+        """ Chose an arm following the different phase of growing lenghts according to the LM-DSEE algorithm."""
+        # print("For a {} policy: t = {}, current_exploration_arm = {}, current_exploitation_arm = {}, batch_number = {}, length_of_current_phase = {}, step_of_current_phase = {}".format(self, self.t, self.current_exploration_arm, self.current_exploitation_arm, self.batch_number, self.length_of_current_phase, self.step_of_current_phase))  # DEBUG
         # 1) exploration
         if self.phase == State.Exploration:
+            # beginning of explore phase
+            if self.current_exploration_arm is None:
+                self.current_exploration_arm = 0
             # if length of current exploration phase not computed, do it
             if self.length_of_current_phase is None:
                 self.length_of_current_phase = self.length_exploration_phase()
             # if in a phase, do it
             if self.step_of_current_phase < self.length_of_current_phase:
-                # beginning of explore phase
-                if self.current_exploration_arm is None:
-                    self.current_exploration_arm = 0
                 self.step_of_current_phase += 1
-                return self.current_exploration_arm
             else:  # done for this arm
                 self.current_exploration_arm += 1  # go for next arm
                 # if done for all the arms, go to exploitation
@@ -114,6 +116,7 @@ class LM_DSEE(BasePolicy):
                     self.phase = State.Exploitation
                     self.step_of_current_phase = 0
                     self.current_exploration_arm = 0
+            return self.current_exploration_arm
         # ---
         # 2) exploitation
         # ---
@@ -121,6 +124,7 @@ class LM_DSEE(BasePolicy):
             if self.length_of_current_phase is None:
                 # start exploitation
                 self.length_of_current_phase = self.length_exploitation_phase()
+            if self.current_exploitation_arm is None:
                 # compute exploited arm
                 mean_rewards = [np.mean(rewards_of_arm_k) for rewards_of_arm_k in self.all_rewards]
                 j_epch_k = np.argmax(mean_rewards)
@@ -130,12 +134,12 @@ class LM_DSEE(BasePolicy):
             # if in a phase, do it
             if self.step_of_current_phase < self.length_of_current_phase:
                 self.step_of_current_phase += 1
-                return self.current_exploitation_arm
             # otherwise, reinitialize
             else:
                 self.phase = State.Exploration
                 self.length_of_current_phase = None  # flag to start the next one
                 self.batch_number += 1
+            return self.current_exploitation_arm
         else:
             raise ValueError("Error: LM_DSEE should only be in phase Exploration or Exploitation.")
 

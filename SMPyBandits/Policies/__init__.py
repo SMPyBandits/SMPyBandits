@@ -176,8 +176,7 @@ from .SlidingWindowUCB import SWUCB, SWUCBPlus
 from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
 from .LM_DSEE import LM_DSEE
-from .SW_UCB_Hash import SW_UCB_Hash  #, SWHash_IndexPolicy
-
+from .SWHash_UCB import SWHash_IndexPolicy
 from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy
 from .Monitored_UCB import Monitored_IndexPolicy
 

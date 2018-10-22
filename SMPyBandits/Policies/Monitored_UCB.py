@@ -7,9 +7,9 @@ r""" The Monitored-UCB generic policy for non-stationary bandits.
     >>> policy = Monitored_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
 
-- It uses an additional :math:`\mathcal{O}(\tau)` memory.
+- It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
-.. warning:: This is very experimental! FIXME finish the code!
+.. warning:: This implementation is still experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -30,19 +30,11 @@ except ImportError:
     from UCB import UCB as DefaultPolicy, UCB
 
 
-#: Default value for the parameter :math:`w`.
-DEFAULT_W = 1
-
-#: Default value for the parameter :math:`b`.
-DEFAULT_B = 1
-
-#: Default value for the parameter :math:`\gamma`.
-GAMMA = 1
+#: Default value for the parameter :math:`\delta`.
+DELTA = 0.1
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
-
-
 
 
 # --- The very generic class
@@ -52,17 +44,38 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
     """
     def __init__(self, nbArms,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
-            w=DEFAULT_W, b=DEFAULT_B, gamma=GAMMA,
+            horizon=None, delta=DELTA, max_nb_random_events=None,
+            w=None, b=None, gamma=None,
             policy=DefaultPolicy,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(Monitored_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        if max_nb_random_events is None or max_nb_random_events <= 1:
+            max_nb_random_events = 1
+
         # New parameters
+        if w is None or w == 'auto':
+            # XXX Estimate w from Remark 1
+            w = (4/delta**2) * (np.sqrt(np.log(2 * nbArms * horizon**2)) + np.sqrt(2 * horizon))**2
+            w = int(w)
+            if w % 2 != 0:
+                w = 2*(1 + w//2)
+        assert w > 0, "Error: for Monitored_UCB policy the parameter w should be > 0 but it was given as {}.".format(w)  # DEBUG
         self.w = w  #: Parameter :math:`w` for the M-UCB algorithm.
+
+        if b is None or b == 'auto':
+            # XXX compute b from the formula from Theorem 6.1
+            b = np.sqrt(np.ceil((w/2) * np.log(2 * nbArms * horizon**2)))
+        assert b > 0, "Error: for Monitored_UCB policy the parameter b should be > 0 but it was given as {}.".format(b)  # DEBUG
         self.b = b  #: Parameter :math:`b` for the M-UCB algorithm.
-        self.gamma = gamma  #: Parameter :math:`gamma` for the M-UCB algorithm.
-        alpha = max(0, min(1, proba_random_exploration))  # crop to [0, 1]
-        self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+
+        if gamma is None or gamma == 'auto':
+            M = max_nb_random_events
+            assert M >= 1, "Error: for Monitored_UCB policy the parameter M should be >= 1 but it was given as {}.".format(M)  # DEBUG
+            # XXX compute gamma from the formula from Theorem 6.1
+            gamma = np.sqrt((M-1) * nbArms * (2 * b + 3 * np.sqrt(w))/(2*horizon))
+        self.proba_random_exploration = gamma  #: What they call :math:`\gamma` in their paper: the probability of uniform exploration at each time.
+
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
 
         # Internal memory
@@ -70,7 +83,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD({}, $\varepsilon={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.h, self.proba_random_exploration)
+        return r"CD({}, $w={:.3g}$, $b={:.3g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.w, self.b, self.proba_random_exploration)
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -113,10 +126,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         - where b is the threshold of the test, and w is the window-size.
         """
         data_y = self.all_rewards[arm]
-        sum_first_half = np.sum(data_y[:self.w_size])
-        sum_second_half = np.sum(data_y[self.w_size:])
-        if abs(sum_first_half - sum_second_half) > self.threshold_b:
-            return True
-        return False
+        sum_first_half = np.sum(data_y[:self.w])
+        sum_second_half = np.sum(data_y[self.w:])
+        return abs(sum_first_half - sum_second_half) > self.b
 
 

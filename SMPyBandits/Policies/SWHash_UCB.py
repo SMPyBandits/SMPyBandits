@@ -8,7 +8,7 @@ r""" The SW-UCB# policy for non-stationary bandits, from [["On Abruptly-Changing
 
 - It uses an additional non-fixed :math:`\mathcal{O}(\tau(t,\alpha))` memory and an extra time complexity.
 
-.. warning:: This is very experimental! TODO finish!
+.. warning:: This implementation is still experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -64,7 +64,7 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
             *args, **kwargs
         ):
         alpha = 1 + alpha  #: The parameter :math:`\alpha` for the UCB indexes
-        super(SWHash_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, alpha=alpha, *args, **kwargs)
+        super(SWHash_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         self.alpha = alpha  #: The parameter :math:`\alpha` for the SW-UCB# algorithm (see article for reference).
         self.lmbda = lmbda  #: The parameter :math:`\lambda` for the SW-UCB# algorithm (see article for reference).
         # Internal memory
@@ -91,6 +91,7 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
         .. warning:: So far this is badly implemented and the algorithm is VERY slow: it has to store all the past, as the window-length is increasing when t increases.
         """
         self.t += 1
+        self.policy.t += 1
         # Get reward, normalize it
         reward = (reward - self.lower) / self.amplitude
         # We seen it one more time at this time step?
@@ -110,3 +111,4 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
             self.pulls[otherArm] = partial_pulls[otherArm]
             these_rewards = [partial_all_rewards[i] for i, p in enumerate(partial_all_pulls) if p == otherArm]
             self.rewards[otherArm] = np.mean(these_rewards)
+        # # print(" and self.pulls = {} and self.rewards = {}".format(self.pulls, self.rewards))  # DEBUG

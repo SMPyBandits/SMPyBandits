@@ -59,8 +59,7 @@ class IndexPolicy(BasePolicy):
         try:
             return np.random.choice(np.nonzero(self.index == np.max(self.index))[0])
         except ValueError:
-            if not np.all(np.isnan(self.index)):
-                raise ValueError("Error: unknown error in IndexPolicy.choice(): the indexes were {} but couldn't be used to select an arm.".format(self.index))
+            print("Warning: unknown error in IndexPolicy.choice(): the indexes were {} but couldn't be used to select an arm.".format(self.index))
             return np.random.randint(self.nbArms)
 
     # --- Others choice...() methods
