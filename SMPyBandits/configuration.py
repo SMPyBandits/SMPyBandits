@@ -1559,48 +1559,57 @@ if TEST_SlidingWindow:
 
     configuration.update({
         "policies":
-        [
-            # --- # XXX experimental sliding window algorithm
-            { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-            # for tau in TAUS for eps in EPSS
-            # for tau in [TAUS[0]] for eps in EPSS
-            # for tau in TAUS for eps in [EPSS[0]]
-            for tau in [TAUS[0]] for eps in [EPSS[0]]
-            for policy in [UCB, klUCB, Thompson, BayesUCB]
-        ] +
         # [
-        #     # --- # XXX experimental other version of the sliding window algorithm
-        #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-        #     for alpha in ALPHAS for tau in TAUS
+        #     # --- # XXX experimental sliding window algorithm
+        #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
+        #     # for tau in TAUS for eps in EPSS
+        #     # for tau in [TAUS[0]] for eps in EPSS
+        #     # for tau in TAUS for eps in [EPSS[0]]
+        #     for tau in [TAUS[0]] for eps in [EPSS[0]]
+        #     for policy in [UCB, klUCB, Thompson, BayesUCB]
         # ] +
+        [
+            # --- # XXX experimental other version of the sliding window algorithm
+            { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+            for alpha in ALPHAS for tau in TAUS
+        ] +
         [
             # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
             { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
             for alpha in ALPHAS
         ] +
-        # [
-        #     # --- # XXX experimental discounted UCB algorithm
-        #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
-        #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
-        # ] +
+        # # [
+        # #     # --- # XXX experimental discounted UCB algorithm
+        # #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
+        # #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
+        # # ] +
         [
             # --- # XXX experimental discounted UCB algorithm, knowing the horizon
             { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
             for alpha in ALPHAS
             for max_nb_random_events in [10 * NB_BREAK_POINTS, 3 * NB_BREAK_POINTS, 2 * NB_BREAK_POINTS, NB_BREAK_POINTS, 2]
         ] +
+        # FIXME try SW_UCB_Hash!
         [
-            { "archtype": UCBalpha, "params": { "alpha": alpha, } }
-            for alpha in ALPHAS
-        ] + [
+            { "archtype": SW_UCB_Hash, "params": { "alpha": alpha, "lmbda": lmbda, } }
+            for alpha in [0.5]  # ALPHAS
+            for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+        ] +
+        # FIXME try LM_DSEE!
+        [
+            { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
+        ] +
+        [
+            { "archtype": UCBalpha, "params": { "alpha": 1, } },
             { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
-            { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-            { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+            # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+            # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
-            { "archtype": Thompson, "params": { "posterior": Beta, } },
-        ]
+            # { "archtype": Thompson, "params": { "posterior": Beta, } },
+        ] +
+        []
     })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]

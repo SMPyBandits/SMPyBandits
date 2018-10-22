@@ -109,11 +109,12 @@ class Evaluator(object):
         # Update signature for non stationary problems
         if self.nb_break_points > 0:
             changePoints = getattr(self.envs[0], 'changePoints', [])
-            self.signature = (r", $\Upsilon_T={}$ random change points{}".format(self.nb_break_points - 1, " (${}$)".format(list(changePoints[1:])) if len(changePoints) > 1 else "") + self.signature)
             if self.random_shuffle:
                 self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_break_points - 1)) + self.signature
             elif self.random_invert:
                 self.signature = (r", $\Upsilon_T={}$ arms inversion".format(self.nb_break_points - 1)) + self.signature
+            else:
+                self.signature = (r", $\Upsilon_T={}$ random change point{}{}".format(self.nb_break_points - 1, "s" if self.nb_break_points > 2 else "", " (${}$)".format(list(changePoints[1:])) if len(changePoints) > 1 else "") + self.signature)
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
@@ -428,7 +429,7 @@ class Evaluator(object):
         """Extract rewards squared."""
         return self.rewardsSquared[policyId, envId, :] / float(self.repetitions)
 
-    def getSTDRegret(self, policyId, envId=0, meanRegret=False):
+    def getSTDRegret(self, policyId, envId=0, meanReward=False):
         """Extract standard deviation of rewards.
 
         .. warning:: FIXME experimental!
@@ -437,7 +438,7 @@ class Evaluator(object):
         # YMAX = self.getMaxRewards(envId=envId)
         # Y = self.getRewards(policyId, envId)
         # Y2 = self.getRewardsSquared(policyId, envId)
-        # if meanRegret:  # Cumulated expectation on time
+        # if meanReward:  # Cumulated expectation on time
         #     Ycum2 = (np.cumsum(Y) / X)**2
         #     Y2cum = np.cumsum(Y2) / X
         #     assert np.all(Y2cum >= Ycum2), "Error: getSTDRegret found a nan value in the standard deviation (ie a point where Y2cum < Ycum2)."  # DEBUG
@@ -479,7 +480,7 @@ class Evaluator(object):
     # --- Plotting methods
 
     def plotRegrets(self, envId,
-                    savefig=None, meanRegret=False,
+                    savefig=None, meanReward=False,
                     plotSTD=False, plotMaxMin=False,
                     semilogx=False, semilogy=False, loglog=False,
                     normalizedRegret=False, drawUpperBound=False,
@@ -496,7 +497,7 @@ class Evaluator(object):
         plot_method = plt.semilogy if semilogy else plot_method
         plot_method = plt.semilogx if semilogx else plot_method
         for i, policy in enumerate(self.policies):
-            if meanRegret:
+            if meanReward:
                 Y = self.getAverageRewards(i, envId)
             else:
                 Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
@@ -517,7 +518,7 @@ class Evaluator(object):
                 plt.yscale('log')
             # Print standard deviation of regret
             if plotSTD and self.repetitions > 1:
-                stdY = self.getSTDRegret(i, envId, meanRegret=meanRegret)
+                stdY = self.getSTDRegret(i, envId, meanReward=meanReward)
                 if normalizedRegret:
                     stdY /= np.log(2 + X)
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - stdY[::self.delta_t_plot], Y[::self.delta_t_plot] + stdY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
@@ -534,11 +535,11 @@ class Evaluator(object):
             print("\nThis MAB problem has: \n - a [Lai & Robbins] complexity constant C(mu) = {:.3g} for 1-player problem... \n - a Optimal Arm Identification factor H_OI(mu) = {:.2%} ...".format(lowerbound, self.envs[envId].hoifactor()))  # DEBUG
             if self.envs[envId]._sparsity is not None and not np.isnan(lowerbound_sparse):
                 print("\n- a [Kwon et al] sparse lower-bound with s = {} non-negative arm, C'(mu) = {:.3g}...".format(self.envs[envId]._sparsity, lowerbound_sparse))  # DEBUG
-        if not meanRegret:
+        if not meanReward:
             plt.ylim(ymin, plt.ylim()[1])
         # Get a small string to add to ylabel
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
-        if meanRegret:
+        if meanReward:
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()

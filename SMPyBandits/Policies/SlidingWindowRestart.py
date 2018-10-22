@@ -2,7 +2,7 @@
 r""" An experimental policy, using a sliding window (of for instance :math:`\tau=100` *draws* of each arm), and reset the algorithm as soon as the small empirical average is too far away from the long history empirical average (or just restart for one arm, if possible).
 
 - Reference: none yet, idea from Rémi Bonnefoi and Lilian Besson.
-- It runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`SlidingWindowRestart` is a function, transforming a base policy into a version implementing this "sliding window" trick:
+- It runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`SlidingWindowRestart` is a generic policy using any simple policy with this "sliding window" trick:
 
     >>> policy = SlidingWindowRestart(nbArms, UCB, tau=100, threshold=0.1)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)

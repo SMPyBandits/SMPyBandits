@@ -67,7 +67,7 @@ PLOT_DIR = getenv('PLOT_DIR', 'plots')  #: Directory for the plots
 semilogx = False  #: Plot in semilogx by default?
 semilogy = False  #: Plot in semilogy by default?
 loglog   = False  #: Plot in loglog   by default?
-meanRegret = True  #: Plot mean regret ?
+meanReward = True  #: Plot mean regret ?
 normalizedRegret = True  #: Plot instantaneous regret?
 
 plotSTD = True   #: Plot regret with a STD?
@@ -200,6 +200,14 @@ if __name__ == '__main__':
         else:
             evaluation.plotMemoryConsumption(envId)  # XXX To plot without saving
 
+        if meanReward:
+            if saveallfigs:
+                savefig = mainfig.replace('main', 'main_MeanRewards')
+                print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
+                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanReward=True)  # XXX To save the figure
+            else:
+                evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanReward=True)  # XXX To plot without saving
+
         # --- Also plotting the regret
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
@@ -232,14 +240,6 @@ if __name__ == '__main__':
                     evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotSTD=True)  # XXX To plot without saving
                 if plotMaxMin:
                     evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotMaxMin=True)  # XXX To plot without saving
-
-        if meanRegret:
-            if saveallfigs:
-                savefig = mainfig.replace('main', 'main_MeanRewards')
-                print(" - Plotting the mean rewards, and saving the plot to {} ...".format(savefig))
-                evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanRegret=True)  # XXX To save the figure
-            else:
-                evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, meanRegret=True)  # XXX To plot without saving
 
         if normalizedRegret:
             if saveallfigs:

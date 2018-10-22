@@ -157,7 +157,7 @@ class SparseWrapper(BaseWrapperPolicy):
 
            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
            U^{\mathcal{K}}_k(t) &= I_k^{P}(t) - \hat{\mu}_k(t),\\
-           \mathcal{J}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{K}}_k(t) - \hat{\mu}_k(t) \right\}.
+           \mathcal{K}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{K}}_k(t) - \hat{\mu}_k(t) \right\}.
 
         - If ``use_ucb_for_set_K`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
