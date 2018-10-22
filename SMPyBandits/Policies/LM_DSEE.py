@@ -18,9 +18,6 @@ except ImportError:
     from BasePolicy import BasePolicy
 
 
-#: Size of the sliding window.
-TAU = 100
-
 #: Different states during the Musical Chair algorithm
 State = Enum('State', ['Exploration', 'Exploitation'])
 

@@ -1599,6 +1599,14 @@ if TEST_SlidingWindow:
         [
             { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
         ] +
+        # FIXME try CUSUM_IndexPolicy!
+        [
+            { "archtype": CUSUM_IndexPolicy, "params": {  } }
+        ] +
+        # FIXME try PHT_IndexPolicy!
+        [
+            { "archtype": PHT_IndexPolicy, "params": {  } }
+        ] +
         [
             { "archtype": UCBalpha, "params": { "alpha": 1, } },
             { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },

@@ -178,10 +178,8 @@ from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 from .LM_DSEE import LM_DSEE
 from .SW_UCB_Hash import SW_UCB_Hash  #, SWHash_IndexPolicy
 
-# from .Monitored_UCB import Monitored_UCB, Monitored_IndexPolicy
-# from .CD_UCB import CD_UCB, CD_IndexPolicy
-# from .CD_UCB import CUSUM_UCB, CUSUM_IndexPolicy
-# from .CD_UCB import PHT_UCB, PHT_IndexPolicy
+from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy
+from .Monitored_UCB import Monitored_IndexPolicy
 
 from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints, Ti_geometric, Ti_exponential, Ti_intermediate_sqrti, Ti_intermediate_i13, Ti_intermediate_i23, Ti_intermediate_i12_logi12, Ti_intermediate_i_by_logi
 
