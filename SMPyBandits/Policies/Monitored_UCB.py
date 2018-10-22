@@ -31,7 +31,7 @@ except ImportError:
 
 
 #: Default value for the parameter :math:`\delta`.
-DELTA = 0.1
+DELTA = 0.5
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
@@ -74,6 +74,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             assert M >= 1, "Error: for Monitored_UCB policy the parameter M should be >= 1 but it was given as {}.".format(M)  # DEBUG
             # XXX compute gamma from the formula from Theorem 6.1
             gamma = np.sqrt((M-1) * nbArms * (2 * b + 3 * np.sqrt(w))/(2*horizon))
+        assert 0 <= gamma <= 1, "Error: for Monitored_UCB policy the parameter gamma should be 0 <= gamma <= 1, but it was given as {}.".format(gamma)  # DEBUG
+        if gamma > 1: print("Warning: for Monitored_UCB policy the parameter gamma should be < 1 but it was given as {}.".format(gamma))  # DEBUG
+        gamma = max(0, min(1, gamma))  # clip gamma to (0, 1) it's a probability!
         self.proba_random_exploration = gamma  #: What they call :math:`\gamma` in their paper: the probability of uniform exploration at each time.
 
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
@@ -83,7 +86,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD({}, $w={:.3g}$, $b={:.3g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.w, self.b, self.proba_random_exploration)
+        return r"Monitored({}, $w={:.3g}$, $b={:.3g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.w, self.b, self.proba_random_exploration)
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""

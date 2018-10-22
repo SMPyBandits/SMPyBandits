@@ -89,10 +89,8 @@ class LM_DSEE(BasePolicy):
     def getReward(self, arm, reward):
         """ Get a reward from an arm."""
         super(LM_DSEE, self).getReward(arm, reward)
-        # 1) exploration
-        if self.phase == State.Exploration:
-            reward = (reward - self.lower) / self.amplitude
-            self.all_rewards[arm].append(reward)
+        reward = (reward - self.lower) / self.amplitude
+        self.all_rewards[arm].append(reward)
 
     def choice(self):
         """ Chose an arm following the different phase of growing lenghts according to the LM-DSEE algorithm."""

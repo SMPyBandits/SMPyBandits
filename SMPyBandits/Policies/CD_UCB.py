@@ -43,7 +43,7 @@ EPSILON = 0.1
 LAMBDA = 1
 
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
-MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
+MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 10
 
 
 from scipy.special import comb
@@ -58,6 +58,7 @@ def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms,
     C1_minus = np.log((4 * epsilon) / (1-epsilon)**2 * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log((4 * epsilon) / (1+epsilon)**2 * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
+    if C1 == 0: C1 = 1
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
     return h, alpha
@@ -105,8 +106,6 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         reward = (reward - self.lower) / self.amplitude
         # We seen it one more time
         self.last_pulls[arm] += 1
-        # we update the total number of samples available to the underlying policy
-        self.policy.t = sum(self.last_pulls)
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
         if self.detect_change(arm):
@@ -118,8 +117,10 @@ class CD_IndexPolicy(BaseWrapperPolicy):
                 self.rewards[arm] = np.sum(self.all_rewards[arm])
                 self.pulls[arm] = len(self.all_rewards[arm])
             # reset current memory for THIS arm
-            self.last_pulls[arm] = 0
-            self.all_rewards[arm] = []
+            self.last_pulls[arm] = 1
+            self.all_rewards[arm] = [reward]
+        # we update the total number of samples available to the underlying policy
+        self.policy.t = sum(self.last_pulls)
 
     def detect_change(self, arm):
         """ Try to detect a change in the current arm.

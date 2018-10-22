@@ -72,7 +72,7 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
         self.all_pulls = []  #: Keep in memory all the pulls obtained in the all the past steps (the size of the window is evolving!). Start with -1 (never seen).
 
     def __str__(self):
-        return r"SW-UCB#($\lambda={:.3g}$, $\alpha={:.3g}$)".format(self.lmbda, self.alpha)
+        return r"SW-UCB#($\lambda={:.3g}$, $\alpha={:.3g}$)".format(self.lmbda, self.alpha - 1)
 
     @property
     def tau(self):
@@ -102,13 +102,12 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
         # print("For {} at time t = {}, current tau = {}, a reward = {} was seen from arm {}...".format(self, self.t, current_tau, reward, arm))  # DEBUG
         # it's highly innefficient but who cares
         partial_all_pulls = self.all_pulls[-current_tau:]
-        partial_pulls = np.bincount(partial_all_pulls, minlength=self.nbArms)
         partial_all_rewards = self.all_rewards[-current_tau:]
 
         # Compute fake pulls and fake average rewards
         for otherArm in range(self.nbArms):
             # Store it in place for the empirical average of that arm
-            self.pulls[otherArm] = partial_pulls[otherArm]
             these_rewards = [partial_all_rewards[i] for i, p in enumerate(partial_all_pulls) if p == otherArm]
-            self.rewards[otherArm] = np.mean(these_rewards)
+            self.rewards[otherArm] = np.sum(these_rewards)
+            self.pulls[otherArm] = len(these_rewards)
         # # print(" and self.pulls = {} and self.rewards = {}".format(self.pulls, self.rewards))  # DEBUG
