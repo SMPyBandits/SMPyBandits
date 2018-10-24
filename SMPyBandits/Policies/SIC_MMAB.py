@@ -183,7 +183,7 @@ class SIC_MMAB(BasePolicy):
         """
         # print("A SIC_MMAB player got a reward = {} on arm {} at time {}.".format(reward, arm, self.t))  # DEBUG
         self.last_action = arm
-        reward = (reward - self.lower) / self.amplitude  # DONE adapt to any [lower, lower + amplitude]
+        assert reward == 0 or reward == 1, "Error: SIC-MMAB works only for binary rewards!"  # DEBUG
 
         # 1) fixation phase
         if self.phase == State.Fixation:

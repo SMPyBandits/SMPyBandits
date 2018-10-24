@@ -37,7 +37,7 @@ PROBA_RANDOM_EXPLORATION = 0.1
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test.
-EPSILON = 0.1
+EPSILON = 0.5
 
 #: Default value of :math:`\lambda`.
 LAMBDA = 1
@@ -50,17 +50,18 @@ from scipy.special import comb
 
 def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M):
     r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""
-    # print("horizon = {}, max_nb_random_events = {}, nbArms = {}, epsilon = {}, lmbda = {}, M = {}".format(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M))  # DEBUG
-    T = horizon
-    UpsilonT = max(1, max_nb_random_events)
-    K = nbArms
+    T = int(max(1, horizon))
+    UpsilonT = int(max(1, max_nb_random_events))
+    K = int(max(1, nbArms))
+    print("compute_h_alpha_from_input_parameters() with:\nT = {}, UpsilonT = {}, K = {}, epsilon = {}, lmbda = {}, M = {}".format(T, UpsilonT, K, epsilon, lmbda, M))  # DEBUG
     C2 = np.log(3) + 2 * np.exp(- 2 * epsilon**2 * M) / lmbda
-    C1_minus = np.log((4 * epsilon) / (1-epsilon)**2 * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
-    C1_plus = np.log((4 * epsilon) / (1+epsilon)**2 * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
+    C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
+    C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
     if C1 == 0: C1 = 1
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
+    print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
 
 
@@ -109,6 +110,11 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
         if self.detect_change(arm):
+            print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
+            print("The current pulls vector is =", self.pulls)  # DEBUG
+            print("The current last pulls vector is =", self.last_pulls)  # DEBUG
+            print("The current rewards vector is =", self.rewards)  # DEBUG
+            print("The current sum/mean of all rewards for this arm is =", np.sum(self.all_rewards[arm]), np.mean(self.all_rewards[arm]))  # DEBUG
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
                 self.startGame(createNewPolicy=False)
@@ -120,7 +126,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
             self.last_pulls[arm] = 1
             self.all_rewards[arm] = [reward]
         # we update the total number of samples available to the underlying policy
-        self.policy.t = sum(self.last_pulls)
+        # self.policy.t = sum(self.last_pulls)  # FIXME try this back!
 
     def detect_change(self, arm):
         """ Try to detect a change in the current arm.
@@ -142,7 +148,7 @@ class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
         .. warning:: This one is simply using a sliding-window of fixed size = 100. A more generic implementation is the :class:`Policies.SlidingWindowRestart` class.
         """
         tau = self.M * self.nbArms
-        if self.last_pulls[arm] >= 100 and self.pulls[arm] >= 100:
+        if self.last_pulls[arm] >= tau and self.pulls[arm] >= tau:
             # Compute the empirical average for that arm
             empirical_average = self.rewards[arm] / self.pulls[arm]
             # And the small empirical average for that arm

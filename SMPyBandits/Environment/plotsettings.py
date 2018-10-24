@@ -69,10 +69,6 @@ if __name__ != '__main__':
 
     # Set up a discrete version of the Viridis map for axes.prop_cycle
 
-    # # Check that a XServer is available
-    # fig = plt.figure()
-    # fig.close()
-
 
 def palette(nb, hls=HLS, viridis=VIRIDIS):
     """ Use a smart palette from seaborn, for nb different plots on the same figure.
@@ -131,7 +127,7 @@ SHRINKFACTOR = 0.70
 MAXNBOFLABELINFIGURE = 7
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE):
+def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.
@@ -153,11 +149,11 @@ def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnbofla
             # XXX rect = [left, bottom, right, top] in normalized (0, 1) figure coordinates.
             fig.tight_layout(rect=[delta_rect, delta_rect, shrinkfactor, 1 - 2*delta_rect])
             # Put a legend to the right of the current axis
-            fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5))
+            fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5), title=title)
         except:
-            fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+            fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title)
     else:
-        fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8)
+        fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title)
 
 
 def maximizeWindow():
@@ -165,26 +161,22 @@ def maximizeWindow():
 
     - Tries as well as possible to maximize the figure.
     - Cf. https://stackoverflow.com/q/12439588/
+
+    .. warning:: This function is still experimental, but "it works on my machine" so I keep it.
     """
-    # print("Calling 'plt.tight_layout()' ...")  # DEBUG
     # plt.show()
     # plt.tight_layout()
-    # print("Calling 'figManager = plt.get_current_fig_manager()' ...")  # DEBUG
     figManager = plt.get_current_fig_manager()
     try:
-        # print("Calling 'figManager.window.showMaximized()' ...")  # DEBUG
         figManager.window.showMaximized()
     except Exception:
         try:
-            # print("Calling 'figManager.frame.Maximize(True)' ...")  # DEBUG
             figManager.frame.Maximize(True)
         except Exception:
             try:
-                # print("Calling 'figManager.window.state('zoomed')' ...")  # DEBUG
                 figManager.window.state('zoomed')  # works fine on Windows!
             except Exception:
                 try:
-                    # print("Calling 'figManager.full_screen_toggle()' ...")  # DEBUG
                     figManager.full_screen_toggle()
                 except Exception:
                     print("  Note: Unable to maximize window...")

@@ -31,7 +31,7 @@ class LM_DSEE(BasePolicy):
     """
 
     def __init__(self, nbArms,
-            nu=0.05, DeltaMin=0.5, a=1, b=2,
+            nu=0.5, DeltaMin=0.5, a=1, b=2,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(LM_DSEE, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
@@ -46,7 +46,6 @@ class LM_DSEE(BasePolicy):
         rho = (1 - nu) / (1 + nu)
         self.rho = rho  #: Parameter :math:`\rho` for the LM-DSEE algorithm.
         # Internal memory
-        self.t = 0  #: Internal timer
         self.phase = State.Exploration  #: Current phase, exploration or exploitation
         self.current_exploration_arm = None  #: Currently explored arm
         self.current_exploitation_arm = None  #: Currently exploited arm
@@ -61,7 +60,6 @@ class LM_DSEE(BasePolicy):
     def startGame(self):
         """ Start the game (fill pulls and rewards with 0)."""
         super(LM_DSEE, self).startGame()
-        self.t = 0
         self.current_exploration_arm = None
         self.current_exploitation_arm = None
         self.batch_number = 1
@@ -69,22 +67,30 @@ class LM_DSEE(BasePolicy):
         self.step_of_current_phase = 0
         self.all_rewards = [[] for _ in range(self.nbArms)]
 
-    def length_exploration_phase(self):
+    def length_exploration_phase(self, verbose=True):
         r""" Compute the value of the current exploration phase:
 
-        .. math:: L(k) = \lceil \gamma \log(k^{\rho} l b)\rceil.
-        """
-        value_Lk = self.gamma * np.log(self.batch_number**self.rho * self.l * self.b)
-        return int(np.ceil(value_Lk))
+        .. math:: L_1(k) = L(k) = \lceil \gamma \log(k^{\rho} l b)\rceil.
 
-    def length_exploitation_phase(self):
+        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`).
+        """
+        value_Lk = self.gamma * np.log((self.batch_number**self.rho) * self.l * self.b)
+        length = max(1, int(np.ceil(value_Lk)))
+        if verbose: print("Length of exploration phase: computed to be = {} for batch number = {}...".format(length, self.batch_number))  # DEBUG
+        return length
+
+    def length_exploitation_phase(self, verbose=True):
         r""" Compute the value of the current exploitation phase:
 
-        .. math:: \lceil a k^{\rho} l\rceil - K L(k).
+        .. math:: L_2(k) = \lceil a k^{\rho} l\rceil - K L_1(k).
+
+        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`).
         """
-        large_value = int(np.ceil(self.a * self.batch_number**self.rho * self.l))
-        Lk = self.length_exploration_phase()
-        return large_value - self.nbArms * Lk
+        large_value = int(np.ceil(self.a * (self.batch_number**self.rho) * self.l))
+        Lk = self.length_exploration_phase(verbose=False)
+        length = max(1, large_value - self.nbArms * Lk)
+        if verbose: print("Length of exploitation phase: computed to be = {} for batch number = {}...".format(length, self.batch_number))  # DEBUG
+        return length
 
     def getReward(self, arm, reward):
         """ Get a reward from an arm."""
@@ -97,7 +103,7 @@ class LM_DSEE(BasePolicy):
         # print("For a {} policy: t = {}, current_exploration_arm = {}, current_exploitation_arm = {}, batch_number = {}, length_of_current_phase = {}, step_of_current_phase = {}".format(self, self.t, self.current_exploration_arm, self.current_exploitation_arm, self.batch_number, self.length_of_current_phase, self.step_of_current_phase))  # DEBUG
         # 1) exploration
         if self.phase == State.Exploration:
-            # beginning of explore phase
+            # beginning of exploration phase
             if self.current_exploration_arm is None:
                 self.current_exploration_arm = 0
             # if length of current exploration phase not computed, do it
@@ -114,18 +120,20 @@ class LM_DSEE(BasePolicy):
                     self.phase = State.Exploitation
                     self.step_of_current_phase = 0
                     self.current_exploration_arm = 0
+                    # note that this last update might force to sample the arm 0 instead of arm K-1, once in a while...
             return self.current_exploration_arm
         # ---
         # 2) exploitation
         # ---
         elif self.phase == State.Exploitation:
+            # beginning of exploitation phase
             if self.length_of_current_phase is None:
-                # start exploitation
                 self.length_of_current_phase = self.length_exploitation_phase()
             if self.current_exploitation_arm is None:
                 # compute exploited arm
                 mean_rewards = [np.mean(rewards_of_arm_k) for rewards_of_arm_k in self.all_rewards]
                 j_epch_k = np.argmax(mean_rewards)
+                print("A {} player at time {} and batch number {} observed the mean rewards = {} and will play {} for this exploitation phase.".format(self, self.t, self.batch_number, mean_rewards, j_epch_k))  # DEBUG
                 self.current_exploitation_arm = j_epch_k
                 # erase current memory
                 self.all_rewards = [[] for _ in range(self.nbArms)]
@@ -136,6 +144,8 @@ class LM_DSEE(BasePolicy):
             else:
                 self.phase = State.Exploration
                 self.length_of_current_phase = None  # flag to start the next one
+                self.step_of_current_phase = 0
+                self.current_exploration_arm = 0
                 self.batch_number += 1
             return self.current_exploitation_arm
         else:

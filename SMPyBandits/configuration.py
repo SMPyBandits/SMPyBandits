@@ -344,10 +344,8 @@ if ENVIRONMENT_BAYESIAN:
                 "newMeans": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
-                    "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    # "mingap": 1. / (3 * NB_ARMS),
+                    # "mingap": None,
+                    "mingap": 0.1 if NB_ARMS <= 5 else 1. / (3 * NB_ARMS),
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
                     "isSorted": True,
@@ -1567,10 +1565,10 @@ if TEST_SlidingWindow:
         [
             { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
         ] +
-        # FIXME try PHT_IndexPolicy!
-        [
-            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
-        ] +
+        # # OK PHT_IndexPolicy is very much like CUSUM
+        # [
+        #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
+        # ] +
         # FIXME try Monitored_IndexPolicy!
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, } }

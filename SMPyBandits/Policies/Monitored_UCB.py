@@ -30,8 +30,10 @@ except ImportError:
     from UCB import UCB as DefaultPolicy, UCB
 
 
-#: Default value for the parameter :math:`\delta`.
-DELTA = 0.5
+#: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
+#: The default abruptly-changing non-stationary problem draws news means in :math:`[0,1]` so :math:`\delta=0` is the only possible (worst-case) lower-bound on amplitude of changes.
+#: I force ``0.1`` because I can force the minimum gap when calling :func:`Arms.randomMeans` to be ``0.1``.
+DELTA = 0.01
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
@@ -65,7 +67,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
 
         if b is None or b == 'auto':
             # XXX compute b from the formula from Theorem 6.1
-            b = np.sqrt(np.ceil((w/2) * np.log(2 * nbArms * horizon**2)))
+            b = np.sqrt((w/2) * np.log(2 * nbArms * horizon**2))
         assert b > 0, "Error: for Monitored_UCB policy the parameter b should be > 0 but it was given as {}.".format(b)  # DEBUG
         self.b = b  #: Parameter :math:`b` for the M-UCB algorithm.
 
@@ -73,9 +75,10 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             M = max_nb_random_events
             assert M >= 1, "Error: for Monitored_UCB policy the parameter M should be >= 1 but it was given as {}.".format(M)  # DEBUG
             # XXX compute gamma from the formula from Theorem 6.1
-            gamma = np.sqrt((M-1) * nbArms * (2 * b + 3 * np.sqrt(w))/(2*horizon))
+            gamma = np.sqrt((M-1) * nbArms * min(w/2, np.ceil(b / delta) +  3 * np.sqrt(w)) / (2 * horizon))
+        if gamma > 1:
+            gamma = 0.05 * nbArms
         assert 0 <= gamma <= 1, "Error: for Monitored_UCB policy the parameter gamma should be 0 <= gamma <= 1, but it was given as {}.".format(gamma)  # DEBUG
-        if gamma > 1: print("Warning: for Monitored_UCB policy the parameter gamma should be < 1 but it was given as {}.".format(gamma))  # DEBUG
         gamma = max(0, min(1, gamma))  # clip gamma to (0, 1) it's a probability!
         self.proba_random_exploration = gamma  #: What they call :math:`\gamma` in their paper: the probability of uniform exploration at each time.
 
