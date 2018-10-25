@@ -1607,17 +1607,17 @@ if TEST_SlidingWindow:
             # --- # XXX experimental discounted UCB algorithm, knowing the horizon
             { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
             for alpha in ALPHAS
-            for max_nb_random_events in list(set([10 * NB_BREAK_POINTS, 3 * NB_BREAK_POINTS, 2 * NB_BREAK_POINTS, NB_BREAK_POINTS, 2]))
+            for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
         ] +
         [
             { "archtype": UCBalpha, "params": { "alpha": 1, } },
             { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
             # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
             # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
-            { "archtype": Thompson, "params": { "posterior": Beta, } },
+            # { "archtype": Thompson, "params": { "posterior": Beta, } },
         ] +
         []
     })

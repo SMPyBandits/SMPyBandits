@@ -111,10 +111,10 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.all_rewards[arm].append(reward)
         if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
-            print("The current pulls vector is =", self.pulls)  # DEBUG
-            print("The current last pulls vector is =", self.last_pulls)  # DEBUG
-            print("The current rewards vector is =", self.rewards)  # DEBUG
-            print("The current sum/mean of all rewards for this arm is =", np.sum(self.all_rewards[arm]), np.mean(self.all_rewards[arm]))  # DEBUG
+            # print("The current pulls vector is =", self.pulls)  # DEBUG
+            # print("The current last pulls vector is =", self.last_pulls)  # DEBUG
+            # print("The current rewards vector is =", self.rewards)  # DEBUG
+            # print("The current sum/mean of all rewards for this arm is =", np.sum(self.all_rewards[arm]), np.mean(self.all_rewards[arm]))  # DEBUG
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
                 self.startGame(createNewPolicy=False)
