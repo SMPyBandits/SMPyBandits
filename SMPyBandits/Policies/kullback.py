@@ -356,9 +356,8 @@ def klGauss(x, y, sig2x=0.25, sig2y=None):
 # --- KL functions, for the KL-UCB policy
 
 @jit
-def klucb(x, d, kl,
-        upperbound, lowerbound=float('-inf'),
-        precision=1e-6, max_iterations=50
+def klucb(x, d, kl, upperbound,
+        precision=1e-6, lowerbound=float('-inf'), max_iterations=50,
     ):
     r""" The generic KL-UCB index computation.
 
@@ -367,7 +366,7 @@ def klucb(x, d, kl,
     - ``kl``: the KL divergence to be used (:func:`klBern`, :func:`klGauss`, etc),
     - ``upperbound``, ``lowerbound=float('-inf')``: the known bound of the values ``x``,
     - ``precision=1e-6``: the threshold from where to stop the research,
-    - ``max_iterations``: max number of iterations of the loop (safer to bound it to reduce time complexity).
+    - ``max_iterations=50``: max number of iterations of the loop (safer to bound it to reduce time complexity).
 
     .. math::
 
@@ -384,7 +383,7 @@ def klucb(x, d, kl,
     >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-3, max_iterations=10)  # doctest: +ELLIPSIS
     0.9941...
     >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-6, max_iterations=10)  # doctest: +ELLIPSIS
-    0.994482...  # doctest: +ELLIPSIS
+    0.9944...
     >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-3, max_iterations=50)  # doctest: +ELLIPSIS
     0.9941...
     >>> klucb(x, d, klBern, upperbound, lowerbound=0, precision=1e-6, max_iterations=100)  # more and more precise!  # doctest: +ELLIPSIS
@@ -397,12 +396,12 @@ def klucb(x, d, kl,
     _count_iteration = 0
     while _count_iteration < max_iterations and u - value > precision:
         _count_iteration += 1
-        m = (value + u) / 2.
+        m = (value + u) * 0.5
         if kl(x, m) > d:
             u = m
         else:
             value = m
-    return (value + u) / 2.
+    return (value + u) * 0.5
 
 
 @jit
@@ -552,7 +551,7 @@ def klucbExp(x, d, precision=1e-6):
         lowerbound = x * exp(d)
     else:
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
-    return klucb(x, d, klGamma, upperbound, lowerbound, precision)
+    return klucb(x, d, klGamma, upperbound, precision, lowerbound)
 
 
 # FIXME this one is wrong!
@@ -597,6 +596,251 @@ def klucbGamma(x, d, precision=1e-6):
         lowerbound = x / (1 + d - sqrt(d * d + 2 * d))
     # FIXME specify the value for a !
     return klucb(x, d, klGamma, max(upperbound, 1e2), min(-1e2, lowerbound), precision)
+
+
+# --- KL functions, for the KL Lower Confidence Bound
+
+@jit
+def kllcb(x, d, kl, lowerbound,
+        precision=1e-6, upperbound=float('+inf'), max_iterations=50,
+    ):
+    r""" The generic KL-LCB index computation.
+
+    - ``x``: value of the cum reward,
+    - ``d``: lower bound on the divergence,
+    - ``kl``: the KL divergence to be used (:func:`klBern`, :func:`klGauss`, etc),
+    - ``lowerbound``, ``upperbound=float('-inf')``: the known bound of the values ``x``,
+    - ``precision=1e-6``: the threshold from where to stop the research,
+    - ``max_iterations=50``: max number of iterations of the loop (safer to bound it to reduce time complexity).
+
+    .. math::
+
+        \mathrm{kllcb}(x, d) \simeq \inf_{\mathrm{lowerbound} \leq y \leq \mathrm{upperbound}} \{ y : \mathrm{kl}(x, y) > d \}.
+
+    .. note:: It uses a **bisection search**, and one call to ``kl`` for each step of the bisection search.
+
+    For example, for :func:`kllcbBern`, the two steps are to first compute an upperbound (as precise as possible) and the compute the kl-UCB index:
+
+    >>> x, d = 0.9, 0.2   # mean x, exploration term d
+    >>> lowerbound = max(0., kllcbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
+    >>> lowerbound  # doctest: +ELLIPSIS
+    0.5837...
+    >>> kllcb(x, d, klBern, lowerbound, upperbound=0, precision=1e-3, max_iterations=10)  # doctest: +ELLIPSIS
+    0.29...
+    >>> kllcb(x, d, klBern, lowerbound, upperbound=0, precision=1e-6, max_iterations=10)  # doctest: +ELLIPSIS
+    0.29188...
+    >>> kllcb(x, d, klBern, lowerbound, upperbound=0, precision=1e-3, max_iterations=50)  # doctest: +ELLIPSIS
+    0.291886...
+    >>> kllcb(x, d, klBern, lowerbound, upperbound=0, precision=1e-6, max_iterations=100)  # more and more precise!  # doctest: +ELLIPSIS
+    0.29188611...
+
+    .. note:: See below for more examples for different KL divergence functions.
+    """
+    value = min(x, upperbound)
+    l = lowerbound
+    _count_iteration = 0
+    while _count_iteration < max_iterations and value - l > precision:
+        _count_iteration += 1
+        m = (value + l) * 0.5
+        if kl(x, m) < d:
+            l = m
+        else:
+            value = m
+    return (value + l) * 0.5
+
+
+@jit
+def kllcbBern(x, d, precision=1e-6):
+    """ KL-LCB index computation for Bernoulli distributions, using :func:`kllcb`.
+
+    - Influence of x:
+
+    >>> kllcbBern(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.09999...
+    >>> kllcbBern(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.49999...
+    >>> kllcbBern(0.9, 0.2)  # doctest: +ELLIPSIS
+    0.89999...
+
+    - Influence of d:
+
+    >>> kllcbBern(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.09999...
+    >>> kllcbBern(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.09999...
+
+    >>> kllcbBern(0.5, 0.4)  # doctest: +ELLIPSIS
+    0.4999...
+    >>> kllcbBern(0.5, 0.9)  # doctest: +ELLIPSIS
+    0.4999...
+
+    >>> kllcbBern(0.9, 0.4)  # doctest: +ELLIPSIS
+    0.8999...
+    >>> kllcbBern(0.9, 0.9)  # doctest: +ELLIPSIS
+    0.8999...
+    """
+    lowerbound = max(0., kllcbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
+    # lowerbound = max(0., kllcbPoisson(x, d))  # also safe, and better ?
+    return kllcb(x, d, klBern, lowerbound, precision)
+
+
+@jit
+def kllcbGauss(x, d, sig2x=0.25, precision=0.):
+    """ KL-LCB index computation for Gaussian distributions.
+
+    - Note that it does not require any search.
+
+    .. warning:: it works only if the good variance constant is given.
+
+    - Influence of x:
+
+    >>> kllcbGauss(0.1, 0.2)  # doctest: +ELLIPSIS
+    -0.21622...
+    >>> kllcbGauss(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.18377...
+    >>> kllcbGauss(0.9, 0.2)  # doctest: +ELLIPSIS
+    0.58377...
+
+    - Influence of d:
+
+    >>> kllcbGauss(0.1, 0.4)  # doctest: +ELLIPSIS
+    -0.3472...
+    >>> kllcbGauss(0.1, 0.9)  # doctest: +ELLIPSIS
+    -0.5708...
+
+    >>> kllcbGauss(0.5, 0.4)  # doctest: +ELLIPSIS
+    0.0527...
+    >>> kllcbGauss(0.5, 0.9)  # doctest: +ELLIPSIS
+    -0.1708...
+
+    >>> kllcbGauss(0.9, 0.4)  # doctest: +ELLIPSIS
+    0.4527...
+    >>> kllcbGauss(0.9, 0.9)  # doctest: +ELLIPSIS
+    0.2291...
+
+    .. warning:: Using :class:`Policies.kllCB` (and variants) with :func:`kllcbGauss` is equivalent to use :class:`Policies.UCB`, so prefer the simpler version.
+    """
+    return x - sqrt(abs(2 * sig2x * d))
+
+
+@jit
+def kllcbPoisson(x, d, precision=1e-6):
+    """ KL-LCB index computation for Poisson distributions, using :func:`kllcb`.
+
+    - Influence of x:
+
+    >>> kllcbPoisson(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.09999...
+    >>> kllcbPoisson(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.49999...
+    >>> kllcbPoisson(0.9, 0.2)  # doctest: +ELLIPSIS
+    0.89999...
+
+    - Influence of d:
+
+    >>> kllcbPoisson(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.09999...
+    >>> kllcbPoisson(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.09999...
+
+    >>> kllcbPoisson(0.5, 0.4)  # doctest: +ELLIPSIS
+    0.49999...
+    >>> kllcbPoisson(0.5, 0.9)  # doctest: +ELLIPSIS
+    0.49999...
+
+    >>> kllcbPoisson(0.9, 0.4)  # doctest: +ELLIPSIS
+    0.89999...
+    >>> kllcbPoisson(0.9, 0.9)  # doctest: +ELLIPSIS
+    0.89999...
+    """
+    lowerbound = x + d - sqrt(d * d + 2 * x * d)  # looks safe, to check: left (Gaussian) tail of Poisson dev
+    return kllcb(x, d, klPoisson, lowerbound, precision)
+
+
+@jit
+def kllcbExp(x, d, precision=1e-6):
+    """ KL-LCB index computation for exponential distributions, using :func:`kllcb`.
+
+    - Influence of x:
+
+    >>> kllcbExp(0.1, 0.2)  # doctest: +ELLIPSIS
+    0.15267...
+    >>> kllcbExp(0.5, 0.2)  # doctest: +ELLIPSIS
+    0.7633...
+    >>> kllcbExp(0.9, 0.2)  # doctest: +ELLIPSIS
+    1.3740...
+
+    - Influence of d:
+
+    >>> kllcbExp(0.1, 0.4)  # doctest: +ELLIPSIS
+    0.2000...
+    >>> kllcbExp(0.1, 0.9)  # doctest: +ELLIPSIS
+    0.3842...
+
+    >>> kllcbExp(0.5, 0.4)  # doctest: +ELLIPSIS
+    1.0000...
+    >>> kllcbExp(0.5, 0.9)  # doctest: +ELLIPSIS
+    1.9214...
+
+    >>> kllcbExp(0.9, 0.4)  # doctest: +ELLIPSIS
+    1.8000...
+    >>> kllcbExp(0.9, 0.9)  # doctest: +ELLIPSIS
+    3.4586...
+    """
+    if d < 0.77:  # XXX where does this value come from?
+        lowerbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
+        # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
+    else:
+        lowerbound = x * exp(d + 1)
+    if d > 1.61:  # XXX where does this value come from?
+        upperbound = x * exp(d)
+    else:
+        upperbound = x / (1 + d - sqrt(d * d + 2 * d))
+    return kllcb(x, d, klGamma, lowerbound, precision, upperbound)
+
+
+# # FIXME this one is wrong!
+# @jit
+# def kllcbGamma(x, d, precision=1e-6):
+#     """ KL-LCB index computation for Gamma distributions, using :func:`kllcb`.
+
+#     - Influence of x:
+
+#     >>> kllcbGamma(0.1, 0.2)  # doctest: +ELLIPSIS
+#     0.202...
+#     >>> kllcbGamma(0.5, 0.2)  # doctest: +ELLIPSIS
+#     1.013...
+#     >>> kllcbGamma(0.9, 0.2)  # doctest: +ELLIPSIS
+#     1.824...
+
+#     - Influence of d:
+
+#     >>> kllcbGamma(0.1, 0.4)  # doctest: +ELLIPSIS
+#     0.285...
+#     >>> kllcbGamma(0.1, 0.9)  # doctest: +ELLIPSIS
+#     0.559...
+
+#     >>> kllcbGamma(0.5, 0.4)  # doctest: +ELLIPSIS
+#     1.428...
+#     >>> kllcbGamma(0.5, 0.9)  # doctest: +ELLIPSIS
+#     2.795...
+
+#     >>> kllcbGamma(0.9, 0.4)  # doctest: +ELLIPSIS
+#     2.572...
+#     >>> kllcbGamma(0.9, 0.9)  # doctest: +ELLIPSIS
+#     5.031...
+#     """
+#     if d < 0.77:  # XXX where does this value come from?
+#         lowerbound = x / (1 + 2. / 3 * d - sqrt(4. / 9 * d * d + 2 * d))
+#         # safe, klexp(x,y) >= e^2/(2*(1-2e/3)) if x=y(1-e)
+#     else:
+#         lowerbound = x * exp(d + 1)
+#     if d > 1.61:  # XXX where does this value come from?
+#         upperbound = x * exp(d)
+#     else:
+#         upperbound = x / (1 + d - sqrt(d * d + 2 * d))
+#     # FIXME specify the value for a !
+#     return kllcb(x, d, klGamma, min(lowerbound, -1e2), precision, max(1e2, upperbound))
 
 
 # --- max EV functions
