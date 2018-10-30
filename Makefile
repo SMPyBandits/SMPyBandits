@@ -14,6 +14,9 @@ SHELL := /bin/bash -o pipefail
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+example:
+	make clean ; clear ; cd ./SMPyBandits/ ; time python3 example_of_main_multiplayers_more.py
+
 single:
 	make clean ; clear ; make singleplayer3
 multi:

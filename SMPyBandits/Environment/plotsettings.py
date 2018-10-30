@@ -38,6 +38,8 @@ else:
 
 DPI = 120  #: DPI to use for the figures
 FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
+FIGSIZE = (16, 9)  #: Figure size, in inches!
+FIGSIZE = (12.4, 7)  #: Figure size, in inches!
 
 # Customize the colormap
 HLS = True  #: Use the HLS mapping, or HUSL mapping
@@ -49,7 +51,7 @@ BBOX_INCHES = None
 
 if __name__ != '__main__':
     # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=1.1)
+    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.95)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX

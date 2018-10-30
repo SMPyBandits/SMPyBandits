@@ -621,9 +621,9 @@ class EvaluatorMultiPlayers(object):
                     X = X[X >= 1]
                     T = np.log(X)
                 if self.plot_lowerbounds:
-                    plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann lower-bound = ${:.3g} \; \log(t)$".format(lowerbound), lw=3)
-                    plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar et al.'s lower-bound = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=2)
-                    plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized lower-bound = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=2)
+                    plot_method(X[::self.delta_t_plot], lowerbound * T[::self.delta_t_plot], 'k-', label="Besson & Kaufmann L-B = ${:.3g} \; \log(t)$".format(lowerbound), lw=3)
+                    plot_method(X[::self.delta_t_plot], anandkumar_lowerbound * T[::self.delta_t_plot], 'k--', label="Anandkumar L-B = ${:.3g} \; \log(t)$".format(anandkumar_lowerbound), lw=2)
+                    plot_method(X[::self.delta_t_plot], centralized_lowerbound * T[::self.delta_t_plot], 'k:', label="Centralized L-B = ${:.3g} \; \log(t)$".format(centralized_lowerbound), lw=2)
             except AssertionError:
                 print("Error: Unable to compute and display the lower-bound...")  # DEBUG
         # Labels and legends
