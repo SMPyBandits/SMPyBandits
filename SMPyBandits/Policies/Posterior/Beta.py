@@ -12,7 +12,7 @@ When reward :math:`r_t \in [0, 1]` is observed, the player receives the result o
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Olivier Cappé, Aurélien Garivier, Emilie Kaufmann, Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 from random import random
 try:
@@ -73,6 +73,8 @@ def bernoulliBinarization(r_t):
         return int(with_proba(r_t))
 
 
+# --- Class
+
 class Beta(Posterior):
     """ Manipulate posteriors of Bernoulli/Beta experiments."""
 
@@ -85,7 +87,7 @@ class Beta(Posterior):
         self.N = [a, b]  #: List of two parameters [a, b]
 
     def __str__(self):
-        return "Beta({}, {})".format(self.N[1], self.N[0])
+        return r"Beta(\alpha={:.3g}, \beta={:.3g})".format(self.N[1], self.N[0])
 
     def reset(self, a=None, b=None):
         """Reset alpha and beta, both to 1 as when creating a new default Beta."""
@@ -121,7 +123,13 @@ class Beta(Posterior):
         self.N[bernoulliBinarization(obs)] -= 1
 
     def update(self, obs):
-        """Add an observation. If obs is 1, update alpha, if it is 0, update beta, otherwise, a trick with :func:`bernoulliBinarization` has to be used."""
+        r"""Add an observation.
+
+        - If obs is 1, update :math:`\alpha` the count of positive observations,
+        - If it is 0, update :math:`\beta` the count of negative observations.
+
+        .. note:: Otherwise, a trick with :func:`bernoulliBinarization` has to be used.
+        """
         # print("Info: calling Beta.update() with obs = {} ...".format(obs))  # DEBUG
         # FIXED update this code, to accept obs that are FLOAT in [0, 1] and not just in {0, 1}...
         self.N[bernoulliBinarization(obs)] += 1
