@@ -4,7 +4,7 @@
 - By default, it uses a DiscountedBeta posterior (:class:`Policies.Posterior.DiscountedBeta`), one by arm.
 - Use discount factor :math:`\gamma\in(0,1)`.
 
-.. warning:: This is still highly experimental! FIXME test this policy!
+.. warning:: This is still highly experimental!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

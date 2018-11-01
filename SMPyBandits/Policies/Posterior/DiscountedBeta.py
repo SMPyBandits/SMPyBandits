@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-r""" Manipulate posteriors of Bernoulli/Beta experiments., for discounted Bayesian policies (:class:`Policies.DiscountedBayesianIndexPolicy`)
-
-.. warning:: This is still highly experimental! FIXME test this!
+r""" Manipulate posteriors of Bernoulli/Beta experiments., for discounted Bayesian policies (:class:`Policies.DiscountedBayesianIndexPolicy`).
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
