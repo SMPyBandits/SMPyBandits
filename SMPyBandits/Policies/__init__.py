@@ -13,7 +13,7 @@
 
 - Index based MOSS algorithms: :class:`MOSS`, :class:`MOSSH`, :class:`MOSSAnytime`, :class:`MOSSExperimental`,
 
-- Bayesian algorithms: :class:`Thompson`, :class:`BayesUCB`,
+- Bayesian algorithms: :class:`Thompson`, :class:`BayesUCB`, and :class:`DiscountedThompson`,
 
 - Based on Kullback-Leibler divergence: :class:`klUCB`, :class:`klUCBloglog`, :class:`klUCBPlus`, :class:`klUCBH`, :class:`klUCBHPlus`, :class:`klUCBPlusPlus`, :class:`klUCBswitch`,
 
@@ -31,6 +31,9 @@
 
 - Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
+- Other policies for the non-stationary problems:
+:class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`.
+
 - A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`, and :class:`SparseWrapper` that can be used with *any* index policy.
 
 - A policy that implements a "smart doubling trick" to turn any horizon-dependent policy into a horizon-independent policy without loosing in performances: :class:`DoublingTrickWrapper`,
@@ -45,6 +48,10 @@
 
 
 - Some are designed only for (fully decentralized) multi-player games: :class:`MusicalChair`, :class:`MEGA`, :class:`TrekkingTSN`, :class:`MusicalChairNoSensing`, :class:`SIC_MMAB`...
+
+.. note::
+
+    The list above might not be complete, see the details below.
 
 
 All policies have the same interface, as described in :class:`BasePolicy`,
@@ -65,7 +72,7 @@ __version__ = "0.9"
 from .BasePolicy import BasePolicy
 from .BaseWrapperPolicy import BaseWrapperPolicy
 
-from .Posterior import Beta, Gamma, Gauss
+from .Posterior import Beta, Gamma, Gauss, DiscountedBeta
 
 # --- Mine, uniform ones or fixed arm / fixed subset ones
 from .Uniform import Uniform
@@ -120,6 +127,7 @@ from .MOSSExperimental import MOSSExperimental  # Without knowing the horizon, e
 
 # --- Thompson sampling index policy
 from .Thompson import Thompson
+from .DiscountedThompson import DiscountedThompson
 
 # --- Bayesian index policy
 from .BayesUCB import BayesUCB

@@ -1617,7 +1617,10 @@ if TEST_SlidingWindow:
             # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
-            # { "archtype": Thompson, "params": { "posterior": Beta, } },
+            { "archtype": Thompson, "params": { "posterior": Beta, } },
+        ] + [  # This is still highly experimental! FIXME test this policy!
+            { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
+            for gamma in GAMMAS
         ] +
         []
     })
