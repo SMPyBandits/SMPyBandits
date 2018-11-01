@@ -9,7 +9,7 @@ Welcome to SMPyBandits documentation!
 **Open-Source Python package for Single- and Multi-Players multi-armed Bandits algorithms**.
 
 A research framework for Single and Multi-Players Multi-Arms Bandits (MAB) Algorithms: UCB, KL-UCB, Thompson and many more for single-players, and MCTopM & RandTopM, MusicalChair, ALOHA, MEGA, rhoRand for multi-players simulations.
-Runs on Python 2 and 3, open-source under the `MIT License <https://lbeson.mit-license.org/>`_.
+It runs on Python 2 and 3, and is publically released as an open-source software under the `MIT License <https://lbeson.mit-license.org/>`_.
 
 .. note::
 
@@ -91,23 +91,14 @@ Indices and tables
 * :ref:`attrindex`,
 * :ref:`search`.
 
-|Stars of https://github.com/SMPyBandits/SMPyBandits/| |Contributors of
-https://github.com/SMPyBandits/SMPyBandits/| |Watchers of
-https://github.com/SMPyBandits/SMPyBandits/| |Forks of
-https://github.com/SMPyBandits/SMPyBandits/|
+|Stars of https://github.com/SMPyBandits/SMPyBandits/| |Contributors of https://github.com/SMPyBandits/SMPyBandits/| |Watchers of https://github.com/SMPyBandits/SMPyBandits/| |Forks of https://github.com/SMPyBandits/SMPyBandits/|
 
 |Releases of https://github.com/SMPyBandits/SMPyBandits/|
-|Commits of https://github.com/SMPyBandits/SMPyBandits/| / |Date of last
-commit of https://github.com/SMPyBandits/SMPyBandits/|
+|Commits of https://github.com/SMPyBandits/SMPyBandits/| / |Date of last commit of https://github.com/SMPyBandits/SMPyBandits/|
 
-|Issues of https://github.com/SMPyBandits/SMPyBandits/| : |Open issues
-of https://github.com/SMPyBandits/SMPyBandits/| / |Closed issues of
-https://github.com/SMPyBandits/SMPyBandits/|
+|Issues of https://github.com/SMPyBandits/SMPyBandits/| : |Open issues of https://github.com/SMPyBandits/SMPyBandits/| / |Closed issues of https://github.com/SMPyBandits/SMPyBandits/|
 
-|Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/|
-: |Pull requests of Issues of
-https://github.com/SMPyBandits/SMPyBandits/| / |Pull requests of Issues
-of https://github.com/SMPyBandits/SMPyBandits/|
+|Pull requests of https://github.com/SMPyBandits/SMPyBandits/| : |Open pull requests of https://github.com/SMPyBandits/SMPyBandits/| / |Closed pull requests of https://github.com/SMPyBandits/SMPyBandits/|
 |made-with-latex| |made-with-sphinx|
 
 |ForTheBadge uses-badges| |ForTheBadge uses-git|
@@ -123,8 +114,11 @@ of https://github.com/SMPyBandits/SMPyBandits/|
 .. |Analytics| image:: https://ga-beacon.appspot.com/UA-38514290-17/github.com/SMPyBandits/SMPyBandits/README.md?pixel
     :target: https://GitHub.com/SMPyBandits/SMPyBandits/
 .. |PyPI version| image:: https://img.shields.io/pypi/v/smpybandits.svg
+    :target: https://PyPI.org/project/SMPyBandits/
 .. |PyPI implementation| image:: https://img.shields.io/pypi/implementation/smpybandits.svg
+    :target: https://PyPI.org/project/SMPyBandits/
 .. |PyPI pyversions| image:: https://img.shields.io/pypi/pyversions/smpybandits.svg
+    :target: https://PyPI.org/project/SMPyBandits/
 .. |Documentation Status| image:: https://readthedocs.org/projects/smpybandits/badge/?version=latest
     :target: https://SMPyBandits.ReadTheDocs.io/en/latest/?badge=latest
 .. |Build Status| image:: https://travis-ci.org/SMPyBandits/SMPyBandits.svg?branch=master
@@ -165,10 +159,9 @@ of https://github.com/SMPyBandits/SMPyBandits/|
     :target: https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aopen+is%3Aissue
 .. |Closed issues of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/closed-issues/SMPyBandits/SMPyBandits
     :target: https://github.com/SMPyBandits/SMPyBandits/issues?q=is%3Aclosed+is%3Aissue
-.. |Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/prs/SMPyBandits/SMPyBandits
+.. |Pull requests of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/prs/SMPyBandits/SMPyBandits
     :target: https://GitHub.com/SMPyBandits/SMPyBandits/pulls
-.. |Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/open-prs/SMPyBandits/SMPyBandits
+.. |Open pull requests of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/open-prs/SMPyBandits/SMPyBandits
     :target: https://GitHub.com/SMPyBandits/SMPyBandits/issues?q=is%3Aopen+is%3Apr
-.. |Pull requests of Issues of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/closed-prs/SMPyBandits/SMPyBandits
+.. |Closed pull requests of https://github.com/SMPyBandits/SMPyBandits/| image:: https://badgen.net/github/closed-prs/SMPyBandits/SMPyBandits
     :target: https://GitHub.com/SMPyBandits/SMPyBandits/issues?q=is%3Aclose+is%3Apr
-
