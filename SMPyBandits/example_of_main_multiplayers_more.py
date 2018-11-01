@@ -8,8 +8,8 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from itertools import product
 from Environment import EvaluatorMultiPlayers, notify
+
 from example_of_configuration_multiplayers import configuration
 configuration['showplot'] = True
 
@@ -17,6 +17,10 @@ N_players = len(configuration["successive_players"])
 
 # List to keep all the EvaluatorMultiPlayers objects
 evaluators = [[None] * N_players] * len(configuration["environment"])
+
+if __name__ != '__main__':
+    from sys import exit
+    exit(0)
 
 for playersId, players in enumerate(configuration["successive_players"]):
     print("\n\n\nConsidering the list of players :\n", players)  # DEBUG

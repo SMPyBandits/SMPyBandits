@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-""" The Bayes-UCB policy. By default, it uses a Beta posterior.
-Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
+""" The Bayes-UCB policy.
+
+- By default, it uses a Beta posterior (:class:`Policies.Posterior.Beta`), one by arm.
+- Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012]
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -14,8 +16,10 @@ except ImportError:
 
 
 class BayesUCB(BayesianIndexPolicy):
-    """ The Bayes-UCB policy. By default, it uses a Beta posterior.
-      Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012].
+    """ The Bayes-UCB policy.
+
+    - By default, it uses a Beta posterior (:class:`Policies.Posterior.Beta`), one by arm.
+    -Reference: [Kaufmann, Cappé & Garivier - AISTATS, 2012].
     """
 
     def computeIndex(self, arm):

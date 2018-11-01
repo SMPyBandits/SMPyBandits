@@ -129,7 +129,7 @@ SHRINKFACTOR = 0.70
 MAXNBOFLABELINFIGURE = 7
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None):
+def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None, fontsize='x-small'):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.
@@ -151,11 +151,11 @@ def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnbofla
             # XXX rect = [left, bottom, right, top] in normalized (0, 1) figure coordinates.
             fig.tight_layout(rect=[delta_rect, delta_rect, shrinkfactor, 1 - 2*delta_rect])
             # Put a legend to the right of the current axis
-            fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5), title=title)
+            fig.legend(loc='center left', numpoints=1, fancybox=True, framealpha=0.8, bbox_to_anchor=(1, 0.5), title=title, fontsize=fontsize)
         except:
-            fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title)
+            fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title, fontsize=fontsize)
     else:
-        fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title)
+        fig.legend(loc='best', numpoints=1, fancybox=True, framealpha=0.8, title=title, fontsize=fontsize)
 
 
 def maximizeWindow():
