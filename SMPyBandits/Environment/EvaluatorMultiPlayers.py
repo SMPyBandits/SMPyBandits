@@ -8,6 +8,8 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 # Generic imports
+import sys
+import pickle
 from copy import deepcopy
 from re import search
 import random
@@ -1176,7 +1178,12 @@ def delayed_play(env, players, horizon, collisionModel,
 
     # Finally, store running time and consumed memory
     result.running_time = time.time() - start_time
-    result.memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
+    memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
+    if memory_consumption == 0:
+        # XXX https://stackoverflow.com/a/565382/
+        memory_consumption = sys.getsizeof(pickle.dumps(players))
+        if repeatId == 0: print("Warning: unable to get the memory consumption for players {}, so we used a trick to measure {} bytes.".format(players, memory_consumption))
+    result.memory_consumption = memory_consumption
     return result
 
 

@@ -8,9 +8,11 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 # Generic imports
-from copy import deepcopy
+import sys
+import pickle
 import random
 import time
+from copy import deepcopy
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
@@ -107,7 +109,7 @@ class Evaluator(object):
         self.__initEnvironments__()
 
         # Update signature for non stationary problems
-        if self.nb_break_points > 0:
+        if self.nb_break_points > 1:
             changePoints = getattr(self.envs[0], 'changePoints', [])
             if self.random_shuffle:
                 self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(self.nb_break_points - 1)) + self.signature
@@ -139,8 +141,8 @@ class Evaluator(object):
             self.pulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms), dtype=np.int32)
             if self.moreAccurate: self.allPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.horizon), dtype=np.int32)
             self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
-            self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions), dtype=np.int32)
-            self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions), dtype=np.int32)
+            self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
+            self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -338,13 +340,13 @@ class Evaluator(object):
         # 5. when done, close the file
         h5file.close()
 
-    def loadfromdisk(self, filepath):
-        """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
+    # def loadfromdisk(self, filepath):
+    #     """ Update internal memory of the Evaluator object by loading data the opened HDF5 file.
 
-        .. warning:: FIXME this is not YET implemented!
-        """
-        # FIXME I just have to fill all the internal matrices from the HDF5 file ?
-        raise NotImplementedError
+    #     .. warning:: FIXME this is not YET implemented!
+    #     """
+    #     # FIXME I just have to fill all the internal matrices from the HDF5 file ?
+    #     raise NotImplementedError
 
     # --- Get data
 
@@ -375,15 +377,12 @@ class Evaluator(object):
 
     def getCumulatedRegret_LessAccurate(self, policyId, envId=0):
         """Compute cumulative regret, based on accumulated rewards."""
-        # return self._times * self.envs[envId].maxArm - np.cumsum(self.getRewards(policyId, envId))
-        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
-        return np.cumsum(self.envs[envId].maxArm - self.getRewards(policyId, envId))
+        return np.cumsum(self.envs[envId].get_maxArm(self.horizon) - self.getRewards(policyId, envId))
 
     def getCumulatedRegret_MoreAccurate(self, policyId, envId=0):
         """Compute cumulative regret, based on counts of selections and not actual rewards."""
         assert self.moreAccurate, "Error: getCumulatedRegret_MoreAccurate() is only available when using the 'moreAccurate' option (it consumes more memory!)."  # DEBUG
-        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
-        return np.cumsum(self.envs[envId].maxArm - self.getAverageWeightedSelections(policyId, envId))
+        return np.cumsum(self.envs[envId].get_maxArm(self.horizon) - self.getAverageWeightedSelections(policyId, envId))
 
     def getCumulatedRegret(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
@@ -396,8 +395,8 @@ class Evaluator(object):
 
     def getLastRegrets_LessAccurate(self, policyId, envId=0):
         """Extract last regrets, based on accumulated rewards."""
-        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
-        return self.horizon * self.envs[envId].maxArm - self.lastCumRewards[policyId, envId, :]
+        maxArm = self.envs[envId].get_maxArm(self.horizon)
+        return np.sum(maxArm) - self.lastCumRewards[policyId, envId, :]
 
     def getAllLastWeightedSelections(self, policyId, envId=0):
         """Extract weighted count of selections."""
@@ -409,8 +408,8 @@ class Evaluator(object):
 
     def getLastRegrets_MoreAccurate(self, policyId, envId=0):
         """Extract last regrets, based on counts of selections and not actual rewards."""
-        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
-        return self.horizon * self.envs[envId].maxArm - self.getAllLastWeightedSelections(policyId, envId=envId)
+        maxArm = self.envs[envId].get_maxArm(self.horizon)
+        return np.sum(maxArm) - self.getAllLastWeightedSelections(policyId, envId=envId)
 
     def getLastRegrets(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
@@ -543,7 +542,7 @@ class Evaluator(object):
             # We plot a horizontal line ----- at the best arm mean
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
-            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+            plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isChangingAtEachRepetition:
                 plt.ylim(0.94 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
@@ -557,9 +556,9 @@ class Evaluator(object):
             legend()
             if self.nb_break_points > 0:
                 # DONE fix math formula in case of non stationary bandits
-                plt.ylabel(r"Normalized cumulated non-stationary regret $\frac{R_t}{\log t} = \frac{1}{\log t} \frac{1}{\log t}\sum_{s = 0}^{t-1}$ \max_k \mu_k(t) - %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Normalized non-stationary regret $\frac{R_t}{\log(t)} = \frac{1}{\log(t)}\sum_{s=1}^{t} \max_k \mu_k(t)$ - \frac{1}{\log(t)} %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             else:
-                plt.ylabel(r"Normalized cumulated regret $\frac{R_t}{\log t} = \frac{t}{\log t} \mu^* - \frac{1}{\log t}\sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Normalized regret $\frac{R_t}{\log(t)} = \frac{t}{\log(t)} \mu^* - \frac{1}{\log(t)}\sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         else:
             if drawUpperBound and not (semilogx or loglog):
@@ -584,9 +583,9 @@ class Evaluator(object):
             legend()
             if self.nb_break_points > 0:
                 # DONE fix math formula in case of non stationary bandits
-                plt.ylabel(r"Cumulated non-stationary regret $R_t = \sum_{s = 0}^{t-1}$ \max_k \mu_k(s -) %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Non-stationary regret $R_t = \sum_{s=1}^{t} \max_k \mu_k(s)$ - %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             else:
-                plt.ylabel(r"Cumulated regret $R_t = t \mu^* - \sum_{s = 0}^{t-1}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(s)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Regret $R_t = t \mu^* - \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
@@ -800,7 +799,12 @@ def delayed_play(env, policy, horizon,
         np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
-    policy = deepcopy(policy)
+    # FIXME remove this!
+    original_policy = policy
+    policies = {}
+    for i in range(1000):
+        policies[i] = deepcopy(original_policy)
+    # FIXME remove this!
     means = env.means
     if env.isChangingAtEachRepetition:
         means = env.newRandomArms()
@@ -834,7 +838,7 @@ def delayed_play(env, policy, horizon,
         # 4. Finally we store the results
         result.store(t, choice, reward)
 
-        # FIXME add support for non stationary problems
+        # FIXME finish to add support for non stationary problems
         if env.isDynamic:
             if t in env.changePoints:
                 means = env.newRandomArms(t)
@@ -867,7 +871,12 @@ def delayed_play(env, policy, horizon,
 
     # Finally, store running time and consumed memory
     result.running_time = time.time() - start_time
-    result.memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
+    memory_consumption = getCurrentMemory(thread=useJoblib) - start_memory
+    if memory_consumption == 0:
+        # XXX https://stackoverflow.com/a/565382/
+        memory_consumption = sys.getsizeof(pickle.dumps(policy))
+        if repeatId == 0: print("Warning: unable to get the memory consumption for policy {}, so we used a trick to measure {} bytes.".format(policy, memory_consumption))
+    result.memory_consumption = memory_consumption
     return result
 
 

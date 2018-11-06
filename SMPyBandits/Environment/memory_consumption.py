@@ -8,12 +8,36 @@ It also imports :mod:`tracemalloc` and define a convenient function that pretty 
 - Reference: https://docs.python.org/3/library/tracemalloc.html#pretty-top
 - Example:
 
->>> start_tracemalloc()
+>>> return_code = start_tracemalloc()
 Starting to trace memory allocations...
 >>> # ... run your application ...
 >>> display_top_tracemalloc()
+<BLANKLINE>
 Top 10 lines ranked by memory consumption:
-...
+#1: python3.6/doctest.py:1330: 636 B
+    compileflags, 1), test.globs)
+#2: <doctest __main__[1]>:1: 568 B
+    display_top_tracemalloc()
+#3: python3.6/doctest.py:1346: 472 B
+    if check(example.want, got, self.optionflags):
+#4: python3.6/doctest.py:1374: 464 B
+    self.report_success(out, test, example, got)
+#5: python3.6/doctest.py:1591: 456 B
+    got = self._toAscii(got)
+#6: ./memory_consumption.py:168: 448 B
+    snapshot = tracemalloc.take_snapshot()
+#7: python3.6/doctest.py:1340: 440 B
+    self._fakeout.truncate(0)
+#8: python3.6/doctest.py:1339: 440 B
+    got = self._fakeout.getvalue()  # the actual output
+#9: python3.6/doctest.py:1331: 432 B
+    self.debugger.set_continue() # ==== Example Finished ====
+#10: python3.6/doctest.py:251: 89 B
+    result = StringIO.getvalue(self)
+2 others: 78 B
+<BLANKLINE>
+Total allocated size: 4.4 KiB
+4523
 
 .. warning:: This is automatically used (for ``main.py`` at least) when ``DEBUGMEMORY=True`` (cli env).
 
@@ -57,7 +81,7 @@ def getCurrentMemory(thread=False, both=False):
     .. warning:: This is still experimental for multi-threaded code.
     .. warning:: It can break on some systems, see for instance [the issue #142](https://github.com/SMPyBandits/SMPyBandits/issues/142).
 
-    .. warning:: FIXME even on my own system, when no multi-threading is used, it works for the *last* few policies I test, but fails for the first??
+    .. warning:: FIXME even on my own system,, it works for the *last* few policies I test, but fails for the first??
     """
     if thread:
         try:
@@ -65,12 +89,6 @@ def getCurrentMemory(thread=False, both=False):
             return resource.getrusage(resource.RUSAGE_THREAD).ru_maxrss
         except (ValueError, AttributeError):
             print("Warning: resource.RUSAGE_THREAD is not available.")  # DEBUG
-    if both:
-        try:
-            # https://docs.python.org/3/library/resource.html#resource.RUSAGE_BOTH
-            return resource.getrusage(resource.RUSAGE_BOTH).ru_maxrss
-        except (ValueError, AttributeError):
-            print("Warning: resource.RUSAGE_BOTH is not available.")  # DEBUG
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
 
@@ -126,7 +144,7 @@ def sizeof_fmt(num, suffix='B', longsuffix=True, usespace=True, base=1024):
 
 
 #: Max number of lines to show with :func:`display_top_tracemalloc`.
-LIMIT = 20
+LIMIT = 10
 
 try:
     import tracemalloc
@@ -134,7 +152,7 @@ try:
     def start_tracemalloc():
         """Wrapper function around :func:`tracemalloc.start`, to log the start of tracing memory allocation."""
         tracemalloc.start()
-        print("Starting to trace memory allocations...\n")  # DEBUG
+        print("Starting to trace memory allocations...")  # DEBUG
         return 0
 
     def display_top_tracemalloc(snapshot=None, key_type='lineno', limit=LIMIT):
