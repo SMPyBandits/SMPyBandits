@@ -33,7 +33,7 @@ except ImportError:
 #: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
 #: The default abruptly-changing non-stationary problem draws news means in :math:`[0,1]` so :math:`\delta=0` is the only possible (worst-case) lower-bound on amplitude of changes.
 #: I force ``0.1`` because I can force the minimum gap when calling :func:`Arms.randomMeans` to be ``0.1``.
-DELTA = 0.01
+DELTA = 0.1
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
@@ -89,7 +89,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"Monitored({}, $w={:.3g}$, $b={:.3g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.w, self.b, self.proba_random_exploration)
+        return r"Monitored-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.w, self.b, self.proba_random_exploration)
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""

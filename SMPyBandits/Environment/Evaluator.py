@@ -875,7 +875,7 @@ def delayed_play(env, policy, horizon,
     if memory_consumption == 0:
         # XXX https://stackoverflow.com/a/565382/
         memory_consumption = sys.getsizeof(pickle.dumps(policy))
-        if repeatId == 0: print("Warning: unable to get the memory consumption for policy {}, so we used a trick to measure {} bytes.".format(policy, memory_consumption))
+        # if repeatId == 0: print("Warning: unable to get the memory consumption for policy {}, so we used a trick to measure {} bytes.".format(policy, memory_consumption))  # DEBUG
     result.memory_consumption = memory_consumption
     return result
 

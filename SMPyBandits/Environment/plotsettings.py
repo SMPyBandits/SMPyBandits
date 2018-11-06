@@ -32,13 +32,13 @@ from os import getenv
 from pickle import dump as pickle_dump
 
 if getenv('DEBUG', 'False') == 'True':
-    signature = "\n(By Lilian Besson, {} - Code on https://github.com/SMPyBandits/SMPyBandits - MIT Licensed)".format(monthyear)  #: A small string to use as a signature
+    signature = "\n(By Lilian Besson, {}, cf. SMPyBandits.GitHub.io - MIT Licensed)".format(monthyear)  #: A small string to use as a signature
 else:
     signature = ""
 
 DPI = 120  #: DPI to use for the figures
-FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
-FIGSIZE = (16, 9)  #: Figure size, in inches!
+# FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
+# FIGSIZE = (16, 9)  #: Figure size, in inches!
 FIGSIZE = (12.4, 7)  #: Figure size, in inches!
 
 # Customize the colormap
@@ -129,7 +129,7 @@ SHRINKFACTOR = 0.70
 MAXNBOFLABELINFIGURE = 7
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None, fontsize='small'):
+def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None, fontsize='x-small'):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.

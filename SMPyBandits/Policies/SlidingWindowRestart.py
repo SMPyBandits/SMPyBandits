@@ -114,7 +114,7 @@ class SWR_UCB(UCB):
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):
-        return r"SlidingWindowRestart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_UCB, self).__str__(), self.tau, self.threshold)
+        return r"SW-Restart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_UCB, self).__str__(), self.tau, self.threshold)
 
     def getReward(self, arm, reward):
         """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
@@ -162,7 +162,7 @@ class SWR_UCBalpha(UCBalpha):
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):
-        return r"SlidingWindowRestart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_UCBalpha, self).__str__(), self.tau, self.threshold)
+        return r"SW-Restart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_UCBalpha, self).__str__(), self.tau, self.threshold)
 
     def getReward(self, arm, reward):
         """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
@@ -210,7 +210,7 @@ class SWR_klUCB(klUCB):
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):
-        return r"SlidingWindowRestart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_klUCB, self).__str__(), self.tau, self.threshold)
+        return r"SW-Restart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(super(SWR_klUCB, self).__str__(), self.tau, self.threshold)
 
     def getReward(self, arm, reward):
         """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

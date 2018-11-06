@@ -89,7 +89,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD({}, $\varepsilon={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.proba_random_exploration)
+        return r"CD-{}($\varepsilon={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.proba_random_exploration)
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -182,7 +182,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM({}, $\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
+        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
         """ Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954]."""
@@ -204,7 +204,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT({}, $\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
+        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
         """ Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971]."""

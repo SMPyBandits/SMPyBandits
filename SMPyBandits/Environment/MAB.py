@@ -191,6 +191,20 @@ class MAB(object):
         """ Sum of the M best means."""
         return np.sum(self.Mbest(M=M))
 
+    def get_minArm(self, horizon=None):
+        """Return the vector of min mean of the arms.
+
+        - It is a vector of length horizon.
+        """
+        return np.full(horizon, self.minArm)
+
+    def get_maxArm(self, horizon=None):
+        """Return the vector of max mean of the arms.
+
+        - It is a vector of length horizon.
+        """
+        return np.full(horizon, self.maxArm)
+
     #
     # --- Estimate sparsity
 
@@ -806,7 +820,7 @@ class NonStationaryMAB(MAB):
 
     def __repr__(self):
         if self._arms is not None:
-            return "{}(nbArms: {}, arms: {}, minArm: {:.3g}, maxArm: {:.3g})".format(self.__class__.__name__, self.nbArms, self._arms, self.minArm, self.maxArm)
+            return "{}(nbArms: {}, arms: {})".format(self.__class__.__name__, self.nbArms, self._arms)
         else:
             return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
 
@@ -895,15 +909,43 @@ class NonStationaryMAB(MAB):
         sortedMeans = np.mean(np.sort(np.array(list(self._historyOfMeans.values())), axis=1), axis=0)
         return sortedMeans[:-M]
 
-    @property
-    def minArm(self):
-        """Return the smallest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        return np.mean(np.min(np.array(list(self._historyOfMeans.values()))))
+    def get_minArm(self, horizon=None):
+        """Return the smallest mean of the arms, for a non-stationary MAB
 
-    @property
-    def maxArm(self):
-        """Return the largest mean of the arms, for a dynamic MAB (averaged on all the draws of new means)."""
-        return np.mean(np.max(np.array(list(self._historyOfMeans.values()))))
+        - It is a vector of length horizon.
+        """
+        # return np.mean(np.min(np.array(list(self._historyOfMeans.values()))))
+        # FIXME add support for non stationary problems: minArm should be a vector of length horizon
+        if horizon is None:
+            horizon = np.max(self._historyOfChangePoints)
+        map_of_worstArms = [np.min (self._historyOfMeans[tau]) for tau in sorted(self._historyOfChangePoints)]
+        meansOfMinArms = np.zeros(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self._historyOfChangePoints) - 1 and t >= self._historyOfChangePoints[nbChangePoint]:
+                nbChangePoint += 1
+            meansOfMinArms[t] = map_of_worstArms[nbChangePoint]
+        return meansOfMinArms
+
+    def get_maxArm(self, horizon=None):
+        """Return the vector of max mean of the arms, for a non-stationary MAB.
+
+        - It is a vector of length horizon.
+        """
+        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
+        if horizon is None:
+            horizon = np.max(self._historyOfChangePoints)
+        map_of_bestArms = [np.max(self._historyOfMeans[tau]) for tau in sorted(self._historyOfChangePoints)]
+        meansOfMaxArms = np.ones(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self._historyOfChangePoints) - 1 and t >= self._historyOfChangePoints[nbChangePoint]:
+                nbChangePoint += 1
+            meansOfMaxArms[t] = map_of_bestArms[nbChangePoint]
+        print("\n"*10)  # DEBUG
+        print("meansOfMaxArms =", meansOfMaxArms)  # DEBUG
+        print("\n"*10)  # DEBUG
+        return meansOfMaxArms
 
     #
     # --- Compute lower bounds

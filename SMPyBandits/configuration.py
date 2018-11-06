@@ -126,9 +126,9 @@ TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test m
 TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
-#: To know if the sliding window policies is tested.
-TEST_SlidingWindow = False  # XXX do not let this = False if you want to test my WrapRange policy
-TEST_SlidingWindow = True
+#: To know if the non stationary policies are tested.
+TEST_Non_Stationary_Policies = True
+TEST_Non_Stationary_Policies = False  # XXX do not let this = False if you want to test the non stationary policies
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = True  # XXX to manually enable this feature?
@@ -1537,7 +1537,7 @@ if TEST_Aggregator:
 # })
 
 # Dynamic hack
-if TEST_SlidingWindow:
+if TEST_Non_Stationary_Policies:
     # XXX compare different values of the experimental sliding window algorithm
     EPSS   = [0.1, 0.05]
     ALPHAS = [2, 1, 0.5, 0.1]
@@ -1561,17 +1561,25 @@ if TEST_SlidingWindow:
         [
             { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
         ] +
-        # FIXME try CUSUM_IndexPolicy!
-        [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
-        ] +
+        # # FIXME try CUSUM_IndexPolicy!
+        # [
+        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
+        # ] +
+        # # # OK this CUSUM-klUCB is the same
+        # # [
+        # #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, } }
+        # # ] +
         # # OK PHT_IndexPolicy is very much like CUSUM
         # [
         #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
         # ] +
         # FIXME try Monitored_IndexPolicy!
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, } }
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+        ] +
+        # OK this Monitored-klUCB is the same
+        [
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
         ] +
         # FIXME try SW_UCB_Hash!
         [
@@ -1607,7 +1615,8 @@ if TEST_SlidingWindow:
             # --- # XXX experimental discounted UCB algorithm, knowing the horizon
             { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
             for alpha in ALPHAS
-            for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
+            for max_nb_random_events in [NB_BREAK_POINTS]
+            # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
         ] +
         [
             { "archtype": UCBalpha, "params": { "alpha": 1, } },
@@ -1618,9 +1627,10 @@ if TEST_SlidingWindow:
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
             { "archtype": Thompson, "params": { "posterior": Beta, } },
-        ] + [  # This is still highly experimental! FIXME test this policy!
+        ] + [  # This is still highly experimental!
             { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-            for gamma in GAMMAS
+            # for gamma in GAMMAS
+            for gamma in [0.99]
         ] +
         []
     })
