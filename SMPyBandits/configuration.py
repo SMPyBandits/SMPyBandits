@@ -363,8 +363,8 @@ if ENVIRONMENT_NONSTATIONARY:
                 "newMeans": randomMeans,
                 # FIXME try different changePoints VALUES
                 # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
-                "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
-                # "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
+                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
+                "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
                 "args": {
                     "nbArms": NB_ARMS,
                     "lower": LOWER, "amplitude": AMPLITUDE,
@@ -462,10 +462,10 @@ configuration.update({
         #     "params": {}
         # },
         # # --- Full or partial knowledge algorithms
-        # TakeFixedArm(nbArms, nbArms - 1),  # Take best arm!
-        # TakeFixedArm(nbArms, nbArms - 2),  # Take second best arm!
-        # TakeFixedArm(nbArms, 0),  # Take worse arm!
-        # TakeFixedArm(nbArms, 1),  # Take second worse arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": 0 }},  # Take worse arm!
+        # { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
+        # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 2 }},  # Take second best arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 1 }},  # Take best arm!
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -630,11 +630,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # --- Exp3PlusPlus algorithm
-        {
-            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-            "params": {}
-        },
+        # # --- Exp3PlusPlus algorithm
+        # {
+        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+        #     "params": {}
+        # },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,

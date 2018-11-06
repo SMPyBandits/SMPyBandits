@@ -3,7 +3,7 @@
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.7"
+__version__ = "0.9"
 
 import numpy as np
 
@@ -39,7 +39,7 @@ class Result(object):
 
         - From that time t **and after**, the index of the best arm is stored as ``indexes_bestarm``.
 
-        .. warning:: This is still experimental!
+        .. warning:: FIXME This is still experimental!
         """
         for t in range(time, len(self.indexes_bestarm)):
             self.indexes_bestarm[t] = indexes_bestarm

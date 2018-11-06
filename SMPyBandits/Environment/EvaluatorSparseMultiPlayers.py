@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ EvaluatorSparseMultiPlayers class to wrap and run the simulations, for the multi-players case with sparse activated players.
 Lots of plotting methods, to have various visualizations. See documentation.
+
+.. warning:: FIXME this environment is not as up-to-date as :class:`Environment.EvaluatorMultiPlayers`.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

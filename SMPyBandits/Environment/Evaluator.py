@@ -121,8 +121,8 @@ class Evaluator(object):
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
         self.lastCumRewards = np.zeros((self.nbPolicies, len(self.envs), self.repetitions))  #: For each env, last accumulated rewards, to compute variance and histogram of whole regret R_T
-        self.minCumRewards = np.inf + np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
-        self.maxCumRewards = -np.inf + np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
+        self.minCumRewards = np.full((self.nbPolicies, len(self.envs), self.horizon), +np.inf)  #: For each env, history of minimum of rewards, to compute amplitude (+- STD)
+        self.maxCumRewards = np.full((self.nbPolicies, len(self.envs), self.horizon), -np.inf)  #: For each env, history of maximum of rewards, to compute amplitude (+- STD)
 
         if STORE_REWARDS_SQUARED:
             self.rewardsSquared = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards squared
@@ -366,9 +366,14 @@ class Evaluator(object):
     def getAverageWeightedSelections(self, policyId, envId=0):
         """Extract weighted count of selections."""
         weighted_selections = np.zeros(self.horizon)
-        for armId, mean in enumerate(self.envs[envId].means):
+        for armId in range(self.envs[envId].nbArms):
             mean_selections = self.allPulls[envId][policyId, armId, :] / float(self.repetitions)
-            weighted_selections += mean * mean_selections
+            # FIXME this is wrong for non-stationary bandits
+            if hasattr(self.envs[envId], 'get_allMeans'):
+                meanOfThisArm = self.envs[envId].get_allMeans(horizon=self.horizon)[armId, :]
+            else:
+                meanOfThisArm = self.envs[envId].means[armId]
+            weighted_selections += meanOfThisArm * mean_selections
         return weighted_selections
 
     def getMaxRewards(self, envId=0):
@@ -382,43 +387,46 @@ class Evaluator(object):
     def getCumulatedRegret_MoreAccurate(self, policyId, envId=0):
         """Compute cumulative regret, based on counts of selections and not actual rewards."""
         assert self.moreAccurate, "Error: getCumulatedRegret_MoreAccurate() is only available when using the 'moreAccurate' option (it consumes more memory!)."  # DEBUG
-        return np.cumsum(self.envs[envId].get_maxArm(self.horizon) - self.getAverageWeightedSelections(policyId, envId))
+        instant_oracle_performance = self.envs[envId].get_maxArm(self.horizon)
+        instant_performance = self.getAverageWeightedSelections(policyId, envId)
+        instant_loss = instant_oracle_performance - instant_performance
+        return np.cumsum(instant_loss)
+        # return np.cumsum(self.envs[envId].get_maxArm(self.horizon) - self.getAverageWeightedSelections(policyId, envId))
 
     def getCumulatedRegret(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
-        moreAccurate = moreAccurate or self.moreAccurate
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         # print("Computing the vector of mean cumulated regret with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
-        if moreAccurate:
-            return self.getCumulatedRegret_MoreAccurate(policyId, envId=envId)
-        else:
-            return self.getCumulatedRegret_LessAccurate(policyId, envId=envId)
+        return self.getCumulatedRegret_MoreAccurate(policyId, envId=envId) if moreAccurate else self.getCumulatedRegret_LessAccurate(policyId, envId=envId)
 
     def getLastRegrets_LessAccurate(self, policyId, envId=0):
         """Extract last regrets, based on accumulated rewards."""
-        maxArm = self.envs[envId].get_maxArm(self.horizon)
-        return np.sum(maxArm) - self.lastCumRewards[policyId, envId, :]
+        return np.sum(self.envs[envId].get_maxArm(self.horizon)) - self.lastCumRewards[policyId, envId, :]
 
     def getAllLastWeightedSelections(self, policyId, envId=0):
         """Extract weighted count of selections."""
         all_last_weighted_selections = np.zeros(self.repetitions)
-        for armId, mean in enumerate(self.envs[envId].means):
+        for armId in range(self.envs[envId].nbArms):
+            if hasattr(self.envs[envId], 'get_allMeans'):
+                meanOfThisArm = self.envs[envId].get_allMeans(horizon=self.horizon)[armId, :]
+                # FIXME this is wrong for non-stationary bandits, and it cannot be made correct
+                meanOfThisArm = meanOfThisArm[-1]  # take only the last mean… but it's wrong!
+                meanOfThisArm = np.mean(meanOfThisArm)  # XXX take average?
+            else:
+                meanOfThisArm = self.envs[envId].means[armId]
             last_selections = self.lastPulls[envId][policyId, armId, :]
-            all_last_weighted_selections += mean * last_selections
+            all_last_weighted_selections += meanOfThisArm * last_selections
         return all_last_weighted_selections
 
     def getLastRegrets_MoreAccurate(self, policyId, envId=0):
         """Extract last regrets, based on counts of selections and not actual rewards."""
-        maxArm = self.envs[envId].get_maxArm(self.horizon)
-        return np.sum(maxArm) - self.getAllLastWeightedSelections(policyId, envId=envId)
+        return np.sum(self.envs[envId].get_maxArm(self.horizon)) - self.getAllLastWeightedSelections(policyId, envId=envId)
 
     def getLastRegrets(self, policyId, envId=0, moreAccurate=None):
         """Using either the more accurate or the less accurate regret count."""
-        moreAccurate = moreAccurate or self.moreAccurate
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         # print("Computing the vector of last cumulated regrets (on repetitions) with '{}' accurate method...".format("more" if moreAccurate else "less"))  # DEBUG
-        if moreAccurate:
-            return self.getLastRegrets_MoreAccurate(policyId, envId=envId)
-        else:
-            return self.getLastRegrets_LessAccurate(policyId, envId=envId)
+        return self.getLastRegrets_MoreAccurate(policyId, envId=envId) if moreAccurate else self.getLastRegrets_LessAccurate(policyId, envId=envId)
 
     def getAverageRewards(self, policyId, envId=0):
         """Extract mean rewards (not `rewards` but `cumsum(rewards)/cumsum(1)`."""
@@ -486,7 +494,7 @@ class Evaluator(object):
                     moreAccurate=None
                     ):
         """Plot the centralized cumulated regret, support more than one environments (use evaluators to give a list of other environments). """
-        moreAccurate = moreAccurate or self.moreAccurate
+        moreAccurate = moreAccurate if moreAccurate is not None else self.moreAccurate
         fig = plt.figure()
         ymin = 0
         colors = palette(self.nbPolicies)
@@ -544,7 +552,7 @@ class Evaluator(object):
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isChangingAtEachRepetition:
-                plt.ylim(0.94 * self.envs[envId].minArm, 1.06 * self.envs[envId].maxArm)
+                plt.ylim(0.80 * self.envs[envId].minArm, 1.10 * self.envs[envId].maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             if self.plot_lowerbound:
@@ -799,12 +807,7 @@ def delayed_play(env, policy, horizon,
         np.random.seed(seed)
     # We have to deepcopy because this function is Parallel-ized
     env = deepcopy(env)
-    # FIXME remove this!
-    original_policy = policy
-    policies = {}
-    for i in range(1000):
-        policies[i] = deepcopy(original_policy)
-    # FIXME remove this!
+    policy = deepcopy(policy)
     means = env.means
     if env.isChangingAtEachRepetition:
         means = env.newRandomArms()
@@ -816,10 +819,11 @@ def delayed_play(env, policy, horizon,
 
     # FIXME remove these two special cases when the NonStationaryMAB is ready!
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
-    t_events = [i * int(horizon / float(nb_break_points)) for i in range(nb_break_points)]
     if nb_break_points is None or nb_break_points <= 0:
         random_shuffle = False
         random_invert = False
+    if nb_break_points > 0:
+        t_events = [i * int(horizon / float(nb_break_points)) for i in range(nb_break_points)]
 
     prettyRange = tqdm(range(horizon), desc="Time t") if repeatId == 0 else range(horizon)
     for t in prettyRange:
@@ -845,15 +849,15 @@ def delayed_play(env, policy, horizon,
                 indexes_bestarm = np.nonzero(np.isclose(means, np.max(means)))[0]
                 result.change_in_arms(t, indexes_bestarm)
 
-        # FIXME remove these two special cases when the NonStationaryMAB is ready!
+        # XXX remove these two special cases when the NonStationaryMAB is ready?
         # FIXME regret is not correct when displayed for these two guys…
         # XXX Experimental : shuffle the arms at the middle of the simulation
-        if random_shuffle and t in t_events:
+        if random_shuffle and t > 0 and t in t_events:
                 indexes_bestarm = env.new_order_of_arm(shuffled(env.arms))
                 result.change_in_arms(t, indexes_bestarm)
                 if repeatId == 0: print("\nShuffling the arms at time t = {} ...".format(t))  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
-        if random_invert and t in t_events:
+        if random_invert and t > 0 and t in t_events:
                 indexes_bestarm = env.new_order_of_arm(env.arms[::-1])
                 result.change_in_arms(t, indexes_bestarm)
                 if repeatId == 0: print("\nInverting the order of the arms at time t = {} ...".format(t))  # DEBUG

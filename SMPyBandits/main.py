@@ -212,7 +212,8 @@ if __name__ == '__main__':
         if saveallfigs:
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
             savefig = mainfig
-            evaluation.plotRegrets(envId, savefig=savefig)  # XXX To save the figure
+            evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=True)  # XXX To save the figure
+            evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=False)  # XXX To save the figure
             if configuration['horizon'] >= 1000:
                 savefig = mainfig.replace('main', 'main_semilogx')
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
@@ -229,7 +230,8 @@ if __name__ == '__main__':
                     savefig = savefig.replace('main', 'main_MaxMin')
                     evaluation.plotRegrets(envId, savefig=savefig, semilogx=semilogx, semilogy=semilogy, loglog=loglog, plotMaxMin=True)  # XXX To save the figure
         else:
-            evaluation.plotRegrets(envId)  # XXX To plot without saving
+            evaluation.plotRegrets(envId, moreAccurate=True)  # XXX To plot without saving
+            evaluation.plotRegrets(envId, moreAccurate=False)  # XXX To plot without saving
             if configuration['horizon'] >= 1000:
                 evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogy=True)  # XXX To plot without saving
