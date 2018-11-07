@@ -43,7 +43,7 @@ EPSILON = 0.5
 LAMBDA = 1
 
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
-MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 10
+MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 
 
 from scipy.special import comb
@@ -58,7 +58,7 @@ def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms,
     C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
-    if C1 == 0: C1 = 1
+    if C1 == 0: C1 = 1  # FIXME
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
@@ -140,6 +140,8 @@ class CD_IndexPolicy(BaseWrapperPolicy):
 
 class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
     r""" A more generic implementation is the :class:`Policies.SlidingWindowRestart` class.
+
+    .. warning:: I have no idea if what I wrote is correct or not!
     """
 
     def detect_change(self, arm):
@@ -185,14 +187,29 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
-        """ Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954]."""
+        r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
+
+        - For each *data* k, compute:
+
+        .. math::
+
+            s_k^- &= (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
+            s_k^+ &= (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
+            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+
+        - The change is detected if :math:`\max(g_k^+, g_k^-) > h` where :attr:`threshold_h` is the threshold of the test,
+        - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
+        """
         gp, gm = 0, 0
         data_y = self.all_rewards[arm]
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         u0hat = np.mean(data_y[:self.M])
         for k, y_k in enumerate(data_y):
-            sp = (u0hat - y_k - self.epsilon) * (k > self.M)
-            sm = (y_k - u0hat - self.epsilon) * (k > self.M)
+            if k <= self.M:
+                continue
+            sp = u0hat - y_k - self.epsilon  # no need to multiply by (k > self.M)
+            sm = y_k - u0hat - self.epsilon  # no need to multiply by (k > self.M)
             gp, gm = max(0, gp + sp), max(0, gm + sm)
             if max(gp, gm) >= self.threshold_h:
                 return True
@@ -207,14 +224,27 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
         return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm):
-        """ Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971]."""
+        r""" Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971].
+
+        - For each *data* k, compute:
+
+        .. math::
+
+            s_k^- &= y_k - \hat{y}_k - \varepsilon,\\
+            s_k^+ &= \hat{y}_k - y_k - \varepsilon,\\
+            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+
+        - The change is detected if :math:`\max(g_k^+, g_k^-) > h` where :attr:`threshold_h` is the threshold of the test,
+        - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
+        """
         gp, gm = 0, 0
         data_y = self.all_rewards[arm]
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         for k, y_k in enumerate(data_y):
             y_k_hat = np.mean(data_y[:k])
-            sp = (y_k_hat - y_k - self.epsilon) * (k > self.M)
-            sm = (y_k - y_k_hat - self.epsilon) * (k > self.M)
+            sp = y_k_hat - y_k - self.epsilon
+            sm = y_k - y_k_hat - self.epsilon
             gp, gm = max(0, gp + sp), max(0, gm + sm)
             if max(gp, gm) >= self.threshold_h:
                 return True
