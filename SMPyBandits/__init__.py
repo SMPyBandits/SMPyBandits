@@ -6,7 +6,7 @@ Empty __init__.py to define the package as a package and its version.
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.9.3"
+__version__ = "0.9.4"
 
 try:
     # from .Arms import *
