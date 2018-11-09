@@ -169,7 +169,7 @@
 <text text-anchor="middle" x="4530.5" y="-542.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost</text>
 <polyline fill="none" stroke="#000000" points="4347.5,-535 4713.5,-535 "/>
 <text text-anchor="start" x="4355.5" y="-519.8" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
-<text text-anchor="start" x="4355.5" y="-504.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, NoneType, int</text>
+<text text-anchor="start" x="4355.5" y="-504.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, int, NoneType</text>
 <polyline fill="none" stroke="#000000" points="4347.5,-497 4713.5,-497 "/>
 <text text-anchor="start" x="4355.5" y="-481.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
 <text text-anchor="start" x="4355.5" y="-466.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>

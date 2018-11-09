@@ -13,14 +13,17 @@ rankdir=BT
 "9" [label="SMPyBandits.configuration_sparse", shape="box"];
 "10" [label="SMPyBandits.configuration_sparse_multiplayers", shape="box"];
 "11" [label="SMPyBandits.env_client", shape="box"];
-"12" [label="SMPyBandits.main", shape="box"];
-"13" [label="SMPyBandits.main_multiplayers", shape="box"];
-"14" [label="SMPyBandits.main_multiplayers_more", shape="box"];
-"15" [label="SMPyBandits.main_sparse_multiplayers", shape="box"];
-"16" [label="SMPyBandits.policy_server", shape="box"];
+"12" [label="SMPyBandits.example_of_configuration_multiplayers", shape="box"];
+"13" [label="SMPyBandits.example_of_main_multiplayers_more", shape="box"];
+"14" [label="SMPyBandits.main", shape="box"];
+"15" [label="SMPyBandits.main_multiplayers", shape="box"];
+"16" [label="SMPyBandits.main_multiplayers_more", shape="box"];
+"17" [label="SMPyBandits.main_sparse_multiplayers", shape="box"];
+"18" [label="SMPyBandits.policy_server", shape="box"];
 "0" -> "0" [arrowhead="open", arrowtail="none"];
-"12" -> "4" [arrowhead="open", arrowtail="none"];
-"13" -> "7" [arrowhead="open", arrowtail="none"];
-"14" -> "8" [arrowhead="open", arrowtail="none"];
-"15" -> "10" [arrowhead="open", arrowtail="none"];
+"13" -> "12" [arrowhead="open", arrowtail="none"];
+"14" -> "4" [arrowhead="open", arrowtail="none"];
+"15" -> "7" [arrowhead="open", arrowtail="none"];
+"16" -> "8" [arrowhead="open", arrowtail="none"];
+"17" -> "10" [arrowhead="open", arrowtail="none"];
 }

@@ -3,14 +3,17 @@ charset="utf-8"
 rankdir=BT
 "0" [label="SMPyBandits.Policies.Posterior", shape="box"];
 "1" [label="SMPyBandits.Policies.Posterior.Beta", shape="box"];
-"2" [label="SMPyBandits.Policies.Posterior.Gamma", shape="box"];
-"3" [label="SMPyBandits.Policies.Posterior.Gauss", shape="box"];
-"4" [label="SMPyBandits.Policies.Posterior.Posterior", shape="box"];
-"5" [label="SMPyBandits.Policies.with_proba", shape="box"];
+"2" [label="SMPyBandits.Policies.Posterior.DiscountedBeta", shape="box"];
+"3" [label="SMPyBandits.Policies.Posterior.Gamma", shape="box"];
+"4" [label="SMPyBandits.Policies.Posterior.Gauss", shape="box"];
+"5" [label="SMPyBandits.Policies.Posterior.Posterior", shape="box"];
+"6" [label="SMPyBandits.Policies.with_proba", shape="box"];
 "0" -> "1" [arrowhead="open", arrowtail="none"];
 "0" -> "2" [arrowhead="open", arrowtail="none"];
 "0" -> "3" [arrowhead="open", arrowtail="none"];
-"1" -> "4" [arrowhead="open", arrowtail="none"];
-"2" -> "4" [arrowhead="open", arrowtail="none"];
-"3" -> "4" [arrowhead="open", arrowtail="none"];
+"0" -> "4" [arrowhead="open", arrowtail="none"];
+"1" -> "5" [arrowhead="open", arrowtail="none"];
+"2" -> "1" [arrowhead="open", arrowtail="none"];
+"3" -> "5" [arrowhead="open", arrowtail="none"];
+"4" -> "5" [arrowhead="open", arrowtail="none"];
 }
