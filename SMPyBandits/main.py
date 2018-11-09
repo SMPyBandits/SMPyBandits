@@ -139,6 +139,25 @@ if __name__ == '__main__':
 
         if debug_memory: start_tracemalloc()  # DEBUG
 
+        # Sub folder with a useful name
+        subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        plot_dir = os.path.join(PLOT_DIR, subfolder)
+
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+        picklename = mainfig + '.pickle'
+        h5pyname = mainfig + '.hdf5'
+
+        # --- Also plotting the history of means
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_HistoryOfMeans')
+            print(" - Plotting the history of means, and saving the plot to {} ...".format(savefig))
+            evaluation.plotHistoryOfMeans(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 
@@ -152,17 +171,6 @@ if __name__ == '__main__':
         print("\nGiving the mean and std memory consumption ...")
         evaluation.printMemoryConsumption(envId)
         if debug_memory: display_top_tracemalloc()  # DEBUG
-
-        # Sub folder with a useful name
-        subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        plot_dir = os.path.join(PLOT_DIR, subfolder)
-
-        # Get the name of the output file
-        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
-        mainfig = os.path.join(plot_dir, imagename)
-        savefig = mainfig
-        picklename = mainfig + '.pickle'
-        h5pyname = mainfig + '.hdf5'
 
         if saveallfigs:
             # Create the sub folder
@@ -199,14 +207,6 @@ if __name__ == '__main__':
             evaluation.plotMemoryConsumption(envId, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotMemoryConsumption(envId)  # XXX To plot without saving
-
-        # --- Also plotting the history of means
-        if saveallfigs:
-            savefig = mainfig.replace('main', 'main_HistoryOfMeans')
-            print(" - Plotting the history of means, and saving the plot to {} ...".format(savefig))
-            evaluation.plotHistoryOfMeans(envId, savefig=savefig)  # XXX To save the figure
-        else:
-            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
 
         if meanReward:
             if saveallfigs:

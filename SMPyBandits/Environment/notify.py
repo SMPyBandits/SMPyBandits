@@ -44,7 +44,7 @@ try:
         # print("iconpng =", iconpng)  # DEBUG
         return iconpng
 
-except ImportError:
+except (ImportError, ValueError):
     if VERBOUS:
         print("\nError, gi.repository.GdkPixbuf seems to not be available, so notification icons will not be available ...")
         print("On Ubuntu, if you want notification icons to work, install the 'python-gobject' and 'libnotify-bin' packages.")
