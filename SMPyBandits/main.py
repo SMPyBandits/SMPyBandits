@@ -285,7 +285,7 @@ if __name__ == '__main__':
             savefig = mainfig.replace('main', 'main_HistogramsRegret')
             print(" - Plotting the histograms of regrets, and saving the plot to {} ...".format(savefig))
             # for sharex, sharey in product([True, False], repeat=2):
-            for sharex, sharey in [False, False]:
+            for sharex, sharey in [(False, False)]:
                 savefig = mainfig.replace('main', 'main_HistogramsRegret{}{}'.format(
                     "_shareX" if sharex else "",
                     "_shareY" if sharey else "",
@@ -299,7 +299,7 @@ if __name__ == '__main__':
         else:
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
             # for sharex, sharey in product([True, False], repeat=2):
-            for sharex, sharey in [False, False]:
+            for sharex, sharey in [(False, False)]:
                 evaluation.plotLastRegrets(envId, sharex=sharex, sharey=sharey)  # XXX To plot without saving
             # evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
 
