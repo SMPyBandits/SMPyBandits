@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" :class:`MAB`, :class:`MarkovianMAB`, :class:`ChangingAtEachRepMAB`, :class:`IncreasingMAB`, and :class:`NonStationaryMAB` classes to wrap the arms of some Multi-Armed Bandit problems.
+""" :class:`MAB`, :class:`MarkovianMAB`, :class:`ChangingAtEachRepMAB`, :class:`IncreasingMAB`, :class:`PieceWiseStationaryMAB` and :class:`NonStationaryMAB` classes to wrap the arms of some Multi-Armed Bandit problems.
 
 Such class has to have *at least* these methods:
 

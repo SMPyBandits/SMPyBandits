@@ -64,7 +64,7 @@ try:
     # One time initialization of libnotify
     Notify.init(PROGRAM_NAME)
     has_Notify = True
-except ImportError:
+except (ImportError, ValueError):
     if VERBOUS:
         print("\nError, gi.repository.Notify seems to not be available, so notification will not be available ...")
         print("On Ubuntu, if you want notifications to work, install the 'python-gobject' and 'libnotify-bin' packages.")

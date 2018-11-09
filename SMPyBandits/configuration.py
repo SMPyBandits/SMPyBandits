@@ -390,6 +390,72 @@ if ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
+# Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] = [
+        {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
+            "arm_type": Bernoulli,
+            "params": {
+                "listOfMeans": [
+                    # red, green, blue, yellow, cyan, red dotted
+                    [0.071, 0.041, 0.032, 0.030, 0.020, 0.011],  # 1st segment
+                    [0.055, 0.053, 0.032, 0.030, 0.008, 0.011],  # 2nd segment
+                    [0.040, 0.063, 0.032, 0.030, 0.008, 0.011],  # 3th segment
+                    [0.040, 0.042, 0.043, 0.030, 0.008, 0.011],  # 4th segment
+                    [0.030, 0.032, 0.055, 0.030, 0.008, 0.011],  # 5th segment
+                    [0.030, 0.032, 0.020, 0.030, 0.008, 0.021],  # 6th segment
+                    [0.020, 0.022, 0.020, 0.045, 0.008, 0.021],  # 7th segment
+                    [0.020, 0.022, 0.020, 0.057, 0.008, 0.011],  # 8th segment
+                    [0.020, 0.022, 0.034, 0.057, 0.022, 0.011],  # 9th segment
+                ],
+                "changePoints": [
+                    0,       # 1st segment
+                    42850,   # 2nd segment
+                    85710,   # 3th segment
+                    128570,  # 4th segment
+                    171420,  # 5th segment
+                    214280,  # 6th segment
+                    257140,  # 7th segment
+                    300000,  # 8th segment
+                    342850,  # 9th segment
+                ],
+            }
+        },
+    ]
+
+# Another example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.08380
+if False and ENVIRONMENT_NONSTATIONARY:  # TODO finish to write this problem!
+    configuration["environment"] = [
+        {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
+            "arm_type": Bernoulli,
+            "params": {
+                "listOfMeans": [
+                    # red, green, blue, yellow, cyan, red dotted
+                    [0.071, 0.041, 0.032, 0.030, 0.020, 0.011],  # 1st segment
+                    [0.055, 0.053, 0.032, 0.030, 0.008, 0.011],  # 2nd segment
+                    [0.040, 0.063, 0.032, 0.030, 0.008, 0.011],  # 3th segment
+                    [0.040, 0.042, 0.043, 0.030, 0.008, 0.011],  # 4th segment
+                    [0.030, 0.032, 0.055, 0.030, 0.008, 0.011],  # 5th segment
+                    [0.030, 0.032, 0.020, 0.030, 0.008, 0.021],  # 6th segment
+                    [0.020, 0.022, 0.020, 0.045, 0.008, 0.021],  # 7th segment
+                    [0.020, 0.022, 0.020, 0.057, 0.008, 0.011],  # 8th segment
+                    [0.020, 0.022, 0.034, 0.057, 0.022, 0.011],  # 9th segment
+                ],
+                "changePoints": [
+                    0,       # 1st segment
+                    42850,   # 2nd segment
+                    85710,   # 3th segment
+                    128570,  # 4th segment
+                    171420,  # 5th segment
+                    214280,  # 6th segment
+                    257140,  # 7th segment
+                    300000,  # 8th segment
+                    342850,  # 9th segment
+                ],
+            }
+        },
+    ]
+
 
 # if ENVIRONMENT_NONSTATIONARY:
 #     configuration["environment"] = [
@@ -1611,13 +1677,21 @@ if TEST_Non_Stationary_Policies:
         # [
         #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
         # ] +
+        # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
+        # [
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+        # ] +
         # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": 800, "b": np.sqrt(800/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, } }
         ] +
-        # OK this Monitored-klUCB is the same
+        # # OK this Monitored-klUCB is the same
+        # [
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
+        # ] +
+        # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": 800, "b": np.sqrt(800/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, } }
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [
