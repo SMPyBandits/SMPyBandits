@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """ ``Environment`` module:
 
-- :class:`MAB`, :class:`MarkovianMAB`, :class:`ChangingAtEachRepMAB`, :class:`IncreasingMAB`, :class:`NonStationaryMAB` objects, used to wrap the problems (list of arms).
+- :class:`MAB`, :class:`MarkovianMAB`, :class:`ChangingAtEachRepMAB`, :class:`IncreasingMAB`, :class:`PieceWiseStationaryMAB`, :class:`NonStationaryMAB` objects, used to wrap the problems (essentially a list of arms).
 - :class:`Result` and :class:`ResultMultiPlayers` objects, used to wrap simulation results (list of decisions and rewards).
 - :class:`Evaluator` environment, used to wrap simulation, for the single player case.
 - :class:`EvaluatorMultiPlayers` environment, used to wrap simulation, for the multi-players case.
@@ -22,7 +22,7 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, IncreasingMAB, NonStationaryMAB
+from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, IncreasingMAB, PieceWiseStationaryMAB, NonStationaryMAB
 
 from .Result import Result
 from .Evaluator import Evaluator

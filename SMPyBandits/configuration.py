@@ -127,8 +127,8 @@ TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: To know if the non stationary policies are tested.
-TEST_Non_Stationary_Policies = True
 TEST_Non_Stationary_Policies = False  # XXX do not let this = False if you want to test the non stationary policies
+TEST_Non_Stationary_Policies = True
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = True  # XXX to manually enable this feature?
@@ -355,31 +355,65 @@ if ENVIRONMENT_BAYESIAN:
     ]
 
 
+# if ENVIRONMENT_NONSTATIONARY:
+#     configuration["environment"] = [
+#         {   # A simple piece-wise stationary problem
+#             "arm_type": ARM_TYPE,
+#             "params": {
+#                 "listOfMeans": LIST_OF_MEANS,
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
+#             }
+#         },
+#     ]
+
 if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] = [
-        {   # A non stationary problem: every step of the same repetition use a different mean vector!
-            "arm_type": ARM_TYPE,
+        {   # A simple piece-wise stationary problem
+            "arm_type": Bernoulli,
             "params": {
-                "newMeans": randomMeans,
-                # FIXME try different changePoints VALUES
-                # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
-                # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
-                "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
-                "args": {
-                    "nbArms": NB_ARMS,
-                    "lower": LOWER, "amplitude": AMPLITUDE,
-                    "mingap": None, "isSorted": False,
-                },
-                # XXX onlyOneArm is None by default,
-                "onlyOneArm": None,
-                # XXX but onlyOneArm can be "uniform" to only change *one* arm at each change point,
-                # "onlyOneArm": "uniform",
-                # XXX onlyOneArm can also be an integer to only change n arms at each change point,
-                # "onlyOneArm": 3,
+                "listOfMeans": [
+                    [0.4, 0.5, 0.9],  # 0    to 399
+                    [0.5, 0.4, 0.7],  # 400  to 799
+                    [0.6, 0.3, 0.5],  # 800  to 1199
+                    [0.7, 0.2, 0.3],  # 1200 to 1599
+                    [0.8, 0.1, 0.1],  # 1600 to end
+                ],
+                "changePoints": [
+                    0,
+                    400,
+                    800,
+                    1200,
+                    1600,
+                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
+                ],
             }
         },
     ]
 
+
+# if ENVIRONMENT_NONSTATIONARY:
+#     configuration["environment"] = [
+#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
+#             "arm_type": ARM_TYPE,
+#             "params": {
+#                 "newMeans": randomMeans,
+#                 # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
+#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
+#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
+#                 "args": {
+#                     "nbArms": NB_ARMS,
+#                     "lower": LOWER, "amplitude": AMPLITUDE,
+#                     "mingap": None, "isSorted": False,
+#                 },
+#                 # XXX onlyOneArm is None by default,
+#                 "onlyOneArm": None,
+#                 # XXX but onlyOneArm can be "uniform" to only change *one* arm at each change point,
+#                 # "onlyOneArm": "uniform",
+#                 # XXX onlyOneArm can also be an integer to only change n arms at each change point,
+#                 # "onlyOneArm": 3,
+#             }
+#         },
+#     ]
 
 # if ENVIRONMENT_NONSTATIONARY:
 #     configuration["environment"] = [  # XXX Bernoulli arms
@@ -387,8 +421,6 @@ if ENVIRONMENT_NONSTATIONARY:
 #             "arm_type": ARM_TYPE,
 #             "params": {
 #                 "newMeans": continuouslyVaryingMeans,
-#                 # FIXME try different changePoints VALUES
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
 #                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
 #                 "args": {
 #                    "nbArms": NB_ARMS,
@@ -407,8 +439,6 @@ if ENVIRONMENT_NONSTATIONARY:
 #             "arm_type": ARM_TYPE,
 #             "params": {
 #                 "newMeans": randomContinuouslyVaryingMeans,
-#                 # FIXME try different changePoints VALUES
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
 #                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
 #                 "args": {
 #                     "nbArms": NB_ARMS,
@@ -420,6 +450,7 @@ if ENVIRONMENT_NONSTATIONARY:
 #         },
 #     ]
 
+
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
 #     # Note: I dropped the support for more than one environments, for this part of the configuration, but not the simulation code
@@ -428,7 +459,10 @@ try:
     #: Number of arms *in the first environment*
     nbArms = int(configuration['environment'][0]['params']['args']['nbArms'])
 except (TypeError, KeyError):
-    nbArms = len(configuration['environment'][0]['params'])
+    try:
+        nbArms = len(configuration['environment'][0]['params']['listOfMeans'][0])
+    except (TypeError, KeyError):
+        nbArms = len(configuration['environment'][0]['params'])
 
 #: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
 klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
@@ -444,11 +478,11 @@ except (ValueError, np.AxisError, TypeError):
 
 configuration.update({
     "policies": [
-        # # --- Stupid algorithms
-        # {
-        #     "archtype": Uniform,   # The stupidest policy, fully uniform
-        #     "params": {}
-        # },
+        # --- Stupid algorithms
+        {
+            "archtype": Uniform,   # The stupidest policy, fully uniform
+            "params": {}
+        },
         # {
         #     "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
         #     "params": {}
@@ -463,9 +497,10 @@ configuration.update({
         # },
         # # --- Full or partial knowledge algorithms
         { "archtype": TakeFixedArm, "params": { "armIndex": 0 }},  # Take worse arm!
-        # { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": min(2, nbArms - 1) }},  # Take third worse arm!
         # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 2 }},  # Take second best arm!
-        { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 1 }},  # Take best arm!
+        # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 1 }},  # Take best arm!
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -1557,11 +1592,14 @@ if TEST_Non_Stationary_Policies:
 
     configuration.update({
         "policies":
-        # FIXME try LM_DSEE!
+        # The LM_DSEE algorithm seems to work fine!
         [
+            # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+            # XXX note that for a fixed T it means nothing…
+            # For T=10000 it is at most 100 changes, reasonable!
             { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.1, "a": 1, "b": 2, } }
         ] +
-        # # FIXME try CUSUM_IndexPolicy!
+        # # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         # [
         #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
         # ] +
@@ -1573,7 +1611,7 @@ if TEST_Non_Stationary_Policies:
         # [
         #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, } }
         # ] +
-        # FIXME try Monitored_IndexPolicy!
+        # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
         ] +
@@ -1581,7 +1619,7 @@ if TEST_Non_Stationary_Policies:
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
         ] +
-        # FIXME try SW_UCB_Hash!
+        # DONE The SW_UCB_Hash algorithm works fine!
         [
             { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
             for alpha in [0.5]  # ALPHAS
@@ -1627,7 +1665,7 @@ if TEST_Non_Stationary_Policies:
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
             { "archtype": Thompson, "params": { "posterior": Beta, } },
-        ] + [  # This is still highly experimental!
+        ] + [  # XXX This is still highly experimental!
             { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
             # for gamma in GAMMAS
             for gamma in [0.99]

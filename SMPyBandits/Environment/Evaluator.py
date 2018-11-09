@@ -30,7 +30,7 @@ try:
     from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
-    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, IncreasingMAB
+    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
     from .Result import Result
     from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
@@ -41,7 +41,7 @@ except ImportError:
     from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
-    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, IncreasingMAB
+    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
     from Result import Result
     from memory_consumption import getCurrentMemory, sizeof_fmt
 
@@ -157,8 +157,11 @@ class Evaluator(object):
             if isinstance(configuration_arms, dict) \
                 and "arm_type" in configuration_arms \
                 and "params" in configuration_arms:
-                # NonStationaryMAB or ChangingAtEachRepMAB
-                if "newMeans" in configuration_arms["params"] \
+                # PieceWiseStationaryMAB or NonStationaryMAB or ChangingAtEachRepMAB
+                if "listOfMeans"  in configuration_arms["params"] \
+                    and "changePoints" in configuration_arms["params"]:
+                        new_mab_problem = PieceWiseStationaryMAB(configuration_arms)
+                elif "newMeans" in configuration_arms["params"] \
                     and "args" in configuration_arms["params"]:
                     if "changePoints" in configuration_arms["params"]:
                         new_mab_problem = NonStationaryMAB(configuration_arms)
@@ -486,7 +489,18 @@ class Evaluator(object):
 
     # --- Plotting methods
 
-    def plotRegrets(self, envId,
+    def _xlabel(self, envId, *args, **kwargs):
+        """Add xlabel to the plot, and if the environment has change-point, draw vertical lines to clearly identify the locations of the change points."""
+        # FIXME add markers for the breakpoints
+        env = self.envs[envId]
+        if hasattr(env, 'changePoints'):
+            ymin, ymax = plt.ylim()
+            for tau in self.envs[envId].changePoints:
+                if tau > 0 and tau < self.horizon:
+                    plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.7)
+        return plt.xlabel(*args, **kwargs)
+
+    def plotRegrets(self, envId=0,
                     savefig=None, meanReward=False,
                     plotSTD=False, plotMaxMin=False,
                     semilogx=False, semilogy=False, loglog=False,
@@ -535,7 +549,7 @@ class Evaluator(object):
                 if normalizedRegret:
                     MaxMinY /= np.log(2 + X)
                 plt.fill_between(X[::self.delta_t_plot], Y[::self.delta_t_plot] - MaxMinY[::self.delta_t_plot], Y[::self.delta_t_plot] + MaxMinY[::self.delta_t_plot], facecolor=colors[i], alpha=0.2)
-        plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
+        self._xlabel(envId, r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         lowerbound = self.envs[envId].lowerbound()
         lowerbound_sparse = self.envs[envId].lowerbound_sparse()
         if not (semilogx or semilogy or loglog):
@@ -548,7 +562,7 @@ class Evaluator(object):
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
         if meanReward:
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Mean of the best arm = ${:.3g}$".format(self.envs[envId].maxArm))
+            plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Largest mean = ${:.3g}$".format(self.envs[envId].maxArm))
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isChangingAtEachRepetition:
@@ -593,7 +607,7 @@ class Evaluator(object):
                 # DONE fix math formula in case of non stationary bandits
                 plt.ylabel(r"Non-stationary regret $R_t = \sum_{s=1}^{t} \max_k \mu_k(s)$ - %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             else:
-                plt.ylabel(r"Regret $R_t = t \mu^* - \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Regret $R_t = t \mu^* - \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$ (from actual rewards)" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
@@ -612,7 +626,7 @@ class Evaluator(object):
             lw = 5 if ('$N=' in policy.__cachedstr__ or 'Aggr' in policy.__cachedstr__ or 'CORRAL' in policy.__cachedstr__ or 'LearnExp' in policy.__cachedstr__ or 'Exp4' in policy.__cachedstr__) else 3
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
-        plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
+        self._xlabel(envId, r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
@@ -637,7 +651,7 @@ class Evaluator(object):
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_times)
-        plt.xlabel("Policies{}".format(self.signature))
+        plt.xlabel("Bandit algorithms{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
@@ -661,7 +675,7 @@ class Evaluator(object):
             plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories)
-        plt.xlabel("Policies{}".format(self.signature))
+        plt.xlabel("Bandit algorithms{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
@@ -744,7 +758,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(policy.__cachedstr__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-                plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                self._xlabel(envId, "Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 n, bins, patches = plt.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins)
@@ -776,7 +790,7 @@ class Evaluator(object):
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-            plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            self._xlabel(envId, "Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
             plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             all_last_regrets = []
             labels = []
@@ -790,6 +804,16 @@ class Evaluator(object):
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
+
+    def plotHistoryOfMeans(self, envId=0, horizon=None, savefig=None):
+        """ Plot the history of means, as a plot with x axis being the time, y axis the mean rewards, and K curves one for each arm."""
+        if horizon is None:
+            horizon = self.horizon
+        env = self.envs[envId]
+        if hasattr(env, 'plotHistoryOfMeans'):
+            return env.plotHistoryOfMeans(horizon=horizon, savefig=savefig)
+        else:
+            print("Warning: environment {} did not have a method plotHistoryOfMeans...".format(env))  # DEBUG
 
 
 # Helper function for the parallelization
@@ -817,7 +841,6 @@ def delayed_play(env, policy, horizon,
     policy.startGame()
     result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm, means=means)  # One Result object, for every policy
 
-    # FIXME remove these two special cases when the NonStationaryMAB is ready!
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     if nb_break_points is None or nb_break_points <= 0:
         random_shuffle = False
@@ -842,12 +865,12 @@ def delayed_play(env, policy, horizon,
         # 4. Finally we store the results
         result.store(t, choice, reward)
 
-        # FIXME finish to add support for non stationary problems
         if env.isDynamic:
             if t in env.changePoints:
                 means = env.newRandomArms(t)
                 indexes_bestarm = np.nonzero(np.isclose(means, np.max(means)))[0]
                 result.change_in_arms(t, indexes_bestarm)
+                if repeatId == 0: print("\nNew means vector = {}, best arm(s) = {}, at time t = {} ...".format(means, indexes_bestarm, t))  # DEBUG
 
         # XXX remove these two special cases when the NonStationaryMAB is ready?
         # FIXME regret is not correct when displayed for these two guys…
@@ -855,12 +878,12 @@ def delayed_play(env, policy, horizon,
         if random_shuffle and t > 0 and t in t_events:
                 indexes_bestarm = env.new_order_of_arm(shuffled(env.arms))
                 result.change_in_arms(t, indexes_bestarm)
-                if repeatId == 0: print("\nShuffling the arms at time t = {} ...".format(t))  # DEBUG
+                if repeatId == 0: print("\nShuffling the arms, best arm(s) = {}, at time t = {} ...".format(indexes_bestarm, t))  # DEBUG
         # XXX Experimental : invert the order of the arms at the middle of the simulation
         if random_invert and t > 0 and t in t_events:
                 indexes_bestarm = env.new_order_of_arm(env.arms[::-1])
                 result.change_in_arms(t, indexes_bestarm)
-                if repeatId == 0: print("\nInverting the order of the arms at time t = {} ...".format(t))  # DEBUG
+                if repeatId == 0: print("\nInverting the order of the arms, best arm(s) = {}, at time t = {} ...".format(indexes_bestarm, t))  # DEBUG
 
     # Print the quality of estimation of arm ranking for this policy, just for 1st repetition
     if repeatId == 0 and hasattr(policy, 'estimatedOrder'):

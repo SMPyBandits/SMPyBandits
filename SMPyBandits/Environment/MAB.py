@@ -7,7 +7,7 @@ Such class has to have *at least* these methods:
 - and ``reprarms()`` to pretty print the arms (for titles of a plot),
 - and more, see below.
 
-.. warning:: FIXME it is still a work in progress, I need to add piecewise stationary environments, as well as continuously varying environments. See https://github.com/SMPyBandits/SMPyBandits/issues/71
+.. warning:: FIXME it is still a work in progress, I need to add continuously varying environments. See https://github.com/SMPyBandits/SMPyBandits/issues/71
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -29,9 +29,9 @@ except ImportError as e:
 
 # Local imports
 try:
-    from .plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
+    from .plotsettings import signature, wraptext, wraplatex, palette, makemarkers, legend, show_and_save
 except ImportError:
-    from plotsettings import signature, wraptext, wraplatex, palette, legend, show_and_save
+    from plotsettings import signature, wraptext, wraplatex, palette, makemarkers, legend, show_and_save
 
 
 class MAB(object):
@@ -104,7 +104,7 @@ class MAB(object):
     def new_order_of_arm(self, arms):
         """ Feed a new order of the arms to the environment.
 
-        - Updates ``self.means`` correctly.
+        - Updates :attr:`means` correctly.
         - Return the new position(s) of the best arm (to count and plot ``BestArmPulls`` correctly).
 
         .. warning:: This is a very limited support of non-stationary environment: only permutations of the arms are allowed, see :class:`NonStationaryMAB` for more.
@@ -191,13 +191,24 @@ class MAB(object):
         """ Sum of the M best means."""
         return np.sum(self.Mbest(M=M))
 
+    #
+    # --- Helper to compute vector of min arms, max arms, all arms
+
     def get_minArm(self, horizon=None):
         """Return the vector of min mean of the arms.
 
         - It is a vector of length horizon.
         """
         return np.full(horizon, self.minArm)
-        # return self.minArm
+        # return self.minArm  # XXX Nope, it's not a constant!
+
+    def get_maxArm(self, horizon=None):
+        """Return the vector of max mean of the arms.
+
+        - It is a vector of length horizon.
+        """
+        return np.full(horizon, self.maxArm)
+        # return self.maxArm  # XXX Nope, it's not a constant!
 
     def get_allMeans(self, horizon=None):
         """Return the vector of means of the arms.
@@ -210,14 +221,6 @@ class MAB(object):
             allMeans[:, t] = self.means
         return allMeans
 
-    def get_maxArm(self, horizon=None):
-        """Return the vector of max mean of the arms.
-
-        - It is a vector of length horizon.
-        """
-        return np.full(horizon, self.maxArm)
-        # return self.maxArm
-
     #
     # --- Estimate sparsity
 
@@ -228,15 +231,15 @@ class MAB(object):
             return self._sparsity
         else:
             return np.count_nonzero(self.means > 0)
-            # return np.count_nonzero(self.means)
 
     def str_sparsity(self):
         """ Empty string if ``sparsity = nbArms``, or a small string ', $s={}$' if the sparsity is strictly less than the number of arm."""
         s, K = self.sparsity, self.nbArms
         assert 0 <= s <= K, "Error: sparsity s = {} has to be 0 <= s <= K = {}...".format(s, K)
-        # FIXME disable this feature when not working on sparse simulations
+        # WARNING
+        # disable this feature when not working on sparse simulations
         # return ""
-        # FIXME bring back this feature when working on sparse simulations
+        # or bring back this feature when working on sparse simulations
         return "" if s == K else ", $s={}$".format(s)
 
     #
@@ -574,7 +577,7 @@ VERBOSE = True
 VERBOSE = False  #: Whether to be verbose when generating new arms for Dynamic MAB
 
 class ChangingAtEachRepMAB(MAB):
-    """Like a static MAB problem, but the arms are (randomly) regenerated for each repetition, with the :meth:`newRandomArms` method.
+    """Like a stationary MAB problem, but the arms are (randomly) regenerated for each repetition, with the :meth:`newRandomArms` method.
 
     - ``M.arms`` and ``M.means`` is changed after each call to :meth:`newRandomArms`, but not ``nbArm``. All the other methods are carefully written to still make sense (``Mbest``, ``Mworst``, ``minArm``, ``maxArm``).
 
@@ -768,21 +771,234 @@ class ChangingAtEachRepMAB(MAB):
         return avg_our_lowerbound, avg_anandkumar_lowerbound, avg_centralized_lowerbound
 
 
-# --- NonStationaryMAB
+# --- PieceWiseStationaryMAB
 
-class NonStationaryMAB(MAB):
-    """Like a static MAB problem, but the arms *can* be modified *at each time step*, with the :meth:`newRandomArms` method.
+class PieceWiseStationaryMAB(MAB):
+    r"""Like a stationary MAB problem, but piece-wise stationary.
+
+    - Give it a list of vector of means, and a list of change-point locations.
+
+    - You can use :meth:`plotHistoryOfMeans` to see a nice plot of the history of means.
+
+    .. note:: This is a generic class to implement one "easy" kind of non-stationary bandits, abruptly changing non-stationary bandits, if changepoints are fixed and decided in advanced.
+
+    .. warning:: It works fine, but it is still experimental, be careful when using this feature.
+
+    .. warning:: The number of arms is fixed, see https://github.com/SMPyBandits/SMPyBandits/issues/123 if you are curious about bandit problems with a varying number of arms (or sleeping bandits where some arms can be enabled or disabled at each time).
+    """
+
+    def __init__(self, configuration, verbose=VERBOSE):
+        """New PieceWiseStationaryMAB."""
+        self.isChangingAtEachRepetition   = False  #: The problem is not changing at each repetition.
+        self.isDynamic   = True  #: The problem is dynamic.
+        self.isMarkovian = False  #: The problem is not Markovian.
+        self._sparsity = None
+
+        assert isinstance(configuration, dict) \
+            and "arm_type" in configuration and "params" in configuration \
+            and "listOfMeans" in configuration["params"] \
+            and "changePoints" in configuration["params"], \
+            "Error: this PieceWiseStationaryMAB is not really a non-stationary MAB, you should use a simple MAB instead!"  # DEBUG
+        self._verbose = verbose
+
+        print("  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
+
+        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (PieceWiseStationaryMAB are homogeneous)
+        print(" - with 'arm_type' =", arm_type)  # DEBUG
+        params = configuration["params"]
+        print(" - with 'params' =", params)  # DEBUG
+
+        self.listOfMeans = params["listOfMeans"]  #: The list of means
+        self.listOfMeans = np.array(self.listOfMeans)
+        self.nbArms = len(self.listOfMeans[0])  #: Number of arms
+        assert all(len(arms) == self.nbArms for arms in self.listOfMeans), "Error: the number of arms cannot be different between change-points."  # DEBUG
+        print(" - with 'listOfMeans' =", self.listOfMeans)  # DEBUG
+
+        self.changePoints = params["changePoints"]  #: List of the change points
+        print(" - with 'changePoints' =", self.changePoints)  # DEBUG
+        # XXX Maybe we need to add 0 in the list of changePoints
+        if 0 not in self.changePoints and len(self.listOfMeans) == len(self.changePoints) - 1:
+            self.changePoints = [0] + self.changePoints
+        assert len(self.listOfMeans) == len(self.changePoints), "Error: the list of means {} does not has the same length as the list of change points {}...".format(self.listOfMeans, self.changePoints)  # DEBUG
+
+        # XXX try to read sparsity
+        self._sparsity = configuration["sparsity"] if "sparsity" in configuration else None
+
+        print("\n\n ==> Creating the dynamic arms ...")  # DEBUG
+
+        self.listOfArms = [
+            [self.arm_type(mean) for mean in means]
+            for means in self.listOfMeans
+        ]
+
+        self.currentInterval = 0  # current number of the interval we are in
+
+        print("   - with 'nbArms' =", self.nbArms)  # DEBUG
+        print("   - with 'arms' =", self.arms)  # DEBUG
+        print(" - Initial draw of 'means' =", self.means)  # DEBUG
+
+    def __repr__(self):
+        if len(self.listOfArms) > 0:
+            return "{}(nbArms: {}, arms: {})".format(self.__class__.__name__, self.nbArms, self.arms)
+        else:
+            return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
+
+    def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
+        """Cannot represent the dynamic arms, so print the PieceWiseStationaryMAB object"""
+        text = "{text}, {arm} with {M} break-points".format(
+            text="Non-Stationary MAB",
+            arm=str(self.arms[0]),
+            M=len([tau for tau in self.changePoints if tau > 0]),
+            # we do not count 0 and horizon
+        )
+        return wraptext(text)
+
+    def newRandomArms(self, t=None, onlyOneArm=None, verbose=VERBOSE):
+        """Fake function, there is nothing random here, it is just to tell the piece-wise stationary MAB problem to maybe use the next interval.
+        """
+        if t > 0 and t in self.changePoints:
+            if verbose: print("  - BREAKPOINT For a PieceWiseStationaryMAB object, the function newRandomArms was called, with t = {}, and current interval was {}, so means was = {} and will be = {}...".format(t, self.currentInterval, self.listOfMeans[self.currentInterval], self.listOfMeans[self.currentInterval + 1]))  # DEBUG
+            self.currentInterval += 1  # next interval!
+        else:
+            if verbose: print("  - For a PieceWiseStationaryMAB object, the function newRandomArms was called, with t = {}, and current interval is {}, so means is = {}...".format(t, self.currentInterval, self.listOfMeans[self.currentInterval]))  # DEBUG
+        # return the latest generate means
+        return self.listOfMeans[self.currentInterval]
+
+    # --- Plot utility
+
+    def plotHistoryOfMeans(self, horizon=None, savefig=None, forceTo01=False):
+        """Plot the history of means, as a plot with x axis being the time, y axis the mean rewards, and K curves one for each arm."""
+        if horizon is None:
+            horizon = max(self.changePoints)
+        allMeans = self.get_allMeans(horizon=horizon)
+        colors = palette(self.nbArms)
+        markers = makemarkers(self.nbArms)
+        # Now plot
+        fig = plt.figure()
+        for armId in range(self.nbArms):
+            meanOfThisArm = allMeans[armId, :]
+            plt.plot(meanOfThisArm, color=colors[armId], marker=markers[armId], markevery=(armId / 50., 0.1), label='Arm #{}'.format(armId), lw=4, alpha=0.9)
+        legend()
+        ymin, ymax = plt.ylim()
+        if forceTo01:
+            ymin, ymax = min(0, ymin), max(1, ymax)
+            plt.ylim(ymin, ymax)
+        for tau in self.changePoints:
+            if tau > 0 and tau < horizon:
+                plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.7)
+        plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(horizon, signature))
+        plt.ylabel(r"Successive means of the $K = {}$ arms".format(self.nbArms))
+        plt.title("History of means for {}".format(self.reprarms(latex=True)))
+        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
+        return fig
+
+    # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
+
+    @property
+    def arms(self):
+        """Return the *current* list of arms. at time :math:`t` , the return mean of arm :math:`k` is the mean during the time interval containing :math:`t`."""
+        return self.listOfArms[self.currentInterval]
+
+    @property
+    def means(self):
+        """ Return the list of means of arms for this PieceWiseStationaryMAB: at time :math:`t` , the return mean of arm :math:`k` is the mean during the time interval containing :math:`t`.
+        """
+        return self.listOfMeans[self.currentInterval]
+
+    #
+    # --- Helper to compute values minArm and maxArm
+
+    @property
+    def minArm(self):
+        """Return the smallest mean of the arms, for the current vector of means."""
+        return np.min(self.means)
+
+    @property
+    def maxArm(self):
+        """Return the largest mean of the arms, for the current vector of means."""
+        return np.max(self.means)
+
+    #
+    # --- Helper to compute vector of min arms, max arms, all arms
+
+    def get_minArm(self, horizon=None):
+        """Return the smallest mean of the arms, for a piece-wise stationary MAB
+
+        - It is a vector of length horizon.
+        """
+        if horizon is None:
+            horizon = np.max(self.changePoints)
+        mapOfMinArms = [np.min(means) for means in self.listOfMeans]
+        meansOfMinArms = np.zeros(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self.changePoints) - 1 and t >= self.changePoints[nbChangePoint + 1]:
+                nbChangePoint += 1
+            meansOfMinArms[t] = mapOfMinArms[nbChangePoint]
+        return meansOfMinArms
+
+    def get_maxArm(self, horizon=None):
+        """Return the vector of max mean of the arms, for a piece-wise stationary MAB.
+
+        - It is a vector of length horizon.
+        """
+        if horizon is None:
+            horizon = np.max(self.changePoints)
+        mapOfMaxArms = [np.max(means) for means in self.listOfMeans]
+        meansOfMaxArms = np.ones(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self.changePoints) - 1 and t >= self.changePoints[nbChangePoint + 1]:
+                nbChangePoint += 1
+            meansOfMaxArms[t] = mapOfMaxArms[nbChangePoint]
+        return meansOfMaxArms
+
+    def get_allMeans(self, horizon=None):
+        """Return the vector of mean of the arms, for a piece-wise stationary MAB.
+
+        - It is a numpy array of shape (nbArms, horizon).
+        """
+        if horizon is None:
+            horizon = np.max(self.changePoints)
+        meansOfArms = np.ones((self.nbArms, horizon))
+        for armId in range(self.nbArms):
+            nbChangePoint = 0
+            for t in range(horizon):
+                if nbChangePoint < len(self.changePoints) - 1 and t >= self.changePoints[nbChangePoint + 1]:
+                    nbChangePoint += 1
+                meansOfArms[armId][t] = self.listOfMeans[nbChangePoint][armId]
+        return meansOfArms
+
+    #
+    # --- Compute lower bounds
+    # TODO include knowledge of piece-wise stationarity in the lower-bounds
+
+    # def lowerbound(self):
+    #     """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
+    #     raise NotImplementedError
+
+    # def hoifactor(self):
+    #     """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
+    #     raise NotImplementedError
+
+    # def lowerbound_multiplayers(self, nbPlayers=1):
+    #     """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
+    #     raise NotImplementedError
+
+
+# --- PieceWiseStationaryMAB
+
+class NonStationaryMAB(PieceWiseStationaryMAB):
+    r"""Like a stationary MAB problem, but the arms *can* be modified *at each time step*, with the :meth:`newRandomArms` method.
 
     - ``M.arms`` and ``M.means`` is changed after each call to :meth:`newRandomArms`, but not ``nbArm``. All the other methods are carefully written to still make sense (``Mbest``, ``Mworst``, ``minArm``, ``maxArm``).
 
     .. note:: This is a generic class to implement different kinds of non-stationary bandits:
 
-        - Abruptly changing non-stationary bandits, in different variants: changepoints are fixed and decided in advanced, or changepoints are randomly drawn (once for all ``n`` repetitions or at different location fo each repetition).
+        - Abruptly changing non-stationary bandits, in different variants: changepoints are randomly drawn (once for all ``n`` repetitions or at different location fo each repetition).
         - Slowly varying non-stationary bandits, where the underlying mean of each arm is slowing randomly modified and a bound on the speed of change (e.g., Lipschitz constant of :math:`t \mapsto \mu_i(t)`) is known.
 
-    .. warning:: FIXME finish this! It works fine, but it is still experimental, be careful when using this feature.
-
-    .. warning:: FIXME So far it only works for randomly generated non-stationary problems: the vector of new means is generated randomly! See https://github.com/SMPyBandits/SMPyBandits/issues/155 regarding the future work to be able not generate random problems but fixed ones !
+    .. warning:: It works fine, but it is still experimental, be careful when using this feature.
 
     .. warning:: The number of arms is fixed, see https://github.com/SMPyBandits/SMPyBandits/issues/123 if you are curious about bandit problems with a varying number of arms (or sleeping bandits where some arms can be enabled or disabled at each time).
     """
@@ -799,12 +1015,12 @@ class NonStationaryMAB(MAB):
             and "newMeans" in configuration["params"] \
             and "changePoints" in configuration["params"] \
             and "args" in configuration["params"], \
-            "Error: this ChangingAtEachRepMAB is not really a non-stationary MAB, you should use a simple MAB instead!"  # DEBUG
+            "Error: this NonStationaryMAB is not really a non-stationary MAB, you should use a simple MAB instead!"  # DEBUG
         self._verbose = verbose
 
         print("  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
 
-        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (ChangingAtEachRepMAB are homogeneous)
+        self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (NonStationaryMAB are homogeneous)
         print(" - with 'arm_type' =", arm_type)  # DEBUG
         params = configuration["params"]
         print(" - with 'params' =", params)  # DEBUG
@@ -831,20 +1047,14 @@ class NonStationaryMAB(MAB):
         print("   - with 'arms' =", self.arms)  # DEBUG
         print(" - Example of initial draw of 'means' =", self.means)  # DEBUG
 
-    def __repr__(self):
-        if self._arms is not None:
-            return "{}(nbArms: {}, arms: {})".format(self.__class__.__name__, self.nbArms, self._arms)
-        else:
-            return "{}(nbArms: {}, armType: {})".format(self.__class__.__name__, self.nbArms, self.arm_type)
-
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
-        """Cannot represent the dynamic arms, so print the ChangingAtEachRepMAB object"""
-        # print("reprarms of a ChangingAtEachRepMAB object...")  # DEBUG
+        """Cannot represent the dynamic arms, so print the NonStationaryMAB object"""
+        # print("reprarms of a NonStationaryMAB object...")  # DEBUG
         # print("  It has self._historyOfMeans =\n{}".format(self._historyOfMeans))  # DEBUG
         # print("  It has self.means =\n{}".format(self.means))  # DEBUG
-        text = "{text}, {K} with uniform means on [{dollar}{lower:.3g}, {upper:.3g}{dollar}]{mingap}{sparsity}".format(
+        text = "{text}, {arm} with uniform means on [{dollar}{lower:.3g}, {upper:.3g}{dollar}]{mingap}{sparsity}".format(
             text="Non-Stationary MAB",
-            K=str(self._arms[0]),
+            arm=str(self._arms[0]),
             lower=self.args["lower"],
             upper=self.args["lower"] + self.args["amplitude"],
             mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r",min gap=%.3g" % self.args["mingap"],
@@ -894,37 +1104,6 @@ class NonStationaryMAB(MAB):
             # print("Currently self._t = {} and self._historyOfMeans = {} ...".format(self._t, self._historyOfMeans))  # DEBUG
         return one_draw_of_means
 
-    # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments
-
-    @property
-    def arms(self):
-        """Return the *current* list of arms."""
-        return self._arms
-
-    @property
-    def means(self):
-        """ Return the list of means of arms for this NonStationaryMAB: after :math:`x` calls to :meth:`newRandomArms`, the return mean of arm :math:`k` is the mean of the :math:`x` means of that arm.
-
-        .. warning:: FIXME wrong!
-        """
-        raise NotImplementedError
-        return np.mean(np.array(list(self._historyOfMeans.values())), axis=0)
-
-    #
-    # --- Helper to compute sets Mbest and Mworst
-
-    def Mbest(self, M=1):
-        """ Set of M best means (averaged on all the draws of new means)."""
-        raise NotImplementedError
-        # sortedMeans = np.mean(np.sort(np.array(list(self._historyOfMeans.values())), axis=1), axis=0)
-        # return sortedMeans[-M:]
-
-    def Mworst(self, M=1):
-        """ Set of M worst means (averaged on all the draws of new means)."""
-        raise NotImplementedError
-        # sortedMeans = np.mean(np.sort(np.array(list(self._historyOfMeans.values())), axis=1), axis=0)
-        # return sortedMeans[:-M]
-
     def get_minArm(self, horizon=None):
         """Return the smallest mean of the arms, for a non-stationary MAB
 
@@ -940,27 +1119,6 @@ class NonStationaryMAB(MAB):
                 nbChangePoint += 1
             meansOfMinArms[t] = mapOfMinArms[nbChangePoint]
         return meansOfMinArms
-
-    def get_allMeans(self, horizon=None):
-        """Return the vector of mean of the arms, for a non-stationary MAB.
-
-        - It is a numpy array of shape (nbArms, horizon).
-        """
-        # FIXME add support for non stationary problems: maxArm should be a vector of length horizon
-        if horizon is None:
-            horizon = np.max(self._historyOfChangePoints)
-        mapOfArms = [self._historyOfMeans[tau] for tau in sorted(self._historyOfChangePoints)]
-        meansOfArms = np.ones((self.nbArms, horizon))
-        for armId in range(self.nbArms):
-            nbChangePoint = 0
-            for t in range(horizon):
-                if nbChangePoint < len(self._historyOfChangePoints) - 1 and t >= self._historyOfChangePoints[nbChangePoint + 1]:
-                    nbChangePoint += 1
-                meansOfArms[armId][t] = mapOfArms[nbChangePoint][armId]
-        print("\n"*10)  # DEBUG
-        print("meansOfArms =", meansOfArms)  # DEBUG
-        print("\n"*10)  # DEBUG
-        return meansOfArms
 
     def get_maxArm(self, horizon=None):
         """Return the vector of max mean of the arms, for a non-stationary MAB.
@@ -978,23 +1136,22 @@ class NonStationaryMAB(MAB):
             meansOfMaxArms[t] = mapOfMaxArms[nbChangePoint]
         return meansOfMaxArms
 
-    #
-    # --- Compute lower bounds
-    # TODO
+    def get_allMeans(self, horizon=None):
+        """Return the vector of mean of the arms, for a non-stationary MAB.
 
-    # def lowerbound(self):
-    #     """ Compute the constant C(mu), for [Lai & Robbins] lower-bound for this MAB problem (complexity), using functions from :mod:`kullback` (averaged on all the draws of new means)."""
-    #     raise NotImplementedError
-
-    # def hoifactor(self):
-    #     """ Compute the HOI factor H_OI(mu), the Optimal Arm Identification (OI) factor, for this MAB problem (complexity). Cf. (3.3) in Navikkumar MODI's thesis, "Machine Learning and Statistical Decision Making for Green Radio" (2017) (averaged on all the draws of new means)."""
-    #     raise NotImplementedError
-
-    # def lowerbound_multiplayers(self, nbPlayers=1):
-    #     """ Compute our multi-players lower bound for this MAB problem (complexity), using functions from :mod:`kullback`. """
-    #     raise NotImplementedError
-
-
+        - It is a numpy array of shape (nbArms, horizon).
+        """
+        if horizon is None:
+            horizon = np.max(self._historyOfChangePoints)
+        mapOfArms = [self._historyOfMeans[tau] for tau in sorted(self._historyOfChangePoints)]
+        meansOfArms = np.ones((self.nbArms, horizon))
+        for armId in range(self.nbArms):
+            nbChangePoint = 0
+            for t in range(horizon):
+                if nbChangePoint < len(self._historyOfChangePoints) - 1 and t >= self._historyOfChangePoints[nbChangePoint + 1]:
+                    nbChangePoint += 1
+                meansOfArms[armId][t] = mapOfArms[nbChangePoint][armId]
+        return meansOfArms
 
 
 # --- IncreasingMAB
@@ -1044,7 +1201,7 @@ default_change_lower_amplitude = doubling_change_lower_amplitude
 
 
 class IncreasingMAB(MAB):
-    """Like a static MAB problem, but the range of the rewards is increased from time to time, to test the :class:`Policy.WrapRange` policy.
+    """Like a stationary MAB problem, but the range of the rewards is increased from time to time, to test the :class:`Policy.WrapRange` policy.
 
     - M.arms and M.means is NOT changed after each call to ``newRandomArms()``, but not nbArm.
 
