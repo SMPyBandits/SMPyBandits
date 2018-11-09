@@ -62,6 +62,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             w = int(np.ceil(w))
             if w % 2 != 0:
                 w = 2*(1 + w//2)
+            if w >= horizon / (1 + max_nb_random_events):
+                print("Warning: the formula for w in the paper gave w = {}, that's crazy large, we use instead {}".format(w, 50 * nbArms * max_nb_random_events))
+                w = 50 * nbArms * max_nb_random_events
         assert w > 0, "Error: for Monitored_UCB policy the parameter w should be > 0 but it was given as {}.".format(w)  # DEBUG
         self.window_size = w  #: Parameter :math:`w` for the M-UCB algorithm.
 
@@ -78,6 +81,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             gamma = np.sqrt((M-1) * nbArms * min(w/2, np.ceil(b / delta) +  3 * np.sqrt(w)) / (2 * horizon))
         if gamma > 1:
             gamma = 0.05 * nbArms
+        if gamma <= 0:
+            print("Warning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 1.0 / (1 + 50 * nbArms * max_nb_random_events)))
+            gamma = 1.0 / (1 + 50 * nbArms * max_nb_random_events)
         assert 0 <= gamma <= 1, "Error: for Monitored_UCB policy the parameter gamma should be 0 <= gamma <= 1, but it was given as {}.".format(gamma)  # DEBUG
         gamma = max(0, min(1, gamma))  # clip gamma to (0, 1) it's a probability!
         self.gamma = gamma  #: What they call :math:`\gamma` in their paper: the share of uniform exploration.
@@ -104,9 +110,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             A &:= (t - \tau) \mod \lceil \frac{K}{\gamma} \rceil,\\
             A &\leq K \implies A_t = A.
         """
-        A = (self.t - self.last_update_time_tau) % np.floor(self.nArms / self.gamma)
+        A = (self.t - self.last_update_time_tau) % int(np.ceil(self.nbArms / self.gamma))
         if A < self.nbArms:
-            return A
+            return int(A)
         # FIXED no in this algorithm they do not use a uniform chance of random exploration!
         # if with_proba(self.gamma):
         #     return np.random.randint(0, self.nbArms - 1)
