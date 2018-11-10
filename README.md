@@ -27,11 +27,11 @@ More recent examples are [klUCBswitch](https://smpybandits.github.io/docs/Polici
 [![Releases of https://github.com/SMPyBandits/SMPyBandits/](https://badgen.net/github/release/SMPyBandits/SMPyBandits)](https://github.com/SMPyBandits/SMPyBandits/releases)
 
 - Classical MAB have a lot of applications, from clinical trials, A/B testing, game tree exploration, and online content recommendation (my framework does *not* implement contextual bandit - yet).
-- [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](SMPyBandits/Environment/CollisionModels.py) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](SMPyBandits/PoliciesMultiPlayers/rhoRand.py) from 2009, [`MEGA`](SMPyBandits/Policies/MEGA.py) from 2015, [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py), and our state-of-the-art algorithms [`RandTopM`](SMPyBandits/PoliciesMultiPlayers/RandTopM.py) and [`MCTopM`](SMPyBandits/PoliciesMultiPlayers/MCTopM.py)).
+- [Multi-player MAB](MultiPlayers.md) have applications in Cognitive Radio, and my framework implements [all the collision models](https://smpybandits.github.io/docs/Environment.CollisionModels.html) found in the literature, as well as all the algorithms from the last 10 years or so ([`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) from 2009, [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) from 2015, [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html), and our state-of-the-art algorithms [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html) and [`MCTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.MCTopM.html), along with very recent algorithms [`SIC-MMAB`](https://smpybandits.github.io/docs/Policies.SIC_MMAB.html) from [arXiv:1809.08151](https://arxiv.org/abs/1809.08151) and [`MusicalChairNoSensing`](https://smpybandits.github.io/docs/Policies.MusicalChairNoSensing.html) from [arXiv:1808.08416](https://arxiv.org/abs/1808.08416)).
 - I'm working on adding a clean support for non-stationary MAB problem, and I will soon implement all state-of-the-art algorithms for these problems.
 
 With this numerical framework, simulations can run on a single CPU or a multi-core machine, and summary plots are automatically saved as high-quality PNG, PDF and EPS (ready for being used in research article).
-Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/SMPyBandits/SMPyBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuration_...py`).
+Making new simulations is very easy, one only needs to write a configuration script and basically no code! See [these examples](https://github.com/SMPyBandits/SMPyBandits/search?l=Python&q=configuration&type=&utf8=%E2%9C%93) (files named `configuration_*.py`).
 
 A complete [Sphinx](http://sphinx-doc.org/) documentation for each algorithms and every piece of code (included constants in the configurations!) is available here: [SMPyBandits.GitHub.io](https://smpybandits.github.io/). (I will use [ReadTheDocs](https://readthedocs.org/) for this project, but I won't use any *continuous integration*, don't even think of it!)
 
@@ -67,7 +67,7 @@ The paper can be consulted [here on my website](https://perso.crans.org/besson/a
 ## [List of research publications using SMPyBandits](PublicationsWithSMPyBandits.md)
 
 ## 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
-I designed and added the [`Aggregator`](SMPyBandits/Policies/Aggregator.py) policy, in order to test its validity and performance.
+I designed and added the [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
@@ -102,15 +102,16 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 ## Other interesting things
 ### [Single-player Policies](https://smpybandits.github.io/docs/Policies.html)
-- More than 65 algorithms, including all known variants of the [`UCB`](SMPyBandits/Policies/UCB.py), [kl-UCB](SMPyBandits/Policies/klUCB.py), [`MOSS`](SMPyBandits/Policies/MOSS.py) and [Thompson Sampling](SMPyBandits/Policies/Thompson.py) algorithms, as well as other less known algorithms ([`OCUCB`](SMPyBandits/Policies/OCUCB.py), [`BESA`](SMPyBandits/Policies/OCUCB.py), [`OSSB`](SMPyBandits/Policies/OSSB.py) etc).
-- [`SparseWrapper`](https://smpybandits.github.io/docs/Policies.SparseWrapper.html#module-Policies.SparseWrapper) is a generalization of [the SparseUCB from this article](https://arxiv.org/pdf/1706.01383/).
+- More than 65 algorithms, including all known variants of the [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html), [kl-UCB](https://smpybandits.github.io/docs//Policies.klUCB.html), [`MOSS`](https://smpybandits.github.io/docs/Policies.MOSS.html) and [Thompson Sampling](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, as well as other less known algorithms ([`OCUCB`](https://smpybandits.github.io/docs/Policies.OCUCB.html), [`BESA`](https://smpybandits.github.io/docs/Policies.OCUCB.html), [`OSSB`](https://smpybandits.github.io/docs/Policies.OSSB.html) etc).
+- For instance, [`SparseWrapper`](https://smpybandits.github.io/docs/Policies.SparseWrapper.html#module-Policies.SparseWrapper) is a generalization of [the SparseUCB from this article](https://arxiv.org/pdf/1706.01383/).
 - Implementation of very recent Multi-Armed Bandits algorithms, e.g., [`kl-UCB++`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) (from [this article](https://hal.inria.fr/hal-01475078)), [`UCB-dagger`](https://smpybandits.github.io/docs/Policies.UCBdagger.html) (from [this article](https://arxiv.org/pdf/1507.07880)),  or [`MOSS-anytime`](https://smpybandits.github.io/docs/Policies.MOSSAnytime.html) (from [this article](http://proceedings.mlr.press/v48/degenne16.pdf)).
 - Experimental policies: [`BlackBoxOpt`](https://smpybandits.github.io/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](https://smpybandits.github.io/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
 
 ### Arms and problems
-- My framework mainly targets stochastic bandits, with arms following [`Bernoulli`](SMPyBandits/Arms/Bernoulli.py), bounded (truncated) or unbounded [`Gaussian`](SMPyBandits/Arms/Gaussian.py), [`Exponential`](SMPyBandits/Arms/Exponential.py), [`Gamma`](SMPyBandits/Arms/Gamma.py) or [`Poisson`](SMPyBandits/Arms/Poisson.py) distributions.
-- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](SMPyBandits/Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](SMPyBandits/Environment/MAB.py)).
-- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](SMPyBandits/Environment/MAB.py), even though I didn't implement any policies tailored for Markovian problems.
+- My framework mainly targets stochastic bandits, with arms following [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html), bounded (truncated) or unbounded [`Gaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html), [`Exponential`](https://smpybandits.github.io/docs/Arms.Exponential.html), [`Gamma`](https://smpybandits.github.io/docs/Arms.Gamma.html) or [`Poisson`](https://smpybandits.github.io/docs/Arms.Poisson.html) distributions, and more.
+- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](https://smpybandits.github.io/docs/Environment.MAB.html#Environment.MAB.MAB)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](https://smpybandits.github.io/docs/Environment/MAB.html#Environment.MAB.DynamicMAB)).
+- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](https://smpybandits.github.io/docs/Environment.MAB.html#Environment.MAB.MarkovianMAB), even though I didn't implement any policies tailored for Markovian problems.
+- I'm actively working on adding a very clean support for non-stationary MAB problems, and [`MAB.PieceWiseStationaryMAB`](https://smpybandits.github.io/docs/Environment.MAB.html#Environment.MAB.PieceWiseStationaryMAB) is already working well. Use it with policies designed for piece-wise stationary problems, like [Discounted-Thompson](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html), [CD-UCB](https://smpybandits.github.io/docs/Policies.CD_UCB.html), [M-UCB](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html), [SW-UCB#](https://smpybandits.github.io/docs/Policies.SWHash_UCB.html).
 
 ----
 
@@ -161,15 +162,14 @@ pip install git+https://github.com/SMPyBandits/SMPyBandits.git#egg=SMPyBandits[f
 ----
 
 ### :boom: Warning
-- This work is still **experimental**! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free and every single module/file should work perfectly (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says), but bugs are sometimes hard to spot so if you encounter any issue, [please fill a bug ticket](https://github.com/SMPyBandits/SMPyBandits/issues/new).
-- Whenever I add a new feature, I run experiments to check that nothing is broken. But *there is no unittest* (I don't have time). You would have to trust me :sunglasses:!
-- This project is NOT meant to be a library that you can use elsewhere, but a research tool. In particular, I don't take ensure that any of the Python modules can be imported from another directory than the main directory.
+- This work is still **experimental** even if [it is well tested and stable](https://travis-ci.org/SMPyBandits/SMPyBandits)! It's [active research](https://github.com/SMPyBandits/SMPyBandits/graphs/contributors). It should be completely bug free and every single module/file should work perfectly (as [this pylint log](main_pylint_log.txt) and [this other one](main_pylint3_log.txt) says), but bugs are sometimes hard to spot so if you encounter any issue, [please fill a bug ticket](https://github.com/SMPyBandits/SMPyBandits/issues/new).
+- Whenever I add a new feature, I run experiments [to check that nothing is broken](https://travis-ci.org/SMPyBandits/SMPyBandits) (and [Travis CI](https://travis-ci.org/SMPyBandits/SMPyBandits) helps too). But *there is no unittest* (I don't have time). You would have to trust me :sunglasses:!
+- This project is NOT meant to be a library that you can use elsewhere, but a research tool.
 
 ## Contributing?
 > I don't except issues or pull requests on this project, but you are welcome to.
 
 Contributions (issues, questions, pull requests) are of course welcome, but this project is and will stay a personal environment designed for quick research experiments, and will never try to be an industry-ready module for applications of Multi-Armed Bandits algorithms.
-
 If you want to contribute, please have a look to the [CONTRIBUTING.md](.github/CONTRIBUTING.md) file, and if you want to be more seriously involved, read the [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md) file.
 
 - You are welcome to [submit an issue](https://github.com/SMPyBandits/SMPyBandits/issues/new), if it was not previously answered,
