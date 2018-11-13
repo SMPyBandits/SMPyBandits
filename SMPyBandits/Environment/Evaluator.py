@@ -54,7 +54,7 @@ plot_lowerbound = True  #: Default is to plot the lower-bound
 # Parameters for the random events
 random_shuffle = False
 random_invert = False
-nb_break_points = 5  #: Default nb of random events
+nb_break_points = 0  #: Default nb of random events
 
 # Flag for experimental aspects
 STORE_ALL_REWARDS = True       #: Store all rewards?
