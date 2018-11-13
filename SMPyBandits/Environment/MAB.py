@@ -883,9 +883,12 @@ class PieceWiseStationaryMAB(MAB):
         if forceTo01:
             ymin, ymax = min(0, ymin), max(1, ymax)
             plt.ylim(ymin, ymax)
-        for tau in self.changePoints:
-            if tau > 0 and tau < horizon:
-                plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.7)
+        if len(self.changePoints) > 25:
+            print("WARNING: Adding vlines for the change points with more than 25 change points will be ugly on the plots...")  # DEBUG
+        if len(self.changePoints) < 50:  # add the vlines only if not too many change points
+            for tau in self.changePoints:
+                if tau > 0 and tau < horizon:
+                    plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.7)
         plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(horizon, signature))
         plt.ylabel(r"Successive means of the $K = {}$ arms".format(self.nbArms))
         plt.title("History of means for {}".format(self.reprarms(latex=True)))

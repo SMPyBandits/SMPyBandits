@@ -337,7 +337,8 @@ clean-doc:
 
 .PHONY: help
 
-send:	send_zamok send_gforge send_ws3
+send:	send_zamok send_gforge
+#send_ws3
 send_zamok:
 	cd notebooks ; make send_zamok ; cd ..
 	CP --exclude=.git "$(BUILDDIR)"/html/ ${Szam}phd/SMPyBandits/

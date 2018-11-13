@@ -491,13 +491,17 @@ class Evaluator(object):
 
     def _xlabel(self, envId, *args, **kwargs):
         """Add xlabel to the plot, and if the environment has change-point, draw vertical lines to clearly identify the locations of the change points."""
-        # FIXME add markers for the breakpoints
         env = self.envs[envId]
         if hasattr(env, 'changePoints'):
             ymin, ymax = plt.ylim()
-            for tau in self.envs[envId].changePoints:
+            taus = self.envs[envId].changePoints
+            if len(taus) > 25:
+                print("WARNING: Adding vlines for the change points with more than 25 change points will be ugly on the plots...")  # DEBUG
+            if len(taus) > 50:  # Force to NOT add the vlines
+                return plt.xlabel(*args, **kwargs)
+            for tau in taus:
                 if tau > 0 and tau < self.horizon:
-                    plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.7)
+                    plt.vlines(tau, ymin, ymax, linestyles='dotted', alpha=0.5)
         return plt.xlabel(*args, **kwargs)
 
     def plotRegrets(self, envId=0,
