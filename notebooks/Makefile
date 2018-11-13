@@ -14,3 +14,8 @@ html_notebooks:	$(CONTENT_HTML)
 
 %.html:	%.ipynb
 	jupyter-nbconvert $< --to html
+
+venv:
+	virtualenv3 ./venv3/
+	. ./venv3/bin/activate ; pip install jupyter tqdm numba
+	. ./venv3/bin/activate ; pip install git+https://github.com/SMPyBandits/SMPyBandits

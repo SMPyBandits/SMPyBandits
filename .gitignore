@@ -1,4 +1,4 @@
- --toc --natbib# Python cache
+# Python cache
 *.pyc
 *.pyo
 __pycache__/
@@ -7,7 +7,7 @@ __pycache__/
 # Nano backup
 *~
 
-#DS_Store
+# DS_Store
 .DS_Store
 
 # LaTeX files
@@ -48,3 +48,8 @@ notebooks/.ipynb_checkpoints/
 
 # C++ executables
 *.exe
+
+# Virtual envs
+venv/
+venv3/
+venv2/
