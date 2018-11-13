@@ -189,6 +189,7 @@ exclude_patterns = [
     '**.ipynb_checkpoints',
     'paper.md', 'longpaper.md', 'paper',
     'docs/paper/paper.md', 'docs/paper/longpaper.md', 'docs/paper',
+    'notebooks/venv', 'notebooks/venv2', 'notebooks/venv3',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.

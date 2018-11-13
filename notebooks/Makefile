@@ -1,7 +1,7 @@
 # Makefile to convert Jupyter notebooks to HTML pages
 SHELL=/usr/bin/env /bin/bash
 
-all:	html_notebooks send
+all:	nb2py nb2html send
 
 send:	send_zamok
 send_zamok:
@@ -9,9 +9,13 @@ send_zamok:
 
 CONTENT_IPYNB=$(wildcard *.ipynb)
 CONTENT_HTML=$(CONTENT_IPYNB:.ipynb=.html)
+CONTENT_PY=$(CONTENT_IPYNB:.ipynb=.py)
 
-html_notebooks:	$(CONTENT_HTML)
+nb2py:	$(CONTENT_PY)
+%.py:	%.ipynb
+	jupyter-nbconvert $< --to python
 
+nb2html:	$(CONTENT_HTML)
 %.html:	%.ipynb
 	jupyter-nbconvert $< --to html
 

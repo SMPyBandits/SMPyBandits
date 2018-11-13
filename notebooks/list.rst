@@ -1,5 +1,5 @@
-List of notebooks for SMPyBandits documentation
-===============================================
+List of notebooks for SMPyBandits
+=================================
 
 .. toctree::
    :maxdepth: 1
@@ -12,6 +12,7 @@ List of notebooks for SMPyBandits documentation
    Unsupervised_Learning_for_Bandit_problem.ipynb
    BlackBox_Bayesian_Optimization_for_Bandit_problems.ipynb
    Lai_Robbins_Lower_Bound_for_Doubling_Trick_with_Restarting_Algorithms.ipynb
+   Exploring_different_doubling_tricks_for_different_kinds_of_regret_bounds.ipynb
 
 ---
 

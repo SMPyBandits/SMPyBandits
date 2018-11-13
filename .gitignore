@@ -6,6 +6,7 @@ __pycache__/
 
 # Nano backup
 *~
+*.swp
 
 # DS_Store
 .DS_Store
