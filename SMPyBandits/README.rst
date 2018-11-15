@@ -81,7 +81,7 @@ Other remarks
 -  Everything here is done in an imperative, object oriented style. The API of the Arms, Policy and MultiPlayersPolicy classes is documented `in this page <https://smpybandits.github.io/API.html>`__.
 -  The code is `clean <https://smpybandits.github.io/logs/main_pylint_log.txt>`__, valid for both `Python 2 <https://smpybandits.github.io/logs/main_pylint_log.txt>`__ and `Python 3 <https://smpybandits.github.io/logs/main_pylint3_log.txt>`__.
 -  Some piece of code come from the `pymaBandits <http://mloss.org/software/view/415/>`__ project, but most of them were refactored. Thanks to the initial project!
--  `G.Varoquaux <http://gael-varoquaux.info/>`__\ ’s `joblib <https://pythonhosted.org/joblib/>`__ is used for the `Evaluator <https://smpybandits.github.io/docs/Environment/Evaluator.html>`__ and `EvaluatorMultiPlayers <https://smpybandits.github.io/docs/Environment/EvaluatorMultiPlayers.html>`__ classes, so the simulations are easily parallelized on multi-core machines. (Put ``n_jobs = -1`` or ``PARALLEL = True`` in the config file to use all your CPU cores, as it is by default).
+-  `G.Varoquaux <http://gael-varoquaux.info/>`__\ ’s `joblib <https://joblib.readthedocs.io/>`__ is used for the `Evaluator <https://smpybandits.github.io/docs/Environment/Evaluator.html>`__ and `EvaluatorMultiPlayers <https://smpybandits.github.io/docs/Environment/EvaluatorMultiPlayers.html>`__ classes, so the simulations are easily parallelized on multi-core machines. (Put ``n_jobs = -1`` or ``PARALLEL = True`` in the config file to use all your CPU cores, as it is by default).
 
 --------------
 

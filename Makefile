@@ -205,7 +205,7 @@ install3:
 
 # Senders:
 send_ws3:	clean
-	CP ~/AlgoBandits.git/ lilian_besson@ws3:~/These/src/AlgoBandits.git/
+	CP ~/SMPyBandits.git/ lilian_besson@ws3:~/SMPyBandits.git
 
 # Cleaner
 clean:
