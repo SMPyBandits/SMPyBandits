@@ -156,8 +156,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         - where :attr:`threshold_b` is the threshold b of the test, and :attr:`window_size` is the window-size w.
         """
         data_y = self.all_rewards[arm]
-        sum_first_half = np.sum(data_y[:self.window_size])
-        sum_second_half = np.sum(data_y[self.window_size:])
+        sum_first_half = np.sum(data_y[:self.window_size//2])
+        sum_second_half = np.sum(data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
 
 

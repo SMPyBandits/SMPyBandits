@@ -42,7 +42,7 @@ class LM_DSEE(BasePolicy):
         self.b = b  #: Parameter :math:`b` for the LM-DSEE algorithm.
         assert 0 < DeltaMin < 1, "Error: for a LM_DSEE policy, the parameter 'DeltaMin' should be in (0,1) but was = {}".format(DeltaMin)  # DEBUG
         gamma = 2 / DeltaMin**2
-        self.l = 50 + nbArms * np.ceil(gamma * np.log(b)) / a  #: Parameter :math:`\ell` for the LM-DSEE algorithm. XXX I add a small offset, :math:`\ell = 50 + \frac{K}{a} \lceil \gamma \log(b) \rceil`.
+        self.l = 50*nbArms**2 + max(0, nbArms * np.ceil(gamma * np.log(b)) / a)  #: Parameter :math:`\ell` for the LM-DSEE algorithm. XXX I add a small offset, :math:`\ell = 50*K^2 + \frac{K}{a} \lceil \gamma \log(b) \rceil`.
         self.gamma = gamma  #: Parameter :math:`\gamma` for the LM-DSEE algorithm.
         assert 0 <= nu < 1, "Error: for a LM_DSEE policy, the parameter 'nu' should be in [0,1) but was = {}".format(nu)  # DEBUG
         rho = (1 - nu) / (1.0 + nu)
@@ -134,8 +134,9 @@ class LM_DSEE(BasePolicy):
             if self.current_exploitation_arm is None:
                 # compute exploited arm
                 mean_rewards = [np.mean(rewards_of_arm_k) for rewards_of_arm_k in self.all_rewards]
+                pulls = [len(rewards_of_arm_k) for rewards_of_arm_k in self.all_rewards]
                 j_epch_k = np.argmax(mean_rewards)
-                print("A {} player at time {} and batch number {} observed the mean rewards = {} and will play {} for this exploitation phase.".format(self, self.t, self.batch_number, mean_rewards, j_epch_k))  # DEBUG
+                print("A {} player at time {} and batch number {} observed the mean rewards = {} (for pulls {}) and will play {} for this exploitation phase.".format(self, self.t, self.batch_number, mean_rewards, pulls, j_epch_k))  # DEBUG
                 self.current_exploitation_arm = j_epch_k
                 # erase current memory
                 self.all_rewards = [[] for _ in range(self.nbArms)]
