@@ -33,6 +33,9 @@ except ImportError:
 #: Default probability of random exploration :math:`\alpha`.
 PROBA_RANDOM_EXPLORATION = 0.1
 
+#: Should we reset one arm empirical average or all?
+PER_ARM_RESTART = True
+
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
 
@@ -65,19 +68,6 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     return h, alpha
 
 
-def compute_c_alpha__GLR(t, t0, horizon):
-    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from [Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds, Odalric-Ambrym Maillard, 2018]."""
-    T = int(max(1, horizon))
-    delta = 1.0 / T
-    print("compute_c_alpha__GLR() with:\nt = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
-    t_m_t0 = t - t0
-    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
-    alpha = 1.0 / horizon
-    print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
-    return c, alpha
-
-
-
 # --- The very generic class
 
 class CD_IndexPolicy(BaseWrapperPolicy):
@@ -85,23 +75,27 @@ class CD_IndexPolicy(BaseWrapperPolicy):
     """
     def __init__(self, nbArms,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
+            per_arm_restart=PER_ARM_RESTART,
             epsilon=EPSILON,
-            proba_random_exploration=PROBA_RANDOM_EXPLORATION,
+            # proba_random_exploration=PROBA_RANDOM_EXPLORATION,
+            proba_random_exploration=None,
             policy=DefaultPolicy,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(CD_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
         self.epsilon = epsilon  #: Parameter :math:`\varepsilon` for the test.
-        alpha = max(0, min(1, proba_random_exploration))  # crop to [0, 1]
-        self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+        if proba_random_exploration is not None:
+            alpha = max(0, min(1, proba_random_exploration))  # crop to [0, 1]
+            self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
+        self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD-{}($\varepsilon={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.proba_random_exploration)
+        return r"CD-{}($\varepsilon={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -124,21 +118,33 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
             # print("The current pulls vector is =", self.pulls)  # DEBUG
+            # print("The current pulls vector of underlying policy is =", self.policy.pulls)  # DEBUG
             # print("The current last pulls vector is =", self.last_pulls)  # DEBUG
             # print("The current rewards vector is =", self.rewards)  # DEBUG
+            # print("The current rewards vector of underlying policy is =", self.policy.rewards)  # DEBUG
             # print("The current sum/mean of all rewards for this arm is =", np.sum(self.all_rewards[arm]), np.mean(self.all_rewards[arm]))  # DEBUG
+
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
                 self.startGame(createNewPolicy=False)
             # Or simply reset one of the empirical averages?
             else:
-                self.rewards[arm] = np.sum(self.all_rewards[arm])
-                self.pulls[arm] = len(self.all_rewards[arm])
+                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
+                self.policy.pulls[arm] = len(self.all_rewards[arm])
+
             # reset current memory for THIS arm
-            self.last_pulls[arm] = 1
-            self.all_rewards[arm] = [reward]
+            if self._per_arm_restart:
+                self.last_pulls[arm] = 1
+                self.all_rewards[arm] = [reward]
+            # or reset current memory for ALL THE arms
+            else:
+                for other_arm in range(self.nbArms):
+                    self.last_pulls[other_arm] = 0
+                    self.all_rewards[other_arm] = []
+                self.last_pulls[arm] = 1
+                self.all_rewards[arm] = [reward]
         # we update the total number of samples available to the underlying policy
-        self.policy.t = sum(self.last_pulls)  # FIXME try this back!
+        # self.policy.t = sum(self.last_pulls)  # XXX SO NOT SURE HERE
 
     def detect_change(self, arm):
         """ Try to detect a change in the current arm.
@@ -196,7 +202,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
+        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -233,7 +239,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration)
+        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm):
         r""" Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971].
@@ -270,9 +276,24 @@ try:
 except (ImportError, SystemError):
     from kullback import klBern, klGauss
 
-VERBOSE = False
-#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
 VERBOSE = True
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = False
+
+
+def compute_c_alpha__GLR(t0, t, horizon, verbose=False):
+    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018]."""
+    T = int(max(1, horizon))
+    delta = 1.0 / T
+    if verbose: print("compute_c_alpha__GLR() with t = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
+    t_m_t0 = abs(t - t0)
+    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
+    if c < 0 and np.isinf(c): c = float('+inf')
+    alpha = 1.0 / (2 * max(1, t**2))
+    if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
+    # FIXME I just want to try, with a small threshold do we detect changes?
+    c = 7.0
+    return c, alpha
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
@@ -294,6 +315,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self.horizon = horizon
         c, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
         self._threshold_h, self._alpha = c, alpha
+        self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
         self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
 
     @property
@@ -311,9 +333,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         return self._alpha
 
     def __str__(self):
-        name = self.klucb.__name__[2:]
+        name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration)
+        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -331,8 +353,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         t0 = 0
         t = len(data_y)
         mu = lambda a, b: np.mean(data_y[a : b+1])
-        for s in range(t0, t):
-            this_kl = self.kl(mu(s+1, t), mu(t0, s))
+        for s in range(t0, t - 1):
+            this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
             glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} and so the kl = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), this_kl, glr, self.threshold_h))
             if glr >= self.threshold_h:
@@ -342,17 +364,19 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
 # --- GLR for sigma=1 Gaussian
 class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
-    r""" The GaussianGLR-UCB generic policy for non-stationary bandits, for standard univariate Gaussian distributions (ie, :math:`\sigma^2=1`)
+    r""" The GaussianGLR-UCB generic policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2` known and fixed).
 
     .. warning:: FIXME This is HIGHLY experimental!
     """
 
-    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
         ):
         super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klGauss, lower=lower, amplitude=amplitude, *args, **kwargs)
+        self.sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`.
+        self._args_to_kl = (sig2, )
 
     def __str__(self):
-        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration)
+        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
@@ -366,4 +390,4 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
         super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klBern, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
-        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration)
+        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")

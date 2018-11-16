@@ -41,8 +41,8 @@ class BaseWrapperPolicy(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
-        self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
-        self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
+        # self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
+        # self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
 
     # --- Pass the call to the subpolicy
 

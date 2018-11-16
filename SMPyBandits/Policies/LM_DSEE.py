@@ -56,6 +56,11 @@ def parameter_ell(a, N, b, gamma,
 
 # --- Class
 
+VERBOSE = True
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = False
+
+
 class LM_DSEE(BasePolicy):
     r""" The LM-DSEE policy for non-stationary bandits, from [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems", by Lai Wei, Vaibhav Srivastava, 2018, arXiv:1802.08380]](https://arxiv.org/pdf/1802.08380)
     """
@@ -87,7 +92,7 @@ class LM_DSEE(BasePolicy):
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Memory of all the rewards. A list per arm. Growing list until restart of that arm?
 
     def __str__(self):
-        return r"LM-DSEE($\gamma={:.3g}$, $\rho={:.3g}$, $l={:.3g}$, $a={:.3g}$, $b={:.3g}$)".format(self.gamma, self.rho, self.l, self.a, self.b)
+        return r"LM-DSEE($\gamma={:.3g}$, $\rho={:.3g}$, $\ell={:.3g}$, $a={:.3g}$, $b={:.3g}$)".format(self.gamma, self.rho, self.l, self.a, self.b)
 
     def startGame(self):
         """ Start the game (fill pulls and rewards with 0)."""
@@ -99,7 +104,7 @@ class LM_DSEE(BasePolicy):
         self.step_of_current_phase = 0
         self.all_rewards = [[] for _ in range(self.nbArms)]
 
-    def length_exploration_phase(self, verbose=True):
+    def length_exploration_phase(self, verbose=VERBOSE):
         r""" Compute the value of the current exploration phase:
 
         .. math:: L_1(k) = L(k) = \lceil \gamma \log(k^{\rho} l b)\rceil.
@@ -111,7 +116,7 @@ class LM_DSEE(BasePolicy):
         if verbose: print("Length of exploration phase: computed to be = {} for batch number = {}...".format(length, self.batch_number))  # DEBUG
         return length
 
-    def length_exploitation_phase(self, verbose=True):
+    def length_exploitation_phase(self, verbose=VERBOSE):
         r""" Compute the value of the current exploitation phase:
 
         .. math:: L_2(k) = \lceil a k^{\rho} l \rceil - K L_1(k).

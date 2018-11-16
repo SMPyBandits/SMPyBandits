@@ -38,6 +38,8 @@ class DiscountedUCB(UCBalpha):
                  useRealDiscount=True,
                  lower=0., amplitude=1., *args, **kwargs):
         super(DiscountedUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+        self.discounted_pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
+        self.discounted_rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
         self.alpha = alpha  #: Parameter alpha
         assert 0 < gamma <= 1, "Error: the 'gamma' parameter for DiscountedUCB class has to be 0 < gamma <= 1."  # DEBUG
@@ -70,12 +72,12 @@ class DiscountedUCB(UCBalpha):
             N_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times N_{k,\gamma}(\text{last pull}) + \mathbb{1}(A(t+1) = k), \\
             X_{k,\gamma}(t+1) &= \gamma^{1+\Delta_k(t)} \times X_{k,\gamma}(\text{last pull}) + X_k(t+1).
         """
-        self.t += 1
+        super(DiscountedUCB, self).getReward(arm, reward)
         # FIXED we should multiply by gamma^delta where delta is the number of time steps where we didn't play this arm, +1
-        self.pulls[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.pulls[arm]) + 1
-        # XXX self.pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
+        self.discounted_pulls[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.discounted_pulls[arm]) + 1
+        # XXX self.discounted_pulls[arm] += 1  # if we were using N_k(t) and not N_{k,gamma}(t).
         reward = (reward - self.lower) / self.amplitude
-        self.rewards[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.rewards[arm]) + reward
+        self.discounted_rewards[arm] = ((self.gamma ** (1 + self.delta_time_steps[arm])) * self.discounted_rewards[arm]) + reward
         # Ok and we saw this arm so no delta now
         if self.useRealDiscount:
             self.delta_time_steps += 1  # increase delay for each algorithms
@@ -89,19 +91,19 @@ class DiscountedUCB(UCBalpha):
             I_k(t) &:= \frac{X_{k,\gamma}(t)}{N_{k,\gamma}(t)} + \sqrt{\frac{\alpha \log(n_{\gamma}(t))}{2 N_{k,\gamma}(t)}}, \\
             \text{where}\;\; n_{\gamma}(t) &:= \sum_{k=1}^{K} N_{k,\gamma}(t).
         """
-        if self.pulls[arm] < 1:
+        if self.discounted_pulls[arm] < 1:
             return float('+inf')
         else:
-            n_t_gamma = np.sum(self.pulls)
+            n_t_gamma = np.sum(self.discounted_pulls)
             assert n_t_gamma <= self.t, "Error: n_t_gamma was computed as {:.3g} but should be < t = {:.3g}...".format(n_t_gamma, self.t)  # DEBUG
-            return (self.rewards[arm] / self.pulls[arm]) + sqrt((self.alpha * log(n_t_gamma)) / (2 * self.pulls[arm]))
+            return (self.discounted_rewards[arm] / self.discounted_pulls[arm]) + sqrt((self.alpha * log(n_t_gamma)) / (2 * self.discounted_pulls[arm]))
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        n_t_gamma = np.sum(self.pulls)
+        n_t_gamma = np.sum(self.discounted_pulls)
         assert n_t_gamma <= self.t, "Error: n_t_gamma was computed as {:.3g} but should be < t = {:.3g}...".format(n_t_gamma, self.t)  # DEBUG
-        indexes = (self.rewards / self.pulls) + np.sqrt((self.alpha * np.log(n_t_gamma)) / (2 * self.pulls))
-        indexes[self.pulls < 1] = float('+inf')
+        indexes = (self.discounted_rewards / self.discounted_pulls) + np.sqrt((self.alpha * np.log(n_t_gamma)) / (2 * self.discounted_pulls))
+        indexes[self.discounted_pulls < 1] = float('+inf')
         self.index[:] = indexes
 
 

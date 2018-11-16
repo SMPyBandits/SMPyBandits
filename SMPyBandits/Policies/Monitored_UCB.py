@@ -35,6 +35,9 @@ except ImportError:
 #: I force ``0.1`` because I can force the minimum gap when calling :func:`Arms.randomMeans` to be ``0.1``.
 DELTA = 0.1
 
+#: Should we reset one arm empirical average or all?
+PER_ARM_RESTART = True
+
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
 
@@ -46,6 +49,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
     """
     def __init__(self, nbArms,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
+            per_arm_restart=PER_ARM_RESTART,
             horizon=None, delta=DELTA, max_nb_random_events=None,
             w=None, b=None, gamma=None,
             policy=DefaultPolicy,
@@ -89,6 +93,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.gamma = gamma  #: What they call :math:`\gamma` in their paper: the share of uniform exploration.
 
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
+        self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
         self.last_update_time_tau = 0  #: Keep in memory the last time a change was detected, ie, the variable :math:`\tau` in the algorithm.
 
         # Internal memory
@@ -96,7 +101,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"Monitored-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}$)".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma)
+        return r"Monitored-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def choice(self):
         r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choice`` of the underlying policy (eg. UCB).
@@ -133,19 +138,29 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
             self.last_update_time_tau = self.t
+
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
                 self.startGame(createNewPolicy=False)
             # Or simply reset one of the empirical averages?
             else:
-                self.rewards[arm] = np.sum(self.all_rewards[arm])
-                self.pulls[arm] = len(self.all_rewards[arm])
-            # XXX reset current memory for ALL arm
-            for eachArm in range(self.nbArms):
-                self.last_pulls[eachArm] = 0
-                self.all_rewards[eachArm] = []
+                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
+                self.policy.pulls[arm] = len(self.all_rewards[arm])
+
+            # reset current memory for THIS arm
+            if self._per_arm_restart:
+                self.last_pulls[arm] = 1
+                self.all_rewards[arm] = [reward]
+            # or reset current memory for ALL THE arms
+            else:
+                for other_arm in range(self.nbArms):
+                    self.last_pulls[other_arm] = 0
+                    self.all_rewards[other_arm] = []
+                self.last_pulls[arm] = 1
+                self.all_rewards[arm] = [reward]
+
         # we update the total number of samples available to the underlying policy
-        self.policy.t = np.sum(self.last_pulls)
+        # self.policy.t = np.sum(self.last_pulls)
 
     def detect_change(self, arm):
         r""" A change is detected for the current arm if the following test is true:
@@ -156,6 +171,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         - where :attr:`threshold_b` is the threshold b of the test, and :attr:`window_size` is the window-size w.
         """
         data_y = self.all_rewards[arm]
+        # don't try to detect change if there is not enough data!
+        if len(data_y) < self.window_size:
+            return False
         sum_first_half = np.sum(data_y[:self.window_size//2])
         sum_second_half = np.sum(data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
