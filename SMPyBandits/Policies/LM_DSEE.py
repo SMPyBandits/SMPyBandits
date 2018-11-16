@@ -23,6 +23,36 @@ except ImportError:
 #: Different states during the Musical Chair algorithm
 State = Enum('State', ['Exploration', 'Exploitation'])
 
+# --- Utility function
+
+VERBOSE = False
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = True
+
+
+def parameter_ell(a, N, b, gamma,
+        verbose=VERBOSE, max_value_on_l=int(1e6)
+    ):
+    r""" Look for the smallest value of the parameter :math:`\ell` that satisfies the following equations:
+
+    .. math:
+
+        \mathrm{Bound}(l) &:= \frac{K}{a} \lceil \gamma \log(l b) \rceil,\\
+        \mathrm{Bound}(l) &> 0,
+        l &\leq \mathrm{Bound}(l).
+    """
+    if verbose: print("a = {}, N = {}, b = {}, gamma = {}".format(a, N, b, gamma))
+    def bound(ell):
+        return (N/a) * np.ceil(gamma * np.log(ell * b))
+    ell = 1
+    bound_ell = bound(ell)
+    if verbose: print("ell = {} gives bound = {}".format(ell, bound_ell))
+    while ell < max_value_on_l and not(ell >= bound_ell > 0):
+        if verbose: print("ell = {} gives bound = {}".format(ell, bound_ell))
+        ell += 1
+        bound_ell = bound(ell)
+    return ell
+
 
 # --- Class
 
@@ -42,7 +72,7 @@ class LM_DSEE(BasePolicy):
         self.b = b  #: Parameter :math:`b` for the LM-DSEE algorithm.
         assert 0 < DeltaMin < 1, "Error: for a LM_DSEE policy, the parameter 'DeltaMin' should be in (0,1) but was = {}".format(DeltaMin)  # DEBUG
         gamma = 2 / DeltaMin**2
-        self.l = 50*nbArms**2 + max(0, nbArms * np.ceil(gamma * np.log(b)) / a)  #: Parameter :math:`\ell` for the LM-DSEE algorithm. XXX I add a small offset, :math:`\ell = 50*K^2 + \frac{K}{a} \lceil \gamma \log(b) \rceil`.
+        self.l = parameter_ell(a, nbArms, b, gamma)  #: Parameter :math:`\ell` for the LM-DSEE algorithm, as computed by the function :func:`parameter_ell`.
         self.gamma = gamma  #: Parameter :math:`\gamma` for the LM-DSEE algorithm.
         assert 0 <= nu < 1, "Error: for a LM_DSEE policy, the parameter 'nu' should be in [0,1) but was = {}".format(nu)  # DEBUG
         rho = (1 - nu) / (1.0 + nu)

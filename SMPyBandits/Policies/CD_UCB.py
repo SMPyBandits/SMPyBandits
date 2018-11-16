@@ -48,12 +48,12 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 
 from scipy.special import comb
 
-def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M):
+def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M):
     r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""
     T = int(max(1, horizon))
     UpsilonT = int(max(1, max_nb_random_events))
     K = int(max(1, nbArms))
-    print("compute_h_alpha_from_input_parameters() with:\nT = {}, UpsilonT = {}, K = {}, epsilon = {}, lmbda = {}, M = {}".format(T, UpsilonT, K, epsilon, lmbda, M))  # DEBUG
+    print("compute_h_alpha_from_input_parameters__CUSUM() with:\nT = {}, UpsilonT = {}, K = {}, epsilon = {}, lmbda = {}, M = {}".format(T, UpsilonT, K, epsilon, lmbda, M))  # DEBUG
     C2 = np.log(3) + 2 * np.exp(- 2 * epsilon**2 * M) / lmbda
     C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
@@ -63,6 +63,18 @@ def compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms,
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
+
+
+def compute_c_alpha__GLR(t, t0, horizon):
+    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from [Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds, Odalric-Ambrym Maillard, 2018]."""
+    T = int(max(1, horizon))
+    delta = 1.0 / T
+    print("compute_c_alpha__GLR() with:\nt = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
+    t_m_t0 = t - t0
+    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
+    alpha = 1.0 / horizon
+    print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
+    return c, alpha
 
 
 
@@ -126,7 +138,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
             self.last_pulls[arm] = 1
             self.all_rewards[arm] = [reward]
         # we update the total number of samples available to the underlying policy
-        # self.policy.t = sum(self.last_pulls)  # FIXME try this back!
+        self.policy.t = sum(self.last_pulls)  # FIXME try this back!
 
     def detect_change(self, arm):
         """ Try to detect a change in the current arm.
@@ -178,7 +190,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         # New parameters
         self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
-        h, alpha = compute_h_alpha_from_input_parameters(horizon, max_nb_random_events, nbArms, epsilon, lmbda, min_number_of_observation_between_change_point)
+        h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, epsilon, lmbda, min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
         alpha = max(0, min(1, alpha))  # crop to [0, 1]
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
@@ -198,7 +210,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
             g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
 
-        - The change is detected if :math:`\max(g_k^+, g_k^-) > h` where :attr:`threshold_h` is the threshold of the test,
+        - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
         """
         gp, gm = 0, 0
@@ -235,7 +247,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
             g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
             g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
 
-        - The change is detected if :math:`\max(g_k^+, g_k^-) > h` where :attr:`threshold_h` is the threshold of the test,
+        - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
         """
         gp, gm = 0, 0
@@ -249,3 +261,109 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
             if max(gp, gm) >= self.threshold_h:
                 return True
         return False
+
+
+# --- Generic GLR for 1-dimensional exponential families
+
+try:
+    from .kullback import klBern, klGauss
+except (ImportError, SystemError):
+    from kullback import klBern, klGauss
+
+VERBOSE = False
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = True
+
+
+class GLR_IndexPolicy(CD_IndexPolicy):
+    r""" The GLR-UCB generic policy for non-stationary bandits, using the Generalized Likelihood Ratio test (GLR),  for 1-dimensional exponential families.
+
+    - It works for any 1-dimensional exponential family, you just have to give a ``kl`` function.
+    - For instance :func:`kullback.klBern`, for Bernoulli distributions, gives :class:`GaussianGLR_IndexPolicy`,
+    - And :func:`kullback.klGauss` for univariate Gaussian distributions, gives :class:`BernoulliGLR_IndexPolicy`.
+    """
+    def __init__(self, nbArms,
+            horizon=None,
+            full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
+            policy=DefaultPolicy,
+            kl=klBern,
+            lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        self.horizon = horizon
+        c, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
+        self._threshold_h, self._alpha = c, alpha
+        self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
+
+    @property
+    def threshold_h(self):
+        r"""Parameter :math:`c` for the test (threshold)."""
+        c, alpha = compute_c_alpha__GLR(0, self.t, self.horizon)
+        self._threshold_h, self._alpha = c, alpha
+        return self._threshold_h
+
+    @property
+    def proba_random_exploration(self):
+        r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
+        c, alpha = compute_c_alpha__GLR(0, self.t, self.horizon)
+        self._threshold_h, self._alpha = c, alpha
+        return self._alpha
+
+    def __str__(self):
+        name = self.klucb.__name__[2:]
+        name = "" if name == "Bern" else name + ", "
+        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration)
+
+    def detect_change(self, arm, verbose=VERBOSE):
+        r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
+
+        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+        .. math::
+
+            G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+
+        - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+        - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+        """
+        data_y = self.all_rewards[arm]
+        t0 = 0
+        t = len(data_y)
+        mu = lambda a, b: np.mean(data_y[a : b+1])
+        for s in range(t0, t):
+            this_kl = self.kl(mu(s+1, t), mu(t0, s))
+            glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} and so the kl = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), this_kl, glr, self.threshold_h))
+            if glr >= self.threshold_h:
+                return True
+        return False
+
+
+# --- GLR for sigma=1 Gaussian
+class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
+    r""" The GaussianGLR-UCB generic policy for non-stationary bandits, for standard univariate Gaussian distributions (ie, :math:`\sigma^2=1`)
+
+    .. warning:: FIXME This is HIGHLY experimental!
+    """
+
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klGauss, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration)
+
+# --- GLR for Bernoulli
+class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
+    r""" The BernoulliGLR-UCB generic policy for non-stationary bandits, for Bernoulli distributions.
+
+    .. warning:: FIXME This is HIGHLY experimental!
+    """
+
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klBern, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration)
