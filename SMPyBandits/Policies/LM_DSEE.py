@@ -31,31 +31,33 @@ class LM_DSEE(BasePolicy):
     """
 
     def __init__(self, nbArms,
-            nu=0.5, DeltaMin=0.5, a=1, b=2,
+            nu=0.5, DeltaMin=0.5, a=1, b=0.25,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(LM_DSEE, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
         # Parameters
+        assert a > 0, "Error: for a LM_DSEE policy, the parameter 'a' should be > 0 but was = {}".format(a)  # DEBUG
         self.a = a  #: Parameter :math:`a` for the LM-DSEE algorithm.
+        assert 0 < b <= 1, "Error: for a LM_DSEE policy, the parameter 'b' should be in (0, 1] but was = {}".format(b)  # DEBUG
         self.b = b  #: Parameter :math:`b` for the LM-DSEE algorithm.
         assert 0 < DeltaMin < 1, "Error: for a LM_DSEE policy, the parameter 'DeltaMin' should be in (0,1) but was = {}".format(DeltaMin)  # DEBUG
         gamma = 2 / DeltaMin**2
-        self.l = nbArms * np.ceil(gamma * np.log(b)) / a  #: Parameter :math:`\ell` for the LM-DSEE algorithm.
+        self.l = 50 + nbArms * np.ceil(gamma * np.log(b)) / a  #: Parameter :math:`\ell` for the LM-DSEE algorithm. XXX I add a small offset, :math:`\ell = 50 + \frac{K}{a} \lceil \gamma \log(b) \rceil`.
         self.gamma = gamma  #: Parameter :math:`\gamma` for the LM-DSEE algorithm.
-        assert 0 < nu < 1, "Error: for a LM_DSEE policy, the parameter 'nu' should be in (0,1) but was = {}".format(nu)  # DEBUG
-        rho = (1 - nu) / (1 + nu)
-        self.rho = rho  #: Parameter :math:`\rho` for the LM-DSEE algorithm.
+        assert 0 <= nu < 1, "Error: for a LM_DSEE policy, the parameter 'nu' should be in [0,1) but was = {}".format(nu)  # DEBUG
+        rho = (1 - nu) / (1.0 + nu)
+        self.rho = rho  #: Parameter :math:`\rho = \frac{1-\nu}{1+\nu}` for the LM-DSEE algorithm.
         # Internal memory
-        self.phase = State.Exploration  #: Current phase, exploration or exploitation
-        self.current_exploration_arm = None  #: Currently explored arm
-        self.current_exploitation_arm = None  #: Currently exploited arm
+        self.phase = State.Exploration  #: Current phase, exploration or exploitation.
+        self.current_exploration_arm = None  #: Currently explored arm.
+        self.current_exploitation_arm = None  #: Currently exploited arm.
         self.batch_number = 1  #: Number of batch
-        self.length_of_current_phase = None  #: Length of the current phase, either computed from :func:`length_exploration_phase` or func:length_exploitation_phase``
-        self.step_of_current_phase = 0  #: Timer inside the current phase
-        self.all_rewards = [[] for _ in range(self.nbArms)]
+        self.length_of_current_phase = None  #: Length of the current phase, either computed from :func:`length_exploration_phase` or func:`length_exploitation_phase`.
+        self.step_of_current_phase = 0  #: Timer inside the current phase.
+        self.all_rewards = [[] for _ in range(self.nbArms)]  #: Memory of all the rewards. A list per arm. Growing list until restart of that arm?
 
     def __str__(self):
-        return r"LM-DSEE($\gamma={:.3g}$, $\rho={:.3g}$, $l={:.3g}$, $b={:.3g}$)".format(self.gamma, self.rho, self.l, self.b)
+        return r"LM-DSEE($\gamma={:.3g}$, $\rho={:.3g}$, $l={:.3g}$, $a={:.3g}$, $b={:.3g}$)".format(self.gamma, self.rho, self.l, self.a, self.b)
 
     def startGame(self):
         """ Start the game (fill pulls and rewards with 0)."""
@@ -82,7 +84,7 @@ class LM_DSEE(BasePolicy):
     def length_exploitation_phase(self, verbose=True):
         r""" Compute the value of the current exploitation phase:
 
-        .. math:: L_2(k) = \lceil a k^{\rho} l\rceil - K L_1(k).
+        .. math:: L_2(k) = \lceil a k^{\rho} l \rceil - K L_1(k).
 
         .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`).
         """
