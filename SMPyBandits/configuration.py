@@ -1734,23 +1734,28 @@ if TEST_Non_Stationary_Policies:
         ] +
         # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": True, } }
+            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # OK this CUSUM-klUCB is the same
         [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": True, } }
+            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # OK PHT_IndexPolicy is very much like CUSUM
         [
-            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": True, } }
+            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # OK BernoulliGLR_IndexPolicy is very much like CUSUM
         [
-            { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, } }
+            { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
         [
-            { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, } }
+            { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         # [
@@ -1758,7 +1763,8 @@ if TEST_Non_Stationary_Policies:
         # ] +
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, } }
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # # OK this Monitored-klUCB is the same
         # [
@@ -1783,18 +1789,18 @@ if TEST_Non_Stationary_Policies:
         #     for tau in [TAUS[0]] for eps in [EPSS[0]]
         #     for policy in [UCB, klUCB, Thompson, BayesUCB]
         # ] +
-        [
-            # --- # XXX experimental other version of the sliding window algorithm
-            { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-            for alpha in ALPHAS for tau in TAUS
-        ] +
+        # [
+        #     # --- # Different versions of the sliding window UCB algorithm
+        #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+        #     for alpha in ALPHAS for tau in TAUS
+        # ] +
         [
             # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
             { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
             for alpha in ALPHAS
         ] +
         # # [
-        # #     # --- # XXX experimental discounted UCB algorithm
+        # #     # --- # Different versions of the discounted UCB algorithm
         # #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
         # #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
         # # ] +

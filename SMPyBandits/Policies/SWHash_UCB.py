@@ -94,6 +94,8 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
         self.policy.t += 1
         # Get reward, normalize it
         reward = (reward - self.lower) / self.amplitude
+        self.pulls[arm] += 1
+        self.rewards[arm] += reward
         # We seen it one more time at this time step?
         self.all_pulls.append(arm)
         self.all_rewards.append(reward)
@@ -108,6 +110,6 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
         for otherArm in range(self.nbArms):
             # Store it in place for the empirical average of that arm
             these_rewards = [partial_all_rewards[i] for i, p in enumerate(partial_all_pulls) if p == otherArm]
-            self.rewards[otherArm] = np.sum(these_rewards)
-            self.pulls[otherArm] = len(these_rewards)
+            self.policy.rewards[otherArm] = np.sum(these_rewards)
+            self.policy.pulls[otherArm] = len(these_rewards)
         # # print(" and self.pulls = {} and self.rewards = {}".format(self.pulls, self.rewards))  # DEBUG

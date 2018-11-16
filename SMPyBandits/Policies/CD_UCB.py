@@ -64,6 +64,8 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     if C1 == 0: C1 = 1  # FIXME
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
+    alpha *= 0.01  # FIXME Just divide alpha to not have too large
+    alpha = max(0, min(1, alpha))  # crop to [0, 1]
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
 
@@ -95,7 +97,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"CD-{}($\varepsilon={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -198,11 +200,10 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
         h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, epsilon, lmbda, min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
-        alpha = max(0, min(1, alpha))  # crop to [0, 1]
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -239,7 +240,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm):
         r""" Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971].
@@ -289,10 +290,10 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False):
     t_m_t0 = abs(t - t0)
     c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
     if c < 0 and np.isinf(c): c = float('+inf')
-    alpha = 1.0 / (2 * max(1, t**2))
+    alpha = 1.0 / (100 * max(1, t**2))
     if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
     # FIXME I just want to try, with a small threshold do we detect changes?
-    c = 7.0
+    # c = 20.0
     return c, alpha
 
 
@@ -335,7 +336,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     def __str__(self):
         name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -376,7 +377,7 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
         self._args_to_kl = (sig2, )
 
     def __str__(self):
-        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
@@ -390,4 +391,4 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
         super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klBern, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
-        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
