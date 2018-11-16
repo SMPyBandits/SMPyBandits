@@ -150,6 +150,23 @@ if __name__ == '__main__':
         picklename = mainfig + '.pickle'
         h5pyname = mainfig + '.hdf5'
 
+        if saveallfigs:
+            # Create the sub folder
+            if os.path.isdir(plot_dir):
+                print("{} is already a directory here...".format(plot_dir))
+            elif os.path.isfile(plot_dir):
+                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+            else:
+                mkdir(plot_dir)
+
+            # Save it to a pickle file
+            if USE_PICKLE:
+                with open(picklename, 'wb') as picklefile:
+                    print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
+                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+            if USE_HD5:
+                evaluation.saveondisk(h5pyname)
+
         # --- Also plotting the history of means
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_HistoryOfMeans')
@@ -171,23 +188,6 @@ if __name__ == '__main__':
         print("\nGiving the mean and std memory consumption ...")
         evaluation.printMemoryConsumption(envId)
         if debug_memory: display_top_tracemalloc()  # DEBUG
-
-        if saveallfigs:
-            # Create the sub folder
-            if os.path.isdir(plot_dir):
-                print("{} is already a directory here...".format(plot_dir))
-            elif os.path.isfile(plot_dir):
-                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-            else:
-                mkdir(plot_dir)
-
-            # Save it to a pickle file
-            if USE_PICKLE:
-                with open(picklename, 'wb') as picklefile:
-                    print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
-                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
-            if USE_HD5:
-                evaluation.saveondisk(h5pyname)
 
         if not do_plots:
             break

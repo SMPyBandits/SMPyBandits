@@ -869,7 +869,7 @@ class PieceWiseStationaryMAB(MAB):
 
     # --- Plot utility
 
-    def plotHistoryOfMeans(self, horizon=None, savefig=None, forceTo01=False):
+    def plotHistoryOfMeans(self, horizon=None, savefig=None, forceTo01=False, showplot=True, pickleit=False):
         """Plot the history of means, as a plot with x axis being the time, y axis the mean rewards, and K curves one for each arm."""
         if horizon is None:
             horizon = max(self.changePoints)
@@ -895,7 +895,7 @@ class PieceWiseStationaryMAB(MAB):
         plt.xlabel(r"Time steps $t = 1...T$, horizon $T = {}${}".format(horizon, signature))
         plt.ylabel(r"Successive means of the $K = {}$ arms".format(self.nbArms))
         plt.title("History of means for {}".format(self.reprarms(latex=True)))
-        show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
+        show_and_save(showplot=showplot, savefig=savefig, fig=fig, pickleit=pickleit)
         return fig
 
     # All these properties arms, means, minArm, maxArm cannot be attributes, as the means of arms change at every experiments

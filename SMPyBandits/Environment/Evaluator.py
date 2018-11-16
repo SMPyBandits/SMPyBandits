@@ -815,7 +815,7 @@ class Evaluator(object):
             horizon = self.horizon
         env = self.envs[envId]
         if hasattr(env, 'plotHistoryOfMeans'):
-            return env.plotHistoryOfMeans(horizon=horizon, savefig=savefig)
+            return env.plotHistoryOfMeans(horizon=horizon, savefig=savefig, showplot=self.showplot)
         else:
             print("Warning: environment {} did not have a method plotHistoryOfMeans...".format(env))  # DEBUG
 
