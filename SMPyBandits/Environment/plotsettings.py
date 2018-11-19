@@ -24,7 +24,7 @@ import seaborn as sns
 from datetime import datetime
 import locale  # See this bug, http://numba.pydata.org/numba-doc/dev/user/faq.html#llvm-locale-bug
 locale.setlocale(locale.LC_TIME, 'C')
-monthyear = '{:%b.%Y}'.format(datetime.today()).title()  #: Month.Year date
+monthyear = "{:%b.%Y}".format(datetime.today()).title()  #: Month.Year date
 
 from os import getenv
 
@@ -46,7 +46,7 @@ HLS = True  #: Use the HLS mapping, or HUSL mapping
 VIRIDIS = False  #: Use the Viridis colormap
 
 # Bbox in inches. Only the given portion of the figure is saved. If 'tight', try to figure out the tight bbox of the figure.
-BBOX_INCHES = 'tight'  #: Use this parameter for bbox
+BBOX_INCHES = "tight"  #: Use this parameter for bbox
 BBOX_INCHES = None
 
 if __name__ != '__main__':
@@ -60,6 +60,12 @@ if __name__ != '__main__':
     mpl.rcParams['mathtext.fontset'] = "cm"
     mpl.rcParams['mathtext.rm'] = "serif"
 
+    # Configure size for axes and x and y labels
+    # Cf. https://stackoverflow.com/a/12444777/
+    mpl.rcParams['axes.labelsize']  = "medium"
+    mpl.rcParams['xtick.labelsize'] = "x-small"
+    mpl.rcParams['ytick.labelsize'] = "x-small"
+
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI
     # print(" - Setting dpi of all figures to", DPI, "...")  # DEBUG
@@ -69,7 +75,7 @@ if __name__ != '__main__':
     mpl.rcParams['figure.figsize'] = FIGSIZE
     # print(" - Setting 'figsize' of all figures to", FIGSIZE, "...")  # DEBUG
 
-    # Set up a discrete version of the Viridis map for axes.prop_cycle
+    # XXX Set up a discrete version of the Viridis map for axes.prop_cycle
 
 
 def palette(nb, hls=HLS, viridis=VIRIDIS):
@@ -129,7 +135,10 @@ SHRINKFACTOR = 0.70
 MAXNBOFLABELINFIGURE = 7
 
 
-def legend(putatright=PUTATRIGHT, shrinkfactor=SHRINKFACTOR, fig=None, maxnboflabelinfigure=MAXNBOFLABELINFIGURE, title=None, fontsize='x-small'):
+def legend(putatright=PUTATRIGHT, fontsize="x-small",
+        shrinkfactor=SHRINKFACTOR, maxnboflabelinfigure=MAXNBOFLABELINFIGURE,
+        fig=None, title=None
+    ):
     """plt.legend() with good options, cf. http://matplotlib.org/users/recipes.html#transparent-fancy-legends.
 
     - It can place the legend to the right also, see https://stackoverflow.com/a/4701285/.
@@ -217,7 +226,7 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
         print("Failed to show the figure for some unknown reason...")  # DEBUG
 
 
-def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter='%.2g%%', formatter='{x:.1%}'):
+def add_percent_formatter(which="xaxis", amplitude=1.0, oldformatter="%.2g%%", formatter="{x:.1%}"):
     """ Small function to use a Percentage formatter for xaxis or yaxis, of a certain amplitude.
 
     - which can be "xaxis" or "yaxis",
@@ -251,12 +260,12 @@ WIDTH = 95
 
 def wraptext(text, width=WIDTH):
     """ Wrap the text, using ``textwrap`` module, and ``width``."""
-    return '\n'.join(wrap(text, width=width))
+    return "\n".join(wrap(text, width=width))
 
 
 def wraplatex(text, width=WIDTH):
     """ Wrap the text, for LaTeX, using ``textwrap`` module, and ``width``."""
-    return '$\n$'.join(wrap(text, width=width))
+    return "$\n$".join(wrap(text, width=width))
 
 
 def nrows_ncols(N):
