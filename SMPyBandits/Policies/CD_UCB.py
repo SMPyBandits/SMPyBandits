@@ -282,18 +282,26 @@ VERBOSE = True
 VERBOSE = False
 
 
-def compute_c_alpha__GLR(t0, t, horizon, verbose=False):
-    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018]."""
+def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1):
+    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+
+    .. note:: I am currently exploring the following variant (November 2018):
+
+        - The probability of uniform exploration, :math:`\alpha`, is computed as a function of the current time:
+
+        .. math:: \forall t>0, \alpha = \alpha_t := \alpha_{t=1} \frac{1}{\max(1, t^{\beta})}.
+
+        - with :math:`\beta > 1, \beta` = ``exponentBeta`` (=1.05) and :math:`\alpha_{t=1} < 1, \alpha_{t=1}` = ``alpha_t1`` (=0.01).
+    """
     T = int(max(1, horizon))
     delta = 1.0 / T
     if verbose: print("compute_c_alpha__GLR() with t = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
     t_m_t0 = abs(t - t0)
     c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
     if c < 0 and np.isinf(c): c = float('+inf')
-    alpha = 1.0 / (100 * max(1, t**2))
+    assert exponentBeta > 1.0, "Error: compute_c_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
+    alpha = alpha_t1 / max(1, t)**exponentBeta
     if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
-    # FIXME I just want to try, with a small threshold do we detect changes?
-    # c = 20.0
     return c, alpha
 
 
