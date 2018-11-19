@@ -272,10 +272,27 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 
 # --- Generic GLR for 1-dimensional exponential families
 
-try:
-    from .kullback import klBern, klGauss
-except (ImportError, SystemError):
-    from kullback import klBern, klGauss
+eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+
+# --- Simple Kullback-Leibler divergence for known distributions
+
+def klBern(x, y):
+    r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
+
+    .. math:: \mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).
+    """
+    x = min(max(x, eps), 1 - eps)
+    y = min(max(y, eps), 1 - eps)
+    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
+
+def klGauss(x, y, sig2x=1):
+    r""" Kullback-Leibler divergence for Gaussian distributions of means ``x`` and ``y`` and variances ``sig2x`` and ``sig2y``, :math:`\nu_1 = \mathcal{N}(x, \sigma_x^2)` and :math:`\nu_2 = \mathcal{N}(y, \sigma_x^2)`:
+
+    .. math:: \mathrm{KL}(\nu_1, \nu_2) = \frac{(x - y)^2}{2 \sigma_y^2} + \frac{1}{2}\left( \frac{\sigma_x^2}{\sigma_y^2} - 1 \log\left(\frac{\sigma_x^2}{\sigma_y^2}\right) \right).
+
+    See https://en.wikipedia.org/wiki/Normal_distribution#Other_properties
+    """
+    return (x - y) ** 2 / (2. * sig2x)
 
 VERBOSE = True
 #: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
