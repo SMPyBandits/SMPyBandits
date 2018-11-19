@@ -63,8 +63,8 @@ if __name__ != '__main__':
     # Configure size for axes and x and y labels
     # Cf. https://stackoverflow.com/a/12444777/
     mpl.rcParams['axes.labelsize']  = "medium"
-    mpl.rcParams['xtick.labelsize'] = "x-small"
-    mpl.rcParams['ytick.labelsize'] = "x-small"
+    mpl.rcParams['xtick.labelsize'] = "small"
+    mpl.rcParams['ytick.labelsize'] = "small"
 
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI
@@ -135,7 +135,7 @@ SHRINKFACTOR = 0.70
 MAXNBOFLABELINFIGURE = 7
 
 
-def legend(putatright=PUTATRIGHT, fontsize="x-small",
+def legend(putatright=PUTATRIGHT, fontsize="xx-small",
         shrinkfactor=SHRINKFACTOR, maxnboflabelinfigure=MAXNBOFLABELINFIGURE,
         fig=None, title=None
     ):
@@ -146,7 +146,7 @@ def legend(putatright=PUTATRIGHT, fontsize="x-small",
     try:
         len_leg = len(plt.gca().get_legend_handles_labels()[1])
         putatright = len_leg > maxnboflabelinfigure
-        print("Warning: forcing to use putatright = {} because there is {} items in the legend.".format(putatright, len_leg))  # DEBUG
+        if len_leg > 0: print("Warning: forcing to use putatright = {} because there is {} items in the legend.".format(putatright, len_leg))  # DEBUG
     except (ValueError, AttributeError, IndexError) as e:
         # print("    e =", e)  # DEBUG
         pass

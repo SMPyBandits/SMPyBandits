@@ -369,7 +369,11 @@ if ENVIRONMENT_BAYESIAN:
 #     ]
 
 if ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] = [
+    configuration["plot_lowerbound"] = False
+    configuration["environment"] = []
+
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
             "params": {
@@ -392,8 +396,33 @@ if ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
+
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] += [
+        {   # A simple piece-wise stationary problem
+            "arm_type": Bernoulli,
+            "params": {
+                "listOfMeans": [
+                    [0.2, 0.5, 0.9],  # 0    to 399
+                    [0.2, 0.2, 0.9],  # 400  to 799
+                    [0.2, 0.2, 0.1],  # 800  to 1199
+                    [0.7, 0.2, 0.1],  # 1200 to 1599
+                    [0.7, 0.5, 0.1],  # 1600 to end
+                ],
+                "changePoints": [
+                    0    * (50 if HORIZON >= 10000 else 1),
+                    400  * (50 if HORIZON >= 10000 else 1),
+                    800  * (50 if HORIZON >= 10000 else 1),
+                    1200 * (50 if HORIZON >= 10000 else 1),
+                    1600 * (50 if HORIZON >= 10000 else 1),
+                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
+                ],
+            }
+        },
+    ]
+
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if False and ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": Bernoulli,
@@ -426,7 +455,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
     ]
 
 # Another example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.08380
-if False and ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
             "arm_type": Bernoulli,
@@ -1725,13 +1754,30 @@ if TEST_Non_Stationary_Policies:
 
     configuration.update({
         "policies":
-        # The LM_DSEE algorithm seems to work fine!
-        [
-            # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-            # XXX note that for a fixed T it means nothing…
-            # XXX But for T=10000 it is at most 100 changes, reasonable!
-            { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
+        [  # XXX Regular adversarial bandits algorithms!
+            { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
+            { "archtype": Exp3PlusPlus, "params": {} },
+        ] + [  # XXX Regular stochastic bandits algorithms!
+            { "archtype": UCBalpha, "params": { "alpha": 1, } },
+            { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
+            # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+            # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+            # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            { "archtype": klUCB, "params": { "klucb": klucb, } },
+            { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
+            { "archtype": Thompson, "params": { "posterior": Beta, } },
+        ] + [  # XXX This is still highly experimental!
+            { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
+            # for gamma in GAMMAS
+            for gamma in [0.99]
         ] +
+        # # The LM_DSEE algorithm seems to work fine!
+        # [
+        #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+        #     # XXX note that for a fixed T it means nothing…
+        #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+        #     { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
+        # ] +
         # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         [
             { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
@@ -1772,7 +1818,8 @@ if TEST_Non_Stationary_Policies:
         # ] +
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, } }
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [
@@ -1810,20 +1857,6 @@ if TEST_Non_Stationary_Policies:
             for alpha in ALPHAS
             for max_nb_random_events in [NB_BREAK_POINTS]
             # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
-        ] +
-        [
-            { "archtype": UCBalpha, "params": { "alpha": 1, } },
-            { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
-            # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-            # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-            { "archtype": klUCB, "params": { "klucb": klucb, } },
-            { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
-            { "archtype": Thompson, "params": { "posterior": Beta, } },
-        ] + [  # XXX This is still highly experimental!
-            { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-            # for gamma in GAMMAS
-            for gamma in [0.99]
         ] +
         []
     })

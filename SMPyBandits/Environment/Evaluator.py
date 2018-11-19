@@ -10,6 +10,7 @@ __version__ = "0.9"
 # Generic imports
 import sys
 import pickle
+USE_PICKLE = False   #: Should we save the figure objects to a .pickle file at the end of the simulation?
 import random
 import time
 from copy import deepcopy
@@ -218,6 +219,7 @@ class Evaluator(object):
 
     def startOneEnv(self, envId, env):
         """Simulate that env."""
+        plt.close('all')
         print("\n\nEvaluating environment:", repr(env))
         self.policies = []
         self.__initPolicies__(env)
@@ -561,6 +563,8 @@ class Evaluator(object):
             if self.envs[envId]._sparsity is not None and not np.isnan(lowerbound_sparse):
                 print("\n- a [Kwon et al] sparse lower-bound with s = {} non-negative arm, C'(mu) = {:.3g}...".format(self.envs[envId]._sparsity, lowerbound_sparse))  # DEBUG
         if not meanReward:
+            if semilogy or loglog:
+                ymin = max(0, ymin)
             plt.ylim(ymin, plt.ylim()[1])
         # Get a small string to add to ylabel
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
@@ -613,7 +617,7 @@ class Evaluator(object):
             else:
                 plt.ylabel(r"Regret $R_t = t \mu^* - \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$ (from actual rewards)" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pit=True)
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -634,11 +638,11 @@ class Evaluator(object):
         add_percent_formatter("yaxis", 1.0)
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Best arm pulls frequency for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
     def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
-            base=1, unit="seconds"
+            base=1, unit="seconds",
         ):
         """Plot the running times of the different policies, as a box plot for each."""
         means, _, all_times = self.getRunningTimes(envId=envId)
@@ -648,17 +652,23 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        if len(labels) < maxNbOfLabels:
-            plt.boxplot(all_times, labels=labels)
-            locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.30)
-            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
-        else:
-            plt.boxplot(all_times)
-        plt.xlabel("Bandit algorithms{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
+        plt.xlabel("Bandit algorithms{}".format(self.signature))
+        if len(labels) < maxNbOfLabels:
+            max_length_of_labels = max([len(label) for label in labels])
+            plt.boxplot(all_times, labels=labels, meanline=True)
+            locs, labels = plt.xticks()
+            if max_length_of_labels >= 50:
+                plt.subplots_adjust(bottom=0.60)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
+                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
+            else:
+                plt.subplots_adjust(bottom=0.30)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
+        else:
+            plt.boxplot(all_times, meanline=True)
         plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
     def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
@@ -673,16 +683,22 @@ class Evaluator(object):
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
-            plt.boxplot(all_memories, labels=labels)
+            max_length_of_labels = max([len(label) for label in labels])
+            plt.boxplot(all_memories, labels=labels, showmeans=True, meanline=True)
             locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.30)
-            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
+            if max_length_of_labels >= 50:
+                plt.subplots_adjust(bottom=0.60)
+                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
+            else:
+                plt.subplots_adjust(bottom=0.30)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_memories)
+            plt.boxplot(all_memories, showmeans=True, meanline=True)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
     def printFinalRanking(self, envId=0, moreAccurate=None):
@@ -768,7 +784,7 @@ class Evaluator(object):
                 n, bins, patches = plt.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins)
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
-                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=True)
+                show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
             return figs
         elif subplots:
@@ -806,7 +822,7 @@ class Evaluator(object):
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)
             legend()
         # Common part
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
     def plotHistoryOfMeans(self, envId=0, horizon=None, savefig=None):

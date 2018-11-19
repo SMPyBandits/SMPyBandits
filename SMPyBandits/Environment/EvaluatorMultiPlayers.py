@@ -886,13 +886,18 @@ class EvaluatorMultiPlayers(object):
         all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
-            plt.boxplot(all_times, labels=labels)
+            max_length_of_labels = max([len(label) for label in labels])
+            plt.boxplot(all_times, labels=labels, meanline=True)
             locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.30)
-            legend()
-            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
+            if max_length_of_labels >= 50:
+                plt.subplots_adjust(bottom=0.60)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
+                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
+            else:
+                plt.subplots_adjust(bottom=0.30)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_times)
+            plt.boxplot(all_times, meanline=True)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -916,13 +921,18 @@ class EvaluatorMultiPlayers(object):
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
-            plt.boxplot(all_memories, labels=labels)
+            max_length_of_labels = max([len(label) for label in labels])
+            plt.boxplot(all_memories, labels=labels, showmeans=True, meanline=True)
             locs, labels = plt.xticks()
-            plt.subplots_adjust(bottom=0.30)
-            legend()
-            plt.xticks(locs, labels, rotation=30)  # XXX See https://stackoverflow.com/a/37708190/
+            if max_length_of_labels >= 50:
+                plt.subplots_adjust(bottom=0.60)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
+                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
+            else:
+                plt.subplots_adjust(bottom=0.30)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_memories)
+            plt.boxplot(all_memories, showmeans=True, meanline=True)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))

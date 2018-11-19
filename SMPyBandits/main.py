@@ -108,6 +108,10 @@ if getenv('DEBUGMEMORY', 'False') == 'True' and __name__ == '__main__':
 if getenv('SAVEALL', 'False') == 'True' and __name__ == '__main__':
     print("====> SAVING FIGURES <=====")
     saveallfigs = True
+    import matplotlib as mpl
+    FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
+    # FIGSIZE = (16, 9)  #: Figure size, in inches!
+    mpl.rcParams['figure.figsize'] = FIGSIZE
 
 if getenv('XKCD', 'False') == 'True' and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
@@ -148,7 +152,7 @@ if __name__ == '__main__':
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
         picklename = mainfig + '.pickle'
-        h5pyname = mainfig + '.hdf5'
+        h5pyname   = mainfig + '.hdf5'
 
         if saveallfigs:
             # Create the sub folder
@@ -158,14 +162,6 @@ if __name__ == '__main__':
                 raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
             else:
                 mkdir(plot_dir)
-
-            # Save it to a pickle file
-            if USE_PICKLE:
-                with open(picklename, 'wb') as picklefile:
-                    print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
-                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
-            if USE_HD5:
-                evaluation.saveondisk(h5pyname)
 
         # --- Also plotting the history of means
         if saveallfigs:
@@ -191,6 +187,16 @@ if __name__ == '__main__':
 
         if not do_plots:
             break
+
+        # --- Save it to a pickle file
+        if saveallfigs and USE_PICKLE:
+            with open(picklename, 'wb') as picklefile:
+                print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
+                pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+
+        # --- Save it to a HD5 file
+        if saveallfigs and USE_HD5:
+            evaluation.saveondisk(h5pyname)
 
         # --- Also plotting the running times
         if saveallfigs:

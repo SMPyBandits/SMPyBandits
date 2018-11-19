@@ -64,6 +64,10 @@ if getenv('DEBUGMEMORY', 'False') == 'True' and __name__ == '__main__':
 if getenv('SAVEALL', 'False') == 'True' and __name__ == '__main__':
     print("====> SAVING FIGURES <=====")
     saveallfigs = True
+    import matplotlib as mpl
+    FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
+    # FIGSIZE = (16, 9)  #: Figure size, in inches!
+    mpl.rcParams['figure.figsize'] = FIGSIZE
 
 if getenv('XKCD', 'False') == 'True' and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
