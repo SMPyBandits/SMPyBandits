@@ -1,8 +1,10 @@
 # Cf. https://docs.readthedocs.io/en/latest/yaml-config.html?highlight=yml
 formats:
 - htmlzip
+build:
+  image: latest
 python:
-  version: 3.5
+  version: 3.6
   setup_py_install: true
   pip_install: false
   extra_requirements:
