@@ -254,7 +254,7 @@ class Evaluator(object):
             if self.useJoblib:
                 seeds = np.random.randint(low=0, high=100 * self.repetitions, size=self.repetitions)
                 repeatIdout = 0
-                for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+                for r in Parallel(n_jobs=self.cfg['n_jobs'], pre_dispatch='3*n_jobs', verbose=self.cfg['verbosity'])(
                     delayed(delayed_play)(env, policy, self.horizon, random_shuffle=self.random_shuffle, random_invert=self.random_invert, nb_break_points=self.nb_break_points, allrewards=allrewards, seed=seeds[repeatId], repeatId=repeatId, useJoblib=self.useJoblib)
                     for repeatId in tqdm(range(self.repetitions), desc="Repeat||")
                 ):
@@ -617,7 +617,7 @@ class Evaluator(object):
             else:
                 plt.ylabel(r"Regret $R_t = t \mu^* - \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$ (from actual rewards)" % (self.repetitions), ylabel2))
             plt.title("Cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-        show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
     def plotBestArmPulls(self, envId, savefig=None):
@@ -831,7 +831,8 @@ class Evaluator(object):
             horizon = self.horizon
         env = self.envs[envId]
         if hasattr(env, 'plotHistoryOfMeans'):
-            return env.plotHistoryOfMeans(horizon=horizon, savefig=savefig, showplot=self.showplot)
+            fig = env.plotHistoryOfMeans(horizon=horizon, savefig=savefig, showplot=self.showplot)
+            return fig
         else:
             print("Warning: environment {} did not have a method plotHistoryOfMeans...".format(env))  # DEBUG
 
