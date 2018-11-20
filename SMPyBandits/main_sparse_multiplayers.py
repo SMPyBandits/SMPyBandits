@@ -73,6 +73,16 @@ if getenv('XKCD', 'False') == 'True' and interactive and not saveallfigs:
     import matplotlib.pyplot as plt
     plt.xkcd()  # XXX turn on XKCD-like style ?! cf. http://matplotlib.org/xkcd/ for more details
 
+# FIXED try to switch to a non interactive backend when running without DEBUG=True
+# https://matplotlib.org/api/matplotlib_configuration_api.html?highlight=matplotlib%20use#matplotlib.use
+if not interactive:
+    import matplotlib
+    print("Warning: Non interactive simulations, switching from '{}' backend to 'agg'...".format(matplotlib.get_backend()))  # DEBUG
+    matplotlib.use("agg", warn=True, force=True)
+# else:
+#     import matplotlib
+#     matplotlib.use("TkAgg")
+
 
 if __name__ == '__main__':
     # Update configuration

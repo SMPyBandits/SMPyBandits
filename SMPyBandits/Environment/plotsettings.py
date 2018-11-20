@@ -202,11 +202,12 @@ FORMATS = ('png', 'pdf')
 
 
 def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, fig=None):
-    """ Maximize the window, save it if needed, and then show it or close it.
+    """ Maximize the window if need to show it, save it if needed, and then show it or close it.
 
     - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
     """
-    maximizeWindow()
+    if showplot:
+        maximizeWindow()
     if savefig is not None:
         if pickleit and fig is not None:
             form = "pickle"
