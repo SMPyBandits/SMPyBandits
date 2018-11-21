@@ -58,11 +58,17 @@ class Exp3PlusPlus(BasePolicy):
         s = "{}{}".format("" if self.alpha == ALPHA else r"$\alpha={}$".format(self.alpha), "" if self.beta == BETA else r"$\beta={}$".format(self.beta))
         return r"Exp3++{}".format("({})".format(s) if s else "")
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def eta(self):
         r"""Decreasing sequence of learning rates, given by :math:`\eta_t = \frac{1}{2} \sqrt{\frac{\log K}{t K}}`."""
         return 0.5 * np.sqrt(np.log(self.nbArms) / float(self.t * self.nbArms))
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
+    @property
+    def gamma(self):
+        r"""Constant :math:`\gamma_t = \gamma`."""
+        return self.eta
 
     @property
     def gap_estimate(self):

@@ -52,7 +52,7 @@ class Softmax(BasePolicy):
     def __str__(self):
         return "Softmax(temp: {})".format(self.temperature)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def temperature(self):
         r"""Constant temperature, :math:`\eta_t`."""
@@ -147,7 +147,7 @@ class SoftmaxWithHorizon(Softmax):
     def __str__(self):
         return "Softmax($T={}$)".format(self.horizon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def temperature(self):
         r""" Fixed temperature, small, knowing the horizon: :math:`\eta_t = \sqrt(\frac{2 \log(K)}{T K})` (*heuristic*).
@@ -163,7 +163,7 @@ class SoftmaxDecreasing(Softmax):
     def __str__(self):
         return "Softmax(decreasing)"
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def temperature(self):
         r""" Decreasing temperature with the time: :math:`\eta_t = \sqrt(\frac{\log(K)}{t K})` (*heuristic*).
@@ -179,7 +179,7 @@ class SoftMix(Softmax):
     def __str__(self):
         return "SoftMix"
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def temperature(self):
         r""" Decreasing temperature with the time: :math:`\eta_t = c \frac{\log(t)}{t}` (*heuristic*).

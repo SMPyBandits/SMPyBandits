@@ -54,7 +54,7 @@ class ETC_KnownGap(EpsilonGreedy):
     def __str__(self):
         return r"ETC_KnownGap($T={}$, $\Delta={:.3g}$, $T_0={}$)".format(self.horizon, self.gap, self.max_t)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" 1 while :math:`t \leq T_0`, 0 after, where :math:`T_0` is defined by:
@@ -90,7 +90,7 @@ class ETC_RandomStop(EpsilonGreedy):
     def __str__(self):
         return r"ETC_RandomStop($T={}$)".format(self.horizon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" 1 while :math:`t \leq \tau`, 0 after, where :math:`\tau` is a random stopping time, defined by:
@@ -153,7 +153,7 @@ class ETC_FixedBudget(EpsilonGreedy):
                 self.best_identified_arm = np.random.choice(np.nonzero(means == np.max(means))[0])
             return self.best_identified_arm
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" 1 while :math:`t \leq n`, 0 after. """
@@ -207,7 +207,7 @@ class _ETC_RoundRobin_WithStoppingCriteria(EpsilonGreedy):
         """ Test if we should stop the Round-Robin phase."""
         raise NotImplementedError
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" 1 while not fixed, 0 after. """

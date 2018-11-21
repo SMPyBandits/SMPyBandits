@@ -58,7 +58,7 @@ class BaseWrapperPolicy(BasePolicy):
         r""" Pass the call to ``choice`` of the underlying policy."""
         return self.policy.choice()
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def index(self):
         r""" Get attribute ``index`` from the underlying policy."""

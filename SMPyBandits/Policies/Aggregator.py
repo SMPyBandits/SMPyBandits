@@ -151,7 +151,7 @@ class Aggregator(BasePolicy):
         else:
             return s + self.extra_str
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def rate(self):
         """ Learning rate, can be constant if self.decreaseRate is None, or decreasing.

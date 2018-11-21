@@ -57,7 +57,7 @@ class Exp3(BasePolicy):
     def __str__(self):
         return r"Exp3($\gamma: {:.3g}$)".format(self.gamma)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r"""Constant :math:`\gamma_t = \gamma`."""
@@ -169,7 +169,7 @@ class Exp3WithHorizon(Exp3):
     def __str__(self):
         return r"Exp3($T={}$)".format(self.horizon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r""" Fixed temperature, small, knowing the horizon: :math:`\gamma_t = \sqrt(\frac{2 \log(K)}{T K})` (*heuristic*).
@@ -185,7 +185,7 @@ class Exp3Decreasing(Exp3):
     def __str__(self):
         return "Exp3(decreasing)"
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).
@@ -201,7 +201,7 @@ class Exp3SoftMix(Exp3):
     def __str__(self):
         return "Exp3(SoftMix)"
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r""" Decreasing gamma parameter with the time: :math:`\gamma_t = c \frac{\log(t)}{t}` (*heuristic*).
@@ -318,7 +318,7 @@ class Exp3ELM(Exp3):
         return trusts
         # return trusts / np.sum(trusts[self.availableArms])
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r""" Decreasing gamma with the time: :math:`\gamma_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).

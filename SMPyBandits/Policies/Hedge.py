@@ -47,7 +47,7 @@ class Hedge(BasePolicy):
     def __str__(self):
         return r"Hedge($\varepsilon: {:.3g}$)".format(self.epsilon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Constant :math:`\varepsilon_t = \varepsilon`."""
@@ -159,7 +159,7 @@ class HedgeWithHorizon(Hedge):
     def __str__(self):
         return r"Hedge($T={}$)".format(self.horizon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" Fixed temperature, small, knowing the horizon: :math:`\varepsilon_t = \sqrt(\frac{2 \log(K)}{T K})` (*heuristic*).
@@ -175,7 +175,7 @@ class HedgeDecreasing(Hedge):
     def __str__(self):
         return "Hedge(decreasing)"
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r""" Decreasing epsilon with the time: :math:`\varepsilon_t = \min(\frac{1}{K}, \sqrt(\frac{\log(K)}{t K}))` (*heuristic*).

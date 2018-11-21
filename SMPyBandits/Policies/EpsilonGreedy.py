@@ -39,7 +39,7 @@ class EpsilonGreedy(BasePolicy):
         assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):  # Allow child classes to use time-dependent epsilon coef
         return self._epsilon
@@ -120,7 +120,7 @@ class EpsilonDecreasing(EpsilonGreedy):
     def __str__(self):
         return "EpsilonDecreasing(e:{})".format(self._epsilon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 / \max(1, t))`."""
@@ -156,7 +156,7 @@ class EpsilonDecreasingMEGA(EpsilonGreedy):
     def __str__(self):
         return r"EpsilonDecreasingMEGA($\varepsilon=%.3g$)" % self._epsilon
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 / \max(1, t))`."""
@@ -184,7 +184,7 @@ class EpsilonFirst(EpsilonGreedy):
     def __str__(self):
         return r"EpsilonFirst($T={}$, $\varepsilon={:.3g}$)".format(self.horizon, self._epsilon)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""1 while :math:`t \leq \varepsilon_0 T`, 0 after."""
@@ -220,7 +220,7 @@ class EpsilonExpDecreasing(EpsilonGreedy):
     def __str__(self):
         return "EpsilonExpDecreasing(e:{}, r:{})".format(self._epsilon, self._decreasingRate)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 \exp(- t \tau))`."""

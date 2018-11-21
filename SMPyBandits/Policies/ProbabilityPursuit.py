@@ -62,7 +62,7 @@ class ProbabilityPursuit(BasePolicy):
         else:   # Assume uniform prior if not given or if = 'uniform'
             self.probabilities = np.full(self.nbArms, 1. / self.nbArms)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def beta(self):  # Allow child classes to use time-dependent beta coef
         r"""Constant parameter :math:`\beta(t) = \beta(0)`."""

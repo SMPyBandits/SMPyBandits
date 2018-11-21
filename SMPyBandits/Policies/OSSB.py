@@ -297,7 +297,7 @@ class OSSB_DecreasingRate(OSSB):
         """ -> str"""
         return r"OSSB(decreasing $\varepsilon(t),\gamma(t)${})".format(self._info_on_solver)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Decreasing :math:`\varepsilon(t) = \min(1, \varepsilon_0 \exp(- t \tau))`."""
@@ -308,7 +308,7 @@ class OSSB_DecreasingRate(OSSB):
     def epsilon(self, value):
         pass
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r"""Decreasing :math:`\gamma(t) = \min(1, \gamma_0 \exp(- t \tau))`."""
@@ -334,7 +334,7 @@ class OSSB_AutoDecreasingRate(OSSB):
         """ -> str"""
         return r"OSSB(auto decreasing $\varepsilon(t),\gamma(t)${})".format(self._info_on_solver)
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def epsilon(self):
         r"""Decreasing :math:`\varepsilon(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
@@ -345,7 +345,7 @@ class OSSB_AutoDecreasingRate(OSSB):
     def epsilon(self, value):
         pass
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/2/library/functions.html#property
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def gamma(self):
         r"""Decreasing :math:`\gamma(t) = \frac{1}{2} \sqrt{\frac{\log(K)}{t K}}`."""
