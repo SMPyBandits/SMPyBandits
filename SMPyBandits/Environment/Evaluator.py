@@ -658,10 +658,13 @@ class Evaluator(object):
             max_length_of_labels = max([len(label) for label in labels])
             plt.boxplot(all_times, labels=labels, meanline=True)
             locs, labels = plt.xticks()
-            if max_length_of_labels >= 50:
+            if max_length_of_labels >= 65:
                 plt.subplots_adjust(bottom=0.60)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
                 plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
+            elif max_length_of_labels >= 45:
+                plt.subplots_adjust(bottom=0.45)
+                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
             else:
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/

@@ -62,7 +62,7 @@ class Exp3PlusPlus(BasePolicy):
     @property
     def eta(self):
         r"""Decreasing sequence of learning rates, given by :math:`\eta_t = \frac{1}{2} \sqrt{\frac{\log K}{t K}}`."""
-        return 0.5 * np.sqrt(np.log(self.nbArms) / float(self.t * self.nbArms))
+        return 0.5 * np.sqrt(np.log(self.nbArms) / float(max(1, self.t) * self.nbArms))
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property

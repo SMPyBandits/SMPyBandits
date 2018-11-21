@@ -323,7 +323,7 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
-    r""" The GLR-UCB generic policy for non-stationary bandits, using the Generalized Likelihood Ratio test (GLR),  for 1-dimensional exponential families.
+    r""" The GLR-UCB generic policy for non-stationary bandits, using the Generalized Likelihood Ratio test (GLR), for 1-dimensional exponential families.
 
     - It works for any 1-dimensional exponential family, you just have to give a ``kl`` function.
     - For instance :func:`kullback.klBern`, for Bernoulli distributions, gives :class:`GaussianGLR_IndexPolicy`,
@@ -344,6 +344,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
         self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def threshold_h(self):
         r"""Parameter :math:`c` for the test (threshold)."""
@@ -351,6 +352,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self._threshold_h, self._alpha = c, alpha
         return self._threshold_h
 
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def proba_random_exploration(self):
         r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
@@ -390,9 +392,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
 # --- GLR for sigma=1 Gaussian
 class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
-    r""" The GaussianGLR-UCB generic policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2` known and fixed).
-
-    .. warning:: FIXME This is HIGHLY experimental!
+    r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed).
     """
 
     def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
@@ -406,9 +406,7 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
-    r""" The BernoulliGLR-UCB generic policy for non-stationary bandits, for Bernoulli distributions.
-
-    .. warning:: FIXME This is HIGHLY experimental!
+    r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
     """
 
     def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
@@ -417,3 +415,135 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
 
     def __str__(self):
         return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+
+
+# --- Drift-Detection algorithm from XXX
+
+from Policies import Exp3, Exp3PlusPlus
+
+CONSTANT_C = 1  #: The constant :math:`C` used in Corollary 1 of paper XXX.
+
+
+class DriftDetection_IndexPolicy(CD_IndexPolicy):
+    r""" The Drift-Detection generic policy for non-stationary bandits, using a custom Drift-Detection test, for 1-dimensional exponential families.
+    """
+    def __init__(self, nbArms,
+            H=None, delta=None, C=CONSTANT_C,
+            horizon=None,
+            full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
+            policy=Exp3,
+            lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(DriftDetection_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        self.startGame()
+        # New parameters
+        self.horizon = horizon
+
+        if H is None:
+            H = int(np.ceil(C * np.sqrt(horizon * np.log(horizon))))
+        assert H >= nbArms, "Error: for the Drift-Detection algorithm, the parameter H should be >= K = {}, but H = {}".format(nbArms, H)  # DEBUG
+        self.H = H  #: Parameter :math:`H` for the Drift-Detection algorithm. Default value is :math:`\lceil C \sqrt{T \log(T)} \rceil`, for some constant :math:`C`=``C``` (= :data:`CONSTANT_C` by default).
+
+        if delta is None:
+            delta = np.sqrt(np.log(horizon) / (nbArms * horizon))
+        self.delta = delta  #: Parameter :math:`\delta` for the Drift-Detection algorithm. Default value is :math:`\sqrt{\frac{\log(T)}{K T}}` for :math:`K` arms and horizon :math:`T`.
+
+        if 'gamma' not in kwargs:
+            gamma = np.sqrt((nbArms * np.log(nbArms) * np.log(horizon)) / horizon)
+            try:
+                self.policy.gamma = gamma
+            except AttributeError:
+                print("Warning: the policy {} tried to use default value of gamma = {} but could not set attribute self.policy.gamma to gamma (maybe it's using an Exp3 with a non-constant value of gamma).".format(self, gamma))  # DEBUG
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
+    @property
+    def proba_random_exploration(self):
+        r"""Parameter :math:`\proba_random_exploration` for the Exp3 algorithm."""
+        return self.policy.gamma
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
+    @property
+    def threshold_h(self):
+        r"""Parameter :math:`\varepsilon` for the Drift-Detection algorithm.
+
+        .. math:: \varepsilon = \sqrt{\frac{K \log(\frac{1}{\delta})}{2 \gamma H}}.
+        """
+        epsilon = np.sqrt((self.nbArms * np.log(1.0 / self.delta)) / (2 * self.proba_random_exploration * self.H))
+        return 2 * epsilon
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
+    @property
+    def min_number_of_pulls_to_test_change(self):
+        r"""Compute :math:`\Gamma_{\min}(I) := \frac{\gamma H}{K}`, the minimum number of samples we should have for all arms before testing for a change."""
+        Gamma_min = self.proba_random_exploration * self.H / self.nbArms
+        return int(np.ceil(Gamma_min))
+
+    def __str__(self):
+        return r"DriftDetection-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.horizon, self.threshold_h, self.proba_random_exploration)
+
+    def detect_change(self, arm, verbose=VERBOSE):
+        r""" Detect a change in the current arm, using a Drift-Detection test (GLR).
+
+        .. math::
+
+            k_{\max} &:= \arg\max_k \tilde{\rho}_k(t),\\
+            DD_t(k) = \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I)
+
+        - The change is detected if there is an arm :math:`k` such that :math:`DD_t(k) \geq 2 * \varepsilon = h`, where :attr:`threshold_h` is the threshold of the test, and :math:`I` is the (number of the) current interval since the last (global) restart,
+        - where :math:`\tilde{\rho}_k(t)` is the trust probability of arm :math:`k` from the Exp3 algorithm,
+        - and where :math:`\hat{\mu}_k(I)` is the empirical mean of arm :math:`k` from the data in the current interval.
+
+        .. warning::
+
+            FIXME I know this implementation is not (yet) correct...
+            I should count differently the samples we obtained from the Gibbs distribution (when Exp3 uses the trust vector) and from the uniform distribution
+            This :math:`\Gamma_{\min}(I)` is the minimum number of samples obtained from the uniform exploration (of probability :math:`\gamma`).
+            It seems painful to code correctly, I will do it later.
+        """
+        # XXX Do we have enough samples?
+        min_pulls = np.min(self.last_pulls)
+        if min_pulls < self.min_number_of_pulls_to_test_change:  # no we don't
+            return False
+        # Yes we do have enough samples
+        trusts = self.policy.trusts
+        k_max = np.argmax(trusts)
+        means = [np.mean(rewards) for rewards in self.all_rewards]
+        meanOfTrustedArm = means[k_max]
+        for otherArm in range(self.nbArms):
+            difference_of_mean = means[otherArm] - meanOfTrustedArm
+            if verbose: print("  - For the mean mu(k={}) = {} and mean of trusted arm mu(k_max={}) = {}, their difference is {}, compared to c = {}...".format(otherArm, means[otherArm], k_max, meanOfTrustedArm, difference_of_mean, self.threshold_h))
+            if difference_of_mean >= self.threshold_h:
+                return True
+        return False
+
+
+# --- Exp3R
+
+class Exp3R(DriftDetection_IndexPolicy):
+    r""" The Exp3.R policy for non-stationary bandits.
+
+    .. warning:: FIXME This is HIGHLY experimental!
+    """
+
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=Exp3, lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(Exp3R, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return r"Exp3R($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self.horizon, self.threshold_h, self.proba_random_exploration)
+
+
+# --- Exp3R++
+
+class Exp3RPlusPlus(DriftDetection_IndexPolicy):
+    r""" The Exp3.R++ policy for non-stationary bandits.
+
+    .. warning:: FIXME This is HIGHLY experimental!
+    """
+
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=Exp3PlusPlus, lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(Exp3RPlusPlus, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+
+    def __str__(self):
+        return r"Exp3R++($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self.horizon, self.threshold_h, self.proba_random_exploration)
