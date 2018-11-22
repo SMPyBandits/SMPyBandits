@@ -3,8 +3,7 @@
 
 - "Stupid" algorithms: :class:`Uniform`, :class:`UniformOnSome`, :class:`TakeFixedArm`, :class:`TakeRandomFixedArm`,
 
-- Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`, :class:`EpsilonDecreasingMEGA`,
-:class:`EpsilonExpDecreasing`,
+- Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`, :class:`EpsilonDecreasingMEGA`, :class:`EpsilonExpDecreasing`,
 - And variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`, :class:`ExploreThenCommit.ETC_FixedBudget`, :class:`ExploreThenCommit.ETC_SPRT`, :class:`ExploreThenCommit.ETC_BAI`, :class:`ExploreThenCommit.DeltaUCB`,
 
 - Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
@@ -32,7 +31,7 @@
 - Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
 - Other policies for the non-stationary problems:
-:class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`.
+:class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`.
 
 - A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`, and :class:`SparseWrapper` that can be used with *any* index policy.
 
@@ -187,6 +186,7 @@ from .LM_DSEE import LM_DSEE
 from .SWHash_UCB import SWHash_IndexPolicy
 from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, Exp3R, Exp3RPlusPlus
 from .Monitored_UCB import Monitored_IndexPolicy
+from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy
 
 from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints, Ti_geometric, Ti_exponential, Ti_intermediate_sqrti, Ti_intermediate_i13, Ti_intermediate_i23, Ti_intermediate_i12_logi12, Ti_intermediate_i_by_logi
 

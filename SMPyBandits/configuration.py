@@ -372,17 +372,18 @@ if ENVIRONMENT_NONSTATIONARY:
     configuration["plot_lowerbound"] = False
     configuration["environment"] = []
 
+
 if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
             "params": {
                 "listOfMeans": [
-                    [0.4, 0.5, 0.9],  # 0    to 399
-                    [0.5, 0.4, 0.7],  # 400  to 799
-                    [0.6, 0.3, 0.5],  # 800  to 1199
-                    [0.7, 0.2, 0.3],  # 1200 to 1599
-                    [0.8, 0.1, 0.1],  # 1600 to end
+                    [0.2, 0.5, 0.9],  # 0    to 399
+                    [0.2, 0.2, 0.9],  # 400  to 799
+                    [0.2, 0.2, 0.1],  # 800  to 1199
+                    [0.7, 0.2, 0.1],  # 1200 to 1599
+                    [0.7, 0.5, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
                     0    * (50 if HORIZON >= 10000 else 1),
@@ -396,18 +397,17 @@ if ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
-
 if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
             "params": {
                 "listOfMeans": [
-                    [0.2, 0.5, 0.9],  # 0    to 399
-                    [0.2, 0.2, 0.9],  # 400  to 799
-                    [0.2, 0.2, 0.1],  # 800  to 1199
-                    [0.7, 0.2, 0.1],  # 1200 to 1599
-                    [0.7, 0.5, 0.1],  # 1600 to end
+                    [0.4, 0.5, 0.9],  # 0    to 399
+                    [0.5, 0.4, 0.7],  # 400  to 799
+                    [0.6, 0.3, 0.5],  # 800  to 1199
+                    [0.7, 0.2, 0.3],  # 1200 to 1599
+                    [0.8, 0.1, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
                     0    * (50 if HORIZON >= 10000 else 1),
@@ -551,6 +551,10 @@ if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use 
         },
     ]
 
+
+CHANGE_POINTS = None
+if ENVIRONMENT_NONSTATIONARY:
+    CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
 
 # if ENVIRONMENT_NONSTATIONARY:
 #     configuration["environment"] = [
@@ -1755,21 +1759,29 @@ if TEST_Non_Stationary_Policies:
     configuration.update({
         "policies":
         [  # XXX Regular adversarial bandits algorithms!
-            { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
+            # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
             { "archtype": Exp3PlusPlus, "params": {} },
         ] + [  # XXX Regular stochastic bandits algorithms!
             { "archtype": UCBalpha, "params": { "alpha": 1, } },
-            { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
-            # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-            # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
+            # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+            # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+            # # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
             { "archtype": klUCB, "params": { "klucb": klucb, } },
-            { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
+            # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
             { "archtype": Thompson, "params": { "posterior": Beta, } },
         ] + [  # XXX This is still highly experimental!
             { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
             # for gamma in GAMMAS
-            for gamma in [0.99]
+            for gamma in [0.99, 0.9, 0.5]
+        ] +
+        # # The Exp3R algorithm works reasonably well
+        # [
+        #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+        # ] +
+        # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+        [
+            { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
         ] +
         # # The LM_DSEE algorithm seems to work fine!
         # [
@@ -1778,7 +1790,7 @@ if TEST_Non_Stationary_Policies:
         #     # XXX But for T=10000 it is at most 100 changes, reasonable!
         #     { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
         # ] +
-        # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
+        # # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         # [
         #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
         #     for per_arm_restart in [True, False]
@@ -1788,10 +1800,10 @@ if TEST_Non_Stationary_Policies:
         #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
         #     for per_arm_restart in [True, False]
         # ] +
-        # # FIXME try CUSUM-Exp3PlusPlus
-        # [
-        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
-        # ] +
+        # # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
+        # # [
+        # #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
+        # # ] +
         # # OK PHT_IndexPolicy is very much like CUSUM
         # [
         #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
@@ -1802,41 +1814,33 @@ if TEST_Non_Stationary_Policies:
         #     { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
         #     for per_arm_restart in [True, False]
         # ] +
-        # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
-        # [
-        #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
-        # ] +
-        # FIXME try Exp3R
-        [
-            { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-        ] +
-        # FIXME try Exp3RPlusPlus
-        [
-            { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
-        ] +
-        # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
-        # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
-        # ] +
-        # # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-        # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
-        # ] +
-        # # # OK this Monitored-klUCB is the same
+        # # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
         # # [
-        # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
+        # #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        # #     for per_arm_restart in [True, False]
         # # ] +
-        # # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        # # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
+        # # [
+        # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+        # # ] +
+        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        [
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
+        ] +
+        # # OK this Monitored-klUCB is the same
         # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
         # ] +
+        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        [
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [True, False]
+        ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [
             { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-            for alpha in [0.5]  # ALPHAS
+            for alpha in ALPHAS
             for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
         ] +
         # [
@@ -1869,6 +1873,16 @@ if TEST_Non_Stationary_Policies:
             for alpha in ALPHAS
             for max_nb_random_events in [NB_BREAK_POINTS]
             # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
+        ] +
+        # DONE the OracleSequentiallyRestartPolicy with UCB policy works quite well, but NOT optimally!
+        [
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "per_arm_restart": per_arm_restart, "policy": UCB, } }
+            for per_arm_restart in [True, False]
+        ] +
+        # DONE the OracleSequentiallyRestartPolicy with klUCB policy works quite well, but NOT optimally!
+        [
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "per_arm_restart": per_arm_restart, "policy": klUCB, } }
+            for per_arm_restart in [True, False]
         ] +
         []
     })
