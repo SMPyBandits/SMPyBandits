@@ -29,18 +29,20 @@ class DiscountedThompson(DiscountedBayesianIndexPolicy):
 
         .. math::
             A(t) &\sim U(\arg\max_{1 \leq k \leq K} I_k(t)),\\
-            I_k(t) &\sim \mathrm{Beta}(1 + \tilde{S_k}(t), 1 + \tilde{F_k}(t)).
+            I_k(t) &\sim \mathrm{Beta}(1 + \widetilde{S_k}(t), 1 + \widetilde{F_k}(t)).
 
-        - It keeps :math:`\tilde{S_k}(t)` and :math:`\tilde{F_k}(t)` the discounted counts of successes and failures (S and F), for each arm k.
+        - It keeps :math:`\widetilde{S_k}(t)` and :math:`\widetilde{F_k}(t)` the discounted counts of successes and failures (S and F), for each arm k.
 
-        - But instead of using :math:`\tilde{S_k}(t) = S_k(t)` and :math:`\tilde{N_k}(t) = N_k(t)`, they are updated at each time step using the discount factor :math:`\gamma`:
-
-        .. math::
-            \tilde{S_{A(t)}}(t+1) &= \gamma \tilde{S_{A(t)}}(t) + r(t),\\
-            \tilde{S_{k'}}(t+1) &= \gamma \tilde{S_{k'}}(t), \forall k' \neq A(t).
+        - But instead of using :math:`\widetilde{S_k}(t) = S_k(t)` and :math:`\widetilde{N_k}(t) = N_k(t)`, they are updated at each time step using the discount factor :math:`\gamma`:
 
         .. math::
-            \tilde{F_{A(t)}}(t+1) &= \gamma \tilde{F_{A(t)}}(t) + (1 - r(t)),\\
-            \tilde{F_{k'}}(t+1) &= \gamma \tilde{F_{k'}}(t), \forall k' \neq A(t).
+
+            \widetilde{S_{A(t)}}(t+1) &= \gamma \widetilde{S_{A(t)}}(t) + r(t),\\
+            \widetilde{S_{k'}}(t+1) &= \gamma \widetilde{S_{k'}}(t), \forall k' \neq A(t).
+
+        .. math::
+
+            \widetilde{F_{A(t)}}(t+1) &= \gamma \widetilde{F_{A(t)}}(t) + (1 - r(t)),\\
+            \widetilde{F_{k'}}(t+1) &= \gamma \widetilde{F_{k'}}(t), \forall k' \neq A(t).
         """
         return self.posterior[arm].sample()

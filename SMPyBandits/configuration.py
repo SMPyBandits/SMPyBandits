@@ -1783,50 +1783,55 @@ if TEST_Non_Stationary_Policies:
         [
             { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
         ] +
-        # # The LM_DSEE algorithm seems to work fine!
+        # # The LM_DSEE algorithm seems to work fine! FIXME it has negative or zero regret some times?!?
         # [
         #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
         #     # XXX note that for a fixed T it means nothing…
         #     # XXX But for T=10000 it is at most 100 changes, reasonable!
         #     { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
         # ] +
-        # # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
+        # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
+        [
+            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
+        ] +
+        # OK this CUSUM-klUCB is the same
+        [
+            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
+        ] +
+        # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
         # [
-        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
+        # ] +
+        # OK PHT_IndexPolicy is very much like CUSUM
+        [
+            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
+        ] +
+        # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+        [
+            { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
+        ] +
+        # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
+        # [
+        #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
         #     for per_arm_restart in [True, False]
         # ] +
-        # # OK this CUSUM-klUCB is the same
+        # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         # [
-        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
         # ] +
-        # # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
-        # # [
-        # #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
-        # # ] +
-        # # OK PHT_IndexPolicy is very much like CUSUM
-        # [
-        #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
-        # ] +
-        # # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-        # [
-        #     { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
-        # ] +
-        # # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
-        # # [
-        # #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        # #     for per_arm_restart in [True, False]
-        # # ] +
-        # # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
-        # # [
-        # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
-        # # ] +
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
         ] +
         # # OK this Monitored-klUCB is the same
         # [
@@ -1876,13 +1881,11 @@ if TEST_Non_Stationary_Policies:
         ] +
         # DONE the OracleSequentiallyRestartPolicy with UCB policy works quite well, but NOT optimally!
         [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "per_arm_restart": per_arm_restart, "policy": UCB, } }
-            for per_arm_restart in [True, False]
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": UCB, } }
         ] +
         # DONE the OracleSequentiallyRestartPolicy with klUCB policy works quite well, but NOT optimally!
         [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "per_arm_restart": per_arm_restart, "policy": klUCB, } }
-            for per_arm_restart in [True, False]
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": klUCB, } }
         ] +
         []
     })

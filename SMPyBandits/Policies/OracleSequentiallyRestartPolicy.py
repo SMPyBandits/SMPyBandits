@@ -104,4 +104,4 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
                 self.all_rewards[arm] = [reward]
 
         # we update the total number of samples available to the underlying policy
-        # self.policy.t = np.sum(self.last_pulls)
+        self.policy.t = np.sum(self.last_pulls)

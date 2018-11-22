@@ -587,9 +587,9 @@ class Evaluator(object):
             legend()
             if self.nb_break_points > 0:
                 # DONE fix math formula in case of non stationary bandits
-                plt.ylabel(r"Normalized non-stationary regret $\frac{R_t}{\log(t)} = \frac{1}{\log(t)}\sum_{s=1}^{t} \max_k \mu_k(t) - \frac{1}{\log(t)}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Normalized non-stationary regret%s$\frac{R_t}{\log(t)} = \frac{1}{\log(t)}\sum_{s=1}^{t} \max_k \mu_k(t) - \frac{1}{\log(t)}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % ("\n", self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             else:
-                plt.ylabel(r"Normalized regret $\frac{R_t}{\log(t)} = \frac{t}{\log(t)} \mu^* - \frac{1}{\log(t)}\sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
+                plt.ylabel(r"Normalized regret%s$\frac{R_t}{\log(t)} = \frac{t}{\log(t)} \mu^* - \frac{1}{\log(t)}\sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % ("\n", self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             plt.title("Normalized cumulated regrets for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         else:
             if drawUpperBound and not (semilogx or loglog):
@@ -686,14 +686,16 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
+        plt.xlabel("Bandit algorithms{}".format(self.signature))
+        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
             plt.boxplot(all_memories, labels=labels, showmeans=True, meanline=True)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 65:
                 plt.subplots_adjust(bottom=0.60)
-                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
+                plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
             elif max_length_of_labels >= 45:
                 plt.subplots_adjust(bottom=0.45)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
@@ -702,8 +704,6 @@ class Evaluator(object):
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
             plt.boxplot(all_memories, showmeans=True, meanline=True)
-        plt.xlabel("Bandit algorithms{}".format(self.signature))
-        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
@@ -803,7 +803,6 @@ class Evaluator(object):
                 locs, labels = plt.xticks()
                 if max_length_of_labels >= 65:
                     plt.subplots_adjust(bottom=0.60)
-                    plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
                     plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
                 elif max_length_of_labels >= 45:
                     plt.subplots_adjust(bottom=0.45)
@@ -846,8 +845,8 @@ class Evaluator(object):
                 n, bins, patches = ax.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins, log=log)
                 addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
-                ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'x-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
-                ax.tick_params(axis='both', labelsize=10)  # XXX https://stackoverflow.com/a/11386056/
+                ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
+                ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
