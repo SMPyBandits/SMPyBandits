@@ -2,7 +2,7 @@
 r""" The Monitored-UCB generic policy for non-stationary bandits.
 
 - Reference: [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018]](https://arxiv.org/pdf/1802.03692)
-- It runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`Monitored_IndexPolicy` is a wrapper:
+- It runs on top of a simple policy, e.g., :class:`UCB`, and :func:`Monitored_IndexPolicy` is a wrapper:
 
     >>> policy = Monitored_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -10,7 +10,7 @@ r""" The Monitored-UCB generic policy for non-stationary bandits.
 - It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
 .. warning:: This implementation is still experimental!
-.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
+.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -101,7 +101,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"Monitored-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"M-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def choice(self):
         r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choice`` of the underlying policy (eg. UCB).

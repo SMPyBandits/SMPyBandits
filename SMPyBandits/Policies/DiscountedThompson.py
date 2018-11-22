@@ -36,11 +36,11 @@ class DiscountedThompson(DiscountedBayesianIndexPolicy):
         - But instead of using :math:`\tilde{S_k}(t) = S_k(t)` and :math:`\tilde{N_k}(t) = N_k(t)`, they are updated at each time step using the discount factor :math:`\gamma`:
 
         .. math::
-            \tilde{S_{A(t)}}(t+1) &= \gamma \tilde{S_{A(t)}}(t) + r(t),
+            \tilde{S_{A(t)}}(t+1) &= \gamma \tilde{S_{A(t)}}(t) + r(t),\\
             \tilde{S_{k'}}(t+1) &= \gamma \tilde{S_{k'}}(t), \forall k' \neq A(t).
 
         .. math::
-            \tilde{F_{A(t)}}(t+1) &= \gamma \tilde{F_{A(t)}}(t) + (1 - r(t)),
+            \tilde{F_{A(t)}}(t+1) &= \gamma \tilde{F_{A(t)}}(t) + (1 - r(t)),\\
             \tilde{F_{k'}}(t+1) &= \gamma \tilde{F_{k'}}(t), \forall k' \neq A(t).
         """
         return self.posterior[arm].sample()

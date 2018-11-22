@@ -2,7 +2,7 @@
 r""" An experimental policy, using a sliding window (of for instance :math:`\tau=100` *draws* of each arm), and reset the algorithm as soon as the small empirical average is too far away from the long history empirical average (or just restart for one arm, if possible).
 
 - Reference: none yet, idea from Rémi Bonnefoi and Lilian Besson.
-- It runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`SlidingWindowRestart` is a generic policy using any simple policy with this "sliding window" trick:
+- It runs on top of a simple policy, e.g., :class:`UCB`, and :func:`SlidingWindowRestart` is a generic policy using any simple policy with this "sliding window" trick:
 
     >>> policy = SlidingWindowRestart(nbArms, UCB, tau=100, threshold=0.1)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -10,7 +10,7 @@ r""" An experimental policy, using a sliding window (of for instance :math:`\tau
 - It uses an additional :math:`\mathcal{O}(\tau)` memory but do not cost anything else in terms of time complexity (the average is done with a sliding window, and costs :math:`\mathcal{O}(1)` at every time step).
 
 .. warning:: This is very experimental!
-.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)! Note that it works on :class:`Policies.Thompson.Thompson`.
+.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)! Note that it works on :class:`Policies.Thompson.Thompson`.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

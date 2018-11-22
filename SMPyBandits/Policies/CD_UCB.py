@@ -2,7 +2,7 @@
 r""" The CD-UCB generic policy and CUSUM-UCB and PHT-UCB policies for non-stationary bandits.
 
 - Reference: [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539)
-- It runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`CUSUM_IndexPolicy` is a wrapper:
+- It runs on top of a simple policy, e.g., :class:`UCB`, and :func:`CUSUM_IndexPolicy` is a wrapper:
 
     >>> policy = CUSUM_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -10,7 +10,7 @@ r""" The CD-UCB generic policy and CUSUM-UCB and PHT-UCB policies for non-statio
 - It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
 .. warning:: This implementation is still experimental!
-.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
+.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

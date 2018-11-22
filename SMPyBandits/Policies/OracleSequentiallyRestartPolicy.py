@@ -29,8 +29,8 @@ except ImportError:
     from UCB import UCB as DefaultPolicy
 
 
-#: Should we reset one arm empirical average or all?
-PER_ARM_RESTART = True
+#: Should we reset one arm empirical average or all? Default is ``False`` for this algorithm.
+PER_ARM_RESTART = False
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 FULL_RESTART_WHEN_REFRESH = False
@@ -66,7 +66,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         print("Info: creating a new policy {}, with change points = {}...".format(self, changePoints))  # DEBUG
 
     def __str__(self):
-        return r"OracleRestart-{}($\Upsilon_T={}${})".format(self._policy.__name__, len(self.changePoints), ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"OracleRestart-{}($\Upsilon_T={}${})".format(self._policy.__name__, len(self.changePoints), ", Per-Arm" if self._per_arm_restart else "")
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

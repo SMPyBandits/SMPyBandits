@@ -109,7 +109,7 @@ class LM_DSEE(BasePolicy):
 
         .. math:: L_1(k) = L(k) = \lceil \gamma \log(k^{\rho} l b)\rceil.
 
-        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`).
+        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`). See :func:`parameter_ell`.
         """
         value_Lk = self.gamma * np.log((self.batch_number**self.rho) * self.l * self.b)
         length = max(1, int(np.ceil(value_Lk)))
@@ -121,7 +121,7 @@ class LM_DSEE(BasePolicy):
 
         .. math:: L_2(k) = \lceil a k^{\rho} l \rceil - K L_1(k).
 
-        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`).
+        .. warning:: I think there is a typo in the paper, as their formula are weird (like :math:`al` is defined from :math:`a`). See :func:`parameter_ell`.
         """
         large_value = int(np.ceil(self.a * (self.batch_number**self.rho) * self.l))
         Lk = self.length_exploration_phase(verbose=False)

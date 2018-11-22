@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 r""" The SW-UCB# policy for non-stationary bandits, from [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems", by Lai Wei, Vaibhav Srivastava, 2018, arXiv:1802.08380]](https://arxiv.org/pdf/1802.08380)
 
-- Instead of being restricted to UCB, it runs on top of a simple policy, e.g., :class:`Policy.UCB.UCB`, and :func:`SWHash_IndexPolicy` is a generic policy using any simple policy with this "sliding window" trick:
+- Instead of being restricted to UCB, it runs on top of a simple policy, e.g., :class:`UCB`, and :func:`SWHash_IndexPolicy` is a generic policy using any simple policy with this "sliding window" trick:
 
     >>> policy = SWHash_IndexPolicy(nbArms, UCB, tau=100, threshold=0.1)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -9,7 +9,7 @@ r""" The SW-UCB# policy for non-stationary bandits, from [["On Abruptly-Changing
 - It uses an additional non-fixed :math:`\mathcal{O}(\tau(t,\alpha))` memory and an extra time complexity.
 
 .. warning:: This implementation is still experimental!
-.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`Policy.UCB.UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
+.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
