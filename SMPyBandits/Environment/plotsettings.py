@@ -130,6 +130,7 @@ PUTATRIGHT = False
 SHRINKFACTOR = 0.60
 SHRINKFACTOR = 0.65
 SHRINKFACTOR = 0.70
+SHRINKFACTOR = 0.75
 
 #: Default parameter for maximum number of label to display in the legend INSIDE the figure
 MAXNBOFLABELINFIGURE = 7

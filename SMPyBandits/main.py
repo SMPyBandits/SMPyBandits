@@ -208,6 +208,13 @@ if __name__ == '__main__':
         else:
             evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
 
+        # --- Also plotting the boxplot of last regrets
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_BoxPlotRegret')
+            evaluation.plotLastRegrets(envId, boxplot=True, savefig=savefig)
+        else:
+            evaluation.plotLastRegrets(envId, boxplot=True)  # XXX To plot without saving
+
         # --- Also plotting the running times
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_RunningTimes')
@@ -297,10 +304,10 @@ if __name__ == '__main__':
 
         # --- Also plotting the histograms of regrets
         if saveallfigs:
-            evaluation.plotLastRegrets(envId, subplots=False)
             savefig = mainfig.replace('main', 'main_HistogramsRegret')
+            evaluation.plotLastRegrets(envId, subplots=False, savefig=savefig)
             print(" - Plotting the histograms of regrets, and saving the plot to {} ...".format(savefig))
-            # for sharex, sharey in product([True, False], repeat=2):
+            # for sharex, sharey in product([True, False], repeat=2):  # XXX 3 out of 4 were UGLY!
             for sharex, sharey in [(False, False)]:
                 savefig = mainfig.replace('main', 'main_HistogramsRegret{}{}'.format(
                     "_shareX" if sharex else "",
@@ -314,7 +321,7 @@ if __name__ == '__main__':
             evaluation.plotLastRegrets(envId, all_on_separate_figures=True, savefig=savefig)  # XXX To save the figure
         else:
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
-            # for sharex, sharey in product([True, False], repeat=2):
+            # for sharex, sharey in product([True, False], repeat=2):  # XXX 3 out of 4 were UGLY!
             for sharex, sharey in [(False, False)]:
                 evaluation.plotLastRegrets(envId, sharex=sharex, sharey=sharey)  # XXX To plot without saving
             # evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
