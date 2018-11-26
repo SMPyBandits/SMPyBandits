@@ -20,14 +20,14 @@ except ImportError:
     from BasePolicy import BasePolicy
 
 
-#: Different states during the Musical Chair algorithm
+#: Different states during the LM-DSEE algorithm
 State = Enum('State', ['Exploration', 'Exploitation'])
 
 # --- Utility function
 
-VERBOSE = False
-#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
 VERBOSE = True
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = False
 
 
 def parameter_ell(a, N, b, gamma,
@@ -55,10 +55,6 @@ def parameter_ell(a, N, b, gamma,
 
 
 # --- Class
-
-VERBOSE = True
-#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
-VERBOSE = False
 
 
 class LM_DSEE(BasePolicy):
@@ -136,7 +132,7 @@ class LM_DSEE(BasePolicy):
         self.all_rewards[arm].append(reward)
 
     def choice(self):
-        """ Chose an arm following the different phase of growing lenghts according to the LM-DSEE algorithm."""
+        """ Choose an arm following the different phase of growing lenghts according to the LM-DSEE algorithm."""
         # print("For a {} policy: t = {}, current_exploration_arm = {}, current_exploitation_arm = {}, batch_number = {}, length_of_current_phase = {}, step_of_current_phase = {}".format(self, self.t, self.current_exploration_arm, self.current_exploitation_arm, self.batch_number, self.length_of_current_phase, self.step_of_current_phase))  # DEBUG
         # 1) exploration
         if self.phase == State.Exploration:
@@ -188,5 +184,3 @@ class LM_DSEE(BasePolicy):
             return self.current_exploitation_arm
         else:
             raise ValueError("Error: LM_DSEE should only be in phase Exploration or Exploitation.")
-
-
