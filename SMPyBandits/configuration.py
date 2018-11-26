@@ -1840,7 +1840,8 @@ if TEST_Non_Stationary_Policies:
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True, False]
+            for per_arm_restart in [True]
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [

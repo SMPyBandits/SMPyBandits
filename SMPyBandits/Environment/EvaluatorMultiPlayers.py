@@ -20,8 +20,10 @@ import matplotlib.pyplot as plt
 
 import inspect
 def _nbOfArgs(function):
-    try: return len(inspect.signature(functions).parameters)
-    except NameError: return len(inspect.getargspec(function).args)
+    try:
+        return len(inspect.signature(functions).parameters)
+    except NameError:
+        return len(inspect.getargspec(function).args)
 
 
 # Local imports, libraries
