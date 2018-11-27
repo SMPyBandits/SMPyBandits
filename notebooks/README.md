@@ -32,7 +32,7 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 
 ### 2.a. View the _notebooks_ statically :memo:
 - Either directly in GitHub: [see the list of notebooks](https://github.com/SMPyBandits/SMPyBandits/search?l=jupyter-notebook);
-- Or on [nbviewer.jupiter.org](http://nbviewer.jupiter.org/): [list of notebooks](http://nbviewer.jupyter.org/github/SMPyBandits/SMPyBandits/).
+- Or on [nbviewer.jupiter.org](https://nbviewer.jupiter.org/): [list of notebooks](https://nbviewer.jupyter.org/github/SMPyBandits/SMPyBandits/).
 
 ### 2.b. Play with the _notebooks_ dynamically (on MyBinder) :boom:
 [![Binder](https://mybinder.org/badge_logo.svg)](http://mybinder.org/v2/gh/SMPyBandits/SMPyBandits/master?filepath=notebooks)
@@ -96,7 +96,7 @@ $ jupyter-notebook --version  # version >= 4 is recommended
 ----
 
 ### :information_desk_person: More information?
-> - More information about [notebooks (on the documentation of IPython)](http://nbviewer.jupiter.org/github/ipython/ipython/blob/3.x/examples/Notebook/Index.ipynb) or [on the FAQ on Jupyter's website](http://nbviewer.jupyter.org/faq).
+> - More information about [notebooks (on the documentation of IPython)](https://nbviewer.jupiter.org/github/ipython/ipython/blob/3.x/examples/Notebook/Index.ipynb) or [on the FAQ on Jupyter's website](https://nbviewer.jupyter.org/faq).
 > - More information about [mybinder.org](http://mybinder.org/): on [this example repository](https://github.com/binder-project/example-requirements).
 
 

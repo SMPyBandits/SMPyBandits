@@ -173,6 +173,10 @@ if __name__ == '__main__':
             else:
                 mkdir(plot_dir)
 
+        # --- Also plotting the history of means
+        if interactive:
+            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 

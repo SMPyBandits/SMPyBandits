@@ -30,8 +30,7 @@
 
 - Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
-- Other policies for the non-stationary problems:
-:class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`.
+- Other policies for the non-stationary problems: :class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`, :class:`AdSwitch`.
 
 - A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`, and :class:`SparseWrapper` that can be used with *any* index policy.
 
