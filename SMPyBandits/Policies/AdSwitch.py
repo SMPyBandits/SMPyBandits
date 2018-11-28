@@ -28,7 +28,7 @@ Phase = Enum('Phase', ['Estimation', 'Checking', 'Exploitation'])
 # --- Class
 
 Constant_C1 = 128.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
-Constant_C1 = 1.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
+Constant_C1 = 10.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
 
 Constant_C2 = 128.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.
 Constant_C2 = 1.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.
@@ -42,8 +42,9 @@ class AdSwitch(BasePolicy):
             horizon=None, C1=Constant_C1, C2=Constant_C2,
             lower=0., amplitude=1., *args, **kwargs
         ):
-        # FIXME generalize the algorithm to K > 2 arms!
-        assert nbArms == 2, "Error: so far, only K=2 arms are supported!"  # DEBUG
+        # DONE XXX generalize the algorithm to K > 2 arms!
+        if nbArms > 2:
+            print("WARNING: so far, for the AdSwitch algorithm, only the special case of K=2 arms was explained in the paper, but I generalized it. Maybe it does not work!")  # DEBUG
         super(AdSwitch, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
 
         # Parameters
