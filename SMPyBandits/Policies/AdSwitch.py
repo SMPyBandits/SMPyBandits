@@ -212,19 +212,18 @@ class AdSwitch(BasePolicy):
             else:
                 if self.current_exploitation_arm is None:
                     self.current_exploitation_arm = 0
-                # test for a change of size d_i ? FIXME test already or later?
+                # test for a change of size d_i
                 compute_new_di_pi_si = self.last_used_di_pi_si is None
                 if not compute_new_di_pi_si:
                     di, pi, si = self.last_used_di_pi_si
-                    XXX1 = self.last_restart_time
-                    XXX2 = self.t + 1
-                    mus = [ np.mean(self.read_range_of_rewards(a, XXX1, XXX2)) for a in range(self.nbArms) ]
-
+                    t1 = self.last_restart_time
+                    t2 = self.t + 1
+                    mus = [ np.mean(self.read_range_of_rewards(a, t1, t2)) for a in range(self.nbArms) ]
                     current_best_mean = np.max(mus)
                     current_worst_mean = np.min(mus)
-                    print("Info: the test |mu_a[t1,t2] - mu_b[t1,t2] - Delta| > di/4 is {} for a = {}, b = {}, t1 = {} and t2 = {}, Delta = {} and di = {}...".format(abs(current_best_mean - current_worst_mean - self.current_estimated_gap) > di / 4, np.argmax(mus), np.argmin(mus), XXX1, XXX2, self.current_estimated_gap, di))  # DEBUG
+                    print("Info: the test |mu_a[t1,t2] - mu_b[t1,t2] - Delta| > di/4 is {} for a = best = {}, b = worst = {}, t1 = {} and t2 = {}, Delta = {} and di = {}...".format(abs(current_best_mean - current_worst_mean - self.current_estimated_gap) > di / 4, np.argmax(mus), np.argmin(mus), t1, t2, self.current_estimated_gap, di))  # DEBUG
                     if abs(current_best_mean - current_worst_mean - self.current_estimated_gap) > di / 4:
-                        print("Info: the test |mu_a[t1,t2] - mu_b[t1,t2] - Delta| > di/4 was true for a = {}, b = {}, t1 = {} and t2 = {}, Delta = {} and di = {}...".format(np.argmax(mus), np.argmin(mus), XXX1, XXX2, self.current_estimated_gap, di))  # DEBUG
+                        print("Info: the test |mu_a[t1,t2] - mu_b[t1,t2] - Delta| > di/4 was true for a = best = {}, b = worst = {}, t1 = {} and t2 = {}, Delta = {} and di = {}...".format(np.argmax(mus), np.argmin(mus), t1, t2, self.current_estimated_gap, di))  # DEBUG
                         # go back to Estimation phase
                         self.phase = Phase.Estimation
                         self.length_of_current_phase = None  # flag to start the next one
@@ -245,7 +244,7 @@ class AdSwitch(BasePolicy):
                                 self.length_of_current_phase = si
                                 break
                                 # ---
-                                # FIXME how to understand this sentence
+                                # DONE OK I understood correctly this sentence, my implementation is correct!
                                 # Then for any i from {1, 2,..., Ik} with probability p_k,i, sample both arms alternatingly for si steps
                                 # ---
                                 # this will make the test sample each arm alternatingly for s_i steps to check for changes of size d_i

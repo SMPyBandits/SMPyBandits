@@ -81,7 +81,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
         if self.t in self.changePoints:
-            print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}, because this time step is in its list of change points!".format(self, self.t, arm, reward))  # DEBUG
+            print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points! Still {} change points to go!".format(self, self.t, arm, len([tau for tau in self.changePoints if tau > self.t])))  # DEBUG
 
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
