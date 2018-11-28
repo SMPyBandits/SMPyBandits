@@ -376,7 +376,7 @@ class Evaluator(object):
         weighted_selections = np.zeros(self.horizon)
         for armId in range(self.envs[envId].nbArms):
             mean_selections = self.allPulls[envId][policyId, armId, :] / float(self.repetitions)
-            # FIXME this is wrong for non-stationary bandits
+            # DONE this is now fixed for non-stationary bandits
             if hasattr(self.envs[envId], 'get_allMeans'):
                 meanOfThisArm = self.envs[envId].get_allMeans(horizon=self.horizon)[armId, :]
             else:
@@ -417,13 +417,20 @@ class Evaluator(object):
         for armId in range(self.envs[envId].nbArms):
             if hasattr(self.envs[envId], 'get_allMeans'):
                 meanOfThisArm = self.envs[envId].get_allMeans(horizon=self.horizon)[armId, :]
-                # FIXME this is wrong for non-stationary bandits, and it cannot be made correct
-                meanOfThisArm = meanOfThisArm[-1]  # take only the last mean… but it's wrong!
-                meanOfThisArm = np.mean(meanOfThisArm)  # XXX take average?
+                # DONE this is now fixed for non-stationary bandits
             else:
                 meanOfThisArm = self.envs[envId].means[armId]
-            last_selections = self.lastPulls[envId][policyId, armId, :]
-            all_last_weighted_selections += meanOfThisArm * last_selections
+            if hasattr(self, 'allPulls'):
+                all_selections = self.allPulls[envId][policyId, armId, :] / float(self.repetitions)
+                if np.size(meanOfThisArm) == 1:  # problem was stationary!
+                    last_selections = np.sum(all_selections)  # no variance, but we don't care!
+                    all_last_weighted_selections += meanOfThisArm * last_selections
+                else:  # problem was non stationary!
+                    last_selections = all_selections
+                    all_last_weighted_selections += np.sum(meanOfThisArm * last_selections)
+            else:
+                last_selections = self.lastPulls[envId][policyId, armId, :]
+                all_last_weighted_selections += meanOfThisArm * last_selections
         return all_last_weighted_selections
 
     def getLastRegrets_MoreAccurate(self, policyId, envId=0):
