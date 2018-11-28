@@ -373,7 +373,7 @@ if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] = []
 
 
-if ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -386,18 +386,18 @@ if ENVIRONMENT_NONSTATIONARY:
                     [0.3, 0.9],  # 1600 to end
                 ],
                 "changePoints": [
-                    0    * int(HORIZON / 2000),
-                    400  * int(HORIZON / 2000),
-                    800  * int(HORIZON / 2000),
-                    1200 * int(HORIZON / 2000),
-                    1600 * int(HORIZON / 2000),
+                    int(0    * HORIZON / 2000.0),
+                    int(400  * HORIZON / 2000.0),
+                    int(800  * HORIZON / 2000.0),
+                    int(1200 * HORIZON / 2000.0),
+                    int(1600 * HORIZON / 2000.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
         },
     ]
 
-if False and ENVIRONMENT_NONSTATIONARY:
+if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -410,11 +410,11 @@ if False and ENVIRONMENT_NONSTATIONARY:
                     [0.7, 0.5, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    0    * int(HORIZON / 2000),
-                    400  * int(HORIZON / 2000),
-                    800  * int(HORIZON / 2000),
-                    1200 * int(HORIZON / 2000),
-                    1600 * int(HORIZON / 2000),
+                    int(0    * HORIZON / 2000.0),
+                    int(400  * HORIZON / 2000.0),
+                    int(800  * HORIZON / 2000.0),
+                    int(1200 * HORIZON / 2000.0),
+                    int(1600 * HORIZON / 2000.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -434,11 +434,11 @@ if False and ENVIRONMENT_NONSTATIONARY:
                     [0.8, 0.1, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    0    * int(HORIZON / 2000),
-                    400  * int(HORIZON / 2000),
-                    800  * int(HORIZON / 2000),
-                    1200 * int(HORIZON / 2000),
-                    1600 * int(HORIZON / 2000),
+                    int(0    * HORIZON / 2000.0),
+                    int(400  * HORIZON / 2000.0),
+                    int(800  * HORIZON / 2000.0),
+                    int(1200 * HORIZON / 2000.0),
+                    int(1600 * HORIZON / 2000.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }

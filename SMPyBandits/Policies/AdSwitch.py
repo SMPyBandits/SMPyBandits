@@ -40,7 +40,7 @@ def mymean(x):
 # --- Class
 
 Constant_C1 = 128.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
-Constant_C1 = 0.1  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
+Constant_C1 = 1.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
 
 Constant_C2 = 128.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.
 Constant_C2 = 1.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.

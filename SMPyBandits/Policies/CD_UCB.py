@@ -243,7 +243,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
         return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm):
-        r""" Detect a change in the current arm, using the two-side PHT algorithm [Hinkley, 1971].
+        r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
 
         - For each *data* k, compute:
 

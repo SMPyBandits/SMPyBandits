@@ -174,8 +174,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # don't try to detect change if there is not enough data!
         if len(data_y) < self.window_size:
             return False
-        sum_first_half = np.sum(data_y[:self.window_size//2])
-        sum_second_half = np.sum(data_y[self.window_size//2:])
+        last_w_data_y = data_y[-self.window_size:]
+        sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
+        sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
 
 
