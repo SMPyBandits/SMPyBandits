@@ -579,12 +579,18 @@ class Evaluator(object):
         # Get a small string to add to ylabel
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
         if meanReward:
+            if hasattr(self.envs[envId], 'get_allMeans'):
+                # DONE this is now fixed for non-stationary bandits
+                means = self.envs[envId].get_allMeans(horizon=self.horizon)
+                minArm, maxArm = np.min(means), np.max(means)
+            else:
+                minArm, maxArm = self.envs[envId].minArm, self.envs[envId].maxArm
             # We plot a horizontal line ----- at the best arm mean
-            plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Largest mean = ${:.3g}$".format(self.envs[envId].maxArm))
+            plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Largest mean = ${:.3g}$".format(maxArm))
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isChangingAtEachRepetition:
-                plt.ylim(0.80 * self.envs[envId].minArm, 1.10 * self.envs[envId].maxArm)
+                plt.ylim(0.80 * minArm, 1.10 * maxArm)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             if self.plot_lowerbound:
