@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 r""" An oracle policy for non-stationary bandits, restarting an underlying stationary bandit policy at each breakpoint.
 
-- It runs on top of a simple policy, e.g., :class:`UCB`, and :func:`OracleSequentiallyRestartPolicy` is a wrapper:
+- It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`OracleSequentiallyRestartPolicy` is a wrapper:
 
     >>> policy = OracleSequentiallyRestartPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -53,6 +53,8 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         if changePoints is None:
             changePoints = []
         changePoints = sorted([tau for tau in changePoints if tau > 0])
+        if len(changePoints) == 0:
+            print("WARNING: it is useless to use the wrapper OracleSequentiallyRestartPolicy when changePoints = {} is empty, just use the base policy without the wrapper!".format(changePoints))  # DEBUG
         self.changePoints = changePoints  #: Locations of the break points (or change points) of the switching bandit problem. If ``None``, an empty list is used.
 
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
@@ -61,8 +63,6 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
-
-        # DEBUG
         print("Info: creating a new policy {}, with change points = {}...".format(self, changePoints))  # DEBUG
 
     def __str__(self):
@@ -104,4 +104,4 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
                 self.all_rewards[arm] = [reward]
 
         # we update the total number of samples available to the underlying policy
-        self.policy.t = np.sum(self.last_pulls)
+        # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE

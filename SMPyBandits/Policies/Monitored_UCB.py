@@ -2,7 +2,7 @@
 r""" The Monitored-UCB generic policy for non-stationary bandits.
 
 - Reference: [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018]](https://arxiv.org/pdf/1802.03692)
-- It runs on top of a simple policy, e.g., :class:`UCB`, and :func:`Monitored_IndexPolicy` is a wrapper:
+- It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`Monitored_IndexPolicy` is a wrapper:
 
     >>> policy = Monitored_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
@@ -160,7 +160,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
                 self.all_rewards[arm] = [reward]
 
         # we update the total number of samples available to the underlying policy
-        # self.policy.t = np.sum(self.last_pulls)
+        # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE
 
     def detect_change(self, arm):
         r""" A change is detected for the current arm if the following test is true:

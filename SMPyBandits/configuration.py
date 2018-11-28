@@ -1783,7 +1783,7 @@ if TEST_Non_Stationary_Policies:
     configuration.update({
         "policies":
         [  # XXX TODO test the AdSwitch policy
-            { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": 1, "C2": 1, } }
+            { "archtype": AdSwitch, "params": { "horizon": HORIZON, } }
         ] +
         [  # XXX Regular adversarial bandits algorithms!
             # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
@@ -1817,59 +1817,59 @@ if TEST_Non_Stationary_Policies:
             # XXX But for T=10000 it is at most 100 changes, reasonable!
             { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
         ] +
-        # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
-        [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
-        # OK this CUSUM-klUCB is the same
-        [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
-        # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
+        # # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         # [
-        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
+        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
         # ] +
-        # OK PHT_IndexPolicy is very much like CUSUM
-        [
-            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
-        # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-        [
-            { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
-        # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
+        # # OK this CUSUM-klUCB is the same
         # [
-        #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-        #     for per_arm_restart in [True, False]
+        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
         # ] +
-        # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
+        # # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
+        # # [
+        # #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
+        # # ] +
+        # # OK PHT_IndexPolicy is very much like CUSUM
         # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+        #     { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
         # ] +
-        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-        [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
-        # # OK this Monitored-klUCB is the same
+        # # OK BernoulliGLR_IndexPolicy is very much like CUSUM
         # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
+        #     { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
         # ] +
-        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-        [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
-        ] +
+        # # # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
+        # # [
+        # #     { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        # #     for per_arm_restart in [True, False]
+        # # ] +
+        # # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
+        # # [
+        # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
+        # # ] +
+        # # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        # [
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
+        # ] +
+        # # # OK this Monitored-klUCB is the same
+        # # [
+        # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
+        # # ] +
+        # # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        # [
+        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
+        #     # for per_arm_restart in [True, False]
+        #     for per_arm_restart in [True]
+        # ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [
             { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }

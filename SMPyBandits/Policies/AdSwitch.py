@@ -3,7 +3,7 @@ r""" The AdSwitch policy for non-stationary bandits, from [["Adaptively Tracking
 
 - It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
-.. warning:: FIXME This implementation is still experimental!
+.. warning:: This implementation is still experimental!
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -25,10 +25,22 @@ except ImportError:
 #: Different phases during the AdSwitch algorithm
 Phase = Enum('Phase', ['Estimation', 'Checking', 'Exploitation'])
 
+
+def mymean(x):
+    r""" Simply :func:`numpy.mean` on x if x is non empty, otherwise ``0.0``.
+
+    .. info:: Avoid to see the following warning:
+
+    >>> np.mean([])
+    /usr/local/lib/python3.6/dist-packages/numpy/core/fromnumeric.py:2957: RuntimeWarning: Mean of empty slice.
+    """
+    return np.mean(x) if len(x) else 0.0
+
+
 # --- Class
 
 Constant_C1 = 128.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
-Constant_C1 = 10.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
+Constant_C1 = 0.1  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
 
 Constant_C2 = 128.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.
 Constant_C2 = 1.0  #: Default value for the constant :math:`C_2`. Should be :math:`>0` and as large as possible, but not too large.
@@ -49,7 +61,7 @@ class AdSwitch(BasePolicy):
 
         # Parameters
         assert horizon is not None, "Error: for a AdSwitch policy, the parameter 'horizon' should be > 0 and not None but was = {}".format(horizon)  # DEBUG
-        self.horizon = horizon
+        self.horizon = horizon  #: Parameter :math:`T` for the AdSwitch algorithm, the horizon of the experiment. TODO try to use :class:`DoublingTrickWrapper` to remove the dependency in :math:`T` ?
 
         assert C1 > 0, "Error: for a AdSwitch policy, the parameter 'C1' should be > 0 but was = {}".format(C1)  # DEBUG
         self.C1 = C1  #: Parameter :math:`C_1` for the AdSwitch algorithm.
@@ -59,11 +71,11 @@ class AdSwitch(BasePolicy):
 
         # Internal memory
         self.phase = Phase.Estimation  #: Current phase, exploration or exploitation.
-        self.current_exploration_arm = None  #: Currently explored arm.
-        self.current_exploitation_arm = None  #: Currently exploited arm.
+        self.current_exploration_arm = None  #: Currently explored arm. It cycles uniformly, in step 2.
+        self.current_exploitation_arm = None  #: Currently exploited arm. It is :math:`\overline{a_k}` in the algorithm.
         self.batch_number = 1  #: Number of batch
         self.last_restart_time = 0  #: Time step of the last restart (beginning of phase of Estimation)
-        self.length_of_current_phase = None  #: Length of the current phase, either computed from :func:`length_exploration_phase` or func:`length_exploitation_phase`.
+        self.length_of_current_phase = None  #: Length of the current tests phase, computed as :math:`s_i`, with :func:`compute_di_pi_si`.
         self.step_of_current_phase = 0  #: Timer inside the current phase.
         # self.all_pulls = np.zeros(self.nbArms) #: Number of pulls of arms since the last restart?
         self.current_best_arm = None  #: Current best arm, when finishing step 3. Denote :math:`\overline{a_k}` in the algorithm.
@@ -71,7 +83,7 @@ class AdSwitch(BasePolicy):
         self.current_estimated_gap = None  #: Gap between the current best and worst arms, ie largest gap, when finishing step 3. Denote :math:`\widehat{\Delta_k}` in the algorithm.
         self.last_used_di_pi_si = None  #: Memory of the currently used :math:`(d_i, p_i, s_i)`.
 
-        self.all_rewards = [{} for _ in range(self.nbArms)]  #: Memory of all the rewards. A *dictionary* per arm, mapping time to rewards or ``nan`` when the arm was *not* sampled at this time?. Growing list until restart of that arm?
+        self.all_rewards = [{} for _ in range(self.nbArms)]  #: Memory of all the rewards. A *dictionary* per arm, mapping time to rewards. Growing size until restart of that arm!
 
     def __str__(self):
         return r"AdSwitch($T={}$, $C_1={:.3g}$, $C_2={:.3g}$)".format(self.horizon, self.C1, self.C2)
@@ -79,6 +91,7 @@ class AdSwitch(BasePolicy):
     def startGame(self):
         """ Start the game (fill pulls and rewards with 0)."""
         super(AdSwitch, self).startGame()
+        self.phase = Phase.Estimation
         self.current_exploration_arm = None
         self.current_exploitation_arm = None
         self.batch_number = 1
@@ -96,15 +109,15 @@ class AdSwitch(BasePolicy):
         super(AdSwitch, self).getReward(arm, reward)
         reward = (reward - self.lower) / self.amplitude
         self.all_rewards[arm][self.t] = reward
-        # FIXME store data so that we can sample correctly the means, using notations from the algorithm
-        # for otherArm in range(self.nbArms):
-        #     if otherArm != arm:
-        #         self.all_rewards[arm][self.t] = np.nan  # XXX Store a NaN for this time
 
     def read_range_of_rewards(self, arm, start, end):
         r""" Read the :attr:`all_rewards` attribute to extract all the rewards for that ``arm``, obtained between time ``start`` (included) and ``end`` (not included)."""
         rewards = self.all_rewards[arm]
-        return [ rewards[t] for t in range(start, end) if t in rewards and not np.isnan(rewards[t]) ]
+        return [
+            rewards[t] for t in range(start, end)
+            if t in rewards
+            and not np.isnan(rewards[t])
+        ]
 
     def statistical_test(self, t, t0):
         r""" Test if at time :math:`t` there is a :math:`\sigma`, :math:`t_0 \leq \sigma < t`, and a pair of arms :math:`a,b`, satisfying this test:
@@ -119,10 +132,8 @@ class AdSwitch(BasePolicy):
             for b in range(a + 1, self.nbArms):
                 for sigma in range(t0, t):
                     # DONE be sure that I can compute the means like this!
-                    rewards_a = self.read_range_of_rewards(a, sigma, t + 1)
-                    mu_a = np.mean(rewards_a) if len(rewards_a) else 0.0
-                    rewards_b = self.read_range_of_rewards(b, sigma, t + 1)
-                    mu_b = np.mean(rewards_b) if len(rewards_b) else 0.0
+                    mu_a = mymean(self.read_range_of_rewards(a, sigma, t + 1))
+                    mu_b = mymean(self.read_range_of_rewards(b, sigma, t + 1))
                     ucb = np.sqrt(self.C1 * np.log(self.horizon) / (t - sigma))
                     # print("Info: test |mu_a[sigma,t] = {} - mu_b[sigma,t] = {}| > UCB = {} is {} for a = {}, b = {}, sigma = {} and t0 = {} and t = {}...".format(mu_a, mu_b, ucb, abs(mu_a - mu_b) > ucb, a, b, sigma, t0, t))  # DEBUG
                     if abs(mu_a - mu_b) > ucb:
@@ -135,9 +146,14 @@ class AdSwitch(BasePolicy):
 
         .. math:: I_k := \lfloor - \log_2(\widehat{\Delta_k}) \rfloor.
         """
-        assert self.current_estimated_gap > 0, "Error: cannot find Ik if self.current_estimated_gap = {} is not > 0.".format(self.current_estimated_gap)  # DEBUG
-        # XXX Direct formula!
-        return int(np.floor(- np.log2(self.current_estimated_gap)))
+        assert self.current_estimated_gap >= 0, "Error: cannot find Ik if self.current_estimated_gap = {} is not > 0.".format(self.current_estimated_gap)  # DEBUG
+        if np.isclose(self.current_estimated_gap, 0):
+            Ik = 1
+        else:
+            # XXX Direct formula!
+            Ik = max(1, int(np.floor(- np.log2(self.current_estimated_gap))))
+        # print("DEBUG: at time t = {}, with gap Delta_k = {}, I_k = {}".format(self.t, self.current_estimated_gap, Ik))  # DEBUG
+        return Ik
         # # XXX Manual search
         # i = 0
         # while (2**(-i)) >= self.current_estimated_gap:
@@ -145,14 +161,14 @@ class AdSwitch(BasePolicy):
         # Ik = i - 1
         # return Ik
 
-    def find_probabilities_and_di(self):
+    def compute_di_pi_si(self):
         r""" Compute the values of :math:`d_i`, :math:`p_{k,i}`, :math:`s_i` according to the AdSwitch algorithm."""
         Ik = self.find_Ik()
         i_values = np.arange(1, Ik+1, dtype=float)
         di_values = 2 ** (-i_values)
         pi_values = di_values * np.sqrt((self.batch_number + 1) / self.horizon)
         si_values = self.nbArms * np.ceil((self.C2 * np.log(self.horizon)) / di_values**2)
-        print("DEBUG: At time t = {} and batch number k = {}, restarted last time at {}... \nIk = {}, and i = {} and di = {} and pi = {} and si = {} ".format(self.t, self.batch_number, self.last_restart_time, Ik, i_values, di_values, pi_values, si_values))  # DEBUG
+        print("DEBUG: At time t = {} and batch number k = {}, restarted last time at t0k = {}... Ik = {}, and i = {} and di = {} and pi = {} and si = {} ".format(self.t, self.batch_number, self.last_restart_time, Ik, i_values, di_values, pi_values, si_values))  # DEBUG
         return di_values, pi_values, si_values
 
     def choice(self):
@@ -169,7 +185,7 @@ class AdSwitch(BasePolicy):
             # Test!
             saw_a_change, sigma = self.statistical_test(self.t, self.last_restart_time)
             if saw_a_change:
-                mus = [ np.mean(self.read_range_of_rewards(a, sigma, self.t)) for a in range(self.nbArms) ]
+                mus = [ mymean(self.read_range_of_rewards(a, sigma, self.t)) for a in range(self.nbArms) ]
                 self.current_best_arm = np.argmax(mus)
                 self.current_worst_arm = np.argmin(mus)
                 self.current_estimated_gap = abs(mus[self.current_best_arm] - mus[self.current_worst_arm])
@@ -197,12 +213,13 @@ class AdSwitch(BasePolicy):
                 if self.current_exploitation_arm is None:
                     self.current_exploitation_arm = 0
                 # test for a change of size d_i ? FIXME test already or later?
-                compute_new_dipisi = self.last_used_di_pi_si is None
-                if not compute_new_dipisi:
+                compute_new_di_pi_si = self.last_used_di_pi_si is None
+                if not compute_new_di_pi_si:
                     di, pi, si = self.last_used_di_pi_si
                     XXX1 = self.last_restart_time
                     XXX2 = self.t + 1
-                    mus = [ np.mean(self.read_range_of_reward(a, XXX1, XXX2)) for a in range(self.nbArms) ]
+                    mus = [ np.mean(self.read_range_of_rewards(a, XXX1, XXX2)) for a in range(self.nbArms) ]
+
                     current_best_mean = np.max(mus)
                     current_worst_mean = np.min(mus)
                     print("Info: the test |mu_a[t1,t2] - mu_b[t1,t2] - Delta| > di/4 is {} for a = {}, b = {}, t1 = {} and t2 = {}, Delta = {} and di = {}...".format(abs(current_best_mean - current_worst_mean - self.current_estimated_gap) > di / 4, np.argmax(mus), np.argmin(mus), XXX1, XXX2, self.current_estimated_gap, di))  # DEBUG
@@ -215,9 +232,9 @@ class AdSwitch(BasePolicy):
                         self.current_exploration_arm = 0
                         self.batch_number += 1
                     else:
-                        compute_new_dipisi = True
-                if compute_new_dipisi:
-                    di_values, pi_values, si_values = self.find_probabilities_and_di()
+                        compute_new_di_pi_si = True
+                if compute_new_di_pi_si:
+                    di_values, pi_values, si_values = self.compute_di_pi_si()
                     proba_of_checking = np.sum(pi_values)
                     assert 0 <= proba_of_checking < 1, "Error: the sum of pi should be < 1 but it is = {}, impossible to do a Step 5 of Exploitation!".format(proba_of_checking)
                     if proba_of_checking > 0:
