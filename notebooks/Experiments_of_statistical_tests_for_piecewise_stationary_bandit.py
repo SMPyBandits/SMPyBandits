@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Table of Contents
-#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Monitored</a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>CUSUM</a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>PHT</a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span>Gaussian GLR</a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span>Bernoulli GLR</a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Conclusions</a></div>
+#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Monitored</a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>CUSUM</a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>PHT</a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span>Gaussian GLR</a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span>Bernoulli GLR</a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-631"><span class="toc-item-num">6.3.1&nbsp;&nbsp;</span>First example</a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-632"><span class="toc-item-num">6.3.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-633"><span class="toc-item-num">6.3.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Conclusions</a></div>
 
 # # Requirements and helper functions
 
@@ -1074,80 +1074,84 @@ get_toy_data(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 from IPython.display import display, Markdown
 
 
+# In[103]:
+
+
+def check_onemeasure(measure, name,
+                     firstMean=0.1, secondMean=0.4,
+                     tau=0.5, horizon=100,
+                     repetitions=50,
+                     unit=""
+    ):
+    if isinstance(tau, float):
+        tau = int(tau * horizon)
+    print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
+    results = np.zeros((repetitions, len(all_CD_algorithms)))
+    for rep in tqdm(range(repetitions), desc="Repetitions"):
+        data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
+        for i, CDAlgorithm in enumerate(all_CD_algorithms):
+            results[rep, i] = measure(data, tau, CDAlgorithm)
+    # print and display a table of the results
+    markdown_text = """
+| Algorithm | {} |
+|------|------|
+{}
+    """.format(name, "\n".join([
+        "| {} | ${:.3g}${} |".format(CDAlgorithm.__name__, mean_result,unit)
+        for CDAlgorithm, mean_result in zip(all_CD_algorithms, np.mean(results, axis=0))
+    ]))
+    print(markdown_text)
+    display(Markdown(markdown_text))
+    return results
+
+
 # ## Checking time efficiency
 # I don't really care about memory efficiency, so I won't check it.
 
-# In[58]:
+# In[104]:
 
 
 import time
 
 
-# In[59]:
+# In[105]:
 
 
-def test_for_all_times(data, CDAlgorithm):
+def time_efficiency(data, tau, CDAlgorithm):
+    startTime = time.time()
     horizon = len(data)
     for t in range(0, horizon + 1):
         _ = CDAlgorithm(data, t)
-
-
-# In[60]:
-
-
-def check_timeEfficiency(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
-    if isinstance(tau, float):
-        tau = int(tau * horizon)
-    print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    times = np.zeros((repetitions, len(all_CD_algorithms)))
-    for rep in tqdm(range(repetitions), desc="Repetitions"):
-        data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
-        for i, CDAlgorithm in enumerate(all_CD_algorithms):
-            startTime = time.time()
-            _ = test_for_all_times(data, CDAlgorithm)
-            endTime = time.time()
-            times[rep, i] = endTime - startTime
-    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
-    #     mean_time = np.mean(times[:, i])
-    #     print(f"- For algorithm {CDAlgorithm}, CPU time was {mean_time:.3g} seconds in average...")
-    markdown_text = """
-| Algorithm | Time   |
-|------|------|
-{}
-    """.format("\n".join([
-        "| {} | ${:.3g}$ seconds |".format(CDAlgorithm.__name__, mean_time)
-        for CDAlgorithm, mean_time in zip(all_CD_algorithms, np.mean(times, axis=0))
-    ]))
-    print(markdown_text)
-    display(Markdown(markdown_text))
-    return times
+    endTime = time.time()
+    return endTime - startTime
 
 
 # For examples:
 
-# In[61]:
+# In[106]:
 
 
-_ = check_timeEfficiency(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
+_ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, unit=" seconds")
 
 
 # <span style="color:red">`PHT` and the two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM`!</span>
 
-# In[62]:
+# In[99]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = check_timeEfficiency(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
+get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000, unit=" seconds")')
 
 
 # <span style="color:red">`PHT` and the two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM`!</span>
 
 # ## Checking detection delay
 
-# In[63]:
+# In[107]:
 
 
 def detection_delay(data, tau, CDAlgorithm):
     horizon = len(data)
+    if isinstance(tau, float): tau = int(tau * horizon)
     for t in range(tau, horizon + 1):
         if CDAlgorithm(data, t):
             return t - tau
@@ -1156,41 +1160,12 @@ def detection_delay(data, tau, CDAlgorithm):
 
 # Now we can check the detection delay for our different algorithms.
 
-# In[64]:
-
-
-def check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
-    if isinstance(tau, float):
-        tau = int(tau * horizon)
-    print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    delays = np.zeros((repetitions, len(all_CD_algorithms)))
-    for rep in tqdm(range(repetitions), desc="Repetitions"):
-        data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
-        for i, CDAlgorithm in enumerate(all_CD_algorithms):
-            delay = detection_delay(data, tau, CDAlgorithm)
-            delays[rep, i] = delay
-    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
-    #     mean_delay = np.mean(delays[:, i])
-    #     print(f"- For algorithm {CDAlgorithm}, detection delay was {mean_delay:.3g} steps in average...")
-    markdown_text = """
-| Algorithm | Mean detection delay |
-|------|------|
-{}
-    """.format("\n".join([
-        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_delay)
-        for CDAlgorithm, mean_delay in zip(all_CD_algorithms, np.mean(delays, axis=0))
-    ]))
-    print(markdown_text)
-    display(Markdown(markdown_text))
-    return delays
-
-
 # For examples:
 
-# In[65]:
+# In[108]:
 
 
-_ = check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
+_ = check_onemeasure(detection_delay, "Mean detection delay", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
 # <span style="color:red">A lot of detection delay are large (ie. it was detected too late), with not enough data! `BernoulliGLR` seems to be the only one "fast enough"!</span>
@@ -1198,63 +1173,33 @@ _ = check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 # In[67]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = check_detection_delay(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
+get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(detection_delay, "Mean detection delay", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
 # <span style="color:green">A very small detection delay, with enough data (a delay of 40 is *very* small when there is $500$ data of $\nu_1$ and $\nu_2$) !</span>
 
 # ## Checking false alarm probabilities
 
-# In[68]:
+# In[109]:
 
 
 def false_alarm(data, tau, CDAlgorithm):
     horizon = len(data)
-    # print(f"For false_alarm, horizon = {horizon}, tau = {tau} and algorithm {CDAlgorithm}")
+    if isinstance(tau, float): tau = int(tau * horizon)
     for t in range(0, tau):
         if CDAlgorithm(data, t):
-            # print(f"Algorithm {CDAlgorithm} detected the change point at time t = {t} BEFORE the change point!")
             return True
     return False
 
 
 # Now we can check the false alarm probabilities for our different algorithms.
 
-# In[69]:
-
-
-def check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
-    if isinstance(tau, float):
-        tau = int(tau * horizon)
-    print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    alarms = np.zeros((repetitions, len(all_CD_algorithms)))
-    for rep in tqdm(range(repetitions), desc="Repetitions"):
-        data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
-        for i, CDAlgorithm in enumerate(all_CD_algorithms):
-            alarm = false_alarm(data, tau, CDAlgorithm)
-            alarms[rep, i] = alarm
-    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
-    #     mean_alarm = np.sum(alarms[:, i]) / float(repetitions)
-    #     print(f"- For algorithm {CDAlgorithm}, a false alarm happened {mean_alarm:.3g} times in average...")
-    markdown_text = """
-| Algorithm | Mean false alarm rate |
-|------|------|
-{}
-    """.format("\n".join([
-        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_alarm)
-        for CDAlgorithm, mean_alarm in zip(all_CD_algorithms, np.mean(alarms, axis=0))
-    ]))
-    print(markdown_text)
-    display(Markdown(markdown_text))
-    return alarms
-
-
 # For examples:
 
-# In[70]:
+# In[110]:
 
 
-_ = check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
+_ = check_onemeasure(false_alarm, "Mean false alarm rate", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
 # <span style="color:red">A lot of false alarm for `BernoulliGLR` but not the others, with not enough data!</span>
@@ -1262,19 +1207,19 @@ _ = check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 # In[71]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = check_false_alarm(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
+get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(false_alarm, "Mean false alarm rate", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
 # <span style="color:green">No false alarm, with enough data!</span>
 
 # ## Checking missed detection probabilities
 
-# In[72]:
+# In[111]:
 
 
 def missed_detection(data, tau, CDAlgorithm):
     horizon = len(data)
-    # print(f"For missed_detection, horizon = {horizon}, tau = {tau} and algorithm {CDAlgorithm}")
+    if isinstance(tau, float): tau = int(tau * horizon)
     for t in range(tau, horizon + 1):
         if CDAlgorithm(data, t):
             return False
@@ -1283,55 +1228,229 @@ def missed_detection(data, tau, CDAlgorithm):
 
 # Now we can check the false alarm probabilities for our different algorithms.
 
-# In[75]:
-
-
-def check_missed_detection(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
-    if isinstance(tau, float):
-        tau = int(tau * horizon)
-    print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    misss = np.zeros((repetitions, len(all_CD_algorithms)))
-    for rep in tqdm(range(repetitions), desc="Repetitions"):
-        data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
-        for i, CDAlgorithm in enumerate(all_CD_algorithms):
-            miss = missed_detection(data, tau, CDAlgorithm)
-            misss[rep, i] = miss
-    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
-    #     mean_miss = np.sum(misss[:, i]) / float(repetitions)
-    #     print(f"- For algorithm {CDAlgorithm}, a missed detection happened {mean_miss:.3g} times in average...")
-    markdown_text = """
-| Algorithm | Mean missed detection rate |
-|------|------|
-{}
-    """.format("\n".join([
-        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_miss)
-        for CDAlgorithm, mean_miss in zip(all_CD_algorithms, np.mean(misss, axis=0))
-    ]))
-    print(markdown_text)
-    display(Markdown(markdown_text))
-    return misss
-
-
 # For examples:
 
-# In[76]:
+# In[112]:
 
 
-_ = check_missed_detection(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
+_ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
 # <span style="color:red">A lot of missed detection, with not enough data!</span>
 
-# In[77]:
+# In[113]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = check_missed_detection(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
+get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
 # <span style="color:green">No missed detection, with enough data!</span>
 
 # ----
 # # More simulations and some plots
+
+# ## Run a check for a grid of values
+# 
+# Fix an algorithm, e.g., `Monitored`, then consider one of the quantities defined above (time efficiency, delay, false alarm or missed detection probas).
+# Now, a piecewise stationary problem is characterized by the parameters $\mu_1$, $\Delta = |\mu_2 - \mu_1|$, and $\tau$ and $T$.
+# 
+# - Fix $\mu_1=\frac12$, and so $\Delta$ can be taken anywhere in $[0, \frac12]$.
+# - Fix $T=1000$ for instance, and so $\tau$ can be taken anywhere in $[0,T]$.
+# 
+# Of course, if any of $\tau$ or $\Delta$ are too small, detection is impossible.
+# I want to display a $2$D image view, showing on $x$-axis a grid of values of $\Delta$, on $y$-axis a grid of values of $\tau$, and on the $2$D image, a color-scale to show the detection delay (for instance).
+
+# In[78]:
+
+
+mu_1 = 0.5
+max_mu_2 = 1
+nb_values_Delta = 20
+values_Delta = np.linspace(0, max_mu_2 - mu_1, nb_values_Delta)
+
+
+# In[83]:
+
+
+horizon = T = 1000
+min_tau = 50
+max_tau = T - min_tau
+step = 50
+values_tau = np.arange(min_tau, max_tau + 1, step)
+nb_values_tau = len(values_tau)
+
+
+# In[84]:
+
+
+print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
+
+
+# And now the function:
+
+# In[154]:
+
+
+def check2D_onemeasure(measure, CDAlgorithm,
+                       values_Delta, values_tau,
+                       firstMean=mu_1, horizon=horizon,
+                       repetitions=10, verbose=True,
+    ):
+    print(f"\nExploring {measure.__name__} for algorithm {CDAlgorithm.__name__} mu^1 = {firstMean} and horizon = {horizon}...")
+    nb_values_Delta = len(values_Delta)
+    nb_values_tau = len(values_tau)
+    print(f"with {nb_values_Delta} values for Delta, and {nb_values_tau} values for tau, and {repetitions} repetitions.")
+    results = np.zeros((nb_values_Delta, nb_values_tau))
+    
+    for i, delta in tqdm(enumerate(values_Delta), desc="Delta s", leave=False):
+        for j, tau in tqdm(enumerate(values_tau), desc="Tau s", leave=False):
+            secondMean = firstMean + delta
+            if isinstance(tau, float): tau = int(tau * horizon)
+                
+            # now the random Monte Carlo repetitions
+            for rep in tqdm(range(repetitions), desc="Repetitions", leave=False):
+                data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
+                result = measure(data, tau, CDAlgorithm)
+                results[i, j] += result
+            results[i, j] /= repetitions
+            if verbose: print(f"For delta = {delta} ({i}th), tau = {tau} ({j}th), mean result = {results[i, j]}")
+    return results
+
+
+# ## Checking on a small grid of values
+
+# In[157]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(time_efficiency, Monitored,\n                       values_Delta=[0, 0.25, 0.5],\n                       values_tau=[1/4, 2/4, 3/4],\n                       firstMean=0.5, horizon=1000,\n                       repetitions=10)')
+
+
+# In[131]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(detection_delay, Monitored,\n                       values_Delta=[0, 0.25, 0.5],\n                       values_tau=[1/4, 2/4, 3/4],\n                       firstMean=0.5, horizon=1000,\n                       repetitions=10)')
+
+
+# In[134]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(false_alarm, Monitored,\n                       values_Delta=[0, 0.25, 0.5],\n                       values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                       firstMean=0.5, horizon=1000,\n                       repetitions=10)')
+
+
+# In[136]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(missed_detection, Monitored,\n                       values_Delta=[0, 0.25, 0.5],\n                       values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                       firstMean=0.5, horizon=1000,\n                       repetitions=10)')
+
+
+# ## Plotting the result as a 2D image
+
+# In[255]:
+
+
+import matplotlib as mpl
+FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
+mpl.rcParams['figure.figsize'] = FIGSIZE
+import matplotlib.ticker as ticker
+import matplotlib.pyplot as plt    
+
+
+# Now the function:
+
+# In[267]:
+
+
+def view2D_onemeasure(measure, name, CDAlgorithm,
+                      values_Delta, values_tau,
+                      firstMean=mu_1, horizon=horizon,
+                      repetitions=10
+    ):
+    results = check2D_onemeasure(measure, CDAlgorithm,
+                                 values_Delta, values_tau,
+                                 firstMean=firstMean, horizon=horizon,
+                                 repetitions=repetitions, verbose=False
+    )
+    fig = plt.figure()
+
+    plt.matshow(results)
+    plt.colorbar(shrink=0.715)
+
+    plt.locator_params(axis='x', nbins=1+len(values_tau))
+    plt.locator_params(axis='y', nbins=len(values_Delta))
+
+    ax = plt.gca()
+    # https://stackoverflow.com/a/19972993/
+    loc = ticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
+    ax.xaxis.set_major_locator(loc)
+    ax.xaxis.set_ticks_position('bottom')
+    def y_fmt(tick_value, pos): return '{:.3g}'.format(tick_value)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(y_fmt))
+    ax.yaxis.set_major_locator(loc)
+
+    # hack to display the ticks labels as the actual values
+    if np.max(values_tau) <= 1:
+        values_tau = np.floor(np.asarray(values_tau) * horizon)
+        values_tau = list(np.asarray(values_tau, dtype=int))
+    values_Delta = np.round(values_Delta, 3)
+    ax.set_xticklabels([0] + list(values_tau))  # hack: the first label is not displayed??
+    ax.set_yticklabels([0] + list(values_Delta))  # hack: the first label is not displayed??
+
+    plt.title(rf"{name} for algorithm {CDAlgorithm.__name__}, for $T={horizon}$ and $\mu_1={firstMean:.3g}$ and ${repetitions}$ repetitions")
+    plt.xlabel(r"Value of $\tau$ time of breakpoint")
+    plt.ylabel(r"Value of gap $\Delta = |\mu_2 - \mu_1|$")
+
+    return fig
+
+
+# ### First example
+
+# In[268]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay", Monitored,\n                       values_Delta=[0.05, 0.25, 0.5],\n                       values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                       firstMean=0.5, horizon=1000,\n                       repetitions=10)')
+
+
+# ### Second example
+
+# In[273]:
+
+
+firstMean = mu_1 = 0.5
+max_mu_2 = 1
+nb_values_Delta = 10
+values_Delta = np.linspace(0, max_mu_2 - mu_1, nb_values_Delta)
+
+
+# In[274]:
+
+
+horizon = T = 1000
+min_tau = 10
+max_tau = T - min_tau
+step = 50
+values_tau = np.arange(min_tau, max_tau + 1, step)
+nb_values_tau = len(values_tau)
+
+
+# In[275]:
+
+
+print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
+
+
+# In[276]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay", Monitored,\n                       values_Delta=values_Delta,\n                       values_tau=values_tau,\n                       firstMean=firstMean, horizon=horizon,\n                       repetitions=10)')
+
+
+# In[278]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay", CUSUM,\n                       values_Delta=values_Delta,\n                       values_tau=values_tau,\n                       firstMean=firstMean, horizon=horizon,\n                       repetitions=1)')
+
+
+# ### More examples
 
 # <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
 

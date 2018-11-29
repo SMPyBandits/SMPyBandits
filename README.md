@@ -1,10 +1,7 @@
 # *SMPyBandits*
 **Open-Source Python package for Single- and Multi-Players multi-armed Bandits algorithms**.
 
-<p align="right">
-![Logo](logo_large.png)
-</p>
-<img width="50%" src="logo_large.png" align="right" alt="![Logo](logo_large.png)"/>
+<img width="50%" src="logo_large.png" align="right" alt="Logo, logo_large.png"/>
 
 This repository contains the code of [Lilian Besson's](https://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
