@@ -215,7 +215,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             s_k^- &= (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
             s_k^+ &= (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
             g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+            g_k^- &= max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
@@ -252,7 +252,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
             s_k^- &= y_k - \hat{y}_k - \varepsilon,\\
             s_k^+ &= \hat{y}_k - y_k - \varepsilon,\\
             g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+            g_k^- &= max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
@@ -302,6 +302,10 @@ VERBOSE = False
 def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1):
     r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
+    - The threshold is computed as:
+
+    .. math:: h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).
+
     .. note:: I am currently exploring the following variant (November 2018):
 
         - The probability of uniform exploration, :math:`\alpha`, is computed as a function of the current time:
@@ -315,7 +319,7 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha
     if verbose: print("compute_c_alpha__GLR() with t = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
     t_m_t0 = abs(t - t0)
     c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
-    if c < 0 and np.isinf(c): c = float('+inf')
+    if c < 0 or np.isinf(c): c = float('+inf')
     assert exponentBeta > 1.0, "Error: compute_c_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
     alpha = alpha_t1 / max(1, t)**exponentBeta
     if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG

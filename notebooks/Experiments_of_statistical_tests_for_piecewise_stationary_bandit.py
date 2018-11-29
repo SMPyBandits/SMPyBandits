@@ -2,14 +2,15 @@
 # coding: utf-8
 
 # # Table of Contents
-#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-stationary-data" data-toc-modified-id="Generating-fake-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating fake stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Monitored</a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>CUSUM</a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>PHT</a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span>Gaussian GLR</a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span>Bernoulli GLR</a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Toy-data" data-toc-modified-id="Toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-and-memory-efficiency?" data-toc-modified-id="Checking-time-and-memory-efficiency?-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time and memory efficiency?</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Conclusions</a></div>
+#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span>Monitored</a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span>CUSUM</a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span>PHT</a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span>Gaussian GLR</a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span>Bernoulli GLR</a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Conclusions</a></div>
 
 # # Requirements and helper functions
 
 # ## Requirements
 # 
-# This notebook requires to have numpy and matplotlib installed.
-# I'm also exploring usage of numba and cython later, so they are also needed.
+# This notebook requires to have [`numpy`](https://www.numpy.org/) and [`matplotlib`](https://matplotlib.org/) installed.
+# I'm also exploring usage of [`numba`](https://numba.pydata.org) and [`cython`](https://cython.readthedocs.io/en/latest/) later, so they are also needed.
+# One function needs a function from [`scipy.special`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.comb.html#scipy.special.comb), and I use [`tqdm`](https://github.com/tqdm/tqdm#usage) for pretty progress bars for loops.
 
 # In[1]:
 
@@ -66,7 +67,7 @@ else:
 # 
 # For a fixed problem and a *horizon* $T\in\mathbb{N}$, $T\geq1$, we draw samples from the $K$ distributions to get *data*: $\forall t, r_k(t) \sim \nu_k$, ie, $\mathbb{P}(r_k(t) = 1) = \mu_k$ and $r_k(t) \in \{0,1\}$.
 
-# ## Generating fake stationary data
+# ## Generating stationary data
 # 
 # Here we give some examples of stationary problems and examples of data we can draw from them.
 
@@ -100,6 +101,8 @@ bernoulli_samples(problem1, horizon=20)
 #     4. Update internal state of the algorithm
 # 
 # An algorithm is efficient if it obtains a high (expected) sum reward, ie, $\sum_{t=1}^T r(t)$.
+# 
+# Note that I don't focus on bandit algorithm here.
 
 # In[7]:
 
@@ -319,20 +322,34 @@ piecewise_bernoulli_samples(problem_piecewise_1, horizon=100)
 # In[20]:
 
 
-def PurelyRandom(all_data, t, proba=0.5):
+probaOfDetection = 0.05
+
+delay = int(np.ceil(1.0 / probaOfDetection))
+print(f"For a fixed probability of detection = {probaOfDetection}, the PurelyRandom algorithm has a mean delay of {delay} steps.")
+
+
+# In[21]:
+
+
+def PurelyRandom(all_data, t, proba=probaOfDetection):
+    """ Delay will be ceil(1/proba) (in average)."""
     return np.random.random() < proba
 
 
 # ## Monitored
+# 
+# It uses a McDiarmid inequality. At time $t$, if there is at least $w$ data in the data vector $(X_i)_i$, then let $Y$ denote the last $w$ data.
+# A change is detected if
+# $$ |\sum_{i=w/2+1}^{w} Y_i - \sum_{i=1}^{w/2} Y_i | > b ? $$
 
-# In[21]:
+# In[22]:
 
 
 NB_ARMS = 1
 WINDOW_SIZE = 80
 
 
-# In[22]:
+# In[23]:
 
 
 def Monitored(all_data, t,
@@ -362,8 +379,22 @@ def Monitored(all_data, t,
 
 
 # ## CUSUM
+# 
+# The two-sided CUSUM algorithm, from [Page, 1954], works like this:
+# 
+# - For each *data* k, compute:
+# 
+# $$
+# s_k^- = (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
+# s_k^+ = (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
+# g_k^+ = max(0, g_{k-1}^+ + s_k^+),\\
+# g_k^- = max(0, g_{k-1}^- + s_k^-).
+# $$
+# 
+# - The change is detected if $\max(g_k^+, g_k^-) > h$, where $h=$`threshold_h` is the threshold of the test,
+# - And $\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k$ is the mean of the first M samples, where M is `M` the min number of observation between change points.
 
-# In[23]:
+# In[24]:
 
 
 #: Precision of the test.
@@ -378,16 +409,16 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 MAX_NB_RANDOM_EVENTS = 1
 
 
-# In[24]:
+# In[25]:
 
 
 from scipy.special import comb
 
 
-# In[25]:
+# In[26]:
 
 
-def compute_h_alpha__CUSUM(horizon, 
+def compute_h__CUSUM(horizon, 
         verbose=False,
         M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
         max_nb_random_events=MAX_NB_RANDOM_EVENTS,
@@ -399,21 +430,15 @@ def compute_h_alpha__CUSUM(horizon,
     T = int(max(1, horizon))
     UpsilonT = int(max(1, max_nb_random_events))
     K = int(max(1, nbArms))
-    # print("compute_h_alpha__CUSUM() with:\nT = {}, UpsilonT = {}, K = {}, epsilon = {}, lmbda = {}, M = {}".format(T, UpsilonT, K, epsilon, lmbda, M))  # DEBUG
-    C2 = np.log(3) + 2 * np.exp(- 2 * epsilon**2 * M) / lmbda
     C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
     if C1 == 0: C1 = 1  # FIXME
     h = 1/C1 * np.log(T / UpsilonT)
-    alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
-    alpha *= 0.01  # FIXME Just divide alpha to not have too large
-    alpha = max(0, min(1, alpha))  # crop to [0, 1]
-    # print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
-    return h, alpha
+    return h
 
 
-# In[26]:
+# In[27]:
 
 
 def CUSUM(all_data, t,
@@ -430,7 +455,7 @@ def CUSUM(all_data, t,
         s_k^- &= (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
         s_k^+ &= (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
         g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-        g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+        g_k^- &= max(0, g_{k-1}^- + s_k^-).
 
     - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
     - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
@@ -440,7 +465,7 @@ def CUSUM(all_data, t,
     # compute parameters
     horizon = len(all_data)
     if threshold_h is None:
-        threshold_h, _ = compute_h_alpha__CUSUM(horizon, M, 1, epsilon=epsilon)
+        threshold_h = compute_h__CUSUM(horizon, M, 1, epsilon=epsilon)
 
     gp, gm = 0, 0
     # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
@@ -457,8 +482,22 @@ def CUSUM(all_data, t,
 
 
 # ## PHT
+# 
+# The two-sided CUSPHTUM algorithm, from [Hinkley, 1971], works like this:
+# 
+# - For each *data* k, compute:
+# 
+# $$
+# s_k^- = y_k - \hat{y}_k - \varepsilon,\\
+# s_k^+ = \hat{y}_k - y_k - \varepsilon,\\
+# g_k^+ = max(0, g_{k-1}^+ + s_k^+),\\
+# g_k^- = max(0, g_{k-1}^- + s_k^-).
+# $$
+# 
+# - The change is detected if $\max(g_k^+, g_k^-) > h$, where $h=$`threshold_h` is the threshold of the test,
+# - And $\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s$ is the mean of the first k samples.
 
-# In[27]:
+# In[28]:
 
 
 def PHT(all_data, t,
@@ -475,7 +514,7 @@ def PHT(all_data, t,
         s_k^- &= y_k - \hat{y}_k - \varepsilon,\\
         s_k^+ &= \hat{y}_k - y_k - \varepsilon,\\
         g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-        g_k^- &= max(0, g_{k-1}^- + s_k^-),\\
+        g_k^- &= max(0, g_{k-1}^- + s_k^-).
 
     - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
     - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
@@ -485,7 +524,7 @@ def PHT(all_data, t,
     # compute parameters
     horizon = len(all_data)
     if threshold_h is None:
-        threshold_h, _ = compute_h_alpha__CUSUM(horizon, M, 1, epsilon=epsilon)
+        threshold_h = compute_h__CUSUM(horizon, M, 1, epsilon=epsilon)
 
     gp, gm = 0, 0
     # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
@@ -499,35 +538,45 @@ def PHT(all_data, t,
     return False
 
 
+# ---
 # ## Gaussian GLR
+# 
+# The Generalized Likelihood Ratio test (GLR) works with a one-dimensional exponential family, for which we have a function `kl` such that if $\mu_1,\mu_2$ are the means fo two distributions $\nu_1,\nu_2$, then $\mathrm{KL}(\mathcal{D}(\nu_1), \mathcal{D}(\nu_1))=$ `kl` $(\mu_1,\mu_2)$.
+# 
+# - For each *time step* $s$ between $t_0=0$ and $t$, compute:
+# $$G^{\mathcal{N}_1}_{t_0:s:t} = \frac{(s-t_0+1)(t-s)}{(t-t_0+1)} \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}).$$
+# 
+# - The change is detected if there is a time $s$ such that $G^{\mathcal{N}_1}_{t_0:s:t} > h$, where $h=$ `threshold_h` is the threshold of the test,
+# - And $\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s$ is the mean of the samples between $a$ and $b$.
+# 
+# The threshold is computed as:
+# $$h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).$$
 
-# In[28]:
+# In[29]:
 
 
-def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1):
+def compute_c__GLR(t0, t, horizon):
     r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
-    .. note:: I am currently exploring the following variant (November 2018):
+    - The threshold is computed as:
 
-        - The probability of uniform exploration, :math:`\alpha`, is computed as a function of the current time:
-
-        .. math:: \forall t>0, \alpha = \alpha_t := \alpha_{t=1} \frac{1}{\max(1, t^{\beta})}.
-
-        - with :math:`\beta > 1, \beta` = ``exponentBeta`` (=1.05) and :math:`\alpha_{t=1} < 1, \alpha_{t=1}` = ``alpha_t1`` (=0.01).
+    .. math:: h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).
     """
     T = int(max(1, horizon))
     delta = 1.0 / T
-    if verbose: print("compute_c_alpha__GLR() with t = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
     t_m_t0 = abs(t - t0)
     c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
     if c < 0 and np.isinf(c): c = float('+inf')
-    assert exponentBeta > 1.0, "Error: compute_c_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
-    alpha = alpha_t1 / max(1, t)**exponentBeta
-    if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
-    return c, alpha
+    return c
 
 
-# In[29]:
+# For Gaussian distributions of known variance, the Kullback-Leibler divergence is easy to compute:
+# 
+# Kullback-Leibler divergence for Gaussian distributions of means $x$ and $y$ and variances $\sigma^2_x = \sigma^2_y$, $\nu_1 = \mathcal{N}(x, \sigma_x^2)$ and $\nu_2 = \mathcal{N}(y, \sigma_x^2)$ is:
+# 
+# $$\mathrm{KL}(\nu_1, \nu_2) = \frac{(x - y)^2}{2 \sigma_y^2} + \frac{1}{2}\left( \frac{\sigma_x^2}{\sigma_y^2} - 1 \log\left(\frac{\sigma_x^2}{\sigma_y^2}\right) \right).$$
+
+# In[30]:
 
 
 def klGauss(x, y, sig2x=0.25):
@@ -542,7 +591,7 @@ def klGauss(x, y, sig2x=0.25):
     return (x - y) ** 2 / (2. * sig2x)
 
 
-# In[30]:
+# In[31]:
 
 
 def GaussianGLR(all_data, t,
@@ -550,14 +599,14 @@ def GaussianGLR(all_data, t,
     ):
     r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
 
-    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
 
-    .. math::
+        .. math::
 
-        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+            G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
 
-    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
-    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+        - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+        - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
     """
     data = all_data[:t]
     t0 = 0
@@ -565,7 +614,7 @@ def GaussianGLR(all_data, t,
     
     # compute parameters
     if threshold_h is None:
-        threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
+        threshold_h = compute_c__GLR(0, t, horizon)
 
     mu = lambda a, b: np.mean(data[a : b+1])
     for s in range(t0, t - 1):
@@ -577,8 +626,12 @@ def GaussianGLR(all_data, t,
 
 
 # ## Bernoulli GLR
+# 
+# The same GLR algorithm but using the Bernoulli KL, given by:
+# 
+# $$\mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).$$
 
-# In[31]:
+# In[32]:
 
 
 eps = 1e-6  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
@@ -592,10 +645,194 @@ def klBern(x, y):
     return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
 
 
-# In[32]:
+# In[33]:
 
 
 def BernoulliGLR(all_data, t,
+          threshold_h=None,
+    ):
+    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
+
+        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+        .. math::
+
+            G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+
+        - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+        - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+    """
+    data = all_data[:t]
+    t0 = 0
+    horizon = len(all_data)
+    
+    # compute parameters
+    if threshold_h is None:
+        threshold_h = compute_c__GLR(0, t, horizon)
+
+    mu = lambda a, b: np.mean(data[a : b+1])
+    for s in range(t0, t - 1):
+        this_kl = klBern(mu(s+1, t), mu(t0, s))
+        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+        if glr >= threshold_h:
+            return True
+    return False
+
+
+# ## List of all Python algorithms
+
+# In[34]:
+
+
+all_CD_algorithms = [
+    PurelyRandom,
+    Monitored, CUSUM, PHT, GaussianGLR, BernoulliGLR
+]
+
+
+# ----
+# # Numba implementations of some statistical tests
+# 
+# I should try to use the [`numba.jit`](https://numba.pydata.org/numba-doc/latest/reference/jit-compilation.html#numba.jit) decorator for some of the (simple) functions defined above.
+# With some luck, the JIT compiler will give automatic speedup.
+
+# In[35]:
+
+
+import numba
+
+
+# In[36]:
+
+
+@numba.jit(nopython=True)
+def klGauss_numba(x, y, sig2x=0.25):
+    return (x - y) ** 2 / (2. * sig2x)
+
+
+# In[37]:
+
+
+def GaussianGLR_numba(all_data, t,
+          threshold_h=None,
+    ):
+    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
+
+    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+    .. math::
+
+        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+
+    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+    """
+    data = all_data[:t]
+    t0 = 0
+    horizon = len(all_data)
+    
+    # compute parameters
+    if threshold_h is None:
+        threshold_h = compute_c__GLR(0, t, horizon)
+
+    mu = lambda a, b: np.mean(data[a : b+1])
+    for s in range(t0, t - 1):
+        this_kl = klGauss_numba(mu(s+1, t), mu(t0, s))
+        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+        if glr >= threshold_h:
+            return True
+    return False
+
+
+# In[38]:
+
+
+@numba.jit(nopython=True)
+def klBern_numba(x, y):
+    x = min(max(x, eps), 1 - eps)
+    y = min(max(y, eps), 1 - eps)
+    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
+
+
+# In[39]:
+
+
+def BernoulliGLR_numba(all_data, t,
+          threshold_h=None,
+    ):
+    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
+
+    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+    .. math::
+
+        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+
+    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+    """
+    data = all_data[:t]
+    t0 = 0
+    horizon = len(all_data)
+    
+    # compute parameters
+    if threshold_h is None:
+        threshold_h = compute_c__GLR(0, t, horizon)
+
+    mu = lambda a, b: np.mean(data[a : b+1])
+    for s in range(t0, t - 1):
+        this_kl = klBern_numba(mu(s+1, t), mu(t0, s))
+        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+        if glr >= threshold_h:
+            return True
+    return False
+
+
+# In[40]:
+
+
+all_CD_algorithms_numba = [
+    GaussianGLR_numba, BernoulliGLR_numba
+]
+# all_CD_algorithms += all_CD_algorithms_numba
+
+
+# ## Some results
+# In the tests below, when comparing the between the pure Python implementations and the numba optimized implementations, I observe the following results (for $T=1000$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
+# 
+# | Algorithm | Time   |
+# |------|------|
+# | GaussianGLR | $2.98$ seconds |
+# | BernoulliGLR | $3.3$ seconds |
+# | GaussianGLR with numba for `kl` | $9.22$ seconds |
+# | BernoulliGLR with numba for `kl` | $2.36$ seconds |
+# 
+# My conclusions from some experiments are that this implementation with Numba is **not** more efficient than the naive Python implementation. So, let's forget about it!
+# Speeding up just the `kl` function is not enough also.
+
+# ----
+# # Cython implementations of some statistical tests
+# 
+# I should try to use the [`%%cython`](https://cython.readthedocs.io/en/latest/src/quickstart/build.html#jupyter-notebook) magic for all the functions defined above.
+
+# ## Speeding up just the `kl` functions
+
+# In[41]:
+
+
+get_ipython().run_line_magic('load_ext', 'cython')
+
+
+# In[42]:
+
+
+get_ipython().run_cell_magic('cython', '', '\ndef klGauss_cython(float x, float y, float sig2x=0.25) -> float:\n    return (x - y) ** 2 / (2. * sig2x)')
+
+
+# In[43]:
+
+
+def GaussianGLR_cython1(all_data, t,
           threshold_h=None,
     ):
     r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -619,79 +856,145 @@ def BernoulliGLR(all_data, t,
 
     mu = lambda a, b: np.mean(data[a : b+1])
     for s in range(t0, t - 1):
-        this_kl = klBern(mu(s+1, t), mu(t0, s))
+        this_kl = klGauss_cython(mu(s+1, t), mu(t0, s))
         glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
         if glr >= threshold_h:
             return True
     return False
 
 
-# ## List of all Python algorithms
-
-# In[33]:
+# In[44]:
 
 
-all_CD_algorithms = [
-    PurelyRandom,
-    Monitored, CUSUM, PHT, GaussianGLR, BernoulliGLR
+get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log\neps = 1e-7  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]\n\ndef klBern_cython(float x, float y) -> float:\n    x = min(max(x, eps), 1 - eps)\n    y = min(max(y, eps), 1 - eps)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))')
+
+
+# In[45]:
+
+
+def BernoulliGLR_cython1(all_data, t,
+          threshold_h=None,
+    ):
+    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
+
+    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+    .. math::
+
+        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+
+    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+    """
+    data = all_data[:t]
+    t0 = 0
+    horizon = len(all_data)
+    
+    # compute parameters
+    if threshold_h is None:
+        threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
+
+    mu = lambda a, b: np.mean(data[a : b+1])
+    for s in range(t0, t - 1):
+        this_kl = klBern_cython(mu(s+1, t), mu(t0, s))
+        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+        if glr >= threshold_h:
+            return True
+    return False
+
+
+# With these two first versions, I observed, when comparing the between the pure Python implementations and these first naive cython optimized implementations, I observe the following results (for $T=1000$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
+# 
+# | Algorithm | Time   |
+# |------|------|
+# | GaussianGLR | $2.98$ seconds |
+# | BernoulliGLR | $3.3$ seconds |
+# | GaussianGLR with cython for `kl` | $2.83$ seconds |
+# | BernoulliGLR with cython for `kl` | $2.26$ seconds |
+# 
+# Speeding up just the `kl` won't be enough, so I'll try to write the whole statistical test function in Cython cells.
+
+# ## Speeding up the whole test functions
+# 
+# In the tests below, when comparing the different pure Python implementation, I observe the following results (for $T=1000$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
+# 
+# | Algorithm | Time   |
+# |------|------|
+# | Monitored | $0.0123$ seconds |
+# | CUSUM | $0.543$ seconds |
+# | <span style="color:red">PHT</span> | $2.97$ seconds |
+# | <span style="color:red">GaussianGLR</span> | $2.98$ seconds |
+# | <span style="color:red">BernoulliGLR</span> | $3.3$ seconds |
+# 
+# I will first try to write in Cython a PHT test and the two GLR tests.
+
+# ### PHT in Cython
+
+# The `scipy.special.comb` is not available from Cython, but by [reading its Cython `_comb.pyx`](https://github.com/scipy/scipy/blob/v1.1.0/scipy/special/_comb.pyx#L7) source code, we can write manually:
+
+# Now, let's write a Cython version of the function that computes the threshold $h$.
+
+# In[46]:
+
+
+get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, floor, ceil\n\nEPSILON = 0.5\nLAMBDA = 1.0\nMIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100\nMAX_NB_RANDOM_EVENTS = 1\n\n#from scipy.special import comb  # unable to import from scipy.special\ncdef int comb_cython(int N, int k):\n    """ Manually defined scipy.special.comb function:\n    \n    comb(N, k) = {k choose N} number of combination of k elements among N."""\n    if k > N or N < 0 or k < 0:\n        return 0\n    cdef int M = N + 1\n    cdef int nterms = min(k, N - k)\n    cdef int numerator = 1\n    cdef int denominator = 1\n    cdef int j = 1\n    while j <= nterms:\n        numerator *= M - j\n        denominator *= j\n        j += 1\n    return numerator // denominator\n\ncdef float compute_h__CUSUM_cython(int horizon, \n        int M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,\n        int nbArms=1,\n        float epsilon=EPSILON,\n        float lmbda=LAMBDA,\n        int max_nb_random_events=MAX_NB_RANDOM_EVENTS,\n    ):\n    r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""\n    cdef int T = int(max(1, horizon))\n    cdef int UpsilonT = int(max(1, max_nb_random_events))\n    cdef int K = int(max(1, nbArms))\n    cdef float C1_minus = log(((4.0 * epsilon) / (1.0-epsilon)**2) * comb_cython(M, int(floor(2.0 * epsilon * M))) * (2.0 * epsilon)**M + 1.0)\n    cdef float C1_plus = log(((4.0 * epsilon) / (1.0+epsilon)**2) * comb_cython(M, int(ceil(2.0 * epsilon * M))) * (2.0 * epsilon)**M + 1.0)\n    cdef float C1 = min(C1_minus, C1_plus)\n    if C1 == 0: C1 = 1.0  # FIXME\n    cdef float h = log(T / UpsilonT) / C1\n    return h\n\nimport numpy as np\ncimport numpy as np\nDTYPE = np.float\nctypedef np.float_t DTYPE_t\n\ndef PHT_cython(\n        np.ndarray[DTYPE_t, ndim=1] all_data,\n        int t,\n        float epsilon=EPSILON,\n        int M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,\n    ) -> bool:\n    r""" Cython version of PHT. Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].\n\n        - For each *data* k, compute:\n\n        .. math::\n\n            s_k^- &= y_k - \\hat{y}_k - \\varepsilon,\\\\\n            s_k^+ &= \\hat{y}_k - y_k - \\varepsilon,\\\\\n            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\\\\n            g_k^- &= max(0, g_{k-1}^- + s_k^-).\n\n        - The change is detected if :math:`\\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,\n        - And :math:`\\hat{y}_k = \\frac{1}{k} \\sum_{s=1}^{k} y_s` is the mean of the first k samples.\n    """\n    assert all_data.dtype == DTYPE\n    cdef np.ndarray[DTYPE_t, ndim=1] data = all_data[:t]\n    # compute parameters\n    cdef int horizon = len(all_data)\n    cdef float threshold_h = compute_h__CUSUM_cython(horizon, M=M, nbArms=1, epsilon=epsilon)\n\n    cdef int k = 0\n    cdef int len_data = len(data)\n    cdef float gp = 0.0\n    cdef float gm = 0.0\n    cdef float y_k, y_k_hat\n    # First we use the first M samples to calculate the average :math:`\\hat{u_0}`.\n    while k < len_data:\n        y_k = data[k]\n        y_k_hat = np.mean(data[:k])\n        gp = max(0, gp + y_k_hat - y_k - epsilon)\n        gm = max(0, gm + y_k - y_k_hat - epsilon)\n        if gp >= threshold_h or gm >= threshold_h:\n            return True\n        k += 1\n    return False')
+
+
+# In[47]:
+
+
+get_ipython().run_line_magic('pinfo', 'PHT_cython')
+
+
+# ### Gaussian GLR in Cython
+
+# In[48]:
+
+
+get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, sqrt, isinf\n\ncdef float compute_c__GLR_cython(\n        int t0, int t, int horizon\n    ):\n    r""" Compute the values :math:`c, \\alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].\n\n    - The threshold is computed as:\n\n    .. math:: h := \\left(1 + \\frac{1}{t - t_0 + 1}\\right) 2 \\log\\left(\\frac{2 (t - t_0) \\sqrt{(t - t_0) + 2}}{\\delta}\\right).\n    """\n    cdef float T = float(max(1, horizon))\n    cdef float t_m_t0 = float(abs(t - t0))\n    cdef float c = (1.0 + (1.0 / (t_m_t0 + 1.0))) * 2.0 * log(T * (2.0 * t_m_t0 * sqrt(t_m_t0 + 2.0)))\n    if c < 0 or isinf(c): c = float(\'+inf\')\n    return c\n\ncdef float klGauss_cython(float x, float y, float sig2x=0.25):\n    return (x - y) ** 2 / (2. * sig2x)\n\nimport numpy as np\ncimport numpy as np\nDTYPE = np.float\nctypedef np.float_t DTYPE_t\n\ndef GaussianGLR_cython(\n        np.ndarray[DTYPE_t, ndim=1] all_data,\n        int t,\n    ) -> bool:\n    r""" Cython version of GaussianGLR. Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.\n\n        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:\n\n        .. math::\n\n            G^{\\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \\mathrm{kl}(\\mu_{s+1,t}, \\mu_{t_0,s}) / (t-t_0+1).\n\n        - The change is detected if there is a time :math:`s` such that :math:`G^{\\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,\n        - And :math:`\\mu_{a,b} = \\frac{1}{b-a+1} \\sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.\n    """\n    assert all_data.dtype == DTYPE\n    cdef np.ndarray[DTYPE_t, ndim=1] data = all_data[:t]\n    cdef int t0 = 0\n    cdef int horizon = len(all_data)\n    # compute parameters\n    cdef float threshold_h = compute_c__GLR_cython(0, t, horizon)\n\n    cdef this_kl, glr\n    cdef s = 0\n    while s < t:\n        this_kl = klGauss_cython(np.mean(data[s+1 : t+1]), np.mean(data[t0 : s+1]))\n        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl\n        if glr >= threshold_h:\n            return True\n        s += 1\n    return False')
+
+
+# ### Bernoulli GLR in Cython
+
+# In[49]:
+
+
+get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, sqrt, isinf\n\ncdef float compute_c__GLR_cython(\n        int t0, int t, int horizon\n    ):\n    r""" Compute the values :math:`c, \\alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].\n\n    - The threshold is computed as:\n\n    .. math:: h := \\left(1 + \\frac{1}{t - t_0 + 1}\\right) 2 \\log\\left(\\frac{2 (t - t_0) \\sqrt{(t - t_0) + 2}}{\\delta}\\right).\n    """\n    cdef float T = float(max(1, horizon))\n    cdef float t_m_t0 = float(abs(t - t0))\n    cdef float c = (1.0 + (1.0 / (t_m_t0 + 1.0))) * 2.0 * log(T * (2.0 * t_m_t0 * sqrt(t_m_t0 + 2.0)))\n    if c < 0 or isinf(c): c = float(\'+inf\')\n    return c\n\neps = 1e-7\n\ncdef float klBern_cython(float x, float y):\n    x = min(max(x, eps), 1 - eps)\n    y = min(max(y, eps), 1 - eps)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))\n\nimport numpy as np\ncimport numpy as np\nDTYPE = np.float\nctypedef np.float_t DTYPE_t\n\ndef BernoulliGLR_cython(\n        np.ndarray[DTYPE_t, ndim=1] all_data,\n        int t,\n    ) -> bool:\n    r""" Cython version of BernoulliGLR. Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.\n\n        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:\n\n        .. math::\n\n            G^{\\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \\mathrm{kl}(\\mu_{s+1,t}, \\mu_{t_0,s}) / (t-t_0+1).\n\n        - The change is detected if there is a time :math:`s` such that :math:`G^{\\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,\n        - And :math:`\\mu_{a,b} = \\frac{1}{b-a+1} \\sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.\n    """\n    assert all_data.dtype == DTYPE\n    cdef np.ndarray[DTYPE_t, ndim=1] data = all_data[:t]\n    cdef int t0 = 0\n    cdef int horizon = len(all_data)\n    # compute parameters\n    cdef float threshold_h = compute_c__GLR_cython(0, t, horizon)\n\n    cdef this_kl, glr\n    cdef s = 0\n    while s < t:\n        this_kl = klBern_cython(np.mean(data[s+1 : t+1]), np.mean(data[t0 : s+1]))\n        glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl\n        if glr >= threshold_h:\n            return True\n        s += 1\n    return False')
+
+
+# ### Some results
+# 
+# With these two first versions, I observed, when comparing the between the pure Python implementations and these cython fully optimized implementations, I observe the following results (for $T=100$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
+# 
+# | Algorithm | Time   |
+# |------|------|
+# | BernoulliGLR | $0.0845$ seconds |
+# | BernoulliGLR_cython | $0.0607$ seconds |
+# | CUSUM | $0.00553$ seconds |
+# | GaussianGLR | $0.0817$ seconds |
+# | GaussianGLR_cython | $0.0832$ seconds |
+# | Monitored | $0.00042$ seconds |
+# | PHT | $0.0584$ seconds |
+# | PHT_cython | $0.038$ seconds |
+# | PurelyRandom | $0.000372$ seconds |
+
+# I don't understand these results: how come the cython-optimized version of Gaussian GLR can be slower than the naive pure Python version?
+
+# ### 3 more algorithms implemented in Cython
+
+# In[51]:
+
+
+all_CD_algorithms_cython = [
+    PHT_cython, GaussianGLR_cython, BernoulliGLR_cython
 ]
 
+# all_CD_algorithms += all_CD_algorithms_cython
+all_CD_algorithms = [
+    PurelyRandom,
+    Monitored, CUSUM, PHT_cython, GaussianGLR, BernoulliGLR_cython,
+]
 
-# ----
-# # Numba implementations of some statistical tests
-# 
-# I should try to use the [`numba.jit`](https://numba.pydata.org/numba-doc/latest/reference/jit-compilation.html#numba.jit) decorator for all the functions defined above.
-
-# In[34]:
-
-
-import numba
-
-
-# In[35]:
-
-
-@numba.jit(nopython=True)
-def klBern_numba(x, y):
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
-
-
-# In[36]:
-
-
-@numba.jit(nopython=True)
-def klGauss_numba(x, y, sig2x=0.25):
-    return (x - y) ** 2 / (2. * sig2x)
-
-
-# <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
-
-# ----
-# # Cython implementations of some statistical tests
-# 
-# I should try to use the [`%%cython`](https://cython.readthedocs.io/en/latest/src/quickstart/build.html#jupyter-notebook) magic for all the functions defined above.
-
-# In[37]:
-
-
-get_ipython().run_line_magic('load_ext', 'cython')
-
-
-# In[38]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log\neps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]\n\ndef klBern_cython(float x, float y) -> float:\n    x = min(max(x, eps), 1 - eps)\n    y = min(max(y, eps), 1 - eps)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))')
-
-
-# In[39]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log\neps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]\n\ndef klGauss_cython(float x, float y, float sig2x=0.25) -> float:\n    return (x - y) ** 2 / (2. * sig2x)')
-
-
-# <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
 
 # ----
 # # Comparing the different implementations
@@ -706,9 +1009,9 @@ get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log\neps = 1e
 # - detection delay, as a function of the amplitude of the breakpoint, or number of prior data (from $t=1$ to $t=\tau$), or as a function of the parameter(s) of the algorithm,
 # - probability of false detection, or missed detection.
 
-# ## Toy data
+# ## Generating some toy data
 
-# In[40]:
+# In[52]:
 
 
 # With 1 arm only! With 1 change only!
@@ -724,7 +1027,7 @@ toy_problem_piecewise = lambda firstMean, secondMean, tau: lambda horizon: {
 }
 
 
-# In[41]:
+# In[53]:
 
 
 def get_toy_data(firstMean=0.5, secondMean=0.9, tau=None, horizon=100):
@@ -740,19 +1043,19 @@ def get_toy_data(firstMean=0.5, secondMean=0.9, tau=None, horizon=100):
 
 # It is now very easy to get data and "see" manually on the data the location of the breakpoint:
 
-# In[42]:
+# In[54]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=100)
 
 
-# In[43]:
+# In[55]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.2, horizon=100)
 
 
-# In[44]:
+# In[56]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -764,25 +1067,32 @@ get_toy_data(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 # - the number of samples before the change decreases ($\tau$ decreases),
 # - the number of samples after the change decreases ($T - \tau$ decreases).
 
-# ## Checking time and memory efficiency?
+# In[57]:
 
-# In[45]:
+
+# Cf. https://stackoverflow.com/a/36313217/
+from IPython.display import display, Markdown
+
+
+# ## Checking time efficiency
+# I don't really care about memory efficiency, so I won't check it.
+
+# In[58]:
 
 
 import time
 
 
-# In[46]:
+# In[59]:
 
 
 def test_for_all_times(data, CDAlgorithm):
     horizon = len(data)
-    # print(f"For test_for_all_times, horizon = {horizon} and algorithm {CDAlgorithm}")
     for t in range(0, horizon + 1):
         _ = CDAlgorithm(data, t)
 
 
-# In[47]:
+# In[60]:
 
 
 def check_timeEfficiency(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
@@ -797,44 +1107,56 @@ def check_timeEfficiency(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, re
             _ = test_for_all_times(data, CDAlgorithm)
             endTime = time.time()
             times[rep, i] = endTime - startTime
-    for i, CDAlgorithm in enumerate(all_CD_algorithms):
-        mean_time = np.mean(times[:, i])
-        print(f"- For algorithm {CDAlgorithm}, CPU time was {mean_time:.3g} seconds in average...")
+    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
+    #     mean_time = np.mean(times[:, i])
+    #     print(f"- For algorithm {CDAlgorithm}, CPU time was {mean_time:.3g} seconds in average...")
+    markdown_text = """
+| Algorithm | Time   |
+|------|------|
+{}
+    """.format("\n".join([
+        "| {} | ${:.3g}$ seconds |".format(CDAlgorithm.__name__, mean_time)
+        for CDAlgorithm, mean_time in zip(all_CD_algorithms, np.mean(times, axis=0))
+    ]))
+    print(markdown_text)
+    display(Markdown(markdown_text))
     return times
 
 
 # For examples:
 
-# In[48]:
+# In[61]:
 
 
 _ = check_timeEfficiency(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
-# In[49]:
+# <span style="color:red">`PHT` and the two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM`!</span>
+
+# In[62]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_timeEfficiency(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
+# <span style="color:red">`PHT` and the two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM`!</span>
+
 # ## Checking detection delay
 
-# In[50]:
+# In[63]:
 
 
 def detection_delay(data, tau, CDAlgorithm):
     horizon = len(data)
-    # print(f"For detection_delay, horizon = {horizon}, tau = {tau} and algorithm {CDAlgorithm}")
     for t in range(tau, horizon + 1):
         if CDAlgorithm(data, t):
-            # print(f"Algorithm {CDAlgorithm} detected the change point at time t = {t} after the change point, with delay = {t - tau}!")
             return t - tau
     return horizon - tau
 
 
 # Now we can check the detection delay for our different algorithms.
 
-# In[51]:
+# In[64]:
 
 
 def check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
@@ -847,29 +1169,43 @@ def check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, r
         for i, CDAlgorithm in enumerate(all_CD_algorithms):
             delay = detection_delay(data, tau, CDAlgorithm)
             delays[rep, i] = delay
-    for i, CDAlgorithm in enumerate(all_CD_algorithms):
-        mean_delay = np.mean(delays[:, i])
-        print(f"- For algorithm {CDAlgorithm}, detection delay was {mean_delay:.3g} steps in average...")
+    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
+    #     mean_delay = np.mean(delays[:, i])
+    #     print(f"- For algorithm {CDAlgorithm}, detection delay was {mean_delay:.3g} steps in average...")
+    markdown_text = """
+| Algorithm | Mean detection delay |
+|------|------|
+{}
+    """.format("\n".join([
+        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_delay)
+        for CDAlgorithm, mean_delay in zip(all_CD_algorithms, np.mean(delays, axis=0))
+    ]))
+    print(markdown_text)
+    display(Markdown(markdown_text))
     return delays
 
 
 # For examples:
 
-# In[52]:
+# In[65]:
 
 
 _ = check_detection_delay(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
-# In[53]:
+# <span style="color:red">A lot of detection delay are large (ie. it was detected too late), with not enough data! `BernoulliGLR` seems to be the only one "fast enough"!</span>
+
+# In[67]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_detection_delay(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
+# <span style="color:green">A very small detection delay, with enough data (a delay of 40 is *very* small when there is $500$ data of $\nu_1$ and $\nu_2$) !</span>
+
 # ## Checking false alarm probabilities
 
-# In[54]:
+# In[68]:
 
 
 def false_alarm(data, tau, CDAlgorithm):
@@ -884,7 +1220,7 @@ def false_alarm(data, tau, CDAlgorithm):
 
 # Now we can check the false alarm probabilities for our different algorithms.
 
-# In[55]:
+# In[69]:
 
 
 def check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
@@ -897,29 +1233,43 @@ def check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repet
         for i, CDAlgorithm in enumerate(all_CD_algorithms):
             alarm = false_alarm(data, tau, CDAlgorithm)
             alarms[rep, i] = alarm
-    for i, CDAlgorithm in enumerate(all_CD_algorithms):
-        mean_alarm = np.sum(alarms[:, i]) / float(repetitions)
-        print(f"- For algorithm {CDAlgorithm}, a false alarm happened {mean_alarm:.3g} times in average...")
+    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
+    #     mean_alarm = np.sum(alarms[:, i]) / float(repetitions)
+    #     print(f"- For algorithm {CDAlgorithm}, a false alarm happened {mean_alarm:.3g} times in average...")
+    markdown_text = """
+| Algorithm | Mean false alarm rate |
+|------|------|
+{}
+    """.format("\n".join([
+        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_alarm)
+        for CDAlgorithm, mean_alarm in zip(all_CD_algorithms, np.mean(alarms, axis=0))
+    ]))
+    print(markdown_text)
+    display(Markdown(markdown_text))
     return alarms
 
 
 # For examples:
 
-# In[56]:
+# In[70]:
 
 
 _ = check_false_alarm(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
-# In[57]:
+# <span style="color:red">A lot of false alarm for `BernoulliGLR` but not the others, with not enough data!</span>
+
+# In[71]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_false_alarm(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
+# <span style="color:green">No false alarm, with enough data!</span>
+
 # ## Checking missed detection probabilities
 
-# In[58]:
+# In[72]:
 
 
 def missed_detection(data, tau, CDAlgorithm):
@@ -933,38 +1283,57 @@ def missed_detection(data, tau, CDAlgorithm):
 
 # Now we can check the false alarm probabilities for our different algorithms.
 
-# In[59]:
+# In[75]:
 
 
 def check_missed_detection(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, repetitions=50):
     if isinstance(tau, float):
         tau = int(tau * horizon)
     print(f"\nGenerating toy data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    misses = np.zeros((repetitions, len(all_CD_algorithms)))
+    misss = np.zeros((repetitions, len(all_CD_algorithms)))
     for rep in tqdm(range(repetitions), desc="Repetitions"):
         data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon)
         for i, CDAlgorithm in enumerate(all_CD_algorithms):
             miss = missed_detection(data, tau, CDAlgorithm)
-            misses[rep, i] = miss
-    for i, CDAlgorithm in enumerate(all_CD_algorithms):
-        mean_miss = np.sum(misses[:, i]) / float(repetitions)
-        print(f"- For algorithm {CDAlgorithm}, a missed detection happened {mean_miss:.3g} times in average...")
-    return misses
+            misss[rep, i] = miss
+    # for i, CDAlgorithm in enumerate(all_CD_algorithms):
+    #     mean_miss = np.sum(misss[:, i]) / float(repetitions)
+    #     print(f"- For algorithm {CDAlgorithm}, a missed detection happened {mean_miss:.3g} times in average...")
+    markdown_text = """
+| Algorithm | Mean missed detection rate |
+|------|------|
+{}
+    """.format("\n".join([
+        "| {} | ${:.3g}$ |".format(CDAlgorithm.__name__, mean_miss)
+        for CDAlgorithm, mean_miss in zip(all_CD_algorithms, np.mean(misss, axis=0))
+    ]))
+    print(markdown_text)
+    display(Markdown(markdown_text))
+    return misss
 
 
 # For examples:
 
-# In[60]:
+# In[76]:
 
 
 _ = check_missed_detection(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 
-# In[61]:
+# <span style="color:red">A lot of missed detection, with not enough data!</span>
+
+# In[77]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_missed_detection(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
+
+# <span style="color:green">No missed detection, with enough data!</span>
+
+# ----
+# # More simulations and some plots
+
+# <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
 
 # ----
 # # Conclusions
