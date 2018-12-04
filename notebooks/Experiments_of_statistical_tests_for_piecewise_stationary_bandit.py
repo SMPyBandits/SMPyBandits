@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Table of Contents
-#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-64"><span class="toc-item-num">6.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-641"><span class="toc-item-num">6.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6411"><span class="toc-item-num">6.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6412"><span class="toc-item-num">6.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-642"><span class="toc-item-num">6.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6421"><span class="toc-item-num">6.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-6422"><span class="toc-item-num">6.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6423"><span class="toc-item-num">6.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-6424"><span class="toc-item-num">6.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-6425"><span class="toc-item-num">6.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-6426"><span class="toc-item-num">6.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-643"><span class="toc-item-num">6.4.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-71"><span class="toc-item-num">7.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-72"><span class="toc-item-num">7.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-73"><span class="toc-item-num">7.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-74"><span class="toc-item-num">7.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-75"><span class="toc-item-num">7.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-76"><span class="toc-item-num">7.6&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Conclusions</a></div>
+#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-64"><span class="toc-item-num">6.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-641"><span class="toc-item-num">6.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6411"><span class="toc-item-num">6.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6412"><span class="toc-item-num">6.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-642"><span class="toc-item-num">6.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6421"><span class="toc-item-num">6.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-6422"><span class="toc-item-num">6.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6423"><span class="toc-item-num">6.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-6424"><span class="toc-item-num">6.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-6425"><span class="toc-item-num">6.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-6426"><span class="toc-item-num">6.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-643"><span class="toc-item-num">6.4.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-71"><span class="toc-item-num">7.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-72"><span class="toc-item-num">7.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-73"><span class="toc-item-num">7.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-74"><span class="toc-item-num">7.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-75"><span class="toc-item-num">7.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Gaussian-GLR" data-toc-modified-id="Experiments-for-Gaussian-GLR-76"><span class="toc-item-num">7.6&nbsp;&nbsp;</span>Experiments for <code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-CUSUM" data-toc-modified-id="Experiments-for-CUSUM-77"><span class="toc-item-num">7.7&nbsp;&nbsp;</span>Experiments for <code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-78"><span class="toc-item-num">7.8&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Conclusions</a></div>
 
 # # Requirements and helper functions
 
@@ -559,7 +559,7 @@ def compute_h__CUSUM(horizon,
     return h
 
 
-# In[115]:
+# In[182]:
 
 
 class CUSUM(ChangePointDetector):
@@ -568,6 +568,7 @@ class CUSUM(ChangePointDetector):
           M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
           threshold_h=None,
         ):
+        assert 0 < epsilon < 1, f"Error: epsilon for CUSUM must be in (0, 1) but is {epsilon}."
         super().__init__(epsilon=epsilon, M=M, threshold_h=threshold_h)
     
     def __str__(self):
@@ -629,7 +630,7 @@ class CUSUM(ChangePointDetector):
 # - The change is detected if $\max(g_k^+, g_k^-) > h$, where $h=$`threshold_h` is the threshold of the test,
 # - And $\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s$ is the mean of the first k samples.
 
-# In[116]:
+# In[183]:
 
 
 class PHT(ChangePointDetector):
@@ -638,6 +639,7 @@ class PHT(ChangePointDetector):
           M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
           threshold_h=None,
         ):
+        assert 0 < epsilon < 1, f"Error: epsilon for CUSUM must be in (0, 1) but is {epsilon}."
         super().__init__(epsilon=epsilon, M=M, threshold_h=threshold_h)
     
     def __str__(self):
@@ -842,7 +844,7 @@ class BernoulliGLR(ChangePointDetector):
 
 # ## List of all Python algorithms
 
-# In[119]:
+# In[184]:
 
 
 all_CD_algorithms = [
@@ -1881,24 +1883,24 @@ get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay,
 
 # ## A simple problem function
 # 
-# We consider again a problem with $T=1000$ samples, first coming from a distribution of mean $\mu^1 = 0.5$ then from a second distribution of mean $\mu^2 = 1$ (largest gap, $\Delta = 0.5$).
+# We consider again a problem with $T=1000$ samples, first coming from a distribution of mean $\mu^1 = 0.25$ then from a second distribution of mean $\mu^2 = 0.75$ (largest gap, $\Delta = 0.5$).
 # We consider also a single breakpoint located at $\tau = \frac{1}{2} T = 500$, ie the algorithm will observe $500$ samples from $\nu^1$ then $500$ from $\nu^2$.
 # 
 # We can consider Bernoulli or Gaussian distributions.
 
-# In[122]:
+# In[215]:
 
 
 horizon = 1000
-firstMean = mu_1 = 0.5
-secondMean = mu_2 = 0.9
+firstMean = mu_1 = 0.25
+secondMean = mu_2 = 0.75
 gap = mu_2 - mu_1
 tau = 0.5
 
 
 # ## A generic function
 
-# In[123]:
+# In[216]:
 
 
 def explore_parameters(measure,
@@ -1939,7 +1941,7 @@ def explore_parameters(measure,
 
 # I want to (try to) use [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/parallel.html) to run the "repetitions" for loop in parallel, for instance on 4 cores on my machine.
 
-# In[124]:
+# In[217]:
 
 
 def explore_parameters_parallel(measure,
@@ -1989,7 +1991,7 @@ def explore_parameters_parallel(measure,
 
 # ## Plotting the result as a 1D plot
 
-# In[125]:
+# In[192]:
 
 
 def view1D_explore_parameters(measure, name,
@@ -2030,14 +2032,14 @@ def view1D_explore_parameters(measure, name,
         args, kwargs = argskwargs
         x_ticklabels.append(f"{args}, {kwargs}" if argskwargs2str is None else argskwargs2str(args, kwargs))
     ax = plt.gca()
-    ax.set_xticklabels(x_ticklabels)
+    ax.set_xticklabels(x_ticklabels, rotation=80, verticalalignment="top")
     
     return fig
 
 
 # ## Experiments for `Monitored`
 
-# In[132]:
+# In[218]:
 
 
 list_of_args_kwargs_for_Monitored = tuple([
@@ -2046,7 +2048,7 @@ list_of_args_kwargs_for_Monitored = tuple([
 ])
 
 
-# In[146]:
+# In[219]:
 
 
 argskwargs2str_for_Monitored = lambda args, kwargs: fr"$w={kwargs['window_size']:.4g}$"
@@ -2054,29 +2056,29 @@ argskwargs2str_for_Monitored = lambda args, kwargs: fr"$w={kwargs['window_size']
 
 # On a first Bernoulli problem, a very easy one (with a large gap of $\Delta=0.5$).
 
-# In[134]:
+# In[220]:
 
 
 horizon = 1000
-firstMean = mu_1 = 0.5
-secondMean = mu_2 = 1.0
+firstMean = mu_1 = 0.25
+secondMean = mu_2 = 0.75
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[135]:
+# In[221]:
 
 
 get_ipython().run_cell_magic('time', '', 'explore_parameters(detection_delay,\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   verbose=True,\n                   gaussian=False,\n                   n_jobs=1,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                )')
 
 
-# In[136]:
+# In[222]:
 
 
 get_ipython().run_cell_magic('time', '', 'explore_parameters_parallel(detection_delay,\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   verbose=True,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                )')
 
 
-# In[137]:
+# In[223]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
@@ -2084,42 +2086,69 @@ get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detectio
 
 # On the same problem, with $10000$ data instead of $1000$.
 
-# In[138]:
+# In[224]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=10*horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
 
 
-# On two Gaussian problems, one with a gap of $\Delta=0.8$ (easy) and a harder with a gap of $\Delta=0.6$.
+# On two Gaussian problems, one with a gap of $\Delta=0.5$ (easy) and a harder with a gap of $\Delta=0.1$.
 # It is very intriguing that small difference in the gap can yield such large differences in the detection delay (or missed detection probability, as having a detection delay of $D=T-\tau$ means a missed detection!).
 
-# In[139]:
+# In[225]:
 
 
 horizon = 10000
-firstMean = mu_1 = -0.4
-secondMean = mu_2 = 0.4
+firstMean = mu_1 = -0.25
+secondMean = mu_2 = 0.25
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[140]:
+# In[226]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
 
 
-# In[145]:
+# With a smaller gap, the problem gets harder, and can become impossible to solve (with such a small time horizon).
+
+# In[229]:
 
 
 horizon = 10000
-firstMean = mu_1 = -0.2
-secondMean = mu_2 = 0.2
+firstMean = mu_1 = -0.1
+secondMean = mu_2 = 0.1
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[147]:
+# In[231]:
+
+
+get_ipython().run_cell_magic('time', '', '\n_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+
+
+# In[227]:
+
+
+horizon = 10000
+firstMean = mu_1 = -0.05
+secondMean = mu_2 = 0.05
+gap = mu_2 - mu_1
+tau = 0.5
+
+
+# In[234]:
+
+
+list_of_args_kwargs_for_Monitored = tuple([
+    ((), {'window_size': w, 'threshold_b': None})  # empty args, kwargs = {window_size=80, threshold_b=None}
+    for w in [5, 10, 20, 40, 80, 120, 160, 200, 250, 300, 350, 400, 500, 1000, 1500, 2000, 2500, 3000, 4000]
+])
+
+
+# In[235]:
 
 
 get_ipython().run_cell_magic('time', '', '\n_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
@@ -2127,7 +2156,7 @@ get_ipython().run_cell_magic('time', '', '\n_ = view1D_explore_parameters(detect
 
 # ## Experiments for `Bernoulli GLR`
 
-# In[148]:
+# In[236]:
 
 
 list_of_args_kwargs_for_BernoulliGLR = tuple([
@@ -2136,7 +2165,7 @@ list_of_args_kwargs_for_BernoulliGLR = tuple([
 ])
 
 
-# In[149]:
+# In[237]:
 
 
 def argskwargs2str_for_BernoulliGLR(args, kwargs):
@@ -2146,29 +2175,29 @@ def argskwargs2str_for_BernoulliGLR(args, kwargs):
 
 # First, for a Bernoulli problem:
 
-# In[158]:
+# In[238]:
 
 
 horizon = 1000
-firstMean = mu_1 = 0.5
-secondMean = mu_2 = 1.0
+firstMean = mu_1 = 0.25
+secondMean = mu_2 = 0.75
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[151]:
+# In[239]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
 
 
-# In[159]:
+# In[240]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=20,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
 
 
-# In[160]:
+# In[241]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=20,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
@@ -2176,23 +2205,90 @@ get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_d
 
 # And now on Gaussian problems:
 
-# In[152]:
+# In[242]:
 
 
 horizon = 1000
-firstMean = mu_1 = -0.5
-secondMean = mu_2 = 0.5
+firstMean = mu_1 = -0.25
+secondMean = mu_2 = 0.25
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[153]:
+# In[243]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
 
 
-# In[154]:
+# In[244]:
+
+
+horizon = 1000
+firstMean = mu_1 = -0.05
+secondMean = mu_2 = 0.05
+gap = mu_2 - mu_1
+tau = 0.5
+
+
+# In[245]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+
+
+# In[246]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+
+
+# In[247]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+
+
+# ## Experiments for `Gaussian GLR`
+
+# In[248]:
+
+
+list_of_args_kwargs_for_GaussianGLR = tuple([
+    ((), {'threshold_h': h})  # empty args, kwargs = {threshold_h=None}
+    for h in [None, 0.0001, 0.01, 0.1, 0.5, 0.9, 1, 2, 5, 10, 20, 50, 100, 1000, 10000]
+])
+
+
+# In[249]:
+
+
+def argskwargs2str_for_GaussianGLR(args, kwargs):
+    h = kwargs['threshold_h']
+    return fr"$h={h:.4g}$" if h is not None else "$h=$'auto'"
+
+
+# First, for a Bernoulli problem:
+
+# In[250]:
+
+
+horizon = 1000
+firstMean = mu_1 = 0.25
+secondMean = mu_2 = 0.75
+gap = mu_2 - mu_1
+tau = 0.5
+
+
+# In[251]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
+
+
+# Then, for a Gaussian problem:
+
+# In[252]:
 
 
 horizon = 1000
@@ -2202,22 +2298,107 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[155]:
+# In[253]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=4,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
 
 
-# In[161]:
+# And for a harder Gaussian problem:
+
+# In[254]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+horizon = 1000
+firstMean = mu_1 = -0.01
+secondMean = mu_2 = 0.01
+gap = mu_2 - mu_1
+tau = 0.5
 
 
-# In[162]:
+# In[255]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=4,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
+
+
+# ## Experiments for `CUSUM`
+
+# In[264]:
+
+
+list_of_args_kwargs_for_CUSUM = tuple([
+    ((), {'epsilon': epsilon, 'threshold_h': h, 'M': M})  # empty args, kwargs = {epsilon=0.5, threshold_h=None, M=100}
+    for epsilon in [0.05, 0.1, 0.5, 0.75, 0.9]
+    for h in [None, 0.01, 0.1, 1, 10]
+    for M in [50, 100, 150, 200, 500]
+])
+
+
+# In[265]:
+
+
+print(f"Exploring {len(list_of_args_kwargs_for_CUSUM)} different values of (h, epsilon, M) for CUSUM...")
+
+
+# In[266]:
+
+
+def argskwargs2str_for_CUSUM(args, kwargs):
+    epsilon = kwargs['epsilon']
+    M = kwargs['M']
+    h = kwargs['threshold_h']
+    return fr"$\varepsilon={epsilon:.4g}$, $M={M}$, $h={h:.4g}$" if h is not None else fr"$\varepsilon={epsilon:.4g}$, $M={M}$, $h=$'auto'"
+
+
+# First, for a Bernoulli problem:
+
+# In[267]:
+
+
+horizon = 1000
+firstMean = mu_1 = 0.25
+secondMean = mu_2 = 0.75
+gap = mu_2 - mu_1
+tau = 0.5
+
+
+# In[268]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+
+
+# And for the same problem but on a longer horizon ($T := 10 \times T = 10000$):
+
+# In[269]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=10*horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+
+
+# In[261]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   PHT,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+
+
+# Then, for a Gaussian problem with the same gap:
+
+# In[262]:
+
+
+horizon = 1000
+firstMean = mu_1 = -0.25
+secondMean = mu_2 = 0.25
+gap = mu_2 - mu_1
+tau = 0.5
+
+
+# In[263]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
 
 
 # ## Other experiments
