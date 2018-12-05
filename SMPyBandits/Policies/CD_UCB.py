@@ -313,6 +313,7 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha
         .. math:: \forall t>0, \alpha = \alpha_t := \alpha_{t=1} \frac{1}{\max(1, t^{\beta})}.
 
         - with :math:`\beta > 1, \beta` = ``exponentBeta`` (=1.05) and :math:`\alpha_{t=1} < 1, \alpha_{t=1}` = ``alpha_t1`` (=0.01).
+        - the only requirement on :math:`\alpha_t` seems to be that `\sum_{t=1}^T \alpha_t < +\infty` (ie. be finite), which is the case for :math:`\alpha_t = \alpha = \frac{1}{T}`, but also any :math:`\alpha_t = \frac{\alpha_1}{t^{\beta}}` for any :math:`\beta>1` (cf. Riemann series).
     """
     T = int(max(1, horizon))
     delta = 1.0 / T
@@ -332,6 +333,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     - It works for any 1-dimensional exponential family, you just have to give a ``kl`` function.
     - For instance :func:`kullback.klBern`, for Bernoulli distributions, gives :class:`GaussianGLR_IndexPolicy`,
     - And :func:`kullback.klGauss` for univariate Gaussian distributions, gives :class:`BernoulliGLR_IndexPolicy`.
+
+    - From ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
     """
     def __init__(self, nbArms,
             horizon=None,
@@ -421,15 +424,17 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
         return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
 
-# --- Drift-Detection algorithm from XXX
+# --- Drift-Detection algorithm from [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
 
 from Policies import Exp3, Exp3PlusPlus
 
-CONSTANT_C = 1  #: The constant :math:`C` used in Corollary 1 of paper XXX.
+CONSTANT_C = 1  #: The constant :math:`C` used in Corollary 1 of paper [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf).
 
 
 class DriftDetection_IndexPolicy(CD_IndexPolicy):
     r""" The Drift-Detection generic policy for non-stationary bandits, using a custom Drift-Detection test, for 1-dimensional exponential families.
+
+    - From [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf).
     """
     def __init__(self, nbArms,
             H=None, delta=None, C=CONSTANT_C,
@@ -446,7 +451,7 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
         if H is None:
             H = int(np.ceil(C * np.sqrt(horizon * np.log(horizon))))
         assert H >= nbArms, "Error: for the Drift-Detection algorithm, the parameter H should be >= K = {}, but H = {}".format(nbArms, H)  # DEBUG
-        self.H = H  #: Parameter :math:`H` for the Drift-Detection algorithm. Default value is :math:`\lceil C \sqrt{T \log(T)} \rceil`, for some constant :math:`C`=``C``` (= :data:`CONSTANT_C` by default).
+        self.H = H  #: Parameter :math:`H` for the Drift-Detection algorithm. Default value is :math:`\lceil C \sqrt{T \log(T)} \rceil`, for some constant :math:`C=` ``C`` (= :data:`CONSTANT_C` by default).
 
         if delta is None:
             delta = np.sqrt(np.log(horizon) / (nbArms * horizon))
@@ -462,7 +467,7 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def proba_random_exploration(self):
-        r"""Parameter :math:`\proba_random_exploration` for the Exp3 algorithm."""
+        r"""Parameter :math:`\gamma` for the Exp3 algorithm."""
         return self.policy.gamma
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
