@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # # Table of Contents
-#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Non-Parametric-GLR" data-toc-modified-id="Non-Parametric-GLR-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span><code>Non-Parametric GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-28"><span class="toc-item-num">2.8&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-64"><span class="toc-item-num">6.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-641"><span class="toc-item-num">6.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6411"><span class="toc-item-num">6.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6412"><span class="toc-item-num">6.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-642"><span class="toc-item-num">6.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6421"><span class="toc-item-num">6.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-6422"><span class="toc-item-num">6.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6423"><span class="toc-item-num">6.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-6424"><span class="toc-item-num">6.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-6425"><span class="toc-item-num">6.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-6426"><span class="toc-item-num">6.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-643"><span class="toc-item-num">6.4.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-71"><span class="toc-item-num">7.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-72"><span class="toc-item-num">7.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-73"><span class="toc-item-num">7.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-74"><span class="toc-item-num">7.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-75"><span class="toc-item-num">7.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Gaussian-GLR" data-toc-modified-id="Experiments-for-Gaussian-GLR-76"><span class="toc-item-num">7.6&nbsp;&nbsp;</span>Experiments for <code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-CUSUM" data-toc-modified-id="Experiments-for-CUSUM-77"><span class="toc-item-num">7.7&nbsp;&nbsp;</span>Experiments for <code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-78"><span class="toc-item-num">7.8&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Conclusions</a></div>
+#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Sub-Gaussian-GLR" data-toc-modified-id="Sub-Gaussian-GLR-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span><code>Sub-Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-28"><span class="toc-item-num">2.8&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-64"><span class="toc-item-num">6.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-641"><span class="toc-item-num">6.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6411"><span class="toc-item-num">6.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6412"><span class="toc-item-num">6.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-642"><span class="toc-item-num">6.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6421"><span class="toc-item-num">6.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-6422"><span class="toc-item-num">6.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6423"><span class="toc-item-num">6.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-6424"><span class="toc-item-num">6.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-6425"><span class="toc-item-num">6.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-6426"><span class="toc-item-num">6.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Sub-Gaussian-GLR" data-toc-modified-id="For-Sub-Gaussian-GLR-6427"><span class="toc-item-num">6.4.2.7&nbsp;&nbsp;</span>For <code>Sub-Gaussian GLR</code></a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-643"><span class="toc-item-num">6.4.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-71"><span class="toc-item-num">7.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-72"><span class="toc-item-num">7.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-73"><span class="toc-item-num">7.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-74"><span class="toc-item-num">7.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-75"><span class="toc-item-num">7.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Gaussian-GLR" data-toc-modified-id="Experiments-for-Gaussian-GLR-76"><span class="toc-item-num">7.6&nbsp;&nbsp;</span>Experiments for <code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-CUSUM" data-toc-modified-id="Experiments-for-CUSUM-77"><span class="toc-item-num">7.7&nbsp;&nbsp;</span>Experiments for <code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-78"><span class="toc-item-num">7.8&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Conclusions</a></div>
 
 # # Requirements and helper functions
 
@@ -315,7 +315,7 @@ def piecewise_bernoulli_samples(problem, horizon=1000):
     for i in range(nbArms):
         mean_i = fullMeans[i, :]
         for t in range(horizon):
-            mean_i_t = mean_i[t]
+            mean_i_t = max(0, min(1, mean_i[t]))  # crop to [0, 1] !
             results[i, t] = np.random.binomial(1, mean_i_t)
     return results
 
@@ -842,7 +842,7 @@ class BernoulliGLR(ChangePointDetector):
         return False
 
 
-# ## `Non-Parametric GLR`
+# ## `Sub-Gaussian GLR`
 # 
 # A slightly different GLR algorithm for non-parametric sub-Gaussian distributions.
 # We assume the distributions $\nu^1$ and $\nu^2$ to be $\sigma^2$-sub Gaussian, for a known value of $\sigma\in\mathbb{R}^+$, and if we consider a confidence level $\delta\in(0,1)$ (typically, it is set to $\frac{1}{T}$ if the horizon $T$ is known, or $\delta=\delta_t=\frac{1}{t^2}$ to have $\sum_{t=1}{T} \delta_t < +\infty$).
@@ -1573,7 +1573,7 @@ def missed_detection(data, tau, CDAlgorithm, *args, **kwargs):
 
 # For examples:
 
-# In[112]:
+# In[331]:
 
 
 _ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -1581,7 +1581,7 @@ _ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0
 
 # <span style="color:red">A lot of missed detection, with not enough data!</span>
 
-# In[113]:
+# In[332]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
@@ -1603,7 +1603,7 @@ get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(missed_detection,
 # Of course, if any of $\tau$ or $\Delta$ are too small, detection is impossible.
 # I want to display a $2$D image view, showing on $x$-axis a grid of values of $\Delta$, on $y$-axis a grid of values of $\tau$, and on the $2$D image, a color-scale to show the detection delay (for instance).
 
-# In[82]:
+# In[333]:
 
 
 mu_1 = 0.5
@@ -1612,7 +1612,7 @@ nb_values_Delta = 20
 values_Delta = np.linspace(0, max_mu_2 - mu_1, nb_values_Delta)
 
 
-# In[83]:
+# In[334]:
 
 
 horizon = T = 5000
@@ -1623,7 +1623,7 @@ values_tau = np.arange(min_tau, max_tau + 1, step)
 nb_values_tau = len(values_tau)
 
 
-# In[84]:
+# In[335]:
 
 
 print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
@@ -1631,7 +1631,7 @@ print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_value
 
 # And now the function:
 
-# In[85]:
+# In[336]:
 
 
 def check2D_onemeasure(measure,
@@ -1671,13 +1671,13 @@ def check2D_onemeasure(measure,
 # 
 # I want to (try to) use [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/parallel.html) to run the "repetitions" for loop in parallel, for instance on 4 cores on my machine.
 
-# In[86]:
+# In[337]:
 
 
 from joblib import Parallel, delayed
 
 
-# In[87]:
+# In[338]:
 
 
 # Tries to know number of CPU
@@ -1691,7 +1691,7 @@ print(f"Info: using {CPU_COUNT} jobs in parallel!")
 
 # We can rewrite the `check2D_onemeasure` function to run some loops in parallel.
 
-# In[88]:
+# In[339]:
 
 
 def check2D_onemeasure_parallel(measure,
@@ -1737,7 +1737,7 @@ def check2D_onemeasure_parallel(measure,
 
 # ## Checking on a small grid of values
 
-# In[318]:
+# In[340]:
 
 
 Monitored
@@ -1781,7 +1781,7 @@ get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(missed
 
 # ## Plotting the result as a 2D image
 
-# In[89]:
+# In[341]:
 
 
 import matplotlib as mpl
@@ -1793,7 +1793,7 @@ import matplotlib.pyplot as plt
 
 # Now the function:
 
-# In[90]:
+# In[342]:
 
 
 def view2D_onemeasure(measure, name,
@@ -1887,7 +1887,7 @@ get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection
 
 # ### Second example
 
-# In[139]:
+# In[345]:
 
 
 firstMean = mu_1 = 0.5
@@ -1899,7 +1899,7 @@ values_Delta = np.linspace(epsilon * max_delta, (1 - epsilon) * max_delta, nb_va
 print(f"Values of delta: {values_Delta}")
 
 
-# In[140]:
+# In[346]:
 
 
 horizon = T = 1000
@@ -1911,7 +1911,7 @@ nb_values_tau = len(values_tau)
 print(f"Values of tau: {values_tau}")
 
 
-# In[126]:
+# In[347]:
 
 
 print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
@@ -1987,6 +1987,26 @@ get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay,
 
 
 get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=5,\n                     )')
+
+
+# In[131]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=5,\n                      gaussian=True,\n                     )')
+
+
+# #### For `Sub-Gaussian GLR`
+
+# In[348]:
+
+
+SubGaussianGLR
+
+
+# In[349]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=5,\n                     )')
 
 
 # In[131]:
