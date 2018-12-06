@@ -387,15 +387,14 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         data_y = self.all_rewards[arm]
         t0 = 0
         t = len(data_y)
-        mu = lambda a, b: np.mean(data_y[a : b+1])
         for s in range(t0, t - 1):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
             # FIXED this is the correct formula!
-            mean_all = mu(t0, t)
-            mean_before = mu(t0,  s)
-            mean_after = mu(s+1, t)
+            mean_all = np.mean(data_y[t0 : t])
+            mean_before = np.mean(data_y[t0 : s])
+            mean_after = np.mean(data_y[s+1 : t])
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -441,7 +440,7 @@ SIGMA = 0.25
 
 #: Whether to use the joint or disjoint threshold function (:func:`threshold_SubGaussianGLR_joint` or :func:`threshold_SubGaussianGLR_disjoint`) for :class:`SubGaussianGLR_IndexPolicy`.
 JOINT = True
-threshold_SubGaussianGLR_joint
+
 def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta) according to this formula:
 
@@ -449,7 +448,7 @@ def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
     """
     return sigma * np.sqrt(
         (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0+1))
-        * 2 * np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta )
+        * 2 * max(0, np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta ))
     )
 
 def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
@@ -458,9 +457,9 @@ def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
     .. math:: b^{\text{disjoint}}_{t_0}(s,t,\delta) := \sqrt{2} \sigma \sqrt{\frac{1 + \frac{1}{s - t_0 + 1}}{s - t_0 + 1} \log\left( \frac{4 \sqrt{s - t_0 + 2}}{\delta}\right)} + \sqrt{\frac{1 + \frac{1}{t - s + 1}}{t - s + 1} \log\left( \frac{4 (t - t_0) \sqrt{t - s + 1}}{\delta}\right)}.
     """
     return np.sqrt(2) * sigma * (np.sqrt(
-        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * np.log( (4 * np.sqrt(s - t0 + 2)) / delta )
+        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * max(0, np.log( (4 * np.sqrt(s - t0 + 2)) / delta ))
     ) + np.sqrt(
-        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta )
+        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta ))
     ))
 
 def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
@@ -522,11 +521,10 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         if delta is None:
             delta = 1.0 / max(1, horizon)
 
-        mu = lambda a, b: np.mean(data_y[a : b+1])
         for s in range(t0, t - 1):
             # compute threshold
             threshold_h = self.compute_threshold_h(t0, s, t)
-            glr = abs( mu(s+1, t) - mu(t0, s))
+            glr = abs( np.mean(data_y[s+1 : t]) - np.mean(data_y[t0 : s]))
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), glr, threshold_h))
             if glr >= self.threshold_h:
                 return True
