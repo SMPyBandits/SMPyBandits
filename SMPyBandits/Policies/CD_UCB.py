@@ -214,8 +214,8 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
 
             s_k^- &= (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
             s_k^+ &= (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
-            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-).
+            g_k^+ &= \max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= \max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
@@ -251,8 +251,8 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 
             s_k^- &= y_k - \hat{y}_k - \varepsilon,\\
             s_k^+ &= \hat{y}_k - y_k - \varepsilon,\\
-            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-).
+            g_k^+ &= \max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= \max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
@@ -598,12 +598,12 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
         return r"DriftDetection-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.horizon, self.threshold_h, self.proba_random_exploration)
 
     def detect_change(self, arm, verbose=VERBOSE):
-        r""" Detect a change in the current arm, using a Drift-Detection test (GLR).
+        r""" Detect a change in the current arm, using a Drift-Detection test (DD).
 
         .. math::
 
             k_{\max} &:= \arg\max_k \tilde{\rho}_k(t),\\
-            DD_t(k) = \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I)
+            DD_t(k) &= \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I)
 
         - The change is detected if there is an arm :math:`k` such that :math:`DD_t(k) \geq 2 * \varepsilon = h`, where :attr:`threshold_h` is the threshold of the test, and :math:`I` is the (number of the) current interval since the last (global) restart,
         - where :math:`\tilde{\rho}_k(t)` is the trust probability of arm :math:`k` from the Exp3 algorithm,
