@@ -379,9 +379,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
         .. math::
 
-            G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
+            G^{\mathrm{kl}}_{t_0:s:t} = (s-t_0+1) \mathrm{kl}(\mu_{t_0,s}, \mu_{t_0,t}) + (t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,t}).
 
-        - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
+        - The change is detected if there is a time :math:`s` such that :math:`G^{\mathrm{kl}}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
         """
         data_y = self.all_rewards[arm]
@@ -389,9 +389,17 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         t = len(data_y)
         mu = lambda a, b: np.mean(data_y[a : b+1])
         for s in range(t0, t - 1):
-            this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
-            glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} and so the kl = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), this_kl, glr, self.threshold_h))
+            # XXX nope, that was a mistake: it is only true for the Gaussian kl !
+            # this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
+            # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
+            # FIXED this is the correct formula!
+            mean_all = mu(t0, t)
+            mean_before = mu(t0,  s)
+            mean_after = mu(s+1, t)
+            kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
+            kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
+            glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the total mean mu(t0,t) = {}, so the kl before = {} and kl after = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, mean_all, kl_before, kl_after, glr, self.threshold_h))
             if glr >= self.threshold_h:
                 return True
         return False
@@ -422,6 +430,107 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
 
     def __str__(self):
         return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+
+# --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
+
+#: Default confidence level for :class:`SubGaussianGLR_IndexPolicy`.
+DELTA = 0.01
+
+#: By default, :class:`SubGaussianGLR_IndexPolicy` assumes distributions are 0.25-sub Gaussian, like Bernoulli or any distributions with support on :math:`[0,1]`.
+SIGMA = 0.25
+
+#: Whether to use the joint or disjoint threshold function (:func:`threshold_SubGaussianGLR_joint` or :func:`threshold_SubGaussianGLR_disjoint`) for :class:`SubGaussianGLR_IndexPolicy`.
+JOINT = True
+threshold_SubGaussianGLR_joint
+def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
+    r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta) according to this formula:
+
+    .. math:: b^{\text{joint}}_{t_0}(s,t,\delta) := \sigma \sqrt{ \left(\frac{1}{s-t_0+1} + \frac{1}{t-s}\right) \left(1 + \frac{1}{t-t_0+1}\right) 2 \log\left( \frac{2(t-t_0)\sqrt{t-t_0+2}}{\delta} \right)}.
+    """
+    return sigma * np.sqrt(
+        (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0+1))
+        * 2 * np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta )
+    )
+
+def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
+    r""" Compute the threshold :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)` according to this formula:
+
+    .. math:: b^{\text{disjoint}}_{t_0}(s,t,\delta) := \sqrt{2} \sigma \sqrt{\frac{1 + \frac{1}{s - t_0 + 1}}{s - t_0 + 1} \log\left( \frac{4 \sqrt{s - t_0 + 2}}{\delta}\right)} + \sqrt{\frac{1 + \frac{1}{t - s + 1}}{t - s + 1} \log\left( \frac{4 (t - t_0) \sqrt{t - s + 1}}{\delta}\right)}.
+    """
+    return np.sqrt(2) * sigma * (np.sqrt(
+        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * np.log( (4 * np.sqrt(s - t0 + 2)) / delta )
+    ) + np.sqrt(
+        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta )
+    ))
+
+def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
+    r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta)` or :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)`."""
+    if joint:
+        return threshold_SubGaussianGLR_joint(t0, s, t, delta, sigma=sigma)
+    else:
+        return threshold_SubGaussianGLR_disjoint(t0, s, t, delta, sigma=sigma)
+
+
+class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
+    r""" The SubGaussianGLR-UCB policy for non-stationary bandits, using the Generalized Likelihood Ratio test (GLR), for sub-Gaussian distributions.
+
+    - It works for any sub-Gaussian family of distributions, being :math:`\sigma^2`-sub Gaussian *with known* :math:`\sigma`.
+
+    - From ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+    """
+    def __init__(self, nbArms,
+            horizon=None,
+            full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
+            policy=DefaultPolicy,
+            alpha=None, delta=DELTA, sigma=SIGMA, joint=JOINT,
+            lower=0., amplitude=1., *args, **kwargs
+        ):
+        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        # New parameters
+        self.horizon = horizon
+        if alpha is None:
+            c, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
+        self.alpha = alpha
+
+    def compute_threshold_h(self, t0, s, t):
+        """Compute the threshold :math:`h` with :func:`threshold_SubGaussianGLR`."""
+        return threshold_SubGaussianGLR(t0, s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
+
+    def __str__(self):
+        return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+
+    def detect_change(self, arm, verbose=VERBOSE):
+        r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:
+
+        - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
+
+        .. math:: G^{\text{sub-}\sigma}_{t_0:s:t} = |\mu_{t_0,s} - \mu_{s+1,t}|.
+
+        - The change is detected if there is a time :math:`s` such that :math:`G^{\text{sub-}\sigma}_{t_0:s:t} > b_{t_0}(s,t,\delta)`, where :math:`b_{t_0}(s,t,\delta)` is the threshold of the test,
+
+        - The threshold is computed as:
+
+        .. math:: b_{t_0}(s,t,\delta) := \sigma \sqrt{ \left(\frac{1}{s-t_0+1} + \frac{1}{t-s}\right) \left(1 + \frac{1}{t-t_0+1}\right) 2 \log\left( \frac{2(t-t_0)\sqrt{t-t_0+2}}{\delta} \right)}.
+
+        - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+        """
+        data_y = self.all_rewards[arm]
+        t0 = 0
+        t = len(data_y)
+        horizon = self.horizon
+        delta = self.delta
+        if delta is None:
+            delta = 1.0 / max(1, horizon)
+
+        mu = lambda a, b: np.mean(data_y[a : b+1])
+        for s in range(t0, t - 1):
+            # compute threshold
+            threshold_h = self.compute_threshold_h(t0, s, t)
+            glr = abs( mu(s+1, t) - mu(t0, s))
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), glr, threshold_h))
+            if glr >= self.threshold_h:
+                return True
+        return False
 
 
 # --- Drift-Detection algorithm from [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
