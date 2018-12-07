@@ -771,13 +771,13 @@ class GaussianGLR(ChangePointDetector):
             threshold_h = compute_c__GLR(0, t, horizon)
 
         # mu = lambda a, b: np.mean(data[a : b+1])
-        for s in range(t0, t - 1):
+        for s in range(t0, t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = klGauss(mu(s+1, t), mu(t0, s))
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-            mean_all = np.mean(data[t0 : t])
-            mean_before = np.mean(data[t0 : s])
-            mean_after = np.mean(data[s+1 : t])
+            mean_all = np.mean(data[t0 : t+1])
+            mean_before = np.mean(data[t0 : s+1])
+            mean_after = np.mean(data[s+1 : t+1])
             kl_before = klGauss(mean_before, mean_all)
             kl_after  = klGauss(mean_after,  mean_all)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -841,13 +841,13 @@ class BernoulliGLR(ChangePointDetector):
             threshold_h = compute_c__GLR(0, t, horizon)
 
         # mu = lambda a, b: np.mean(data[a : b+1])
-        for s in range(t0, t - 1):
+        for s in range(t0, t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = klBern(mu(s+1, t), mu(t0, s))
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-            mean_all = np.mean(data[t0 : t])
-            mean_before = np.mean(data[t0 : s])
-            mean_after = np.mean(data[s+1 : t])
+            mean_all = np.mean(data[t0 : t+1])
+            mean_before = np.mean(data[t0 : s+1])
+            mean_after = np.mean(data[s+1 : t+1])
             kl_before = klBern(mean_before, mean_all)
             kl_after  = klBern(mean_after,  mean_all)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -963,10 +963,11 @@ class SubGaussianGLR(ChangePointDetector):
         if delta is None:
             delta = 1.0 / max(1, horizon)
 
-        for s in range(t0, t - 1):
+        # mu = lambda a, b: np.mean(data[a : b+1])
+        for s in range(t0, t):
             # compute threshold
             threshold = threshold_SubGaussianGLR(t0, s, t, delta=delta, sigma=self.sigma, joint=self.joint)
-            glr = abs( np.mean(data[s+1 : t]) - np.mean(data[t0 : s]) )
+            glr = abs( np.mean(data[s+1 : t+1]) - np.mean(data[t0 : s+1]) )
             if glr >= threshold:
                 # print(f"DEBUG: t0 = {t0}, t = {t}, s = {s}, horizon = {horizon}, delta = {delta}, threshold = {threshold} and mu(s+1, t) = {mu(s+1, t)}, and mu(t0, s) = {mu(t0, s)}, and and glr = {glr}.")
                 return True
@@ -1030,12 +1031,13 @@ def GaussianGLR_numba(all_data, t,
     if threshold_h is None:
         threshold_h = compute_c__GLR(0, t, horizon)
 
-    for s in range(t0, t - 1):
+    # mu = lambda a, b: np.mean(data[a : b+1])
+    for s in range(t0, t):
         # this_kl = klGauss_numba(mu(s+1, t), mu(t0, s))
         # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t])
-        mean_before = np.mean(data[t0 : s])
-        mean_after = np.mean(data[s+1 : t])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = np.mean(data[t0 : s+1])
+        mean_after = np.mean(data[s+1 : t+1])
         kl_before = klGauss_numba(mean_before, mean_all)
         kl_after  = klGauss_numba(mean_after,  mean_all)
         glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -1080,12 +1082,12 @@ def BernoulliGLR_numba(all_data, t,
         threshold_h = compute_c__GLR(0, t, horizon)
 
     # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t - 1):
+    for s in range(t0, t):
         # this_kl = klBern_numba(mu(s+1, t), mu(t0, s))
         # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t])
-        mean_before = np.mean(data[t0 : s])
-        mean_after = np.mean(data[s+1 : t])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = np.mean(data[t0 : s+1])
+        mean_after = np.mean(data[s+1 : t+1])
         kl_before = klBern_numba(mean_before, mean_all)
         kl_after  = klBern_numba(mean_after,  mean_all)
         glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -1163,12 +1165,12 @@ def GaussianGLR_cython1(all_data, t,
         threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
 
     # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t - 1):
+    for s in range(t0, t):
         # this_kl = klGauss_cython(mu(s+1, t), mu(t0, s))
         # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t])
-        mean_before = np.mean(data[t0 : s])
-        mean_after = np.mean(data[s+1 : t])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = np.mean(data[t0 : s+1])
+        mean_after = np.mean(data[s+1 : t+1])
         kl_before = klGauss_cython(mean_before, mean_all)
         kl_after  = klGauss_cython(mean_after,  mean_all)
         glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -1209,12 +1211,12 @@ def BernoulliGLR_cython1(all_data, t,
         threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
 
     # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t - 1):
+    for s in range(t0, t):
         # this_kl = klBern_cython(mu(s+1, t), mu(t0, s))
         # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t])
-        mean_before = np.mean(data[t0 : s])
-        mean_after = np.mean(data[s+1 : t])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = np.mean(data[t0 : s+1])
+        mean_after = np.mean(data[s+1 : t+1])
         kl_before = klBernoulli_cython(mean_before, mean_all)
         kl_after  = klBernoulli_cython(mean_after,  mean_all)
         glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -2079,6 +2081,56 @@ get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay,
 get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                     )')
 
 
+# For another, simpler problem.
+
+# In[384]:
+
+
+horizon = T = 200
+min_tau = 10
+max_tau = T - min_tau
+step = 10
+values_tau = np.arange(min_tau, max_tau + 1, step)
+nb_values_tau = len(values_tau)
+print(f"Values of tau: {values_tau}")
+
+
+# In[386]:
+
+
+firstMean = mu_1 = -1.0
+max_mu_2 = 1.0
+nb_values_Delta = nb_values_tau
+max_delta = max_mu_2 - mu_1
+epsilon = 0.01
+values_Delta = np.linspace(epsilon * max_delta, (1 - epsilon) * max_delta, nb_values_Delta)
+print(f"Values of delta: {values_Delta}")
+
+
+# In[387]:
+
+
+print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
+
+
+# In[394]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                     )')
+
+
+# In[395]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=200,\n                      gaussian=True,\n                     )')
+
+
+# In[391]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=100,\n                      gaussian=True,\n                     )')
+
+
 # ### More examples
 
 # <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
@@ -2610,7 +2662,7 @@ get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detectio
 
 # ## Experiments for `Sub-Gaussian GLR`
 
-# In[366]:
+# In[396]:
 
 
 list_of_args_kwargs_for_SubGaussianGLR = tuple([
@@ -2657,7 +2709,7 @@ get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_al
 
 # Then, for a Gaussian problem:
 
-# In[277]:
+# In[397]:
 
 
 horizon = 1000
@@ -2667,7 +2719,7 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[278]:
+# In[399]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
@@ -2675,7 +2727,7 @@ get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detectio
 
 # And for a harder Gaussian problem:
 
-# In[279]:
+# In[400]:
 
 
 horizon = 1000
@@ -2685,10 +2737,10 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[280]:
+# In[402]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=1,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
 
 
 # ## Other experiments

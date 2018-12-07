@@ -30,6 +30,10 @@ except ImportError:
     from UCB import UCB as DefaultPolicy, UCB
 
 
+VERBOSE = True
+#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+VERBOSE = False
+
 #: Default probability of random exploration :math:`\alpha`.
 PROBA_RANDOM_EXPLORATION = 0.1
 
@@ -148,7 +152,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         # we update the total number of samples available to the underlying policy
         # self.policy.t = sum(self.last_pulls)  # XXX SO NOT SURE HERE
 
-    def detect_change(self, arm):
+    def detect_change(self, arm, verbose=VERBOSE):
         """ Try to detect a change in the current arm.
 
         .. warning:: This is not implemented for the generic CD algorithm, it has to be implement by a child of the class :class:`CD_IndexPolicy`.
@@ -164,7 +168,7 @@ class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
     .. warning:: I have no idea if what I wrote is correct or not!
     """
 
-    def detect_change(self, arm):
+    def detect_change(self, arm, verbose=VERBOSE):
         """ Try to detect a change in the current arm.
 
         .. warning:: This one is simply using a sliding-window of fixed size = 100. A more generic implementation is the :class:`Policies.SlidingWindowRestart` class.
@@ -205,7 +209,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
     def __str__(self):
         return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
-    def detect_change(self, arm):
+    def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
 
         - For each *data* k, compute:
@@ -230,6 +234,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             sp = u0hat - y_k - self.epsilon  # no need to multiply by (k > self.M)
             sm = y_k - u0hat - self.epsilon  # no need to multiply by (k > self.M)
             gp, gm = max(0, gp + sp), max(0, gm + sm)
+            if verbose: print("  - For u0hat = {}, k = {}, y_k = {}, gp = {}, gm = {}, sp = {}, sm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(u0hat, k, y_k, gp, gm, sp, sm, max(gp, gm), self.threshold_h))  # DEBUG
             if max(gp, gm) >= self.threshold_h:
                 return True
         return False
@@ -242,7 +247,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     def __str__(self):
         return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
-    def detect_change(self, arm):
+    def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
 
         - For each *data* k, compute:
@@ -265,6 +270,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
             sp = y_k_hat - y_k - self.epsilon
             sm = y_k - y_k_hat - self.epsilon
             gp, gm = max(0, gp + sp), max(0, gm + sm)
+            if verbose: print("  - For k = {}, y_k = {}, y_k_hat = {}, gp = {}, gm = {}, sp = {}, sm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(k, y_k, y_k_hat, gp, gm, sp, sm, max(gp, gm), self.threshold_h))  # DEBUG
             if max(gp, gm) >= self.threshold_h:
                 return True
         return False
@@ -293,10 +299,6 @@ def klGauss(x, y, sig2x=1):
     See https://en.wikipedia.org/wiki/Normal_distribution#Other_properties
     """
     return (x - y) ** 2 / (2. * sig2x)
-
-VERBOSE = True
-#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
-VERBOSE = False
 
 
 def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1):
@@ -386,15 +388,15 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         """
         data_y = self.all_rewards[arm]
         t0 = 0
-        t = len(data_y)
-        for s in range(t0, t - 1):
+        t = len(data_y)-1
+        for s in range(t0, t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
             # FIXED this is the correct formula!
-            mean_all = np.mean(data_y[t0 : t])
-            mean_before = np.mean(data_y[t0 : s])
-            mean_after = np.mean(data_y[s+1 : t])
+            mean_all = np.mean(data_y[t0 : t+1])
+            mean_before = np.mean(data_y[t0 : s+1])
+            mean_after = np.mean(data_y[s+1 : t+1])
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -484,19 +486,22 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             alpha=None, delta=DELTA, sigma=SIGMA, joint=JOINT,
             lower=0., amplitude=1., *args, **kwargs
         ):
-        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
         self.horizon = horizon
+        self.delta = delta  #: Parameter :math:`\delta` for the Sub-Gaussian-GLR test.
+        self.sigma = sigma  #: Parameter :math:`\sigma` for the Sub-Gaussian-GLR test.
+        self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
         if alpha is None:
-            c, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
-        self.alpha = alpha
+            _, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
+        self.proba_random_exploration = alpha
 
     def compute_threshold_h(self, t0, s, t):
         """Compute the threshold :math:`h` with :func:`threshold_SubGaussianGLR`."""
         return threshold_SubGaussianGLR(t0, s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:
@@ -515,18 +520,18 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         """
         data_y = self.all_rewards[arm]
         t0 = 0
-        t = len(data_y)
+        t = len(data_y)-1
         horizon = self.horizon
         delta = self.delta
         if delta is None:
             delta = 1.0 / max(1, horizon)
 
-        for s in range(t0, t - 1):
+        for s in range(t0, t):
             # compute threshold
             threshold_h = self.compute_threshold_h(t0, s, t)
-            glr = abs( np.mean(data_y[s+1 : t]) - np.mean(data_y[t0 : s]))
-            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mu(t0, s), mu(s+1, t), glr, threshold_h))
-            if glr >= self.threshold_h:
+            glr = abs( np.mean(data_y[s+1 : t+1]) - np.mean(data_y[t0 : s+1]))
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, np.mean(data_y[t0 : s+1]), np.mean(data_y[s+1 : t+1]), glr, threshold_h))
+            if glr >= threshold_h:
                 return True
         return False
 
