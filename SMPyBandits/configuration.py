@@ -421,7 +421,7 @@ if ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
-if False and ENVIRONMENT_NONSTATIONARY:
+if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,

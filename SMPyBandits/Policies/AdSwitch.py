@@ -137,7 +137,7 @@ class AdSwitch(BasePolicy):
                     ucb = np.sqrt(self.C1 * np.log(self.horizon) / (t - sigma))
                     # print("Info: test |mu_a[sigma,t] = {} - mu_b[sigma,t] = {}| > UCB = {} is {} for a = {}, b = {}, sigma = {} and t0 = {} and t = {}...".format(mu_a, mu_b, ucb, abs(mu_a - mu_b) > ucb, a, b, sigma, t0, t))  # DEBUG
                     if abs(mu_a - mu_b) > ucb:
-                        print("DEBUG: test |mu_a[sigma,t] = {} - mu_b[sigma,t] = {}| > UCB = {} is {} for a = {}, b = {}, sigma = {} and t0 = {} and t = {}...".format(mu_a, mu_b, ucb, abs(mu_a - mu_b) > ucb, a, b, sigma, t0, t))  # DEBUG
+                        # print("DEBUG: test |mu_a[sigma,t] = {} - mu_b[sigma,t] = {}| > UCB = {} is {} for a = {}, b = {}, sigma = {} and t0 = {} and t = {}...".format(mu_a, mu_b, ucb, abs(mu_a - mu_b) > ucb, a, b, sigma, t0, t))  # DEBUG
                         return True, sigma
         return False, None
 
@@ -168,7 +168,7 @@ class AdSwitch(BasePolicy):
         di_values = 2 ** (-i_values)
         pi_values = di_values * np.sqrt((self.batch_number + 1) / self.horizon)
         si_values = self.nbArms * np.ceil((self.C2 * np.log(self.horizon)) / di_values**2)
-        print("DEBUG: At time t = {} and batch number k = {}, restarted last time at t0k = {}... Ik = {}, and i = {} and di = {} and pi = {} and si = {} ".format(self.t, self.batch_number, self.last_restart_time, Ik, i_values, di_values, pi_values, si_values))  # DEBUG
+        # print("DEBUG: At time t = {} and batch number k = {}, restarted last time at t0k = {}... Ik = {}, and i = {} and di = {} and pi = {} and si = {} ".format(self.t, self.batch_number, self.last_restart_time, Ik, i_values, di_values, pi_values, si_values))  # DEBUG
         return di_values, pi_values, si_values
 
     def choice(self):
