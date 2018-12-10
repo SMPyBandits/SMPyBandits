@@ -397,7 +397,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
-if ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -421,7 +421,7 @@ if ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
-if ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -446,7 +446,7 @@ if ENVIRONMENT_NONSTATIONARY:
     ]
 
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
+if ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": Bernoulli,
@@ -463,17 +463,18 @@ if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use 
                     [0.020, 0.022, 0.020, 0.057, 0.008, 0.011],  # 8th segment
                     [0.020, 0.022, 0.034, 0.057, 0.022, 0.011],  # 9th segment
                 ],
-                "changePoints": [
-                    0,       # 1st segment
-                    42850,   # 2nd segment
-                    85710,   # 3th segment
-                    128570,  # 4th segment
-                    171420,  # 5th segment
-                    214280,  # 6th segment
-                    257140,  # 7th segment
-                    300000,  # 8th segment
-                    342850,  # 9th segment
-                ],
+                "changePoints": np.linspace(0, HORIZON, num=9, endpoint=True, dtype=int),
+                # "changePoints": [
+                #     int(0     * HORIZON / 38570.0),   # 1st segment
+                #     int(4285  * HORIZON / 38570.0),   # 2nd segment
+                #     int(8571  * HORIZON / 38570.0),   # 3th segment
+                #     int(12857 * HORIZON / 38570.0),  # 4th segment
+                #     int(17142 * HORIZON / 38570.0),  # 5th segment
+                #     int(21428 * HORIZON / 38570.0),  # 6th segment
+                #     int(25714 * HORIZON / 38570.0),  # 7th segment
+                #     int(30000 * HORIZON / 38570.0),  # 8th segment
+                #     int(38570 * HORIZON / 38570.0),  # 9th segment
+                # ],
             }
         },
     ]
