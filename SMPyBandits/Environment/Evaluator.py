@@ -542,6 +542,7 @@ class Evaluator(object):
                     Y /= np.log(X + 2)   # XXX prevent /0
             ymin = min(ymin, np.min(Y))
             lw = 5 if ('$N=' in policy.__cachedstr__ or 'Aggr' in policy.__cachedstr__ or 'CORRAL' in policy.__cachedstr__ or 'LearnExp' in policy.__cachedstr__ or 'Exp4' in policy.__cachedstr__) else 3
+            if len(self.policies) > 8: lw -= 1
             if semilogx or loglog:
                 # FIXED for semilogx plots, truncate to only show t >= 100
                 X_to_plot_here = X[X >= 100]
@@ -648,6 +649,7 @@ class Evaluator(object):
         for i, policy in enumerate(self.policies):
             Y = self.getBestArmPulls(i, envId)[2:]
             lw = 5 if ('$N=' in policy.__cachedstr__ or 'Aggr' in policy.__cachedstr__ or 'CORRAL' in policy.__cachedstr__ or 'LearnExp' in policy.__cachedstr__ or 'Exp4' in policy.__cachedstr__) else 3
+            if len(self.policies) > 8: lw -= 1
             plt.plot(X[::self.delta_t_plot], Y[::self.delta_t_plot], label=policy.__cachedstr__, color=colors[i], marker=markers[i], markevery=(i / 50., 0.1), lw=lw)
         legend()
         self._xlabel(envId, r"Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
@@ -797,6 +799,7 @@ class Evaluator(object):
             subplots = False  # no need for a subplot
         colors = palette(N)
         if boxplot:
+            if self.nb_break_points > 0: moreAccurate = False
             all_last_regrets = []
             for policyId, policy in enumerate(self.policies):
                 last_regret = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
@@ -811,7 +814,7 @@ class Evaluator(object):
             all_last_regrets = [ np.asarray(all_last_regrets[i]) for i in index_of_sorting ]
             fig = plt.figure()
             plt.xlabel("Bandit algorithms{}".format(self.signature))
-            plt.ylabel("{}egret value $R_T{}$, for $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions), fontsize="x-small")
+            plt.ylabel("{}egret value $R_T{}$,\nfor $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions), fontsize="x-small")
             if len(labels) < maxNbOfLabels:
                 max_length_of_labels = max([len(label) for label in labels])
                 plt.boxplot(all_last_regrets, labels=labels, showmeans=True, meanline=True)
