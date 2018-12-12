@@ -17,12 +17,8 @@ import numpy as np
 from Arms import *
 # Import contained classes
 from Environment import MAB
-# Collision Models
-from Environment.CollisionModels import *
-# Import algorithms, both single-player and multi-player
+# Import single-player algorithms
 from Policies import *
-from PoliciesMultiPlayers import *
-
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".
@@ -41,16 +37,9 @@ DO_PARALLEL = True
 N_JOBS = -1 if DO_PARALLEL else 1
 N_JOBS = int(getenv('N_JOBS', N_JOBS))
 
-#: NB_PLAYERS : number of players for the game. Should be >= 2 and <= number of arms.
-NB_PLAYERS = 3    # Less that the number of arms
-NB_PLAYERS = int(getenv('M', NB_PLAYERS))
-NB_PLAYERS = int(getenv('NB_PLAYERS', NB_PLAYERS))
-
-#: The best collision model: none of the colliding users get any reward
-collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 #: Number of arms for non-hard-coded problems (Bayesian problems)
-NB_ARMS = 2 * NB_PLAYERS
+NB_ARMS = 3
 NB_ARMS = int(getenv('K', NB_ARMS))
 NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 
@@ -97,8 +86,6 @@ configuration = {
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 6,      # Max joblib verbosity
-    # --- Collision model
-    "collisionModel": collisionModel,
     # --- Other parameters for the Evaluator
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
@@ -139,54 +126,34 @@ except (TypeError, KeyError):
 if len(configuration['environment']) > 1:
     print("WARNING do not use this hack if you try to use more than one environment.")
 
-
-configuration["successive_players"] = [
-    # XXX This new SIC_MMAB algorithm
-    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-
-    # ---- rhoRand etc
-    rhoRand(NB_PLAYERS, nbArms, UCB).children,
-    rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-
-    # # ---- RandTopM
-    RandTopM(NB_PLAYERS, nbArms, UCB).children,
-    RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-
-    # ---- MCTopM
-    MCTopM(NB_PLAYERS, nbArms, UCB).children,
-    MCTopM(NB_PLAYERS, nbArms, klUCB).children,
-
-    # # # ---- Selfish
-    Selfish(NB_PLAYERS, nbArms, UCB).children,
-    Selfish(NB_PLAYERS, nbArms, klUCB).children,
-
-    # # --- XXX MusicalChairNoSensing (selfish), a better Musical Chair
-    # [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
-
-    # # --- Centralized multiple play
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
-
-    # # XXX stupid version with fixed T0 : cannot adapt to any problem
-    [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
-
-    # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
-    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
-    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],
-
-    # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
-    # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
-]
-
 configuration.update({
-    # --- DONE Using multi-player Selfish policy
-    "players": Selfish(NB_PLAYERS, nbArms, UCB).children
-})
+    "policies": [
+        # --- Stupid algorithms
+        {
+            "archtype": Uniform,   # The stupidest policy, fully uniform
+            "params": {}
+        },
+        # # --- Full or partial knowledge algorithms
+        { "archtype": TakeFixedArm, "params": { "armIndex": 0 }},  # Take worse arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
+        { "archtype": TakeFixedArm, "params": { "armIndex": min(2, nbArms - 1) }},  # Take third worse arm!
+        {
+            "archtype": UCB,   # UCB with alpha=1 parameter
+            "params": {}
+        },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {}
+        },
+        # --- KL UCB algorithms
+        {
+            "archtype": klUCB,
+            "params": {}
+        },
+    ]}
+)
 
 # DONE
-print("Loaded experiments configuration from 'example_of_configuration_multiplayers.py' :")
+print("Loaded experiments configuration from 'example_of_configuration_singleplayer.py' :")
 print("configuration =", configuration)  # DEBUG

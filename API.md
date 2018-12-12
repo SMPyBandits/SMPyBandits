@@ -8,7 +8,7 @@
 - Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](SMPyBandits/Arms/Bernoulli.py)
 - MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](SMPyBandits/Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](SMPyBandits/Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](SMPyBandits/Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](SMPyBandits/Policies/BayesUCB.py), [`Policies.klUCB`](SMPyBandits/Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](SMPyBandits/Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggregator`](SMPyBandits/Policies/Aggregator.py) for my *aggregated bandits* algorithms.
 - Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](SMPyBandits/Environment/MAB.py), simulation results are stored in a [`Environment.Result`](SMPyBandits/Environment/Result.py), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluator`](SMPyBandits/Environment/Evaluator.py).
-- [`configuration.py`](SMPyBandits/configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
+- [very_simple_configuration.py`](SMPyBandits/configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
 - [`main.py`](SMPyBandits/main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
 
 ----
@@ -24,6 +24,7 @@
 
 ### To change the configuration of the simulations
 1. Change the config file, i.e., [`configuration.py`](SMPyBandits/configuration.py) for single-player simulations, or [`configuration_multiplayers.py`](SMPyBandits/configuration_multiplayers.py) for multi-players simulations.
+2. A good example of a very simple configuration file is given in [very_simple_configuration.py`](SMPyBandits/very_simple_configuration.py)
 
 ### To change how to results are exploited
 1. Change the main script, i.e., [`main.py`](SMPyBandits/main.py) for single-player simulations, [`main_multiplayers.py`](SMPyBandits/main_multiplayers.py) for multi-players simulations. Some plots can be disabled or enabled by commenting a few lines, and some options are given as flags (constants in the beginning of the file).

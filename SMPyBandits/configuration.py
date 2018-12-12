@@ -1821,14 +1821,14 @@ if TEST_Non_Stationary_Policies:
         # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
         [
             { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # OK this CUSUM-klUCB is the same
         [
             { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
         # [
@@ -1837,26 +1837,26 @@ if TEST_Non_Stationary_Policies:
         # OK PHT_IndexPolicy is very much like CUSUM
         [
             { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # OK BernoulliGLR_IndexPolicy is very much like CUSUM
         [
             { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
         [
             { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
         [
             { "archtype": SubGaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         # [
@@ -1865,8 +1865,8 @@ if TEST_Non_Stationary_Policies:
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # # OK this Monitored-klUCB is the same
         # [
@@ -1875,8 +1875,8 @@ if TEST_Non_Stationary_Policies:
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            # for per_arm_restart in [True, False]
-            for per_arm_restart in [True]
+            for per_arm_restart in [True, False]
+            # for per_arm_restart in [True]
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [

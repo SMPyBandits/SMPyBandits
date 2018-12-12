@@ -82,5 +82,5 @@ for envId, env in enumerate(configuration["environment"]):
     # e0.plotLastRegrets(envId, all_on_separate_figures=True, evaluators=eothers)
 
 # Done
-print("Done for simulations main_multiplayers.py ...")
-notify("Done for simulations main_multiplayers.py ...")
+print("Done for simulations example_of_main_multiplayers_more.py ...")
+notify("Done for simulations example_of_main_multiplayers_more.py ...")

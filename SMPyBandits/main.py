@@ -22,30 +22,30 @@ import pickle
 try:
     from Environment import Evaluator, notify, start_tracemalloc, display_top_tracemalloc
     # Import a configuration file
-    if 'configuration_comparing_aggregation_algorithms' in sys.argv:
+    if 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
         from configuration_comparing_aggregation_algorithms import configuration
-    elif 'configuration_all_singleplayer' in sys.argv:
+    elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
         from configuration_all_singleplayer import configuration
-    elif 'configuration_comparing_doubling_algorithms' in sys.argv:
+    elif 'configuration_comparing_doubling_algorithms' in sys.argv or 'configuration_comparing_doubling_algorithms.py' in sys.argv:
         from configuration_comparing_doubling_algorithms import configuration
-    elif 'configuration_markovian' in sys.argv:
+    elif 'configuration_markovian' in sys.argv or 'configuration_markovian.py' in sys.argv:
         from configuration_markovian import configuration
-    elif 'configuration_sparse' in sys.argv:
+    elif 'configuration_sparse' in sys.argv or 'configuration_sparse.py' in sys.argv:
         from configuration_sparse import configuration
     else:
         from configuration import configuration
 except ImportError:
     from SMPyBandits.Environment import Evaluator, notify
     # Import a configuration file
-    if 'configuration_comparing_aggregation_algorithms' in sys.argv:
+    if 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
         from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
-    elif 'configuration_all_singleplayer' in sys.argv:
+    elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
         from SMPyBandits.configuration_all_singleplayer import configuration
-    elif 'configuration_comparing_doubling_algorithms' in sys.argv:
+    elif 'configuration_comparing_doubling_algorithms' in sys.argv or 'configuration_comparing_doubling_algorithms.py' in sys.argv:
         from SMPyBandits.configuration_comparing_doubling_algorithms import configuration
-    elif 'configuration_markovian' in sys.argv:
+    elif 'configuration_markovian' in sys.argv or 'configuration_markovian.py' in sys.argv:
         from SMPyBandits.configuration_markovian import configuration
-    elif 'configuration_sparse' in sys.argv:
+    elif 'configuration_sparse' in sys.argv or 'configuration_sparse.py' in sys.argv:
         from SMPyBandits.configuration_sparse import configuration
     else:
         from SMPyBandits.configuration import configuration

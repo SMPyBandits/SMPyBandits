@@ -21,13 +21,13 @@ import pickle
 # Local imports
 try:
     from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    if 'configuration_multiplayers_with_aggregation' in sys.argv:
+    if 'configuration_multiplayers_with_aggregation' in sys.argv or 'configuration_multiplayers_with_aggregation.py' in sys.argv:
         from configuration_multiplayers_with_aggregation import configuration
     else:
         from configuration_multiplayers import configuration
 except ImportError:
     from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    if 'configuration_multiplayers_with_aggregation' in sys.argv:
+    if 'configuration_multiplayers_with_aggregation' in sys.argv or 'configuration_multiplayers_with_aggregation.py' in sys.argv:
         from SMPyBandits.configuration_multiplayers_with_aggregation import configuration
     else:
         from SMPyBandits.configuration_multiplayers import configuration
