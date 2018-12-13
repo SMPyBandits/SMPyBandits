@@ -5,11 +5,11 @@
 
 ## Code organization
 ### Layout of the code:
-- Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](SMPyBandits/Arms/Bernoulli.py)
-- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](SMPyBandits/Policies/Dummy.py) for a fully random policy, [`Policies.EpsilonGreedy`](SMPyBandits/Policies/EpsilonGreedy.py) for the epsilon-greedy random policy, [`Policies.UCB`](SMPyBandits/Policies/UCB.py) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](SMPyBandits/Policies/BayesUCB.py), [`Policies.klUCB`](SMPyBandits/Policies/klUCB.py) for two UCB-like algorithms, [`Policies.AdBandits`](SMPyBandits/Policies/AdBandits.py) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggregator`](SMPyBandits/Policies/Aggregator.py) for my *aggregated bandits* algorithms.
-- Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](SMPyBandits/Environment/MAB.py), simulation results are stored in a [`Environment.Result`](SMPyBandits/Environment/Result.py), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluator`](SMPyBandits/Environment/Evaluator.py).
-- [very_simple_configuration.py`](SMPyBandits/configuration.py) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
-- [`main.py`](SMPyBandits/main.py) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
+- Arms are defined in [this folder (`Arms/`)](Arms/), see for example [`Arms.Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html)
+- MAB algorithms (also called policies) are defined in [this folder (`Policies/`)](Policies/), see for example [`Policies.Dummy`](https://smpybandits.github.io/docs/Policies.Dummy.html) for a fully random policy, [`Policies.EpsilonGreedy`](https://smpybandits.github.io/docs/Policies.EpsilonGreedy.html) for the epsilon-greedy random policy, [`Policies.UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) for the "simple" UCB algorithm, or also [`Policies.BayesUCB`](https://smpybandits.github.io/docs/Policies.BayesUCB.html), [`Policies.klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) for two UCB-like algorithms, [`Policies.AdBandits`](https://smpybandits.github.io/docs/Policies.AdBandits.html) for the [AdBandits](https://github.com/flaviotruzzi/AdBandits/) algorithm, and [`Policies.Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html) for my *aggregated bandits* algorithms.
+- Environments to encapsulate date are defined in [this folder (`Environment/`)](Environment/): MAB problem use the class [`Environment.MAB`](https://smpybandits.github.io/docs/Environment.MAB.html), simulation results are stored in a [`Environment.Result`](https://smpybandits.github.io/docs/Environment.Result.html), and the class to evaluate multi-policy single-player multi-env is [`Environment.Evaluator`](https://smpybandits.github.io/docs/Environment.Evaluator.html).
+- [very_simple_configuration.py`](https://smpybandits.github.io/docs/configuration.html) imports all the classes, and define the simulation parameters as a dictionary (JSON-like).
+- [`main.py`](https://smpybandits.github.io/docs/main.html) runs the simulations, then display the final ranking of the different policies and plots the results (saved to [this folder (`plots/`)](plots/)).
 
 ----
 
@@ -20,15 +20,15 @@
 
 ## Question: *How to change the simulations*?
 ### To customize the plots
-1. Change the default settings defined in [`Environment/plotsettings.py`](SMPyBandits/Environment/plotsettings.py).
+1. Change the default settings defined in [`Environment/plotsettings.py`](https://smpybandits.github.io/docs/Environment.plotsettings.html).
 
 ### To change the configuration of the simulations
-1. Change the config file, i.e., [`configuration.py`](SMPyBandits/configuration.py) for single-player simulations, or [`configuration_multiplayers.py`](SMPyBandits/configuration_multiplayers.py) for multi-players simulations.
-2. A good example of a very simple configuration file is given in [very_simple_configuration.py`](SMPyBandits/very_simple_configuration.py)
+1. Change the config file, i.e., [`configuration.py`](https://smpybandits.github.io/docs/configuration.html) for single-player simulations, or [`configuration_multiplayers.py`](https://smpybandits.github.io/docs/configuration_multiplayers.html) for multi-players simulations.
+2. A good example of a very simple configuration file is given in [very_simple_configuration.py`](https://smpybandits.github.io/docs/very_simple_configuration.html)
 
 ### To change how to results are exploited
-1. Change the main script, i.e., [`main.py`](SMPyBandits/main.py) for single-player simulations, [`main_multiplayers.py`](SMPyBandits/main_multiplayers.py) for multi-players simulations. Some plots can be disabled or enabled by commenting a few lines, and some options are given as flags (constants in the beginning of the file).
-2. If needed, change, improve or add some methods to the simulation environment class, i.e., [`Environment.Evaluator`](SMPyBandits/Environment/Evaluator.py) for single-player simulations, and [`Environment.EvaluatorMultiPlayers`](SMPyBandits/Environment/EvaluatorMultiPlayers.py) for multi-players simulations. They use a class to store their simulation result, [`Environment.Result`](SMPyBandits/Environment/Result.py) and [`Environment.ResultMultiPlayers`](SMPyBandits/Environment/ResultMultiPlayers.py).
+1. Change the main script, i.e., [`main.py`](https://smpybandits.github.io/docs/main.html) for single-player simulations, [`main_multiplayers.py`](https://smpybandits.github.io/docs/main_multiplayers.html) for multi-players simulations. Some plots can be disabled or enabled by commenting a few lines, and some options are given as flags (constants in the beginning of the file).
+2. If needed, change, improve or add some methods to the simulation environment class, i.e., [`Environment.Evaluator`](https://smpybandits.github.io/docs/Environment.Evaluator.html) for single-player simulations, and [`Environment.EvaluatorMultiPlayers`](https://smpybandits.github.io/docs/Environment.EvaluatorMultiPlayers.html) for multi-players simulations. They use a class to store their simulation result, [`Environment.Result`](https://smpybandits.github.io/docs/Environment.Result.html) and [`Environment.ResultMultiPlayers`](https://smpybandits.github.io/docs/Environment.ResultMultiPlayers.html).
 
 ----
 
@@ -38,11 +38,11 @@
 ### For a **new arm**
 1. Make a new file, e.g., `MyArm.py`
 2. Save it in [`Arms/`](Arms/)
-3. The file should contain a class of the same name, inheriting from [`Arms/Arm`](SMPyBandits/Arms/Arm.py), e.g., like this `class MyArm(Arm): ...` (no need for any [`super`](https://stackoverflow.com/questions/576169/ddg#576183) call)
+3. The file should contain a class of the same name, inheriting from [`Arms/Arm`](https://smpybandits.github.io/docs/Arms.Arm.html), e.g., like this `class MyArm(Arm): ...` (no need for any [`super`](https://stackoverflow.com/questions/576169/ddg#576183) call)
 4. This class `MyArm` has to **have at least** an `__init__(...)` method to create the arm object (with or without arguments - named or not); a `__str__` method to print it as a string; a `draw(t)` method to draw a reward from this arm (`t` is the time, which can be used or not); and **should have** a `mean()` method that gives/computes the mean of the arm
-5. Finally, add it to the [`Arms/__init__.py`](SMPyBandits/Arms/__init__.py) file: `from .MyArm import MyArm`
+5. Finally, add it to the [`Arms/__init__.py`](https://smpybandits.github.io/docs/Arms.__init__.html) file: `from .MyArm import MyArm`
 
-> - For examples, see [`Arms.Bernoulli`](SMPyBandits/Arms/Bernoulli.py), [`Arms.Gaussian`](SMPyBandits/Arms/Gaussian.py), [`Arms.Exponential`](SMPyBandits/Arms/Exponential.py), [`Arms.Poisson`](SMPyBandits/Arms/Poisson.py).
+> - For examples, see [`Arms.Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html), [`Arms.Gaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html), [`Arms.Exponential`](https://smpybandits.github.io/docs/Arms.Exponential.html), [`Arms.Poisson`](https://smpybandits.github.io/docs/Arms.Poisson.html).
 
 > - For example, use this template:
 
@@ -68,13 +68,13 @@ class MyArm(Arm):
 ### For a **new (single-user) policy**
 1. Make a new file, e.g., `MyPolicy.py`
 2. Save it in [`Policies/`](Policies/)
-3. The file should contain a class of the same name, it can inherit from [`Policies/IndexPolicy`](SMPyBandits/Policies/IndexPolicy.py) if it is a simple [index policy](SMPyBandits/Policies/IndexPolicy.py), e.g., like this, `class MyPolicy(IndexPolicy): ...` (no need for any [`super`](https://stackoverflow.com/questions/576169/ddg#576183) call), or simply like `class MyPolicy(object): ...`
-4. This class `MyPolicy` has to **have at least** an `__init__(nbArms, ...)` method to create the policy object (with or without arguments - named or not), with **at least** the parameter `nbArms` (number of arms); a `__str__` method to print it as a string; a `choice()` method to choose an arm (index among `0, ..., nbArms - 1`, e.g., at random, or based on a maximum index if it is an [index policy](SMPyBandits/Policies/IndexPolicy.py)); and a `getReward(arm, reward)` method called when the arm `arm` gave the reward `reward`, and finally a `startGame()` method (possibly empty) which is called when a new simulation is ran.
+3. The file should contain a class of the same name, it can inherit from [`Policies/IndexPolicy`](https://smpybandits.github.io/docs/Policies.IndexPolicy.html) if it is a simple [index policy](https://smpybandits.github.io/docs/Policies.IndexPolicy.html), e.g., like this, `class MyPolicy(IndexPolicy): ...` (no need for any [`super`](https://stackoverflow.com/questions/576169/ddg#576183) call), or simply like `class MyPolicy(object): ...`
+4. This class `MyPolicy` has to **have at least** an `__init__(nbArms, ...)` method to create the policy object (with or without arguments - named or not), with **at least** the parameter `nbArms` (number of arms); a `__str__` method to print it as a string; a `choice()` method to choose an arm (index among `0, ..., nbArms - 1`, e.g., at random, or based on a maximum index if it is an [index policy](https://smpybandits.github.io/docs/Policies.IndexPolicy.html)); and a `getReward(arm, reward)` method called when the arm `arm` gave the reward `reward`, and finally a `startGame()` method (possibly empty) which is called when a new simulation is ran.
 5. Optionally, a policy class can have a `handleCollision(arm)` method to handle a collision after choosing the arm `arm` (eg. update an internal index, change a fixed offset etc).
-6. Finally, add it to the [`Policies/__init__.py`](SMPyBandits/Policies/__init__.py) file: `from .MyPolicy import MyPolicy`
+6. Finally, add it to the [`Policies/__init__.py`](https://smpybandits.github.io/docs/Policies.__init__.html) file: `from .MyPolicy import MyPolicy`
 
-> - For examples, see [`Arms.Uniform`](SMPyBandits/Arms/Uniform.py) for a fully randomized policy, [`Arms.EpsilonGreedy`](SMPyBandits/Arms/EpsilonGreedy.py) for a simple exploratory policy, [`Arms.Softmax`](SMPyBandits/Arms/Softmax.py) for another simple approach, [`Arms.UCB`](SMPyBandits/Arms/UCB.py) for the class Upper Confidence-Bounds policy (SMPyBandits/based on indexes, so inheriting from [`Policies/IndexPolicy`](Policies/IndexPolicy.py)). There is also [`Arms.Thompson`](SMPyBandits/Arms/Thompson.py) and [`Arms.BayesUCB`](SMPyBandits/Arms/BayesUCB.py) for Bayesian policies (using a posterior, e.g., like [`Arms.Beta`](SMPyBandits/Arms/Beta.py)), [`Arms.klUCB`](SMPyBandits/Arms/klUCB.py) for a policy based on the [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence).
-> - For less classical [`Arms.AdBandit`](SMPyBandits/Arms/AdBandit.py) is an approach combining Bayesian and frequentist point of view, and [`Arms.Aggregator`](SMPyBandits/Arms/Aggregator.py) is [my aggregating policy](Aggregation.md).
+> - For examples, see [`Arms.Uniform`](https://smpybandits.github.io/docs/Arms.Uniform.html) for a fully randomized policy, [`Arms.EpsilonGreedy`](https://smpybandits.github.io/docs/Arms.EpsilonGreedy.html) for a simple exploratory policy, [`Arms.Softmax`](https://smpybandits.github.io/docs/Arms.Softmax.html) for another simple approach, [`Arms.UCB`](https://smpybandits.github.io/docs/Arms.UCB.html) for the class Upper Confidence-Bounds policy based on indexes, so inheriting from [`Policies/IndexPolicy`](https://smpybandits.github.io/docs/Policies.IndexPolicy.html)). There is also [`Arms.Thompson`](https://smpybandits.github.io/docs/Arms.Thompson.html) and [`Arms.BayesUCB`](https://smpybandits.github.io/docs/Arms.BayesUCB.html) for Bayesian policies (using a posterior, e.g., like [`Arms.Beta`](https://smpybandits.github.io/docs/Arms.Beta.html)), [`Arms.klUCB`](https://smpybandits.github.io/docs/Arms.klUCB.html) for a policy based on the [Kullback-Leibler divergence](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence).
+> - For less classical [`Arms.AdBandit`](https://smpybandits.github.io/docs/Arms.AdBandit.html) is an approach combining Bayesian and frequentist point of view, and [`Arms.Aggregator`](https://smpybandits.github.io/docs/Arms.Aggregator.html) is [my aggregating policy](Aggregation.md).
 
 > - For example, use this template:
 
@@ -112,11 +112,11 @@ class MyPolicy(object):
 2. Save it in [`PoliciesMultiPlayers/`](PoliciesMultiPlayers/)
 3. The file should contain a class, of the same name, e.g., like this, `class MyPoliciesMultiPlayers(object):`
 4. This class `MyPoliciesMultiPlayers` has to **have at least** an `__init__` method to create the arm; a `__str__` method to print it as a string; and a `children` **attribute** that gives a list of *players* ([single-player policies](#for-a-new-single-user-policy)).
-5. Finally, add it to the [`PoliciesMultiPlayers/__init__.py`](SMPyBandits/PoliciesMultiPlayers/__init__.py) file: `from .MyPoliciesMultiPlayers import MyPoliciesMultiPlayers`
+5. Finally, add it to the [`PoliciesMultiPlayers/__init__.py`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.__init__.html) file: `from .MyPoliciesMultiPlayers import MyPoliciesMultiPlayers`
 
-> For examples, see [`PoliciesMultiPlayers.OracleNotFair`](SMPyBandits/PoliiesyMultiPlayers/OracleNotFair.py) and [`PoliciesMultiPlayers.OracleFair`](SMPyBandits/PoliiesyMultiPlayers/OracleFair.py) for full-knowledge centralized policies (fair or not), [`PoliciesMultiPlayers.CentralizedFixed`](SMPyBandits/PoliiesyMultiPlayers/CentralizedFixed.py) and [`PoliciesMultiPlayers.CentralizedCycling`](SMPyBandits/PoliiesyMultiPlayers/CentralizedCycling.py) for non-full-knowledge centralized policies (fair or not). There is also the [`PoliciesMultiPlayers.Selfish`](SMPyBandits/PoliiesyMultiPlayers/Selfish.py) decentralized policy, where all players runs in without any knowledge on the number of players, and no communication (decentralized).
+> For examples, see [`PoliciesMultiPlayers.OracleNotFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleNotFair.html) and [`PoliciesMultiPlayers.OracleFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleFair.html) for full-knowledge centralized policies (fair or not), [`PoliciesMultiPlayers.CentralizedFixed`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedFixed.html) and [`PoliciesMultiPlayers.CentralizedCycling`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedCycling.html) for non-full-knowledge centralized policies (fair or not). There is also the [`PoliciesMultiPlayers.Selfish`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.Selfish.html) decentralized policy, where all players runs in without any knowledge on the number of players, and no communication (decentralized).
 
-> [`PoliciesMultiPlayers.Selfish`](SMPyBandits/PoliiesyMultiPlayers/Selfish.py) is the simplest possible example I could give as a template.
+> [`PoliciesMultiPlayers.Selfish`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.Selfish.html) is the simplest possible example I could give as a template.
 
 ----
 

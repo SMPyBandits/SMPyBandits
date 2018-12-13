@@ -23,7 +23,7 @@ For more details, see [`SparseWrapper`](docs/Policies.SparseWrapper.html#Policie
 
 ## Example of simulation configuration
 
-A simple python file, [`configuration_sparse.py`](SMPyBandits/configuration_sparse.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_sparse.py`](https://smpybandits.github.io/docs/configuration_sparse.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
 For example, we can compare the standard [`UCB`](docs/Policies.UCB.html) and  [`BayesUCB`](docs/Policies.BayesUCB.html) algorithms, non aware of the sparsity, against the sparsity-aware [`SparseUCB`](docs/Policies.SparseUCB.html) algorithm, as well as 4 versions of [`SparseWrapper`](docs/Policies.SparseWrapper.html) applied to [`BayesUCB`](docs/Policies.BayesUCB.html).
 
@@ -80,7 +80,7 @@ make sparse   # run and log the main.py script
 
 ## Some illustrations
 
-Here are some plots illustrating the performances of the different [policies](docs/Policies.) implemented in this project, against various sparse problems (with [`Bernoulli`](Arms/Bernoulli.html) or [`UnboundedGaussian`](SMPyBandits/Arms/Gaussian.html) arms only):
+Here are some plots illustrating the performances of the different [policies](docs/Policies.) implemented in this project, against various sparse problems (with [`Bernoulli`](Arms/Bernoulli.html) or [`UnboundedGaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html) arms only):
 
 ### 3 variants of [Sparse-Wrapper](docs/Policies.SparseWrapper.html) for UCB, on a "simple" sparse Bernoulli problem
 ![3 variants of Sparse-Wrapper for UCB, on a "simple" sparse Bernoulli problem](plots/main____env1-1_XXX.png)

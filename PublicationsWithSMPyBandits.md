@@ -5,7 +5,7 @@
 ----
 
 ## 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
-I designed and added the [`Aggregator`](SMPyBandits/Policies/Aggregator.py) policy, in order to test its validity and performance.
+I designed and added the [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
 Basically, it behaves like a simple MAB bandit just based on empirical means (even simpler than UCB), where *arms* are the child algorithms `A_1 .. A_N`, each running in "parallel".
@@ -40,15 +40,16 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 ## Other interesting things
 ### [Single-player Policies](https://smpybandits.github.io/docs/Policies.html)
-- More than 65 algorithms, including all known variants of the [`UCB`](SMPyBandits/Policies/UCB.py), [kl-UCB](SMPyBandits/Policies/klUCB.py), [`MOSS`](SMPyBandits/Policies/MOSS.py) and [Thompson Sampling](SMPyBandits/Policies/Thompson.py) algorithms, as well as other less known algorithms (SMPyBandits/[`OCUCB`](Policies/OCUCB.py), [`BESA`](SMPyBandits/Policies/OCUCB.py), [`OSSB`](SMPyBandits/Policies/OSSB.py) etc).
+- More than 65 algorithms, including all known variants of the [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html), [kl-UCB](https://smpybandits.github.io/docs/Policies.klUCB.html), [`MOSS`](https://smpybandits.github.io/docs/Policies.MOSS.html) and [Thompson Sampling](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, as well as other less known algorithms (https://smpybandits.github.io/docs/[`OCUCB`](Policies.OCUCB.html), [`BESA`](https://smpybandits.github.io/docs/Policies.OCUCB.html), [`OSSB`](https://smpybandits.github.io/docs/Policies.OSSB.html) etc).
 - [`SparseWrapper`](https://smpybandits.github.io/docs/Policies.SparseWrapper.html#module-Policies.SparseWrapper) is a generalization of [the SparseUCB from this article](https://arxiv.org/pdf/1706.01383/).
 - Implementation of very recent Multi-Armed Bandits algorithms, e.g., [`kl-UCB++`](https://smpybandits.github.io/docs/Policies.klUCBPlusPlus.html) (from [this article](https://hal.inria.fr/hal-01475078)), [`UCB-dagger`](https://smpybandits.github.io/docs/Policies.UCBdagger.html) (from [this article](https://arxiv.org/pdf/1507.07880)),  or [`MOSS-anytime`](https://smpybandits.github.io/docs/Policies.MOSSAnytime.html) (from [this article](http://proceedings.mlr.press/v48/degenne16.pdf)).
 - Experimental policies: [`BlackBoxOpt`](https://smpybandits.github.io/docs/Policies.BlackBoxOpt.html) or [`UnsupervisedLearning`](https://smpybandits.github.io/docs/Policies.UnsupervisedLearning.html) (using Gaussian processes to learn the arms distributions).
 
 ### Arms and problems
-- My framework mainly target stochastic bandits, with arms following [`Bernoulli`](SMPyBandits/Arms/Bernoulli.py), bounded (SMPyBandits/truncated) or unbounded [`Gaussian`](Arms/Gaussian.py), [`Exponential`](SMPyBandits/Arms/Exponential.py), [`Gamma`](SMPyBandits/Arms/Gamma.py) or [`Poisson`](SMPyBandits/Arms/Poisson.py) distributions.
-- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](SMPyBandits/Environment/MAB.py)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](SMPyBandits/Environment/MAB.py)).
-- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](SMPyBandits/Environment/MAB.py), even though I didn't implement any.
+- My framework mainly targets stochastic bandits, with arms following [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html), bounded (truncated) or unbounded [`Gaussian`](https://smpybandits.github.io/docs/Arms.Gaussian.html), [`Exponential`](https://smpybandits.github.io/docs/Arms.Exponential.html), [`Gamma`](https://smpybandits.github.io/docs/Arms.Gamma.html) or [`Poisson`](https://smpybandits.github.io/docs/Arms.Poisson.html) distributions.
+- The default configuration is to use a fixed problem for N repetitions (e.g. 1000 repetitions, use [`MAB.MAB`](https://smpybandits.github.io/docs/Environment.MAB.html)), but there is also a perfect support for "Bayesian" problems where the mean vector µ1,…,µK change *at every repetition* (see [`MAB.DynamicMAB`](https://smpybandits.github.io/docs/Environment.MAB.html)).
+- There is also a good support for Markovian problems, see [`MAB.MarkovianMAB`](https://smpybandits.github.io/docs/Environment.MAB.html#Environment.MAB.MarkovianMAB), even though I didn't implement any policies tailored for Markovian problems.
+- I'm actively working on adding a very clean support for non-stationary MAB problems, and [`MAB.PieceWiseStationaryMAB`](https://smpybandits.github.io/docs/Environment.MAB.html#Environment.MAB.PieceWiseStationaryMAB) is already working well. Use it with policies designed for piece-wise stationary problems, like [Discounted-Thompson](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html), [CD-UCB](https://smpybandits.github.io/docs/Policies.CD_UCB.html), [M-UCB](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html), [SW-UCB#](https://smpybandits.github.io/docs/Policies.SWHash_UCB.html).
 
 ----
 

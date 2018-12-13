@@ -11,7 +11,7 @@ There is another point of view: instead of comparing different single-player pol
 The basic difference is about **collisions** : at each time `$t$`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
 ### Collision models
-For example, I implemented these different collision models, in [`CollisionModels.py`](SMPyBandits/Environment/CollisionModels.py):
+For example, I implemented these different collision models, in [`CollisionModels.py`](https://smpybandits.github.io/docs/Environment.CollisionModels.html):
 
 - `noCollision` is a limited model *where* all players can sample an arm with collision. It corresponds to the single-player simulation: each player is a policy, compared without collision. This is for testing only, not so interesting.
 - `onlyUniqUserGetsReward` is a simple collision model where only the players alone on one arm sample it and receive the reward. This is the default collision model in the literature, for instance cf. [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3) collision model 1 or cf [[Liu & Zhao, 2009]](https://arxiv.org/abs/0910.2065v3). [Our article](https://hal.inria.fr/hal-01629733) also focusses on this model.
@@ -22,22 +22,22 @@ For example, I implemented these different collision models, in [`CollisionModel
 
 ### More details on the code
 Have a look to:
-- [`main_multiplayers.py`](SMPyBandits/main_multiplayers.py) and [`configuration_multiplayers.py`](SMPyBandits/configuration_multiplayers.py) to run and configure the simulation,
-- the [`EvaluatorMultiPlayers`](SMPyBandits/Environment/EvaluatorMultiPlayers.py) class that performs the simulation,
-- the [`ResultMultiPlayers`](SMPyBandits/Environment/ResultMultiPlayers.py) class to store the results,
-- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](SMPyBandits/PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py), [`CentralizedFixed`](SMPyBandits/PoliciesMultiPlayers/CentralizedFixed.py), [`CentralizedCycling`](SMPyBandits/PoliciesMultiPlayers/CentralizedCycling.py), [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py), [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) multi-players policy.
+- [`main_multiplayers.py`](https://smpybandits.github.io/docs/main_multiplayers.html) and [`configuration_multiplayers.py`](https://smpybandits.github.io/docs/configuration_multiplayers.html) to run and configure the simulation,
+- the [`EvaluatorMultiPlayers`](https://smpybandits.github.io/docs/Environment.EvaluatorMultiPlayers.html) class that performs the simulation,
+- the [`ResultMultiPlayers`](https://smpybandits.github.io/docs/Environment.ResultMultiPlayers.html) class to store the results,
+- and some naive policies are implemented in the [`PoliciesMultiPlayers/`](https://smpybandits.github.io/docs/PoliciesMultiPlayers/) folder. As far as now, there is the [`Selfish`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.Selfish.html), [`CentralizedFixed`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedFixed.html), [`CentralizedCycling`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedCycling.html), [`OracleNotFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleNotFair.html), [`OracleFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleFair.html) multi-players policy.
 
 ### Policies designed to be used in the multi-players setting
-- The first one I implemented is the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py).
-- Then I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](SMPyBandits/Policies/MEGA.py). But it has too much parameter, the question is how to chose them.
-- The [`rhoRand`](SMPyBandits/PoliciesMultiplayers/rhoRand.py) and variants are from [[Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
-- Our algorithms introduced in [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733) are in [`RandTopM`](SMPyBandits/PoliciesMultiplayers/RandTopM.py): `RandTopM` and `MCTopM`.
-- We also studied deeply the [`Selfish`](SMPyBandits/PoliciesMultiplayers/Selfish.py) policy, without being able to prove that it is as efficient as `rhoRand`, `RandTopM` and `MCTopM`.
+- The first one I implemented is the ["Musical Chair"](https://arxiv.org/abs/1512.02866) policy, from [[Shamir et al., 2015]](https://arxiv.org/abs/0910.2065v3), in [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html).
+- Then I implemented the ["MEGA"](https://arxiv.org/abs/1404.5421) policy from [[Avner & Mannor, 2014]](https://arxiv.org/abs/1404.5421), in [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html). But it has too much parameter, the question is how to chose them.
+- The [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiplayers.rhoRand.html) and variants are from [[Distributed Algorithms for Learning..., Anandkumar et al., 2010](http://ieeexplore.ieee.org/document/5462144/).
+- Our algorithms introduced in [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733) are in [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiplayers.RandTopM.html): `RandTopM` and `MCTopM`.
+- We also studied deeply the [`Selfish`](https://smpybandits.github.io/docs/PoliciesMultiplayers.Selfish.html) policy, without being able to prove that it is as efficient as `rhoRand`, `RandTopM` and `MCTopM`.
 
 ----
 
 ### Configuration:
-A simple python file, [`configuration_multiplayers.py`](SMPyBandits/configuration_multiplayers.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_multiplayers.py`](https://smpybandits.github.io/docs/configuration_multiplayers.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 See the explanations given for [the simple-player case](Aggregation.md).
 
 ```python
@@ -50,7 +50,7 @@ configuration["successive_players"] = [
 ]
 ```
 
-- The multi-players policies are added by giving a list of their children (eg `Selfish(*args).children`), who are instances of the proxy class [`ChildPointer`](SMPyBandits/PoliciesMultiPlayers/ChildPointer.py). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `Selfish`), who can then handle the calls as it wants (can be centralized or not).
+- The multi-players policies are added by giving a list of their children (eg `Selfish(*args).children`), who are instances of the proxy class [`ChildPointer`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.ChildPointer.html). Each child methods is just passed back to the mother class (the multi-players policy, e.g., `Selfish`), who can then handle the calls as it wants (can be centralized or not).
 
 ----
 
@@ -79,17 +79,17 @@ configuration["successive_players"] = [
 For a multi-player policy, being fair means that on *every* simulation with `$M$` players, each player access any of the `$M$` best arms (about) the same amount of time.
 It is important to highlight that it has to be verified on each run of the MP policy, having this property in average is NOT enough.
 
-- For instance, the oracle policy [`OracleNotFair`](SMPyBandits/PoliciesMultiPlayers/OracleNotFair.py) affects each of the `$M$` players to one of the `$M$` best arms, orthogonally, but once they are affected they always pull this arm. It's unfair because one player will be lucky and affected to the best arm, the others are unlucky. The centralized regret is optimal (null, in average), but it is not fair.
-- And the other oracle policy [`OracleFair`](SMPyBandits/PoliciesMultiPlayers/OracleFair.py) affects an offset to each of the `$M$` players corresponding to one of the `$M$` best arms, orthogonally, and once they are affected they will cycle among the best `$M$` arms. It's fair because every player will pull the `$M$` best arms an equal number of time. And the centralized regret is also optimal (null, in average).
+- For instance, the oracle policy [`OracleNotFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleNotFair.html) affects each of the `$M$` players to one of the `$M$` best arms, orthogonally, but once they are affected they always pull this arm. It's unfair because one player will be lucky and affected to the best arm, the others are unlucky. The centralized regret is optimal (null, in average), but it is not fair.
+- And the other oracle policy [`OracleFair`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.OracleFair.html) affects an offset to each of the `$M$` players corresponding to one of the `$M$` best arms, orthogonally, and once they are affected they will cycle among the best `$M$` arms. It's fair because every player will pull the `$M$` best arms an equal number of time. And the centralized regret is also optimal (null, in average).
 
-- Usually, the [`Selfish`](SMPyBandits/PoliciesMultiPlayers/Selfish.py) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `$M$` best arms.
+- Usually, the [`Selfish`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.Selfish.html) policy is *not* fair: as each player is selfish and tries to maximize her personal regret, there is no reason for them to share the time on the `$M$` best arms.
 
-- Conversely, the [`MusicalChair`](SMPyBandits/Policies/MusicalChair.py) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `$M$` best arms.
+- Conversely, the [`MusicalChair`](https://smpybandits.github.io/docs/Policies.MusicalChair.html) policy is *not* fair either, and cannot be: when each player has attained the last step, ie. they are all choosing the same arm, orthogonally, and they are not sharing the `$M$` best arms.
 
-- The [`MEGA`](SMPyBandits/Policies/MEGA.py) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `$M$` best arms equally.
+- The [`MEGA`](https://smpybandits.github.io/docs/Policies.MEGA.html) policy is designed to be fair: when players collide, they all have the same chance of leaving or staying on the arm, and they all sample from the `$M$` best arms equally.
 
-- The [`rhoRand`](SMPyBandits/PoliciesMultiPlayers/rhoRand.py) policy is not designed to be fair for every run, but it is fair in average.
-- Similarly for our algorithms `RandTopM` and `MCTopM`, defined in [`RandTopM`](SMPyBandits/PoliciesMultiPlayers/RandTopM.py).
+- The [`rhoRand`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.rhoRand.html) policy is not designed to be fair for every run, but it is fair in average.
+- Similarly for our algorithms `RandTopM` and `MCTopM`, defined in [`RandTopM`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.RandTopM.html).
 
 
 ----

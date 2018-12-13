@@ -39,22 +39,19 @@ Here is a partial list of references on this topic. For more, a good starting po
     + I implemented this sliding window idea in a generic way, and [`Policies.SlidingWindowRestart`](docs/Policies.SlidingWindowRestart.html) is a generic wrapper that can work with (almost) any algorithm: it is an experimental policy, using a sliding window (of for instance `$\tau=100$` draws of each arm), and reset the underlying algorithm as soon as the small empirical average is too far away from the long history empirical average (or just restart for one arm, if possible).
 
 3. [["Thompson sampling for dynamic multi-armed bandits". N Gupta,. OC Granmo, A. Agrawala, 10th International Conference on Machine Learning and Applications Workshops. IEEE, 2011](https://www.researchgate.net/profile/Ole-Christoffer_Granmo/publication/232616670_Thompson_Sampling_for_Dynamic_Multi-armed_Bandits/links/56a7d8e808ae0fd8b3fe3dc6.pdf)]
-    + TODO read it!
 
 4. [["Stochastic multi-armed-bandit problem with non-stationary rewards", O. Besbes, Y. Gur, A. Zeevi. Advances in Neural Information Processing Systems (pp. 199-207), 2014](http://papers.nips.cc/paper/5378-stochastic-multi-armed-bandit-problem-with-non-stationary-rewards.pdf)]
-    + TODO read it!
 
 
 ### Recent references
 
 More recent articles include the following:
 
-1. [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems". L. Wei and V. Srivastav. arXiv preprint arXiv:1802.08380, 2018](https://arxiv.org/pdf/1802.08380)], introduced the first algorithms that can (try to) tackle the two problems simultaneously, [`LM-DSEE`](XXX) and [`SW-UCB#`](XXX).
+1. [["On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems". L. Wei and V. Srivastav. arXiv preprint arXiv:1802.08380, 2018](https://arxiv.org/pdf/1802.08380)], introduced the first algorithms that can (try to) tackle the two problems simultaneously, [`LM-DSEE`](https://smpybandits.github.io/docs/Policies.LM_DSEE.html) and [`SW-UCB#`](https://smpybandits.github.io/docs/Policies.SWHash_UCB.html).
     + They require to know the rate of change but not the number of changes. They either assume that the number of break points `$\Upsilon_T$` is `$\mathcal{O}(T^\nu)$` for some `$\nu\in(0,1)$` (for abruptly-changing), or that the rate of change is `$\max_t |\mu_{t+1} - \mu_{t}| \leq \varepsilon_T = \mathcal{O}(T^{-\kappa})$`. In both cases, their model assumes to know `$\nu$` or `$\kappa$`, or an upper-bound on it.
     + One advantage of their algorithms is their simplicity and ability to tackle both cases!
-    + TODO code it!
 
-2. [["Adaptively Tracking the Best Arm with an Unknown Number of Distribution Changes". Peter Auer, Pratik Gajane and Ronald Ortner. EWRL 2018, Lille](https://ewrl.files.wordpress.com/2018/09/ewrl_14_2018_paper_28.pdf)], introduced the [`AdSwitch`](XXX) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
+2. [["Adaptively Tracking the Best Arm with an Unknown Number of Distribution Changes". Peter Auer, Pratik Gajane and Ronald Ortner. EWRL 2018, Lille](https://ewrl.files.wordpress.com/2018/09/ewrl_14_2018_paper_28.pdf)], introduced the [`AdSwitch`](https://smpybandits.github.io/docs/Policies.AdSwitch.html) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
     + TODO code it!
     + Be sure how to adapt it to `$K\geq2$` arms and not just `$K=2$` (it shouldn't be hard).
     + TODO adapt it to unknown horizon (using [doubling tricks?](DoublingTrick.html)!
@@ -66,38 +63,25 @@ More recent articles include the following:
 
 4. 🇫🇷 [["Algorithme de bandit et obsolescence : un modèle pour la recommandation". Jonhathan Louëdec, Laurent Rossi, Max Chevalier, Aurélien Garivier and Josiane Mothe. 18ème Conférence francophone sur l'Apprentissage Automatique, 2016 (Marseille, France)](http://oatao.univ-toulouse.fr/17130/1/louedec_17130.pdf)] (🇫🇷 *in French*), introduces and justifies the possible applications of slowly-varying to recommender systems. They studies and present a model with an exponential decrease of the means, and the [`FadingUCB`](XXX) that is efficient if a bound on the speed of the exponential decrease is known.
 
-### References to read
+### Other references
 
-References that seem interesting but I haven't read them yet:
+Other interesting references:
 
-1. [["The Non-Stationary Stochastic Multi Armed Bandit Problem". R. Allesiardo, Raphaël Féraud and Odalric-Ambrym Maillard. International Journal of Data Science and Analytics, 3(4), 267-283. 2017](https://hal.archives-ouvertes.fr/hal-01575000/document)]
-    + It is a long journal article, I'm sure there is so many interesting to discover in it!
-    + TODO I need to read it!
-    + TODO code it!
+1. [["The Non-Stationary Stochastic Multi Armed Bandit Problem". R. Allesiardo, Raphaël Féraud and Odalric-Ambrym Maillard. International Journal of Data Science and Analytics, 3(4), 267-283. 2017](https://hal.archives-ouvertes.fr/hal-01575000/document)]  introduced the [`Exp3R`](https://smpybandits.github.io/docs/Policies.CD_UCB.html) algorithm.
 
-2. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)]
-    + TODO A shorter arXiv paper, I need to read it!
-    + TODO code it!
+2. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)] introduced the [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
 
-3. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)]
-    + TODO A second short arXiv paper, I need to read it!
-    + TODO code it!
+3. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)] introduced the [`CUSUM-UCB`](https://smpybandits.github.io/docs/Policies.CD_UCB.html) and `PHT-UCB` algorithms.
 
-4. [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018](https://arxiv.org/pdf/1802.03692)]
-    + TODO A third short arXiv paper, I need to read it!
-    + TODO code it!
+4. [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018](https://arxiv.org/pdf/1802.03692)] introduced the [`M-UCB`](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html) algorithm.
 
 ----
 
 ## Example of simulation configuration
 
-FIXME finish implementation!
+A simple python file, [`configuration_nonstationary.py`](https://smpybandits.github.io/docs/configuration_nonstationary.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-> See [issue #71](https://github.com/SMPyBandits/SMPyBandits/issues/71) and [issue #146](https://github.com/SMPyBandits/SMPyBandits/issues/146).
-
-A simple python file, [`configuration_nonstationary.py`](SMPyBandits/configuration_nonstationary.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
-
-For example, we can compare the standard [`UCB`](SMPyBandits/Policies/UCB.py) and  [`Thompson`](SMPyBandits/Policies/Thompson.py) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](SMPyBandits/Policies/DiscountedUCB.py) and [`SWUCB`](SMPyBandits/Policies/SlidingWindowUCB.py) algorithms.
+For example, we can compare the standard [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) and  [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](https://smpybandits.github.io/docs/Policies.DiscountedUCB.html) and [`SWUCB`](https://smpybandits.github.io/docs/Policies.SlidingWindowUCB.html) algorithms.
 
 ```python
 horizon = 10000
@@ -155,7 +139,7 @@ make nonstationary   # run and log the main.py script
 
 ## Some illustrations
 
-Here are some plots illustrating the performances of the different [policies](SMPyBandits/Policies/) implemented in this project, against various non-stationary problems (with [`Bernoulli`](Arms/Bernoulli.py) only).
+Here are some plots illustrating the performances of the different [policies](https://smpybandits.github.io/docs/Policies/) implemented in this project, against various non-stationary problems (with [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html) only).
 
 FIXME do some plots!
 

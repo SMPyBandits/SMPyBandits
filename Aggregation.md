@@ -12,7 +12,7 @@ The basic idea of a policy aggregation algorithm is to run in parallel some onli
 Hopefully, if all the algorithms `$A_i$` are not too bad and at least one of them is efficient for the problem at hand, the aggregation algorithm will learn to mainly trust the efficient one(s) and discard the votes from the others.
 An efficient aggregation algorithm should have performances similar to the best child algorithm `$A_i$`, in any problem.
 
-The [Exp4 algorithm](http://sbubeck.com/SurveyBCB12.pdf) by [Auer et al, 2002] is the first aggregation algorithm for online bandit algorithms, and recently other algorithms include [LearnExp](SMPyBandits/Policies/LearnExp.py) ([[Singla et al, 2017](https://arxiv.org/abs/1702.04825)]) and [CORRAL](SMPyBandits/Policies/CORRAL.py) ([[Agarwal et al, 2017](https://arxiv.org/abs/1612.06246v2)]).
+The [Exp4 algorithm](http://sbubeck.com/SurveyBCB12.pdf) by [Auer et al, 2002] is the first aggregation algorithm for online bandit algorithms, and recently other algorithms include [`LearnExp`](https://smpybandits.github.io/docs/Policies.LearnExp.html) ([[Singla et al, 2017](https://arxiv.org/abs/1702.04825)]) and [`CORRAL`](https://smpybandits.github.io/docs/Policies.CORRAL.html) ([[Agarwal et al, 2017](https://arxiv.org/abs/1612.06246v2)]).
 
 ---
 
@@ -30,18 +30,18 @@ This algorithm can be seen as the Multi-Armed Bandits (i.e., sequential reinforc
 
 Another approach could be to do some sort of [grid search](http://scikit-learn.org/stable/modules/grid_search.html).
 
-### My algorithm: [Aggregator](SMPyBandits/Policies/Aggregator.py)
+### My algorithm: [Aggregator](https://smpybandits.github.io/docs/Policies.Aggregator.html)
 
-It is based on a modification of Exp4, and the details are given in its documentation, see [Aggregator](SMPyBandits/Policies/Aggregator.py).
+It is based on a modification of Exp4, and the details are given in its documentation, see [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html).
 
 All the mathematical details can be found in my paper, [[Aggregation of Multi-Armed Bandits Learning Algorithms for Opportunistic Spectrum Access, Lilian Besson and Emilie Kaufmann and Christophe Moy, 2017]](https://hal.inria.fr/hal-01705292), presented at the [IEEE WCNC 2018](http://wcnc2018.ieee-wcnc.org/) conference.
 
 ----
 
 ## Configuration:
-A simple python file, [`configuration_comparing_aggregation_algorithms.py`](SMPyBandits/configuration_comparing_aggregation_algorithms.py), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+A simple python file, [`configuration_comparing_aggregation_algorithms.py`](https://smpybandits.github.io/docs/configuration_comparing_aggregation_algorithms.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
-For example, this will compare the classical MAB algorithms [`UCB`](SMPyBandits/Policies/UCB.py), [`Thompson`](SMPyBandits/Policies/Thompson.py), [`BayesUCB`](SMPyBandits/Policies/BayesUCB.py), [`klUCB`](SMPyBandits/Policies/klUCB.py) algorithms.
+For example, this will compare the classical MAB algorithms [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html), [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html), [`BayesUCB`](https://smpybandits.github.io/docs/Policies.BayesUCB.html), [`klUCB`](https://smpybandits.github.io/docs/Policies.klUCB.html) algorithms.
 
 ```python
 configuration = {
@@ -66,7 +66,7 @@ configuration = {
 }
 ```
 
-To add an aggregated bandit algorithm ([`Aggregator` class](SMPyBandits/Policies/Aggregator.py)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
+To add an aggregated bandit algorithm ([`Aggregator` class](https://smpybandits.github.io/docs/Policies.Aggregator.html)), you can use this piece of code, to aggregate all the algorithms defined before and dynamically add it to `configuration`:
 ```python
 current_policies = configuration["policies"]
 configuration["policies"] = current_policies +
@@ -95,7 +95,7 @@ make comparing_aggregation_algorithms   # run and log the main.py script
 ----
 
 ## Some illustrations
-Here are some plots illustrating the performances of the different [policies](SMPyBandits/Policies/) implemented in this project, against various problems (with [`Bernoulli`](Arms/Bernoulli.py) arms only):
+Here are some plots illustrating the performances of the different [policies](https://smpybandits.github.io/docs/Policies/) implemented in this project, against various problems (with [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html) arms only):
 
 ### On a "simple" Bernoulli problem (semi-log-y scale)
 ![On a "simple" Bernoulli problem (semi-log-y scale).](plots/main_semilogy____env1-4_932221613383548446.png)

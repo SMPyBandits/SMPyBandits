@@ -15,14 +15,14 @@ pip install -r requirements.txt
 This will run the simulation, average them (by `repetitions`) and plot the results.
 
 ### Single player
-#### [Single player](SMPyBandits/main.py)
+#### [Single player](https://smpybandits.github.io/docs/main.html)
 ```bash
 python main.py
 # or
 make main
 ```
 
-#### [Single player, aggregating algorithms](SMPyBandits/configuration_comparing_aggregation_algorithms.py)
+#### [Single player, aggregating algorithms](https://smpybandits.github.io/docs/configuration_comparing_aggregation_algorithms.html)
 ```bash
 python main.py configuration_comparing_aggregation_algorithms
 # or
@@ -30,7 +30,7 @@ make comparing_aggregation_algorithms
 ```
 > See these explainations: [Aggregation.md](Aggregation.html)
 
-#### [Single player, doubling-trick algorithms](SMPyBandits/configuration_comparing_doubling_algorithms.py)
+#### [Single player, doubling-trick algorithms](https://smpybandits.github.io/docs/configuration_comparing_doubling_algorithms.html)
 ```bash
 python main.py configuration_comparing_doubling_algorithms
 # or
@@ -38,21 +38,21 @@ make comparing_doubling_algorithms
 ```
 > See these explainations: [DoublingTrick.md](DoublingTrick.html)
 
-#### [Single player, with Sparse Stochastic Bandit](SMPyBandits/configuration_sparse.py)
+#### [Single player, with Sparse Stochastic Bandit](https://smpybandits.github.io/docs/configuration_sparse.html)
 ```bash
 python main.py configuration_sparse
 # or
 make sparse
 ```
 
-#### [Single player, with Markovian problem](SMPyBandits/configuration_markovian.py)
+#### [Single player, with Markovian problem](https://smpybandits.github.io/docs/configuration_markovian.html)
 ```bash
 python main.py configuration_markovian
 # or
 make markovian
 ```
 
-#### [Single player, with non-stationary problem](SMPyBandits/configuration_nonstationary.py)
+#### [Single player, with non-stationary problem](https://smpybandits.github.io/docs/configuration_nonstationary.html)
 ```bash
 python main.py configuration_nonstationary
 # or
@@ -60,14 +60,14 @@ make nonstationary
 ```
 
 ### Multi-Player
-#### [Multi-Player, one algorithm](SMPyBandits/main_multiplayers.py)
+#### [Multi-Player, one algorithm](https://smpybandits.github.io/docs/main_multiplayers.html)
 ```bash
 python main_multiplayers.py
 # or
 make multi
 ```
 
-#### [Multi-Player, comparing different algorithms](SMPyBandits/main_multiplayers_more.py)
+#### [Multi-Player, comparing different algorithms](https://smpybandits.github.io/docs/main_multiplayers_more.html)
 ```bash
 python main_multiplayers_more.py
 # or
@@ -79,7 +79,7 @@ make moremulti
 
 For all simulations, I recently added the support for *environment variable*, to ease the customization of the main parameters of every simulations.
 
-For instance, if the [`configuration_multiplayers_more.py`](SMPyBandits/configuration_multiplayers_more.py) file is correct,
+For instance, if the [`configuration_multiplayers_more.py`](https://smpybandits.github.io/docs/configuration_multiplayers_more.html) file is correct,
 then you can customize to use `N=4` repetitions, for horizon `T=1000` and `M=3` players, parallelized with `N_JOBS=4` jobs (use the number of cores of your CPU for optimal performance):
 
 ```bash
