@@ -839,7 +839,7 @@ class Evaluator(object):
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 n, bins, patches = plt.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins)
-                addTextForWorstCases(plt, n, bins, patches, normed=normed)
+                # addTextForWorstCases(plt, n, bins, patches, normed=normed)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
@@ -876,8 +876,8 @@ class Evaluator(object):
                 labels.append(policy.__cachedstr__)
             if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
             ns, bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
-            for n, patches in zip(ns, patchess):
-                addTextForWorstCases(plt, n, bins, patches, normed=normed)
+            # for n, patches in zip(ns, patchess):
+            #     addTextForWorstCases(plt, n, bins, patches, normed=normed)
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)

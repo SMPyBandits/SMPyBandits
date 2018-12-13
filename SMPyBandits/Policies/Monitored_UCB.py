@@ -35,10 +35,11 @@ except ImportError:
 #: I force ``0.1`` because I can force the minimum gap when calling :func:`Arms.randomMeans` to be ``0.1``.
 DELTA = 0.1
 
-#: Should we reset one arm empirical average or all?
+#: Should we reset one arm empirical average or all? Default is ``True``, it's usually more efficient!
+PER_ARM_RESTART = False
 PER_ARM_RESTART = True
 
-#: Should we fully restart the algorithm or simply reset one arm empirical average ?
+#: Should we fully restart the algorithm or simply reset one arm empirical average? Default is ``False``, it's usually more efficient!
 FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 

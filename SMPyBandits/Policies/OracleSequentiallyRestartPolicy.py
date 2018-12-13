@@ -30,9 +30,10 @@ except ImportError:
 
 
 #: Should we reset one arm empirical average or all? Default is ``False`` for this algorithm.
+PER_ARM_RESTART = True
 PER_ARM_RESTART = False
 
-#: Should we fully restart the algorithm or simply reset one arm empirical average ?
+#: Should we fully restart the algorithm or simply reset one arm empirical average? Default is ``False``, it's usually more efficient!
 FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 

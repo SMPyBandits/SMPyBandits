@@ -398,7 +398,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -423,7 +423,7 @@ if ENVIRONMENT_NONSTATIONARY:
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if False and ENVIRONMENT_NONSTATIONARY:
+if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -1910,12 +1910,16 @@ if TEST_Non_Stationary_Policies:
         ] +
         # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
         [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy, } }
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy,
+                # "full_restart_when_refresh": full_restart_when_refresh, "per_arm_restart": per_arm_restart,
+            } }
             for policy in [
                 UCB,
                 klUCB,  # XXX comment to only test UCB
                 Exp3PlusPlus,  # XXX comment to only test UCB
             ]
+            # for full_restart_when_refresh in [True, False]
+            # for per_arm_restart in [True, False]
         ] +
         []
     })
