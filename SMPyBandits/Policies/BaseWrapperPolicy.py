@@ -34,13 +34,19 @@ class BaseWrapperPolicy(BasePolicy):
     # --- Start game by creating new underlying policy
 
     def startGame(self, createNewPolicy=True):
-        """ Initialize the policy for a new game."""
+        """ Initialize the policy for a new game.
+
+        .. warning:: ``createNewPolicy=True`` creates a new object for the underlying policy, while ``createNewPolicy=False`` only call :meth:`BasePolicy.startGame`.
+        """
         super(BaseWrapperPolicy, self).startGame()
         # now for the underlying policy
         if createNewPolicy:
+            # print("INFO: BaseWrapperPolicy: creating a new underlying policy with startGame(createNewPolicy=True)...")  # DEBUG
+            # del self.policy  # XXX be sure that we delete the attribute and the object?
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
+        # print("DEBUG: BaseWrapperPolicy underlying policy rewards = {}, pulls = {}...".format(self.policy.rewards, self.policy.pulls))  # DEBUG
         # self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
         # self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
 

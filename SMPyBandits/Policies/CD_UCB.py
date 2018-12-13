@@ -41,6 +41,7 @@ PROBA_RANDOM_EXPLORATION = 0.1
 PER_ARM_RESTART = True
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
+FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test.
@@ -123,32 +124,30 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.all_rewards[arm].append(reward)
         if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
-            # print("The current pulls vector is =", self.pulls)  # DEBUG
-            # print("The current pulls vector of underlying policy is =", self.policy.pulls)  # DEBUG
-            # print("The current last pulls vector is =", self.last_pulls)  # DEBUG
-            # print("The current rewards vector is =", self.rewards)  # DEBUG
-            # print("The current rewards vector of underlying policy is =", self.policy.rewards)  # DEBUG
-            # print("The current sum/mean of all rewards for this arm is =", np.sum(self.all_rewards[arm]), np.mean(self.all_rewards[arm]))  # DEBUG
 
-            # Fully restart the algorithm ?!
-            if self._full_restart_when_refresh:
-                self.startGame(createNewPolicy=False)
-            # Or simply reset one of the empirical averages?
-            else:
-                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
-                self.policy.pulls[arm] = len(self.all_rewards[arm])
-
-            # reset current memory for THIS arm
-            if self._per_arm_restart:
-                self.last_pulls[arm] = 1
-                self.all_rewards[arm] = [reward]
-            # or reset current memory for ALL THE arms
-            else:
+            if not self._per_arm_restart:
+                # or reset current memory for ALL THE arms
                 for other_arm in range(self.nbArms):
                     self.last_pulls[other_arm] = 0
                     self.all_rewards[other_arm] = []
-                self.last_pulls[arm] = 1
-                self.all_rewards[arm] = [reward]
+            # reset current memory for THIS arm
+            self.last_pulls[arm] = 1
+            self.all_rewards[arm] = [reward]
+
+            # Fully restart the algorithm ?!
+            if self._full_restart_when_refresh:
+                self.startGame(createNewPolicy=True)
+            # Or simply reset one of the empirical averages?
+            else:
+                if not self._per_arm_restart:
+                # or reset current memory for ALL THE arms
+                    for other_arm in range(self.nbArms):
+                        self.policy.rewards[other_arm] = 0
+                        self.policy.pulls[other_arm] = 0
+                # reset current memory for THIS arm
+                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
+                self.policy.pulls[arm] = len(self.all_rewards[arm])
+
         # we update the total number of samples available to the underlying policy
         # self.policy.t = sum(self.last_pulls)  # XXX SO NOT SURE HERE
 
@@ -312,7 +311,7 @@ def klGauss(x, y, sig2x=1):
     return (x - y) ** 2 / (2. * sig2x)
 
 
-def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1):
+def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1, alpha=None):
     r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
     - The threshold is computed as:
@@ -335,7 +334,8 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha
     c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
     if c < 0 or np.isinf(c): c = float('+inf')
     assert exponentBeta > 1.0, "Error: compute_c_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
-    alpha = alpha_t1 / max(1, t)**exponentBeta
+    if alpha is None:
+        alpha = alpha_t1 / max(1, t)**exponentBeta
     if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
     return c, alpha
 
@@ -384,7 +384,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
         # return r"GLR-{}({}$T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"GLR-{}({}{})".format(self._policy.__name__, name, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GLR-{}({}{})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -433,12 +433,12 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
     def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
         ):
         super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klGauss, lower=lower, amplitude=amplitude, *args, **kwargs)
-        self.sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`.
+        self.sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
         self._args_to_kl = (sig2, )
 
     def __str__(self):
         # return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"GaussianGLR-{}({})".format(self._policy.__name__, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GaussianGLR-{}({})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global")
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
@@ -451,12 +451,12 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
 
     def __str__(self):
         # return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"BernoulliGLR-{}({})".format(self._policy.__name__, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"BernoulliGLR-{}({})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global")
 
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
 
 #: Default confidence level for :class:`SubGaussianGLR_IndexPolicy`.
-DELTA = 0.01
+DELTA = 0.001
 
 #: By default, :class:`SubGaussianGLR_IndexPolicy` assumes distributions are 0.25-sub Gaussian, like Bernoulli or any distributions with support on :math:`[0,1]`.
 SIGMA = 0.25
@@ -527,8 +527,8 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return threshold_SubGaussianGLR(t0, s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
 
     def __str__(self):
-        # return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{})".format(self._policy.__name__, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, "joint" if self.joint else "disjoint", self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:

@@ -33,6 +33,7 @@ except ImportError:
 PER_ARM_RESTART = False
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average ?
+FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 
 
@@ -66,7 +67,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         print("Info: creating a new policy {}, with change points = {}...".format(self, changePoints))  # DEBUG
 
     def __str__(self):
-        return r"OracleRestart-{}($\Upsilon_T={}${})".format(self._policy.__name__, len(self.changePoints), ", Per-Arm" if self._per_arm_restart else "")
+        return r"OracleRestart-{}($\Upsilon_T={}${}{})".format(self._policy.__name__, len(self.changePoints), ", Per-Arm" if self._per_arm_restart else ", Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "")
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
@@ -83,25 +84,28 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         if self.t in self.changePoints:
             print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points! Still {} change points to go!".format(self, self.t, arm, len([tau for tau in self.changePoints if tau > self.t])))  # DEBUG
 
-            # Fully restart the algorithm ?!
-            if self._full_restart_when_refresh:
-                self.startGame(createNewPolicy=False)
-            # Or simply reset one of the empirical averages?
-            else:
-                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
-                self.policy.pulls[arm] = len(self.all_rewards[arm])
-
-            # reset current memory for THIS arm
-            if self._per_arm_restart:
-                self.last_pulls[arm] = 1
-                self.all_rewards[arm] = [reward]
-            # or reset current memory for ALL THE arms
-            else:
+            if not self._per_arm_restart:
+                # or reset current memory for ALL THE arms
                 for other_arm in range(self.nbArms):
                     self.last_pulls[other_arm] = 0
                     self.all_rewards[other_arm] = []
-                self.last_pulls[arm] = 1
-                self.all_rewards[arm] = [reward]
+            # reset current memory for THIS arm
+            self.last_pulls[arm] = 1
+            self.all_rewards[arm] = [reward]
+
+            # Fully restart the algorithm ?!
+            if self._full_restart_when_refresh:
+                self.startGame(createNewPolicy=True)
+            # Or simply reset one of the empirical averages?
+            else:
+                if not self._per_arm_restart:
+                # or reset current memory for ALL THE arms
+                    for other_arm in range(self.nbArms):
+                        self.policy.rewards[other_arm] = 0
+                        self.policy.pulls[other_arm] = 0
+                # reset current memory for THIS arm
+                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
+                self.policy.pulls[arm] = len(self.all_rewards[arm])
 
         # we update the total number of samples available to the underlying policy
         # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE
