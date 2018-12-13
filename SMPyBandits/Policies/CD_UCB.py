@@ -207,7 +207,8 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -227,7 +228,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         gp, gm = 0, 0
         data_y = self.all_rewards[arm]
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
-        u0hat = np.mean(data_y[:self.M])
+        u0hat = np.mean(data_y[:self.M])  # DONE okay this is efficient we don't compute the same means too many times!
         for k, y_k in enumerate(data_y):
             if k <= self.M:
                 continue
@@ -245,7 +246,8 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, $h={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}${})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
@@ -265,8 +267,10 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
         gp, gm = 0, 0
         data_y = self.all_rewards[arm]
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
+        y_k_hat = 0
         for k, y_k in enumerate(data_y):
-            y_k_hat = np.mean(data_y[:k])
+            # y_k_hat = np.mean(data_y[:k+1])  # XXX this is not efficient we compute the same means too many times!
+            y_k_hat = (k * y_k_hat + y_k) / (k + 1)  # DONE okay this is efficient we don't compute the same means too many times!
             sp = y_k_hat - y_k - self.epsilon
             sm = y_k - y_k_hat - self.epsilon
             gp, gm = max(0, gp + sp), max(0, gm + sm)
@@ -282,6 +286,12 @@ eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - 
 
 # --- Simple Kullback-Leibler divergence for known distributions
 
+try:
+    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+except (ValueError, ImportError, SystemError):
+    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
+
+@jit
 def klBern(x, y):
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
@@ -291,6 +301,7 @@ def klBern(x, y):
     y = min(max(y, eps), 1 - eps)
     return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
 
+@jit
 def klGauss(x, y, sig2x=1):
     r""" Kullback-Leibler divergence for Gaussian distributions of means ``x`` and ``y`` and variances ``sig2x`` and ``sig2y``, :math:`\nu_1 = \mathcal{N}(x, \sigma_x^2)` and :math:`\nu_2 = \mathcal{N}(y, \sigma_x^2)`:
 
@@ -372,7 +383,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     def __str__(self):
         name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}$T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"GLR-{}({}$T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__, name, self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GLR-{}({}{})".format(self._policy.__name__, name, ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -389,14 +401,21 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         data_y = self.all_rewards[arm]
         t0 = 0
         t = len(data_y)-1
+        mean_all = np.mean(data_y[t0 : t+1])
+        mean_before = 0
+        mean_after = mean_all
         for s in range(t0, t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
             # FIXED this is the correct formula!
-            mean_all = np.mean(data_y[t0 : t+1])
-            mean_before = np.mean(data_y[t0 : s+1])
-            mean_after = np.mean(data_y[s+1 : t+1])
+            # XXX this is not efficient we compute the same means too many times!
+            # mean_before = np.mean(data_y[t0 : s+1])
+            # mean_after = np.mean(data_y[s+1 : t+1])
+            # DONE okay this is efficient we don't compute the same means too many times!
+            y = data_y[s]
+            mean_before = (s * mean_before + y) / (s + 1)
+            mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -418,7 +437,8 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
         self._args_to_kl = (sig2, )
 
     def __str__(self):
-        return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"GaussianGLR-{}({})".format(self._policy.__name__, ", Per-Arm" if self._per_arm_restart else ", Global")
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
@@ -430,7 +450,8 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
         super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klBern, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
-        return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"BernoulliGLR-{}({})".format(self._policy.__name__, ", Per-Arm" if self._per_arm_restart else ", Global")
 
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
 
@@ -449,7 +470,7 @@ def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
     .. math:: b^{\text{joint}}_{t_0}(s,t,\delta) := \sigma \sqrt{ \left(\frac{1}{s-t_0+1} + \frac{1}{t-s}\right) \left(1 + \frac{1}{t-t_0+1}\right) 2 \log\left( \frac{2(t-t_0)\sqrt{t-t_0+2}}{\delta} \right)}.
     """
     return sigma * np.sqrt(
-        (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0+1))
+        (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0 + 1))
         * 2 * max(0, np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta ))
     )
 
@@ -464,8 +485,13 @@ def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
         ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta ))
     ))
 
-def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
+def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT, experimental=False):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta)` or :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)`."""
+    if experimental:  # FIXME this is the threshold we want to try
+        return sigma * np.sqrt(
+            (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0 + 1))
+            * 2 * max(0, np.log(((1 + np.log(t-t0+1)) * (1 + np.log(s - t0 + 1))) / delta ))
+        )
     if joint:
         return threshold_SubGaussianGLR_joint(t0, s, t, delta, sigma=sigma)
     else:
@@ -501,7 +527,8 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return threshold_SubGaussianGLR(t0, s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
+        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{})".format(self._policy.__name__, self.delta, self.sigma, 'joint' if self.joint else 'disjoint', ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:
@@ -526,11 +553,20 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         if delta is None:
             delta = 1.0 / max(1, horizon)
 
+        mean_before = 0
+        mean_after = np.mean(data_y)
         for s in range(t0, t):
             # compute threshold
             threshold_h = self.compute_threshold_h(t0, s, t)
-            glr = abs( np.mean(data_y[s+1 : t+1]) - np.mean(data_y[t0 : s+1]))
-            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, np.mean(data_y[t0 : s+1]), np.mean(data_y[s+1 : t+1]), glr, threshold_h))
+            # XXX this is not efficient we compute the same means too many times!
+            # mean_before = np.mean(data_y[t0 : s+1])
+            # mean_after = np.mean(data_y[s+1 : t+1])
+            # DONE okay this is efficient we don't compute the same means too many times!
+            y = data_y[s]
+            mean_before = (s * mean_before + y) / (s + 1)
+            mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+            glr = abs(mean_after - mean_before)
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, glr, threshold_h))
             if glr >= threshold_h:
                 return True
         return False

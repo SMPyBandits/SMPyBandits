@@ -1783,9 +1783,6 @@ if TEST_Non_Stationary_Policies:
 
     configuration.update({
         "policies":
-        [  # XXX TODO test the AdSwitch policy
-            { "archtype": AdSwitch, "params": { "horizon": HORIZON, } }
-        ] +
         [  # XXX Regular adversarial bandits algorithms!
             # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
             { "archtype": Exp3PlusPlus, "params": {} },
@@ -1811,52 +1808,50 @@ if TEST_Non_Stationary_Policies:
         [
             { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
         ] +
-        # The LM_DSEE algorithm seems to work fine! FIXME it has negative or zero regret some times?!?
+        [  # XXX TODO test the AdSwitch policy
+            { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
+            for C1 in [1]  # , 100, 0.01]
+            for C2 in [1]  # , 100, 0.01]
+        ] +
+        # The LM_DSEE algorithm seems to work fine!
         [
             # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
             # XXX note that for a fixed T it means nothing…
             # XXX But for T=10000 it is at most 100 changes, reasonable!
-            { "archtype": LM_DSEE, "params": { "nu": 0.5, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
+            { "archtype": LM_DSEE, "params": { "nu": 0.2, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
         ] +
-        # XXX The CUSUM_IndexPolicy works but the default choice of parameters seem bad! WARNING It is REALLY slow!
+        # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
         [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
+            { "archtype": archtype, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": policy, "per_arm_restart": per_arm_restart, } }
+            for archtype in [
+                CUSUM_IndexPolicy,
+                PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+            ]
+            for policy in [
+                UCB,
+                klUCB,  # XXX comment to only test UCB
+            ]
+            for per_arm_restart in [
+                True,  # Per-arm restart XXX comment to only test global arm
+                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+            ]
         ] +
-        # OK this CUSUM-klUCB is the same
+        # XXX Test a few CD-MAB algorithms
         [
-            { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
-        ] +
-        # # OK CUSUM-Exp3PlusPlus is very much like CUSUM-UCB
-        # [
-        #     { "archtype": CUSUM_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": Exp3PlusPlus, "per_arm_restart": True, } }
-        # ] +
-        # OK PHT_IndexPolicy is very much like CUSUM
-        [
-            { "archtype": PHT_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
-        ] +
-        # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-        [
-            { "archtype": BernoulliGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
-        ] +
-        # OK GaussianGLR_IndexPolicy is very much like Gaussian GLR
-        [
-            { "archtype": GaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
-        ] +
-        # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-        [
-            { "archtype": SubGaussianGLR_IndexPolicy, "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
+            { "archtype": archtype, "params": { "horizon": HORIZON, "policy": policy, "per_arm_restart": per_arm_restart, } }
+            for archtype in [
+                BernoulliGLR_IndexPolicy,  # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+                GaussianGLR_IndexPolicy,  # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+                SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            ]
+            for policy in [
+                UCB,
+                klUCB,  # XXX comment to only test UCB
+            ]
+            for per_arm_restart in [
+                True,  # Per-arm restart XXX comment to only test global arm
+                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+            ]
         ] +
         # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
         # [
@@ -1864,19 +1859,15 @@ if TEST_Non_Stationary_Policies:
         # ] +
         # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
         [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": UCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
-        ] +
-        # # OK this Monitored-klUCB is the same
-        # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": klUCB, } }
-        # ] +
-        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-        [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": klUCB, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [True, False]
-            # for per_arm_restart in [True]
+            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
+            for per_arm_restart in [
+                True,  # Per-arm restart XXX comment to only test global arm
+                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+            ]
+            for policy in [
+                UCB,
+                klUCB,  # XXX comment to only test UCB
+            ]
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
         [
@@ -1915,13 +1906,14 @@ if TEST_Non_Stationary_Policies:
             for max_nb_random_events in [NB_BREAK_POINTS]
             # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
         ] +
-        # DONE the OracleSequentiallyRestartPolicy with UCB policy works quite well, but NOT optimally!
+        # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
         [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": UCB, } }
-        ] +
-        # DONE the OracleSequentiallyRestartPolicy with klUCB policy works quite well, but NOT optimally!
-        [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": klUCB, } }
+            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy, } }
+            for policy in [
+                UCB,
+                klUCB,  # XXX comment to only test UCB
+                Exp3PlusPlus,  # XXX comment to only test UCB
+            ]
         ] +
         []
     })
