@@ -789,7 +789,7 @@ class Evaluator(object):
             print("STD of    last regrets R_T = {:.3g}".format(np.std(last_regrets)))
 
     def plotLastRegrets(self, envId=0,
-                        normed=False, subplots=True, nbbins=25, log=False,
+                        normed=False, subplots=True, nbbins=15, log=False,
                         boxplot=False, maxNbOfLabels=45, normalized_boxplot=True,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=False):
@@ -874,6 +874,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(policy.__cachedstr__)
+            if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
             ns, bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
             for n, patches in zip(ns, patchess):
                 addTextForWorstCases(plt, n, bins, patches, normed=normed)

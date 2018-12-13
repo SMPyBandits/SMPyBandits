@@ -249,6 +249,10 @@ if __name__ == '__main__':
             savefig = mainfig
             evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=True)  # XXX To save the figure
             evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=False)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_BestArmPulls')
+            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
+            # --- Also plotting the probability of picking the best arm
+            evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
             if configuration['horizon'] >= 1000:
                 savefig = mainfig.replace('main', 'main_semilogx')
                 evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
@@ -267,6 +271,8 @@ if __name__ == '__main__':
         else:
             evaluation.plotRegrets(envId, moreAccurate=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, moreAccurate=False)  # XXX To plot without saving
+            # --- Also plotting the probability of picking the best arm
+            evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
             if configuration['horizon'] >= 1000:
                 evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogy=True)  # XXX To plot without saving
@@ -298,21 +304,13 @@ if __name__ == '__main__':
                     if plotMaxMin:
                         evaluation.plotRegrets(envId, semilogx=semilogx, semilogy=semilogy, loglog=loglog, normalizedRegret=True, plotMaxMin=True)  # XXX To plot without saving
 
-        # --- Also plotting the probability of picking the best arm
-        if saveallfigs:
-            savefig = mainfig.replace('main', 'main_BestArmPulls')
-            print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
-            evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
-        else:
-            evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
-
         # --- Also plotting the histograms of regrets
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_HistogramsRegret')
             evaluation.plotLastRegrets(envId, subplots=False, savefig=savefig)
             print(" - Plotting the histograms of regrets, and saving the plot to {} ...".format(savefig))
             # for sharex, sharey in product([True, False], repeat=2):  # XXX 3 out of 4 were UGLY!
-            for sharex, sharey in [(False, False)]:
+            for sharex, sharey in [(True, False)]:
                 savefig = mainfig.replace('main', 'main_HistogramsRegret{}{}'.format(
                     "_shareX" if sharex else "",
                     "_shareY" if sharey else "",
@@ -326,7 +324,7 @@ if __name__ == '__main__':
         else:
             evaluation.plotLastRegrets(envId, subplots=False)  # XXX To plot without saving
             # for sharex, sharey in product([True, False], repeat=2):  # XXX 3 out of 4 were UGLY!
-            for sharex, sharey in [(False, False)]:
+            for sharex, sharey in [(True, False)]:
                 evaluation.plotLastRegrets(envId, sharex=sharex, sharey=sharey)  # XXX To plot without saving
             # evaluation.plotLastRegrets(envId, all_on_separate_figures=True)  # XXX To plot without saving
 

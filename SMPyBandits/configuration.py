@@ -397,7 +397,8 @@ if False and ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
-if False and ENVIRONMENT_NONSTATIONARY:
+# XXX Pb 1 changes are only on one arm at a time
+if ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -421,6 +422,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
         },
     ]
 
+# XXX Pb 2 changes are on all or almost arms at a time
 if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
@@ -446,7 +448,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
     ]
 
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
+if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": Bernoulli,
@@ -1813,13 +1815,13 @@ if TEST_Non_Stationary_Policies:
             for C1 in [1]  # , 100, 0.01]
             for C2 in [1]  # , 100, 0.01]
         ] +
-        # The LM_DSEE algorithm seems to work fine!
-        [
-            # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-            # XXX note that for a fixed T it means nothing…
-            # XXX But for T=10000 it is at most 100 changes, reasonable!
-            { "archtype": LM_DSEE, "params": { "nu": 0.2, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
-        ] +
+        # # The LM_DSEE algorithm seems to work fine!
+        # [
+        #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+        #     # XXX note that for a fixed T it means nothing…
+        #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+        #     { "archtype": LM_DSEE, "params": { "nu": 0.2, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
+        # ] +
         # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
         [
             { "archtype": archtype, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": policy, "per_arm_restart": per_arm_restart, } }
@@ -1828,8 +1830,8 @@ if TEST_Non_Stationary_Policies:
                 PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
             ]
             for policy in [
-                UCB,
-                klUCB,  # XXX comment to only test UCB
+                # UCB,  # XXX comment to only test klUCB
+                klUCB,
             ]
             for per_arm_restart in [
                 True,  # Per-arm restart XXX comment to only test global arm
@@ -1845,8 +1847,8 @@ if TEST_Non_Stationary_Policies:
                 SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
             ]
             for policy in [
-                UCB,
-                klUCB,  # XXX comment to only test UCB
+                # UCB,  # XXX comment to only test klUCB
+                klUCB,
             ]
             for per_arm_restart in [
                 True,  # Per-arm restart XXX comment to only test global arm
@@ -1862,11 +1864,11 @@ if TEST_Non_Stationary_Policies:
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
             for per_arm_restart in [
                 True,  # Per-arm restart XXX comment to only test global arm
-                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+                # False, # Global restart XXX seems more efficient? (at least more memory efficient!)
             ]
             for policy in [
                 UCB,
-                klUCB,  # XXX comment to only test UCB
+                # klUCB,  # XXX comment to only test UCB
             ]
         ] +
         # DONE The SW_UCB_Hash algorithm works fine!
