@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r""" The CD-UCB generic policy and CUSUM-UCB and PHT-UCB policies for non-stationary bandits.
+r""" The CD-UCB generic policy and CUSUM-UCB, PHT-UCB, GLR-UCB, RExp3 policies for non-stationary bandits.
 
 - Reference: [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539)
 - It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`CUSUM_IndexPolicy` is a wrapper:

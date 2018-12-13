@@ -799,7 +799,7 @@ class Evaluator(object):
             subplots = False  # no need for a subplot
         colors = palette(N)
         if boxplot:
-            if self.nb_break_points > 0: moreAccurate = False
+            moreAccurate = False
             all_last_regrets = []
             for policyId, policy in enumerate(self.policies):
                 last_regret = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)

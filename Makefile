@@ -64,7 +64,7 @@ comparing_doubling_algorithms3:
 comparing_doubling_algorithms2:
 	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
 
-# FIXME
+# FIXME create this file!
 nonstationary:	nonstationary3
 nonstationary3:
 	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_py3_log.txt
