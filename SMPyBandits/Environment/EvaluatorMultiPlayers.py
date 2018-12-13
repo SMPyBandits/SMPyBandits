@@ -871,7 +871,7 @@ class EvaluatorMultiPlayers(object):
             else:
                 print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=e.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=45,
             base=1, unit="seconds", evaluators=()
         ):
         """Plot the running times of the different players, as a box plot for each evaluators."""
@@ -906,7 +906,7 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=45,
             base=1024, unit="KiB", evaluators=()
         ):
         """Plot the memory consumption of the different players, as a box plot for each."""

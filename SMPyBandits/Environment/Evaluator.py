@@ -659,7 +659,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=30,
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=45,
             base=1, unit="seconds",
         ):
         """Plot the running times of the different policies, as a box plot for each."""
@@ -692,7 +692,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=30,
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=45,
             base=1024, unit="KiB"
         ):
         """Plot the memory consumption of the different policies, as a box plot for each."""
@@ -790,16 +790,15 @@ class Evaluator(object):
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=25, log=False,
-                        boxplot=False, maxNbOfLabels=30, normalized_boxplot=True,
+                        boxplot=False, maxNbOfLabels=45, normalized_boxplot=True,
                         all_on_separate_figures=False, sharex=False, sharey=False,
-                        savefig=None, moreAccurate=None):
+                        savefig=None, moreAccurate=False):
         """Plot histogram of the regrets R_T for all policies."""
         N = self.nbPolicies
         if N == 1:
             subplots = False  # no need for a subplot
         colors = palette(N)
         if boxplot:
-            moreAccurate = False
             all_last_regrets = []
             for policyId, policy in enumerate(self.policies):
                 last_regret = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
