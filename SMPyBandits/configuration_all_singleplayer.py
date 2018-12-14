@@ -858,5 +858,5 @@ configuration.update({
     }
 })
 
-print("Loaded experiments configuration from 'configuration.py' :")
+print("Loaded experiments configuration from 'configuration_all_singleplayer.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

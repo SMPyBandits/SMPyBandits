@@ -20,11 +20,9 @@ __version__ = "0.9"
 import numpy as np
 
 try:
-    from .with_proba import with_proba
     from .BaseWrapperPolicy import BaseWrapperPolicy
     from .UCB import UCB as DefaultPolicy
 except ImportError:
-    from with_proba import with_proba
     from BaseWrapperPolicy import BaseWrapperPolicy
     from UCB import UCB as DefaultPolicy
 

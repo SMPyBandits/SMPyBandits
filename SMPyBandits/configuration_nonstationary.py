@@ -76,16 +76,12 @@ NB_ARMS = int(getenv('NB_ARMS', NB_ARMS))
 LOWER = 0.
 #: Default value for the amplitude value of means
 AMPLITUDE = 1.
+#: Variance of Gaussian arms, if needed
+VARIANCE = 0.25
 
 #: Type of arms for non-hard-coded problems (Bayesian problems)
 ARM_TYPE = "Bernoulli"
 ARM_TYPE = str(getenv('ARM_TYPE', ARM_TYPE))
-
-LOWER = float(getenv('LOWER', LOWER))
-AMPLITUDE = float(getenv('AMPLITUDE', AMPLITUDE))
-assert AMPLITUDE > 0, "Error: invalid amplitude = {:.3g} but has to be > 0."  # DEBUG
-VARIANCE = float(getenv('VARIANCE', VARIANCE))
-
 ARM_TYPE_str = str(ARM_TYPE)
 ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 
@@ -103,6 +99,8 @@ configuration = {
     # --- Parameters for the use of joblib.Parallel
     "n_jobs": N_JOBS,    # = nb of CPU cores
     "verbosity": 6,      # Max joblib verbosity
+    # --- Random events
+    "nb_break_points": NB_BREAK_POINTS,
     # --- Should we plot the lower-bounds or not?
     "plot_lowerbound": False,  # XXX Default
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
@@ -112,7 +110,7 @@ configuration = {
 }
 
 # XXX Pb 0 changes are only on one arm at a time, only 2 arms
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -137,7 +135,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -162,7 +160,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -210,6 +208,7 @@ if True:
             }
         },
     ]
+
 
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
 if False:  # WARNING remove this "False and" to use this problem
@@ -342,6 +341,49 @@ if False:  # FIXME remove this "False and" to use this problem
     ]
 
 
+# FIXME experimental code to check some condition on the problems
+
+def lowerbound_on_sequence_length(horizon, gap):
+    r""" A function that computes the lower-bound (we will find) on the sequence length to have a reasonable bound on the delay of our change-detection algorithm.
+
+    - It returns the smallest possible sequence length :math:`L = \tau_{m+1} - \tau_m` satisfying:
+
+    .. math:: L \geq \frac{8}{\Delta^2} \log(T).
+    """
+    if np.isclose(gap, 0): return 0
+    condition = lambda length: length >= (8/gap**2) * np.log(horizon)
+    length = 1
+    while not condition(length):
+        length += 1
+    return length
+
+
+def check_condition_on_piecewise_stationary_problems(horizon, listOfMeans, changePoints):
+    """ Check some conditions on the piecewise stationary problem."""
+    M = len(listOfMeans)
+    print("For a piecewise stationary problem with M = {} sequences...".format(M))  # DEBUG
+    for m in range(M - 1):
+        mus_m = listOfMeans[m]
+        tau_m = changePoints[m]
+        mus_mp1 = listOfMeans[m+1]
+        tau_mp1 = changePoints[m+1]
+        print("\nChecking m-th (m = {}) sequence, µ_m = {}, µ_m+1 = {} and tau_m = {} and tau_m+1 = {}".format(m, mus_m, mus_mp1, tau_m, tau_mp1))  # DEBUG
+        for i, (mu_i_m, mu_i_mp1) in enumerate(zip(mus_m, mus_mp1)):
+            gap = abs(mu_i_m - mu_i_mp1)
+            length = tau_mp1 - tau_m
+            lowerbound = lowerbound_on_sequence_length(horizon, gap)
+            print("   - For arm i = {}, gap = {:.3g} and length = {} with lowerbound on length = {}...".format(i, gap, length, lowerbound))  # DEBUG
+            if length < lowerbound:
+                print("WARNING For arm i = {}, gap = {:.3g} and length = {} < lowerbound on length = {} !!".format(i, gap, length, lowerbound))  # DEBUG
+
+
+for envId, env in enumerate(configuration["environment"]):
+    print("\n\n\nChecking environment number {}".format(envId))  # DEBUG
+    listOfMeans = env["params"]["listOfMeans"]
+    changePoints = env["params"]["changePoints"]
+    check_condition_on_piecewise_stationary_problems(HORIZON, listOfMeans, changePoints)
+
+
 CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
 
 # if False:  # WARNING remove this "False and" to use this problem
@@ -434,15 +476,16 @@ GAMMAS = [
 
 WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
 
-configuration["policies"] = [] +
+configuration.update({
+    "policies":
     [  # XXX Regular adversarial bandits algorithms!
         { "archtype": Exp3PlusPlus, "params": {} },
     ] + [  # XXX Regular stochastic bandits algorithms!
         { "archtype": UCBalpha, "params": { "alpha": 1, } },
         # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
-        { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-        { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-        { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+        # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+        # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+        # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
         { "archtype": klUCB, "params": { "klucb": klucb, } },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
         { "archtype": Thompson, "params": { "posterior": Beta, } },
@@ -484,7 +527,7 @@ configuration["policies"] = [] +
             PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
         ]
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
         for per_arm_restart in [
@@ -525,8 +568,8 @@ configuration["policies"] = [] +
             False, # Global restart XXX seems more efficient? (at least more memory efficient!)
         ]
         for policy in [
-            UCB,
-            # klUCB,  # XXX comment to only test UCB
+            # UCB,
+            klUCB,  # XXX comment to only test UCB
         ]
     ] +
     # DONE The SW_UCB_Hash algorithm works fine!
@@ -570,9 +613,9 @@ configuration["policies"] = [] +
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            UCB,
+            # UCB,
             klUCB,  # XXX comment to only test UCB
-            Exp3PlusPlus,  # XXX comment to only test UCB
+            # Exp3PlusPlus,  # XXX comment to only test UCB
         ]
         for per_arm_restart in [True]  #, False]
         # for full_restart_when_refresh in [True, False]
@@ -596,6 +639,6 @@ configuration.update({
     }
 })
 
-print("Loaded experiments configuration from 'configuration.py' :")
+print("Loaded experiments configuration from 'configuration_nonstationnary.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG
 print("configuration['environment'] =", configuration["environment"])  # DEBUG

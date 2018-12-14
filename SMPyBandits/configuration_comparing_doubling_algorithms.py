@@ -182,5 +182,5 @@ for policy in POLICIES_FOR_DOUBLING_TRICK:
     ]
 
 
-print("Loaded experiments configuration from 'configuration.py' :")
+print("Loaded experiments configuration from 'configuration_comparing_doubling_algorithms.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

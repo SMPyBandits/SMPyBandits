@@ -442,5 +442,5 @@ configuration.update({
 
 
 # DONE
-print("Loaded experiments configuration from 'configuration.py' :")
+print("Loaded experiments configuration from 'configuration_multiplayers.py' :")
 print("configuration =", configuration)  # DEBUG

@@ -48,39 +48,39 @@ singleplayer2:
 
 all_singleplayer:	all_singleplayer3
 all_singleplayer3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_all_singleplayer_py3_log.txt
 all_singleplayer2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_all_singleplayer | tee ./logs/main_all_singleplayer_py2_log.txt
 
 comparing_aggregation_algorithms:	comparing_aggregation_algorithms3
 comparing_aggregation_algorithms3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_comparing_aggregation_algorithms_py3_log.txt
 comparing_aggregation_algorithms2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_aggregation_algorithms | tee ./logs/main_comparing_aggregation_algorithms_py2_log.txt
 
 comparing_doubling_algorithms:	comparing_doubling_algorithms3
 comparing_doubling_algorithms3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_comparing_doubling_algorithms_py3_log.txt
 comparing_doubling_algorithms2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_comparing_doubling_algorithms | tee ./logs/main_comparing_doubling_algorithms_py2_log.txt
 
 nonstationary:	nonstationary3
 nonstationary3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_nonstationary_py3_log.txt
 nonstationary2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_nonstationary | tee ./logs/main_nonstationary_py2_log.txt
 
 sparse:	sparse3
 sparse3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_sparse_py3_log.txt
 sparse2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_sparse | tee ./logs/main_sparse_py2_log.txt
 
 markovian:	markovian3
 markovian3:
-	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_py3_log.txt
+	time nice -n 19 ipython3 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_markovian_py3_log.txt
 markovian2:
-	time nice -n 19 python2 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_py2_log.txt
+	time nice -n 19 python2 ./SMPyBandits/main.py configuration_markovian | tee ./logs/main_markovian_py2_log.txt
 
 multiplayers:	multiplayers3
 multiplayers3:

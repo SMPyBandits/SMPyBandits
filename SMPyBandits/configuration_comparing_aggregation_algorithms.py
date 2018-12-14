@@ -406,5 +406,5 @@ if TEST_Aggregator:
             }] + CURRENT_POLICIES
 
 
-print("Loaded experiments configuration from 'configuration.py' :")
+print("Loaded experiments configuration from 'configuration_comparing_aggregation_algorithms.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

@@ -22,7 +22,9 @@ import pickle
 try:
     from Environment import Evaluator, notify, start_tracemalloc, display_top_tracemalloc
     # Import a configuration file
-    if 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
+    if 'configuration_nonstationary' in sys.argv or 'configuration_nonstationary.py' in sys.argv:
+        from configuration_nonstationary import configuration
+    elif 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
         from configuration_comparing_aggregation_algorithms import configuration
     elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
         from configuration_all_singleplayer import configuration
@@ -37,8 +39,8 @@ try:
 except ImportError:
     from SMPyBandits.Environment import Evaluator, notify
     # Import a configuration file
-    if 'configuration_nonstationnary' in sys.argv or 'configuration_nonstationnary.py' in sys.argv:
-        from SMPyBandits.configuration_nonstationnary import configuration
+    if 'configuration_nonstationary' in sys.argv or 'configuration_nonstationary.py' in sys.argv:
+        from SMPyBandits.configuration_nonstationary import configuration
     elif 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
         from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
     elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
