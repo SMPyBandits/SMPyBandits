@@ -54,6 +54,20 @@ configuration["successive_players"] = [
 
 ----
 
+## [How to run the experiments ?](How_to_run_the_code.md)
+
+You should use the provided [`Makefile`](Makefile) file to do this simply:
+```bash
+# if not already installed, otherwise update with 'git pull'
+git clone https://github.com/SMPyBandits/SMPyBandits/
+cd SMPyBandits
+make install            # install the requirements ONLY ONCE
+make multiplayers       # run and log the main_multiplayers.py script
+make moremultiplayers   # run and log the main_more_multiplayers.py script
+```
+
+----
+
 ### Some illustrations of multi-players simulations
 
 ![plots/MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized____env1-1_8318947830261751207.png](plots/MP__K9_M6_T5000_N500__4_algos__all_RegretCentralized____env1-1_8318947830261751207.png)

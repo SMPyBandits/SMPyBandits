@@ -247,7 +247,7 @@ configuration = {
         # {   # Another very easy problem: 3 arms, two very bad, one bad
         #     "arm_type": Bernoulli,
         #     "params": [0.04, 0.05, 0.1]
-        # },np.asarray(
+        # },
         {   # Use vector from command line
             "arm_type": ARM_TYPE,
             "params": MEANS

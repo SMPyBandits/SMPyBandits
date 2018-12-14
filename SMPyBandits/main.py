@@ -37,7 +37,9 @@ try:
 except ImportError:
     from SMPyBandits.Environment import Evaluator, notify
     # Import a configuration file
-    if 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
+    if 'configuration_nonstationnary' in sys.argv or 'configuration_nonstationnary.py' in sys.argv:
+        from SMPyBandits.configuration_nonstationnary import configuration
+    elif 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
         from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
     elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
         from SMPyBandits.configuration_all_singleplayer import configuration

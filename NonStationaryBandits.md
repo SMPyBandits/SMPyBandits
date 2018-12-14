@@ -82,10 +82,10 @@ Other interesting references:
 A simple python file, [`configuration_nonstationary.py`](https://smpybandits.github.io/docs/configuration_nonstationary.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
 
 For example, we can compare the standard [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) and  [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](https://smpybandits.github.io/docs/Policies.DiscountedUCB.html) and [`SWUCB`](https://smpybandits.github.io/docs/Policies.SlidingWindowUCB.html) algorithms.
+We also included our algorithms [`Bernoulli-GLR-UCB`](https://smpybandits.github.io/docs/Policies.BernoulliGLR_IndexPolicy.html) using [`kl-UCB`](https://smpybandits.github.io/docs/Policies.klUCB.html), and the efficient [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
 
 ```python
 horizon = 10000
-nb_random_events = 10
 configuration = {
     "horizon": horizon,    # Finite horizon of the simulation
     "repetitions": 100,  # number of repetitions
@@ -96,14 +96,21 @@ configuration = {
         {   # A non stationary problem: every step of the same repetition use a different mean vector!
             "arm_type": Bernoulli,
             "params": {
-                "newMeans": randomContinuouslyVaryingMeans,
-                "changePoints": geometricChangePoints(
-                    horizon=horizon, proba=nb_random_events/horizon),
-                "args": {
-                    "nbArms": 9,
-                    "lower": 0, "amplitude": 1,
-                    "mingap": None, "isSorted": True,
-                }
+                "listOfMeans": [
+                    [0.4, 0.5, 0.9],  # 0    to 399
+                    [0.5, 0.4, 0.7],  # 400  to 799
+                    [0.6, 0.3, 0.5],  # 800  to 1199
+                    [0.7, 0.2, 0.3],  # 1200 to 1599
+                    [0.8, 0.1, 0.1],  # 1600 to end
+                ],
+                "changePoints": [
+                    int(0    * HORIZON / 2000.0),
+                    int(400  * HORIZON / 2000.0),
+                    int(800  * HORIZON / 2000.0),
+                    int(1200 * HORIZON / 2000.0),
+                    int(1600 * HORIZON / 2000.0),
+                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
+                ],
             }
         },
     ]
@@ -111,16 +118,20 @@ configuration = {
     # Policies that should be simulated, and their parameters.
     "policies": [
         {"archtype": UCB, "params": {} },
+        {"archtype": klUCB, "params": {} },
         {"archtype": Thompson, "params": {} },
-        {"archtype": SWUCB, "params": { "tau": 100 } },
-        {"archtype": SWUCB, "params": { "tau": 500 } },
-        {"archtype": SWUCB, "params": { "tau": 1000 } },
         {"archtype": SWUCB, "params": { "tau":  # formula from [GarivierMoulines2011]
             2 * np.sqrt(horizon * np.log(horizon) / (1 + nb_random_events))
         } },
         {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.99 } },
-        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.85 } },
-        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.5 } },
+        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.9 } },
+        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.7 } },
+        { "archtype": BernoulliGLR_IndexPolicy, "params": {
+            "horizon": horizon, "policy": klUCB, "per_arm_restart": True,
+        } }
+        {"archtype": DiscountedThompson, "params": { "gamma": 0.99 } },
+        {"archtype": DiscountedThompson, "params": { "gamma": 0.9 } },
+        {"archtype": DiscountedThompson, "params": { "gamma": 0.7 } },
     ]
 }
 ```
@@ -131,6 +142,9 @@ configuration = {
 
 You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
+# if not already installed, otherwise update with 'git pull'
+git clone https://github.com/SMPyBandits/SMPyBandits/
+cd SMPyBandits
 make install         # install the requirements ONLY ONCE
 make nonstationary   # run and log the main.py script
 ```

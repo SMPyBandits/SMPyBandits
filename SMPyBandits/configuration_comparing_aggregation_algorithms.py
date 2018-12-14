@@ -368,7 +368,7 @@ if TEST_CORRAL:
     # BROADCAST_ALL_VALUES = [False, True]
     BROADCAST_ALL_VALUES = [True]
     for UNBIASED in UNBIASED_VALUES:
-       for BROADCAST_ALL in BROADCAST_ALL_VALUES:
+        for BROADCAST_ALL in BROADCAST_ALL_VALUES:
             CURRENT_POLICIES = configuration["policies"]
             # Add one CORRAL policy
             configuration["policies"] = [{

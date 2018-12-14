@@ -83,6 +83,9 @@ configuration["policies"] += [
 
 You should use the provided [`Makefile`](Makefile) file to do this simply:
 ```bash
+# if not already installed, otherwise update with 'git pull'
+git clone https://github.com/SMPyBandits/SMPyBandits/
+cd SMPyBandits
 make install  # install the requirements ONLY ONCE
 make comparing_doubling_algorithms   # run and log the main.py script
 ```

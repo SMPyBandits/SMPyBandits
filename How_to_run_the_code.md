@@ -44,6 +44,7 @@ python main.py configuration_sparse
 # or
 make sparse
 ```
+> See these explainations: [SparseBandits.md](SparseBandits.html)
 
 #### [Single player, with Markovian problem](https://smpybandits.github.io/docs/configuration_markovian.html)
 ```bash
@@ -58,6 +59,7 @@ python main.py configuration_nonstationary
 # or
 make nonstationary
 ```
+> See these explainations: [NonStationaryBandits.md](NonStationaryBandits.html)
 
 ### Multi-Player
 #### [Multi-Player, one algorithm](https://smpybandits.github.io/docs/main_multiplayers.html)
@@ -74,6 +76,8 @@ python main_multiplayers_more.py
 make moremulti
 ```
 > See these explainations: [MultiPlayers.md](MultiPlayers.html)
+
+----
 
 ### Using `env` variables ?
 
