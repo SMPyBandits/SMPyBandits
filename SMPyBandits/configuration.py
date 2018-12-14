@@ -423,7 +423,7 @@ if False and ENVIRONMENT_NONSTATIONARY:
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if ENVIRONMENT_NONSTATIONARY:
+if False and ENVIRONMENT_NONSTATIONARY:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -441,6 +441,31 @@ if ENVIRONMENT_NONSTATIONARY:
                     int(800  * HORIZON / 2000.0),
                     int(1200 * HORIZON / 2000.0),
                     int(1600 * HORIZON / 2000.0),
+                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
+                ],
+            }
+        },
+    ]
+
+# XXX Pb 3 changes are on all or almost arms at a time, but sequences don't have same length
+if ENVIRONMENT_NONSTATIONARY:
+    configuration["environment"] += [
+        {   # A simple piece-wise stationary problem
+            "arm_type": Bernoulli,
+            "params": {
+                "listOfMeans": [
+                    [0.1, 0.5, 0.9],  # 1th sequence, best=3rd
+                    [0.3, 0.4, 0.1],  # 2th sequence, best=2nd, DeltaMin=0.1
+                    [0.5, 0.3, 0.2],  # 3th sequence, best=1st, DeltaMin=0.1
+                    [0.7, 0.4, 0.3],  # 4th sequence, best=1st, DeltaMin=0.1
+                    [0.1, 0.5, 0.2],  # 5th sequence, best=2nd, DeltaMin=0.1
+                ],
+                "changePoints": [
+                    int(0    * HORIZON / 2000.0),
+                    int(1000 * HORIZON / 2000.0),
+                    int(1250 * HORIZON / 2000.0),
+                    int(1500 * HORIZON / 2000.0),
+                    int(1750 * HORIZON / 2000.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -1789,39 +1814,41 @@ if TEST_Non_Stationary_Policies:
             # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
             { "archtype": Exp3PlusPlus, "params": {} },
         ] + [  # XXX Regular stochastic bandits algorithms!
+            # { "archtype": Uniform, "params": {} },  # WARNING remove it's useless!
+            # { "archtype": EmpiricalMeans, "params": {} },  # WARNING remove it's useless!
             { "archtype": UCBalpha, "params": { "alpha": 1, } },
             # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
-            # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-            # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            # # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+            { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+            { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+            { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
             { "archtype": klUCB, "params": { "klucb": klucb, } },
             # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
             { "archtype": Thompson, "params": { "posterior": Beta, } },
         ] + [  # XXX This is still highly experimental!
             { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
             # for gamma in GAMMAS
-            for gamma in [0.99, 0.9, 0.5]
+            for gamma in [0.99, 0.9, 0.7]
         ] +
-        # # The Exp3R algorithm works reasonably well
-        # [
-        #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-        # ] +
+        # The Exp3R algorithm works reasonably well
+        [
+            { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+        ] +
         # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
         [
             { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
         ] +
         [  # XXX TODO test the AdSwitch policy
             { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-            for C1 in [1]  # , 100, 0.01]
-            for C2 in [1]  # , 100, 0.01]
+            for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+            for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
         ] +
-        # # The LM_DSEE algorithm seems to work fine!
-        # [
-        #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-        #     # XXX note that for a fixed T it means nothing…
-        #     # XXX But for T=10000 it is at most 100 changes, reasonable!
-        #     { "archtype": LM_DSEE, "params": { "nu": 0.2, "DeltaMin": 0.5, "a": 1, "b": 0.25, } }
-        # ] +
+        # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+        [
+            # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+            # XXX note that for a fixed T it means nothing…
+            # XXX But for T=10000 it is at most 100 changes, reasonable!
+            { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+        ] +
         # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
         [
             { "archtype": archtype, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": policy, "per_arm_restart": per_arm_restart, } }
@@ -1864,7 +1891,7 @@ if TEST_Non_Stationary_Policies:
             { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
             for per_arm_restart in [
                 True,  # Per-arm restart XXX comment to only test global arm
-                # False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
             ]
             for policy in [
                 UCB,
@@ -1880,9 +1907,6 @@ if TEST_Non_Stationary_Policies:
         # [
         #     # --- # XXX experimental sliding window algorithm
         #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-        #     # for tau in TAUS for eps in EPSS
-        #     # for tau in [TAUS[0]] for eps in EPSS
-        #     # for tau in TAUS for eps in [EPSS[0]]
         #     for tau in [TAUS[0]] for eps in [EPSS[0]]
         #     for policy in [UCB, klUCB, Thompson, BayesUCB]
         # ] +
@@ -1911,15 +1935,16 @@ if TEST_Non_Stationary_Policies:
         # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
         [
             { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy,
-                # "full_restart_when_refresh": full_restart_when_refresh, "per_arm_restart": per_arm_restart,
+                "per_arm_restart": per_arm_restart,
+                # "full_restart_when_refresh": full_restart_when_refresh,
             } }
             for policy in [
                 UCB,
                 klUCB,  # XXX comment to only test UCB
                 Exp3PlusPlus,  # XXX comment to only test UCB
             ]
+            for per_arm_restart in [True]  #, False]
             # for full_restart_when_refresh in [True, False]
-            # for per_arm_restart in [True, False]
         ] +
         []
     })
