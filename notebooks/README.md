@@ -16,7 +16,10 @@ This folder hosts some [Jupyter Notebooks](http://jupyter.org/), to present in a
 - [A simple example of Single-Player simulation](Example_of_a_small_Single-Player_Simulation.ipynb), comparing [`UCB1`](https://smpybandits.github.io/docs/Policies.UCBalpha.html) (for two values of $\alpha$, 1 and 1/2), [`Thompson Sampling`](https://smpybandits.github.io/docs/Policies.Thompson.html), [`BayesUCB`](https://smpybandits.github.io/docs/Policies.BayesUCB.html) and [`kl-UCB`](https://smpybandits.github.io/docs/Policies.klUCB.html).
 - [*Do we even need UCB?*](Do_we_even_need_UCB.ipynb) demonstrates the need for an algorithm smarter than the naive [`EmpiricalMeans`](https://smpybandits.github.io/docs/Policies.EmpiricalMeans.html).
 - [Lai-Robbins lower-bound for doubling-tricks algorithms with full restart](Lai_Robbins_Lower_Bound_for_Doubling_Trick_with_Restarting_Algorithms.ipynb).
+
+### Active research on Single-Player MAB
 - [Exploring different doubling tricks for different kinds of regret bounds](Exploring_different_doubling_tricks_for_different_kinds_of_regret_bounds.ipynb).
+- [Demonstrations of Single-Player Simulations for Non-Stationary Bandits](Demonstrations_of_Single-Player_Simulations_for_Non-Stationary-Bandits.ipynb).
 
 ### Multi-Player simulations
 - [A simple example of Multi-Player simulation with 4 Centralized Algorithms](Example_of_a_small_Multi-Player_Simulation__with_Centralized_Algorithms.ipynb), comparing [`CentralizedMultiplePlay`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedMultiplePlay.html) and [`CentralizedIMP`](https://smpybandits.github.io/docs/PoliciesMultiPlayers.CentralizedIMP.html) with [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) and [`Thompson Sampling`](https://smpybandits.github.io/docs/Policies.Thompson.html).

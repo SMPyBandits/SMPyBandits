@@ -14,6 +14,7 @@ List of notebooks for SMPyBandits
     Lai_Robbins_Lower_Bound_for_Doubling_Trick_with_Restarting_Algorithms.ipynb
     Exploring_different_doubling_tricks_for_different_kinds_of_regret_bounds.ipynb
     Experiments_of_statistical_tests_for_piecewise_stationary_bandit.ipynb
+    Demonstrations_of_Single-Player_Simulations_for_Non-Stationary-Bandits.ipynb
 
 ---
 

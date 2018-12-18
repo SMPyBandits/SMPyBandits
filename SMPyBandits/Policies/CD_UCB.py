@@ -24,10 +24,14 @@ try:
     from .with_proba import with_proba
     from .BaseWrapperPolicy import BaseWrapperPolicy
     from .UCB import UCB as DefaultPolicy, UCB
+    from .Exp3 import Exp3
+    from .Exp3PlusPlus import Exp3PlusPlus
 except ImportError:
     from with_proba import with_proba
     from BaseWrapperPolicy import BaseWrapperPolicy
     from UCB import UCB as DefaultPolicy, UCB
+    from Exp3 import Exp3
+    from Exp3PlusPlus import Exp3PlusPlus
 
 
 VERBOSE = True
@@ -574,8 +578,6 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
 
 
 # --- Drift-Detection algorithm from [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
-
-from Policies import Exp3, Exp3PlusPlus
 
 CONSTANT_C = 1  #: The constant :math:`C` used in Corollary 1 of paper [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf).
 

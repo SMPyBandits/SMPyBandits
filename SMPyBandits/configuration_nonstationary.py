@@ -385,6 +385,7 @@ for envId, env in enumerate(configuration["environment"]):
 
 
 CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
+# CHANGE_POINTS = np.unique(np.array(list(set.union(*(set(env["params"]["changePoints"]) for env in ENVIRONMENT)))))
 
 # if False:  # WARNING remove this "False and" to use this problem
 #     configuration["environment"] = [
@@ -475,6 +476,7 @@ GAMMAS = [
     ]
 
 WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
+
 
 configuration.update({
     "policies":
