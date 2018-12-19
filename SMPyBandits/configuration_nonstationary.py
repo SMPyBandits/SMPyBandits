@@ -106,7 +106,7 @@ configuration = {
 }
 
 # XXX Pb 0 changes are only on one arm at a time, only 2 arms
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,

@@ -1024,7 +1024,7 @@ class NonStationaryMAB(PieceWiseStationaryMAB):
             "Error: this NonStationaryMAB is not really a non-stationary MAB, you should use a simple MAB instead!"  # DEBUG
         self._verbose = verbose
 
-        print("  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
+        print("  NonStationary MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {} ...".format(configuration))  # DEBUG
 
         self.arm_type = arm_type = configuration["arm_type"]  #: Kind of arm (NonStationaryMAB are homogeneous)
         print(" - with 'arm_type' =", arm_type)  # DEBUG

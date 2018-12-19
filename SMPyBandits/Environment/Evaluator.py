@@ -577,8 +577,6 @@ class Evaluator(object):
             if semilogy or loglog:
                 ymin = max(0, ymin)
             plt.ylim(ymin, plt.ylim()[1])
-        if meanReward:
-            plt.ylim(0, 1)
         # Get a small string to add to ylabel
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
         if meanReward:
@@ -592,8 +590,10 @@ class Evaluator(object):
             plt.plot(X[::self.delta_t_plot], self.envs[envId].maxArm * np.ones_like(X)[::self.delta_t_plot], 'k--', label="Largest mean = ${:.3g}$".format(maxArm))
             legend()
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
-            if not self.envs[envId].isChangingAtEachRepetition:
+            if not self.envs[envId].isChangingAtEachRepetition and not self.nb_break_points > 0:
                 plt.ylim(0.80 * minArm, 1.10 * maxArm)
+            if self.nb_break_points > 0:
+                plt.ylim(0, 1)
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             if self.plot_lowerbound:
@@ -777,7 +777,7 @@ class Evaluator(object):
             else:
                 print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=self.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
 
-    def printLastRegrets(self, envId=0, moreAccurate=None):
+    def printLastRegrets(self, envId=0, moreAccurate=False):
         """Print the last regrets of the different policies."""
         for policyId, policy in enumerate(self.policies):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
@@ -862,7 +862,7 @@ class Evaluator(object):
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 n, bins, patches = ax.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins, log=log)
-                addTextForWorstCases(ax, n, bins, patches, normed=normed)
+                # addTextForWorstCases(ax, n, bins, patches, normed=normed)
                 ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
