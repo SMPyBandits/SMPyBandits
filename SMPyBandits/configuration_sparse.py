@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Configuration for the simulations, for the single-player case.
+Configuration for the simulations, for single-player sparse bandit.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

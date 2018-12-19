@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+An very simple configuration file to run some basic simulations about stationary multi-armed bandits.
+"""
 
 from Arms import *
 

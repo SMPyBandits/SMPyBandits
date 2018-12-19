@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Configuration for the simulations, for the multi-players case.
+An example of a configuration file to launch some the simulations, for the single-player case.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Script to load the config, run the simulations, and plot them, for the single player case.
+An example of a simple 'main' script.
+Main scripts load the config, run the simulations, and plot them, for the single player case.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
