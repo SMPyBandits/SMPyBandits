@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Configuration for the simulations, for the single-player case.
+Configuration for the simulations, for the piecewise stationary single-player case.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -241,7 +241,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # Another example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.08380
-if False:  # FIXME remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
             "arm_type": Bernoulli,
@@ -457,21 +457,17 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 
 # XXX compare different values of the experimental sliding window algorithm
 EPSS   = [0.1, 0.05]
-
 ALPHAS = [1]
-
 TAUS   = [
         500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-
-GAMMAS = [
-        0.2, 0.4, 0.6, 0.8,
-        0.95, 0.99,
-        max(min(1, (1 - np.sqrt((1 + NB_BREAK_POINTS) / HORIZON)) / 4.), 0),  # "optimal" value according to [Garivier & Moulines, 2008]
-    ]
-
 WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
+
+PER_ARM_RESTART = [
+    True,  # Per-arm restart XXX comment to only test global arm
+    # False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+]
 
 
 configuration.update({
@@ -489,7 +485,6 @@ configuration.update({
         { "archtype": Thompson, "params": { "posterior": Beta, } },
     ] + [  # XXX This is still highly experimental!
         { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-        # for gamma in GAMMAS
         for gamma in [0.99, 0.9, 0.7]
     ] +
     # The Exp3R algorithm works reasonably well
@@ -500,18 +495,18 @@ configuration.update({
     [
         { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
     ] +
-    [  # XXX TODO test the AdSwitch policy and its corrected version
-        { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-        for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    ] +
-    # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
-    [
-        # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-        # XXX note that for a fixed T it means nothing…
-        # XXX But for T=10000 it is at most 100 changes, reasonable!
-        { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
-    ] +
+    # [  # XXX TODO test the AdSwitch policy and its corrected version
+    #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
+    #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    # ] +
+    # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    # [
+    #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+    #     # XXX note that for a fixed T it means nothing…
+    #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+    #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+    # ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
         { "archtype": archtype, "params": {
@@ -528,10 +523,7 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for per_arm_restart in [
-            True,  # Per-arm restart XXX comment to only test global arm
-            False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-        ]
+        for per_arm_restart in PER_ARM_RESTART
     ] +
     # XXX Test a few CD-MAB algorithms
     [
@@ -539,20 +531,19 @@ configuration.update({
             "horizon": HORIZON,
             "policy": policy,
             "per_arm_restart": per_arm_restart,
+            "delta": delta,
         } }
         for archtype in [
-            BernoulliGLR_IndexPolicy,  # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            GaussianGLR_IndexPolicy,  # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for per_arm_restart in [
-            True,  # Per-arm restart XXX comment to only test global arm
-            False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-        ]
+        for per_arm_restart in PER_ARM_RESTART
+        for delta in [None] + [10, 1, 0.1, 0.01, 0.001]
     ] +
     # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
     # [
@@ -561,10 +552,7 @@ configuration.update({
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
-        for per_arm_restart in [
-            True,  # Per-arm restart XXX comment to only test global arm
-            False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-        ]
+        for per_arm_restart in PER_ARM_RESTART
         for policy in [
             # UCB,
             klUCB,  # XXX comment to only test UCB

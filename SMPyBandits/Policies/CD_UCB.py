@@ -9,7 +9,6 @@ r""" The CD-UCB generic policy and CUSUM-UCB, PHT-UCB, GLR-UCB, RExp3 policies f
 
 - It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
-.. warning:: This implementation is still experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -19,6 +18,7 @@ __version__ = "0.9"
 
 
 import numpy as np
+from math import log, sqrt, isinf
 
 try:
     from .with_proba import with_proba
@@ -286,16 +286,11 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 
 # --- Generic GLR for 1-dimensional exponential families
 
-eps = 1e-15  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+eps = 1e-10  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
 
 # --- Simple Kullback-Leibler divergence for known distributions
 
-try:
-    from .usenumba import jit  # Import numba.jit or a dummy jit(f)=f
-except (ValueError, ImportError, SystemError):
-    from usenumba import jit  # Import numba.jit or a dummy jit(f)=f
 
-@jit
 def klBern(x, y):
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
@@ -303,9 +298,9 @@ def klBern(x, y):
     """
     x = min(max(x, eps), 1 - eps)
     y = min(max(y, eps), 1 - eps)
-    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
+    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))
 
-@jit
+
 def klGauss(x, y, sig2x=1):
     r""" Kullback-Leibler divergence for Gaussian distributions of means ``x`` and ``y`` and variances ``sig2x`` and ``sig2y``, :math:`\nu_1 = \mathcal{N}(x, \sigma_x^2)` and :math:`\nu_2 = \mathcal{N}(y, \sigma_x^2)`:
 
@@ -316,12 +311,50 @@ def klGauss(x, y, sig2x=1):
     return (x - y) ** 2 / (2. * sig2x)
 
 
-def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha_t1=0.1, alpha=None):
-    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+def threshold_GaussianGLR(s, t, horizon=None, delta=None, verbose=False):
+    r""" Compute the value :math:`c from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
     - The threshold is computed as:
 
-    .. math:: h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).
+    .. math:: \beta(t_0, t, \delta) := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).
+    """
+    if delta is None:
+        delta = 1.0 / int(max(1, horizon))
+    if verbose:
+        print("threshold_GaussianGLR() with s = {}, t = {}, T = {}, delta = 1/T = {}".format(s, t, int(max(1, horizon)), delta))  # DEBUG
+    c = (1 + (1.0 / (t + 1.0))) * log((2 * t * sqrt(t + 2)) / delta)
+    if c < 0 or isinf(c):
+        c = float('+inf')
+    if verbose:
+        print("Gave c = {}".format(c))  # DEBUG
+    return c
+
+
+def threshold_BernoulliGLR(s, t, horizon=None, delta=None, verbose=False):
+    r""" Compute the value :math:`c from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+
+    - The threshold is computed as:
+
+    .. math:: \beta(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(s)) + \log(1 + \log(t - s)).
+    """
+    if delta is None:
+        delta = 1.0 / int(max(1, horizon))
+    if verbose:
+        print("threshold_BernoulliGLR() with s = {}, t = {}, T = {}, delta = 1/T = {}".format(s, t, int(max(1, horizon)), delta))  # DEBUG
+    c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))
+    if c < 0 or isinf(c):
+        c = float('+inf')
+    if verbose:
+        print("Gave c = {}".format(c))  # DEBUG
+    return c
+
+
+EXPONENT_BETA = 1.1  #: The default value of parameter :math:`\beta` for the function :func:`decreasing_alpha__GLR`.
+ALPHA_T1 = 0.1  #: The default value of parameter :math:`\alpha_{t=1}` for the function :func:`decreasing_alpha__GLR`.
+
+
+def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1, verbose=False):
+    r""" Either use a fixed alpha, or compute it with an exponential decay (if ``alpha0=None``).
 
     .. note:: I am currently exploring the following variant (November 2018):
 
@@ -332,17 +365,11 @@ def compute_c_alpha__GLR(t0, t, horizon, verbose=False, exponentBeta=1.05, alpha
         - with :math:`\beta > 1, \beta` = ``exponentBeta`` (=1.05) and :math:`\alpha_{t=1} < 1, \alpha_{t=1}` = ``alpha_t1`` (=0.01).
         - the only requirement on :math:`\alpha_t` seems to be that `\sum_{t=1}^T \alpha_t < +\infty` (ie. be finite), which is the case for :math:`\alpha_t = \alpha = \frac{1}{T}`, but also any :math:`\alpha_t = \frac{\alpha_1}{t^{\beta}}` for any :math:`\beta>1` (cf. Riemann series).
     """
-    T = int(max(1, horizon))
-    delta = 1.0 / T
-    if verbose: print("compute_c_alpha__GLR() with t = {}, t0 = {}, T = {}, delta = 1/T = {}".format(t, t0, T, delta))  # DEBUG
-    t_m_t0 = abs(t - t0)
-    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
-    if c < 0 or np.isinf(c): c = float('+inf')
-    assert exponentBeta > 1.0, "Error: compute_c_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
-    if alpha is None:
+    assert exponentBeta > 1.0, "Error: decreasing_alpha__GLR should have a exponentBeta > 1 but it was given = {}...".format(exponentBeta)  # DEBUG
+    if alpha0 is None:
         alpha = alpha_t1 / max(1, t)**exponentBeta
-    if verbose: print("Gave c = {} and alpha = {}".format(c, alpha))  # DEBUG
-    return c, alpha
+    if verbose: print("Gave alpha = {}".format(alpha))  # DEBUG
+    return alpha
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
@@ -352,38 +379,43 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     - For instance :func:`kullback.klBern`, for Bernoulli distributions, gives :class:`GaussianGLR_IndexPolicy`,
     - And :func:`kullback.klGauss` for univariate Gaussian distributions, gives :class:`BernoulliGLR_IndexPolicy`.
 
+    - ``threshold_function`` computes the threshold :math:`\beta(s, t, \delta)`, it can be for instance :func:`threshold_GaussianGLR` or :func:`threshold_BernoulliGLR`.
+
     - From ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
     """
     def __init__(self, nbArms,
             horizon=None,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             policy=DefaultPolicy,
-            kl=klBern,
+            kl=klGauss,
+            delta=None, alpha=None,
+            exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1,
+            threshold_function=threshold_BernoulliGLR,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
         self.horizon = horizon
-        c, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
-        self._threshold_h, self._alpha = c, alpha
+        # if delta is None: delta = 1.0 / max(1, horizon)
+        self._delta = delta
+        self._exponentBeta = exponentBeta
+        self._alpha_t1 = alpha_t1
+        self._alpha0 = alpha
+        self._threshold_function = threshold_function
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
         self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
 
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
-    @property
-    def threshold_h(self):
-        r"""Parameter :math:`c` for the test (threshold)."""
-        c, alpha = compute_c_alpha__GLR(0, self.t, self.horizon)
-        self._threshold_h, self._alpha = c, alpha
-        return self._threshold_h
+    def compute_threshold_h(self, s, t):
+        """Compute the threshold :math:`h` with :attr:`_threshold_function`."""
+        return self._threshold_function(s, t, horizon=self.horizon, delta=self._delta)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
     def proba_random_exploration(self):
         r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
-        c, alpha = compute_c_alpha__GLR(0, self.t, self.horizon)
-        self._threshold_h, self._alpha = c, alpha
-        return self._alpha
+        if self._alpha0 is not None:
+            return self._alpha0
+        return decreasing_alpha__GLR(alpha0=self._alpha0, t=self.t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
         name = self.kl.__name__[2:]
@@ -409,9 +441,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         mean_all = np.mean(data_y[t0 : t+1])
         mean_before = 0
         mean_after = mean_all
-        for s in range(t0, t):
+        for s in range(t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
-            # this_kl = self.kl(mu(s+1, t), mu(t0, s), *self._args_to_kl)
+            # this_kl = self.kl(mu(s+1, t), mu(s), *self._args_to_kl)
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
             # FIXED this is the correct formula!
             # XXX this is not efficient we compute the same means too many times!
@@ -424,8 +456,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the total mean mu(t0,t) = {}, so the kl before = {} and kl after = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, mean_all, kl_before, kl_after, glr, self.threshold_h))
-            if glr >= self.threshold_h:
+            threshold_h = self.compute_threshold_h(s + 1, t + 1)
+            if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the total mean mu(t0,t) = {}, so the kl before = {} and kl after = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, mean_all, kl_before, kl_after, glr, threshold_h))
+            if glr >= threshold_h:
                 return True
         return False
 
@@ -435,33 +468,35 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed).
     """
 
-    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, kl=klGauss, threshold_function=threshold_GaussianGLR, delta=None, alpha=None, exponentBeta=1.05, alpha_t1=0.1, lower=0., amplitude=1., *args, **kwargs
         ):
-        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klGauss, lower=lower, amplitude=amplitude, *args, **kwargs)
-        self.sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
+        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha=alpha, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lower=lower, amplitude=amplitude, *args, **kwargs)
+        self._sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
         self._args_to_kl = (sig2, )
 
     def __str__(self):
         # return r"GaussianGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"GaussianGLR-{}({})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global")
+        return r"GaussianGLR-{}({}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r", $\delta={:.3g}$".format(self._delta) if self._delta is not None else r", $\delta=\frac{1}{T}$")
+
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
     """
 
-    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs
+    def __init__(self, nbArms, horizon=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, kl=klBern, threshold_function=threshold_BernoulliGLR, delta=None, alpha=None, exponentBeta=1.05, alpha_t1=0.1, lower=0., amplitude=1., *args, **kwargs
         ):
-        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=klBern, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha=alpha, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lower=lower, amplitude=amplitude, *args, **kwargs)
 
     def __str__(self):
         # return r"BernoulliGLR-{}($T={}$, $c={:.3g}$, $\gamma={:.3g}${})".format(self._policy.__name__,  self.horizon, self.threshold_h, self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
-        return r"BernoulliGLR-{}({})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global")
+        return r"BernoulliGLR-{}({}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r", $\delta={:.3g}$".format(self._delta) if self._delta is not None else r", $\delta=\frac{1}{T}$")
+
 
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
 
 #: Default confidence level for :class:`SubGaussianGLR_IndexPolicy`.
-DELTA = 0.001
+DELTA = 0.01
 
 #: By default, :class:`SubGaussianGLR_IndexPolicy` assumes distributions are 0.25-sub Gaussian, like Bernoulli or any distributions with support on :math:`[0,1]`.
 SIGMA = 0.25
@@ -469,38 +504,33 @@ SIGMA = 0.25
 #: Whether to use the joint or disjoint threshold function (:func:`threshold_SubGaussianGLR_joint` or :func:`threshold_SubGaussianGLR_disjoint`) for :class:`SubGaussianGLR_IndexPolicy`.
 JOINT = True
 
-def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
+def threshold_SubGaussianGLR_joint(s, t, delta=DELTA, sigma=SIGMA):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta) according to this formula:
 
     .. math:: b^{\text{joint}}_{t_0}(s,t,\delta) := \sigma \sqrt{ \left(\frac{1}{s-t_0+1} + \frac{1}{t-s}\right) \left(1 + \frac{1}{t-t_0+1}\right) 2 \log\left( \frac{2(t-t_0)\sqrt{t-t_0+2}}{\delta} \right)}.
     """
-    return sigma * np.sqrt(
-        (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0 + 1))
-        * 2 * max(0, np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta ))
+    return sigma * sqrt(
+        (1.0 / (s + 1) + 1.0 / (t - s)) * (1.0 + 1.0/(t + 1))
+        * 2 * max(0, log(( 2 * t * sqrt(t + 2)) / delta ))
     )
 
-def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
+def threshold_SubGaussianGLR_disjoint(s, t, delta=DELTA, sigma=SIGMA):
     r""" Compute the threshold :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)` according to this formula:
 
     .. math:: b^{\text{disjoint}}_{t_0}(s,t,\delta) := \sqrt{2} \sigma \sqrt{\frac{1 + \frac{1}{s - t_0 + 1}}{s - t_0 + 1} \log\left( \frac{4 \sqrt{s - t_0 + 2}}{\delta}\right)} + \sqrt{\frac{1 + \frac{1}{t - s + 1}}{t - s + 1} \log\left( \frac{4 (t - t_0) \sqrt{t - s + 1}}{\delta}\right)}.
     """
-    return np.sqrt(2) * sigma * (np.sqrt(
-        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * max(0, np.log( (4 * np.sqrt(s - t0 + 2)) / delta ))
-    ) + np.sqrt(
-        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta ))
+    return sqrt(2) * sigma * (sqrt(
+        ((1.0 + (1.0 / (s + 1))) / (s + 1)) * max(0, log( (4 * sqrt(s + 2)) / delta ))
+    ) + sqrt(
+        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, log( (4 * t * sqrt(t - s + 1)) / delta ))
     ))
 
-def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT, experimental=False):
+def threshold_SubGaussianGLR(s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta)` or :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)`."""
-    if experimental:  # FIXME this is the threshold we want to try
-        return sigma * np.sqrt(
-            (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0 + 1))
-            * 2 * max(0, np.log(((1 + np.log(t-t0+1)) * (1 + np.log(s - t0 + 1))) / delta ))
-        )
     if joint:
-        return threshold_SubGaussianGLR_joint(t0, s, t, delta, sigma=sigma)
+        return threshold_SubGaussianGLR_joint(s, t, delta=delta, sigma=sigma)
     else:
-        return threshold_SubGaussianGLR_disjoint(t0, s, t, delta, sigma=sigma)
+        return threshold_SubGaussianGLR_disjoint(s, t, delta=delta, sigma=sigma)
 
 
 class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
@@ -514,25 +544,34 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             horizon=None,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             policy=DefaultPolicy,
-            alpha=None, delta=DELTA, sigma=SIGMA, joint=JOINT,
+            delta=DELTA, sigma=SIGMA, joint=JOINT,
+            exponentBeta=1.05, alpha_t1=0.1, alpha=None,
             lower=0., amplitude=1., *args, **kwargs
         ):
         super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
         # New parameters
         self.horizon = horizon
+        if delta is None: delta = 1.0 / max(1, horizon)
         self.delta = delta  #: Parameter :math:`\delta` for the Sub-Gaussian-GLR test.
         self.sigma = sigma  #: Parameter :math:`\sigma` for the Sub-Gaussian-GLR test.
         self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
-        if alpha is None:
-            _, alpha = compute_c_alpha__GLR(0, 1, self.horizon)
-        self.proba_random_exploration = alpha
+        self._exponentBeta = exponentBeta
+        self._alpha_t1 = alpha_t1
+        self._alpha0 = alpha
 
-    def compute_threshold_h(self, t0, s, t):
+    def compute_threshold_h(self, s, t):
         """Compute the threshold :math:`h` with :func:`threshold_SubGaussianGLR`."""
-        return threshold_SubGaussianGLR(t0, s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
+        return threshold_SubGaussianGLR(s, t, delta=self.delta, sigma=self.sigma, joint=self.joint)
+
+    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
+    @property
+    def proba_random_exploration(self):
+        r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
+        if self._alpha0 is not None:
+            return self._alpha0
+        return decreasing_alpha__GLR(alpha0=self._alpha0, t=self.t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        # return r"SubGaussian-GLR-{}($T={}$, $\delta={:.3g}$, $\sigma={:.3g}$, {}, $\gamma={:.3g}${})".format(self._policy.__name__, self.horizon, self.delta, self.sigma, "joint" if self.joint else "disjoint", self.proba_random_exploration, ", Per-Arm" if self._per_arm_restart else ", Global")
         return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", ", Per-Arm" if self._per_arm_restart else ", Global")
 
     def detect_change(self, arm, verbose=VERBOSE):
@@ -553,16 +592,9 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         data_y = self.all_rewards[arm]
         t0 = 0
         t = len(data_y)-1
-        horizon = self.horizon
-        delta = self.delta
-        if delta is None:
-            delta = 1.0 / max(1, horizon)
-
         mean_before = 0
         mean_after = np.mean(data_y)
-        for s in range(t0, t):
-            # compute threshold
-            threshold_h = self.compute_threshold_h(t0, s, t)
+        for s in range(t):
             # XXX this is not efficient we compute the same means too many times!
             # mean_before = np.mean(data_y[t0 : s+1])
             # mean_after = np.mean(data_y[s+1 : t+1])
@@ -571,6 +603,8 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             mean_before = (s * mean_before + y) / (s + 1)
             mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
             glr = abs(mean_after - mean_before)
+            # compute threshold
+            threshold_h = self.compute_threshold_h(s, t)
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, glr, threshold_h))
             if glr >= threshold_h:
                 return True
@@ -628,8 +662,7 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
 
         .. math:: \varepsilon = \sqrt{\frac{K \log(\frac{1}{\delta})}{2 \gamma H}}.
         """
-        epsilon = np.sqrt((self.nbArms * np.log(1.0 / self.delta)) / (2 * self.proba_random_exploration * self.H))
-        return 2 * epsilon
+        return 2 * sqrt((self.nbArms * log(1.0 / self.delta)) / (2 * self.proba_random_exploration * self.H))
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property

@@ -55,8 +55,8 @@ DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 plot_lowerbound = True  #: Default is to plot the lower-bound
 
 # Parameters for the random events
-random_shuffle = False
-random_invert = False
+random_shuffle = False  #: Use basic random events of shuffling the arms?
+random_invert = False  #: Use basic random events of inverting the arms?
 nb_break_points = 0  #: Default nb of random events
 
 # Flag for experimental aspects
@@ -66,8 +66,10 @@ STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
 MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
-FINAL_RANKS_ON_AVERAGE = True
-USE_JOBLIB_FOR_POLICIES = False
+FINAL_RANKS_ON_AVERAGE = True  #: Final ranks are printed based on average on last 1% rewards and not only the last rewards
+USE_JOBLIB_FOR_POLICIES = False  #: Don't use joblib to parallelize the simulations on various policies (we parallelize the random Monte Carlo repetitions)
+
+MAX_NB_OF_LABELS = 50  #: If more than MAX_NB_OF_LABELS labels have to be displayed on a boxplot, don't put a legend.
 
 
 class Evaluator(object):
@@ -661,7 +663,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=45,
+    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=MAX_NB_OF_LABELS,
             base=1, unit="seconds",
         ):
         """Plot the running times of the different policies, as a box plot for each."""
@@ -694,7 +696,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=45,
+    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=MAX_NB_OF_LABELS,
             base=1024, unit="KiB"
         ):
         """Plot the memory consumption of the different policies, as a box plot for each."""
@@ -792,7 +794,7 @@ class Evaluator(object):
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=15, log=False,
-                        boxplot=False, maxNbOfLabels=45, normalized_boxplot=True,
+                        boxplot=False, maxNbOfLabels=MAX_NB_OF_LABELS, normalized_boxplot=True,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=False):
         """Plot histogram of the regrets R_T for all policies."""
