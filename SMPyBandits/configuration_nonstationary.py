@@ -472,106 +472,106 @@ PER_ARM_RESTART = [
 
 configuration.update({
     "policies":
-    # [  # XXX Regular adversarial bandits algorithms!
-    #     { "archtype": Exp3PlusPlus, "params": {} },
-    # ] + [  # XXX Regular stochastic bandits algorithms!
-    #     { "archtype": UCBalpha, "params": { "alpha": 1, } },
-    #     # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
-    #     # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-    #     # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-    #     # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-    #     { "archtype": klUCB, "params": { "klucb": klucb, } },
-    #     # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-    #     { "archtype": Thompson, "params": { "posterior": Beta, } },
-    # ] + [  # XXX This is still highly experimental!
-    #     { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-    #     for gamma in [0.99, 0.9, 0.7]
+    [  # XXX Regular adversarial bandits algorithms!
+        { "archtype": Exp3PlusPlus, "params": {} },
+    ] + [  # XXX Regular stochastic bandits algorithms!
+        { "archtype": UCBalpha, "params": { "alpha": 1, } },
+        # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
+        # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+        # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+        # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+        { "archtype": klUCB, "params": { "klucb": klucb, } },
+        # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
+        { "archtype": Thompson, "params": { "posterior": Beta, } },
+    ] + [  # XXX This is still highly experimental!
+        { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
+        for gamma in [0.99, 0.9, 0.7]
+    ] +
+    # The Exp3R algorithm works reasonably well
+    [
+        { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+    ] +
+    # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+    [
+        { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
+    ] +
+    # [  # XXX TODO test the AdSwitch policy and its corrected version
+    #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
+    #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
     # ] +
-    # # The Exp3R algorithm works reasonably well
+    # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
     # [
-    #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+    #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+    #     # XXX note that for a fixed T it means nothing…
+    #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+    #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
     # ] +
-    # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+    # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
+    [
+        { "archtype": archtype, "params": {
+            "horizon": HORIZON,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            "policy": policy,
+            "per_arm_restart": per_arm_restart,
+        } }
+        for archtype in [
+            CUSUM_IndexPolicy,
+            PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        for per_arm_restart in PER_ARM_RESTART
+    ] +
+    # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
     # [
-    #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
+    #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
     # ] +
-    # # [  # XXX TODO test the AdSwitch policy and its corrected version
-    # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-    # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # # ] +
-    # # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+    [
+        { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
+        for per_arm_restart in PER_ARM_RESTART
+        for policy in [
+            # UCB,
+            klUCB,  # XXX comment to only test UCB
+        ]
+    ] +
+    # DONE The SW_UCB_Hash algorithm works fine!
+    [
+        { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
+        for alpha in ALPHAS
+        for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+    ] +
+    # [
+    #     # --- # XXX experimental sliding window algorithm
+    #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
+    #     for tau in [TAUS[0]] for eps in [EPSS[0]]
+    #     for policy in [UCB, klUCB, Thompson, BayesUCB]
+    # ] +
+    # [
+    #     # --- # Different versions of the sliding window UCB algorithm
+    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+    #     for alpha in ALPHAS for tau in TAUS
+    # ] +
+    [
+        # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+        { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
+        for alpha in ALPHAS
+    ] +
     # # [
-    # #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-    # #     # XXX note that for a fixed T it means nothing…
-    # #     # XXX But for T=10000 it is at most 100 changes, reasonable!
-    # #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+    # #     # --- # Different versions of the discounted UCB algorithm
+    # #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
+    # #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
     # # ] +
-    # # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
-    # [
-    #     { "archtype": archtype, "params": {
-    #         "horizon": HORIZON,
-    #         "max_nb_random_events": NB_BREAK_POINTS,
-    #         "policy": policy,
-    #         "per_arm_restart": per_arm_restart,
-    #     } }
-    #     for archtype in [
-    #         CUSUM_IndexPolicy,
-    #         PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
-    #     ]
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #     ]
-    #     for per_arm_restart in PER_ARM_RESTART
-    # ] +
-    # # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
-    # # [
-    # #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
-    # # ] +
-    # # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-    # [
-    #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
-    #     for per_arm_restart in PER_ARM_RESTART
-    #     for policy in [
-    #         # UCB,
-    #         klUCB,  # XXX comment to only test UCB
-    #     ]
-    # ] +
-    # # DONE The SW_UCB_Hash algorithm works fine!
-    # [
-    #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-    #     for alpha in ALPHAS
-    #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
-    # ] +
-    # # [
-    # #     # --- # XXX experimental sliding window algorithm
-    # #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-    # #     for tau in [TAUS[0]] for eps in [EPSS[0]]
-    # #     for policy in [UCB, klUCB, Thompson, BayesUCB]
-    # # ] +
-    # # [
-    # #     # --- # Different versions of the sliding window UCB algorithm
-    # #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-    # #     for alpha in ALPHAS for tau in TAUS
-    # # ] +
-    # [
-    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-    #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
-    #     for alpha in ALPHAS
-    # ] +
-    # # # [
-    # # #     # --- # Different versions of the discounted UCB algorithm
-    # # #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
-    # # #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
-    # # # ] +
-    # [
-    #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-    #     { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
-    #     for alpha in ALPHAS
-    #     for max_nb_random_events in [NB_BREAK_POINTS]
-    #     # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
-    # ] +
+    [
+        # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+        { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
+        for alpha in ALPHAS
+        for max_nb_random_events in [NB_BREAK_POINTS]
+        # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
+    ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
         { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy,
@@ -592,12 +592,12 @@ configuration.update({
             "horizon": HORIZON,
             "policy": policy,
             "per_arm_restart": per_arm_restart,
-            "delta": delta,
-            "alpha0": alpha0,
+            # "delta": delta,
+            # "alpha0": alpha0,
         } }
         for archtype in [
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            BernoulliGLR_IndexPolicy_Variant,   # TODO BernoulliGLR_IndexPolicy_Variant is working?
+            # BernoulliGLR_IndexPolicy_Variant,   # TODO BernoulliGLR_IndexPolicy_Variant is working?
             GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
         ]
@@ -606,8 +606,8 @@ configuration.update({
             klUCB,
         ]
         for per_arm_restart in PER_ARM_RESTART
-        for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
-        for alpha0 in [None] + [0.5, 0.01, 0.001, 0.0001]  # comment from the + to use default parameter
+        # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
+        # for alpha0 in [None] + [0.5, 0.01, 0.001, 0.0001]  # comment from the + to use default parameter
     ] +
     []
 })

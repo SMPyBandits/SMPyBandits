@@ -344,8 +344,8 @@ def threshold_BernoulliGLR(s, t, horizon=None, delta=None):
     return c
 
 
-EXPONENT_BETA = 1.1  #: The default value of parameter :math:`\beta` for the function :func:`decreasing_alpha__GLR`.
-ALPHA_T1 = 0.1  #: The default value of parameter :math:`\alpha_{t=1}` for the function :func:`decreasing_alpha__GLR`.
+EXPONENT_BETA = 1.01  #: The default value of parameter :math:`\beta` for the function :func:`decreasing_alpha__GLR`.
+ALPHA_T1 = 0.05  #: The default value of parameter :math:`\alpha_{t=1}` for the function :func:`decreasing_alpha__GLR`.
 
 
 def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1):
@@ -408,7 +408,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
         if self._alpha0 is not None:
             return self._alpha0
-        return decreasing_alpha__GLR(alpha0=self._alpha0, t=self.t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
+        smallest_time_since_last_restart = np.min(self.last_pulls)
+        t = min(self.t, 2 * smallest_time_since_last_restart)
+        return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
         name = self.kl.__name__[2:]
@@ -458,7 +460,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 class GLR_IndexPolicy_Variant(GLR_IndexPolicy):
     """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough.
 
-    .. warning:: FIXME this is still highly experimental!
+    .. warning:: WARNING this is still highly experimental!
     """
     def choice(self):
         r""" If any arm is not explored enough (:math:`n_k < \leq \alpha \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -589,7 +591,9 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
         if self._alpha0 is not None:
             return self._alpha0
-        return decreasing_alpha__GLR(alpha0=self._alpha0, t=self.t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
+        smallest_time_since_last_restart = np.min(self.last_pulls)
+        t = min(self.t, 2 * smallest_time_since_last_restart)
+        return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
         return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r", $\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else "")
