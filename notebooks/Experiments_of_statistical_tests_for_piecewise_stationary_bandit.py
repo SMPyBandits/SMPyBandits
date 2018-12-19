@@ -2,62 +2,40 @@
 # coding: utf-8
 
 # # Table of Contents
-#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#A-stupid-detection-test-(pure-random!)" data-toc-modified-id="A-stupid-detection-test-(pure-random!)-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span>A stupid detection test (pure random!)</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Sub-Gaussian-GLR" data-toc-modified-id="Sub-Gaussian-GLR-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span><code>Sub-Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-28"><span class="toc-item-num">2.8&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Numba-implementations-of-some-statistical-tests" data-toc-modified-id="Numba-implementations-of-some-statistical-tests-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Numba implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Some results</a></div><div class="lev1 toc-item"><a href="#Cython-implementations-of-some-statistical-tests" data-toc-modified-id="Cython-implementations-of-some-statistical-tests-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>Cython implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Speeding-up-just-the-kl-functions" data-toc-modified-id="Speeding-up-just-the-kl-functions-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Speeding up just the <code>kl</code> functions</a></div><div class="lev2 toc-item"><a href="#Speeding-up-the-whole-test-functions" data-toc-modified-id="Speeding-up-the-whole-test-functions-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>Speeding up the whole test functions</a></div><div class="lev3 toc-item"><a href="#PHT-in-Cython" data-toc-modified-id="PHT-in-Cython-421"><span class="toc-item-num">4.2.1&nbsp;&nbsp;</span>PHT in Cython</a></div><div class="lev3 toc-item"><a href="#Gaussian-GLR-in-Cython" data-toc-modified-id="Gaussian-GLR-in-Cython-422"><span class="toc-item-num">4.2.2&nbsp;&nbsp;</span>Gaussian GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Bernoulli-GLR-in-Cython" data-toc-modified-id="Bernoulli-GLR-in-Cython-423"><span class="toc-item-num">4.2.3&nbsp;&nbsp;</span>Bernoulli GLR in Cython</a></div><div class="lev3 toc-item"><a href="#Some-results" data-toc-modified-id="Some-results-424"><span class="toc-item-num">4.2.4&nbsp;&nbsp;</span>Some results</a></div><div class="lev3 toc-item"><a href="#3-more-algorithms-implemented-in-Cython" data-toc-modified-id="3-more-algorithms-implemented-in-Cython-425"><span class="toc-item-num">4.2.5&nbsp;&nbsp;</span>3 more algorithms implemented in Cython</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-61"><span class="toc-item-num">6.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-62"><span class="toc-item-num">6.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-63"><span class="toc-item-num">6.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-64"><span class="toc-item-num">6.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-641"><span class="toc-item-num">6.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6411"><span class="toc-item-num">6.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6412"><span class="toc-item-num">6.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-642"><span class="toc-item-num">6.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-6421"><span class="toc-item-num">6.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-6422"><span class="toc-item-num">6.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-6423"><span class="toc-item-num">6.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-6424"><span class="toc-item-num">6.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-6425"><span class="toc-item-num">6.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-6426"><span class="toc-item-num">6.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Sub-Gaussian-GLR" data-toc-modified-id="For-Sub-Gaussian-GLR-6427"><span class="toc-item-num">6.4.2.7&nbsp;&nbsp;</span>For <code>Sub-Gaussian GLR</code></a></div><div class="lev3 toc-item"><a href="#More-examples" data-toc-modified-id="More-examples-643"><span class="toc-item-num">6.4.3&nbsp;&nbsp;</span>More examples</a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-7"><span class="toc-item-num">7&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-71"><span class="toc-item-num">7.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-72"><span class="toc-item-num">7.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-73"><span class="toc-item-num">7.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-74"><span class="toc-item-num">7.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-75"><span class="toc-item-num">7.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Gaussian-GLR" data-toc-modified-id="Experiments-for-Gaussian-GLR-76"><span class="toc-item-num">7.6&nbsp;&nbsp;</span>Experiments for <code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-CUSUM" data-toc-modified-id="Experiments-for-CUSUM-77"><span class="toc-item-num">7.7&nbsp;&nbsp;</span>Experiments for <code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Sub-Gaussian-GLR" data-toc-modified-id="Experiments-for-Sub-Gaussian-GLR-78"><span class="toc-item-num">7.8&nbsp;&nbsp;</span>Experiments for <code>Sub-Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-79"><span class="toc-item-num">7.9&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-8"><span class="toc-item-num">8&nbsp;&nbsp;</span>Conclusions</a></div>
+#  <p><div class="lev1 toc-item"><a href="#Requirements-and-helper-functions" data-toc-modified-id="Requirements-and-helper-functions-1"><span class="toc-item-num">1&nbsp;&nbsp;</span>Requirements and helper functions</a></div><div class="lev2 toc-item"><a href="#Requirements" data-toc-modified-id="Requirements-11"><span class="toc-item-num">1.1&nbsp;&nbsp;</span>Requirements</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-stationary-problems" data-toc-modified-id="Mathematical-notations-for-stationary-problems-12"><span class="toc-item-num">1.2&nbsp;&nbsp;</span>Mathematical notations for stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-stationary-data" data-toc-modified-id="Generating-stationary-data-13"><span class="toc-item-num">1.3&nbsp;&nbsp;</span>Generating stationary data</a></div><div class="lev2 toc-item"><a href="#Mathematical-notations-for-piecewise-stationary-problems" data-toc-modified-id="Mathematical-notations-for-piecewise-stationary-problems-14"><span class="toc-item-num">1.4&nbsp;&nbsp;</span>Mathematical notations for piecewise stationary problems</a></div><div class="lev2 toc-item"><a href="#Generating-fake-piecewise-stationary-data" data-toc-modified-id="Generating-fake-piecewise-stationary-data-15"><span class="toc-item-num">1.5&nbsp;&nbsp;</span>Generating fake piecewise stationary data</a></div><div class="lev1 toc-item"><a href="#Python-implementations-of-some-statistical-tests" data-toc-modified-id="Python-implementations-of-some-statistical-tests-2"><span class="toc-item-num">2&nbsp;&nbsp;</span>Python implementations of some statistical tests</a></div><div class="lev2 toc-item"><a href="#Monitored" data-toc-modified-id="Monitored-21"><span class="toc-item-num">2.1&nbsp;&nbsp;</span><code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#CUSUM" data-toc-modified-id="CUSUM-22"><span class="toc-item-num">2.2&nbsp;&nbsp;</span><code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#PHT" data-toc-modified-id="PHT-23"><span class="toc-item-num">2.3&nbsp;&nbsp;</span><code>PHT</code></a></div><div class="lev2 toc-item"><a href="#Gaussian-GLR" data-toc-modified-id="Gaussian-GLR-24"><span class="toc-item-num">2.4&nbsp;&nbsp;</span><code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Bernoulli-GLR" data-toc-modified-id="Bernoulli-GLR-25"><span class="toc-item-num">2.5&nbsp;&nbsp;</span><code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Sub-Gaussian-GLR" data-toc-modified-id="Sub-Gaussian-GLR-26"><span class="toc-item-num">2.6&nbsp;&nbsp;</span><code>Sub-Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#List-of-all-Python-algorithms" data-toc-modified-id="List-of-all-Python-algorithms-27"><span class="toc-item-num">2.7&nbsp;&nbsp;</span>List of all Python algorithms</a></div><div class="lev1 toc-item"><a href="#Comparing-the-different-implementations" data-toc-modified-id="Comparing-the-different-implementations-3"><span class="toc-item-num">3&nbsp;&nbsp;</span>Comparing the different implementations</a></div><div class="lev2 toc-item"><a href="#Generating-some-toy-data" data-toc-modified-id="Generating-some-toy-data-31"><span class="toc-item-num">3.1&nbsp;&nbsp;</span>Generating some toy data</a></div><div class="lev2 toc-item"><a href="#Checking-time-efficiency" data-toc-modified-id="Checking-time-efficiency-32"><span class="toc-item-num">3.2&nbsp;&nbsp;</span>Checking time efficiency</a></div><div class="lev2 toc-item"><a href="#Checking-detection-delay" data-toc-modified-id="Checking-detection-delay-33"><span class="toc-item-num">3.3&nbsp;&nbsp;</span>Checking detection delay</a></div><div class="lev2 toc-item"><a href="#Checking-false-alarm-probabilities" data-toc-modified-id="Checking-false-alarm-probabilities-34"><span class="toc-item-num">3.4&nbsp;&nbsp;</span>Checking false alarm probabilities</a></div><div class="lev2 toc-item"><a href="#Checking-missed-detection-probabilities" data-toc-modified-id="Checking-missed-detection-probabilities-35"><span class="toc-item-num">3.5&nbsp;&nbsp;</span>Checking missed detection probabilities</a></div><div class="lev1 toc-item"><a href="#More-simulations-and-some-plots" data-toc-modified-id="More-simulations-and-some-plots-4"><span class="toc-item-num">4&nbsp;&nbsp;</span>More simulations and some plots</a></div><div class="lev2 toc-item"><a href="#Run-a-check-for-a-grid-of-values" data-toc-modified-id="Run-a-check-for-a-grid-of-values-41"><span class="toc-item-num">4.1&nbsp;&nbsp;</span>Run a check for a grid of values</a></div><div class="lev2 toc-item"><a href="#A-version-using-joblib.Parallel-to-use-multi-core-computations" data-toc-modified-id="A-version-using-joblib.Parallel-to-use-multi-core-computations-42"><span class="toc-item-num">4.2&nbsp;&nbsp;</span>A version using <code>joblib.Parallel</code> to use multi-core computations</a></div><div class="lev2 toc-item"><a href="#Checking-on-a-small-grid-of-values" data-toc-modified-id="Checking-on-a-small-grid-of-values-43"><span class="toc-item-num">4.3&nbsp;&nbsp;</span>Checking on a small grid of values</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-2D-image" data-toc-modified-id="Plotting-the-result-as-a-2D-image-44"><span class="toc-item-num">4.4&nbsp;&nbsp;</span>Plotting the result as a 2D image</a></div><div class="lev3 toc-item"><a href="#First-example" data-toc-modified-id="First-example-441"><span class="toc-item-num">4.4.1&nbsp;&nbsp;</span>First example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-4411"><span class="toc-item-num">4.4.1.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-4412"><span class="toc-item-num">4.4.1.2&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev3 toc-item"><a href="#Second-example" data-toc-modified-id="Second-example-442"><span class="toc-item-num">4.4.2&nbsp;&nbsp;</span>Second example</a></div><div class="lev4 toc-item"><a href="#For-Monitored" data-toc-modified-id="For-Monitored-4421"><span class="toc-item-num">4.4.2.1&nbsp;&nbsp;</span>For <code>Monitored</code></a></div><div class="lev4 toc-item"><a href="#For-Monitored-for-Gaussian-data" data-toc-modified-id="For-Monitored-for-Gaussian-data-4422"><span class="toc-item-num">4.4.2.2&nbsp;&nbsp;</span>For <code>Monitored</code> for Gaussian data</a></div><div class="lev4 toc-item"><a href="#For-CUSUM" data-toc-modified-id="For-CUSUM-4423"><span class="toc-item-num">4.4.2.3&nbsp;&nbsp;</span>For <code>CUSUM</code></a></div><div class="lev4 toc-item"><a href="#For-PHT" data-toc-modified-id="For-PHT-4424"><span class="toc-item-num">4.4.2.4&nbsp;&nbsp;</span>For <code>PHT</code></a></div><div class="lev4 toc-item"><a href="#For-Bernoulli-GLR" data-toc-modified-id="For-Bernoulli-GLR-4425"><span class="toc-item-num">4.4.2.5&nbsp;&nbsp;</span>For <code>Bernoulli GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Gaussian-GLR" data-toc-modified-id="For-Gaussian-GLR-4426"><span class="toc-item-num">4.4.2.6&nbsp;&nbsp;</span>For <code>Gaussian GLR</code></a></div><div class="lev4 toc-item"><a href="#For-Sub-Gaussian-GLR" data-toc-modified-id="For-Sub-Gaussian-GLR-4427"><span class="toc-item-num">4.4.2.7&nbsp;&nbsp;</span>For <code>Sub-Gaussian GLR</code></a></div><div class="lev1 toc-item"><a href="#Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?" data-toc-modified-id="Exploring-the-parameters-of-change-point-detection-algorithms:-how-to-tune-them?-5"><span class="toc-item-num">5&nbsp;&nbsp;</span>Exploring the parameters of change point detection algorithms: how to tune them?</a></div><div class="lev2 toc-item"><a href="#A-simple-problem-function" data-toc-modified-id="A-simple-problem-function-51"><span class="toc-item-num">5.1&nbsp;&nbsp;</span>A simple problem function</a></div><div class="lev2 toc-item"><a href="#A-generic-function" data-toc-modified-id="A-generic-function-52"><span class="toc-item-num">5.2&nbsp;&nbsp;</span>A generic function</a></div><div class="lev2 toc-item"><a href="#Plotting-the-result-as-a-1D-plot" data-toc-modified-id="Plotting-the-result-as-a-1D-plot-53"><span class="toc-item-num">5.3&nbsp;&nbsp;</span>Plotting the result as a 1D plot</a></div><div class="lev2 toc-item"><a href="#Experiments-for-Monitored" data-toc-modified-id="Experiments-for-Monitored-54"><span class="toc-item-num">5.4&nbsp;&nbsp;</span>Experiments for <code>Monitored</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Bernoulli-GLR" data-toc-modified-id="Experiments-for-Bernoulli-GLR-55"><span class="toc-item-num">5.5&nbsp;&nbsp;</span>Experiments for <code>Bernoulli GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Gaussian-GLR" data-toc-modified-id="Experiments-for-Gaussian-GLR-56"><span class="toc-item-num">5.6&nbsp;&nbsp;</span>Experiments for <code>Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-CUSUM" data-toc-modified-id="Experiments-for-CUSUM-57"><span class="toc-item-num">5.7&nbsp;&nbsp;</span>Experiments for <code>CUSUM</code></a></div><div class="lev2 toc-item"><a href="#Experiments-for-Sub-Gaussian-GLR" data-toc-modified-id="Experiments-for-Sub-Gaussian-GLR-58"><span class="toc-item-num">5.8&nbsp;&nbsp;</span>Experiments for <code>Sub-Gaussian GLR</code></a></div><div class="lev2 toc-item"><a href="#Other-experiments" data-toc-modified-id="Other-experiments-59"><span class="toc-item-num">5.9&nbsp;&nbsp;</span>Other experiments</a></div><div class="lev1 toc-item"><a href="#Conclusions" data-toc-modified-id="Conclusions-6"><span class="toc-item-num">6&nbsp;&nbsp;</span>Conclusions</a></div>
 
 # # Requirements and helper functions
 
 # ## Requirements
 # 
 # This notebook requires to have [`numpy`](https://www.numpy.org/) and [`matplotlib`](https://matplotlib.org/) installed.
-# I'm also exploring usage of [`numba`](https://numba.pydata.org) and [`cython`](https://cython.readthedocs.io/en/latest/) later, so they are also needed.
-# One function needs a function from [`scipy.special`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.comb.html#scipy.special.comb), and I use [`tqdm`](https://github.com/tqdm/tqdm#usage) for pretty progress bars for loops.
+# One function needs a function from [`scipy.special`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.comb.html#scipy.special.comb).
 # [`joblib`](https://joblib.readthedocs.io/en/latest/) is used to have parallel computations (at the end).
+# 
+# The bottleneck performance of the main functions are very simple functions, for which we can write efficient versions using either [`numba.jit`](https://numba.pydata.org/numba-doc/latest/reference/jit-compilation.html#numba.jit) or [`cython`](https://cython.readthedocs.io/en/latest/src/quickstart/build.html#jupyter-notebook).
 
-# In[52]:
+# In[3]:
 
 
-get_ipython().system('pip install watermark numpy scipy matplotlib numba cython tqdm joblib')
+get_ipython().system('pip3 install watermark numpy scipy matplotlib joblib numba cython')
 get_ipython().run_line_magic('load_ext', 'watermark')
-get_ipython().run_line_magic('watermark', '-v -m -p numpy,scipy,matplotlib,numba,cython,tqdm,joblib -a "Lilian Besson"')
+get_ipython().run_line_magic('watermark', '-v -m -p numpy,scipy,matplotlib,joblib,numba,cython -a "Lilian Besson and Emilie Kaufmann"')
 
 
-# In[53]:
+# In[4]:
 
 
 import numpy as np
-import matplotlib.pyplot as plt
-import numba
 
 
-# In[54]:
+# In[5]:
 
 
-def in_notebook():
-    """Check if the code is running inside a Jupyter notebook or not. Cf. http://stackoverflow.com/a/39662359/.
-
-    >>> in_notebook()
-    False
-    """
-    try:
-        shell = get_ipython().__class__.__name__
-        if shell == 'ZMQInteractiveShell':  # Jupyter notebook or qtconsole?
-            return True
-        elif shell == 'TerminalInteractiveShell':  # Terminal running IPython?
-            return False
-        else:
-            return False  # Other type (?)
-    except NameError:
-        return False      # Probably standard Python interpreter
-
-
-# In[55]:
-
-
-if in_notebook():
+try:
     from tqdm import tqdm_notebook as tqdm
-    print("Info: Using the Jupyter notebook version of the tqdm() decorator, tqdm_notebook() ...")  # DEBUG
-else:
-    from tqdm import tqdm
+except:
+    def tqdm(iterator, *args, **kwargs):
+        return iterator
 
 
 # ## Mathematical notations for stationary problems
@@ -72,7 +50,7 @@ else:
 # 
 # Here we give some examples of stationary problems and examples of data we can draw from them.
 
-# In[56]:
+# In[13]:
 
 
 def bernoulli_samples(means, horizon=1000):
@@ -85,7 +63,7 @@ def bernoulli_samples(means, horizon=1000):
         return results
 
 
-# In[57]:
+# In[14]:
 
 
 problem1 = [0.5]
@@ -93,13 +71,21 @@ problem1 = [0.5]
 bernoulli_samples(problem1, horizon=20)
 
 
-# In[58]:
+# In[27]:
+
+
+get_ipython().run_line_magic('timeit', 'bernoulli_samples(problem1, horizon=1000)')
+
+
+# Now for Gaussian data:
+
+# In[49]:
 
 
 sigma = 0.25  # Bernoulli are 1/4-sub Gaussian too!
 
 
-# In[59]:
+# In[50]:
 
 
 def gaussian_samples(means, horizon=1000, sigma=sigma):
@@ -112,10 +98,16 @@ def gaussian_samples(means, horizon=1000, sigma=sigma):
         return results
 
 
-# In[60]:
+# In[51]:
 
 
 gaussian_samples(problem1, horizon=20)
+
+
+# In[52]:
+
+
+get_ipython().run_line_magic('timeit', 'gaussian_samples(problem1, horizon=1000)')
 
 
 # For bandit problem with $K \geq 2$ arms, the *goal* is to design an online learning algorithm that roughly do the following:
@@ -130,7 +122,7 @@ gaussian_samples(problem1, horizon=20)
 # 
 # Note that I don't focus on bandit algorithm here.
 
-# In[61]:
+# In[9]:
 
 
 problem2 = [0.1, 0.5, 0.9]
@@ -138,7 +130,7 @@ problem2 = [0.1, 0.5, 0.9]
 bernoulli_samples(problem2, horizon=20)
 
 
-# In[62]:
+# In[10]:
 
 
 problem2 = [0.1, 0.5, 0.9]
@@ -168,7 +160,7 @@ gaussian_samples(problem2, horizon=20)
 # - On the second interval, for instance from $t=501$ to $t=1000$, that is $\tau_2 = 100$, $\mu_1^{(2)} = 0.5$,
 # - On the third interval, for instance from $t=1001$ to $t=1500$, that $\mu_1^{(3)} = 0.9$.
 
-# In[63]:
+# In[53]:
 
 
 # With 1 arm only!
@@ -186,7 +178,7 @@ problem_piecewise_0 = lambda horizon: {
 }
 
 
-# In[64]:
+# In[54]:
 
 
 # With 2 arms
@@ -208,7 +200,7 @@ problem_piecewise_1 = lambda horizon: {
 }
 
 
-# In[65]:
+# In[55]:
 
 
 # With 3 arms
@@ -230,7 +222,7 @@ problem_piecewise_2 = lambda horizon: {
 }
 
 
-# In[66]:
+# In[56]:
 
 
 # With 3 arms
@@ -254,7 +246,7 @@ problem_piecewise_3 = lambda horizon: {
 
 # Now we can write a utility function that transform this compact representation into a full list of means.
 
-# In[67]:
+# In[57]:
 
 
 def getFullHistoryOfMeans(problem, horizon=2000):
@@ -279,25 +271,25 @@ def getFullHistoryOfMeans(problem, horizon=2000):
 
 # For examples :
 
-# In[68]:
+# In[16]:
 
 
 getFullHistoryOfMeans(problem_piecewise_0, horizon=50)
 
 
-# In[69]:
+# In[17]:
 
 
 getFullHistoryOfMeans(problem_piecewise_1, horizon=50)
 
 
-# In[70]:
+# In[18]:
 
 
 getFullHistoryOfMeans(problem_piecewise_2, horizon=50)
 
 
-# In[71]:
+# In[19]:
 
 
 getFullHistoryOfMeans(problem_piecewise_3, horizon=50)
@@ -305,7 +297,7 @@ getFullHistoryOfMeans(problem_piecewise_3, horizon=50)
 
 # And now we need to be able to generate samples from such distributions.
 
-# In[72]:
+# In[58]:
 
 
 def piecewise_bernoulli_samples(problem, horizon=1000):
@@ -320,7 +312,7 @@ def piecewise_bernoulli_samples(problem, horizon=1000):
     return results
 
 
-# In[73]:
+# In[59]:
 
 
 def piecewise_gaussian_samples(problem, horizon=1000, sigma=sigma):
@@ -337,14 +329,14 @@ def piecewise_gaussian_samples(problem, horizon=1000, sigma=sigma):
 
 # Examples:
 
-# In[74]:
+# In[22]:
 
 
 getFullHistoryOfMeans(problem_piecewise_0, horizon=100)
 piecewise_bernoulli_samples(problem_piecewise_0, horizon=100)
 
 
-# In[75]:
+# In[23]:
 
 
 piecewise_gaussian_samples(problem_piecewise_0, horizon=100)
@@ -354,13 +346,13 @@ piecewise_gaussian_samples(problem_piecewise_0, horizon=100)
 # 
 # Another example:
 
-# In[76]:
+# In[24]:
 
 
 piecewise_bernoulli_samples(problem_piecewise_1, horizon=100)
 
 
-# In[77]:
+# In[25]:
 
 
 piecewise_gaussian_samples(problem_piecewise_1, horizon=20)
@@ -378,7 +370,7 @@ piecewise_gaussian_samples(problem_piecewise_1, horizon=20)
 # - Gaussian GLR, for [`GaussianGLR-UCB`](https://smpybandits.github.io/docs/Policies.CD_UCB.html?highlight=glr#Policies.CD_UCB.GaussianGLR_IndexPolicy),
 # - Bernoulli GLR, for [`BernoulliGLR-UCB`](https://smpybandits.github.io/docs/Policies.CD_UCB.html?highlight=glr#Policies.CD_UCB.BernoulliGLR_IndexPolicy).
 
-# In[78]:
+# In[60]:
 
 
 class ChangePointDetector(object):
@@ -396,54 +388,16 @@ class ChangePointDetector(object):
 
 # Having classes is simply to be able to pretty print the algorithms when they have parameters:
 
-# In[79]:
+# In[27]:
 
 
 print(ChangePointDetector())
 
 
-# In[80]:
+# In[28]:
 
 
 print(ChangePointDetector(w=10, b=1))
-
-
-# ## A stupid detection test (pure random!)
-# Just to be sure that the test functions work as wanted, I start by writing a stupid change detection test, which is purely random!
-
-# In[81]:
-
-
-probaOfDetection = 0.05
-
-delay = int(np.ceil(1.0 / probaOfDetection))
-print(f"For a fixed probability of detection = {probaOfDetection}, the PurelyRandom algorithm has a mean delay of {delay} steps.")
-
-
-# In[82]:
-
-
-class PurelyRandom(ChangePointDetector):
-    def __init__(self, proba=probaOfDetection):
-        super().__init__(proba=probaOfDetection)
-        self.proba = proba
-    
-    def __str__(self):
-        return f"PurelyRandom($p={self.proba:.3g}$)"
-    
-    def detect(self, all_data, t):
-        """ Delay will be ceil(1/proba) (in average)."""
-        return np.random.random() < self.proba
-
-
-# We can print different versions:
-
-# In[83]:
-
-
-print(PurelyRandom(0.5))
-print(PurelyRandom(0.9))
-print(PurelyRandom(0.1))
 
 
 # ## `Monitored`
@@ -453,14 +407,20 @@ print(PurelyRandom(0.1))
 # A change is detected if
 # $$ |\sum_{i=w/2+1}^{w} Y_i - \sum_{i=1}^{w/2} Y_i | > b ? $$
 
-# In[84]:
+# In[64]:
 
 
 NB_ARMS = 1
 WINDOW_SIZE = 80
 
 
-# In[85]:
+# In[65]:
+
+
+import numba
+
+
+# In[88]:
 
 
 class Monitored(ChangePointDetector):
@@ -508,14 +468,14 @@ class Monitored(ChangePointDetector):
 # $$
 # s_k^- = (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
 # s_k^+ = (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
-# g_k^+ = max(0, g_{k-1}^+ + s_k^+),\\
-# g_k^- = max(0, g_{k-1}^- + s_k^-).
+# g_k^+ = \max(0, g_{k-1}^+ + s_k^+),\\
+# g_k^- = \max(0, g_{k-1}^- + s_k^-).
 # $$
 # 
 # - The change is detected if $\max(g_k^+, g_k^-) > h$, where $h=$`threshold_h` is the threshold of the test,
 # - And $\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k$ is the mean of the first M samples, where M is `M` the min number of observation between change points.
 
-# In[86]:
+# In[67]:
 
 
 #: Precision of the test.
@@ -530,13 +490,13 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 MAX_NB_RANDOM_EVENTS = 1
 
 
-# In[87]:
+# In[68]:
 
 
 from scipy.special import comb
 
 
-# In[88]:
+# In[89]:
 
 
 def compute_h__CUSUM(horizon, 
@@ -559,7 +519,7 @@ def compute_h__CUSUM(horizon,
     return h
 
 
-# In[89]:
+# In[151]:
 
 
 class CUSUM(ChangePointDetector):
@@ -586,8 +546,8 @@ class CUSUM(ChangePointDetector):
 
             s_k^- &= (y_k - \hat{u}_0 - \varepsilon) 1(k > M),\\
             s_k^+ &= (\hat{u}_0 - y_k - \varepsilon) 1(k > M),\\
-            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-).
+            g_k^+ &= \max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= \max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{u}_0 = \frac{1}{M} \sum_{k=1}^{M} y_k` is the mean of the first M samples, where M is :attr:`M` the min number of observation between change points.
@@ -603,12 +563,12 @@ class CUSUM(ChangePointDetector):
         gp, gm = 0, 0
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         u0hat = np.mean(data[:self.M])
-        for k, y_k in enumerate(data):
-            if k <= self.M:
-                continue
+        for k in range(self.M + 1, len(data)):
+            y_k = data[k]
             sp = u0hat - y_k - self.epsilon  # no need to multiply by (k > self.M)
             sm = y_k - u0hat - self.epsilon  # no need to multiply by (k > self.M)
-            gp, gm = max(0, gp + sp), max(0, gm + sm)
+            gp = max(0, gp + sp)
+            gm = max(0, gm + sm)
             if max(gp, gm) >= threshold_h:
                 return True
         return False
@@ -623,14 +583,14 @@ class CUSUM(ChangePointDetector):
 # $$
 # s_k^- = y_k - \hat{y}_k - \varepsilon,\\
 # s_k^+ = \hat{y}_k - y_k - \varepsilon,\\
-# g_k^+ = max(0, g_{k-1}^+ + s_k^+),\\
-# g_k^- = max(0, g_{k-1}^- + s_k^-).
+# g_k^+ = \max(0, g_{k-1}^+ + s_k^+),\\
+# g_k^- = \max(0, g_{k-1}^- + s_k^-).
 # $$
 # 
 # - The change is detected if $\max(g_k^+, g_k^-) > h$, where $h=$`threshold_h` is the threshold of the test,
 # - And $\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s$ is the mean of the first k samples.
 
-# In[90]:
+# In[152]:
 
 
 class PHT(ChangePointDetector):
@@ -657,8 +617,8 @@ class PHT(ChangePointDetector):
 
             s_k^- &= y_k - \hat{y}_k - \varepsilon,\\
             s_k^+ &= \hat{y}_k - y_k - \varepsilon,\\
-            g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\
-            g_k^- &= max(0, g_{k-1}^- + s_k^-).
+            g_k^+ &= \max(0, g_{k-1}^+ + s_k^+),\\
+            g_k^- &= \max(0, g_{k-1}^- + s_k^-).
 
         - The change is detected if :math:`\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\hat{y}_k = \frac{1}{k} \sum_{s=1}^{k} y_s` is the mean of the first k samples.
@@ -672,12 +632,14 @@ class PHT(ChangePointDetector):
             threshold_h = compute_h__CUSUM(horizon, self.M, 1, epsilon=self.epsilon)
 
         gp, gm = 0, 0
+        y_k_hat = 0
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         for k, y_k in enumerate(data):
-            y_k_hat = np.mean(data[:k])
+            y_k_hat = (k * y_k_hat + y_k) / (k + 1)   # XXX smart formula to update the mean!
             sp = y_k_hat - y_k - self.epsilon
             sm = y_k - y_k_hat - self.epsilon
-            gp, gm = max(0, gp + sp), max(0, gm + sm)
+            gp = max(0, gp + sp)
+            gm = max(0, gm + sm)
             if max(gp, gm) >= threshold_h:
                 return True
         return False
@@ -691,27 +653,54 @@ class PHT(ChangePointDetector):
 # - For each *time step* $s$ between $t_0=0$ and $t$, compute:
 # $$G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1) \mathrm{kl}(\mu_{t_0,s}, \mu_{t_0,t}) + (t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,t}).$$
 # 
-# - The change is detected if there is a time $s$ such that $G^{\mathcal{N}_1}_{t_0:s:t} > h$, where $h=$ `threshold_h` is the threshold of the test,
+# - The change is detected if there is a time $s$ such that $G^{\mathcal{N}_1}_{t_0:s:t} > b(t_0, s, t, \delta)$, where $b(t_0, s, t, \delta)=$ `threshold_h` is the threshold of the test,
 # - And $\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s$ is the mean of the samples between $a$ and $b$.
 # 
 # The threshold is computed as:
-# $$h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).$$
+# $$ b(t_0, s, t, \delta):= \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).$$
+# 
+# Another threshold we want to check is the following:
+# $$ b(t_0, s, t, \delta):= \log\left(\frac{(s - t_0 + 1) (t - s)}{\delta}\right).$$
 
-# In[183]:
+# In[124]:
 
 
-def compute_c__GLR(t0, t, horizon):
-    r""" Compute the values :math:`c, \alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+from math import log, isinf
+
+def compute_c__GLR_0(t0, s, t, horizon=None, delta=None):
+    r""" Compute the values :math:`c` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
     - The threshold is computed as:
 
     .. math:: h := \left(1 + \frac{1}{t - t_0 + 1}\right) 2 \log\left(\frac{2 (t - t_0) \sqrt{(t - t_0) + 2}}{\delta}\right).
     """
-    T = int(max(1, horizon))
-    delta = 1.0 / T
+    if delta is None:
+        T = int(max(1, horizon))
+        delta = 1.0 / T
     t_m_t0 = abs(t - t0)
-    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * np.log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
-    if c < 0 and np.isinf(c): c = float('+inf')
+    c = (1 + (1 / (t_m_t0 + 1.0))) * 2 * log((2 * t_m_t0 * np.sqrt(t_m_t0 + 2)) / delta)
+    if c < 0 and isinf(c): c = float('+inf')
+    return c
+
+
+# In[125]:
+
+
+from math import log, isinf
+
+def compute_c__GLR(t0, s, t, horizon=None, delta=None):
+    r""" Compute the values :math:`c` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+
+    - The threshold is computed as:
+
+    .. math:: h := \log\left(\frac{(s - t_0 + 1) (t - s)}{\delta}\right).
+    """
+    if delta is None:    
+        T = int(max(1, horizon))
+        delta = 1.0 / T
+    arg = (s - t0 + 1) * (t - s) / delta
+    if arg <= 0: c = float('+inf')
+    else: c = log(arg)
     return c
 
 
@@ -721,7 +710,7 @@ def compute_c__GLR(t0, t, horizon):
 # 
 # $$\mathrm{KL}(\nu_1, \nu_2) = \frac{(x - y)^2}{2 \sigma_y^2} + \frac{1}{2}\left( \frac{\sigma_x^2}{\sigma_y^2} - 1 \log\left(\frac{\sigma_x^2}{\sigma_y^2}\right) \right).$$
 
-# In[184]:
+# In[126]:
 
 
 def klGauss(x, y, sig2x=0.25):
@@ -736,18 +725,18 @@ def klGauss(x, y, sig2x=0.25):
     return (x - y) ** 2 / (2. * sig2x)
 
 
-# In[331]:
+# In[127]:
 
 
 class GaussianGLR(ChangePointDetector):
-    def __init__(self, threshold_h=None):
-        super().__init__(threshold_h=threshold_h)
+    def __init__(self, mult_threshold_h=1, delta=None):
+        super().__init__(mult_threshold_h=mult_threshold_h, delta=delta)
     
     def __str__(self):
-        if self.threshold_h:
-            return f"Gaussian-GLR($h={self.threshold_h:.3g}$)"
-        else:
-            return f"Gaussian-GLR($h=$'auto')"
+        return r"Gaussian-GLR($h_0={}$, $\delta={}$)".format(
+            f"{self.mult_threshold_h:.3g}" if self.mult_threshold_h is not None else 'auto',
+            f"{self.delta:.3g}" if self.delta is not None else 'auto',
+        )
 
     def detect(self, all_data, t):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -766,20 +755,17 @@ class GaussianGLR(ChangePointDetector):
         horizon = len(all_data)
 
         # compute parameters
-        threshold_h = self.threshold_h
-        if threshold_h is None:
-            threshold_h = compute_c__GLR(0, t, horizon)
-
-        # mu = lambda a, b: np.mean(data[a : b+1])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = 0
+        mean_after = mean_all
         for s in range(t0, t):
-            # XXX nope, that was a mistake: it is only true for the Gaussian kl !
-            # this_kl = klGauss(mu(s+1, t), mu(t0, s))
-            # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-            mean_all = np.mean(data[t0 : t+1])
-            mean_before = np.mean(data[t0 : s+1])
-            mean_after = np.mean(data[s+1 : t+1])
+            # DONE okay this is efficient we don't compute the same means too many times!
+            y = data[s]
+            mean_before = (s * mean_before + y) / (s + 1)
+            mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
             kl_before = klGauss(mean_before, mean_all)
             kl_after  = klGauss(mean_after,  mean_all)
+            threshold_h = self.mult_threshold_h * compute_c__GLR(t0, s, t, horizon=horizon, delta=self.delta)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
             if glr >= threshold_h:
                 return True
@@ -792,32 +778,57 @@ class GaussianGLR(ChangePointDetector):
 # 
 # $$\mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y}).$$
 
-# In[239]:
+# In[257]:
 
 
-eps = 1e-6  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
+import cython
+get_ipython().run_line_magic('load_ext', 'cython')
 
-def klBern(x, y):
+
+# In[265]:
+
+
+def klBern(x: float, y: float) -> float:
     r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence
 
     .. math:: \mathrm{KL}(\mathcal{B}(x), \mathcal{B}(y)) = x \log(\frac{x}{y}) + (1-x) \log(\frac{1-x}{1-y})."""
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
+    x = min(max(x, 1e-6), 1 - 1e-6)
+    y = min(max(y, 1e-6), 1 - 1e-6)
+    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))
 
 
-# In[240]:
+# In[259]:
+
+
+get_ipython().run_line_magic('timeit', 'klBern(np.random.random(), np.random.random())')
+
+
+# In[260]:
+
+
+get_ipython().run_cell_magic('cython', '--annotate', 'from libc.math cimport log\neps = 1e-6  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]\n\ndef klBern_cython(float x, float y) -> float:\n    r""" Kullback-Leibler divergence for Bernoulli distributions. https://en.wikipedia.org/wiki/Bernoulli_distribution#Kullback.E2.80.93Leibler_divergence\n\n    .. math:: \\mathrm{KL}(\\mathcal{B}(x), \\mathcal{B}(y)) = x \\log(\\frac{x}{y}) + (1-x) \\log(\\frac{1-x}{1-y})."""\n    x = min(max(x, 1e-6), 1 - 1e-6)\n    y = min(max(y, 1e-6), 1 - 1e-6)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))')
+
+
+# In[261]:
+
+
+get_ipython().run_line_magic('timeit', 'klBern_cython(np.random.random(), np.random.random())')
+
+
+# Now the class, with this optimized kl function.
+
+# In[262]:
 
 
 class BernoulliGLR(ChangePointDetector):
-    def __init__(self, threshold_h=None):
-        super().__init__(threshold_h=threshold_h)
+    def __init__(self, mult_threshold_h=1, delta=None):
+        super().__init__(mult_threshold_h=mult_threshold_h, delta=delta)
     
     def __str__(self):
-        if self.threshold_h:
-            return f"Bernoulli-GLR($h={self.threshold_h:.3g}$)"
-        else:
-            return f"Bernoulli-GLR($h=$'auto')"
+        return r"Bernoulli-GLR($h_0={}$, $\delta={}$)".format(
+            f"{self.mult_threshold_h:.3g}" if self.mult_threshold_h is not None else 'auto',
+            f"{self.delta:.3g}" if self.delta is not None else 'auto',
+        )
 
     def detect(self, all_data, t):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -836,20 +847,18 @@ class BernoulliGLR(ChangePointDetector):
         horizon = len(all_data)
 
         # compute parameters
-        threshold_h = self.threshold_h
-        if threshold_h is None:
-            threshold_h = compute_c__GLR(0, t, horizon)
 
-        # mu = lambda a, b: np.mean(data[a : b+1])
+        mean_all = np.mean(data[t0 : t+1])
+        mean_before = 0
+        mean_after = mean_all
         for s in range(t0, t):
-            # XXX nope, that was a mistake: it is only true for the Gaussian kl !
-            # this_kl = klBern(mu(s+1, t), mu(t0, s))
-            # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-            mean_all = np.mean(data[t0 : t+1])
-            mean_before = np.mean(data[t0 : s+1])
-            mean_after = np.mean(data[s+1 : t+1])
+            # DONE okay this is efficient we don't compute the same means too many times!
+            y = data[s]
+            mean_before = (s * mean_before + y) / (s + 1)
+            mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
             kl_before = klBern(mean_before, mean_all)
             kl_after  = klBern(mean_after,  mean_all)
+            threshold_h = self.mult_threshold_h * compute_c__GLR(t0, s, t, horizon=horizon, delta=self.delta)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
             if glr >= threshold_h:
                 return True
@@ -880,7 +889,7 @@ class BernoulliGLR(ChangePointDetector):
 #     }.$$
 # 
 
-# In[188]:
+# In[129]:
 
 
 # Default confidence level?
@@ -891,35 +900,39 @@ DELTA = 0.01
 SIGMA = 0.25
 
 
-# In[189]:
+# In[130]:
 
 
 # Whether to use the joint or disjoint threshold function
 JOINT = True
 
 
-# In[190]:
+# In[159]:
 
+
+from math import log, sqrt
 
 def threshold_SubGaussianGLR_joint(t0, s, t, delta=DELTA, sigma=SIGMA):
-    return sigma * np.sqrt(
+    return sigma * sqrt(
         (1.0 / (s - t0 + 1) + 1.0/(t - s)) * (1.0 + 1.0/(t - t0+1))
-        * 2 * max(0, np.log(( 2 * (t - t0) * np.sqrt(t - t0 + 2)) / delta ))
+        * 2 * max(0, log(( 2 * (t - t0) * sqrt(t - t0 + 2)) / delta ))
     )
 
 
-# In[191]:
+# In[160]:
 
+
+from math import log, sqrt
 
 def threshold_SubGaussianGLR_disjoint(t0, s, t, delta=DELTA, sigma=SIGMA):
-    return np.sqrt(2) * sigma * (np.sqrt(
-        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * max(0, np.log( (4 * np.sqrt(s - t0 + 2)) / delta ))
-    ) + np.sqrt(
-        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, np.log( (4 * (t - t0) * np.sqrt(t - s + 1)) / delta ))
+    return np.sqrt(2) * sigma * (sqrt(
+        ((1.0 + (1.0 / (s - t0 + 1))) / (s - t0 + 1)) * max(0, log( (4 * sqrt(s - t0 + 2)) / delta ))
+    ) + sqrt(
+        ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, log( (4 * (t - t0) * sqrt(t - s + 1)) / delta ))
     ))
 
 
-# In[192]:
+# In[161]:
 
 
 def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
@@ -931,7 +944,7 @@ def threshold_SubGaussianGLR(t0, s, t, delta=DELTA, sigma=SIGMA, joint=JOINT):
 
 # And now we can write the CD algorithm:
 
-# In[242]:
+# In[162]:
 
 
 class SubGaussianGLR(ChangePointDetector):
@@ -963,11 +976,17 @@ class SubGaussianGLR(ChangePointDetector):
         if delta is None:
             delta = 1.0 / max(1, horizon)
 
-        # mu = lambda a, b: np.mean(data[a : b+1])
+        mean_before = 0
+        mean_after = np.mean(data[t0 : t+1])
         for s in range(t0, t):
+            # DONE okay this is efficient we don't compute the same means too many times!
+            y = data[s]
+            mean_before = (s * mean_before + y) / (s + 1)
+            mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+
             # compute threshold
             threshold = threshold_SubGaussianGLR(t0, s, t, delta=delta, sigma=self.sigma, joint=self.joint)
-            glr = abs( np.mean(data[s+1 : t+1]) - np.mean(data[t0 : s+1]) )
+            glr = abs(mean_before - mean_after)
             if glr >= threshold:
                 # print(f"DEBUG: t0 = {t0}, t = {t}, s = {s}, horizon = {horizon}, delta = {delta}, threshold = {threshold} and mu(s+1, t) = {mu(s+1, t)}, and mu(t0, s) = {mu(t0, s)}, and and glr = {glr}.")
                 return True
@@ -976,353 +995,16 @@ class SubGaussianGLR(ChangePointDetector):
 
 # ## List of all Python algorithms
 
-# In[323]:
+# In[135]:
 
 
 all_CD_algorithms = [
-    PurelyRandom,
     Monitored, CUSUM, PHT,
     GaussianGLR, BernoulliGLR, SubGaussianGLR
 ]
 
 
-# ----
-# # Numba implementations of some statistical tests
-# 
-# I should try to use the [`numba.jit`](https://numba.pydata.org/numba-doc/latest/reference/jit-compilation.html#numba.jit) decorator for some of the (simple) functions defined above.
-# With some luck, the JIT compiler will give automatic speedup.
-
-# In[103]:
-
-
-import numba
-
-
-# In[319]:
-
-
-@numba.jit(nopython=True)
-def klGauss_numba(x, y, sig2x=0.25):
-    return (x - y) ** 2 / (2. * sig2x)
-
-
-# In[244]:
-
-
-def GaussianGLR_numba(all_data, t,
-          threshold_h=None,
-    ):
-    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
-
-    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
-
-    .. math::
-
-        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
-
-    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
-    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
-    """
-    data = all_data[:t]
-    t0 = 0
-    horizon = len(all_data)
-    
-    # compute parameters
-    if threshold_h is None:
-        threshold_h = compute_c__GLR(0, t, horizon)
-
-    # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t):
-        # this_kl = klGauss_numba(mu(s+1, t), mu(t0, s))
-        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t+1])
-        mean_before = np.mean(data[t0 : s+1])
-        mean_after = np.mean(data[s+1 : t+1])
-        kl_before = klGauss_numba(mean_before, mean_all)
-        kl_after  = klGauss_numba(mean_after,  mean_all)
-        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-        if glr >= threshold_h:
-            return True
-    return False
-
-
-# In[320]:
-
-
-@numba.jit(nopython=True)
-def klBern_numba(x, y):
-    x = min(max(x, eps), 1 - eps)
-    y = min(max(y, eps), 1 - eps)
-    return x * np.log(x / y) + (1 - x) * np.log((1 - x) / (1 - y))
-
-
-# In[321]:
-
-
-def BernoulliGLR_numba(all_data, t,
-          threshold_h=None,
-    ):
-    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
-
-    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
-
-    .. math::
-
-        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
-
-    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
-    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
-    """
-    data = all_data[:t]
-    t0 = 0
-    horizon = len(all_data)
-    
-    # compute parameters
-    if threshold_h is None:
-        threshold_h = compute_c__GLR(0, t, horizon)
-
-    # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t):
-        # this_kl = klBern_numba(mu(s+1, t), mu(t0, s))
-        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t+1])
-        mean_before = np.mean(data[t0 : s+1])
-        mean_after = np.mean(data[s+1 : t+1])
-        kl_before = klBern_numba(mean_before, mean_all)
-        kl_after  = klBern_numba(mean_after,  mean_all)
-        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-        if glr >= threshold_h:
-            return True
-    return False
-
-
-# In[322]:
-
-
-all_CD_algorithms_numba = [
-    GaussianGLR_numba, BernoulliGLR_numba
-]
-# all_CD_algorithms += all_CD_algorithms_numba
-
-
-# ## Some results
-# In the tests below, when comparing the between the pure Python implementations and the numba optimized implementations, I observe the following results (for $T=100$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
-# 
-# | Algorithm | Time |
-# |------|------|
-# | PurelyRandom($p=0.05$) | $0.000488$ seconds |
-# | Monitored($w=80$, $b=\sqrt{\frac{w}{2} \log(2 T^2)}$) | $0.000592$ seconds |
-# | Gaussian-GLR($c=$'auto') | $0.102$ seconds |
-# | Bernoulli-GLR($h=$'auto') | $0.151$ seconds |
-# | GaussianGLR_numba | $0.334$ seconds |
-# | BernoulliGLR_numba | $0.0933$ seconds |
-# 
-# My conclusions from some experiments are that this implementation with Numba is **not** more efficient than the naive Python implementation. So, let's forget about it!
-# Speeding up just the `kl` function is not enough also.
-
-# ----
-# # Cython implementations of some statistical tests
-# 
-# I should try to use the [`%%cython`](https://cython.readthedocs.io/en/latest/src/quickstart/build.html#jupyter-notebook) magic for all the functions defined above.
-
-# ## Speeding up just the `kl` functions
-
-# In[211]:
-
-
-get_ipython().run_line_magic('load_ext', 'cython')
-
-
-# In[110]:
-
-
-get_ipython().run_cell_magic('cython', '', '\ndef klGauss_cython(float x, float y, float sig2x=0.25) -> float:\n    return (x - y) ** 2 / (2. * sig2x)')
-
-
-# In[247]:
-
-
-def GaussianGLR_cython1(all_data, t,
-          threshold_h=None,
-    ):
-    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
-
-    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
-
-    .. math::
-
-        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
-
-    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
-    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
-    """
-    data = all_data[:t]
-    t0 = 0
-    horizon = len(all_data)
-    
-    # compute parameters
-    if threshold_h is None:
-        threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
-
-    # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t):
-        # this_kl = klGauss_cython(mu(s+1, t), mu(t0, s))
-        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t+1])
-        mean_before = np.mean(data[t0 : s+1])
-        mean_after = np.mean(data[s+1 : t+1])
-        kl_before = klGauss_cython(mean_before, mean_all)
-        kl_after  = klGauss_cython(mean_after,  mean_all)
-        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-        if glr >= threshold_h:
-            return True
-    return False
-
-
-# In[112]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log\neps = 1e-7  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]\n\ndef klBern_cython(float x, float y) -> float:\n    x = min(max(x, eps), 1 - eps)\n    y = min(max(y, eps), 1 - eps)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))')
-
-
-# In[248]:
-
-
-def BernoulliGLR_cython1(all_data, t,
-          threshold_h=None,
-    ):
-    r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
-
-    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:
-
-    .. math::
-
-        G^{\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \mathrm{kl}(\mu_{s+1,t}, \mu_{t_0,s}) / (t-t_0+1).
-
-    - The change is detected if there is a time :math:`s` such that :math:`G^{\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
-    - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
-    """
-    data = all_data[:t]
-    t0 = 0
-    horizon = len(all_data)
-    
-    # compute parameters
-    if threshold_h is None:
-        threshold_h, _ = compute_c_alpha__GLR(0, t, horizon)
-
-    # mu = lambda a, b: np.mean(data[a : b+1])
-    for s in range(t0, t):
-        # this_kl = klBern_cython(mu(s+1, t), mu(t0, s))
-        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
-        mean_all = np.mean(data[t0 : t+1])
-        mean_before = np.mean(data[t0 : s+1])
-        mean_after = np.mean(data[s+1 : t+1])
-        kl_before = klBernoulli_cython(mean_before, mean_all)
-        kl_after  = klBernoulli_cython(mean_after,  mean_all)
-        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-        if glr >= threshold_h:
-            return True
-    return False
-
-
-# With these two first versions, I observed, when comparing the between the pure Python implementations and these first naive cython optimized implementations, I observe the following results (for $T=1000$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
-# 
-# | Algorithm | Time   |
-# |------|------|
-# | GaussianGLR | $2.98$ seconds |
-# | BernoulliGLR | $3.3$ seconds |
-# | GaussianGLR with cython for `kl` | $2.83$ seconds |
-# | BernoulliGLR with cython for `kl` | $2.26$ seconds |
-# 
-# Speeding up just the `kl` won't be enough, so I'll try to write the whole statistical test function in Cython cells.
-
-# ## Speeding up the whole test functions
-# 
-# In the tests below, when comparing the different pure Python implementation, I observe the following results (for $T=100$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
-# 
-# | Algorithm | Time |
-# |------|------|
-# | PurelyRandom($p=0.05$) | $0.000488$ seconds |
-# | Monitored($w=80$, $b=\sqrt{\frac{w}{2} \log(2 T^2)}$) | $0.000592$ seconds |
-# | CUSUM($\varepsilon=0.5$, $M=50$, $h=$'auto') | $0.00935$ seconds |
-# | PHT($\varepsilon=0.5$, $M=50$, $h=$'auto') | $0.0534$ seconds |
-# | Gaussian-GLR($c=$'auto') | $0.102$ seconds |
-# | Bernoulli-GLR($h=$'auto') | $0.151$ seconds |
-# 
-# I will first try to write in Cython a PHT test and the two GLR tests.
-
-# ### PHT in Cython
-
-# The `scipy.special.comb` is not available from Cython, but by [reading its Cython `_comb.pyx`](https://github.com/scipy/scipy/blob/v1.1.0/scipy/special/_comb.pyx#L7) source code, we can write manually:
-
-# Now, let's write a Cython version of the function that computes the threshold $h$.
-
-# In[308]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, floor, ceil\n\nEPSILON = 0.5\nLAMBDA = 1.0\nMIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100\nMAX_NB_RANDOM_EVENTS = 1\n\n#from scipy.special import comb  # unable to import from scipy.special\ncdef int comb_cython(int N, int k):\n    """ Manually defined scipy.special.comb function:\n    \n    comb(N, k) = {k choose N} number of combination of k elements among N."""\n    if k > N or N < 0 or k < 0:\n        return 0\n    cdef int M = N + 1\n    cdef int nterms = min(k, N - k)\n    cdef int numerator = 1\n    cdef int denominator = 1\n    cdef int j = 1\n    while j <= nterms:\n        numerator *= M - j\n        denominator *= j\n        j += 1\n    return numerator // denominator\n\ncdef double compute_h__CUSUM_cython(int horizon, \n        int M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,\n        int nbArms=1,\n        double epsilon=EPSILON,\n        double lmbda=LAMBDA,\n        int max_nb_random_events=MAX_NB_RANDOM_EVENTS,\n    ):\n    r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""\n    cdef int T = int(max(1, horizon))\n    cdef int UpsilonT = int(max(1, max_nb_random_events))\n    cdef int K = int(max(1, nbArms))\n    cdef double C1_minus = log(((4.0 * epsilon) / (1.0-epsilon)**2) * comb_cython(M, int(floor(2.0 * epsilon * M))) * (2.0 * epsilon)**M + 1.0)\n    cdef double C1_plus = log(((4.0 * epsilon) / (1.0+epsilon)**2) * comb_cython(M, int(ceil(2.0 * epsilon * M))) * (2.0 * epsilon)**M + 1.0)\n    cdef double C1 = min(C1_minus, C1_plus)\n    if C1 == 0: C1 = 1.0  # FIXME\n    cdef double h = log(T / UpsilonT) / C1\n    return h\n\nimport numpy as np\n#cimport numpy as np\n# See http://docs.cython.org/en/latest/src/userguide/numpy_tutorial.html#efficient-indexing-with-memoryviews\n\ndef PHT_cython(\n        double[:] all_data,\n        int t,\n        float epsilon=EPSILON,\n        int M=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,\n    ) -> bool:\n    r""" Cython version of PHT. Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].\n\n    - For each *data* k, compute:\n\n    .. math::\n\n        s_k^- &= y_k - \\hat{y}_k - \\varepsilon,\\\\\n        s_k^+ &= \\hat{y}_k - y_k - \\varepsilon,\\\\\n        g_k^+ &= max(0, g_{k-1}^+ + s_k^+),\\\\\n        g_k^- &= max(0, g_{k-1}^- + s_k^-).\n\n    - The change is detected if :math:`\\max(g_k^+, g_k^-) > h`, where :attr:`threshold_h` is the threshold of the test,\n    - And :math:`\\hat{y}_k = \\frac{1}{k} \\sum_{s=1}^{k} y_s` is the mean of the first k samples.\n    """\n    cdef double[:] data = all_data[:t]\n    # compute parameters\n    cdef int horizon = len(all_data)\n    cdef float threshold_h = compute_h__CUSUM_cython(horizon, M=M, nbArms=1, epsilon=epsilon)\n\n    cdef int k = 0\n    cdef int len_data = len(data)\n    cdef double gp = 0.0\n    cdef double gm = 0.0\n    cdef double y_k, y_k_hat\n    # First we use the first M samples to calculate the average :math:`\\hat{u_0}`.\n    while k < len_data:\n        y_k = data[k]\n        y_k_hat = np.mean(data[:k])\n        gp = max(0, gp + y_k_hat - y_k - epsilon)\n        gm = max(0, gm + y_k - y_k_hat - epsilon)\n        if gp >= threshold_h or gm >= threshold_h:\n            return True\n        k += 1\n    return False')
-
-
-# ### Gaussian GLR in Cython
-
-# In[309]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, sqrt, isinf\n\ncdef double compute_c__GLR_cython(\n        int t0, int t, int horizon\n    ):\n    r""" Compute the values :math:`c, \\alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].\n\n    - The threshold is computed as:\n\n    .. math:: h := \\left(1 + \\frac{1}{t - t_0 + 1}\\right) 2 \\log\\left(\\frac{2 (t - t_0) \\sqrt{(t - t_0) + 2}}{\\delta}\\right).\n    """\n    cdef double T = max(1, horizon)\n    cdef double t_m_t0 = abs(t - t0)\n    cdef double c = (1.0 + (1.0 / (t_m_t0 + 1.0))) * 2.0 * log(T * (2.0 * t_m_t0 * sqrt(t_m_t0 + 2.0)))\n    if c < 0 or isinf(c): c = float(\'+inf\')\n    return c\n\ncdef double klGauss_cython(double x, double y, double sig2x=0.25):\n    return (x - y) ** 2 / (2. * sig2x)\n\nimport numpy as np\n#cimport numpy as np\n# See http://docs.cython.org/en/latest/src/userguide/numpy_tutorial.html#efficient-indexing-with-memoryviews\n\ndef GaussianGLR_cython(\n        double[:] all_data,\n        int t,\n    ) -> bool:\n    r""" Cython version of GaussianGLR. Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.\n\n    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:\n\n    .. math::\n\n        G^{\\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \\mathrm{kl}(\\mu_{s+1,t}, \\mu_{t_0,s}) / (t-t_0+1).\n\n    - The change is detected if there is a time :math:`s` such that :math:`G^{\\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,\n    - And :math:`\\mu_{a,b} = \\frac{1}{b-a+1} \\sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.\n    """\n    cdef double[:] data = all_data[:t]\n    cdef int t0 = 0\n    cdef int horizon = len(all_data)\n    # compute parameters\n    cdef double threshold_h = compute_c__GLR_cython(0, t, horizon)\n\n    cdef double mean_all, mean_before, mean_after\n    cdef double kl_before, kl_after, glr\n    cdef int s = 0\n    while s < t:\n        # this_kl = klGauss_cython(np.mean(data[s+1 : t+1]), np.mean(data[t0 : s+1]))\n        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl\n        mean_all = np.mean(data[t0 : t])\n        mean_before = np.mean(data[t0 : s])\n        mean_after = np.mean(data[s+1 : t])\n        kl_before = klGauss_cython(mean_before, mean_all)\n        kl_after  = klGauss_cython(mean_after, mean_all)\n        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after\n        if glr >= threshold_h:\n            return True\n        s += 1\n    return False')
-
-
-# ### Bernoulli GLR in Cython
-
-# In[310]:
-
-
-get_ipython().run_cell_magic('cython', '', 'from libc.math cimport log, sqrt, isinf\n\ncdef double compute_c__GLR_cython(\n        int t0, int t, int horizon\n    ):\n    r""" Compute the values :math:`c, \\alpha` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].\n\n    - The threshold is computed as:\n\n    .. math:: h := \\left(1 + \\frac{1}{t - t_0 + 1}\\right) 2 \\log\\left(\\frac{2 (t - t_0) \\sqrt{(t - t_0) + 2}}{\\delta}\\right).\n    """\n    cdef double T = max(1, horizon)\n    cdef double t_m_t0 = abs(t - t0)\n    cdef double c = (1.0 + (1.0 / (t_m_t0 + 1.0))) * 2.0 * log(T * (2.0 * t_m_t0 * sqrt(t_m_t0 + 2.0)))\n    if c < 0 or isinf(c): c = float(\'+inf\')\n    return c\n\neps = 1e-7\n\ncdef double klBern_cython(double x, double y):\n    x = min(max(x, eps), 1 - eps)\n    y = min(max(y, eps), 1 - eps)\n    return x * log(x / y) + (1 - x) * log((1 - x) / (1 - y))\n\nimport numpy as np\n#cimport numpy as np\n# See http://docs.cython.org/en/latest/src/userguide/numpy_tutorial.html#efficient-indexing-with-memoryviews\n\ndef BernoulliGLR_cython(\n        double[:] all_data,\n        int t,\n    ) -> bool:\n    r""" Cython version of BernoulliGLR. Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.\n\n    - For each *time step* :math:`s` between :math:`t_0=0` and :math:`t`, compute:\n\n    .. math::\n\n        G^{\\mathcal{N}_1}_{t_0:s:t} = (s-t_0+1)(t-s) \\mathrm{kl}(\\mu_{s+1,t}, \\mu_{t_0,s}) / (t-t_0+1).\n\n    - The change is detected if there is a time :math:`s` such that :math:`G^{\\mathcal{N}_1}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,\n    - And :math:`\\mu_{a,b} = \\frac{1}{b-a+1} \\sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.\n    """\n    cdef double[:] data = all_data[:t]\n    cdef int t0 = 0\n    cdef int horizon = len(all_data)\n    # compute parameters\n    cdef double threshold_h = compute_c__GLR_cython(0, t, horizon)\n\n    cdef double mean_all, mean_before, mean_after\n    cdef double kl_before, kl_after, glr\n    cdef int s = 0\n    while s < t:\n        # this_kl = klBern_cython(np.mean(data[s+1 : t+1]), np.mean(data[t0 : s+1]))\n        # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl\n        mean_all = np.mean(data[t0 : t])\n        mean_before = np.mean(data[t0 : s])\n        mean_after = np.mean(data[s+1 : t])\n        kl_before = klBern_cython(mean_before, mean_all)\n        kl_after  = klBern_cython(mean_after, mean_all)\n        glr = (s - t0 + 1) * kl_before + (t - s) * kl_after\n        if glr >= threshold_h:\n            return True\n        s += 1\n    return False')
-
-
-# ### Some results
-# 
-# With these two first versions, I observed, when comparing the between the pure Python implementations and these cython fully optimized implementations, I observe the following results (for $T=100$, $\mu^1=0.1$, $\mu^2=0.9$ and $\tau=\frac{1}{2}T$):
-# 
-# | Algorithm | Time |
-# |------|------|
-# | PurelyRandom($p=0.05$) | $0.000488$ seconds |
-# | Monitored($w=80$, $b=\sqrt{\frac{w}{2} \log(2 T^2)}$) | $0.000592$ seconds |
-# | CUSUM($\varepsilon=0.5$, $M=50$, $h=$'auto') | $0.00935$ seconds |
-# | PHT($\varepsilon=0.5$, $M=50$, $h=$'auto') | $0.0534$ seconds |
-# | Gaussian-GLR($c=$'auto') | $0.102$ seconds |
-# | Bernoulli-GLR($h=$'auto') | $0.151$ seconds |
-# | SubGaussian-GLR($\delta=$0.01, $\sigma=$0.25, joint) | $0.0839$ seconds |
-# | PHT_cython | $0.0418$ seconds |
-# | GaussianGLR_cython | $0.125$ seconds |
-# | BernoulliGLR_cython | $0.128$ seconds |
-
-# I don't understand these results: how come the cython-optimized version of Gaussian GLR can be slower than the naive pure Python version?
-
-# ### 3 more algorithms implemented in Cython
-
-# In[324]:
-
-
-all_CD_algorithms_cython = [
-    PHT_cython, GaussianGLR_cython, BernoulliGLR_cython
-]
-
-
-# In[325]:
-
-
-all_CD_algorithms += all_CD_algorithms_cython
-
-
-# In[326]:
-
-
-all_CD_algorithms += all_CD_algorithms_numba
-
-
-# ----
 # # Comparing the different implementations
-# 
 # I now want to compare, on a simple non stationary problem, the efficiency of the different change detection algorithms, in terms of:
 # 
 # - speed of computations (we should see that naive Python is much slower than Numba, which is also slower than the Cython version),
@@ -1333,38 +1015,17 @@ all_CD_algorithms += all_CD_algorithms_numba
 # - detection delay, as a function of the amplitude of the breakpoint, or number of prior data (from $t=1$ to $t=\tau$), or as a function of the parameter(s) of the algorithm,
 # - probability of false detection, or missed detection.
 
-# In[118]:
-
-
-import inspect
-
-
-# In[119]:
-
-
-inspect.isclass(BernoulliGLR)
-
-
-# In[120]:
-
-
-inspect.isclass(BernoulliGLR_cython)
-
-
-# In[121]:
+# In[136]:
 
 
 def str_of_CDAlgorithm(CDAlgorithm, *args, **kwargs):
-    if inspect.isclass(CDAlgorithm):
-        detector = CDAlgorithm(*args, **kwargs)
-        return str(detector)
-    else:
-        return CDAlgorithm.__name__
+    detector = CDAlgorithm(*args, **kwargs)
+    return str(detector)
 
 
 # ## Generating some toy data
 
-# In[122]:
+# In[137]:
 
 
 # With 1 arm only! With 1 change only!
@@ -1380,7 +1041,7 @@ toy_problem_piecewise = lambda firstMean, secondMean, tau: lambda horizon: {
 }
 
 
-# In[123]:
+# In[138]:
 
 
 def get_toy_data(firstMean=0.5, secondMean=0.9, tau=None, horizon=100, gaussian=False):
@@ -1399,19 +1060,19 @@ def get_toy_data(firstMean=0.5, secondMean=0.9, tau=None, horizon=100, gaussian=
 
 # It is now very easy to get data and "see" manually on the data the location of the breakpoint:
 
-# In[124]:
+# In[74]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=100)
 
 
-# In[125]:
+# In[75]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.2, horizon=100)
 
 
-# In[126]:
+# In[76]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -1419,7 +1080,7 @@ get_toy_data(firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
 
 # And similarly for Gaussian data, we clearly see a difference around the middle of the vector:
 
-# In[291]:
+# In[77]:
 
 
 get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=20, gaussian=True)
@@ -1431,14 +1092,14 @@ get_toy_data(firstMean=0.1, secondMean=0.9, tau=0.5, horizon=20, gaussian=True)
 # - the number of samples before the change decreases ($\tau$ decreases),
 # - the number of samples after the change decreases ($T - \tau$ decreases).
 
-# In[292]:
+# In[139]:
 
 
 # Cf. https://stackoverflow.com/a/36313217/
 from IPython.display import display, Markdown
 
 
-# In[327]:
+# In[140]:
 
 
 def check_onemeasure(measure, name,
@@ -1450,19 +1111,19 @@ def check_onemeasure(measure, name,
                      gaussian=False,
                      unit="",
                      list_of_args_kwargs=None,
-                     all_CDAlgorithms=None,
+                     CDAlgorithms=None,
     ):
-    if all_CDAlgorithms is None:
-        all_CDAlgorithms = tuple(all_CD_algorithms)
+    if CDAlgorithms is None:
+        CDAlgorithms = tuple(all_CD_algorithms)
     if isinstance(tau, float):
         tau = int(tau * horizon)
     print(f"\nGenerating toy {'Gaussian' if gaussian else 'Bernoulli'} data for mu^1 = {firstMean}, mu^2 = {secondMean}, tau = {tau} and horizon = {horizon}...")
-    results = np.zeros((repetitions, len(all_CD_algorithms)))
-    list_of_args = [tuple() for _ in all_CDAlgorithms]
-    list_of_kwargs = [dict() for _ in all_CDAlgorithms]
+    results = np.zeros((repetitions, len(CDAlgorithms)))
+    list_of_args = [tuple() for _ in CDAlgorithms]
+    list_of_kwargs = [dict() for _ in CDAlgorithms]
     for rep in tqdm(range(repetitions), desc="Repetitions"):
         data = get_toy_data(firstMean=firstMean, secondMean=secondMean, tau=tau, horizon=horizon, gaussian=gaussian)
-        for i, CDAlgorithm in enumerate(all_CDAlgorithms):
+        for i, CDAlgorithm in enumerate(CDAlgorithms):
             if list_of_args_kwargs:
                 list_of_args[i], list_of_kwargs[i] = list_of_args_kwargs[i]
             results[rep, i] = measure(data, tau, CDAlgorithm, *list_of_args[i], **list_of_kwargs[i])
@@ -1476,36 +1137,31 @@ def check_onemeasure(measure, name,
             str_of_CDAlgorithm(CDAlgorithm, *list_of_args[i], **list_of_kwargs[i]),
             mean_result, unit
         )
-        for CDAlgorithm, mean_result in zip(all_CD_algorithms, np.mean(results, axis=0))
+        for CDAlgorithm, mean_result in zip(CDAlgorithms, np.mean(results, axis=0))
     ]))
     print(markdown_text)
     display(Markdown(markdown_text))
     return results
 
 
-# I will write this tiny function, to deal with a `CDAlgorithm` that can be a class or a function:
-
-# In[294]:
+# In[141]:
 
 
 def eval_CDAlgorithm(CDAlgorithm, data, t, *args, **kwargs):
-    if inspect.isclass(CDAlgorithm):
-        detector = CDAlgorithm(*args, **kwargs)
-        return detector.detect(data, t)
-    else:
-        return CDAlgorithm(data, t, *args, **kwargs)
+    detector = CDAlgorithm(*args, **kwargs)
+    return detector.detect(data, t)
 
 
 # ## Checking time efficiency
 # I don't really care about memory efficiency, so I won't check it.
 
-# In[316]:
+# In[142]:
 
 
 import time
 
 
-# In[317]:
+# In[143]:
 
 
 def time_efficiency(data, tau, CDAlgorithm, *args, **kwargs):
@@ -1517,15 +1173,71 @@ def time_efficiency(data, tau, CDAlgorithm, *args, **kwargs):
     return endTime - startTime
 
 
+# To benchmark each of the CD algorithm, we can use the [`line_profiler`](https://github.com/rkern/line_profiler#line_profiler) module and it's `lprun` magic.
+
+# In[148]:
+
+
+get_ipython().system('pip3 install line_profiler >/dev/null')
+
+
+# In[153]:
+
+
+get_ipython().run_line_magic('lprun', '-f Monitored.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[Monitored])')
+
+
+# $20\%$ of the time is spent computing the threshold, and $55\%$ is spent computing the two sums: we cannot optimize these!
+
+# In[154]:
+
+
+get_ipython().run_line_magic('lprun', '-f CUSUM.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[CUSUM])')
+
+
+# $10\%$ of the time is spent computing the threshold, and about $10\%$ to $25\%$ are spent on the few maths computations that can hardly be optimized.
+
+# In[155]:
+
+
+get_ipython().run_line_magic('lprun', '-f PHT.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[PHT])')
+
+
+# $10\%$ of the time is spent computing the threshold, and about $10\%$ to $25\%$ are spent on the few maths computations that can hardly be optimized.
+
+# In[156]:
+
+
+get_ipython().run_line_magic('lprun', '-f GaussianGLR.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[GaussianGLR])')
+
+
+# $30\%$ of the time is spent computing the threshold (at every step it must be recomputed!), and about $10\%$ to $25\%$ are spent on the few maths computations that can hardly be optimized.
+
+# In[157]:
+
+
+get_ipython().run_line_magic('lprun', '-f BernoulliGLR.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[BernoulliGLR])')
+
+
+# $30\%$ of the time is spent computing the threshold (at every step it must be recomputed!), and about $10\%$ to $25\%$ are spent on the few maths computations that can hardly be optimized.
+
+# In[163]:
+
+
+get_ipython().run_line_magic('lprun', '-f SubGaussianGLR.detect check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=200, unit=" seconds", CDAlgorithms=[SubGaussianGLR])')
+
+
+# $30\%$ of the time is spent computing the threshold (at every step it must be recomputed!), and about $10\%$ to $25\%$ are spent on the few maths computations that can hardly be optimized.
+
 # For examples:
 
-# In[328]:
+# In[164]:
 
 
 _ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, unit=" seconds")
 
 
-# In[329]:
+# In[165]:
 
 
 _ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100, unit=" seconds", gaussian=True)
@@ -1533,17 +1245,112 @@ _ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.4, tau
 
 # <span style="color:red">The two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM` or `PHT`!</span>
 
-# In[330]:
+# In[166]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.2, tau=0.5, horizon=100, unit=" seconds")')
 
 
-# <span style="color:red">`PHT` and the two `GLR` are very slow, compared to the `Monitored` approach, and slow compared to `CUSUM`!</span>
+# Let's compare the results for $T=100$, $T=500$, $T=1000$:
+
+# In[170]:
+
+
+get_ipython().run_cell_magic('time', '', 'results_T100 = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=100, unit=" seconds")')
+
+
+# In[171]:
+
+
+get_ipython().run_cell_magic('time', '', 'results_T500 = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=500, unit=" seconds")')
+
+
+# In[172]:
+
+
+get_ipython().run_cell_magic('time', '', 'results_T1000 = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000, unit=" seconds")')
+
+
+# In[193]:
+
+
+get_ipython().run_cell_magic('time', '', 'results_T2000 = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=2000, repetitions=10, unit=" seconds")')
+
+
+# In[202]:
+
+
+get_ipython().run_cell_magic('time', '', 'results_T2500 = check_onemeasure(time_efficiency, "Time", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=2500, repetitions=10, unit=" seconds")')
+
+
+# <span style="color:red">The three `GLR` and `CUSUM` and `PHT` are comparable, and the Bernoulli `GLR` is essentially the most efficient, except for `Monitored` which is the only one to be way faster.</span>
+
+# When going from a horizon of $T=100$ to $T=500$ and $T=1000$, we see that `Monitored` time complexity is essentially constant, while the complexity of `CUSUM`, `PHT` and all the `GLR` tests blows up quadratically:
+
+# In[203]:
+
+
+data_X = np.array([100, 500, 1000, 2000, 2500])
+data_Y = [
+    [
+        np.mean(results_T100,  axis=0)[i],
+        np.mean(results_T500,  axis=0)[i],
+        np.mean(results_T1000, axis=0)[i],
+        np.mean(results_T2000, axis=0)[i],
+        np.mean(results_T2500, axis=0)[i],
+    ]
+    for i in range(len(all_CD_algorithms))
+]
+
+
+# In[204]:
+
+
+import matplotlib.pyplot as plt
+
+
+# In[205]:
+
+
+fig = plt.figure()
+for i, alg in enumerate(all_CD_algorithms):
+    plt.plot(data_X, data_Y[i], 'o-', label=alg.__name__, lw=3)
+plt.legend()
+plt.xlabel("Time horizon $T$")
+plt.ylabel("Time complexity in seconds")
+plt.title("Comparison of time complexity efficiency of different CD algorithms")
+plt.show()
+
+
+# We can fit time complexity $C^{Algorithm}(T)$ as a function of $T$ in the form $C(T) \simeq a T^b + c$. Using the function [`scipy.optimize.curve_fit`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html), it is very easy:
+
+# In[206]:
+
+
+from scipy.optimize import curve_fit
+
+
+# In[221]:
+
+
+def time_complexity_general_shape(T, a, b, c):
+    return a * T**b + c
+
+
+# In[223]:
+
+
+for i, alg in enumerate(all_CD_algorithms):
+    popt, _ = curve_fit(time_complexity_general_shape, data_X, data_Y[i])
+    a, b, c = popt
+    print(f"For algorithm {alg.__name__},\n\ta = {a:.3g}, b = {b:.3g}, c = {c:.3g} is the best fit for C(T) = a T^b + c")
+
+
+# We check indeed that (roughly) $C(T^{1.3}) = \mathcal{O}(T)$ for `Monitored`, and $C(T) = \mathcal{O}(T^2)$ for all the other algorithms!
 
 # ## Checking detection delay
 
-# In[136]:
+# In[224]:
 
 
 def detection_delay(data, tau, CDAlgorithm, *args, **kwargs):
@@ -1559,7 +1366,7 @@ def detection_delay(data, tau, CDAlgorithm, *args, **kwargs):
 
 # For examples:
 
-# In[332]:
+# In[65]:
 
 
 _ = check_onemeasure(detection_delay, "Mean detection delay", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -1567,19 +1374,17 @@ _ = check_onemeasure(detection_delay, "Mean detection delay", firstMean=0.1, sec
 
 # <span style="color:red">A lot of detection delay are large (ie. it was detected too late), with not enough data! `SubGaussian-GLR` seems to be the only one "fast enough", but it triggers false alarms and not correct detections!</span>
 
-# In[333]:
+# In[66]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(detection_delay, "Mean detection delay", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
-# <span style="color:green">A very small detection delay, with enough data (a delay of 40 is *very* small when there is $500$ data of $\nu_1$ and $\nu_2$) !</span>
-
-# Note: it is also a very good "sanity check" to verify that the three implementations of GaussianGLR and BernoulliGLR and the two implementations of PHT obtain the same results!
+# <span style="color:green">A very small detection delay, with enough data (a delay of 40 is small when there is $500$ data of $\nu_1$ and $\nu_2$) !</span>
 
 # ## Checking false alarm probabilities
 
-# In[334]:
+# In[225]:
 
 
 def false_alarm(data, tau, CDAlgorithm, *args, **kwargs):
@@ -1595,7 +1400,7 @@ def false_alarm(data, tau, CDAlgorithm, *args, **kwargs):
 
 # For examples:
 
-# In[335]:
+# In[68]:
 
 
 _ = check_onemeasure(false_alarm, "Mean false alarm rate", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -1603,17 +1408,18 @@ _ = check_onemeasure(false_alarm, "Mean false alarm rate", firstMean=0.1, second
 
 # <span style="color:red">A lot of false alarm for `BernoulliGLR` but not the others, with not enough data!</span>
 
-# In[336]:
+# In[69]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(false_alarm, "Mean false alarm rate", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
 
 
 # <span style="color:green">No false alarm, with enough data!</span>
+# <span style="color:red">Only `Sub-Gaussian-GLR` has a lot of false alarms, even with enough data!</span>
 
 # ## Checking missed detection probabilities
 
-# In[337]:
+# In[226]:
 
 
 def missed_detection(data, tau, CDAlgorithm, *args, **kwargs):
@@ -1629,7 +1435,7 @@ def missed_detection(data, tau, CDAlgorithm, *args, **kwargs):
 
 # For examples:
 
-# In[338]:
+# In[71]:
 
 
 _ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.4, tau=0.5, horizon=100)
@@ -1637,7 +1443,7 @@ _ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0
 
 # <span style="color:red">A lot of missed detection, with not enough data!</span>
 
-# In[339]:
+# In[72]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(missed_detection, "Mean missed detection rate", firstMean=0.1, secondMean=0.9, tau=0.5, horizon=1000)')
@@ -1659,7 +1465,7 @@ get_ipython().run_cell_magic('time', '', '_ = check_onemeasure(missed_detection,
 # Of course, if any of $\tau$ or $\Delta$ are too small, detection is impossible.
 # I want to display a $2$D image view, showing on $x$-axis a grid of values of $\Delta$, on $y$-axis a grid of values of $\tau$, and on the $2$D image, a color-scale to show the detection delay (for instance).
 
-# In[340]:
+# In[230]:
 
 
 mu_1 = 0.5
@@ -1668,18 +1474,18 @@ nb_values_Delta = 20
 values_Delta = np.linspace(0, max_mu_2 - mu_1, nb_values_Delta)
 
 
-# In[341]:
+# In[231]:
 
 
-horizon = T = 5000
-min_tau = 50
+horizon = T = 1000
+min_tau = 10
 max_tau = T - min_tau
 step = 50
 values_tau = np.arange(min_tau, max_tau + 1, step)
 nb_values_tau = len(values_tau)
 
 
-# In[342]:
+# In[232]:
 
 
 print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
@@ -1687,7 +1493,7 @@ print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_value
 
 # And now the function:
 
-# In[343]:
+# In[233]:
 
 
 def check2D_onemeasure(measure,
@@ -1727,13 +1533,13 @@ def check2D_onemeasure(measure,
 # 
 # I want to (try to) use [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/parallel.html) to run the "repetitions" for loop in parallel, for instance on 4 cores on my machine.
 
-# In[344]:
+# In[234]:
 
 
 from joblib import Parallel, delayed
 
 
-# In[345]:
+# In[235]:
 
 
 # Tries to know number of CPU
@@ -1747,7 +1553,7 @@ print(f"Info: using {CPU_COUNT} jobs in parallel!")
 
 # We can rewrite the `check2D_onemeasure` function to run some loops in parallel.
 
-# In[346]:
+# In[236]:
 
 
 def check2D_onemeasure_parallel(measure,
@@ -1793,43 +1599,43 @@ def check2D_onemeasure_parallel(measure,
 
 # ## Checking on a small grid of values
 
-# In[146]:
+# In[80]:
 
 
 Monitored
 
 
-# In[147]:
+# In[233]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(time_efficiency,\n                       Monitored,\n                       values_Delta=[0.05, 0.25, 0.5],\n                       values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                       firstMean=0.5,\n                       horizon=1000,\n                       repetitions=100)')
 
 
-# In[73]:
+# In[82]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(time_efficiency,\n                                Monitored,\n                                values_Delta=[0.05, 0.25, 0.5],\n                                values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                                firstMean=0.5,\n                                horizon=1000,\n                                repetitions=100,\n                                n_jobs=4)')
 
 
-# In[74]:
+# In[83]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure(detection_delay,\n                       Monitored,\n                       values_Delta=[0.05, 0.25, 0.5],\n                       values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                       firstMean=0.5,\n                       horizon=1000,\n                       repetitions=100)')
 
 
-# In[75]:
+# In[84]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(detection_delay,\n                                Monitored,\n                                values_Delta=[0.05, 0.25, 0.5],\n                                values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                                firstMean=0.5,\n                                horizon=1000,\n                                repetitions=100\n                               )')
 
 
-# In[76]:
+# In[85]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(false_alarm,\n                                Monitored,\n                                values_Delta=[0.05, 0.25, 0.5],\n                                values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                                firstMean=0.5,\n                                horizon=1000,\n                                repetitions=100,\n                                )')
 
 
-# In[77]:
+# In[86]:
 
 
 get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(missed_detection,\n                                Monitored,\n                                values_Delta=[0.05, 0.25, 0.5],\n                                values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                                firstMean=0.5,\n                                horizon=1000,\n                                repetitions=100,\n                                )')
@@ -1837,7 +1643,7 @@ get_ipython().run_cell_magic('time', '', '_ = check2D_onemeasure_parallel(missed
 
 # ## Plotting the result as a 2D image
 
-# In[148]:
+# In[238]:
 
 
 import matplotlib as mpl
@@ -1847,9 +1653,45 @@ import matplotlib.ticker as ticker
 import matplotlib.pyplot as plt    
 
 
+# In[239]:
+
+
+#: List of formats to use for saving the figures, by default.
+#: It is a smart idea to save in both a raster and vectorial formats
+FORMATS = ('png', 'pdf')
+
+import pickle
+from datetime import datetime
+from os.path import getsize, getatime
+
+
+def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, fig=None):
+    """ Maximize the window if need to show it, save it if needed, and then show it or close it.
+
+    - Inspired by https://tomspur.blogspot.fr/2015/08/publication-ready-figures-with.html#Save-the-figure
+    """
+    if savefig is not None:
+        if pickleit and fig is not None:
+            form = "pickle"
+            path = "{}.{}".format(savefig, form)
+            print("Saving raw figure with format {}, to file '{}'...".format(form, path))  # DEBUG
+            with open(path, "bw") as f:
+                pickle_dump(fig, f)
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
+        for form in formats:
+            path = "{}.{}".format(savefig, form)
+            print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
+            plt.savefig(path, bbox_inches=None)
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
+    try:
+        plt.show() if showplot else plt.close()
+    except (TypeError, AttributeError):
+        print("Failed to show the figure for some unknown reason...")  # DEBUG
+
+
 # Now the function:
 
-# In[149]:
+# In[240]:
 
 
 def view2D_onemeasure(measure, name,
@@ -1861,6 +1703,7 @@ def view2D_onemeasure(measure, name,
                       repetitions=10,
                       gaussian=False,
                       n_jobs=CPU_COUNT,
+                      savefig=None,
                       *args, **kwargs,
     ):
     check = check2D_onemeasure_parallel if n_jobs > 1 else check2D_onemeasure
@@ -1903,59 +1746,80 @@ def view2D_onemeasure(measure, name,
     plt.xlabel(r"Value of $\tau$ time of breakpoint")
     plt.ylabel(r"Value of gap $\Delta = |\mu_2 - \mu_1|$")
 
+                  
+    show_and_save(savefig=savefig)
     return fig
 
 
 # ### First example
 # #### For `Monitored`
 
-# In[150]:
+# In[110]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=100,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=50,\n                      savefig="Detection_delay_of_Monitored__Bernoulli_T1000_N50__5deltas__5taus"\n                     )')
 
 
-# In[81]:
+# In[118]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=100,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=50,\n                      savefig="False_alarm_of_Monitored__Bernoulli_T1000_N50__5deltas__5taus"\n                     )')
+
+
+# In[119]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=50,\n                      savefig="Missed_detection_of_Monitored__Bernoulli_T1000_N50__5deltas__5taus"\n                     )')
 
 
 # In[121]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=100,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=50,\n                      gaussian=True,\n                      savefig="False_alarm_of_Monitored__Gaussian_T1000_N50__5deltas__5taus"\n                     )')
+
+
+# In[122]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=50,\n                      gaussian=True,\n                      savefig="Missed_detection_of_Monitored__Gaussian_T1000_N50__5deltas__5taus"\n                     )')
 
 
 # #### For `CUSUM`
 
-# In[82]:
-
-
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      CUSUM,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=10,\n                     )')
-
-
 # In[123]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      CUSUM,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=10,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      CUSUM,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=10,\n                      savefig="Detection_delay_of_CUSUM__Bernoulli_T1000_N10__5deltas__5taus",\n                     )')
+
+
+# In[124]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      CUSUM,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=10,\n                      savefig="False_alarm_of_CUSUM__Bernoulli_T1000_N10__5deltas__5taus",\n                     )')
+
+
+# In[125]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      CUSUM,\n                      values_Delta=[0.05, 0.1, 0.25, 0.4, 0.5],\n                      values_tau=[1/10, 1/4, 2/4, 3/4, 9/10],\n                      firstMean=0.5,\n                      horizon=1000,\n                      repetitions=10,\n                      savefig="Missed_detection_of_CUSUM__Bernoulli_T1000_N10__5deltas__5taus",\n                     )')
 
 
 # ### Second example
 
-# In[351]:
+# In[150]:
 
 
 firstMean = mu_1 = 0.5
 max_mu_2 = 1
 nb_values_Delta = 20
+min_delta = 0.15
 max_delta = max_mu_2 - mu_1
 epsilon = 0.03
-values_Delta = np.linspace(epsilon * max_delta, (1 - epsilon) * max_delta, nb_values_Delta)
+values_Delta = np.linspace(min_delta, (1 - epsilon) * max_delta, nb_values_Delta)
 print(f"Values of delta: {values_Delta}")
 
 
-# In[352]:
+# In[151]:
 
 
 horizon = T = 1000
@@ -1967,7 +1831,7 @@ nb_values_tau = len(values_tau)
 print(f"Values of tau: {values_tau}")
 
 
-# In[353]:
+# In[152]:
 
 
 print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
@@ -1975,115 +1839,115 @@ print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_value
 
 # #### For `Monitored`
 
-# In[141]:
+# In[153]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                     )')
-
-
-# In[142]:
-
-
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      savefig="Detection_delay_of_CUSUM__Bernoulli_T1000_N50__20deltas__19taus",\n                     )')
 
 
 # In[154]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=100,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      savefig="False_alarm_of_CUSUM__Bernoulli_T1000_N50__20deltas__19taus",\n                     )')
+
+
+# In[155]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      savefig="Missed_detection_of_CUSUM__Bernoulli_T1000_N50__20deltas__19taus",\n                     )')
 
 
 # #### For `Monitored` for Gaussian data
 
-# In[144]:
+# In[156]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      gaussian=True,\n                      savefig="Detection_delay_of_Monitored__Gaussian_T1000_N50__20deltas__19taus",\n                     )')
 
 
-# In[145]:
+# In[157]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      Monitored,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=50,\n                      gaussian=True,\n                      savefig="Missed_detection_of_Monitored__Gaussian_T1000_N50__20deltas__19taus",\n                     )')
 
 
 # #### For `CUSUM`
 
-# In[88]:
+# In[158]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      CUSUM,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=20,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      CUSUM,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      savefig="Detection_delay_of_CUSUM__Bernoulli_T1000_N10__20deltas__19taus",\n                     )')
 
 
 # #### For `PHT`
 
-# In[217]:
+# In[159]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      PHT,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      PHT,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=5,\n                      savefig="Detection_delay_of_PHT__Bernoulli_T1000_N5__20deltas__19taus",\n                     )')
 
 
 # #### For `Bernoulli GLR`
 
-# In[356]:
+# In[160]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      BernoulliGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      BernoulliGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      savefig="Detection_delay_of_BernoulliGLR__Bernoulli_T1000_N10__20deltas__19taus",\n                     )')
 
 
-# In[357]:
+# In[161]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      BernoulliGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      BernoulliGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                      savefig="Detection_delay_of_BernoulliGLR__Gaussian_T1000_N10__20deltas__19taus",\n                     )')
 
 
 # #### For `Gaussian GLR`
 
-# In[358]:
+# In[162]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      savefig="Detection_delay_of_GaussianGLR__Bernoulli_T1000_N10__20deltas__19taus",\n                     )')
 
 
-# In[359]:
+# In[163]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      GaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                      gaussian=True,\n                      savefig="Detection_delay_of_GaussianGLR__Gaussian_T1000_N1__20deltas__19taus",\n                     )')
 
 
 # #### For `Sub-Gaussian GLR`
 
-# In[362]:
+# In[164]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      savefig="Detection_delay_of_SubGaussianGLR__Bernoulli_T1000_N10__20deltas__19taus",\n                     )')
 
 
-# In[364]:
+# In[165]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=100,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      savefig="False_alarm__SubGaussianGLR__Bernoulli_T1000_N10__20deltas__19taus",\n                     )')
 
 
 # With this tuning ($\delta=0.01$), the `Sub-Gaussian GLR` almost always gives a false alarm! It detects too soon!
 
 # For Gaussian data:
 
-# In[365]:
+# In[166]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                      savefig="Detection_delay__SubGaussianGLR__Gaussian_T1000_N10__20deltas__19taus",\n                     )')
 
 
-# In[160]:
+# In[167]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=1,\n                      gaussian=True,\n                      savefig="False_alarm__SubGaussianGLR__Gaussian_T1000_N1__20deltas__19taus",\n                     )')
 
 
 # For another, simpler problem.
 
-# In[384]:
+# In[168]:
 
 
 horizon = T = 200
@@ -2095,7 +1959,7 @@ nb_values_tau = len(values_tau)
 print(f"Values of tau: {values_tau}")
 
 
-# In[386]:
+# In[169]:
 
 
 firstMean = mu_1 = -1.0
@@ -2107,33 +1971,29 @@ values_Delta = np.linspace(epsilon * max_delta, (1 - epsilon) * max_delta, nb_va
 print(f"Values of delta: {values_Delta}")
 
 
-# In[387]:
+# In[170]:
 
 
 print(f"This will give a grid of {nb_values_Delta} x {nb_values_tau} = {nb_values_Delta * nb_values_tau} values of Delta and tau to explore.")
 
 
-# In[394]:
+# In[171]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(detection_delay, "Detection delay",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                      savefig="Detection_delay__SubGaussianGLR__Gaussian_T1000_N10__19deltas__19taus",\n                     )')
 
 
-# In[395]:
+# In[172]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=200,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(false_alarm, "False alarm probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                      savefig="False_alarm__SubGaussianGLR__Gaussian_T1000_N10__19deltas__19taus",\n                     )')
 
 
-# In[391]:
+# In[173]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=100,\n                      gaussian=True,\n                     )')
+get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection, "Missed detection probability",\n                      SubGaussianGLR,\n                      values_Delta=values_Delta,\n                      values_tau=values_tau,\n                      firstMean=firstMean,\n                      horizon=horizon,\n                      repetitions=10,\n                      gaussian=True,\n                      savefig="Missed_detection__SubGaussianGLR__Gaussian_T1000_N10__19deltas__19taus",\n                     )')
 
-
-# ### More examples
-
-# <center><span style="font-size:xx-large; color:red;">TODO TODO TODO TODO TODO TODO</span></center>
 
 # ----
 # # Exploring the parameters of change point detection algorithms: how to tune them?
@@ -2145,10 +2005,10 @@ get_ipython().run_cell_magic('time', '', '_ = view2D_onemeasure(missed_detection
 # 
 # We can consider Bernoulli or Gaussian distributions.
 
-# In[166]:
+# In[241]:
 
 
-horizon = 1000
+horizon = 200
 firstMean = mu_1 = 0.25
 secondMean = mu_2 = 0.75
 gap = mu_2 - mu_1
@@ -2157,7 +2017,7 @@ tau = 0.5
 
 # ## A generic function
 
-# In[167]:
+# In[242]:
 
 
 def explore_parameters(measure,
@@ -2198,7 +2058,7 @@ def explore_parameters(measure,
 
 # I want to (try to) use [`joblib.Parallel`](https://joblib.readthedocs.io/en/latest/parallel.html) to run the "repetitions" for loop in parallel, for instance on 4 cores on my machine.
 
-# In[168]:
+# In[243]:
 
 
 def explore_parameters_parallel(measure,
@@ -2248,21 +2108,22 @@ def explore_parameters_parallel(measure,
 
 # ## Plotting the result as a 1D plot
 
-# In[169]:
+# In[244]:
 
 
 def view1D_explore_parameters(measure, name,
-                       CDAlgorithm,
-                       tau=tau,
-                       firstMean=mu_1,
-                       secondMean=mu_2,
-                       horizon=horizon,
-                       repetitions=10,
-                       verbose=False,
-                       gaussian=False,
-                       n_jobs=CPU_COUNT,
-                       list_of_args_kwargs=tuple(),
-                       argskwargs2str=None,
+        CDAlgorithm,
+        tau=tau,
+        firstMean=mu_1,
+        secondMean=mu_2,
+        horizon=horizon,
+        repetitions=10,
+        verbose=False,
+        gaussian=False,
+        n_jobs=CPU_COUNT,
+        list_of_args_kwargs=tuple(),
+        argskwargs2str=None,
+        savefig=None,
     ):
     explore = explore_parameters_parallel if n_jobs > 1 else explore_parameters
     results = explore(measure,
@@ -2291,12 +2152,13 @@ def view1D_explore_parameters(measure, name,
     ax = plt.gca()
     ax.set_xticklabels(x_ticklabels, rotation=80, verticalalignment="top")
     
+    show_and_save(savefig=savefig)
     return fig
 
 
 # ## Experiments for `Monitored`
 
-# In[218]:
+# In[245]:
 
 
 list_of_args_kwargs_for_Monitored = tuple([
@@ -2305,7 +2167,7 @@ list_of_args_kwargs_for_Monitored = tuple([
 ])
 
 
-# In[219]:
+# In[246]:
 
 
 argskwargs2str_for_Monitored = lambda args, kwargs: fr"$w={kwargs['window_size']:.4g}$"
@@ -2313,46 +2175,46 @@ argskwargs2str_for_Monitored = lambda args, kwargs: fr"$w={kwargs['window_size']
 
 # On a first Bernoulli problem, a very easy one (with a large gap of $\Delta=0.5$).
 
-# In[220]:
+# In[247]:
 
 
-horizon = 1000
+horizon = 100
 firstMean = mu_1 = 0.25
 secondMean = mu_2 = 0.75
 gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[221]:
+# In[373]:
 
 
 get_ipython().run_cell_magic('time', '', 'explore_parameters(detection_delay,\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   verbose=True,\n                   gaussian=False,\n                   n_jobs=1,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                )')
 
 
-# In[222]:
+# In[374]:
 
 
 get_ipython().run_cell_magic('time', '', 'explore_parameters_parallel(detection_delay,\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   verbose=True,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                )')
 
 
-# In[223]:
+# In[375]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                   savefig=f"Detection_delay__Monitored__Bernoulli_T1000_N100__{len(list_of_args_kwargs_for_Monitored)}",\n                )')
 
 
 # On the same problem, with $10000$ data instead of $1000$.
 
-# In[224]:
+# In[376]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=10*horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=10*horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                   savefig=f"Detection_delay__Monitored__Bernoulli_T10000_N100__{len(list_of_args_kwargs_for_Monitored)}",\n                )')
 
 
 # On two Gaussian problems, one with a gap of $\Delta=0.5$ (easy) and a harder with a gap of $\Delta=0.1$.
 # It is very intriguing that small difference in the gap can yield such large differences in the detection delay (or missed detection probability, as having a detection delay of $D=T-\tau$ means a missed detection!).
 
-# In[225]:
+# In[377]:
 
 
 horizon = 10000
@@ -2362,15 +2224,15 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[226]:
+# In[378]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                   savefig=f"Detection_delay__Monitored__Gaussian_T1000_N100__{len(list_of_args_kwargs_for_Monitored)}",\n                )')
 
 
 # With a smaller gap, the problem gets harder, and can become impossible to solve (with such a small time horizon).
 
-# In[229]:
+# In[379]:
 
 
 horizon = 10000
@@ -2380,13 +2242,13 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[231]:
+# In[380]:
 
 
-get_ipython().run_cell_magic('time', '', '\n_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                   savefig=f"Detection_delay__Monitored__Bernoulli_T1000_N100__{len(list_of_args_kwargs_for_Monitored)}_2",\n                )')
 
 
-# In[227]:
+# In[381]:
 
 
 horizon = 10000
@@ -2396,7 +2258,7 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[234]:
+# In[382]:
 
 
 list_of_args_kwargs_for_Monitored = tuple([
@@ -2405,34 +2267,36 @@ list_of_args_kwargs_for_Monitored = tuple([
 ])
 
 
-# In[235]:
+# In[383]:
 
 
-get_ipython().run_cell_magic('time', '', '\n_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   Monitored,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=True,\n                   n_jobs=4,\n                   list_of_args_kwargs=list_of_args_kwargs_for_Monitored,\n                   argskwargs2str=argskwargs2str_for_Monitored,\n                   savefig=f"Detection_delay__Monitored__Bernoulli_T1000_N100__{len(list_of_args_kwargs_for_Monitored)}_3",\n                )')
 
 
 # ## Experiments for `Bernoulli GLR`
 
-# In[236]:
+# In[316]:
 
 
 list_of_args_kwargs_for_BernoulliGLR = tuple([
-    ((), {'threshold_h': h})  # empty args, kwargs = {threshold_h=None}
-    for h in [None, 0.0001, 0.01, 0.1, 0.5, 0.9, 1, 2, 5, 10, 20, 50, 100, 1000, 10000]
+    ((), {'mult_threshold_h': h})  # empty args, kwargs = {threshold_h=None}
+    for h in [0.0001, 0.01, 0.1, 0.5, 0.9, 1, 2, 5, 10, 20, 50, 100, 1000, 10000]
 ])
 
 
-# In[237]:
+# In[317]:
 
 
 def argskwargs2str_for_BernoulliGLR(args, kwargs):
-    h = kwargs['threshold_h']
-    return fr"$h={h:.4g}$" if h is not None else "$h=$'auto'"
+    h = kwargs['mult_threshold_h']
+    return fr"$h_0={h:.4g}$" if h is not None else "$h=$'auto'"
 
+
+# ### Simple Bernoulli problem for BernoulliGLR
 
 # First, for a Bernoulli problem:
 
-# In[238]:
+# In[319]:
 
 
 horizon = 1000
@@ -2442,27 +2306,103 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[239]:
+# In[387]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Detection_delay__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}",\n                )')
 
 
-# In[240]:
+# In[388]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=20,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"False_alarm__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}",\n                )')
 
 
-# In[241]:
+# In[389]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=20,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Missed_detection__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}",\n                )')
 
 
+# ### Medium Bernoulli problem for BernoulliGLR
+
+# Then, for a harder Bernoulli problem. Here the gap is $\frac{1}{\sqrt{2}}$ smaller, $\Delta=\frac{1}{2\sqrt{2}}$, so the complexity of the problem should be twice as hard (it scales as $\propto \frac{1}{\Delta^2}$).
+
+# In[329]:
+
+
+horizon = 1000
+firstMean = mu_1 = 0.25
+gap = 1/2 / np.sqrt(2)
+print(f"Gap = {gap}")
+secondMean = mu_2 = mu_1 + gap
+tau = 0.5
+
+
+# In[330]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Detection_delay__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
+
+
+# In[331]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"False_alarm__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
+
+
+# In[332]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Missed_detection__BernoulliGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
+
+
+# ### Harder Bernoulli problem for BernoulliGLR
+
+# Then, for a really harder Bernoulli problem. Here the gap is again smaller, $\Delta=\frac{1}{10}$, so the complexity of the problem should (again) much harder (it scales as $\propto \frac{1}{\Delta^2}$).
+
+# In[359]:
+
+
+list_of_args_kwargs_for_BernoulliGLR = tuple([
+    ((), {'mult_threshold_h': h})  # empty args, kwargs = {threshold_h=None}
+    for h in [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 2]
+])
+
+
+# In[360]:
+
+
+horizon = 1000
+firstMean = mu_1 = 0.25
+gap = 0.1
+print(f"Gap = {gap}")
+secondMean = mu_2 = mu_1 + gap
+tau = 0.5
+
+
+# In[361]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Detection_delay__BernoulliGLR__Bernoulli_T1000_N100__params{len(list_of_args_kwargs_for_BernoulliGLR)}_4",\n                )')
+
+
+# In[362]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"False_alarm__BernoulliGLR__Bernoulli_T1000_N100__params{len(list_of_args_kwargs_for_BernoulliGLR)}_5",\n                )')
+
+
+# In[363]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Missed_detection__BernoulliGLR__Bernoulli_T1000_N100__params{len(list_of_args_kwargs_for_BernoulliGLR)}_5",\n                )')
+
+
+# ### Easy Gaussian problem for BernoulliGLR
 # And now on Gaussian problems:
 
-# In[242]:
+# In[266]:
 
 
 horizon = 1000
@@ -2472,13 +2412,19 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[243]:
+# In[267]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Detection_delay__BernoulliGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}",\n                )')
 
 
-# In[244]:
+# In[270]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=50,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"False_alarm__BernoulliGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}",\n                )')
+
+
+# In[392]:
 
 
 horizon = 1000
@@ -2488,46 +2434,46 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[245]:
+# In[393]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Detection_delay__BernoulliGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
 
 
-# In[246]:
+# In[394]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"False_alarm__BernoulliGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
 
 
-# In[247]:
+# In[271]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(missed_detection, "Missed detection probability",\n                   BernoulliGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_BernoulliGLR,\n                   argskwargs2str=argskwargs2str_for_BernoulliGLR,\n                   savefig=f"Missed_detection__BernoulliGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_BernoulliGLR)}_2",\n                )')
 
 
 # ## Experiments for `Gaussian GLR`
 
-# In[273]:
+# In[272]:
 
 
 list_of_args_kwargs_for_GaussianGLR = tuple([
-    ((), {'threshold_h': h})  # empty args, kwargs = {threshold_h=None}
-    for h in [None, 0.0001, 0.01, 0.1, 0.5, 0.9, 1, 2, 5, 10, 20, 50, 100, 1000, 10000]
+    ((), {'mult_threshold_h': h})  # empty args, kwargs = {threshold_h=None}
+    for h in [0.0001, 0.01, 0.1, 0.5, 0.9, 1, 2, 5, 10, 20, 50, 100, 1000, 10000]
 ])
 
 
-# In[274]:
+# In[273]:
 
 
 def argskwargs2str_for_GaussianGLR(args, kwargs):
-    h = kwargs['threshold_h']
+    h = kwargs['mult_threshold_h']
     return fr"$h={h:.4g}$" if h is not None else "$h=$'auto'"
 
 
 # First, for a Bernoulli problem:
 
-# In[275]:
+# In[274]:
 
 
 horizon = 1000
@@ -2537,10 +2483,16 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
+# In[275]:
+
+
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                   savefig=f"Detection_delay__GaussianGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_GaussianGLR)}_2",\n                )')
+
+
 # In[276]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=50,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                   savefig=f"False_alarm__GaussianGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_GaussianGLR)}_2",\n                )')
 
 
 # Then, for a Gaussian problem:
@@ -2558,7 +2510,7 @@ tau = 0.5
 # In[278]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=50,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                   savefig=f"Detection_delay__GaussianGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_GaussianGLR)}_2",\n                )')
 
 
 # And for a harder Gaussian problem:
@@ -2576,12 +2528,12 @@ tau = 0.5
 # In[280]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=50,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   GaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_GaussianGLR,\n                   argskwargs2str=argskwargs2str_for_GaussianGLR,\n                   savefig=f"Detection_delay__GaussianGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_GaussianGLR)}_3",\n                )')
 
 
 # ## Experiments for `CUSUM`
 
-# In[264]:
+# In[282]:
 
 
 list_of_args_kwargs_for_CUSUM = tuple([
@@ -2592,13 +2544,13 @@ list_of_args_kwargs_for_CUSUM = tuple([
 ])
 
 
-# In[265]:
+# In[283]:
 
 
 print(f"Exploring {len(list_of_args_kwargs_for_CUSUM)} different values of (h, epsilon, M) for CUSUM...")
 
 
-# In[266]:
+# In[284]:
 
 
 def argskwargs2str_for_CUSUM(args, kwargs):
@@ -2610,7 +2562,7 @@ def argskwargs2str_for_CUSUM(args, kwargs):
 
 # First, for a Bernoulli problem:
 
-# In[267]:
+# In[305]:
 
 
 horizon = 1000
@@ -2620,31 +2572,23 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[268]:
+# In[408]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=100,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
-
-
-# And for the same problem but on a longer horizon ($T := 10 \times T = 10000$):
-
-# In[270]:
-
-
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=10*horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                   savefig=f"Detection_delay__CUSUM__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_CUSUM)}",\n                )')
 
 
 # Now for the first problem ($T=1000$) and the `PHT` algorithm.
 
-# In[261]:
+# In[306]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   PHT,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   PHT,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                   savefig=f"Detection_delay__PHT__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_CUSUM)}",\n                )')
 
 
 # Then, for a Gaussian problem with the same gap:
 
-# In[262]:
+# In[307]:
 
 
 horizon = 1000
@@ -2654,15 +2598,15 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[263]:
+# In[308]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   CUSUM,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_CUSUM,\n                   argskwargs2str=argskwargs2str_for_CUSUM,\n                   savefig=f"Detection_delay__CUSUM__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_CUSUM)}",\n                )')
 
 
 # ## Experiments for `Sub-Gaussian GLR`
 
-# In[396]:
+# In[293]:
 
 
 list_of_args_kwargs_for_SubGaussianGLR = tuple([
@@ -2673,7 +2617,7 @@ list_of_args_kwargs_for_SubGaussianGLR = tuple([
 ])
 
 
-# In[367]:
+# In[294]:
 
 
 def argskwargs2str_for_SubGaussianGLR(args, kwargs):
@@ -2685,7 +2629,7 @@ def argskwargs2str_for_SubGaussianGLR(args, kwargs):
 
 # First, for a Bernoulli problem:
 
-# In[368]:
+# In[309]:
 
 
 horizon = 1000
@@ -2695,21 +2639,21 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[371]:
+# In[310]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                   savefig=f"Detection_delay__SubGaussianGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_SubGaussianGLR)}",\n                )')
 
 
-# In[370]:
+# In[311]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(false_alarm, "False alarm probability",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=False,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                   savefig=f"False_alarm__SubGaussianGLR__Bernoulli_T1000_N10__params{len(list_of_args_kwargs_for_SubGaussianGLR)}",\n                )')
 
 
 # Then, for a Gaussian problem:
 
-# In[397]:
+# In[314]:
 
 
 horizon = 1000
@@ -2719,15 +2663,15 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[399]:
+# In[315]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                   savefig=f"Detection_delay__SubGaussianGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_SubGaussianGLR)}",\n                )')
 
 
 # And for a harder Gaussian problem:
 
-# In[400]:
+# In[312]:
 
 
 horizon = 1000
@@ -2737,10 +2681,10 @@ gap = mu_2 - mu_1
 tau = 0.5
 
 
-# In[402]:
+# In[313]:
 
 
-get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                )')
+get_ipython().run_cell_magic('time', '', '_ = view1D_explore_parameters(detection_delay, "Detection delay",\n                   SubGaussianGLR,\n                   tau=tau,\n                   firstMean=mu_1,\n                   secondMean=mu_2,\n                   horizon=horizon,\n                   repetitions=10,\n                   gaussian=True,\n                   list_of_args_kwargs=list_of_args_kwargs_for_SubGaussianGLR,\n                   argskwargs2str=argskwargs2str_for_SubGaussianGLR,\n                   savefig=f"Detection_delay__SubGaussianGLR__Gaussian_T1000_N10__params{len(list_of_args_kwargs_for_SubGaussianGLR)}_2",\n                )')
 
 
 # ## Other experiments
