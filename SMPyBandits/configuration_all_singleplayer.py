@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration.py' is NOT executable. Use 'main.py' or 'make single' ...")  # DEBUG
+    print("Warning: this script 'configuration_all_singleplayer.py' is NOT executable. Use 'main.py configuration_all_singleplayer' or 'make all_singleplayer' ...")  # DEBUG
     exit(0)
 
 # Import arms and algorithms

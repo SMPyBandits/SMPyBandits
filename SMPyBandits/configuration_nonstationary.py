@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration.py' is NOT executable. Use 'main.py' or 'make single' ...")  # DEBUG
+    print("Warning: this script 'configuration_nonstationary.py' is NOT executable. Use 'main.py' or 'make single' ...")  # DEBUG
     exit(0)
 
 # Import arms
@@ -63,10 +63,6 @@ RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
 NB_BREAK_POINTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
 
-#: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = False  # XXX to manually disable this feature?
-CACHE_REWARDS = True  # XXX to manually enable this feature?
-
 #: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 3
 NB_ARMS = int(getenv('K', NB_ARMS))
@@ -104,9 +100,9 @@ configuration = {
     # --- Should we plot the lower-bounds or not?
     "plot_lowerbound": False,  # XXX Default
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
-    "cache_rewards": CACHE_REWARDS,
+    "cache_rewards": False,  # TODO it's not yet 
     # --- Arms
-    "environment": []
+    "environment": [],
 }
 
 # XXX Pb 0 changes are only on one arm at a time, only 2 arms

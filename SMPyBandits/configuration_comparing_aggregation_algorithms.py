@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration_comparing_KLUCB_aggregation.py' is NOT executable. Use 'main.py configuration_comparing_KLUCB_aggregation' or 'make comparing_KLUCB_aggregation' ...")  # DEBUG
+    print("Warning: this script 'configuration_comparing_aggregation_algorithms.py' is NOT executable. Use 'main.py configuration_comparing_aggregation_algorithms' or 'make comparing_aggregation_algorithms' ...")  # DEBUG
     exit(0)
 
 # Import arms

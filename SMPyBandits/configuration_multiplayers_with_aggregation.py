@@ -18,7 +18,7 @@ from os import getenv
 import numpy as np
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration_multiplayers.py' is NOT executable. Use 'main_multiplayers.py' or 'make multiplayers' or 'make moremultiplayers' ...")  # DEBUG
+    print("Warning: this script 'configuration_multiplayers_with_aggregation.py' is NOT executable. Use 'main_multiplayers.py configuration_multiplayers_with_aggregation' or 'make moremultiplayers_with_aggregation' or 'make moremultiplayers' ...")  # DEBUG
     exit(0)
 
 try:

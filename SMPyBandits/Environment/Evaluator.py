@@ -577,6 +577,8 @@ class Evaluator(object):
             if semilogy or loglog:
                 ymin = max(0, ymin)
             plt.ylim(ymin, plt.ylim()[1])
+        if meanReward:
+            plt.ylim(0, 1)
         # Get a small string to add to ylabel
         ylabel2 = r"%s%s" % (r", $\pm 1$ standard deviation" if (plotSTD and not plotMaxMin) else "", r", $\pm 1$ amplitude" if (plotMaxMin and not plotSTD) else "")
         if meanReward:

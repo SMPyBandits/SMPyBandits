@@ -18,7 +18,7 @@ from os import getenv
 import numpy as np
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration_sparse_multiplayers.py' is NOT executable. Use 'main_sparse_multiplayers.py' or 'make sparsemulti' ...")  # DEBUG
+    print("Warning: this script 'configuration_sparse_multiplayers.py' is NOT executable. Use 'main_sparse_multiplayers.py' or 'make sparsemultiplayers' ...")  # DEBUG
     exit(0)
 
 # Import arms

@@ -17,7 +17,7 @@ except ImportError:
 from os import getenv
 
 if __name__ == '__main__':
-    print("Warning: this script 'configuration_sparse.py' is NOT executable. Use 'main.py configuration_sparse' or 'make configuration_sparse' ...")  # DEBUG
+    print("Warning: this script 'configuration_sparse.py' is NOT executable. Use 'main.py configuration_sparse' or 'make sparse' ...")  # DEBUG
     exit(0)
 
 # Import arms

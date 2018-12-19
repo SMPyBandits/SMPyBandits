@@ -34,28 +34,14 @@ except ImportError:
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".
-HORIZON = 100
-HORIZON = 500
-HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
 HORIZON = 10000
-# HORIZON = 20000
-# HORIZON = 30000
-# HORIZON = 40000
-# HORIZON = 100000
 HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be statistically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
 REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 10000
 # REPETITIONS = 1000
-# REPETITIONS = 200
-# REPETITIONS = 100
-# REPETITIONS = 50
-# REPETITIONS = 20
 REPETITIONS = int(getenv('N', REPETITIONS))
 
 #: To profile the code, turn down parallel computing
@@ -82,32 +68,17 @@ RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
 NB_BREAK_POINTS = 0  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_BREAK_POINTS = 3  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 # NB_BREAK_POINTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-# NB_BREAK_POINTS = 10  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
-# NB_BREAK_POINTS = 20  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
 
 #: Parameters for the epsilon-greedy and epsilon-... policies.
 EPSILON = 0.1
 #: Temperature for the Softmax policies.
-TEMPERATURE = 0.01  # When -> 0, more greedy
-TEMPERATURE = 0.1
-TEMPERATURE = 0.5
-TEMPERATURE = 1
-TEMPERATURE = 10
-TEMPERATURE = 100   # When -> oo, more uniformly at random
-# TEMPERATURE = 10.0 / HORIZON  # Not sure ??!
 TEMPERATURE = 0.05
 
 #: Learning rate for my aggregated bandit (it can be autotuned)
-LEARNING_RATE = 0.05
-LEARNING_RATE = 0.1
-LEARNING_RATE = 0.2
-LEARNING_RATE = 0.5
 LEARNING_RATE = 0.01
 
 # To try more learning rates in one run
-LEARNING_RATES = [10, 2, 1, 0.1, 0.01, 0.001, 0.0001, 0.00005]
-LEARNING_RATES = [10, 1, 0.1, 0.01, 0.001]
 LEARNING_RATES = [LEARNING_RATE]
 
 #: Constant time tau for the decreasing rate for my aggregated bandit.
@@ -116,26 +87,13 @@ DECREASE_RATE = None
 DECREASE_RATE = HORIZON / 2.0
 DECREASE_RATE = 'auto'  # FIXED using the formula from Theorem 4.2 from [Bubeck & Cesa-Bianchi, 2012](http://sbubeck.com/SurveyBCB12.pdf)
 
-#: To know if my Aggregator policy is tested.
-TEST_Aggregator = True
-TEST_Aggregator = False  # XXX do not let this = False if you want to test my Aggregator policy
-
-#: To know if my Doubling Trick policy is tested.
-TEST_Doubling_Trick = True
-TEST_Doubling_Trick = False  # XXX do not let this = False if you want to test my Doubling Trick policy
-
 #: To know if my WrapRange policy is tested.
 TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
-#: To know if the non stationary policies are tested.
-TEST_Non_Stationary_Policies = False  # XXX do not let this = False if you want to test the non stationary policies
-TEST_Non_Stationary_Policies = True
-
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = True  # XXX to manually enable this feature?
 CACHE_REWARDS = False  # XXX to manually disable this feature?
-CACHE_REWARDS = TEST_Aggregator
 
 #: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -187,11 +145,6 @@ ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 #: True to use bayesian problem
 ENVIRONMENT_BAYESIAN = False
 ENVIRONMENT_BAYESIAN = getenv('BAYES', str(ENVIRONMENT_BAYESIAN)) == 'True'
-
-#: True to use non-stationary problem
-ENVIRONMENT_NONSTATIONARY = False
-ENVIRONMENT_NONSTATIONARY = getenv('NONSTATIONARY', str(ENVIRONMENT_NONSTATIONARY)) == 'True'
-ENVIRONMENT_BAYESIAN = False if ENVIRONMENT_NONSTATIONARY else ENVIRONMENT_BAYESIAN
 
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUDE, isSorted=True)
@@ -355,318 +308,6 @@ if ENVIRONMENT_BAYESIAN:
             }
         },
     ]
-
-
-# if ENVIRONMENT_NONSTATIONARY:
-#     configuration["environment"] = [
-#         {   # A simple piece-wise stationary problem
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "listOfMeans": LIST_OF_MEANS,
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
-#             }
-#         },
-#     ]
-
-if ENVIRONMENT_NONSTATIONARY:
-    configuration["plot_lowerbound"] = False
-    configuration["environment"] = []
-
-
-if False and ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] += [
-        {   # A simple piece-wise stationary problem
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    [0.1, 0.2],  # 0    to 399
-                    [0.1, 0.3],  # 400  to 799
-                    [0.5, 0.3],  # 800  to 1199
-                    [0.4, 0.3],  # 1200 to 1599
-                    [0.3, 0.9],  # 1600 to end
-                ],
-                "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
-                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
-                ],
-            }
-        },
-    ]
-
-# XXX Pb 1 changes are only on one arm at a time
-if False and ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] += [
-        {   # A simple piece-wise stationary problem
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    [0.2, 0.5, 0.9],  # 0    to 399
-                    [0.2, 0.2, 0.9],  # 400  to 799
-                    [0.2, 0.2, 0.1],  # 800  to 1199
-                    [0.7, 0.2, 0.1],  # 1200 to 1599
-                    [0.7, 0.5, 0.1],  # 1600 to end
-                ],
-                "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
-                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
-                ],
-            }
-        },
-    ]
-
-# XXX Pb 2 changes are on all or almost arms at a time
-if False and ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] += [
-        {   # A simple piece-wise stationary problem
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    [0.4, 0.5, 0.9],  # 0    to 399
-                    [0.5, 0.4, 0.7],  # 400  to 799
-                    [0.6, 0.3, 0.5],  # 800  to 1199
-                    [0.7, 0.2, 0.3],  # 1200 to 1599
-                    [0.8, 0.1, 0.1],  # 1600 to end
-                ],
-                "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
-                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
-                ],
-            }
-        },
-    ]
-
-# XXX Pb 3 changes are on all or almost arms at a time, but sequences don't have same length
-if ENVIRONMENT_NONSTATIONARY:
-    configuration["environment"] += [
-        {   # A simple piece-wise stationary problem
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    [0.1, 0.5, 0.9],  # 1th sequence, best=3rd
-                    [0.3, 0.4, 0.1],  # 2th sequence, best=2nd, DeltaMin=0.1
-                    [0.5, 0.3, 0.2],  # 3th sequence, best=1st, DeltaMin=0.1
-                    [0.7, 0.4, 0.3],  # 4th sequence, best=1st, DeltaMin=0.1
-                    [0.1, 0.5, 0.2],  # 5th sequence, best=2nd, DeltaMin=0.1
-                ],
-                "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(1000 * HORIZON / 2000.0),
-                    int(1250 * HORIZON / 2000.0),
-                    int(1500 * HORIZON / 2000.0),
-                    int(1750 * HORIZON / 2000.0),
-                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
-                ],
-            }
-        },
-    ]
-
-# Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
-    configuration["environment"] = [
-        {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    # red, green, blue, yellow, cyan, red dotted
-                    [0.071, 0.041, 0.032, 0.030, 0.020, 0.011],  # 1st segment
-                    [0.055, 0.053, 0.032, 0.030, 0.008, 0.011],  # 2nd segment
-                    [0.040, 0.063, 0.032, 0.030, 0.008, 0.011],  # 3th segment
-                    [0.040, 0.042, 0.043, 0.030, 0.008, 0.011],  # 4th segment
-                    [0.030, 0.032, 0.055, 0.030, 0.008, 0.011],  # 5th segment
-                    [0.030, 0.032, 0.020, 0.030, 0.008, 0.021],  # 6th segment
-                    [0.020, 0.022, 0.020, 0.045, 0.008, 0.021],  # 7th segment
-                    [0.020, 0.022, 0.020, 0.057, 0.008, 0.011],  # 8th segment
-                    [0.020, 0.022, 0.034, 0.057, 0.022, 0.011],  # 9th segment
-                ],
-                "changePoints": np.linspace(0, HORIZON, num=9, endpoint=True, dtype=int),
-                # "changePoints": [
-                #     int(0     * HORIZON / 38570.0),   # 1st segment
-                #     int(4285  * HORIZON / 38570.0),   # 2nd segment
-                #     int(8571  * HORIZON / 38570.0),   # 3th segment
-                #     int(12857 * HORIZON / 38570.0),  # 4th segment
-                #     int(17142 * HORIZON / 38570.0),  # 5th segment
-                #     int(21428 * HORIZON / 38570.0),  # 6th segment
-                #     int(25714 * HORIZON / 38570.0),  # 7th segment
-                #     int(30000 * HORIZON / 38570.0),  # 8th segment
-                #     int(38570 * HORIZON / 38570.0),  # 9th segment
-                # ],
-            }
-        },
-    ]
-
-# Another example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.08380
-if False and ENVIRONMENT_NONSTATIONARY:  # FIXME remove this "False and" to use this problem
-    configuration["environment"] = [
-        {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
-            "arm_type": Bernoulli,
-            "params": {
-                "listOfMeans": [
-                    # blue, red, golden, purple, green
-                    [0.070, 0.044, 0.043, 0.029, 0.039],
-                    [0.063, 0.044, 0.044, 0.029, 0.040],
-                    [0.063, 0.045, 0.044, 0.028, 0.040],
-                    [0.063, 0.045, 0.046, 0.028, 0.034],
-                    [0.055, 0.045, 0.046, 0.028, 0.034],
-                    [0.055, 0.049, 0.045, 0.024, 0.035],
-                    [0.052, 0.049, 0.041, 0.024, 0.035],
-                    [0.052, 0.048, 0.041, 0.020, 0.037],
-                    [0.052, 0.048, 0.037, 0.020, 0.037],
-                    [0.045, 0.050, 0.037, 0.020, 0.035],
-                    [0.045, 0.050, 0.033, 0.018, 0.035],
-                    [0.0455, 0.047, 0.033, 0.018, 0.035],
-                    [0.0455, 0.047, 0.033, 0.018, 0.034],
-                    [0.037, 0.042, 0.030, 0.020, 0.034],
-                    [0.029, 0.032, 0.030, 0.020, 0.034],
-                    [0.031, 0.026, 0.032, 0.020, 0.033],
-                    [0.033, 0.026, 0.025, 0.020, 0.033],
-                    [0.033, 0.035, 0.023, 0.020, 0.030],
-                    [0.045, 0.038, 0.015, 0.020, 0.023],
-                    [0.045, 0.038, 0.020, 0.014, 0.023],
-                    [0.045, 0.038, 0.021, 0.014, 0.023],
-                    [0.049, 0.042, 0.029, 0.014, 0.016],
-                    [0.049, 0.042, 0.029, 0.016, 0.016],
-                    [0.049, 0.042, 0.030, 0.014, 0.016],
-                    [0.046, 0.040, 0.035, 0.020, 0.019],
-                    [0.046, 0.040, 0.035, 0.020, 0.029],
-                    [0.046, 0.040, 0.035, 0.023, 0.029],
-                    [0.046, 0.037, 0.034, 0.023, 0.033],
-                    [0.050, 0.037, 0.034, 0.024, 0.033],
-                    [0.050, 0.040, 0.034, 0.024, 0.033],
-                    [0.050, 0.040, 0.032, 0.024, 0.035],
-                    [0.049, 0.040, 0.029, 0.0235, 0.035],
-                    [0.049, 0.0405, 0.029, 0.0235, 0.037],
-                    [0.047, 0.038, 0.0295, 0.025, 0.037],
-                    [0.047, 0.038, 0.034, 0.025, 0.037],
-                    [0.047, 0.041, 0.034, 0.025, 0.038],
-                    [0.051, 0.041, 0.035, 0.025, 0.038],
-                    [0.051, 0.040, 0.035, 0.025, 0.038],
-                    [0.051, 0.038, 0.033, 0.025, 0.039],
-                    [0.047, 0.038, 0.033, 0.026, 0.039],
-                    [0.047, 0.035, 0.032, 0.026, 0.039],
-                    [0.045, 0.033, 0.032, 0.024, 0.038],
-                    [0.045, 0.030, 0.031, 0.024, 0.038],
-                    [0.045, 0.027, 0.031, 0.024, 0.038],
-                    [0.043, 0.027, 0.026, 0.021, 0.0375],
-                    [0.043, 0.030, 0.026, 0.021, 0.0375],
-                    [0.043, 0.030, 0.026, 0.021, 0.0375],
-                    [0.043, 0.034, 0.025, 0.021, 0.0375],
-                    [0.045, 0.034, 0.015, 0.020, 0.0375],
-                    [0.045, 0.033, 0.016, 0.020, 0.036],
-                    [0.043, 0.033, 0.020, 0.018, 0.036],
-                    [0.043, 0.035, 0.020, 0.018, 0.032],
-                    [0.043, 0.035, 0.027, 0.018, 0.032],
-                    [0.040, 0.035, 0.027, 0.018, 0.032],
-                    [0.033, 0.036, 0.029, 0.019, 0.033],
-                    [0.028, 0.036, 0.029, 0.019, 0.033],
-                    [0.028, 0.038, 0.029, 0.017, 0.033],
-                    [0.032, 0.038, 0.034, 0.017, 0.030],
-                    [0.031, 0.038, 0.034, 0.015, 0.030],
-                    [0.031, 0.040, 0.034, 0.015, 0.030],
-                    [0.038, 0.040, 0.034, 0.014, 0.029],
-                    [0.038, 0.038, 0.034, 0.012, 0.026],
-                    [0.042, 0.038, 0.034, 0.018, 0.026],
-                    [0.042, 0.037, 0.034, 0.018, 0.019],
-                    [0.042, 0.037, 0.034, 0.018, 0.0185],
-                    [0.043, 0.037, 0.034, 0.023, 0.017],
-                    [0.044, 0.038, 0.036, 0.023, 0.024],
-                    [0.044, 0.038, 0.036, 0.023, 0.029],
-                    [0.044, 0.038, 0.036, 0.025, 0.029],
-                    [0.044, 0.037, 0.034, 0.025, 0.034],
-                    [0.044, 0.035, 0.034, 0.028, 0.034],
-                    [0.044, 0.035, 0.034, 0.028, 0.037],
-                    [0.049, 0.035, 0.034, 0.028, 0.037],
-                    [0.048, 0.032, 0.037, 0.028, 0.037],
-                    [0.048, 0.032, 0.037, 0.027, 0.037],
-                    [0.047, 0.029, 0.037, 0.027, 0.038],
-                    [0.047, 0.027, 0.039, 0.027, 0.038],
-                    [0.047, 0.023, 0.039, 0.030, 0.039],
-                    [0.049, 0.022, 0.035, 0.030, 0.039],
-                    [0.049, 0.031, 0.035, 0.030, 0.039],
-                    [0.049, 0.031, 0.035, 0.027, 0.039],
-                    [0.049, 0.032, 0.033, 0.027, 0.039],
-                ],
-                "changePoints": np.linspace(0, 5*1e5, num=82, endpoint=True, dtype=int),
-                # FIXME the locations of the change points are not uniform! But it will be enough for my tests
-            }
-        },
-    ]
-
-
-CHANGE_POINTS = None
-if ENVIRONMENT_NONSTATIONARY:
-    CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
-
-# if ENVIRONMENT_NONSTATIONARY:
-#     configuration["environment"] = [
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": randomMeans,
-#                 # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
-#                 "args": {
-#                     "nbArms": NB_ARMS,
-#                     "lower": LOWER, "amplitude": AMPLITUDE,
-#                     "mingap": None, "isSorted": False,
-#                 },
-#                 # XXX onlyOneArm is None by default,
-#                 "onlyOneArm": None,
-#                 # XXX but onlyOneArm can be "uniform" to only change *one* arm at each change point,
-#                 # "onlyOneArm": "uniform",
-#                 # XXX onlyOneArm can also be an integer to only change n arms at each change point,
-#                 # "onlyOneArm": 3,
-#             }
-#         },
-#     ]
-
-# if ENVIRONMENT_NONSTATIONARY:
-#     configuration["environment"] = [  # XXX Bernoulli arms
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": continuouslyVaryingMeans,
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
-#                 "args": {
-#                    "nbArms": NB_ARMS,
-#                    "maxSlowChange": 0.1, "sign": +1,
-#                    "mingap": None, "isSorted": False,
-#                    "lower": LOWER, "amplitude": AMPLITUDE,
-#                 }
-#             }
-#         },
-#     ]
-
-
-# if ENVIRONMENT_NONSTATIONARY:
-#     configuration["environment"] = [  # XXX Bernoulli arms
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": randomContinuouslyVaryingMeans,
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
-#                 "args": {
-#                     "nbArms": NB_ARMS,
-#                     "maxSlowChange": 0.1, "horizon": HORIZON,
-#                     "mingap": None, "isSorted": False,
-#                     "lower": LOWER, "amplitude": AMPLITUDE,
-#                 }
-#             }
-#         },
-#     ]
-
 
 # if len(configuration['environment']) > 1:
 #     raise ValueError("WARNING do not use this hack if you try to use more than one environment.")
@@ -1491,8 +1132,7 @@ if ARM_TYPE_str in ["Gaussian", "UnboundedGaussian"]:
                 # "change_lower_amplitude": True  # XXX an experiment to let Environment.Evaluator load a IncreasingMAB instead of just a MAB
         }, ],
     })
-elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and \
-    not ENVIRONMENT_BAYESIAN and not ENVIRONMENT_NONSTATIONARY:
+elif MEANS_STR == '' and ARM_TYPE_str != "DiscreteArm" and not ENVIRONMENT_BAYESIAN:
     configuration.update({
         "environment": [ {
             "arm_type": ARM_TYPE,
@@ -1575,170 +1215,6 @@ if TEST_WrapRange:
         ]
     })
 
-# Dynamic hack
-if TEST_Doubling_Trick:
-    POLICIES_FOR_DOUBLING_TRICK = [
-            # klUCB,  # XXX Don't need the horizon, but suffer from the restart (to compare)
-            # UCBH,
-            # MOSSH,
-            klUCBPlusPlus,
-            # ApproximatedFHGittins,
-        ]
-    # Just add the klUCB or UCB baseline
-    configuration["policies"] = [
-        {
-            "archtype": UCB,
-            "params": {}
-        },
-        {
-            "archtype": klUCB,
-            "params": {}
-        },
-        # # --- Horizon-dependent algorithm ApproximatedFHGittins
-        # {
-        #     "archtype": klUCBPlusPlus,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb,
-        #     }
-        # },
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 0.5,
-                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-            }
-        },
-        # --- klUCB-Switch-Anytime
-        {
-            "archtype": klUCBswitchAnytime,
-            "params": {
-                "klucb": klucb,
-                "threshold": "best"
-            }
-        },
-        # {
-        #     "archtype": klUCBswitchAnytime,
-        #     "params": {
-        #         "klucb": klucb,
-        #         "threshold": "delayed"
-        #     }
-        # },
-    ]
-    # Smart way of adding list of Doubling Trick versions
-    for policy in POLICIES_FOR_DOUBLING_TRICK:
-        # First add the non-doubling trick version
-        accept_horizon = True
-        try:
-            _ = policy(NB_ARMS, horizon=HORIZON)
-        except TypeError:
-            accept_horizon = False  # don't use horizon
-        configuration["policies"] += [
-            {
-                "archtype": policy,
-                "params": {
-                    "horizon": HORIZON,
-                    # "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-                    # "alpha": 0.5,  # only for ApproximatedFHGittins
-                } if accept_horizon else {
-                    # "alpha": 0.5,  # only for ApproximatedFHGittins
-                }
-            }
-        ]
-        # Then add the doubling trick version
-        configuration["policies"] += [
-            {
-                "archtype": DoublingTrickWrapper,
-                "params": {
-                    "next_horizon": next_horizon,
-                    "full_restart": full_restart,
-                    "policy": policy,
-                    # "alpha": 0.5,  # only for ApproximatedFHGittins
-                }
-            }
-            for full_restart in [
-                USE_FULL_RESTART,
-                # True,
-                # False,
-            ]
-            for next_horizon in [
-                Ti_exponential,
-                Ti_geometric,
-                Ti_intermediate_sqrti,
-                Ti_intermediate_i13,
-                Ti_intermediate_i23,
-                Ti_intermediate_i12_logi12,
-                Ti_intermediate_i_by_logi,
-            ]
-            # for next_horizon in [
-            #     # next_horizon__arithmetic,
-            #     next_horizon__geometric,
-            #     # next_horizon__exponential,
-            #     next_horizon__exponential_fast,
-            #     next_horizon__exponential_slow,
-            #     next_horizon__exponential_generic,
-            # ]
-        ]
-
-
-from itertools import product  # XXX If needed!
-
-# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
-if TEST_Aggregator:
-    # Smart way of adding list of Aggregated versions
-    LIST_NON_AGGR_POLICIES = []
-
-    LIST_NON_AGGR_POLICIES += [[
-        # --- Doubling trick algorithm
-        {
-            "archtype": DoublingTrickWrapper,
-            "params": {
-                "next_horizon": next_horizon,
-                "policy": klUCBPlusPlus,
-                # "alpha": 0.5,
-            }
-        }
-        for next_horizon in [next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow]
-    ]]
-
-
-    LIST_NON_AGGR_POLICIES += [[
-        {
-            "archtype": klUCBPlusPlus,
-            "params": {
-                # "alpha": 0.5,
-                "horizon": int(1.05 * T),
-            }
-        }
-        for T in breakpoints(next_horizon__geometric, 1, HORIZON, debug=True)[0]
-        # for T in breakpoints(next_horizon__exponential, 1, HORIZON, debug=True)[0]
-        # for T in breakpoints(next_horizon__exponential_fast, 1, HORIZON, debug=True)[0]
-        # for T in breakpoints(next_horizon__exponential_slow, 1, HORIZON, debug=True)[0]
-    ]]
-    # LIST_NON_AGGR_POLICIES += [configuration["policies"]]
-
-    for NON_AGGR_POLICIES in LIST_NON_AGGR_POLICIES:
-        # for LEARNING_RATE in LEARNING_RATES:  # XXX old code to test different static learning rates, not any more
-        # for UNBIASED in [False, True]:  # XXX to test between biased or unabiased estimators
-        # for (UNBIASED, UPDATE_LIKE_EXP4) in product([False, True], repeat=2):  # XXX If needed!
-        # for (HORIZON, UPDATE_LIKE_EXP4) in product([None, HORIZON], [False, True]):  # XXX If needed!
-        for UPDATE_LIKE_EXP4 in [False, True]:
-            CURRENT_POLICIES = configuration["policies"]
-            print("configuration['policies'] =", CURRENT_POLICIES)  # DEBUG
-            # Add one Aggregator policy
-            configuration["policies"] = CURRENT_POLICIES + [{
-                "archtype": Aggregator,
-                "params": {
-                    "unbiased": UNBIASED,
-                    "update_all_children": UPDATE_ALL_CHILDREN,
-                    "decreaseRate": DECREASE_RATE,
-                    "learningRate": LEARNING_RATE,
-                    "children": NON_AGGR_POLICIES,
-                    "update_like_exp4": UPDATE_LIKE_EXP4,
-                    # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-                },
-            }]
 
 # # XXX Only test with fixed arms
 # configuration.update({
@@ -1777,177 +1253,6 @@ if TEST_Aggregator:
 #         },
 #     ]
 # })
-
-# configuration.update({
-#     "policies": [
-#         # --- Empirical KL-UCB algorithm
-#         {
-#             "archtype": KLempUCB,
-#             "params": {}
-#         },
-#     ]
-# })
-
-# Dynamic hack
-if TEST_Non_Stationary_Policies:
-    # XXX compare different values of the experimental sliding window algorithm
-    EPSS   = [0.1, 0.05]
-    ALPHAS = [2, 1, 0.5, 0.1]
-    ALPHAS = [2, 0.5, 0.1]
-    ALPHAS = [0.5]
-    ALPHAS = [1]
-    TAUS   = [
-            500, 1000, 2000,
-            int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
-        ]
-    GAMMAS = [
-            # 0.1, 0.3, 0.5, 0.7, 0.9,
-            0.2, 0.4, 0.6, 0.8,
-            0.95, 0.99,
-            max(min(1, (1 - np.sqrt((1 + NB_BREAK_POINTS) / HORIZON)) / 4.), 0),  # "optimal" value according to [Garivier & Moulines, 2008]
-        ]
-    WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
-
-    configuration.update({
-        "policies":
-        [  # XXX Regular adversarial bandits algorithms!
-            # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
-            { "archtype": Exp3PlusPlus, "params": {} },
-        ] + [  # XXX Regular stochastic bandits algorithms!
-            # { "archtype": Uniform, "params": {} },  # WARNING remove it's useless!
-            # { "archtype": EmpiricalMeans, "params": {} },  # WARNING remove it's useless!
-            { "archtype": UCBalpha, "params": { "alpha": 1, } },
-            # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },
-            { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-            { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-            { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-            { "archtype": klUCB, "params": { "klucb": klucb, } },
-            # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },
-            { "archtype": Thompson, "params": { "posterior": Beta, } },
-        ] + [  # XXX This is still highly experimental!
-            { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-            # for gamma in GAMMAS
-            for gamma in [0.99, 0.9, 0.7]
-        ] +
-        # The Exp3R algorithm works reasonably well
-        [
-            { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-        ] +
-        # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
-        [
-            { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
-        ] +
-        [  # XXX TODO test the AdSwitch policy
-            { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-            for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-            for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-        ] +
-        # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
-        [
-            # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-            # XXX note that for a fixed T it means nothing…
-            # XXX But for T=10000 it is at most 100 changes, reasonable!
-            { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
-        ] +
-        # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
-        [
-            { "archtype": archtype, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "policy": policy, "per_arm_restart": per_arm_restart, } }
-            for archtype in [
-                CUSUM_IndexPolicy,
-                PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
-            ]
-            for policy in [
-                # UCB,  # XXX comment to only test klUCB
-                klUCB,
-            ]
-            for per_arm_restart in [
-                True,  # Per-arm restart XXX comment to only test global arm
-                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-            ]
-        ] +
-        # XXX Test a few CD-MAB algorithms
-        [
-            { "archtype": archtype, "params": { "horizon": HORIZON, "policy": policy, "per_arm_restart": per_arm_restart, } }
-            for archtype in [
-                BernoulliGLR_IndexPolicy,  # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-                GaussianGLR_IndexPolicy,  # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-                SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-            ]
-            for policy in [
-                # UCB,  # XXX comment to only test klUCB
-                klUCB,
-            ]
-            for per_arm_restart in [
-                True,  # Per-arm restart XXX comment to only test global arm
-                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-            ]
-        ] +
-        # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
-        # [
-        #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
-        # ] +
-        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
-        [
-            { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
-            for per_arm_restart in [
-                True,  # Per-arm restart XXX comment to only test global arm
-                False, # Global restart XXX seems more efficient? (at least more memory efficient!)
-            ]
-            for policy in [
-                UCB,
-                # klUCB,  # XXX comment to only test UCB
-            ]
-        ] +
-        # DONE The SW_UCB_Hash algorithm works fine!
-        [
-            { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-            for alpha in ALPHAS
-            for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
-        ] +
-        # [
-        #     # --- # XXX experimental sliding window algorithm
-        #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-        #     for tau in [TAUS[0]] for eps in [EPSS[0]]
-        #     for policy in [UCB, klUCB, Thompson, BayesUCB]
-        # ] +
-        # [
-        #     # --- # Different versions of the sliding window UCB algorithm
-        #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-        #     for alpha in ALPHAS for tau in TAUS
-        # ] +
-        [
-            # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-            { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
-            for alpha in ALPHAS
-        ] +
-        # # [
-        # #     # --- # Different versions of the discounted UCB algorithm
-        # #     { "archtype": DiscountedUCB, "params": { "alpha": alpha, "gamma": gamma, "useRealDiscount": useRealDiscount, } }
-        # #     for gamma in GAMMAS for alpha in ALPHAS for useRealDiscount in [True, False]
-        # # ] +
-        [
-            # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-            { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
-            for alpha in ALPHAS
-            for max_nb_random_events in [NB_BREAK_POINTS]
-            # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
-        ] +
-        # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
-        [
-            { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy,
-                "per_arm_restart": per_arm_restart,
-                # "full_restart_when_refresh": full_restart_when_refresh,
-            } }
-            for policy in [
-                UCB,
-                klUCB,  # XXX comment to only test UCB
-                Exp3PlusPlus,  # XXX comment to only test UCB
-            ]
-            for per_arm_restart in [True]  #, False]
-            # for full_restart_when_refresh in [True, False]
-        ] +
-        []
-    })
 
 # # XXX Only test with scenario 1 from [A.Beygelzimer, J.Langfor, L.Li et al, AISTATS 2011]
 # from PoliciesMultiPlayers import Scenario1  # XXX remove after testing once
