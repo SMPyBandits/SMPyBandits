@@ -64,7 +64,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # New parameters
         if w is None or w == 'auto':
             # XXX Estimate w from Remark 1
-            w = (4/delta**2) * (np.sqrt(np.log(2 * nbArms * horizon**2)) + np.sqrt(2 * horizon))**2
+            w = (4/delta**2) * (np.sqrt(np.log(2 * nbArms * horizon**2)) + np.sqrt(np.log(2 * horizon)))**2
             w = int(np.ceil(w))
             if w % 2 != 0:
                 w = 2*(1 + w//2)
@@ -99,7 +99,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_update_time_tau = 0  #: Keep in memory the last time a change was detected, ie, the variable :math:`\tau` in the algorithm.
 
         # Internal memory
-        self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
+        self.last_w_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
@@ -136,7 +136,10 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # We seen it one more time
         self.last_pulls[arm] += 1
         # Store it in place for the empirical average of that arm
-        self.all_rewards[arm].append(reward)
+        if len(self.last_w_rewards[arm]) >= self.window_size:
+            self.last_w_rewards[arm].pop(0)
+        self.last_w_rewards[arm].append(reward)
+
         if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
             self.last_update_time_tau = self.t
@@ -145,10 +148,10 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
                 # or reset current memory for ALL THE arms
                 for other_arm in range(self.nbArms):
                     self.last_pulls[other_arm] = 0
-                    self.all_rewards[other_arm] = []
+                    self.last_w_rewards[other_arm] = []
             # reset current memory for THIS arm
             self.last_pulls[arm] = 1
-            self.all_rewards[arm] = [reward]
+            self.last_w_rewards[arm] = [reward]
 
             # Fully restart the algorithm ?!
             if self._full_restart_when_refresh:
@@ -161,8 +164,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
                         self.policy.rewards[other_arm] = 0
                         self.policy.pulls[other_arm] = 0
                 # reset current memory for THIS arm
-                self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
-                self.policy.pulls[arm] = len(self.all_rewards[arm])
+                self.policy.rewards[arm] = np.sum(self.last_w_rewards[arm])
+                self.policy.pulls[arm] = len(self.last_w_rewards[arm])
 
         # we update the total number of samples available to the underlying policy
         # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE
@@ -174,11 +177,15 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
 
         - where :math:`Y_i` is the i-th data in the latest w data from this arm (ie, :math:`X_k(t)` for :math:`t = n_k - w + 1` to :math:`t = n_k` current number of samples from arm k).
         - where :attr:`threshold_b` is the threshold b of the test, and :attr:`window_size` is the window-size w.
+
+        .. warning:: FIXME See https://github.com/SMPyBandits/SMPyBandits/issues/174 i should store only the last :math:`w` data.
         """
-        data_y = self.all_rewards[arm]
+        data_y = self.last_w_rewards[arm]
         # don't try to detect change if there is not enough data!
         if len(data_y) < self.window_size:
             return False
+        # last_w_data_y = data_y[-self.window_size:]
+        last_w_data_y = data_y  # FIXME
         last_w_data_y = data_y[-self.window_size:]
         sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
         sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
