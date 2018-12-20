@@ -139,18 +139,6 @@ configuration = {
             "arm_type": Bernoulli,
             "params": [0, 1]
         },
-        # {   # A very very easy problem: 2 arms, one better than the other
-        #     "arm_type": Bernoulli,
-        #     "params": [0.8, 0.9]
-        # },
-        # {   # A very very easy problem: 2 arms, one better than the other
-        #     "arm_type": Bernoulli,
-        #     "params": [0.375, 0.571]
-        # },
-        # {   # A very very easy problem: 3 arms, one bad, one average, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.5, 0.9]
-        # },
         {   # Another very easy problem: 3 arms, two very bad, one bad
             "arm_type": Bernoulli,
             "params": [0.04, 0.05, 0.1]
@@ -164,22 +152,10 @@ configuration = {
             "arm_type": ARM_TYPE,
             "params": uniformMeans(nbArms=NB_ARMS, delta=1./(1. + NB_ARMS), lower=LOWER, amplitude=AMPLITUDE)
         },
-        # {   # An other problem, best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3 - 0.6) and very good arms (0.78, 0.8, 0.82)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.01, 0.02, 0.3, 0.4, 0.5, 0.6, 0.78, 0.8, 0.82]
-        # },
-        # {   # Lots of bad arms, significative difference between the best and the others
-        #     "arm_type": Bernoulli,
-        #     "params": [0.001, 0.001, 0.005, 0.005, 0.01, 0.01, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3]
-        # },
         {   # VERY HARD One optimal arm, much better than the others, but *lots* of bad arms (34 arms!)
             "arm_type": Bernoulli,
             "params": [0.001, 0.001, 0.001, 0.001, 0.005, 0.005, 0.005, 0.005, 0.01, 0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.02, 0.02, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.2, 0.5]
         },
-        # {   # HARD An other problem (17 arms), best arm = last, with three groups: very bad arms (0.01, 0.02), middle arms (0.3, 0.6) and very good arms (0.78, 0.85)
-        #     "arm_type": Bernoulli,
-        #     "params": [0.005, 0.01, 0.015, 0.02, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.78, 0.8, 0.82, 0.83, 0.84, 0.85]
-        # },
         # {   # A Bayesian problem: every repetition use a different mean vectors!
         #     "arm_type": ARM_TYPE,
         #     "params": {
@@ -690,11 +666,11 @@ configuration.update({
             "archtype": UnsupervisedLearning,
             "params": {}
         },
-        # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
-        {
-            "archtype": BlackBoxOpt,
-            "params": {}
-        },
+        # # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
+        # {
+        #     "archtype": BlackBoxOpt,
+        #     "params": {}
+        # },
         # --- The new OSSB algorithm
         {
             "archtype": OSSB,
@@ -817,9 +793,111 @@ configuration.update({
                 "alpha": 0.5,
             }
         },
+        # XXX Regular adversarial bandits algorithms!
+        {
+            "archtype": Exp3PlusPlus,
+            "params": {}
+        },
+        {
+            "archtype": DiscountedThompson,
+            "params": { "posterior": DiscountedBeta, "gamma": gamma }
+        },
+        # The Exp3R algorithm works reasonably well
+        {
+            "archtype": Exp3R,
+            "params": { "horizon": HORIZON, }
+        },
+        # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+        {
+            "archtype": Exp3RPlusPlus,
+            "params": { "horizon": HORIZON, }
+        },
 
+        # XXX TODO test the AdSwitch policy and its corrected version
+        {
+            "archtype": AdSwitch,
+            "params": { "horizon": HORIZON }
+        },
+        {
+            "archtype": LM_DSEE,
+            "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, }
+        },
+        # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
+        {
+            "archtype": CUSUM_IndexPolicy,
+            "params": { "horizon": HORIZON, "max_nb_random_events": 1, "policy": UCB, "per_arm_restart": True, }
+        },
+        {
+            "archtype": PHT_IndexPolicy,
+            "params": { "horizon": HORIZON, "max_nb_random_events": 1, "policy": UCB, "per_arm_restart": True, }
+        },
+        # DONE The SW_UCB_Hash algorithm works fine!
+        {
+            "archtype": SWHash_IndexPolicy,
+            "params": { "alpha": 1, "lmbda": 1, "policy": UCB }
+        },
+        # --- # XXX experimental sliding window algorithm
+        {
+            "archtype": SlidingWindowRestart,
+            "params": { "policy": UCB }
+        },
+        # --- # Different versions of the sliding window UCB algorithm
+        {
+            "archtype": SWUCB,
+            "params": { "alpha": 1, "tau": 500, }
+        },
+        for alpha in ALPHAS for tau in TAUS
+        # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+        {
+            "archtype": SWUCBPlus,
+            "params": { "horizon": HORIZON, "alpha": 1, }
+        },
+        # --- # Different versions of the discounted UCB algorithm
+        {
+            "archtype": DiscountedUCB,
+            "params": { "alpha": 1, "gamma": 0.9 }
+        },
+        # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+        {
+            "archtype": DiscountedUCBPlus,
+            "params": { "max_nb_random_events": 1, "alpha": 1, "horizon": HORIZON, }
+        },
+        # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
+        {
+            "archtype": Monitored_IndexPolicy,
+            "params": { "horizon": HORIZON, "max_nb_random_events": 1, "delta": 0.1, "policy": UCB, }
+        },
+        # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
+        {
+            "archtype": Monitored_IndexPolicy,
+            "params": { "policy": UCB, "horizon": HORIZON, "w": 80, "b": np.sqrt(80/2 * np.log(2 * NB_ARMS * HORIZON**2)), }
+        },
+        # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
+        {
+            "archtype": OracleSequentiallyRestartPolicy,
+            "params": { "changePoints": [], "policy": U
+        B,
+            "per_arm_restart": True } },
+        # XXX Test a few CD-MAB algorithms
+        {
+            "archtype": BernoulliGLR_IndexPolicy,
+            "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
+        },
+        {
+            "archtype": GaussianGLR_IndexPolicy,
+            "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
+        },
+        {
+            "archtype": GaussianGLR_IndexPolicy,
+            "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
+        },
+        {
+            "archtype": SubGaussianGLR_IndexPolicy,
+            "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
+        },
     ]
 })
+
 
 
 # Tiny configuration, for testing the WrapRange policy.

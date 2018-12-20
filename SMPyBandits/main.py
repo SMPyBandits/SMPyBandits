@@ -13,7 +13,6 @@ import sys
 from os import mkdir
 import os.path
 from os import getenv
-from itertools import product
 
 # Backup evaluation object
 import pickle

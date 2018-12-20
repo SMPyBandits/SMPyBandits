@@ -34,6 +34,8 @@ install:
 
 script:
   - python --version
+  # - bash ./other_scripts/run_test_simulations.sh
+  - bash ./other_scripts/run_all_doctest.sh
   - cd SMPyBandits/
   # # Testing basic things
   # - N=4 T=1000 python example_of_main_singleplayer.py very_simple_configuration
@@ -52,7 +54,5 @@ script:
   - N=4 T=1000 python main_multiplayers_more.py
   - NOPLOTS=True N=4 T=1000 python main_multiplayers_more.py configuration_multiplayers_with_aggregation
   - NOPLOTS=True N=4 T=1000 python main_sparse_multiplayers.py
-  # - bash ./other_scripts/run_test_simulations.sh
-  - bash ./other_scripts/run_all_doctest.sh
   - cd Policies/
   - python kullback.py

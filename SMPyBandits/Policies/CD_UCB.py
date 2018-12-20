@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-r""" The CD-UCB generic policy and CUSUM-UCB, PHT-UCB, GLR-UCB, RExp3 policies for non-stationary bandits.
+r""" The CD-UCB generic policy and CUSUM-UCB, PHT-UCB, GLR-UCB policies for non-stationary bandits.
 
 - Reference: [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539)
 - It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`CUSUM_IndexPolicy` is a wrapper:
@@ -23,13 +23,13 @@ from math import log, sqrt, isinf
 try:
     from .with_proba import with_proba
     from .BaseWrapperPolicy import BaseWrapperPolicy
-    from .UCB import UCB as DefaultPolicy, UCB
+    from .UCB import UCB as DefaultPolicy
     from .Exp3 import Exp3
     from .Exp3PlusPlus import Exp3PlusPlus
 except ImportError:
     from with_proba import with_proba
     from BaseWrapperPolicy import BaseWrapperPolicy
-    from UCB import UCB as DefaultPolicy, UCB
+    from UCB import UCB as DefaultPolicy
     from Exp3 import Exp3
     from Exp3PlusPlus import Exp3PlusPlus
 
@@ -74,11 +74,10 @@ class CD_IndexPolicy(BaseWrapperPolicy):
             per_arm_restart=PER_ARM_RESTART,
             epsilon=EPSILON,
             proba_random_exploration=None,
-            policy=DefaultPolicy,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             *args, **kwargs
         ):
-        super(CD_IndexPolicy, self).__init__(nbArms, policy=policy, *args, **kwargs)
+        super(CD_IndexPolicy, self).__init__(nbArms, *args, **kwargs)
         # New parameters
         self.epsilon = epsilon  #: Parameter :math:`\varepsilon` for the test.
         self.lazy_detect_change_only_x_steps = lazy_detect_change_only_x_steps  #: Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
@@ -198,28 +197,25 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     if C1 == 0: C1 = 1  # FIXME
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
-    alpha *= 0.01  # FIXME Just divide alpha to not have too large
+    # alpha *= 0.01  # FIXME Just divide alpha to not have too large
     alpha = max(0, min(1, alpha))  # crop to [0, 1]
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
+
 
 class CUSUM_IndexPolicy(CD_IndexPolicy):
     r""" The CUSUM-UCB generic policy for non-stationary bandits, from [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539).
     """
     def __init__(self, nbArms,
-            horizon=None, max_nb_random_events=None,
-            full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
-            epsilon=EPSILON, lmbda=LAMBDA,
+            horizon=None, max_nb_random_events=None, lmbda=LAMBDA,
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
-            policy=DefaultPolicy,
-            lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             *args, **kwargs
         ):
-        super(CUSUM_IndexPolicy, self).__init__(nbArms, epsilon=epsilon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
+        super(CUSUM_IndexPolicy, self).__init__(nbArms, *args, **kwargs)
         # New parameters
         self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
-        h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, epsilon, lmbda, min_number_of_observation_between_change_point)
+        h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, self.epsilon, lmbda, min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
@@ -406,21 +402,17 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     """
     def __init__(self, nbArms,
             horizon=None, delta=None, max_nb_random_events=None,
-            full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
-            policy=DefaultPolicy,
             kl=klGauss,
             alpha0=None, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1,
             threshold_function=threshold_BernoulliGLR,
-            lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
-        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
+        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
-        if delta is None and horizon is not None:
-            delta = 1.0 / horizon
+        # if delta is None and horizon is not None: delta = 1.0 / horizon
         self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{T}` if ``horizon`` is given and ``delta=None``.
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
@@ -450,7 +442,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     def __str__(self):
         name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}, {}, {}, {})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+        return r"GLR-{}({}, {}, {}, {}{}{})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -512,14 +504,13 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed).
     """
 
-    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, kl=klGauss, threshold_function=threshold_GaussianGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, *args, **kwargs
-        ):
-        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, *args, **kwargs)
+    def __init__(self, nbArms, sig2=0.25, kl=klGauss, threshold_function=threshold_GaussianGLR, *args, **kwargs):
+        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
         self._sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
         self._args_to_kl = (sig2, )
 
     def __str__(self):
-        return r"GaussianGLR-{}({}, {}, {})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+        return r"GaussianGLR-{}({}, {}, {}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
 
 class GaussianGLR_IndexPolicy_Variant(GLR_IndexPolicy_Variant, GaussianGLR_IndexPolicy):
@@ -535,12 +526,11 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
     """
 
-    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, kl=klBern, threshold_function=threshold_BernoulliGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, *args, **kwargs
-        ):
-        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, *args, **kwargs)
+    def __init__(self, nbArms, kl=klBern, threshold_function=threshold_BernoulliGLR, *args, **kwargs):
+        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
 
     def __str__(self):
-        return r"BernoulliGLR-{}({}, {}, {})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+        return r"BernoulliGLR-{}({}, {}, {}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
 
 class BernoulliGLR_IndexPolicy_Variant(GLR_IndexPolicy_Variant, BernoulliGLR_IndexPolicy):
@@ -553,7 +543,7 @@ class BernoulliGLR_IndexPolicy_Variant(GLR_IndexPolicy_Variant, BernoulliGLR_Ind
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
 
 #: Default confidence level for :class:`SubGaussianGLR_IndexPolicy`.
-SubGaussianGLRDELTA = 0.01
+SubGaussianGLR_DELTA = 0.01
 
 #: By default, :class:`SubGaussianGLR_IndexPolicy` assumes distributions are 0.25-sub Gaussian, like Bernoulli or any distributions with support on :math:`[0,1]`.
 SubGaussianGLR_SIGMA = 0.25
@@ -561,7 +551,7 @@ SubGaussianGLR_SIGMA = 0.25
 #: Whether to use the joint or disjoint threshold function (:func:`threshold_SubGaussianGLR_joint` or :func:`threshold_SubGaussianGLR_disjoint`) for :class:`SubGaussianGLR_IndexPolicy`.
 SubGaussianGLR_JOINT = True
 
-def threshold_SubGaussianGLR_joint(s, t, delta=SubGaussianGLRDELTA, sigma=SubGaussianGLR_SIGMA):
+def threshold_SubGaussianGLR_joint(s, t, delta=SubGaussianGLR_DELTA, sigma=SubGaussianGLR_SIGMA):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta) according to this formula:
 
     .. math:: b^{\text{joint}}_{t_0}(s,t,\delta) := \sigma \sqrt{ \left(\frac{1}{s-t_0+1} + \frac{1}{t-s}\right) \left(1 + \frac{1}{t-t_0+1}\right) 2 \log\left( \frac{2(t-t_0)\sqrt{t-t_0+2}}{\delta} \right)}.
@@ -571,7 +561,7 @@ def threshold_SubGaussianGLR_joint(s, t, delta=SubGaussianGLRDELTA, sigma=SubGau
         * 2 * max(0, log(( 2 * t * sqrt(t + 2)) / delta ))
     )
 
-def threshold_SubGaussianGLR_disjoint(s, t, delta=SubGaussianGLRDELTA, sigma=SubGaussianGLR_SIGMA):
+def threshold_SubGaussianGLR_disjoint(s, t, delta=SubGaussianGLR_DELTA, sigma=SubGaussianGLR_SIGMA):
     r""" Compute the threshold :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)` according to this formula:
 
     .. math:: b^{\text{disjoint}}_{t_0}(s,t,\delta) := \sqrt{2} \sigma \sqrt{\frac{1 + \frac{1}{s - t_0 + 1}}{s - t_0 + 1} \log\left( \frac{4 \sqrt{s - t_0 + 2}}{\delta}\right)} + \sqrt{\frac{1 + \frac{1}{t - s + 1}}{t - s + 1} \log\left( \frac{4 (t - t_0) \sqrt{t - s + 1}}{\delta}\right)}.
@@ -582,7 +572,7 @@ def threshold_SubGaussianGLR_disjoint(s, t, delta=SubGaussianGLRDELTA, sigma=Sub
         ((1.0 + (1.0 / (t - s + 1))) / (t - s + 1)) * max(0, log( (4 * t * sqrt(t - s + 1)) / delta ))
     ))
 
-def threshold_SubGaussianGLR(s, t, delta=SubGaussianGLRDELTA, sigma=SubGaussianGLR_SIGMA, joint=SubGaussianGLR_JOINT):
+def threshold_SubGaussianGLR(s, t, delta=SubGaussianGLR_DELTA, sigma=SubGaussianGLR_SIGMA, joint=SubGaussianGLR_JOINT):
     r""" Compute the threshold :math:`b^{\text{joint}}_{t_0}(s,t,\delta)` or :math:`b^{\text{disjoint}}_{t_0}(s,t,\delta)`."""
     if joint:
         return threshold_SubGaussianGLR_joint(s, t, delta=delta, sigma=sigma)
@@ -601,23 +591,24 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             horizon=None, max_nb_random_events=None,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             policy=DefaultPolicy,
-            delta=SubGaussianGLRDELTA, sigma=SubGaussianGLR_SIGMA, joint=SubGaussianGLR_JOINT,
+            delta=SubGaussianGLR_DELTA, sigma=SubGaussianGLR_SIGMA, joint=SubGaussianGLR_JOINT,
             exponentBeta=1.05, alpha_t1=0.1, alpha0=None,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
+            lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
         super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
-        if delta is None and horizon is not None:
-            delta = 1.0 / horizon
+        # if delta is None and horizon is not None: delta = 1.0 / horizon
         self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{T}` if ``horizon`` is given and ``delta=None``.
         self.sigma = sigma  #: Parameter :math:`\sigma` for the Sub-Gaussian-GLR test.
         self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
         self._alpha0 = alpha0
+        self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
 
     def compute_threshold_h(self, s, t):
         """Compute the threshold :math:`h` with :func:`threshold_SubGaussianGLR`."""
@@ -634,7 +625,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}, {})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:
@@ -656,7 +647,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         t = len(data_y)-1
         mean_before = 0
         mean_after = np.mean(data_y)
-        for s in range(t):
+        for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
             # XXX this is not efficient we compute the same means too many times!
             # mean_before = np.mean(data_y[t0 : s+1])
             # mean_after = np.mean(data_y[s+1 : t+1])
@@ -671,126 +662,3 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             if glr >= threshold_h:
                 return True
         return False
-
-
-# --- Drift-Detection algorithm from [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
-
-CONSTANT_C = 1.0  #: The constant :math:`C` used in Corollary 1 of paper [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf).
-
-
-class DriftDetection_IndexPolicy(CD_IndexPolicy):
-    r""" The Drift-Detection generic policy for non-stationary bandits, using a custom Drift-Detection test, for 1-dimensional exponential families.
-
-    - From [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf).
-    """
-    def __init__(self, nbArms,
-            H=None, delta=None, C=CONSTANT_C,
-            horizon=None, policy=Exp3,
-            *args, **kwargs
-        ):
-        super(DriftDetection_IndexPolicy, self).__init__(nbArms, epsilon=1, policy=policy, *args, **kwargs)
-        self.startGame()
-        # New parameters
-        self.horizon = horizon
-
-        if H is None:
-            H = int(np.ceil(C * np.sqrt(horizon * np.log(horizon))))
-        assert H >= nbArms, "Error: for the Drift-Detection algorithm, the parameter H should be >= K = {}, but H = {}".format(nbArms, H)  # DEBUG
-        self.H = H  #: Parameter :math:`H` for the Drift-Detection algorithm. Default value is :math:`\lceil C \sqrt{T \log(T)} \rceil`, for some constant :math:`C=` ``C`` (= :data:`CONSTANT_C` by default).
-
-        if delta is None:
-            delta = np.sqrt(np.log(horizon) / (nbArms * horizon))
-        self.delta = delta  #: Parameter :math:`\delta` for the Drift-Detection algorithm. Default value is :math:`\sqrt{\frac{\log(T)}{K T}}` for :math:`K` arms and horizon :math:`T`.
-
-        if 'gamma' not in kwargs:
-            gamma = np.sqrt((nbArms * np.log(nbArms) * np.log(horizon)) / horizon)
-            try:
-                self.policy.gamma = gamma
-            except AttributeError:
-                print("Warning: the policy {} tried to use default value of gamma = {} but could not set attribute self.policy.gamma to gamma (maybe it's using an Exp3 with a non-constant value of gamma).".format(self, gamma))  # DEBUG
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
-    @property
-    def proba_random_exploration(self):
-        r"""Parameter :math:`\gamma` for the Exp3 algorithm."""
-        return self.policy.gamma
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
-    @property
-    def threshold_h(self):
-        r"""Parameter :math:`\varepsilon` for the Drift-Detection algorithm.
-
-        .. math:: \varepsilon = \sqrt{\frac{K \log(\frac{1}{\delta})}{2 \gamma H}}.
-        """
-        return 2 * sqrt((self.nbArms * log(1.0 / self.delta)) / (2 * self.proba_random_exploration * self.H))
-
-    # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
-    @property
-    def min_number_of_pulls_to_test_change(self):
-        r"""Compute :math:`\Gamma_{\min}(I) := \frac{\gamma H}{K}`, the minimum number of samples we should have for all arms before testing for a change."""
-        Gamma_min = self.proba_random_exploration * self.H / self.nbArms
-        return int(np.ceil(Gamma_min))
-
-    def __str__(self):
-        return r"DriftDetection-{}($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self._policy.__name__, self.horizon, self.threshold_h, self.proba_random_exploration)
-
-    def detect_change(self, arm, verbose=VERBOSE):
-        r""" Detect a change in the current arm, using a Drift-Detection test (DD).
-
-        .. math::
-
-            k_{\max} &:= \arg\max_k \tilde{\rho}_k(t),\\
-            DD_t(k) &= \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I)
-
-        - The change is detected if there is an arm :math:`k` such that :math:`DD_t(k) \geq 2 * \varepsilon = h`, where :attr:`threshold_h` is the threshold of the test, and :math:`I` is the (number of the) current interval since the last (global) restart,
-        - where :math:`\tilde{\rho}_k(t)` is the trust probability of arm :math:`k` from the Exp3 algorithm,
-        - and where :math:`\hat{\mu}_k(I)` is the empirical mean of arm :math:`k` from the data in the current interval.
-
-        .. warning::
-
-            FIXME I know this implementation is not (yet) correct...
-            I should count differently the samples we obtained from the Gibbs distribution (when Exp3 uses the trust vector) and from the uniform distribution
-            This :math:`\Gamma_{\min}(I)` is the minimum number of samples obtained from the uniform exploration (of probability :math:`\gamma`).
-            It seems painful to code correctly, I will do it later.
-        """
-        # XXX Do we have enough samples?
-        min_pulls = np.min(self.last_pulls)
-        if min_pulls < self.min_number_of_pulls_to_test_change:  # no we don't
-            return False
-        # Yes we do have enough samples
-        trusts = self.policy.trusts
-        k_max = np.argmax(trusts)
-        means = [np.mean(rewards) for rewards in self.all_rewards]
-        meanOfTrustedArm = means[k_max]
-        for otherArm in range(self.nbArms):
-            difference_of_mean = means[otherArm] - meanOfTrustedArm
-            if verbose: print("  - For the mean mu(k={}) = {} and mean of trusted arm mu(k_max={}) = {}, their difference is {}, compared to c = {}...".format(otherArm, means[otherArm], k_max, meanOfTrustedArm, difference_of_mean, self.threshold_h))
-            if difference_of_mean >= self.threshold_h:
-                return True
-        return False
-
-
-# --- Exp3R
-
-class Exp3R(DriftDetection_IndexPolicy):
-    r""" The Exp3.R policy for non-stationary bandits.
-    """
-
-    def __init__(self, nbArms, *args, **kwargs):
-        super(Exp3R, self).__init__(nbArms, policy=Exp3, *args, **kwargs)
-
-    def __str__(self):
-        return r"Exp3R($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self.horizon, self.threshold_h, self.proba_random_exploration)
-
-
-# --- Exp3R++
-
-class Exp3RPlusPlus(DriftDetection_IndexPolicy):
-    r""" The Exp3.R++ policy for non-stationary bandits.
-    """
-
-    def __init__(self, nbArms, *args, **kwargs):
-        super(Exp3RPlusPlus, self).__init__(nbArms, policy=Exp3PlusPlus, *args, **kwargs)
-
-    def __str__(self):
-        return r"Exp3R++($T={}$, $c={:.3g}$, $\alpha={:.3g}$)".format(self.horizon, self.threshold_h, self.proba_random_exploration)

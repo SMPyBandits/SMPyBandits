@@ -22,11 +22,9 @@ import numpy as np
 try:
     from .with_proba import with_proba
     from .BaseWrapperPolicy import BaseWrapperPolicy
-    from .UCB import UCB as DefaultPolicy, UCB
 except ImportError:
     from with_proba import with_proba
     from BaseWrapperPolicy import BaseWrapperPolicy
-    from UCB import UCB as DefaultPolicy, UCB
 
 
 #: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
@@ -55,10 +53,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             per_arm_restart=PER_ARM_RESTART,
             horizon=None, delta=DELTA, max_nb_random_events=None,
             w=None, b=None, gamma=None,
-            policy=DefaultPolicy,
             *args, **kwargs
         ):
-        super(Monitored_IndexPolicy, self).__init__(nbArms, policy=policy, *args, **kwargs)
+        super(Monitored_IndexPolicy, self).__init__(nbArms, *args, **kwargs)
         if max_nb_random_events is None or max_nb_random_events <= 1:
             max_nb_random_events = 1
 

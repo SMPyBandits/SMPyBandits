@@ -183,7 +183,8 @@ from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
 from .LM_DSEE import LM_DSEE
 from .SWHash_UCB import SWHash_IndexPolicy
-from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_Variant, BernoulliGLR_IndexPolicy_Variant, SubGaussianGLR_IndexPolicy, Exp3R, Exp3RPlusPlus
+from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_Variant, BernoulliGLR_IndexPolicy_Variant, SubGaussianGLR_IndexPolicy
+from .Exp3R import Exp3R, Exp3RPlusPlus
 from .Monitored_UCB import Monitored_IndexPolicy
 from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy
 from .AdSwitch import AdSwitch
@@ -195,7 +196,6 @@ from .WrapRange import WrapRange
 # --- Mine, implemented from state-of-the-art papers on multi-player policies
 
 from .MusicalChair import MusicalChair, optimalT0  # Cf. [Shamir et al., 2015](https://arxiv.org/abs/1512.02866)
-# from .DynamicMusicalChair import DynamicMusicalChair  # FIXME write it! Can be just a subclass of MusicalChair
 from .MusicalChairNoSensing import MusicalChairNoSensing  # Cf. [Lugosi and Mehrabian, 2018](https://arxiv.org/abs/1808.08416)
 from .SIC_MMAB import SIC_MMAB, SIC_MMAB_UCB, SIC_MMAB_klUCB  # Cf. [Boursier and Perchet, 2018](https://arxiv.org/abs/1809.08151)
 
