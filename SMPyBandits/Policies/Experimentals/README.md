@@ -26,7 +26,7 @@ All policies have the same interface, as described in [`BasePolicy`](../BasePoli
 in order to use them in any experiment with the following approach:
 
 ```python
-my_policy = Policy(nbArms, *args, lower=0, amplitude=1, **kwargs)
+my_policy = Policy(nbArms)
 my_policy.startGame()  # start the game
 for t in range(T):
     chosen_arm_t = k_t = my_policy.choice()  # chose one arm

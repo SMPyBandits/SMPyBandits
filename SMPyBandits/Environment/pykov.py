@@ -22,10 +22,10 @@
 """Pykov documentation.
 
 .. module:: A Python module for finite Markov chains.
-   :platform: Unix, Windows, Mac
+    :platform: Unix, Windows, Mac
 
 .. moduleauthor::
-   Riccardo Scalco <riccardo.scalco@gmail.com>
+    Riccardo Scalco <riccardo.scalco@gmail.com>
 
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -47,13 +47,9 @@ else:
    Set = set
 
 __date__ = 'March 2015'
-
 __version__ = 1.1
-
 __license__ = 'GNU General Public License Version 3'
-
 __authors__ = 'Riccardo Scalco'
-
 __many_thanks_to__ = 'Sandra Steiner, Nicky Van Foreest, Adel Qalieh'
 
 

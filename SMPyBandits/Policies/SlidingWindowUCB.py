@@ -37,8 +37,8 @@ class SWUCB(IndexPolicy):
 
     def __init__(self, nbArms,
                  tau=TAU, alpha=DEFAULT_ALPHA,
-                 lower=0., amplitude=1., *args, **kwargs):
-        super(SWUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+                 *args, **kwargs):
+        super(SWUCB, self).__init__(nbArms, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SWUCB has to be >= 1, but was {}.".format(tau)  # DEBUG
         self.tau = int(tau)  #: Size :math:`\tau` of the sliding window.
@@ -89,13 +89,13 @@ class SWUCBPlus(SWUCB):
     """
 
     def __init__(self, nbArms, horizon=None,
-                 lower=0., amplitude=1., *args, **kwargs):
+                 *args, **kwargs):
         if horizon is not None:
             T = int(horizon)
             tau = int(4 * np.sqrt(T * np.log(T)))
         else:
             tau = TAU
-        super(SWUCBPlus, self).__init__(nbArms, tau=tau, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(SWUCBPlus, self).__init__(nbArms, tau=tau, *args, **kwargs)
         # New parameter
 
     def __str__(self):

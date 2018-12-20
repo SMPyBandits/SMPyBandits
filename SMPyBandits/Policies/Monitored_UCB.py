@@ -56,9 +56,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             horizon=None, delta=DELTA, max_nb_random_events=None,
             w=None, b=None, gamma=None,
             policy=DefaultPolicy,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(Monitored_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(Monitored_IndexPolicy, self).__init__(nbArms, policy=policy, *args, **kwargs)
         if max_nb_random_events is None or max_nb_random_events <= 1:
             max_nb_random_events = 1
 

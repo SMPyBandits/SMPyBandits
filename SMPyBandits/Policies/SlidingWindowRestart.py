@@ -50,9 +50,9 @@ class SlidingWindowRestart(BaseWrapperPolicy):
 
     def __init__(self, nbArms, policy=DefaultPolicy,
             tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(SlidingWindowRestart, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(SlidingWindowRestart, self).__init__(nbArms, policy=policy, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SlidingWindowRestart has to be >= 1, but was {}.".format(tau)  # DEBUG
         self._tau = int(tau)  # Size of the sliding window.
@@ -102,8 +102,8 @@ class SWR_UCB(UCB):
     .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
-    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, lower=0., amplitude=1., *args, **kwargs):
-        super(SWR_UCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, *args, **kwargs):
+        super(SWR_UCB, self).__init__(nbArms, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SWR_UCB has to be >= 1, but was {}.".format(tau)  # DEBUG
         self.tau = int(tau)  #: Size of the sliding window.
@@ -150,8 +150,8 @@ class SWR_UCBalpha(UCBalpha):
     .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
-    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, alpha=ALPHA, lower=0., amplitude=1., *args, **kwargs):
-        super(SWR_UCBalpha, self).__init__(nbArms, alpha=alpha, lower=lower, amplitude=amplitude, *args, **kwargs)
+    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, alpha=ALPHA, *args, **kwargs):
+        super(SWR_UCBalpha, self).__init__(nbArms, alpha=alpha, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SWR_UCBalpha has to be >= 1, but was {}.".format(tau)  # DEBUG
         self.tau = int(tau)  #: Size of the sliding window.
@@ -198,8 +198,8 @@ class SWR_klUCB(klUCB):
     .. warning:: FIXME I should remove this code, it's useless now that the generic wrapper :class:`SlidingWindowRestart` works fine.
     """
 
-    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, tolerance=1e-4, klucb=klucbBern, c=c, lower=0., amplitude=1., *args, **kwargs):
-        super(SWR_klUCB, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude, *args, **kwargs)
+    def __init__(self, nbArms, tau=TAU, threshold=THRESHOLD, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, tolerance=1e-4, klucb=klucbBern, c=c, *args, **kwargs):
+        super(SWR_klUCB, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, *args, **kwargs)
         # New parameters
         assert 1 <= tau, "Error: parameter 'tau' for class SWR_klUCB has to be >= 1, but was {}.".format(tau)  # DEBUG
         self.tau = int(tau)  #: Size of the sliding window.

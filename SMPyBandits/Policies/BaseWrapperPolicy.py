@@ -22,7 +22,7 @@ except ImportError:
 class BaseWrapperPolicy(BasePolicy):
     """ Base class for any wrapper policy."""
 
-    def __init__(self, nbArms, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, nbArms, policy=DefaultPolicy, *args, **kwargs):
         super(BaseWrapperPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # --- Policy
         self._policy = policy  # Class to create the underlying policy

@@ -64,7 +64,7 @@ class SWHash_IndexPolicy(BaseWrapperPolicy):
             *args, **kwargs
         ):
         alpha = 1 + alpha  #: The parameter :math:`\alpha` for the UCB indexes
-        super(SWHash_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(SWHash_IndexPolicy, self).__init__(nbArms, policy=policy, *args, **kwargs)
         self.alpha = alpha  #: The parameter :math:`\alpha` for the SW-UCB# algorithm (see article for reference).
         self.lmbda = lmbda  #: The parameter :math:`\lambda` for the SW-UCB# algorithm (see article for reference).
         # Internal memory

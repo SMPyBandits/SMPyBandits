@@ -52,12 +52,12 @@ class AdSwitch(BasePolicy):
 
     def __init__(self, nbArms,
             horizon=None, C1=Constant_C1, C2=Constant_C2,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
         # DONE XXX generalize the algorithm to K > 2 arms!
         if nbArms > 2:
             print("WARNING: so far, for the AdSwitch algorithm, only the special case of K=2 arms was explained in the paper, but I generalized it. Maybe it does not work!")  # DEBUG
-        super(AdSwitch, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(AdSwitch, self).__init__(nbArms, *args, **kwargs)
 
         # Parameters
         assert horizon is not None, "Error: for a AdSwitch policy, the parameter 'horizon' should be > 0 and not None but was = {}".format(horizon)  # DEBUG

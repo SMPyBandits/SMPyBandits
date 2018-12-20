@@ -76,9 +76,9 @@ class CD_IndexPolicy(BaseWrapperPolicy):
             proba_random_exploration=None,
             policy=DefaultPolicy,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(CD_IndexPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(CD_IndexPolicy, self).__init__(nbArms, policy=policy, *args, **kwargs)
         # New parameters
         self.epsilon = epsilon  #: Parameter :math:`\varepsilon` for the test.
         self.lazy_detect_change_only_x_steps = lazy_detect_change_only_x_steps  #: Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
@@ -213,9 +213,9 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             policy=DefaultPolicy,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(CUSUM_IndexPolicy, self).__init__(nbArms, epsilon=epsilon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(CUSUM_IndexPolicy, self).__init__(nbArms, epsilon=epsilon, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
         # New parameters
         self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
@@ -413,9 +413,9 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             threshold_function=threshold_BernoulliGLR,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
@@ -512,9 +512,9 @@ class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed).
     """
 
-    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, kl=klGauss, threshold_function=threshold_GaussianGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, lower=0., amplitude=1., *args, **kwargs
+    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, sig2=0.25, policy=DefaultPolicy, kl=klGauss, threshold_function=threshold_GaussianGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, *args, **kwargs
         ):
-        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(GaussianGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, *args, **kwargs)
         self._sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
         self._args_to_kl = (sig2, )
 
@@ -535,9 +535,9 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
     """
 
-    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, kl=klBern, threshold_function=threshold_BernoulliGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, lower=0., amplitude=1., *args, **kwargs
+    def __init__(self, nbArms, horizon=None, max_nb_random_events=None, full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH, policy=DefaultPolicy, kl=klBern, threshold_function=threshold_BernoulliGLR, delta=None, alpha0=None, exponentBeta=1.05, alpha_t1=0.1, lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS, lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS, *args, **kwargs
         ):
-        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, horizon=horizon, max_nb_random_events=max_nb_random_events, full_restart_when_refresh=full_restart_when_refresh, policy=policy, kl=kl, threshold_function=threshold_function, delta=delta, alpha0=alpha0, exponentBeta=exponentBeta, alpha_t1=alpha_t1, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps=lazy_try_value_s_only_x_steps, *args, **kwargs)
 
     def __str__(self):
         return r"BernoulliGLR-{}({}, {}, {})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
@@ -604,9 +604,9 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             delta=SubGaussianGLRDELTA, sigma=SubGaussianGLR_SIGMA, joint=SubGaussianGLR_JOINT,
             exponentBeta=1.05, alpha_t1=0.1, alpha0=None,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.

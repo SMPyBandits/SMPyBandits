@@ -20,7 +20,7 @@ All policies have the same interface, as described in :class:`BaseMPPolicy` for 
 and :class:`BaseCentralizedPolicy` for centralized policies,
 in order to use them in any experiment with the following approach: ::
 
-    my_policy_MP = Policy_MP(nbPlayers, nbArms, *args, lower=0, amplitude=1, **kwargs)
+    my_policy_MP = Policy_MP(nbPlayers, nbArms)
     children = my_policy_MP.children             # get a list of usable single-player policies
     for one_policy in children:
         one_policy.startGame()                       # start the game

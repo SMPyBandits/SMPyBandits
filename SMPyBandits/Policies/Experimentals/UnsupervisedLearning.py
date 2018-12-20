@@ -125,7 +125,7 @@ class SimpleBernoulliKernel(FittingModel):
     0.3619...
     """
 
-    def __init__(self, p=None, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, p=None, *args, **kwargs):
         r""" Starts with :math:`\mathcal{B}(\mu)`, where :math:`\mu = p` or :math:`\mu = \mathrm{lower} + \mathrm{amplitude} / 2`, by default."""
         self.lower = float(lower)  #: Known lower bounds on the rewards.
         self.amplitude = float(amplitude)  #: Known amplitude of the rewards.

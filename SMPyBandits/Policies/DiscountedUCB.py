@@ -36,8 +36,8 @@ class DiscountedUCB(UCBalpha):
     def __init__(self, nbArms,
                  alpha=ALPHA, gamma=GAMMA,
                  useRealDiscount=True,
-                 lower=0., amplitude=1., *args, **kwargs):
-        super(DiscountedUCB, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+                 *args, **kwargs):
+        super(DiscountedUCB, self).__init__(nbArms, *args, **kwargs)
         self.discounted_pulls = np.zeros(nbArms, dtype=int)  #: Number of pulls of each arms
         self.discounted_rewards = np.zeros(nbArms)  #: Cumulated rewards of each arms
         assert alpha >= 0, "Error: the 'alpha' parameter for DiscountedUCB class has to be >= 0."  # DEBUG
@@ -119,7 +119,7 @@ class DiscountedUCBPlus(DiscountedUCB):
     def __init__(self, nbArms,
                  horizon=None, max_nb_random_events=None,
                  alpha=ALPHA,
-                 lower=0., amplitude=1., *args, **kwargs):
+                 *args, **kwargs):
         # New parameter
         if horizon is not None and max_nb_random_events is not None:
             gamma = 1 - np.sqrt(max_nb_random_events / horizon) / 4.
@@ -127,7 +127,7 @@ class DiscountedUCBPlus(DiscountedUCB):
                 gamma = 1.
         else:
             gamma = GAMMA
-        super(DiscountedUCBPlus, self).__init__(nbArms, alpha=alpha, gamma=gamma, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(DiscountedUCBPlus, self).__init__(nbArms, alpha=alpha, gamma=gamma, *args, **kwargs)
 
     def __str__(self):
         return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)

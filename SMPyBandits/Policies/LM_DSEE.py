@@ -63,9 +63,9 @@ class LM_DSEE(BasePolicy):
 
     def __init__(self, nbArms,
             nu=0.5, DeltaMin=0.5, a=1, b=0.25,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(LM_DSEE, self).__init__(nbArms, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(LM_DSEE, self).__init__(nbArms, *args, **kwargs)
         # Parameters
         assert a > 0, "Error: for a LM_DSEE policy, the parameter 'a' should be > 0 but was = {}".format(a)  # DEBUG
         self.a = a  #: Parameter :math:`a` for the LM-DSEE algorithm.
