@@ -162,7 +162,7 @@ class rhoLearn(rhoRand):
         self.nbArms = nbArms  #: Number of arms
         self.change_rank_each_step = change_rank_each_step  #: Change rank at every steps?
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRhoLearn(maxRank, rankSelectionAlgo, change_rank_each_step, self, playerId)
         # Fake rankSelection algorithm, for pretty print
         self._rankSelection = rankSelectionAlgo(maxRank)

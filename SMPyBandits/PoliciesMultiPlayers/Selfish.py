@@ -43,7 +43,7 @@ class Selfish(BaseMPPolicy):
     - not even knowing that they should try to avoid collisions. When a collision happens, the algorithm simply receives a 0 reward for the chosen arm (can be changed with penalty= argument).
     """
 
-    def __init__(self, nbPlayers, nbArms, playerAlgo, penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, nbPlayers, nbArms, playerAlgo, penalty=PENALTY, *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -65,7 +65,7 @@ class Selfish(BaseMPPolicy):
         - To get a list of usable players, use ``s.children``.
         - Warning: ``s._players`` is for internal use ONLY!
 
-        .. warning:: I want my code to stay compatible with Python 2, so I cannot use the `new syntax of keyword-only argument <https://www.python.org/dev/peps/pep-3102/>`_. It would make more sense to have ``*args, penalty=PENALTY, lower=0., amplitude=1., **kwargs`` instead of ``penalty=PENALTY, lower=0., amplitude=1., *args, **kwargs`` but I can't.
+        .. warning:: I want my code to stay compatible with Python 2, so I cannot use the `new syntax of keyword-only argument <https://www.python.org/dev/peps/pep-3102/>`_. It would make more sense to have ``*args, penalty=PENALTY, lower=0., amplitude=1., **kwargs`` instead of ``penalty=PENALTY, *args, **kwargs`` but I can't.
         """
         assert nbPlayers > 0, "Error, the parameter 'nbPlayers' for Selfish class has to be > 0."
         self.nbPlayers = nbPlayers  #: Number of players
@@ -74,7 +74,7 @@ class Selfish(BaseMPPolicy):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)  # Create it here!
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)  # Create it here!
             self.children[playerId] = SelfishChildPointer(self, playerId)
             if hasattr(self._players[playerId], 'handleCollision'):  # XXX they should not have such method!
                 print("Warning: Selfish found a player #{} which has a method 'handleCollision' : Selfish should NOT be used with bandit algorithms aware of collision-avoidance!".format(playerId))  # DEBUG

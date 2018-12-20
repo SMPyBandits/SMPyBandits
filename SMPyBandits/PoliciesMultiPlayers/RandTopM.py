@@ -228,7 +228,7 @@ class RandTopM(BaseMPPolicy):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRandTopM(maxRank, withChair, pickWorstFirst, exitIfWorstWasPicked, pickPrevWorstFirst, self, playerId)
 
     def __str__(self):
@@ -261,7 +261,7 @@ class RandTopMCautious(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(RandTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -294,7 +294,7 @@ class RandTopMExtraCautious(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(RandTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMExtraCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -325,7 +325,7 @@ class RandTopMOld(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(RandTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(RandTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=False, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "RandTopMOld({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -357,7 +357,7 @@ class MCTopM(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(MCTopM, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopM, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "MCTopM({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -389,7 +389,7 @@ class MCTopMCautious(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(MCTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -421,7 +421,7 @@ class MCTopMExtraCautious(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(MCTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMExtraCautious, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=True, exitIfWorstWasPicked=True, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMExtraCautious({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -453,7 +453,7 @@ class MCTopMOld(RandTopM):
         >>> [ child.choice() for child in s.children ]
         [12, 15, 0, 3, 3, 7]
         """
-        super(MCTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMOld, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=False, maxRank=maxRank, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMOld({} x {})".format(self.nbPlayers, str(self._players[0]))

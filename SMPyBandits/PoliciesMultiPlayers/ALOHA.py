@@ -189,7 +189,7 @@ class ALOHA(BaseMPPolicy):
 
     def __init__(self, nbPlayers, nbArms, playerAlgo,
                  p0=0.5, alpha_p0=0.5, ftnext=tnext_beta, beta=None,
-                 lower=0., amplitude=1., *args, **kwargs):  # Named argument to give them in any order
+                 *args, **kwargs):  # Named argument to give them in any order
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -227,7 +227,7 @@ class ALOHA(BaseMPPolicy):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         for playerId in range(nbPlayers):
             # Initialize internal algorithm (eg. UCB, Thompson etc)
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             # Initialize proxy child
             self.children[playerId] = oneALOHA(nbPlayers, self, playerId, nbArms, p0=p0, alpha_p0=alpha_p0, ftnext=ftnext, beta=beta)
 

@@ -121,10 +121,7 @@ class oneEstimateM(ChildPointer):
     #
     # XXX I don't want to write ugly dynamic code that handles both, so let's just say this breaks Python2 compatibility
     # You shouldn't use Python2 anyway! https://pythonclock.org/
-    def __init__(self, nbArms, playerAlgo, threshold, decentralizedPolicy, *args,
-                 lower=0., amplitude=1., horizon=None,
-                 args_decentralizedPolicy=None, kwargs_decentralizedPolicy=None,
-                 **kwargs):
+    def __init__(self, nbArms, playerAlgo, threshold, decentralizedPolicy, *args, lower=0., amplitude=1., horizon=None, args_decentralizedPolicy=None, kwargs_decentralizedPolicy=None, **kwargs):
         self.horizon = horizon
         super(oneEstimateM, self).__init__(*args, **kwargs)
         # Creating of the underlying policy (e.g., oneRhoRand, oneRandTopM etc)

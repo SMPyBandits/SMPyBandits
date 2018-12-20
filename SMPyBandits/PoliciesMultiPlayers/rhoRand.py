@@ -72,8 +72,8 @@ class rhoRand(BaseMPPolicy):
     """
 
     def __init__(self, nbPlayers, nbArms, playerAlgo,
-                 maxRank=None, orthogonalRanks=False,
-                 lower=0., amplitude=1., *args, **kwargs):
+                 maxRank=None,
+                 *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -105,11 +105,11 @@ class rhoRand(BaseMPPolicy):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRhoRand(maxRank, self, playerId)
 
     def __str__(self):
-        return "rhoRand({} x {}{})".format(self.nbPlayers, str(self._players[0]))
+        return "rhoRand({} x {})".format(self.nbPlayers, str(self._players[0]))
 
 
 # --- Debugging

@@ -179,7 +179,7 @@ class RandTopMEst(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         fake_maxRank = None
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRandTopMEst(threshold, fake_maxRank, withChair, pickWorstFirst, exitIfWorstWasPicked, pickPrevWorstFirst, self, playerId)
 
     def __str__(self):
@@ -234,7 +234,7 @@ class RandTopMEstPlus(BaseMPPolicy):
         self.nbArms = nbArms  #: Number of arms
         fake_maxRank = None
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRandTopMEst(threshold_on_t_with_horizon, fake_maxRank, withChair, pickWorstFirst, exitIfWorstWasPicked, pickPrevWorstFirst, self, playerId, horizon=horizon)
 
     def __str__(self):
@@ -256,7 +256,7 @@ class MCTopMEst(RandTopMEst):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMEst, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMEst, self).__init__(nbPlayers, nbArms, playerAlgo, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMEst({} x {})".format(self.nbPlayers, str(self._players[0]))
@@ -277,7 +277,7 @@ class MCTopMEstPlus(RandTopMEstPlus):
         - nbArms: number of arms, given as first argument to playerAlgo.
         - `*args`, `**kwargs`: arguments, named arguments, given to playerAlgo.
         """
-        super(MCTopMEstPlus, self).__init__(nbPlayers, nbArms, playerAlgo, horizon, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(MCTopMEstPlus, self).__init__(nbPlayers, nbArms, playerAlgo, horizon, withChair=True, pickWorstFirst=False, exitIfWorstWasPicked=False, pickPrevWorstFirst=True, *args, **kwargs)
 
     def __str__(self):
         return "MCTopMEstPlus({} x {})".format(self.nbPlayers, str(self._players[0]))

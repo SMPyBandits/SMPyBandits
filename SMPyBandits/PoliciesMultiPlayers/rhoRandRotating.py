@@ -107,7 +107,7 @@ class rhoRandRotating(rhoRand):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRhoRandRotating(maxRank, self, playerId)
 
     def __str__(self):

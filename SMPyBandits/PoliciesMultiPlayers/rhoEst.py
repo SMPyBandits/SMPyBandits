@@ -152,7 +152,7 @@ class rhoEst(rhoRand):
         self.nbArms = nbArms  #: Number of arms
         fake_maxRank = None
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRhoEst(threshold, fake_maxRank, self, playerId)
 
     def __str__(self):
@@ -198,7 +198,7 @@ class rhoEstPlus(rhoRand):
         self.nbArms = nbArms  #: Number of arms
         fake_maxRank = None
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             self.children[playerId] = oneRhoEst(threshold_on_t_with_horizon, fake_maxRank, self, playerId, horizon=horizon)
 
     def __str__(self):

@@ -199,7 +199,6 @@ callgraph:
 	# -convert logs/pycallgraph.svg logs/pycallgraph.png
 
 # Installers
-# FIXME make a virtualenv automatically?
 install:
 	sudo -H pip  install -U -r requirements.txt
 install2:

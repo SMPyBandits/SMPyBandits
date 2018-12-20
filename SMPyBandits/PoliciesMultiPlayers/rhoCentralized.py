@@ -74,7 +74,7 @@ class rhoCentralized(BaseMPPolicy):
 
     def __init__(self, nbPlayers, nbArms, playerAlgo,
                  maxRank=None, orthogonalRanks=True,
-                 lower=0., amplitude=1., *args, **kwargs):
+                 *args, **kwargs):
         """
         - nbPlayers: number of players to create (in self._players).
         - playerAlgo: class to use for every players.
@@ -108,7 +108,7 @@ class rhoCentralized(BaseMPPolicy):
         self.children = [None] * nbPlayers  #: List of children, fake algorithms
         self.nbArms = nbArms  #: Number of arms
         for playerId in range(nbPlayers):
-            self._players[playerId] = playerAlgo(nbArms, *args, lower=lower, amplitude=amplitude, **kwargs)
+            self._players[playerId] = playerAlgo(nbArms, *args, **kwargs)
             if orthogonalRanks:
                 self.children[playerId] = oneRhoCentralized(maxRank, self, playerId, rank=playerId + 1)
             else:
