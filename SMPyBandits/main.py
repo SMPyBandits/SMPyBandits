@@ -157,26 +157,6 @@ if __name__ == '__main__':
 
         if debug_memory: start_tracemalloc()  # DEBUG
 
-        # Sub folder with a useful name
-        subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
-        plot_dir = os.path.join(PLOT_DIR, subfolder)
-
-        # Get the name of the output file
-        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
-        mainfig = os.path.join(plot_dir, imagename)
-        savefig = mainfig
-        picklename = mainfig + '.pickle'
-        h5pyname   = mainfig + '.hdf5'
-
-        if saveallfigs:
-            # Create the sub folder
-            if os.path.isdir(plot_dir):
-                print("{} is already a directory here...".format(plot_dir))
-            elif os.path.isfile(plot_dir):
-                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
-            else:
-                mkdir(plot_dir)
-
         # --- Also plotting the history of means
         if interactive:
             evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
@@ -197,6 +177,26 @@ if __name__ == '__main__':
 
         if not do_plots:
             break
+
+        # Sub folder with a useful name
+        subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
+        plot_dir = os.path.join(PLOT_DIR, subfolder)
+
+        # Get the name of the output file
+        imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
+        mainfig = os.path.join(plot_dir, imagename)
+        savefig = mainfig
+        picklename = mainfig + '.pickle'
+        h5pyname   = mainfig + '.hdf5'
+
+        if saveallfigs:
+            # Create the sub folder
+            if os.path.isdir(plot_dir):
+                print("{} is already a directory here...".format(plot_dir))
+            elif os.path.isfile(plot_dir):
+                raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
+            else:
+                mkdir(plot_dir)
 
         # --- Save it to a pickle file
         if saveallfigs and USE_PICKLE:

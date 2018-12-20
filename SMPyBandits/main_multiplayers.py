@@ -127,6 +127,9 @@ if __name__ == '__main__':
         evaluation.printMemoryConsumption(envId)
         if debug_memory: display_top_tracemalloc()  # DEBUG
 
+        if not do_plots:
+            break
+
         # Sub folder with a useful name
         subfolder = "MP__K{}_M{}_T{}_N{}".format(env.nbArms, len(configuration['players']), configuration['horizon'], configuration['repetitions'])
         # Get the name of the output file
@@ -138,7 +141,7 @@ if __name__ == '__main__':
         picklename = mainfig + '.pickle'
         h5pyname = mainfig + '.hdf5'
 
-        if saveallfigs:
+        if do_plots and saveallfigs:
             # Create the sub folder
             if os.path.isdir(plot_dir):
                 print("{} is already a directory here...".format(plot_dir))
@@ -154,9 +157,6 @@ if __name__ == '__main__':
                     pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
             if USE_HD5:
                 evaluation.saveondisk(h5pyname)
-
-        if not do_plots:
-            break
 
         # --- Also plotting the running times
         if saveallfigs:

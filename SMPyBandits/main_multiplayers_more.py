@@ -163,6 +163,9 @@ if __name__ == '__main__':
             evaluation.printMemoryConsumption(envId)
             if debug_memory: display_top_tracemalloc()  # DEBUG
 
+            if not do_simple_plots:
+                break
+
             # Sub folder with a useful name
             subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
             # Get the name of the output file
@@ -189,9 +192,6 @@ if __name__ == '__main__':
                         pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
                 if USE_HD5:
                     evaluation.saveondisk(h5pyname)
-
-            if not do_simple_plots:
-                break
 
             # --- Also plotting the running times
             if saveallfigs:

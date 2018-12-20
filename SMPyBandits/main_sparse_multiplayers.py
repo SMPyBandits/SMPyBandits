@@ -134,9 +134,11 @@ if __name__ == '__main__':
             # Display the final rankings for that env
             print("\n\nGiving the final ranks ...")
             evaluation.printFinalRanking(envId)
-
             print("\n\nGiving the vector of final regrets ...")
             evaluation.printLastRegrets(envId)
+
+            if not do_simple_plots:
+                break
 
             # Sub folder with a useful name
             subfolder = "SMP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
@@ -162,9 +164,6 @@ if __name__ == '__main__':
                     with open(picklename, 'wb') as picklefile:
                         print("Saving the EvaluatorSparseMultiPlayers 'evaluation' objet to", picklename, "...")
                         pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
-
-            if not do_simple_plots:
-                break
 
             # --- Also plotting the decentralized rewards
             print("\n\n- Plotting the decentralized rewards")
