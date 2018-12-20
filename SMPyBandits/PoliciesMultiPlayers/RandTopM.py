@@ -203,7 +203,7 @@ class RandTopM(BaseMPPolicy):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -253,7 +253,7 @@ class RandTopMCautious(RandTopM):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -286,7 +286,7 @@ class RandTopMExtraCautious(RandTopM):
         Example:
 
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -317,7 +317,7 @@ class RandTopMOld(RandTopM):
         Example:
 
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -349,7 +349,7 @@ class MCTopM(RandTopM):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -381,7 +381,7 @@ class MCTopMCautious(RandTopM):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -413,7 +413,7 @@ class MCTopMExtraCautious(RandTopM):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -445,7 +445,7 @@ class MCTopMOld(RandTopM):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -459,11 +459,4 @@ class MCTopMOld(RandTopM):
         return "MCTopMOld({} x {})".format(self.nbPlayers, str(self._players[0]))
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)
 

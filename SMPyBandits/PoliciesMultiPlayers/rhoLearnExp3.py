@@ -239,7 +239,7 @@ class rhoLearnExp3(rhoRand):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6

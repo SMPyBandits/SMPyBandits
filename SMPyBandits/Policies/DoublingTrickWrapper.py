@@ -562,9 +562,8 @@ class DoublingTrickWrapper(BaseWrapperPolicy):
                  policy=default_horizonDependent_policy,
                  next_horizon=default_next_horizon,
                  first_horizon=DEFAULT_FIRST_HORIZON,
-                 lower=0., amplitude=1.,
                  *args, **kwargs):
-        super(DoublingTrickWrapper, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude)
+        super(DoublingTrickWrapper, self).__init__(nbArms, policy=policy, *args, **kwargs)
         self.full_restart = full_restart  #: Constant to know how to refresh the underlying policy.
         # --- Horizon
         self._i = 0

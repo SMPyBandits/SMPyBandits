@@ -28,21 +28,13 @@ from Policies import *
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".
-HORIZON = 500
-HORIZON = 2000
-HORIZON = 3000
-HORIZON = 5000
-HORIZON = 10000
-# HORIZON = 100000
+HORIZON = 1000
+HORIZON = int(getenv('T', HORIZON))
 
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be statistically trustworthy.
-REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
-# REPETITIONS = 1000
-# REPETITIONS = 100
-REPETITIONS = 50
-# REPETITIONS = 20
+REPETITIONS = 100
+REPETITIONS = int(getenv('N', REPETITIONS))
 
 #: To profile the code, turn down parallel computing
 DO_PARALLEL = False  # XXX do not let this = False

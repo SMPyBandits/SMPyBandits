@@ -52,7 +52,7 @@ class Selfish(BaseMPPolicy):
 
         Examples:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -94,10 +94,3 @@ class Selfish(BaseMPPolicy):
         player.getReward(arm, getattr(player, 'lower', 0) if self.penalty is None else self.penalty)
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)

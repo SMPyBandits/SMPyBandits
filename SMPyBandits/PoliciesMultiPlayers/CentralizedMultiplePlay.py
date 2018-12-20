@@ -44,7 +44,7 @@ class CentralizedMultiplePlay(BaseMPPolicy):
 
         Examples:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> s = CentralizedMultiplePlay(2, 3, UCB)
         >>> [ child.choice() for child in s.children ]
         [2, 0]
@@ -107,10 +107,3 @@ class CentralizedMultiplePlay(BaseMPPolicy):
         return self.player.estimatedOrder()
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)

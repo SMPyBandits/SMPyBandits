@@ -64,6 +64,11 @@ do_simple_plots = False
 do_comparison_plots = False
 do_comparison_plots = True
 
+if getenv('NOPLOTS', 'False') == 'True' and __name__ == '__main__':
+    print("====> TURNING NOPLOTS MODE ON <=====")
+    do_simple_plots = False
+    do_comparison_plots = False
+
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False

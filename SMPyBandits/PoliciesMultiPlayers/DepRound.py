@@ -17,8 +17,11 @@ __version__ = "0.6"
 
 import numpy as np
 from random import random
-from .with_proba import with_proba
 
+try:
+    from .with_proba import with_proba
+except ImportError:
+    from with_proba import with_proba
 
 
 # --- Utility functions
@@ -109,10 +112,3 @@ def DepRound(weights_p, k=1):
     return subset
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)

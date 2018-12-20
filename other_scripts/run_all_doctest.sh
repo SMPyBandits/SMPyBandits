@@ -16,5 +16,7 @@ for file in $(find . -type f -iname '*.py'); do
         clear
         echo -e "\n${green}Testing the file '$file'...${reset}"  # DEBUG
         python3 "$file"
+        echo -e "\n${green}Testing the file '$file'...${reset}"  # DEBUG
+        read
     fi
 done

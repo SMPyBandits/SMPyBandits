@@ -23,7 +23,7 @@ class BaseWrapperPolicy(BasePolicy):
     """ Base class for any wrapper policy."""
 
     def __init__(self, nbArms, policy=DefaultPolicy, *args, **kwargs):
-        super(BaseWrapperPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
+        super(BaseWrapperPolicy, self).__init__(nbArms, *args, **kwargs)
         # --- Policy
         self._policy = policy  # Class to create the underlying policy
         self._args = args  # To keep them
@@ -45,7 +45,7 @@ class BaseWrapperPolicy(BasePolicy):
         if createNewPolicy:
             # print("INFO: BaseWrapperPolicy: creating a new underlying policy with startGame(createNewPolicy=True)...")  # DEBUG
             # del self.policy  # XXX be sure that we delete the attribute and the object?
-            self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
+            self.policy = self._policy(self.nbArms, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
 

@@ -35,9 +35,24 @@ install:
 script:
   - python --version
   - cd SMPyBandits/
-  - N=10 T=1000 python main.py
-  - N=10 T=1000 python main_multiplayers.py
-  - N=10 T=1000 python main_multiplayers_more.py
-  # - . ./other_scripts/run_test_simulations.sh
+  # # Testing basic things
+  # - N=4 T=1000 python example_of_main_singleplayer.py very_simple_configuration
+  # - N=4 T=1000 python example_of_main_singleplayer.py
+  # - N=4 T=1000 python example_of_main_multiplayers_more.py
+  # Testing single player
+  - N=4 T=1000 python main.py
+  - N=4 T=1000 python main.py configuration_comparing_aggregation_algorithms
+  - N=4 T=1000 python main.py configuration_comparing_doubling_algorithms
+  - N=4 T=1000 python main.py configuration_nonstationary
+  - N=4 T=1000 python main.py configuration_sparse
+  - N=4 T=1000 python main.py configuration_markovian
+  - NOPLOTS=True N=4 T=1000 python main.py configuration_all_singleplayer
+  # Testing multi player
+  - N=4 T=1000 python main_multiplayers.py
+  - N=4 T=1000 python main_multiplayers_more.py
+  - NOPLOTS=True N=4 T=1000 python main_multiplayers_more.py configuration_multiplayers_with_aggregation
+  - NOPLOTS=True N=4 T=1000 python main_sparse_multiplayers.py
+  # - bash ./other_scripts/run_test_simulations.sh
+  - bash ./other_scripts/run_all_doctest.sh
   - cd Policies/
   - python kullback.py

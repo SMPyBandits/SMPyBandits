@@ -119,10 +119,3 @@ class OracleNotFair(BaseMPPolicy):
                     print(" - For arm number {}, there is {} different child player affected on this arm ...".format(armId + 1, nbAffected))
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)

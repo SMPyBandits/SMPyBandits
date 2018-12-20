@@ -12,9 +12,15 @@ from random import random
 import numpy as np
 import numpy.random as rn
 
-from .BaseMPPolicy import BaseMPPolicy
-from .ChildPointer import ChildPointer
-from .with_proba import with_proba
+try:
+    from .BaseMPPolicy import BaseMPPolicy
+    from .ChildPointer import ChildPointer
+    from .with_proba import with_proba
+except ImportError:
+    from BaseMPPolicy import BaseMPPolicy
+    from ChildPointer import ChildPointer
+    from with_proba import with_proba
+
 
 
 # --- Functions to define [t, t + tnext] intervals
@@ -204,7 +210,7 @@ class ALOHA(BaseMPPolicy):
 
         Example:
 
-        >>> import sys; sys.path.insert(0, '..'); from Policies import *
+        >>> from Policies import *
         >>> import random; random.seed(0); import numpy as np; np.random.seed(0)
         >>> nbArms = 17
         >>> nbPlayers = 6
@@ -235,10 +241,3 @@ class ALOHA(BaseMPPolicy):
         return "ALOHA({} x {})".format(self.nbPlayers, str(self._players[0]))
 
 
-# --- Debugging
-
-if __name__ == "__main__":
-    # Code for debugging purposes.
-    from doctest import testmod
-    print("\nTesting automatically all the docstring written in each functions of this module :")
-    testmod(verbose=True)

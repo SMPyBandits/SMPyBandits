@@ -97,7 +97,7 @@ configuration = {
         {   # A Bayesian problem: every repetition use a different mean vectors!
             "arm_type": ARM_TYPE,
             "params": {
-                "function": randomMeans,
+                "newMeans": randomMeans,
                 "args": {
                     "nbArms": NB_ARMS,
                     "mingap": None,

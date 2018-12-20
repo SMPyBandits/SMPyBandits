@@ -46,6 +46,10 @@ saveallfigs = True  # XXX dont keep it like this
 #: Whether to do the plots or not
 do_plots = True
 
+if getenv('NOPLOTS', 'False') == 'True' and __name__ == '__main__':
+    print("====> TURNING NOPLOTS MODE ON <=====")
+    do_plots = False
+
 #: Whether to show plots, one by one, or not at all and just save them
 interactive = True  # XXX dont keep it like this
 interactive = False
