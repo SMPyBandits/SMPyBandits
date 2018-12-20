@@ -7,9 +7,8 @@ r""" The Monitored-UCB generic policy for non-stationary bandits.
     >>> policy = Monitored_IndexPolicy(nbArms, UCB)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
 
-- It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
+- It uses an additional :math:`\mathcal{O}(K w)` memory for a window of size :math:`w`.
 
-.. warning:: This implementation is still experimental!
 .. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
 """
 from __future__ import division, print_function  # Python 2 compatibility
@@ -48,6 +47,8 @@ FULL_RESTART_WHEN_REFRESH = False
 
 class Monitored_IndexPolicy(BaseWrapperPolicy):
     r""" The Monitored-UCB generic policy for non-stationary bandits, from [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018]](https://arxiv.org/pdf/1802.03692)
+
+    - For a window size ``w``, it uses only :math:`\mathcal{O}(K w)` memory.
     """
     def __init__(self, nbArms,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
@@ -135,9 +136,10 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         reward = (reward - self.lower) / self.amplitude
         # We seen it one more time
         self.last_pulls[arm] += 1
-        # Store it in place for the empirical average of that arm
+        # DONE use only :math:`\mathcal{O}(K w)` memory.
         if len(self.last_w_rewards[arm]) >= self.window_size:
             self.last_w_rewards[arm].pop(0)
+        # Store it in place for the empirical average of that arm
         self.last_w_rewards[arm].append(reward)
 
         if self.detect_change(arm):

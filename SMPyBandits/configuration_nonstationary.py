@@ -487,14 +487,14 @@ configuration.update({
     #     { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
     #     for gamma in [0.99, 0.9, 0.7]
     # ] +
-    # # The Exp3R algorithm works reasonably well
-    # [
-    #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-    # ] +
-    # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
-    # [
-    #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
-    # ] +
+    # The Exp3R algorithm works reasonably well
+    [
+        { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+    ] +
+    # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+    [
+        { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
+    ] +
     # # [  # XXX TODO test the AdSwitch policy and its corrected version
     # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
     # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
@@ -565,12 +565,19 @@ configuration.update({
     # ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
-        { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "w": WINDOW_SIZE, "b": np.sqrt(WINDOW_SIZE/2 * np.log(2 * NB_ARMS * HORIZON**2)), "policy": policy, "per_arm_restart": per_arm_restart, } }
+        { "archtype": Monitored_IndexPolicy, "params": {
+            "policy": policy,
+            "per_arm_restart": per_arm_restart,
+            "horizon": HORIZON,
+            "w": w,
+            "b": np.sqrt(w/2 * np.log(2 * NB_ARMS * HORIZON**2)),
+        } }
         for per_arm_restart in PER_ARM_RESTART
         for policy in [
             # UCB,
             klUCB,  # XXX comment to only test UCB
         ]
+        for w in [WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
     ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
@@ -595,6 +602,8 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "delta": delta,
             # "alpha0": alpha0,
+            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
@@ -607,8 +616,10 @@ configuration.update({
             klUCB,
         ]
         for per_arm_restart in PER_ARM_RESTART
-        for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
-        for alpha0 in [None] + [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
+        # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
+        # for alpha0 in [None] + [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
+        # for lazy_detect_change_only_x_steps in [0, 2, 10]
+        # for lazy_try_value_s_only_x_steps in [1, 2, 10]
     ] +
     []
 })

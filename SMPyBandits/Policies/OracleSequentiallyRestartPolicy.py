@@ -10,6 +10,8 @@ r""" An oracle policy for non-stationary bandits, restarting an underlying stati
 - It is very simple but impractical: in any real problem it is impossible to know the locations of the breakpoints, but it acts as an efficient baseline.
 
 .. warning:: It is an efficient baseline, but it has no reason to be the best algorithm on a given problem (empirically)! I found that :class:`Policy.DiscountedThompson.DiscountedThompson` is usually the most efficient.
+
+.. warning:: FIXME I should implement a better oracle, see https://github.com/SMPyBandits/SMPyBandits/issues/172
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -21,10 +23,8 @@ import numpy as np
 
 try:
     from .BaseWrapperPolicy import BaseWrapperPolicy
-    from .UCB import UCB as DefaultPolicy
 except ImportError:
     from BaseWrapperPolicy import BaseWrapperPolicy
-    from UCB import UCB as DefaultPolicy
 
 
 #: Should we reset one arm empirical average or all? Default is ``False`` for this algorithm.
@@ -43,19 +43,25 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
     """
     def __init__(self, nbArms,
             changePoints=None,
+            listOfMeans=None,
+            reset_for_all_change=False,
+            reset_for_suboptimal_change=False,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             per_arm_restart=PER_ARM_RESTART,
-            policy=DefaultPolicy,
-            lower=0., amplitude=1., *args, **kwargs
+            *args, **kwargs
         ):
-        super(OracleSequentiallyRestartPolicy, self).__init__(nbArms, policy=policy, lower=lower, amplitude=amplitude, *args, **kwargs)
+        super(OracleSequentiallyRestartPolicy, self).__init__(nbArms, *args, **kwargs)
 
         if changePoints is None:
             changePoints = []
         changePoints = sorted([tau for tau in changePoints if tau > 0])
         if len(changePoints) == 0:
             print("WARNING: it is useless to use the wrapper OracleSequentiallyRestartPolicy when changePoints = {} is empty, just use the base policy without the wrapper!".format(changePoints))  # DEBUG
-        self.changePoints = changePoints  #: Locations of the break points (or change points) of the switching bandit problem. If ``None``, an empty list is used.
+        self.changePoints = [changePoints for _ in range(nbArms)]  #: Locations of the break points (or change points) of the switching bandit problem, for each arm. If ``None``, an empty list is used.
+        self.listOfMeans = listOfMeans  #: FIXME
+        self.reset_for_all_change = reset_for_all_change  #: FIXME
+        self.reset_for_suboptimal_change = reset_for_suboptimal_change  #: FIXME
+        # TODO if listOfMeans is given and these options are, store changePoints as a list of list
 
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
         self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
@@ -80,8 +86,9 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         self.last_pulls[arm] += 1
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
-        if self.t in self.changePoints:
-            print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points! Still {} change points to go!".format(self, self.t, arm, len([tau for tau in self.changePoints if tau > self.t])))  # DEBUG
+
+        if self.t in self.changePoints[arm]:
+            print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points! Still {} change points to go!".format(self, self.t, arm, len([tau for tau in self.changePoints[arm] if tau > self.t])))  # DEBUG
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms

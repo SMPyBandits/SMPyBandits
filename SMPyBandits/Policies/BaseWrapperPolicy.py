@@ -13,14 +13,16 @@ import numpy as np
 
 try:
     from .BasePolicy import BasePolicy
+    from .UCB import UCB as DefaultPolicy
 except ImportError:
     from BasePolicy import BasePolicy
+    from UCB import UCB as DefaultPolicy
 
 
 class BaseWrapperPolicy(BasePolicy):
     """ Base class for any wrapper policy."""
 
-    def __init__(self, nbArms, policy=None, lower=0., amplitude=1., *args, **kwargs):
+    def __init__(self, nbArms, policy=DefaultPolicy, lower=0., amplitude=1., *args, **kwargs):
         super(BaseWrapperPolicy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         # --- Policy
         self._policy = policy  # Class to create the underlying policy
@@ -29,7 +31,7 @@ class BaseWrapperPolicy(BasePolicy):
             kwargs.update(kwargs['params'])
             del kwargs['params']
         self._kwargs = kwargs  # To keep them
-        self.policy = None  #: Underlying policy
+        self.policy = policy  #: Underlying policy
 
     # --- Start game by creating new underlying policy
 
@@ -46,9 +48,6 @@ class BaseWrapperPolicy(BasePolicy):
             self.policy = self._policy(self.nbArms, lower=self.lower, amplitude=self.amplitude, *self._args, **self._kwargs)
         # now also start game for the underlying policy
         self.policy.startGame()
-        # print("DEBUG: BaseWrapperPolicy underlying policy rewards = {}, pulls = {}...".format(self.policy.rewards, self.policy.pulls))  # DEBUG
-        # self.rewards = self.policy.rewards  # just pointers to the underlying arrays!
-        # self.pulls = self.policy.pulls      # just pointers to the underlying arrays!
 
     # --- Pass the call to the subpolicy
 
