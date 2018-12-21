@@ -160,8 +160,8 @@ class EvaluatorMultiPlayers(object):
                 MB = MAB(configuration_arms)
             self.envs.append(MB)
             nbArms.append(MB.nbArms)
-        if len(set(nbArms)) != 1:  # FIXME
-            raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios. FIXME correct this point!")
+        if len(set(nbArms)) != 1:  # FIXME add support of multi-environments evaluator for MP policies with different number of arms in the scenarios.
+            raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios!")
 
     def __initPlayers__(self, env):
         """ Create or initialize players."""
@@ -1057,11 +1057,10 @@ class EvaluatorMultiPlayers(object):
         """Get a string of the players for this environment."""
         listStrPlayers = [_extract(player.__cachedstr__) for player in self.players]
         if len(set(listStrPlayers)) == 1:  # Unique user
-            if latex:
-                text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
-            else:
-                text = r'{} x {}'.format(self.nbPlayers, listStrPlayers[0])
-            # FIXME change this after this week simulations
+            # if latex:
+            #     text = r'${} \times$ {}'.format(self.nbPlayers, listStrPlayers[0])
+            # else:
+            #     text = r'{} x {}'.format(self.nbPlayers, listStrPlayers[0])
             text = listStrPlayers[0]
         else:
             text = ', '.join(listStrPlayers)

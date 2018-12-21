@@ -23,8 +23,6 @@ except ImportError:
 
 # --- Utilitary functions Dinf
 
-# FIXME test it!
-
 from scipy.optimize import minimize_scalar
 from warnings import filterwarnings
 filterwarnings("ignore", message="Method 'bounded' does not support relative tolerance in x; defaulting to absolute tolerance", category=RuntimeWarning)

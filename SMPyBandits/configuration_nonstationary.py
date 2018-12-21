@@ -98,9 +98,7 @@ configuration = {
     # --- Random events
     "nb_break_points": NB_BREAK_POINTS,
     # --- Should we plot the lower-bounds or not?
-    "plot_lowerbound": False,  # XXX Default
-    # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
-    "cache_rewards": False,  # TODO it's not yet 
+    "plot_lowerbound": False,  # XXX Default for non stationary: we do not have a better lower bound than Lai & Robbins's.
     # --- Arms
     "environment": [],
 }
@@ -616,7 +614,7 @@ configuration.update({
         } }
         for archtype in [
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            BernoulliGLR_IndexPolicy_Variant,   # TODO BernoulliGLR_IndexPolicy_Variant is working?
+            BernoulliGLR_IndexPolicy_Variant,   # FIXME BernoulliGLR_IndexPolicy_Variant is working? Is it better?
             GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
         ]

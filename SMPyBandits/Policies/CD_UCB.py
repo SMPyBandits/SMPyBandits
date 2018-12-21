@@ -61,6 +61,7 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 #: XXX Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 
 
@@ -194,10 +195,10 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
-    if C1 == 0: C1 = 1  # FIXME
+    if C1 == 0: C1 = 1  # FIXME This case of having C1=0 for CUSUM parameters should not happen...
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
-    # alpha *= 0.01  # FIXME Just divide alpha to not have too large
+    # alpha *= 0.01  # FIXME Just divide alpha to not have too large, for CUSUM-UCB.
     alpha = max(0, min(1, alpha))  # crop to [0, 1]
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
@@ -386,8 +387,8 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
 #: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):

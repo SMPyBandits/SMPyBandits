@@ -30,7 +30,7 @@ def special_times(nbArms=10, theta=0.01, epsilon=0.1, delta=0.05):
 
         T_{RH} &= \frac{\log(\frac{\delta}{3 K})}{\log(1 - \theta (1 - \frac{1}{K})^{K-1}))} \\
         T_{SH} &= (2 K / \varepsilon^2) \log(\frac{2 K^2}{\delta / 3}) \\
-        T_{TR} &= \lceil\frac{\log((\delta / 3) K XXX)}{\log(1 - \theta)} \rceil \frac{(K - 1) K}{2} \\
+        T_{TR} &= \lceil\frac{\log((\delta / 3) K XXX)}{\log(1 - \theta)} \rceil \frac{(K - 1) K}{2}.
 
     - Cf. Theorem 1 of [Kumar et al., 2018](XXX).
     - Examples:

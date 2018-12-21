@@ -250,14 +250,14 @@ except (ValueError, np.AxisError):
 
 
 configuration["successive_players"] = [
-    # FIXME test this new SIC_MMAB algorithm
+    # DONE test this new SIC_MMAB algorithm
     [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
     [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
     [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
-    # # FIXME test this new TrekkingTSN algorithm!
+    # # DONE test this new TrekkingTSN algorithm!
 
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, UCB).children,

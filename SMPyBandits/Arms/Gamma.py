@@ -91,7 +91,6 @@ class Gamma(Arm):
 
     def kl(self, x, y):
         """ The kl(x, y) to use for this arm."""
-        # FIXME if x, y are means (ie self.shape), shouldn't we divide them by self.scale ?
         return klGamma(x, y, self.scale)
 
     def oneLR(self, mumax, mu):

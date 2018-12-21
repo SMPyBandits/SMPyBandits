@@ -12,8 +12,7 @@
 
 .. warning::
 
-   This is very EXPERIMENTAL! No proof yet!
-   But it works fine!!
+    This is very EXPERIMENTAL! I have no proof yet! But it works fine!!
 """
 
 __author__ = "Lilian Besson"
@@ -97,7 +96,7 @@ class SparseWrapper(BaseWrapperPolicy):
 
     def __str__(self):
         ucb_for = ""
-        # FIXME use notations B_cJ, B_cK from my article?
+        # XXX use notations B_cJ, B_cK from my article?
         if self.use_ucb_for_set_K or self.use_ucb_for_set_J:
             ucb_for = r", UCB for "
         if self.use_ucb_for_set_J and self.use_ucb_for_set_K:
@@ -155,9 +154,9 @@ class SparseWrapper(BaseWrapperPolicy):
 
         .. math::
 
-           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-           U^{\mathcal{K}}_k(t) &= I_k^{P}(t) - \hat{\mu}_k(t),\\
-           \mathcal{K}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{K}}_k(t) - \hat{\mu}_k(t) \right\}.
+            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+            U^{\mathcal{K}}_k(t) &= I_k^{P}(t) - \hat{\mu}_k(t),\\
+            \mathcal{K}(t) &= \left\{ k \in [1,...,K]\;, \hat{\mu}_k(t) \geq U^{\mathcal{K}}_k(t) - \hat{\mu}_k(t) \right\}.
 
         - If ``use_ucb_for_set_K`` is ``True``, the same formula from :class:`Policies.SparseUCB` is used.
         """
@@ -181,12 +180,12 @@ class SparseWrapper(BaseWrapperPolicy):
         - If still in a Round-Robin phase, play the next arm,
         - Otherwise, recompute the set :math:`\mathcal{J}(t)`,
         - If it is too small, if :math:`\mathcal{J}(t) < s`:
-           + Start a new Round-Robin phase from arm 0.
+            + Start a new Round-Robin phase from arm 0.
         - Otherwise, recompute the second set :math:`\mathcal{K}(t)`,
         - If it is too small, if :math:`\mathcal{K}(t) < s`:
-           + Play a Force-Log step by choosing an arm uniformly at random from the set :math:`\mathcal{J}(t) \setminus K(t)`.
+            + Play a Force-Log step by choosing an arm uniformly at random from the set :math:`\mathcal{J}(t) \setminus K(t)`.
         - Otherwise,
-           + Play a UCB step by choosing an arm with highest index (from the underlying policy) from the set :math:`\mathcal{K}(t)`.
+            + Play a UCB step by choosing an arm with highest index (from the underlying policy) from the set :math:`\mathcal{K}(t)`.
         """
         # print("  At step t = {} a SparseWrapper algorithm was in phase {} ...".format(self.t, self.phase))  # DEBUG
         if (self.phase == Phase.RoundRobin) and ((1 + self.offset) < self.nbArms):

@@ -165,7 +165,7 @@ try:
             tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),
             tracemalloc.Filter(False, "<frozen importlib._bootstrap_external>"),
             tracemalloc.Filter(False, "<unknown>"),
-            # TODO add my own filter if needed!
+            # XXX add my own filter if needed!
         ))
         top_stats = snapshot.statistics(key_type)
 

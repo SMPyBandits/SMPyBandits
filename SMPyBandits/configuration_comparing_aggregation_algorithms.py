@@ -181,7 +181,7 @@ configuration = {
     #         for arm_type in [Bernoulli, lambda mean: Gaussian(mean, VARIANCE), ExponentialFromMean]
     #     ],
     # # ],
-    # # "environment": [  # FIXME Gamma arms
+    # # "environment": [  # XXX Gamma arms
     # #     {   # An example problem with 3 arms
     # #         "arm_type": GammaFromMean,
     # #         "params": [(shape, SCALE, 0, 10) for shape in [1, 2, 3, 4, 5]]

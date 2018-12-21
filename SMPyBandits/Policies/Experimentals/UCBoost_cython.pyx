@@ -103,13 +103,6 @@ class UCB_sq(IndexPolicy):
             return solution_pb_sq(self.rewards[arm] / self.pulls[arm], log(self.t) / self.pulls[arm])  # XXX Faster if c=0
         return solution_pb_sq(self.rewards[arm] / self.pulls[arm], (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls[arm])
 
-    # TODO make this vectorized function working!
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     indexes = solution_pb_bq(self.rewards / self.pulls, (log(self.t) + self.c * log(max(1, log(self.t)))) / self.pulls)
-    #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index[:] = indexes
-
 
 # --- New distance and algorithm: biquadratic
 

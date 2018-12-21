@@ -70,10 +70,3 @@ class OCUCB(UCB):
             return float('+inf')
         else:
             return (self.rewards[arm] / self.pulls[arm]) + sqrt(2 * self.eta * log(self._Bterm(arm)) / self.pulls[arm])
-
-    # FIXME it does not work so far!
-    # def computeAllIndex(self):
-    #     """ Compute the current indexes for all arms, in a vectorized manner."""
-    #     indexes = (self.rewards / self.pulls) + np.sqrt(2 * self.eta * np.log(self._Bterms()) / self.pulls)
-    #     indexes[self.pulls < 1] = float('+inf')
-    #     self.index[:] = indexes

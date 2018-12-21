@@ -95,7 +95,7 @@ class IndexPolicy(BasePolicy):
         #     return self.choice()
         elif len(availableArms) == 0:
             print("WARNING: IndexPolicy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)))  # DEBUG
-            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
+            # WARNING if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
             return self.choice()
         else:
             for arm in availableArms:
@@ -149,8 +149,8 @@ class IndexPolicy(BasePolicy):
     def estimatedBestArms(self, M=1):
         """ Return a (non-necessarily sorted) list of the indexes of the M-best arms. Identify the set M-best."""
         assert 1 <= M <= self.nbArms, "Error: the parameter 'M' has to be between 1 and K = {}, but it was {} ...".format(self.nbArms, M)  # DEBUG
-        # # FIXME this slows down everything, but maybe the only way to make this correct?
-        # if np.any(np.isinf(self.index)) and set(self.index) == {np.inf}:
+        # # WARNING this slows down everything, but maybe the only way to make this correct?
+        # if np.all(np.isinf(self.index)):
         #     # Initial guess: random estimate of the set Mbest
         #     choice = np.random.choice(self.nbArms, size=M, replace=False)
         #     print("Warning: estimatedBestArms() for self = {} was called with M = {} but all indexes are +inf, so using a random estimate = {} of Mbest instead of the biased [K-M,...,K-1] ...".format(self, M, choice))  # DEBUG

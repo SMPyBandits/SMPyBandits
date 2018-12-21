@@ -76,7 +76,7 @@ class EpsilonGreedy(BasePolicy):
             return self.choice()
         elif len(availableArms) == 0:
             print("WARNING: EpsilonGreedy.choiceFromSubSet({}): the argument availableArms of type {} should not be empty.".format(availableArms, type(availableArms)))  # DEBUG
-            # FIXME if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
+            # WARNING if no arms are tagged as available, what to do ? choose an arm at random, or call choice() as if available == 'all'
             return self.choice()
             # return np.random.randint(self.nbArms)
         else:

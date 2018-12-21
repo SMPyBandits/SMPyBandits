@@ -79,7 +79,7 @@ configuration = {
             "arm_type": "Markovian",
             "params": {
                 # "rested": True,
-                "rested": False,  # FIXME
+f                "rested": False,  # FIXME Try rested/restless arms
                 # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
                     # 1st arm, either a dictionary, to customize the states
@@ -90,7 +90,7 @@ configuration = {
                     # 2nd arm, or a right transition matrix, with states [| 0, n-1 |]
                     [[0.2, 0.8], [0.6, 0.4]],  # Mean = 0.571
                 ],
-                # FIXME make this by default! include it in MAB.py and not in the configuration!
+                # XXX make this by default! include it in MAB.py and not in the configuration!
                 "steadyArm": Bernoulli
             }
         },
@@ -99,7 +99,7 @@ configuration = {
         #     "arm_type": "Markovian",
         #     "params": {
         #         "rested": True,
-        #         # "rested": False,  # FIXME
+        #         # "rested": False,  # FIXME Try rested/restless arms
         #         "transitions": [
         #             # 1st arm, rewars are in {0, 0.5, 1} with 3 states
         #             {   # Mean = 0.5

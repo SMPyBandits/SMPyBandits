@@ -178,7 +178,7 @@ class oneALOHA(ChildPointer):
         if self.chosenArm is not None:
             # We can still exploit that arm
             pass
-        else:  # FIXME check the algorithm
+        else:
             # We have to chose a new arm
             availableArms = np.nonzero(self.tnext <= self.t)[0]  # Identify available arms
             result = self.mother._choiceFromSubSet_one(self.playerId, availableArms)

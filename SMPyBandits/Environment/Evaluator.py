@@ -956,7 +956,7 @@ def delayed_play(env, policy, horizon,
                 if repeatId == 0: print("\nNew means vector = {}, best arm(s) = {}, at time t = {} ...".format(means, indexes_bestarm, t))  # DEBUG
 
         # XXX remove these two special cases when the NonStationaryMAB is ready?
-        # FIXME regret is not correct when displayed for these two guys…
+        # XXX regret is not correct when displayed for these two guys…
         # XXX Experimental : shuffle the arms at the middle of the simulation
         if random_shuffle and t > 0 and t in t_events:
                 indexes_bestarm = env.new_order_of_arm(shuffled(env.arms))

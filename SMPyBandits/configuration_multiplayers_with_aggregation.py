@@ -133,8 +133,7 @@ configuration = {
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
     # --- Should we plot the lower-bounds or not?
-    # "plot_lowerbounds": True,  # XXX Default
-    "plot_lowerbounds": False,  # FIXME comment this line!
+    "plot_lowerbounds": False,
     # --- Arms
     "environment": [
         {   # Use vector from command line
@@ -180,7 +179,7 @@ except (ValueError, np.AxisError):
     GAP = 1. / (3 * NB_ARMS)
 
 
-# FIXME very simulation dependent! Change
+# FIXME very simulation dependent! Change manually...
 list_of_change_labels = [
     # "Aggr(rhoRand, RandTopM, MCTopM, Selfish) UCB",
     "Aggr(rhoRand, RandTopM, MCTopM, Selfish) kl-UCB",

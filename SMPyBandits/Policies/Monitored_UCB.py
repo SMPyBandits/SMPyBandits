@@ -177,15 +177,14 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         - where :math:`Y_i` is the i-th data in the latest w data from this arm (ie, :math:`X_k(t)` for :math:`t = n_k - w + 1` to :math:`t = n_k` current number of samples from arm k).
         - where :attr:`threshold_b` is the threshold b of the test, and :attr:`window_size` is the window-size w.
 
-        .. warning:: FIXME See https://github.com/SMPyBandits/SMPyBandits/issues/174 i should store only the last :math:`w` data.
+        .. warning:: FIXED only the last :math:`w` data are stored, using lists that got their first element ``pop()``ed out (deleted). See https://github.com/SMPyBandits/SMPyBandits/issues/174
         """
         data_y = self.last_w_rewards[arm]
         # don't try to detect change if there is not enough data!
         if len(data_y) < self.window_size:
             return False
-        # last_w_data_y = data_y[-self.window_size:]
-        last_w_data_y = data_y  # FIXME
-        last_w_data_y = data_y[-self.window_size:]
+        # last_w_data_y = data_y[-self.window_size:]  # WARNING revert to this if data_y can be larger
+        last_w_data_y = data_y
         sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
         sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
