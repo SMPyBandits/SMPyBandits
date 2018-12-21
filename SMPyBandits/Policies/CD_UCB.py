@@ -24,18 +24,13 @@ try:
     from .with_proba import with_proba
     from .BaseWrapperPolicy import BaseWrapperPolicy
     from .UCB import UCB as DefaultPolicy
-    from .Exp3 import Exp3
-    from .Exp3PlusPlus import Exp3PlusPlus
 except ImportError:
     from with_proba import with_proba
     from BaseWrapperPolicy import BaseWrapperPolicy
     from UCB import UCB as DefaultPolicy
-    from Exp3 import Exp3
-    from Exp3PlusPlus import Exp3PlusPlus
 
 
-VERBOSE = True
-#: Whether to be verbose when doing the search for valid parameter :math:`\ell`.
+#: Whether to be verbose when doing the change detection algorithm.
 VERBOSE = False
 
 #: Default probability of random exploration :math:`\alpha`.
@@ -49,8 +44,8 @@ PER_ARM_RESTART = True
 FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 
-#: Precision of the test.
-EPSILON = 0.5
+#: Precision of the test. For CUSUM/PHT, :math:`\varepsilon` is the drift correction threshold (see algorithm).
+EPSILON = 0.01
 
 #: Default value of :math:`\lambda`.
 LAMBDA = 1
@@ -89,11 +84,11 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
-        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the number times since last restart. Start with -1 (never seen)
+        self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the number times since last restart. Start with -1 (never seen)
         self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
 
     def __str__(self):
-        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "Per-Arm" if self._per_arm_restart else "Global")
+        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -221,7 +216,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global")
+        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -258,7 +253,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global")
+        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
@@ -387,8 +382,8 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
 #: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
@@ -442,9 +437,23 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        name = self.kl.__name__[2:]
-        name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}, {}, {}, {}{}{})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "")
+        class_name = self.__class__.__name__
+        name = "Gaussian"
+        if "Bernoulli" in class_name:
+            name = "Bernoulli"
+        if "Sub" in class_name:
+            name = "Sub{}".format(name)
+        with_tracking = ", with Tracking" if "WithTracking" in class_name else ""
+        return r"{}-GLR-{}({}, {}, {}{}{}{})".format(
+            name,
+            self._policy.__name__,
+            "Per-Arm" if self._per_arm_restart else "Global",
+            r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$",
+            r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
+            ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "",
+            ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "",
+            with_tracking
+        )
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -488,16 +497,21 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         return False
 
 
-class GLR_IndexPolicy_Variant(GLR_IndexPolicy):
-    """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough.
+class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
+    """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough (with a tracking).
 
-    .. warning:: WARNING this is still highly experimental!
+    .. warning:: FIXME this is still experimental!
     """
     def choice(self):
-        r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to ``choice`` of the underlying policy."""
+        r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to ``choice`` of the underlying policy.
+        """
         number_of_explorations = self.last_pulls
         min_number_of_explorations = self.proba_random_exploration * (self.t - self.last_restart_times) / self.nbArms
         not_explored_enough = np.where(number_of_explorations <= min_number_of_explorations)[0]
+        # FIXME check numerically what I want to prove mathematically
+        for arm in range(self.nbArms):
+            if number_of_explorations[arm] > 0:
+                assert number_of_explorations[arm] >= self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2, "Error: for arm k={}, the number of exploration n_k(t) = {} was not >= alpha={} / K={}**2 * (t={} - tau_k(t)={}) and RHS was = {}...".format(arm, number_of_explorations[arm], self.proba_random_exploration, self.nbArms, self.t, self.last_restart_times[arm], self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2)  # DEBUG
         if len(not_explored_enough) > 0:
             return np.random.choice(not_explored_enough)
         return self.policy.choice()
@@ -507,41 +521,29 @@ class GLR_IndexPolicy_Variant(GLR_IndexPolicy):
 class GaussianGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed).
     """
-
     def __init__(self, nbArms, sig2=0.25, kl=klGauss, threshold_function=threshold_GaussianGLR, *args, **kwargs):
         super(GaussianGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
         self._sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
         self._args_to_kl = (sig2, )
 
-    def __str__(self):
-        return r"GaussianGLR-{}({}, {}, {}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
-
-class GaussianGLR_IndexPolicy_Variant(GLR_IndexPolicy_Variant, GaussianGLR_IndexPolicy):
+class GaussianGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, GaussianGLR_IndexPolicy):
     """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough.
     """
-
-    def __str__(self):
-        return r"GaussianGLR-{}({}, {}, {}, variant)".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+    pass
 
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
     """
-
     def __init__(self, nbArms, kl=klBern, threshold_function=threshold_BernoulliGLR, *args, **kwargs):
         super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
 
-    def __str__(self):
-        return r"BernoulliGLR-{}({}, {}, {}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
 
-
-class BernoulliGLR_IndexPolicy_Variant(GLR_IndexPolicy_Variant, BernoulliGLR_IndexPolicy):
+class BernoulliGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy):
     """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough."""
-
-    def __str__(self):
-        return r"BernoulliGLR-{}({}, {}, {}, variant)".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$")
+    pass
 
 
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
@@ -629,7 +631,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
+        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:

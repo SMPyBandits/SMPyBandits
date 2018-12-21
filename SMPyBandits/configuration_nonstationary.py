@@ -154,7 +154,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -462,10 +462,11 @@ TAUS   = [
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
 WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
+WINDOW_SIZE = 3 * NB_ARMS * int(np.ceil(HORIZON / 500))
 
 PER_ARM_RESTART = [
     True,  # Per-arm restart XXX comment to only test global arm
-    False, # Global restart XXX seems more efficient? (at least more memory efficient!)
+    # False, # Global restart XXX seems more efficient? (at least more memory efficient!)
 ]
 
 
@@ -479,19 +480,19 @@ configuration.update({
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
         # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
         # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-        # # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+        # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
         { "archtype": klUCB, "params": { "klucb": klucb, } },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-        # { "archtype": Thompson, "params": { "posterior": Beta, } },
+        { "archtype": Thompson, "params": { "posterior": Beta, } },
     ] +
-    # [  # XXX This is still highly experimental!
-    #     { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-    #     for gamma in [0.99, 0.9, 0.7]
+    [  # XXX This is still highly experimental!
+        { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
+        for gamma in [0.99, 0.9, 0.7]
+    ] +
+    # # The Exp3R algorithm works reasonably well
+    # [
+    #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
     # ] +
-    # The Exp3R algorithm works reasonably well
-    [
-        { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-    ] +
     # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
     [
         { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
@@ -508,24 +509,6 @@ configuration.update({
     # #     # XXX But for T=10000 it is at most 100 changes, reasonable!
     # #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
     # # ] +
-    # # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
-    # [
-    #     { "archtype": archtype, "params": {
-    #         "horizon": HORIZON,
-    #         "max_nb_random_events": NB_BREAK_POINTS,
-    #         "policy": policy,
-    #         "per_arm_restart": per_arm_restart,
-    #     } }
-    #     for archtype in [
-    #         CUSUM_IndexPolicy,
-    #         PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
-    #     ]
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #     ]
-    #     for per_arm_restart in PER_ARM_RESTART
-    # ] +
     # # DONE The SW_UCB_Hash algorithm works fine!
     # [
     #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
@@ -574,7 +557,7 @@ configuration.update({
             # UCB,
             klUCB,  # XXX comment to only test UCB
         ]
-        for w in [10, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
+        for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
     ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
@@ -583,8 +566,8 @@ configuration.update({
             "listOfMeans": LIST_OF_MEANS,
             "policy": policy,
             "per_arm_restart": per_arm_restart,
-            "reset_for_all_change": reset_for_all_change,
-            "reset_for_suboptimal_change": reset_for_suboptimal_change,
+            # "reset_for_all_change": reset_for_all_change,
+            # "reset_for_suboptimal_change": reset_for_suboptimal_change,
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
@@ -594,13 +577,34 @@ configuration.update({
         ]
         for per_arm_restart in [True]  #, False]
         # for full_restart_when_refresh in [True, False]
-        for reset_for_all_change, reset_for_suboptimal_change in [
-            (True,  True),  # sub sub optimal
-            (False, True),  # optimal
-            (False, False),  # sub optimal
-        ]
+        # for reset_for_all_change, reset_for_suboptimal_change in [
+        #     (True,  True),  # sub sub optimal
+        #     (False, True),  # optimal
+        #     (False, False),  # sub optimal
+        # ]
     ] +
-    # XXX Test a few CD-MAB algorithms
+    # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
+    [
+        { "archtype": archtype, "params": {
+            "horizon": HORIZON,
+            "policy": policy,
+            "per_arm_restart": per_arm_restart,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            "min_number_of_observation_between_change_point": np.min(np.diff(CHANGE_POINTS)),
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+        } }
+        for archtype in [
+            CUSUM_IndexPolicy,
+            PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        for per_arm_restart in PER_ARM_RESTART
+        for lazy_detect_change_only_x_steps in [1, 2, 10]
+    ] +
+    # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
         { "archtype": archtype, "params": {
             "horizon": HORIZON,
@@ -609,14 +613,14 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "delta": delta,
             # "alpha0": alpha0,
-            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-            "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
-            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            BernoulliGLR_IndexPolicy_Variant,   # FIXME BernoulliGLR_IndexPolicy_Variant is working? Is it better?
             GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            BernoulliGLR_IndexPolicy_WithTracking,   # BernoulliGLR_IndexPolicy_Variant is working? XXX Is it better?
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
@@ -625,8 +629,8 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         # for alpha0 in [None] + [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        for lazy_detect_change_only_x_steps in [0, 2, 10]
-        for lazy_try_value_s_only_x_steps in [1, 2, 10]
+        # for lazy_detect_change_only_x_steps in [1, 2, 10]
+        # for lazy_try_value_s_only_x_steps in [1, 2, 10]
     ] +
     []
 })

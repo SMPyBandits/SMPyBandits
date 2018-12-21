@@ -35,13 +35,13 @@ PER_ARM_RESTART = True
 FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 
-#: ``True`` if the algorithm reset one/all arm memories when a change occur on any arm (default, but should be less efficient).
-#: ``False``` if the algorithms only resets one arm memories when a change occur on *this arm* (needs to know ``listOfMeans``).
-RESET_FOR_ALL_CHANGE = True
+#: ``True`` if the algorithm reset one/all arm memories when a change occur on any arm.
+#: ``False``` if the algorithms only resets one arm memories when a change occur on *this arm* (needs to know ``listOfMeans``) (default, it should be more efficient).
+RESET_FOR_ALL_CHANGE = False
 
-#: ``True`` if the algorithm reset memories only when a change make the previously best arm become suboptimal.
-#: ``False`` if the algorithms resets memories of *this arm* no matter if it stays optimal/suboptimal (default, but should be less efficient).
-RESET_FOR_SUBOPTIMAL_CHANGE = False
+#: ``True`` if the algorithms resets memories of *this arm* no matter if it stays optimal/suboptimal (default, it should be more efficient).
+#: ``False`` if the algorithm reset memories only when a change make the previously best arm become suboptimal.
+RESET_FOR_SUBOPTIMAL_CHANGE = True
 
 
 # --- The very generic class
@@ -76,7 +76,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
 
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
-        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
         print("Info: creating a new policy {}, with change points = {}...".format(self, changePoints))  # DEBUG
 
     def compute_optimized_changePoints(self, changePoints=None, listOfMeans=None):
