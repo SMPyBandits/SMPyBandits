@@ -9,14 +9,15 @@
 #
 
 # More details at http://redsymbol.net/articles/unofficial-bash-strict-mode/
-set -euo pipefail
+# set -euo pipefail
 
 for file in $(find . -type f -iname '*.py'); do
-    if grep 'from doctest import testmod' "$file"; then
+    if grep 'from doctest import testmod' "$file" >/dev/null; then
         clear
-        echo -e "\n${green}Testing the file '$file'...${reset}"  # DEBUG
-        python3 "$file"
-        # echo -e "\n${green}Testing the file '$file'...${reset}"  # DEBUG
+        echo -e "\n${red}Testing the file '$file'...${reset}"  # DEBUG
+        ( python "$file" \
+          || echo -e "\n${red}File '$file' had some errors...${reset}" ) \
+          && echo -e "\n${green}Tested the file '$file'...${reset}"
         # read  # DEBUG
     fi
 done

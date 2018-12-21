@@ -657,8 +657,6 @@ configuration.update({
             "params": {
                 "alpha": 0.5,
                 "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-                # "horizon": HORIZON,
-                # "horizon": HORIZON + 1,
             }
         },
         # --- Using unsupervised learning, from scikit-learn, XXX works well, but VERY SLOW
@@ -816,7 +814,7 @@ configuration.update({
         # XXX TODO test the AdSwitch policy and its corrected version
         {
             "archtype": AdSwitch,
-            "params": { "horizon": HORIZON }
+            "params": { "horizon": HORIZON, }
         },
         {
             "archtype": LM_DSEE,
@@ -845,8 +843,8 @@ configuration.update({
         {
             "archtype": SWUCB,
             "params": { "alpha": 1, "tau": 500, }
+            for alpha in ALPHAS for tau in TAUS
         },
-        for alpha in ALPHAS for tau in TAUS
         # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
         {
             "archtype": SWUCBPlus,
@@ -875,20 +873,23 @@ configuration.update({
         # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
         {
             "archtype": OracleSequentiallyRestartPolicy,
-            "params": { "changePoints": [], "policy": U
-        B,
-            "per_arm_restart": True } },
+            "params": { "changePoints": [], "policy": UCB, "per_arm_restart": True }
+        },
         # XXX Test a few CD-MAB algorithms
         {
             "archtype": BernoulliGLR_IndexPolicy,
             "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
         },
         {
-            "archtype": GaussianGLR_IndexPolicy,
+            "archtype": BernoulliGLR_IndexPolicy_WithTracking,
             "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
         },
         {
             "archtype": GaussianGLR_IndexPolicy,
+            "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
+        },
+        {
+            "archtype": GaussianGLR_IndexPolicy_WithTracking,
             "params": { "horizon": HORIZON, "policy": UCB, "per_arm_restart": True, "max_nb_random_events": 1 }
         },
         {

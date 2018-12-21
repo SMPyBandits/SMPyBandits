@@ -79,7 +79,7 @@ configuration = {
             "arm_type": "Markovian",
             "params": {
                 # "rested": True,
-f                "rested": False,  # FIXME Try rested/restless arms
+                "rested": False,  # FIXME Try rested/restless arms
                 # XXX Example from [Kalathil et al., 2012](https://arxiv.org/abs/1206.3582) Table 1
                 "transitions": [
                     # 1st arm, either a dictionary, to customize the states

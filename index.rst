@@ -99,7 +99,6 @@ Indices and tables
 |Issues of https://github.com/SMPyBandits/SMPyBandits/| : |Open issues of https://github.com/SMPyBandits/SMPyBandits/| / |Closed issues of https://github.com/SMPyBandits/SMPyBandits/|
 
 |Pull requests of https://github.com/SMPyBandits/SMPyBandits/| : |Open pull requests of https://github.com/SMPyBandits/SMPyBandits/| / |Closed pull requests of https://github.com/SMPyBandits/SMPyBandits/|
-|made-with-latex| |made-with-sphinx|
 
 |ForTheBadge uses-badges| |ForTheBadge uses-git|
 |forthebadge made-with-python| |ForTheBadge built-with-science|
@@ -125,10 +124,6 @@ Indices and tables
     :target: https://travis-ci.org/SMPyBandits/SMPyBandits
 .. |Website up| image:: https://img.shields.io/website-up-down-green-red/http/banditslilian.gforge.inria.fr.svg
     :target: https://smpybandits.github.io/
-.. |made-with-latex| image:: https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg
-    :target: https://www.latex-project.org/
-.. |made-with-sphinx| image:: https://img.shields.io/badge/Made%20with-Sphinx-1f425f.svg
-    :target: https://www.sphinx-doc.org/
 .. |ForTheBadge uses-badges| image:: http://ForTheBadge.com/images/badges/uses-badges.svg
     :target: http://ForTheBadge.com
 .. |ForTheBadge uses-git| image:: http://ForTheBadge.com/images/badges/uses-git.svg

@@ -193,7 +193,7 @@ def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_ran
     if C1 == 0: C1 = 1  # FIXME This case of having C1=0 for CUSUM parameters should not happen...
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
-    alpha *= scaleFactor  # Just divide alpha to not have too large, for CUSUM-UCB.
+    alpha *= scaleFactor  # XXX Just divide alpha to not have too large, for CUSUM-UCB.
     alpha = max(0, min(1, alpha))  # crop to [0, 1]
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
@@ -212,6 +212,7 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     h = np.log(ratio)
     alpha = np.sqrt(np.log(ratio) / ratio)
     alpha = max(0, min(1, alpha))  # crop to [0, 1]
+    alpha *= scaleFactor  # XXX Just divide alpha to not have too large, for CUSUM-UCB.
     return h, alpha
 
 
@@ -356,7 +357,8 @@ def threshold_BernoulliGLR(s, t, horizon=None, delta=None):
     """
     if delta is None:
         delta = 1.0 / horizon
-    c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))
+    # c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))
+    c = -log(delta) + log(s) + log(t-s)
     if c < 0 or isinf(c):
         c = float('+inf')
     return c
