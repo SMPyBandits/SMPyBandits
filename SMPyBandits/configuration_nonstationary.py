@@ -129,7 +129,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -154,7 +154,7 @@ if True:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -179,7 +179,7 @@ if True:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 3 changes are on all or almost arms at a time, but sequences don't have same length
-if True:
+if False:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -205,7 +205,7 @@ if True:
 
 
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": Bernoulli,
