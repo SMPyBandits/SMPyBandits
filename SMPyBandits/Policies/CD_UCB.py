@@ -58,7 +58,7 @@ LAMBDA = 1
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
 MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 
-#: FIXME Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
+#: XXX Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
@@ -88,7 +88,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the number times since last restart. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the number times since last restart. Start with -1 (never seen)
         self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
 
     def __str__(self):
@@ -103,7 +103,9 @@ class CD_IndexPolicy(BaseWrapperPolicy):
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
 
-        - Reset the whole empirical average if the change detection algorithm says so.
+        - Reset the whole empirical average if the change detection algorithm says so, with method :meth:`detect_change`, for this arm at this current time step.
+
+        .. warning:: This is computationally costly, so an easy way to speed up this step is to use :attr:`lazy_detect_change_only_x_steps` :math:`= \mathrm{Step_t}` for a small value (e.g., 10), so not test for all :math:`t\in\mathbb{N}^*` but only :math:`s\in\mathbb{N}^*, s % \mathrm{Step_t} = 0` (e.g., one out of every 10 steps).
         """
         super(CD_IndexPolicy, self).getReward(arm, reward)
         # Get reward
@@ -113,9 +115,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
 
-        should_you_try_to_detect = True
-        if self.lazy_detect_change_only_x_steps > 1:
-            should_you_try_to_detect = (self.last_pulls[arm] % self.lazy_detect_change_only_x_steps) == 0
+        should_you_try_to_detect = (self.last_pulls[arm] % self.lazy_detect_change_only_x_steps) == 0
         if should_you_try_to_detect and self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
 
@@ -243,8 +243,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             return False
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         u0hat = np.mean(data_y[:self.M])  # DONE okay this is efficient we don't compute the same means too many times!
-        for k in range(self.M + 1, len(data_y)): # no need to multiply by (k > self.M)
-            y_k = data_y[k]
+        for k, y_k in enumerate(data_y, self.M + 1): # no need to multiply by (k > self.M)
             gp = max(0, gp + (u0hat - y_k - self.epsilon))
             gm = max(0, gm + (y_k - u0hat - self.epsilon))
             if verbose: print("  - For u0hat = {}, k = {}, y_k = {}, gp = {}, gm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(u0hat, k, y_k, gp, gm, max(gp, gm), self.threshold_h))  # DEBUG
@@ -282,6 +281,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
         for k, y_k in enumerate(data_y):
             # y_k_hat = np.mean(data_y[:k+1])  # XXX this is not efficient we compute the same means too many times!
             y_k_hat = (k * y_k_hat + y_k) / (k + 1)  # DONE okay this is efficient we don't compute the same means too many times!
+            # Note doing this optimization step improves about 12 times faster!
             gp = max(0, gp + (y_k_hat - y_k - self.epsilon))
             gm = max(0, gm + (y_k - y_k_hat - self.epsilon))
             if verbose: print("  - For y_k_hat = {}, k = {}, y_k = {}, gp = {}, gm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(y_k_hat, k, y_k, gp, gm, max(gp, gm), self.threshold_h))  # DEBUG
@@ -382,7 +382,8 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
         return alpha0
     return alpha_t1 / max(1, t)**exponentBeta
 
-#: FIXME Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
+
+#: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
@@ -442,7 +443,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     def __str__(self):
         name = self.kl.__name__[2:]
         name = "" if name == "Bern" else name + ", "
-        return r"GLR-{}({}, {}, {}, {}{}{})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != 1 else "")
+        return r"GLR-{}({}, {}, {}, {}{}{})".format(self._policy.__name__, name, "Per-Arm" if self._per_arm_restart else "Global", r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 0 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -455,6 +456,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
         - The change is detected if there is a time :math:`s` such that :math:`G^{\mathrm{kl}}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
+
+        .. warning:: This is computationally costly, so an easy way to speed up this test is to use :attr:`lazy_try_value_s_only_x_steps` :math:`= \mathrm{Step_s}` for a small value (e.g., 10), so not test for all :math:`s\in[t_0, t-1]` but only :math:`s\in[t_0, t-1], s % \mathrm{Step_s} = 0` (e.g., one out of every 10 steps).
         """
         data_y = self.all_rewards[arm]
         t0 = 0

@@ -61,7 +61,7 @@ class SlidingWindowRestart(BaseWrapperPolicy):
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
         # Internal memory
         self.last_rewards = np.zeros((nbArms, self._tau))  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
         return r"SW-Restart({}, $\tau={}$, $\varepsilon={:.3g}$)".format(self._policy.__name__, self._tau, self._threshold)
@@ -110,7 +110,7 @@ class SWR_UCB(UCB):
         assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SWR_UCB has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
         self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
         self.last_rewards = np.zeros((nbArms, tau))  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):
@@ -158,7 +158,7 @@ class SWR_UCBalpha(UCBalpha):
         assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SWR_UCBalpha has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
         self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
         self.last_rewards = np.zeros((nbArms, tau))  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):
@@ -206,7 +206,7 @@ class SWR_klUCB(klUCB):
         assert 0 < threshold <= 1, "Error: parameter 'threshold' for class SWR_klUCB has to be 0 < threshold <= 1, but was {}.".format(threshold)  # DEBUG
         self.threshold = threshold  #: Threshold to know when to restart the base algorithm.
         self.last_rewards = np.zeros((nbArms, tau))  #: Keep in memory all the rewards obtained in the last :math:`\tau` steps.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
         self.full_restart_when_refresh = full_restart_when_refresh  #: Should we fully restart the algorithm or simply reset one arm empirical average ?
 
     def __str__(self):

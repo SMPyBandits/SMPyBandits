@@ -131,7 +131,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -380,7 +380,8 @@ for envId, env in enumerate(configuration["environment"]):
     check_condition_on_piecewise_stationary_problems(HORIZON, listOfMeans, changePoints)
 
 
-CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
+CHANGE_POINTS = configuration["environment"][0]["params"]["changePoints"]
+LIST_OF_MEANS = configuration["environment"][0]["params"]["listOfMeans"]
 # CHANGE_POINTS = np.unique(np.array(list(set.union(*(set(env["params"]["changePoints"]) for env in ENVIRONMENT)))))
 
 # if False:  # WARNING remove this "False and" to use this problem
@@ -444,15 +445,15 @@ CHANGE_POINTS = configuration["environment"][0]['params']['changePoints']
 
 try:
     #: Number of arms *in the first environment*
-    nbArms = int(configuration['environment'][0]['params']['args']['nbArms'])
+    nbArms = int(configuration["environment"][0]["params"]["args"]["nbArms"])
 except (TypeError, KeyError):
     try:
-        nbArms = len(configuration['environment'][0]['params']['listOfMeans'][0])
+        nbArms = len(configuration["environment"][0]["params"]["listOfMeans"][0])
     except (TypeError, KeyError):
-        nbArms = len(configuration['environment'][0]['params'])
+        nbArms = len(configuration["environment"][0]["params"])
 
 #: Warning: if using Exponential or Gaussian arms, gives klExp or klGauss to KL-UCB-like policies!
-klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), klucbBern)
+klucb = klucb_mapping.get(str(configuration["environment"][0]["arm_type"]), klucbBern)
 
 
 # XXX compare different values of the experimental sliding window algorithm
@@ -472,18 +473,20 @@ PER_ARM_RESTART = [
 
 configuration.update({
     "policies":
-    # [  # XXX Regular adversarial bandits algorithms!
-    #     { "archtype": Exp3PlusPlus, "params": {} },
-    # ] + [  # XXX Regular stochastic bandits algorithms!
-    #     { "archtype": UCBalpha, "params": { "alpha": 1, } },
-    #     # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
-    #     # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-    #     # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-    #     # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-    #     { "archtype": klUCB, "params": { "klucb": klucb, } },
-    #     # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-    #     { "archtype": Thompson, "params": { "posterior": Beta, } },
-    # ] + [  # XXX This is still highly experimental!
+    [  # XXX Regular adversarial bandits algorithms!
+        { "archtype": Exp3PlusPlus, "params": {} },
+    ] +
+    [  # XXX Regular stochastic bandits algorithms!
+        # { "archtype": UCBalpha, "params": { "alpha": 1, } },
+        # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
+        # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+        # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+        # # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+        { "archtype": klUCB, "params": { "klucb": klucb, } },
+        # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
+        # { "archtype": Thompson, "params": { "posterior": Beta, } },
+    ] +
+    # [  # XXX This is still highly experimental!
     #     { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
     #     for gamma in [0.99, 0.9, 0.7]
     # ] +
@@ -559,10 +562,6 @@ configuration.update({
     #     for max_nb_random_events in [NB_BREAK_POINTS]
     #     # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
     # ] +
-    # # XXX The Monitored_IndexPolicy works but the default choice of parameters seem bad!
-    # [
-    #     { "archtype": Monitored_IndexPolicy, "params": { "horizon": HORIZON, "max_nb_random_events": NB_BREAK_POINTS, "delta": 0.1, "policy": UCB, } }
-    # ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": {
@@ -577,12 +576,17 @@ configuration.update({
             # UCB,
             klUCB,  # XXX comment to only test UCB
         ]
-        for w in [WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
+        for w in [10, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
     ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
-        { "archtype": OracleSequentiallyRestartPolicy, "params": { "changePoints": CHANGE_POINTS, "policy": policy,
+        { "archtype": OracleSequentiallyRestartPolicy, "params": {
+            "changePoints": CHANGE_POINTS,
+            "listOfMeans": LIST_OF_MEANS,
+            "policy": policy,
             "per_arm_restart": per_arm_restart,
+            "reset_for_all_change": reset_for_all_change,
+            "reset_for_suboptimal_change": reset_for_suboptimal_change,
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
@@ -592,6 +596,11 @@ configuration.update({
         ]
         for per_arm_restart in [True]  #, False]
         # for full_restart_when_refresh in [True, False]
+        for reset_for_all_change, reset_for_suboptimal_change in [
+            (True,  True),  # sub sub optimal
+            (False, True),  # optimal
+            (False, False),  # sub optimal
+        ]
     ] +
     # XXX Test a few CD-MAB algorithms
     [
@@ -602,8 +611,8 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "delta": delta,
             # "alpha0": alpha0,
-            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
@@ -618,8 +627,8 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         # for alpha0 in [None] + [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        # for lazy_detect_change_only_x_steps in [0, 2, 10]
-        # for lazy_try_value_s_only_x_steps in [1, 2, 10]
+        for lazy_detect_change_only_x_steps in [0, 2, 10]
+        for lazy_try_value_s_only_x_steps in [1, 2, 10]
     ] +
     []
 })

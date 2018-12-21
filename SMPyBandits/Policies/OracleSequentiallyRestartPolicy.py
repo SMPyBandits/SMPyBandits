@@ -28,12 +28,20 @@ except ImportError:
 
 
 #: Should we reset one arm empirical average or all? Default is ``False`` for this algorithm.
-PER_ARM_RESTART = True
 PER_ARM_RESTART = False
+PER_ARM_RESTART = True
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average? Default is ``False``, it's usually more efficient!
 FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
+
+#: ``True`` if the algorithm reset one/all arm memories when a change occur on any arm (default, but should be less efficient).
+#: ``False``` if the algorithms only resets one arm memories when a change occur on *this arm* (needs to know ``listOfMeans``).
+RESET_FOR_ALL_CHANGE = True
+
+#: ``True`` if the algorithm reset memories only when a change make the previously best arm become suboptimal.
+#: ``False`` if the algorithms resets memories of *this arm* no matter if it stays optimal/suboptimal (default, but should be less efficient).
+RESET_FOR_SUBOPTIMAL_CHANGE = False
 
 
 # --- The very generic class
@@ -44,8 +52,8 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
     def __init__(self, nbArms,
             changePoints=None,
             listOfMeans=None,
-            reset_for_all_change=False,
-            reset_for_suboptimal_change=False,
+            reset_for_all_change=RESET_FOR_ALL_CHANGE,
+            reset_for_suboptimal_change=RESET_FOR_SUBOPTIMAL_CHANGE,
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             per_arm_restart=PER_ARM_RESTART,
             *args, **kwargs
@@ -57,22 +65,67 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         changePoints = sorted([tau for tau in changePoints if tau > 0])
         if len(changePoints) == 0:
             print("WARNING: it is useless to use the wrapper OracleSequentiallyRestartPolicy when changePoints = {} is empty, just use the base policy without the wrapper!".format(changePoints))  # DEBUG
-        self.changePoints = [changePoints for _ in range(nbArms)]  #: Locations of the break points (or change points) of the switching bandit problem, for each arm. If ``None``, an empty list is used.
-        self.listOfMeans = listOfMeans  #: FIXME
-        self.reset_for_all_change = reset_for_all_change  #: FIXME
-        self.reset_for_suboptimal_change = reset_for_suboptimal_change  #: FIXME
-        # TODO if listOfMeans is given and these options are, store changePoints as a list of list
+        changePoints = [changePoints for _ in range(nbArms)]
+
+        self.reset_for_all_change = reset_for_all_change  #: See :data:`RESET_FOR_ALL_CHANGE`
+        self.reset_for_suboptimal_change = reset_for_suboptimal_change  #: See :data:`RESET_FOR_SUBOPTIMAL_CHANGE`
+        self.changePoints = self.compute_optimized_changePoints(changePoints=changePoints, listOfMeans=listOfMeans)  #: Locations of the break points (or change points) of the switching bandit problem, for each arm. If ``None``, an empty list is used.
 
         self._full_restart_when_refresh = full_restart_when_refresh  # Should we fully restart the algorithm or simply reset one arm empirical average ?
         self._per_arm_restart = per_arm_restart  # Should we reset one arm empirical average or all?
 
         # Internal memory
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
         print("Info: creating a new policy {}, with change points = {}...".format(self, changePoints))  # DEBUG
 
+    def compute_optimized_changePoints(self, changePoints=None, listOfMeans=None):
+        """ Compute the list of change points for each arm.
+
+        - If :attr:`reset_for_all_change` is ``True``, all change points concern all arms (sub optimal)!
+        - If :attr:`reset_for_all_change` is ``False``,
+            + If :attr:`reset_for_suboptimal_change` is ``True``, all change points were the mean of an arm change concern it (still sub optimal)!
+            + If :attr:`reset_for_suboptimal_change` is ``False``, only the change points were an arm goes from optimal to sub-optimal or sub-optimal to optimal concern it (optimal!)!
+        """
+        optimized_changePoints = [ [] for _ in range(self.nbArms) ]
+        if listOfMeans is None:
+            return changePoints
+        elif listOfMeans is not None and len(listOfMeans) > 0:
+            listOfMeans = np.array(listOfMeans)
+            for arm in range(self.nbArms):
+                taus = changePoints[arm]
+                mus = listOfMeans[:, arm]
+                m = 0
+                last_mu = mus[m]
+                last_best_mu = np.max(listOfMeans[m, :])
+                for m, (mu_m, tau_m) in enumerate(zip(mus, taus)):
+                    if self.reset_for_all_change:
+                        # this breakpoint location concerns all arm, for this option
+                        optimized_changePoints[arm].append(tau_m)
+                    elif last_mu != mu_m:
+                        if self.reset_for_suboptimal_change:
+                            # this breakpoint location concerns this arm because its mean changed, for this option
+                            optimized_changePoints[arm].append(tau_m)
+                        else:
+                            best_mu = np.max(listOfMeans[m, :])
+                            if (
+                                (last_mu == last_best_mu and mu_m < best_mu)  # it's not the best anymore!
+                                or (last_mu < last_best_mu and mu_m == best_mu)  # it's now the best!
+                                ):
+                                # this breakpoint location concerns this arm because its mean changed and it is not the best anymore, for this option
+                                optimized_changePoints[arm].append(tau_m)
+                            last_best_mu = best_mu
+                        last_mu = mu_m
+        return optimized_changePoints
+
     def __str__(self):
-        return r"OracleRestart-{}($\Upsilon_T={}${}{})".format(self._policy.__name__, len(self.changePoints), ", Per-Arm" if self._per_arm_restart else ", Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "")
+        quality = ""
+        subsub = self.reset_for_all_change
+        if subsub: quality = ", sub-sub-optimal"
+        sub = not self.reset_for_all_change and not self.reset_for_suboptimal_change
+        if sub: quality = ", sub-optimal"
+        # opt = not self.reset_for_all_change and self.reset_for_suboptimal_change
+        return r"OracleRestart-{}({}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

@@ -98,7 +98,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
 
         # Internal memory
         self.last_w_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
-        self.last_pulls = np.full(nbArms, -1)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_pulls = np.full(nbArms, -1, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
         return r"M-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, ", Per-Arm" if self._per_arm_restart else ", Global")
