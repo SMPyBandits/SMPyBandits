@@ -100,7 +100,7 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
         .. math::
 
             k_{\max} &:= \arg\max_k \tilde{\rho}_k(t),\\
-            DD_t(k) &= \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I)
+            DD_t(k) &= \hat{\mu}_k(I) - \hat{\mu}_{k_{\max}}(I).
 
         - The change is detected if there is an arm :math:`k` such that :math:`DD_t(k) \geq 2 * \varepsilon = h`, where :attr:`threshold_h` is the threshold of the test, and :math:`I` is the (number of the) current interval since the last (global) restart,
         - where :math:`\tilde{\rho}_k(t)` is the trust probability of arm :math:`k` from the Exp3 algorithm,

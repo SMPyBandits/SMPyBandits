@@ -45,19 +45,19 @@ FULL_RESTART_WHEN_REFRESH = True
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test. For CUSUM/PHT, :math:`\varepsilon` is the drift correction threshold (see algorithm).
-EPSILON = 0.01
+EPSILON = 0.05
 
 #: Default value of :math:`\lambda`.
 LAMBDA = 1
 
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
-MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
+MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 
 #: XXX Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
-LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 5
 
 
 # --- The very generic class
@@ -88,7 +88,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
 
     def __str__(self):
-        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
+        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -180,7 +180,7 @@ class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
 
 from scipy.special import comb
 
-def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, epsilon, lmbda, M):
+def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=0.5):
     r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""
     T = int(max(1, horizon))
     UpsilonT = int(max(1, max_nb_random_events))
@@ -193,9 +193,25 @@ def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, 
     if C1 == 0: C1 = 1  # FIXME This case of having C1=0 for CUSUM parameters should not happen...
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
-    # alpha *= 0.01  # FIXME Just divide alpha to not have too large, for CUSUM-UCB.
+    alpha *= scaleFactor  # Just divide alpha to not have too large, for CUSUM-UCB.
     alpha = max(0, min(1, alpha))  # crop to [0, 1]
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
+    return h, alpha
+
+def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=0.5):
+    r""" Compute the values :math:`h, \alpha` from the simplified formulas in Theorem 2 and Corollary 2 in the paper.
+
+    .. math::
+
+        h &= \log(\frac{T}{\Upsilon_T}),\\
+        \alpha &= \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}.
+    """
+    T = int(max(1, horizon))
+    UpsilonT = int(max(1, max_nb_random_events))
+    ratio = T / UpsilonT
+    h = np.log(ratio)
+    alpha = np.sqrt(np.log(ratio) / ratio)
+    alpha = max(0, min(1, alpha))  # crop to [0, 1]
     return h, alpha
 
 
@@ -203,7 +219,8 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
     r""" The CUSUM-UCB generic policy for non-stationary bandits, from [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017]](https://arxiv.org/pdf/1711.03539).
     """
     def __init__(self, nbArms,
-            horizon=None, max_nb_random_events=None, lmbda=LAMBDA,
+            horizon=None, max_nb_random_events=None,
+            lmbda=LAMBDA,
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             *args, **kwargs
         ):
@@ -211,12 +228,12 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         # New parameters
         self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
-        h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms, self.epsilon, lmbda, min_number_of_observation_between_change_point)
+        h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms=nbArms, epsilon=self.epsilon, lmbda=lmbda, M=min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
+        return r"CUSUM-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -253,7 +270,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\varepsilon={:.3g}$, $\Upsilon_T={:.3g}$, $M={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.max_nb_random_events, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "")
+        return r"PHT-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
@@ -349,18 +366,6 @@ EXPONENT_BETA = 1.01  #: The default value of parameter :math:`\beta` for the fu
 ALPHA_T1 = 0.05  #: The default value of parameter :math:`\alpha_{t=1}` for the function :func:`decreasing_alpha__GLR`.
 
 
-def smart_alpha__GLR(horizon=1, max_nb_random_events=1):
-    r""" Compute a smart estimate of the optimal value for the *fixed* forced exploration probability :math:`\alpha`.
-
-    .. math:: \alpha = \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
-    """
-    ratio = max_nb_random_events / float(horizon)
-    assert 0 < ratio <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
-    alpha = sqrt(- ratio * log(ratio))
-    print("DEBUG: smart_alpha__GLR: horizon = {}, max_nb_random_events = {}, gives alpha = {}...".format(horizon, max_nb_random_events, alpha))  # DEBUG
-    return alpha
-
-
 def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1):
     r""" Either use a fixed alpha, or compute it with an exponential decay (if ``alpha0=None``).
 
@@ -379,11 +384,23 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
     return alpha_t1 / max(1, t)**exponentBeta
 
 
+def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=0.5):
+    r""" Compute a smart estimate of the optimal value for the *fixed* forced exploration probability :math:`\alpha`.
+
+    .. math:: \alpha = \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
+    """
+    ratio = max_nb_random_events / float(horizon)
+    assert 0 < ratio <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
+    alpha = scaleFactor * sqrt(- ratio * log(ratio))
+    print("DEBUG: smart_alpha_from_T_UpsilonT: horizon = {}, max_nb_random_events = {}, gives alpha = {}...".format(horizon, max_nb_random_events, alpha))  # DEBUG
+    return alpha
+
+
 #: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
@@ -414,7 +431,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
         if alpha0 is None and horizon is not None and max_nb_random_events is not None:
-            alpha0 = smart_alpha__GLR(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
+            alpha0 = smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
         self._alpha0 = alpha0
         self._threshold_function = threshold_function
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
@@ -443,15 +460,15 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             name = "Bernoulli"
         if "Sub" in class_name:
             name = "Sub{}".format(name)
-        with_tracking = ", with Tracking" if "WithTracking" in class_name else ""
-        return r"{}-GLR-{}({}, {}, {}{}{}{})".format(
+        with_tracking = ", tracking" if "WithTracking" in class_name else ""
+        return r"{}-GLR-{}({}{}, {}{}{}{})".format(
             name,
             self._policy.__name__,
-            "Per-Arm" if self._per_arm_restart else "Global",
+            "" if self._per_arm_restart else "Global, ",
             r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$",
             r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
-            ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "",
-            ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "",
+            ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
+            ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking
         )
 
@@ -613,6 +630,8 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
+        if alpha0 is None and horizon is not None and max_nb_random_events is not None:
+            alpha0 = smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
         self._alpha0 = alpha0
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
 
@@ -631,7 +650,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}, {}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "Per-Arm" if self._per_arm_restart else "Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps > 1 else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps > 1 else "")
+        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "" if self._per_arm_restart else ", Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:

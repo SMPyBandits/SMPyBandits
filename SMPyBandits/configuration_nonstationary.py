@@ -129,7 +129,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -154,7 +154,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -461,8 +461,8 @@ TAUS   = [
         500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-WINDOW_SIZE = 800 if HORIZON >= 10000 else 80
-WINDOW_SIZE = 3 * NB_ARMS * int(np.ceil(HORIZON / 500))
+
+WINDOW_SIZE = 2 * NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
 
 PER_ARM_RESTART = [
     True,  # Per-arm restart XXX comment to only test global arm
@@ -485,9 +485,9 @@ configuration.update({
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
         { "archtype": Thompson, "params": { "posterior": Beta, } },
     ] +
-    [  # XXX This is still highly experimental!
+    [  # XXX DiscountedThompson works REALLY well!
         { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
-        for gamma in [0.99, 0.9, 0.7]
+        for gamma in [0.99]  #, 0.9, 0.75]
     ] +
     # # The Exp3R algorithm works reasonably well
     # [
@@ -557,7 +557,8 @@ configuration.update({
             # UCB,
             klUCB,  # XXX comment to only test UCB
         ]
-        for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
+        # for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
+        for w in [WINDOW_SIZE]
     ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
@@ -590,19 +591,19 @@ configuration.update({
             "policy": policy,
             "per_arm_restart": per_arm_restart,
             "max_nb_random_events": NB_BREAK_POINTS,
-            "min_number_of_observation_between_change_point": np.min(np.diff(CHANGE_POINTS)),
-            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "min_number_of_observation_between_change_point": np.min(np.diff(CHANGE_POINTS))//4,
+            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         } }
         for archtype in [
             CUSUM_IndexPolicy,
-            PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+            # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
         for per_arm_restart in PER_ARM_RESTART
-        for lazy_detect_change_only_x_steps in [1, 2, 10]
+        # for lazy_detect_change_only_x_steps in [1, 2, 10]
     ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
@@ -611,15 +612,16 @@ configuration.update({
             "policy": policy,
             "per_arm_restart": per_arm_restart,
             "max_nb_random_events": NB_BREAK_POINTS,
-            # "delta": delta,
-            # "alpha0": alpha0,
+            "delta": delta,
+            "alpha0": alpha0,
             # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
-            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             BernoulliGLR_IndexPolicy_WithTracking,   # BernoulliGLR_IndexPolicy_Variant is working? XXX Is it better?
         ]
         for policy in [
@@ -627,8 +629,8 @@ configuration.update({
             klUCB,
         ]
         for per_arm_restart in PER_ARM_RESTART
-        # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
-        # for alpha0 in [None] + [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
+        for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
+        for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
         # for lazy_detect_change_only_x_steps in [1, 2, 10]
         # for lazy_try_value_s_only_x_steps in [1, 2, 10]
     ] +

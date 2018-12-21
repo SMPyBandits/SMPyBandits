@@ -84,7 +84,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             # XXX compute gamma from the formula from Theorem 6.1
             gamma = np.sqrt((M-1) * nbArms * min(w/2, np.ceil(b / delta) +  3 * np.sqrt(w)) / (2 * horizon))
         if gamma > 1:
-            gamma = 0.05 * nbArms
+            gamma = 0.01 * nbArms
         if gamma <= 0:
             print("Warning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 1.0 / (1 + 50 * nbArms * max_nb_random_events)))
             gamma = 1.0 / (1 + 50 * nbArms * max_nb_random_events)
@@ -101,7 +101,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"M-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, ", Per-Arm" if self._per_arm_restart else ", Global")
+        # return r"M-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, "" if self._per_arm_restart else ", Global")
+        return r"M-{}($w={:g}${})".format(self._policy.__name__, self.window_size, "" if self._per_arm_restart else ", Global")
 
     def choice(self):
         r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choice`` of the underlying policy (eg. UCB).
