@@ -843,7 +843,6 @@ configuration.update({
         {
             "archtype": SWUCB,
             "params": { "alpha": 1, "tau": 500, }
-            for alpha in ALPHAS for tau in TAUS
         },
         # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
         {

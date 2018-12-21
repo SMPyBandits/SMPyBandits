@@ -143,19 +143,6 @@ configuration.update({
                 "alpha": 1
             }
         },
-        {
-            "archtype": UCBalpha,   # UCB with custom alpha parameter
-            "params": {
-                "alpha": 0.5          # XXX Below the theoretically acceptable value!
-            }
-        },
-        # --- DMED algorithm, similar to klUCB
-        {
-            "archtype": DMED,
-            "params": {
-                "genuine": True,
-            }
-        },
         # --- Thompson algorithms
         {
             "archtype": Thompson,
@@ -168,53 +155,14 @@ configuration.update({
                 "klucb": klucb
             }
         },
-        {
-            "archtype": klUCBPlus,
-            "params": {
-                "klucb": klucb
-            }
-        },
         # --- Bayes UCB algorithms
         {
             "archtype": BayesUCB,
             "params": {}
         },
-        # --- Finite-Horizon Gittins index
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 1,
-            }
-        },
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "horizon": 1.1 * HORIZON,
-                "alpha": 0.5,
-            }
-        },
     ]
 })
 
-# Dynamic hack to force the Aggregator (policies aggregator) to use all the policies previously/already defined
-if TEST_Aggregator:
-    NON_AGGR_POLICIES = configuration["policies"]
-    for UPDATE_LIKE_EXP4 in [False, True]:
-        CURRENT_POLICIES = configuration["policies"]
-        # Add one Aggregator policy
-        configuration["policies"] = [{
-            "archtype": Aggregator,
-            "params": {
-                "unbiased": False,
-                "update_all_children": False,
-                "decreaseRate": 'auto',
-                "learningRate": 1,
-                "children": NON_AGGR_POLICIES,
-                "update_like_exp4": UPDATE_LIKE_EXP4,
-                # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-            },
-        }] + CURRENT_POLICIES
 
 print("Loaded experiments configuration from 'configuration_markovian.py' :")
 print("configuration['policies'] =", configuration["policies"])  # DEBUG

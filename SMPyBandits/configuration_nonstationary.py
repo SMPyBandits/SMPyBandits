@@ -205,7 +205,7 @@ if False:
 
 
 # Example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.03692
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": Bernoulli,
@@ -239,7 +239,7 @@ if True:  # WARNING remove this "False and" to use this problem
     ]
 
 # Another example from the Yahoo! dataset, from article https://arxiv.org/abs/1802.08380
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
             "arm_type": Bernoulli,
