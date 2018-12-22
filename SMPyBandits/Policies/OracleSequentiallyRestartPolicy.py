@@ -125,7 +125,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         sub = not self.reset_for_all_change and not self.reset_for_suboptimal_change
         if sub: quality = ", sub-optimal"
         # opt = not self.reset_for_all_change and self.reset_for_suboptimal_change
-        return r"OracleRestart-{}({}{}{})".format(self._policy.__name__, "Per-Arm" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
+        return r"OracleRestart-{}({}{}{})".format(self._policy.__name__, "" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

@@ -88,7 +88,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
 
     def __str__(self):
-        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def choice(self):
         r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
@@ -234,7 +234,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"CUSUM-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -271,7 +271,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "Per-Arm" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"PHT-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].

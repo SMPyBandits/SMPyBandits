@@ -21,6 +21,8 @@ class UCBV(UCB):
     """ The UCB-V policy for bounded bandits, with a variance correction term.
     Reference: [Audibert, Munos, & Szepesvári - Theoret. Comput. Sci., 2009].
     """
+    def __str__(self):
+        return "UCB-V"
 
     def __init__(self, nbArms, lower=0., amplitude=1.):
         super(UCBV, self).__init__(nbArms, lower=lower, amplitude=amplitude)

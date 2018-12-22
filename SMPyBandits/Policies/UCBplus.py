@@ -24,6 +24,9 @@ class UCBplus(UCB):
     - Reference: [Auer et al. 2002], and [[Garivier et al. 2016](https://arxiv.org/pdf/1605.08988.pdf)] (it is noted :math:`\mathrm{UCB}^*` in the second article).
     """
 
+    def __str__(self):
+        return "UCB+"
+
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
 

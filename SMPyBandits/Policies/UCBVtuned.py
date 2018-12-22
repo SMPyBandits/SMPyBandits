@@ -21,6 +21,8 @@ class UCBVtuned(UCBV):
     """ The UCBV-Tuned policy for bounded bandits, with a tuned variance correction term.
     Reference: [Auer et al. 02].
     """
+    def __str__(self):
+        return "UCB-V-Tuned"
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

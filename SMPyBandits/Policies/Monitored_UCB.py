@@ -101,7 +101,6 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        # return r"M-{}($w={:g}$, $b={:g}$, $\gamma={:.3g}${})".format(self._policy.__name__, self.window_size, self.threshold_b, self.gamma, "" if self._per_arm_restart else ", Global")
         return r"M-{}($w={:g}${})".format(self._policy.__name__, self.window_size, "" if self._per_arm_restart else ", Global")
 
     def choice(self):

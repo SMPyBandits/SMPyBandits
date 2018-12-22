@@ -6,7 +6,7 @@
 
 .. warning:: This algorithm works VERY well but it is looks weird at first sight. It sounds "too easy", so take a look to the article before wondering why it should work.
 
-.. note:: Right now, it is between 10 and 25 times slower than :class:`Policies.klUCB` and other single-player policies.
+.. warning:: Right now, it is between 10 and 25 times slower than :class:`Policies.klUCB` and other single-player policies.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

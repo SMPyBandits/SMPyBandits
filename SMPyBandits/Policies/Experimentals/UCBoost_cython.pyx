@@ -150,7 +150,7 @@ class UCB_bq(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{bq}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"UCBcython_{d=d_{bq}}", self.c)
 
     def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
@@ -214,7 +214,7 @@ class UCB_h(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_h}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"UCBcython_{d=d_h}", self.c)
 
     def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
@@ -287,7 +287,7 @@ class UCB_lb(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_{lb}}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"UCBcython_{d=d_{lb}}", self.c)
 
     def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
@@ -358,7 +358,7 @@ class UCB_t(IndexPolicy):
         self.c = c  #: Parameter c
 
     def __str__(self):
-        return r"${}$($c={:.3g}$)".format(r"\mathrm{UCBcython}_{d=d_t}", self.c)
+        return r"${}$($c={:.3g}$)".format(r"UCBcython_{d=d_t}", self.c)
 
     def computeIndex(self, int arm) -> float:
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:

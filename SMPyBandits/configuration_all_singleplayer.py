@@ -724,18 +724,6 @@ configuration.update({
                 "epsilon": 0.1,
             }
         },
-        {
-            "archtype": UCBoostEpsilon,
-            "params": {
-                "epsilon": 0.05,
-            }
-        },
-        {
-            "archtype": UCBoostEpsilon,
-            "params": {
-                "epsilon": 0.01,
-            }
-        },
         # --- new UCBoost_cython algorithms
         {
             "archtype": UCB_bq_cython,
@@ -798,7 +786,7 @@ configuration.update({
         },
         {
             "archtype": DiscountedThompson,
-            "params": { "posterior": DiscountedBeta, "gamma": gamma }
+            "params": { "posterior": DiscountedBeta, "gamma": 0.99 }
         },
         # The Exp3R algorithm works reasonably well
         {
