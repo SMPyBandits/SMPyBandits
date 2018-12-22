@@ -21,18 +21,26 @@ if __name__ == '__main__':
     print("Warning: this script 'configuration_sparse_multiplayers.py' is NOT executable. Use 'main_sparse_multiplayers.py' or 'make sparsemultiplayers' ...")  # DEBUG
     exit(0)
 
-# Import arms
-from Arms import *
-
-# Import contained classes
-from Environment import MAB
-
-# Collision Models
-from Environment.CollisionModels import *
-
-# Import algorithms, both single-player and multi-player
-from Policies import *
-from PoliciesMultiPlayers import *
+try:
+    # Import arms
+    from Arms import *
+    # Import contained classes
+    from Environment import MAB
+    # Collision Models
+    from Environment.CollisionModels import *
+    # Import algorithms, both single-player and multi-player
+    from Policies import *
+    from PoliciesMultiPlayers import *
+except ImportError:
+    # Import arms
+    from SMPyBandits.Arms import *
+    # Import contained classes
+    from SMPyBandits.Environment import MAB
+    # Collision Models
+    from SMPyBandits.Environment.CollisionModels import *
+    # Import algorithms, both single-player and multi-player
+    from SMPyBandits.Policies import *
+    from SMPyBandits.PoliciesMultiPlayers import *
 
 
 #: HORIZON : number of time steps of the experiments.

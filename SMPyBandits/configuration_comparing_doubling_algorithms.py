@@ -20,11 +20,13 @@ if __name__ == '__main__':
     print("Warning: this script 'configuration_comparing_doubling_algorithms.py' is NOT executable. Use 'main.py configuration_comparing_doubling_algorithms' or 'make comparing_doubling_algorithms' ...")  # DEBUG
     exit(0)
 
-# Import arms
-from Arms import *
-
-# Import algorithms
-from Policies import *
+# Import arms and algorithms
+try:
+    from Arms import *
+    from Policies import *
+except ImportError:
+    from SMPyBandits.Arms import *
+    from SMPyBandits.Policies import *
 
 #: HORIZON : number of time steps of the experiments.
 #: Warning Should be >= 10000 to be interesting "asymptotically".

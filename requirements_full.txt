@@ -27,6 +27,7 @@ nbsphinx          # to include the notebooks as Sphinx pages
 scikit-learn      # for UnsupervisedLearning
 scikit-optimize   # for BlackBoxOpt
 # julia             # for UCBjulia
+cython            # for UCBcython, adds module 'pyximport'
 
 # --- For command line scripts
 # docopt           # for server.py
