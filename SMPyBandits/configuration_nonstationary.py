@@ -371,11 +371,11 @@ def check_condition_on_piecewise_stationary_problems(horizon, listOfMeans, chang
                 print("WARNING For arm i = {}, gap = {:.3g} and length = {} < lowerbound on length = {} !!".format(i, gap, length, lowerbound))  # DEBUG
 
 
-for envId, env in enumerate(configuration["environment"]):
-    print("\n\n\nChecking environment number {}".format(envId))  # DEBUG
-    listOfMeans = env["params"]["listOfMeans"]
-    changePoints = env["params"]["changePoints"]
-    check_condition_on_piecewise_stationary_problems(HORIZON, listOfMeans, changePoints)
+# for envId, env in enumerate(configuration["environment"]):
+#     print("\n\n\nChecking environment number {}".format(envId))  # DEBUG
+#     listOfMeans = env["params"]["listOfMeans"]
+#     changePoints = env["params"]["changePoints"]
+#     check_condition_on_piecewise_stationary_problems(HORIZON, listOfMeans, changePoints)
 
 
 CHANGE_POINTS = configuration["environment"][0]["params"]["changePoints"]
