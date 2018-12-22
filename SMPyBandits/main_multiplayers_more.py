@@ -140,11 +140,6 @@ if __name__ == '__main__':
         M = evaluation.nbPlayers
         N = len(evaluation.envs)
 
-        # Sub folder with a useful name
-        subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
-        # Create the sub folder
-        plot_dir = os.path.join(PLOT_DIR, subfolder)
-
         for envId, env in enumerate(evaluation.envs):
             # # Plot histogram for rewards for that env
             # if do_simple_plots and interactive:
@@ -167,6 +162,11 @@ if __name__ == '__main__':
             print("\nGiving the mean and std memory consumption ...")
             evaluation.printMemoryConsumption(envId)
             if debug_memory: display_top_tracemalloc()  # DEBUG
+
+            # Sub folder with a useful name
+            subfolder = "MP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
+            # Create the sub folder
+            plot_dir = os.path.join(PLOT_DIR, subfolder)
 
             if not do_simple_plots:
                 break

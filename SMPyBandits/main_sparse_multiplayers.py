@@ -137,16 +137,16 @@ if __name__ == '__main__':
             print("\n\nGiving the vector of final regrets ...")
             evaluation.printLastRegrets(envId)
 
-            if not do_simple_plots:
-                break
-
             # Sub folder with a useful name
             subfolder = "SMP__K{}_M{}_T{}_N{}__{}_algos".format(env.nbArms, M, configuration['horizon'], configuration['repetitions'], N_players)
-            # Get the name of the output file
-            imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             # Create the sub folder
             plot_dir = os.path.join(PLOT_DIR, subfolder)
 
+            if not do_simple_plots:
+                break
+
+            # Get the name of the output file
+            imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             mainfig = os.path.join(plot_dir, imagename)
             savefig = mainfig
             picklename = mainfig + '.pickle'

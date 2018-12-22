@@ -141,7 +141,7 @@ if __name__ == '__main__':
         picklename = mainfig + '.pickle'
         h5pyname = mainfig + '.hdf5'
 
-        if do_plots and saveallfigs:
+        if saveallfigs:
             # Create the sub folder
             if os.path.isdir(plot_dir):
                 print("{} is already a directory here...".format(plot_dir))

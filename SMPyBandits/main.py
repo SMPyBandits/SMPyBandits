@@ -180,7 +180,6 @@ if __name__ == '__main__':
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
-
         # Get the name of the output file
         imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
