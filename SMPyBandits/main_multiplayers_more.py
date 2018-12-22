@@ -168,9 +168,6 @@ if __name__ == '__main__':
             # Create the sub folder
             plot_dir = os.path.join(PLOT_DIR, subfolder)
 
-            if not do_simple_plots:
-                break
-
             # Get the name of the output file
             imagename = "main____env{}-{}_{}".format((playersId + envId * N_players) + 1, N * N_players, hashvalue)
             mainfig = os.path.join(plot_dir, imagename)
@@ -192,6 +189,9 @@ if __name__ == '__main__':
                         pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
                 if USE_HD5:
                     evaluation.saveondisk(h5pyname)
+
+            if not do_simple_plots:
+                break
 
             # --- Also plotting the running times
             if saveallfigs:

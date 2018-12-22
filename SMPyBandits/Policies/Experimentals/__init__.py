@@ -37,7 +37,7 @@ except:
     print("Warning: the 'UCBcython' module failed to be imported. Maybe there is something wrong with your installation of Cython?")  # DEBUG
     try:
         from .UCB import UCB as UCBcython
-    except ImportError
+    except ImportError:
         import sys; sys.path.insert(0, '..')
         from UCB import UCB as UCBcython
 
