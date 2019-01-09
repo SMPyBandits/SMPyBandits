@@ -600,6 +600,21 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         # for lazy_detect_change_only_x_steps in [1, 2, 10]
     ] +
+    # XXX Test a UCBLCB_IndexPolicy algorithm
+    [
+        { "archtype": archtype, "params": {
+            "policy": policy,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+        } }
+        for archtype in [
+            UCBLCB_IndexPolicy,
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        for lazy_detect_change_only_x_steps in [1, 2, 10]
+    ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
         { "archtype": archtype, "params": {

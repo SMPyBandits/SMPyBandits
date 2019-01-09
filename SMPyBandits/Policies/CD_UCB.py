@@ -306,19 +306,27 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 
 # --- UCB-CDP based on LCB/UCB Mukherjee & Maillard's paper
 
+#: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
+#: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
+#: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
+
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
     r""" The UCBLCB-UCB generic policy for non-stationary bandits, from [[Improved Changepoint Detection for Piecewise i.i.d Bandits, by S. Mukherjee  & O.-A. Maillard, preprint 2018](https://subhojyoti.github.io/pdf/aistats_2019.pdf)].
     """
     def __init__(self, nbArms,
+            lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
         super(UCBLCB_IndexPolicy, self).__init__(nbArms, per_arm_restart=False, *args, **kwargs)
         # New parameters
         self.proba_random_exploration = 0  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+        self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
 
     def __str__(self):
-        return r"UCB/LCB-{}({}{})".format(self._policy.__name__, ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"UCB/LCB-{}({})".format(self._policy.__name__, "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def delta(self, t):
         r""" Use :math:`\delta = \frac{1}{t}` as the confidence level of UCB/LCB test."""
@@ -339,7 +347,6 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
                 - If :math:`UCB_{before} < LCB_{after}` or :math:`UCB_{after} < LCB_{before}`, then restart.
         """
         for armId in range(self.nbArms):
-
             data_y = self.all_rewards[armId]
             t0 = 0
             t = len(data_y)-1
@@ -459,13 +466,6 @@ def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=0
     alpha = scaleFactor * sqrt(- ratio * log(ratio))
     print("DEBUG: smart_alpha_from_T_UpsilonT: horizon = {}, max_nb_random_events = {}, gives alpha = {}...".format(horizon, max_nb_random_events, alpha))  # DEBUG
     return alpha
-
-
-#: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
-#: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
-#: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
 
 
 class GLR_IndexPolicy(CD_IndexPolicy):
