@@ -304,6 +304,69 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
         return False
 
 
+# --- UCB-CDP based on LCB/UCB Mukherjee & Maillard's paper
+
+
+class UCBLCB_IndexPolicy(CD_IndexPolicy):
+    r""" The UCBLCB-UCB generic policy for non-stationary bandits, from [[Improved Changepoint Detection for Piecewise i.i.d Bandits, by S. Mukherjee  & O.-A. Maillard, preprint 2018](https://subhojyoti.github.io/pdf/aistats_2019.pdf)].
+    """
+    def __init__(self, nbArms,
+            *args, **kwargs
+        ):
+        super(UCBLCB_IndexPolicy, self).__init__(nbArms, per_arm_restart=False, *args, **kwargs)
+        # New parameters
+        self.proba_random_exploration = 0  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+
+    def __str__(self):
+        return r"UCB/LCB-{}({}{})".format(self._policy.__name__, ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+
+    def delta(self, t):
+        r""" Use :math:`\delta = \frac{1}{t}` as the confidence level of UCB/LCB test."""
+        return 1.0 / t
+
+    def detect_change(self, arm, verbose=VERBOSE):
+        r""" Detect a change in the current arm, using the two-sided UCB-LCB algorithm [Mukherjee & Maillard, 2018].
+
+        - Let :math:`\hat{\mu}_{i,t:t'}` the empirical mean of rewards obtained for arm i from time :math:`t` to :math:`t'`, and :math:`N_{i,t:t'}` the number of samples.
+        - Let :math:`S_{i,t:t'} = \srqt{\frac{\log(4 t^2 / \delta)}{2 N_{i,t:t'}}}` the length of the confidence interval.
+
+        - When we have data starting at :math:`t_0=0` (since last restart) and up-to current time :math:`t`, for each *arm* i,
+            - For each intermediate time steps :math:`t' \in [t_0, t)`,
+                - Compute :math:`LCB_{before} = \hat{\mu}_{i,t_0:t'} - S_{i,t_0:t'}`,
+                - Compute :math:`UCB_{before} = \hat{\mu}_{i,t_0:t'} + S_{i,t_0:t'}`,
+                - Compute :math:`LCB_{after} = \hat{\mu}_{i,t'+1:t} - S_{i,t'+1:t}`,
+                - Compute :math:`UCB_{after} = \hat{\mu}_{i,t'+1:t} + S_{i,t'+1:t}`,
+                - If :math:`UCB_{before} < LCB_{after}` or :math:`UCB_{after} < LCB_{before}`, then restart.
+        """
+        for armId in range(self.nbArms):
+
+            data_y = self.all_rewards[armId]
+            t0 = 0
+            t = len(data_y)-1
+            mean_all = np.mean(data_y[t0 : t+1])
+            mean_before = 0
+            mean_after = mean_all
+            for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
+                y = data_y[s]
+                mean_before = (s * mean_before + y) / (s + 1)
+                mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+
+                ucb_lcb_cst = sqrt(log(4 * t / self.delta(t)) / 2)
+                S_before = ucb_lcb_cst / sqrt(s + 1)
+                lcb_before = mean_before - S_before
+                ucb_before = mean_before + S_before
+                S_after  = ucb_lcb_cst / sqrt(t - s + t0)
+                lcb_after  = mean_after  - S_after
+                ucb_after  = mean_after  + S_after
+
+                if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the S_before = {} and S_after = {}, so UCB_after = {} <? LCB_before = {}, and UCB_before = {} <? LCB_after = {}...".format(t0, s, t, mean_before, mean_after, S_before, S_after, ucb_after, lcb_before, ucb_before, lcb_after))
+
+                if ucb_after < lcb_before or ucb_before < lcb_after:
+                    return True
+            return False
+
+
+
 # --- Generic GLR for 1-dimensional exponential families
 
 eps = 1e-10  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]

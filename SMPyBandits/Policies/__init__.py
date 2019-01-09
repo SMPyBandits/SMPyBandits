@@ -30,7 +30,7 @@
 
 - Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
 
-- Other policies for the non-stationary problems: :class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`, :class:`AdSwitch`.
+- Other policies for the non-stationary problems: :class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.UCBLCB_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`, :class:`AdSwitch`.
 
 - A policy designed to tackle sparse stochastic bandit problems, :class:`SparseUCB`, :class:`SparseklUCB`, and :class:`SparseWrapper` that can be used with *any* index policy.
 
@@ -183,7 +183,7 @@ from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
 from .LM_DSEE import LM_DSEE
 from .SWHash_UCB import SWHash_IndexPolicy
-from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy_WithTracking, SubGaussianGLR_IndexPolicy
+from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, UCBLCB_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy_WithTracking, SubGaussianGLR_IndexPolicy
 from .Exp3R import Exp3R, Exp3RPlusPlus
 from .Monitored_UCB import Monitored_IndexPolicy
 from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy
