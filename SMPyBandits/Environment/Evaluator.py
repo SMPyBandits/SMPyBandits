@@ -17,6 +17,7 @@ from copy import deepcopy
 # Scientific imports
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 import inspect
 def _nbOfArgs(function):
@@ -30,7 +31,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -41,7 +42,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -54,7 +55,7 @@ DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 plot_lowerbound = True  #: Default is to plot the lower-bound
 
-USE_BOX_PLOT = True #: True to use boxplot, False to use violinplot.
+USE_BOX_PLOT = True  #: True to use boxplot, False to use violinplot.
 
 # Parameters for the random events
 random_shuffle = False  #: Use basic random events of shuffling the arms?
@@ -713,7 +714,7 @@ class Evaluator(object):
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
-            violin_or_box_plot(data=all_memories, labels=labels, boxplot=USE_BOX_PLOT)
+            violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 65:
                 plt.subplots_adjust(bottom=0.60)
@@ -726,7 +727,7 @@ class Evaluator(object):
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            violin_or_box_plot(data=all_memories, labels=labels, boxplot=USE_BOX_PLOT)
+            violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
@@ -844,8 +845,7 @@ class Evaluator(object):
                 self._xlabel(envId, "Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                n, bins, patches = plt.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins)
-                # addTextForWorstCases(plt, n, bins, patches, normed=normed)
+                sns.displot(last_regrets, color=colors[policyId], bins=nbbins)
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
@@ -865,15 +865,13 @@ class Evaluator(object):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                n, bins, patches = ax.hist(last_regrets, density=normed, color=colors[policyId], bins=nbbins, log=log)
-                # addTextForWorstCases(ax, n, bins, patches, normed=normed)
-                ax.vlines(np.mean(last_regrets), 0, min(np.max(n), self.repetitions))  # display mean regret on a vertical line
+                sns.distplot(last_regrets, color=colors[policyId], ax=ax, hist=False)  #, bins=nbbins  # XXX
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-            self._xlabel(envId, "Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
             plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             all_last_regrets = []
             labels = []
@@ -881,9 +879,8 @@ class Evaluator(object):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(policy.__cachedstr__)
             if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
-            ns, bins, patchess = plt.hist(all_last_regrets, label=labels, density=normed, color=colors, bins=nbbins)
-            # for n, patches in zip(ns, patchess):
-            #     addTextForWorstCases(plt, n, bins, patches, normed=normed)
+            for last_regret, color, label in zip(all_last_regrets, colors, labels):
+                sns.distplot(last_regret, label=label, color=color, hist=False)  #, bins=nbbins)  # XXX
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)

@@ -125,7 +125,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if False:  # WARNING remove this "False and" to use this problem
+if True:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -604,13 +604,13 @@ configuration.update({
     [
         { "archtype": UCBLCB_IndexPolicy, "params": {
             "policy": policy,
-            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         } }
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for lazy_detect_change_only_x_steps in [1, 2, 10]
+        # for lazy_detect_change_only_x_steps in [1, 2, 10]
     ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
@@ -627,7 +627,7 @@ configuration.update({
         for archtype in [
             GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-            SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
         ]
