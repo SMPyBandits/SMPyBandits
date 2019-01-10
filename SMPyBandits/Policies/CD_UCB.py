@@ -234,7 +234,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"CUSUM-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -271,7 +271,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
     """
 
     def __str__(self):
-        return r"PHT-{}($\alpha={:.3g}$, $M={}$, {}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"PHT-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided PHT algorithm [Hinkley, 1971].
@@ -315,8 +315,11 @@ LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
     r""" The UCBLCB-UCB generic policy for non-stationary bandits, from [[Improved Changepoint Detection for Piecewise i.i.d Bandits, by S. Mukherjee  & O.-A. Maillard, preprint 2018](https://subhojyoti.github.io/pdf/aistats_2019.pdf)].
+
+    .. warning:: This is still experimental! See https://github.com/SMPyBandits/SMPyBandits/issues/177
     """
     def __init__(self, nbArms,
+            delta=None,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
@@ -324,13 +327,20 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
         # New parameters
         self.proba_random_exploration = 0  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
+        self._delta = delta
 
     def __str__(self):
         return r"UCB/LCB-{}({})".format(self._policy.__name__, "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def delta(self, t):
-        r""" Use :math:`\delta = \frac{1}{t}` as the confidence level of UCB/LCB test."""
-        return 1.0 / t
+        r""" Use :math:`\delta = \delta_0` if it was given as an argument to the policy, or `\frac{1}{t}` as the confidence level of UCB/LCB test.
+
+        .. warning:: It is unclear in the article whether :math:`t` is the time since the last restart or the total time?
+        """
+        if self._delta is not None:
+            return self._delta
+        else:
+            return 1.0 / t
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided UCB-LCB algorithm [Mukherjee & Maillard, 2018].
@@ -351,14 +361,14 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
             t0 = 0
             t = len(data_y)-1
             mean_all = np.mean(data_y[t0 : t+1])
-            mean_before = 0
+            mean_before = 0.0
             mean_after = mean_all
             for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
                 y = data_y[s]
                 mean_before = (s * mean_before + y) / (s + 1)
                 mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
 
-                ucb_lcb_cst = sqrt(log(4 * t / self.delta(t)) / 2)
+                ucb_lcb_cst = sqrt(log(4 * t / self.delta(t)) / 2.0)
                 S_before = ucb_lcb_cst / sqrt(s + 1)
                 lcb_before = mean_before - S_before
                 ucb_before = mean_before + S_before
@@ -366,9 +376,8 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
                 lcb_after  = mean_after  - S_after
                 ucb_after  = mean_after  + S_after
 
-                if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the S_before = {} and S_after = {}, so UCB_after = {} <? LCB_before = {}, and UCB_before = {} <? LCB_after = {}...".format(t0, s, t, mean_before, mean_after, S_before, S_after, ucb_after, lcb_before, ucb_before, lcb_after))
-
                 if ucb_after < lcb_before or ucb_before < lcb_after:
+                    if verbose: print("  - For arm = {}, t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {:.3g} and the mean after mu(s+1,t) = {:.3g} and the S_before = {:.3g} and S_after = {:.3g}, so UCB_after = {:.3g} <? LCB_before = {:.3g} or UCB_before = {:.3g} <? LCB_after = {:.3g}...".format(armId, t0, s, t, mean_before, mean_after, S_before, S_after, ucb_after, lcb_before, ucb_before, lcb_after))
                     return True
             return False
 
@@ -555,7 +564,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         t0 = 0
         t = len(data_y)-1
         mean_all = np.mean(data_y[t0 : t+1])
-        mean_before = 0
+        mean_before = 0.0
         mean_after = mean_all
         for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
@@ -735,7 +744,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         data_y = self.all_rewards[arm]
         t0 = 0
         t = len(data_y)-1
-        mean_before = 0
+        mean_before = 0.0
         mean_after = np.mean(data_y)
         for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
             # XXX this is not efficient we compute the same means too many times!

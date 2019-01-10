@@ -10,8 +10,6 @@ r""" An oracle policy for non-stationary bandits, restarting an underlying stati
 - It is very simple but impractical: in any real problem it is impossible to know the locations of the breakpoints, but it acts as an efficient baseline.
 
 .. warning:: It is an efficient baseline, but it has no reason to be the best algorithm on a given problem (empirically)! I found that :class:`Policy.DiscountedThompson.DiscountedThompson` is usually the most efficient.
-
-.. warning:: FIXME I should implement a better oracle, see https://github.com/SMPyBandits/SMPyBandits/issues/172
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -124,8 +122,10 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         if subsub: quality = ", sub-sub-optimal"
         sub = not self.reset_for_all_change and not self.reset_for_suboptimal_change
         if sub: quality = ", sub-optimal"
+        args = "{}{}{}".format("" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
+        args = "({})".format(args) if args else ""
         # opt = not self.reset_for_all_change and self.reset_for_suboptimal_change
-        return r"OracleRestart-{}({}{}{})".format(self._policy.__name__, "" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
+        return r"OracleRestart-{}{}".format(self._policy.__name__, args)
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

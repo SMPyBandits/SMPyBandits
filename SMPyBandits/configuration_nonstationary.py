@@ -125,7 +125,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if True:  # WARNING remove this "False and" to use this problem
+if False:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -602,15 +602,12 @@ configuration.update({
     ] +
     # XXX Test a UCBLCB_IndexPolicy algorithm
     [
-        { "archtype": archtype, "params": {
+        { "archtype": UCBLCB_IndexPolicy, "params": {
             "policy": policy,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         } }
-        for archtype in [
-            UCBLCB_IndexPolicy,
-        ]
         for policy in [
-            # UCB,  # XXX comment to only test klUCB
+            UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
         for lazy_detect_change_only_x_steps in [1, 2, 10]
@@ -628,11 +625,11 @@ configuration.update({
             # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
-            # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-            # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            BernoulliGLR_IndexPolicy_WithTracking,   # BernoulliGLR_IndexPolicy_Variant is working? XXX Is it better?
+            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB

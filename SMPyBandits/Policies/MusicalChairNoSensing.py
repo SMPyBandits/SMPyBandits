@@ -2,8 +2,6 @@
 r""" MusicalChairNoSensing: implementation of the decentralized multi-player policy from [["Multiplayer bandits without observing collision information", by Gabor Lugosi and Abbas Mehrabian]](https://arxiv.org/abs/1808.08416).
 
 .. note:: The algorithm implemented here is Algorithm 1 (page 8) in the article, but the authors did not named it. I will refer to it as the Musical Chair algorithm with no sensing, or :class:`MusicalChairNoSensing` in the code.
-
-.. warning:: This is a work in progress, see https://github.com/SMPyBandits/SMPyBandits/issues/141
 """
 from __future__ import division, print_function  # Python 2 compatibility, division
 

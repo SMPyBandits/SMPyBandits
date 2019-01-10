@@ -426,7 +426,6 @@ try:
         """ Check if n is a number or not (``int``, ``float``, ``complex`` etc, any instance of :py:class:`numbers.Number` class."""
         return isinstance(n, Number)
 except ImportError:
-    print("Warning: the numbers.Number abstract class should be available for both Python 2 and 3. It is VERY weird that it is not!\nPlease fill an issue here, if you can, https://github.com/SMPyBandits/SMPyBandits/issues/new")
     def is_a_true_number(n):
         """ Check if n is a number or not (``int``, ``float``, ``complex`` etc, any instance of :py:class:`numbers.Number` class."""
         try:

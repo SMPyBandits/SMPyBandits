@@ -324,8 +324,8 @@ SPHINXOPTS    =
 # WARNING My fork contains the generic indexes, my PR to Sphinx was never accepted
 # WARNING Use the system-wise 'sphinx-build' if you prefer
 DEFAULTSPHINXBUILD   = sphinx-build
-# SPHINXBUILD   = sphinx-build
-SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
+SPHINXBUILD   = sphinx-build
+# SPHINXBUILD   = /home/lilian/publis/sphinx.git/sphinx-build.py
 SPHINXPROJ    = SMPyBandits
 SOURCEDIR     = .
 BUILDDIR      = _build
