@@ -61,7 +61,7 @@ MORE_ACCURATE = True           #: Use the count of selections instead of rewards
 
 plot_lowerbounds = True  #: Default is to plot the lower-bounds
 
-USE_BOX_PLOT = False  #: True to use boxplot, False to use violinplot (default).
+USE_BOX_PLOT = True  #: True to use boxplot, False to use violinplot (default).
 
 FINAL_RANKS_ON_AVERAGE = True  #: Default value for ``finalRanksOnAverage``
 USE_JOBLIB_FOR_POLICIES = False  #: Default value for ``useJoblibForPolicies``. Does not speed up to use it (too much overhead in using too much threads); so it should really be disabled.

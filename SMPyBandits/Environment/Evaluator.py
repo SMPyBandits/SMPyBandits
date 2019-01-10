@@ -30,7 +30,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plo, boxplot=USE_BOX_PLOTt
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -41,7 +41,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plo, boxplot=USE_BOX_PLOTt
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -54,7 +54,7 @@ DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 plot_lowerbound = True  #: Default is to plot the lower-bound
 
-USE_BOX_PLOT = False  #: True to use boxplot, False to use violinplot (default).
+USE_BOX_PLOT = True #: True to use boxplot, False to use violinplot.
 
 # Parameters for the random events
 random_shuffle = False  #: Use basic random events of shuffling the arms?
