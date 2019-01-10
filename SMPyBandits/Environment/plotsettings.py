@@ -333,6 +333,24 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0.85, normed=False, fontsize
             ax.text(x, y, text, fontsize=fontsize)
 
 
+def violin_or_box_plot(data=None, labels=None, boxplot=False, **kwargs):
+    """ Automatically add labels to a violin plot."""
+    if boxplot:
+        return plt.boxplot(data, labels=labels, showmeans=True, meanline=True, **kwargs)
+    if labels is not None:
+        try:
+            import pandas as pd
+            dict_of_data = {
+                label: column
+                for label, column in zip(labels, data)
+            }
+            df = pd.DataFrame(dict_of_data)
+            return sns.violinplot(data=df, nonsymmetrical="left", orient="v", **kwargs)
+        except ImportError:
+            return violin_or_box_plot(data, boxplot=boxplot, **kwargs)
+    return sns.violinplot(data=df, nonsymmetrical="left", orient="v", **kwargs)
+
+
 # --- Debugging
 
 if __name__ == "__main__":

@@ -31,7 +31,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
@@ -43,7 +43,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
@@ -60,6 +60,8 @@ MORE_ACCURATE = False          #: Use the count of selections instead of rewards
 MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 
 plot_lowerbounds = True  #: Default is to plot the lower-bounds
+
+USE_BOX_PLOT = False  #: True to use boxplot, False to use violinplot (default).
 
 FINAL_RANKS_ON_AVERAGE = True  #: Default value for ``finalRanksOnAverage``
 USE_JOBLIB_FOR_POLICIES = False  #: Default value for ``useJoblibForPolicies``. Does not speed up to use it (too much overhead in using too much threads); so it should really be disabled.
@@ -889,7 +891,7 @@ class EvaluatorMultiPlayers(object):
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
-            plt.boxplot(all_times, labels=labels, meanline=True)
+            violin_or_box_plot(all_times, labels=labels, boxplot=USE_BOX_PLOT)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 50:
                 plt.subplots_adjust(bottom=0.60)
@@ -899,7 +901,7 @@ class EvaluatorMultiPlayers(object):
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_times, meanline=True)
+            violin_or_box_plot(all_times, boxplot=USE_BOX_PLOT)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
@@ -924,7 +926,7 @@ class EvaluatorMultiPlayers(object):
         fig = plt.figure()
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
-            plt.boxplot(all_memories, labels=labels, showmeans=True, meanline=True)
+            violin_or_box_plot(all_memories, labels=labels, boxplot=USE_BOX_PLOT)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 50:
                 plt.subplots_adjust(bottom=0.60)
@@ -934,7 +936,7 @@ class EvaluatorMultiPlayers(object):
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_memories, showmeans=True, meanline=True)
+            violin_or_box_plot(all_memories, boxplot=USE_BOX_PLOT)
         plt.xlabel("Policies{}".format(self.signature))
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))

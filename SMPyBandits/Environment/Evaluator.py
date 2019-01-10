@@ -30,7 +30,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plo, boxplot=USE_BOX_PLOTt
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -41,7 +41,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plo, boxplot=USE_BOX_PLOTt
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -53,6 +53,8 @@ REPETITIONS = 1    #: Default nb of repetitions
 DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 plot_lowerbound = True  #: Default is to plot the lower-bound
+
+USE_BOX_PLOT = False  #: True to use boxplot, False to use violinplot (default).
 
 # Parameters for the random events
 random_shuffle = False  #: Use basic random events of shuffling the arms?
@@ -678,7 +680,7 @@ class Evaluator(object):
         plt.xlabel("Bandit algorithms{}".format(self.signature))
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
-            plt.boxplot(all_times, labels=labels, meanline=True)
+            violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 65:
                 plt.subplots_adjust(bottom=0.60)
@@ -691,7 +693,7 @@ class Evaluator(object):
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_times, meanline=True)
+            violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
         plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
@@ -711,7 +713,7 @@ class Evaluator(object):
         plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
         if len(labels) < maxNbOfLabels:
             max_length_of_labels = max([len(label) for label in labels])
-            plt.boxplot(all_memories, labels=labels, showmeans=True, meanline=True)
+            violin_or_box_plot(data=all_memories, labels=labels, boxplot=USE_BOX_PLOT)
             locs, labels = plt.xticks()
             if max_length_of_labels >= 65:
                 plt.subplots_adjust(bottom=0.60)
@@ -724,7 +726,7 @@ class Evaluator(object):
                 plt.subplots_adjust(bottom=0.30)
                 plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
         else:
-            plt.boxplot(all_memories, showmeans=True, meanline=True)
+            violin_or_box_plot(data=all_memories, labels=labels, boxplot=USE_BOX_PLOT)
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
@@ -820,7 +822,7 @@ class Evaluator(object):
             plt.ylabel("{}egret value $R_T{}$,\nfor $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions), fontsize="x-small")
             if len(labels) < maxNbOfLabels:
                 max_length_of_labels = max([len(label) for label in labels])
-                plt.boxplot(all_last_regrets, labels=labels, showmeans=True, meanline=True)
+                violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
                 locs, labels = plt.xticks()
                 if max_length_of_labels >= 65:
                     plt.subplots_adjust(bottom=0.60)
@@ -832,7 +834,7 @@ class Evaluator(object):
                     plt.subplots_adjust(bottom=0.30)
                     plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
             else:
-                plt.boxplot(all_last_regrets, showmeans=True, meanline=True)
+                violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
             plt.title("Regret for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif all_on_separate_figures:
             figs = []

@@ -698,7 +698,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
-        # if delta is None and horizon is not None: delta = 1.0 / horizon
+        if delta is None and horizon is not None: delta = 1.0 / horizon
         self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{T}` if ``horizon`` is given and ``delta=None``.
         self.sigma = sigma  #: Parameter :math:`\sigma` for the Sub-Gaussian-GLR test.
         self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
@@ -724,7 +724,16 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         return decreasing_alpha__GLR(alpha0=self._alpha0, t=t, exponentBeta=self._exponentBeta, alpha_t1=self._alpha_t1)
 
     def __str__(self):
-        return r"SubGaussian-GLR-{}($\delta={:.3g}$, $\sigma={:.3g}$, {}{}, {}{}{})".format(self._policy.__name__, self.delta, self.sigma, "joint" if self.joint else "disjoint", "" if self._per_arm_restart else ", Global", r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "", ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "")
+        args0 = r"$\delta={}$, $\sigma={:.3g}$".format("{:.3g}".format(self.delta) if self.delta else "1/T", self.sigma)
+        args1 = "{}{}".format(
+            "joint" if self.joint else "disjoint",
+            "" if self._per_arm_restart else ", Global"
+        )
+        args2 = "{}{}{}".format(
+            r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
+            ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
+            ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "")
+        return r"SubGaussian-GLR-{}({}, {}, {})".format(self._policy.__name__, args0, args1, args2)
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the non-parametric sub-Gaussian Generalized Likelihood Ratio test (GLR) works like this:
