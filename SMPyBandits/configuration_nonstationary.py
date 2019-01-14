@@ -567,6 +567,7 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
+            Thompson,
             # UCB,
             klUCB,  # XXX comment to only test UCB
             # Exp3PlusPlus,  # XXX comment to only test UCB
@@ -604,15 +605,17 @@ configuration.update({
     [
         { "archtype": UCBLCB_IndexPolicy, "params": {
             "policy": policy,
-            "delta0": delta0,
+            # "delta0": delta0,
             # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for policy in [
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        # for lazy_detect_change_only_x_steps in [1, 2, 10]
-        for delta0 in [0.1, 0.05, 0.001]  # comment to use default parameter
+        # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
+        # for lazy_detect_change_only_x_steps in [1]  # [1, 2, 10]
+        # for lazy_try_value_s_only_x_steps in [1]  # [1, 2, 10]
     ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
@@ -640,8 +643,8 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        # for lazy_detect_change_only_x_steps in [1, 2, 10]
-        # for lazy_try_value_s_only_x_steps in [1, 2, 10]
+        for lazy_detect_change_only_x_steps in [10]  # [1, 2, 10]
+        for lazy_try_value_s_only_x_steps in [10]  # [1, 2, 10]
     ] +
     []
 })

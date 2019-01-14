@@ -331,12 +331,19 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
         self._delta0 = delta0
 
     def __str__(self):
-        return r"{}-CDP{}{}".format(self._policy.__name__, "(lazy detect {})".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "", r"($\delta_0={:.3g}$)".format(self._delta0) if self._delta0 != 1 else "")
+        args = "{}{}{}".format(
+            "lazy detect {}, ".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
+            "lazy s {}, ".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
+            r"$\delta_0={:.3g}$, ".format(self._delta0) if self._delta0 != 1 else "",
+        )
+        if args.endswith(', '): args[:-2]
+        args = "({})".format(args) if args else ""
+        return r"{}-CDP{}".format(self._policy.__name__, args)
 
     def delta(self, t):
         r""" Use :math:`\delta = \delta_0` if it was given as an argument to the policy, or :math:`\frac{\delta_0}{t}` as the confidence level of UCB/LCB test (default is :math:`\delta_0=1`).
 
-        .. warning:: It is unclear in the article whether :math:`t` is the time since the last restart or the total time?
+        .. warning:: It is unclear (in the article) whether :math:`t` is the time since the last restart or the total time?
         """
         if self._delta is not None:
             return self._delta
@@ -361,6 +368,8 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
             data_y = self.all_rewards[armId]
             t0 = 0
             t = len(data_y)-1
+            if t <= 2:
+                continue
             mean_all = np.mean(data_y[t0 : t+1])
             mean_before = 0.0
             mean_after = mean_all
@@ -371,14 +380,19 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
 
                 ucb_lcb_cst = sqrt(log(4 * t / self.delta(t)) / 2.0)
                 S_before = ucb_lcb_cst / sqrt(s + 1)
-                lcb_before = mean_before - S_before
-                ucb_before = mean_before + S_before
                 S_after  = ucb_lcb_cst / sqrt(t - s + t0)
-                lcb_after  = mean_after  - S_after
                 ucb_after  = mean_after  + S_after
+                lcb_before = mean_before - S_before
 
-                if ucb_after < lcb_before or ucb_before < lcb_after:
-                    if verbose: print("  - For arm = {}, t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {:.3g} and the mean after mu(s+1,t) = {:.3g} and the S_before = {:.3g} and S_after = {:.3g}, so UCB_after = {:.3g} <? LCB_before = {:.3g} or UCB_before = {:.3g} <? LCB_after = {:.3g}...".format(armId, t0, s, t, mean_before, mean_after, S_before, S_after, ucb_after, lcb_before, ucb_before, lcb_after))
+                if ucb_after < lcb_before:
+                    if verbose: print("  - For arm = {}, t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {:.3g} and the mean after mu(s+1,t) = {:.3g} and the S_before = {:.3g} and S_after = {:.3g}, so UCB_after = {:.3g} < LCB_before = {:.3g}...".format(armId, t0, s, t, mean_before, mean_after, S_before, S_after, ucb_after, lcb_before))
+                    return True
+
+                ucb_before = mean_before + S_before
+                lcb_after  = mean_after  - S_after
+
+                if ucb_before < lcb_after:
+                    if verbose: print("  - For arm = {}, t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {:.3g} and the mean after mu(s+1,t) = {:.3g} and the S_before = {:.3g} and S_after = {:.3g}, so UCB_before = {:.3g} < LCB_after = {:.3g}...".format(armId, t0, s, t, mean_before, mean_after, S_before, S_after, ucb_before, lcb_after))
                     return True
             return False
 
@@ -466,8 +480,8 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
     return alpha_t1 / max(1, t)**exponentBeta
 
 
-def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=0.5):
-    r""" Compute a smart estimate of the optimal value for the *fixed* forced exploration probability :math:`\alpha`.
+def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=0.1):
+    r""" Compute a smart estimate of the    optimal value for the *fixed* forced exploration probability :math:`\alpha`.
 
     .. math:: \alpha = \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
     """

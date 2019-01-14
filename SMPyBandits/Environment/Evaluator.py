@@ -31,7 +31,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot, adjust_xticks_subplots
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -42,7 +42,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, legend, show_and_save, nrows_ncols, violin_or_box_plot, adjust_xticks_subplots
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     # Local imports, objects and functions
     from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
@@ -72,8 +72,6 @@ MORE_ACCURATE = False          #: Use the count of selections instead of rewards
 MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
 FINAL_RANKS_ON_AVERAGE = True  #: Final ranks are printed based on average on last 1% rewards and not only the last rewards
 USE_JOBLIB_FOR_POLICIES = False  #: Don't use joblib to parallelize the simulations on various policies (we parallelize the random Monte Carlo repetitions)
-
-MAX_NB_OF_LABELS = 50  #: If more than MAX_NB_OF_LABELS labels have to be displayed on a boxplot, don't put a legend.
 
 
 class Evaluator(object):
@@ -667,9 +665,7 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=MAX_NB_OF_LABELS,
-            base=1, unit="seconds",
-        ):
+    def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds"):
         """Plot the running times of the different policies, as a box plot for each."""
         means, _, all_times = self.getRunningTimes(envId=envId)
         # order by increasing mean time
@@ -678,31 +674,16 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
+        violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
-        if len(labels) < maxNbOfLabels:
-            max_length_of_labels = max([len(label) for label in labels])
-            violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
-            locs, labels = plt.xticks()
-            if max_length_of_labels >= 65:
-                plt.subplots_adjust(bottom=0.60)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
-            elif max_length_of_labels >= 45:
-                plt.subplots_adjust(bottom=0.45)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-            else:
-                plt.subplots_adjust(bottom=0.30)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
-        else:
-            violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
+        ylabel = "Running times (in {}), for {} repetitions".format(unit, self.repetitions)
+        plt.ylabel(ylabel)
+        adjust_xticks_subplots(ylabel=ylabel, labels=labels)
         plt.title("Running times for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=MAX_NB_OF_LABELS,
-            base=1024, unit="KiB"
-        ):
+    def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB"):
         """Plot the memory consumption of the different policies, as a box plot for each."""
         means, _, all_memories = self.getMemoryConsumption(envId=envId)
         # order by increasing mean memory consumption
@@ -711,24 +692,11 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
+        violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
-        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
-        if len(labels) < maxNbOfLabels:
-            max_length_of_labels = max([len(label) for label in labels])
-            violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
-            locs, labels = plt.xticks()
-            if max_length_of_labels >= 65:
-                plt.subplots_adjust(bottom=0.60)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
-            elif max_length_of_labels >= 45:
-                plt.subplots_adjust(bottom=0.45)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-            else:
-                plt.subplots_adjust(bottom=0.30)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
-        else:
-            violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
+        ylabel = "Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions)
+        plt.ylabel(ylabel)
+        adjust_xticks_subplots(ylabel=ylabel, labels=labels)
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
@@ -798,7 +766,7 @@ class Evaluator(object):
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=15, log=False,
-                        boxplot=False, maxNbOfLabels=MAX_NB_OF_LABELS, normalized_boxplot=True,
+                        boxplot=False, normalized_boxplot=True,
                         all_on_separate_figures=False, sharex=False, sharey=False,
                         savefig=None, moreAccurate=False):
         """Plot histogram of the regrets R_T for all policies."""
@@ -822,22 +790,10 @@ class Evaluator(object):
             all_last_regrets = [ np.asarray(all_last_regrets[i]) for i in index_of_sorting ]
             fig = plt.figure()
             plt.xlabel("Bandit algorithms{}".format(self.signature))
-            plt.ylabel("{}egret value $R_T{}$,\nfor $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions), fontsize="x-small")
-            if len(labels) < maxNbOfLabels:
-                max_length_of_labels = max([len(label) for label in labels])
-                violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
-                locs, labels = plt.xticks()
-                if max_length_of_labels >= 65:
-                    plt.subplots_adjust(bottom=0.60)
-                    plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                elif max_length_of_labels >= 45:
-                    plt.subplots_adjust(bottom=0.45)
-                    plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                else:
-                    plt.subplots_adjust(bottom=0.30)
-                    plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
-            else:
-                violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
+            ylabel = "{}egret value $R_T{}$,\nfor $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions)
+            plt.ylabel(ylabel, fontsize="x-small")
+            violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
+            adjust_xticks_subplots(ylabel=ylabel, labels=labels)
             plt.title("Regret for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif all_on_separate_figures:
             figs = []
@@ -847,7 +803,7 @@ class Evaluator(object):
                 self._xlabel(envId, "Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], marker=markers[policyId])
+                sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId]})
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
@@ -867,7 +823,7 @@ class Evaluator(object):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.distplot(last_regrets, ax=ax, hist=True, bins=nbbins, color=colors[policyId], marker=markers[policyId])  # XXX
+                sns.distplot(last_regrets, ax=ax, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId]})  # XXX
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
@@ -881,8 +837,8 @@ class Evaluator(object):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(policy.__cachedstr__)
             if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
-            for policyId in range(self.policies):
-                sns.distplot(all_last_regrets[policyId], label=labels[policyId], hist=False, color=colors[policyId], marker=markers[policyId])  #, bins=nbbins)  # XXX
+            for policyId in range(self.nbPolicies):
+                sns.distplot(all_last_regrets[policyId], label=labels[policyId], hist=False, color=colors[policyId], kde_kws={'marker': markers[policyId]})  #, bins=nbbins)  # XXX
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)

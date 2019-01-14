@@ -147,7 +147,7 @@ def legend(putatright=PUTATRIGHT, fontsize="xx-small",
     try:
         len_leg = len(plt.gca().get_legend_handles_labels()[1])
         putatright = len_leg > maxnboflabelinfigure
-        if len_leg > 0: print("Warning: forcing to use putatright = {} because there is {} items in the legend.".format(putatright, len_leg))  # DEBUG
+        if len_leg > maxnboflabelinfigure: print("Warning: forcing to use putatright = {} because there is {} items in the legend.".format(putatright, len_leg))  # DEBUG
     except (ValueError, AttributeError, IndexError) as e:
         # print("    e =", e)  # DEBUG
         pass
@@ -359,6 +359,26 @@ def violin_or_box_plot(data=None, labels=None, boxplot=False, **kwargs):
         except ImportError:
             return violin_or_box_plot(data, boxplot=boxplot, **kwargs)
     return myviolinplot(nonsymmetrical="left", data=df, orient="v", **kwargs)
+
+
+MAX_NB_OF_LABELS = 50  #: If more than MAX_NB_OF_LABELS labels have to be displayed on a boxplot, don't put a legend.
+
+
+def adjust_xticks_subplots(ylabel=None, labels=(), maxNbOfLabels=MAX_NB_OF_LABELS):
+    """Adjust the size of the xticks, and maybe change size of ylabel.
+
+    - See https://stackoverflow.com/a/37708190/
+    """
+    if len(labels) >= maxNbOfLabels:
+        return
+    max_length_of_labels = max([len(label) for label in labels])
+    locs, labels = plt.xticks()
+    plt.subplots_adjust(bottom=max_length_of_labels/135.0)
+    if max_length_of_labels >= 40:
+        plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")
+        if ylabel is not None: plt.ylabel(ylabel, fontsize="x-small")
+    else:
+        plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")
 
 
 # --- Debugging

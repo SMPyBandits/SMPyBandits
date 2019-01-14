@@ -31,7 +31,7 @@ try:
     from .usejoblib import USE_JOBLIB, Parallel, delayed
     from .usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
+    from .plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot, adjust_xticks_subplots
     from .sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
@@ -43,7 +43,7 @@ except ImportError:
     from usejoblib import USE_JOBLIB, Parallel, delayed
     from usetqdm import USE_TQDM, tqdm
     # Local imports, tools and config
-    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot
+    from plotsettings import BBOX_INCHES, signature, maximizeWindow, palette, makemarkers, add_percent_formatter, wraptext, wraplatex, legend, show_and_save, nrows_ncols, addTextForWorstCases, violin_or_box_plot, adjust_xticks_subplots
     from sortedDistance import weightedDistance, manhattan, kendalltau, spearmanr, gestalt, meanDistance, sortedDistance
     from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
@@ -873,9 +873,7 @@ class EvaluatorMultiPlayers(object):
             else:
                 print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=e.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
 
-    def plotRunningTimes(self, envId=0, savefig=None, maxNbOfLabels=45,
-            base=1, unit="seconds", evaluators=()
-        ):
+    def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds", evaluators=()):
         """Plot the running times of the different players, as a box plot for each evaluators."""
         means, all_times, labels = [], [], []
         evaluators = [self] + list(evaluators)  # Default to only [self]
@@ -889,28 +887,16 @@ class EvaluatorMultiPlayers(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        if len(labels) < maxNbOfLabels:
-            max_length_of_labels = max([len(label) for label in labels])
-            violin_or_box_plot(all_times, labels=labels, boxplot=USE_BOX_PLOT)
-            locs, labels = plt.xticks()
-            if max_length_of_labels >= 50:
-                plt.subplots_adjust(bottom=0.60)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
-            else:
-                plt.subplots_adjust(bottom=0.30)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
-        else:
-            violin_or_box_plot(all_times, boxplot=USE_BOX_PLOT)
+        violin_or_box_plot(all_times, labels=labels, boxplot=USE_BOX_PLOT)
         plt.xlabel("Policies{}".format(self.signature))
-        plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions))
+        ylabel = "Running times (in {}), for {} repetitions".format(unit, self.repetitions)
+        plt.ylabel(ylabel)
+        adjust_xticks_subplots(ylabel=ylabel, labels=labels)
         plt.title("Running times for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
 
-    def plotMemoryConsumption(self, envId=0, savefig=None, maxNbOfLabels=45,
-            base=1024, unit="KiB", evaluators=()
-        ):
+    def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB", evaluators=()):
         """Plot the memory consumption of the different players, as a box plot for each."""
         means, all_memories, labels = [], [], []
         evaluators = [self] + list(evaluators)  # Default to only [self]
@@ -924,21 +910,11 @@ class EvaluatorMultiPlayers(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        if len(labels) < maxNbOfLabels:
-            max_length_of_labels = max([len(label) for label in labels])
-            violin_or_box_plot(all_memories, labels=labels, boxplot=USE_BOX_PLOT)
-            locs, labels = plt.xticks()
-            if max_length_of_labels >= 50:
-                plt.subplots_adjust(bottom=0.60)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")  # XXX See https://stackoverflow.com/a/37708190/
-                plt.ylabel("Running times (in {}), for {} repetitions".format(unit, self.repetitions), fontsize="x-small")
-            else:
-                plt.subplots_adjust(bottom=0.30)
-                plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="x-small")  # XXX See https://stackoverflow.com/a/37708190/
-        else:
-            violin_or_box_plot(all_memories, boxplot=USE_BOX_PLOT)
+        violin_or_box_plot(all_memories, labels=labels, boxplot=USE_BOX_PLOT)
         plt.xlabel("Policies{}".format(self.signature))
-        plt.ylabel("Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions))
+        ylabel = "Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions)
+        plt.ylabel(ylabel)
+        adjust_xticks_subplots(ylabel=ylabel, labels=labels)
         plt.title("Memory consumption for different MP bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=True)
         return fig
