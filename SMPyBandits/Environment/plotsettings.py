@@ -335,9 +335,9 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0.85, normed=False, fontsize
 
 def myviolinplot(nonsymmetrical=False, *args, **kwargs):
     try:
-        return sns.violinplot(nonsymmetrical=nonsymmetrical, *args, **kwargs)
+        return sns.violinplot(nonsymmetrical=nonsymmetrical, cut=0, inner="stick", *args, **kwargs)
     except TypeError:
-        return sns.violinplot(*args, **kwargs)
+        return sns.violinplot(cut=0, inner="stick", *args, **kwargs)
 
 
 def violin_or_box_plot(data=None, labels=None, boxplot=False, **kwargs):

@@ -319,7 +319,7 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
     .. warning:: This is still experimental! See https://github.com/SMPyBandits/SMPyBandits/issues/177
     """
     def __init__(self, nbArms,
-            delta=None,
+            delta=None, delta0=1.0,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
@@ -328,19 +328,20 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = 0  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
         self._delta = delta
+        self._delta0 = delta0
 
     def __str__(self):
-        return r"UCB/LCB-{}({})".format(self._policy.__name__, "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        return r"{}-CDP{}{}".format(self._policy.__name__, "(lazy detect {})".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "", r"($\delta_0={:.3g}$)".format(self._delta0) if self._delta0 != 1 else "")
 
     def delta(self, t):
-        r""" Use :math:`\delta = \delta_0` if it was given as an argument to the policy, or `\frac{1}{t}` as the confidence level of UCB/LCB test.
+        r""" Use :math:`\delta = \delta_0` if it was given as an argument to the policy, or :math:`\frac{\delta_0}{t}` as the confidence level of UCB/LCB test (default is :math:`\delta_0=1`).
 
         .. warning:: It is unclear in the article whether :math:`t` is the time since the last restart or the total time?
         """
         if self._delta is not None:
             return self._delta
         else:
-            return 1.0 / t
+            return self._delta0 / t
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided UCB-LCB algorithm [Mukherjee & Maillard, 2018].

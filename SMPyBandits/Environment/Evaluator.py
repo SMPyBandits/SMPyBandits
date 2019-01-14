@@ -55,6 +55,7 @@ DELTA_T_PLOT = 50  #: Default sampling rate for plotting
 
 plot_lowerbound = True  #: Default is to plot the lower-bound
 
+USE_BOX_PLOT = False  #: True to use boxplot, False to use violinplot.
 USE_BOX_PLOT = True  #: True to use boxplot, False to use violinplot.
 
 # Parameters for the random events
@@ -805,6 +806,7 @@ class Evaluator(object):
         if N == 1:
             subplots = False  # no need for a subplot
         colors = palette(N)
+        markers = makemarkers(N)
         if boxplot:
             all_last_regrets = []
             for policyId, policy in enumerate(self.policies):
@@ -842,10 +844,10 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(policy.__cachedstr__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-                self._xlabel(envId, "Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+                self._xlabel(envId, "Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.displot(last_regrets, color=colors[policyId], bins=nbbins)
+                sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], marker=markers[policyId])
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
@@ -860,18 +862,18 @@ class Evaluator(object):
             ax0.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
             ax0.set_ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
-            ax0.set_xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            ax0.set_xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.distplot(last_regrets, color=colors[policyId], ax=ax, hist=False)  #, bins=nbbins  # XXX
+                sns.distplot(last_regrets, ax=ax, hist=True, bins=nbbins, color=colors[policyId], marker=markers[policyId])  # XXX
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-            plt.xlabel("Regret value $R_T$ at the end of simulation, for $T = {}${}".format(self.horizon, self.signature))
+            plt.xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
             plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             all_last_regrets = []
             labels = []
@@ -879,8 +881,8 @@ class Evaluator(object):
                 all_last_regrets.append(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate))
                 labels.append(policy.__cachedstr__)
             if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
-            for last_regret, color, label in zip(all_last_regrets, colors, labels):
-                sns.distplot(last_regret, label=label, color=color, hist=False)  #, bins=nbbins)  # XXX
+            for policyId in range(self.policies):
+                sns.distplot(all_last_regrets[policyId], label=labels[policyId], hist=False, color=colors[policyId], marker=markers[policyId])  #, bins=nbbins)  # XXX
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)

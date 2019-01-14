@@ -175,7 +175,7 @@ if True:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 3 changes are on all or almost arms at a time, but sequences don't have same length
-if False:
+if True:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": Bernoulli,
@@ -457,7 +457,7 @@ TAUS   = [
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / (1 + NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
 
-WINDOW_SIZE = 2 * NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
+WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
 
 PER_ARM_RESTART = [
     True,  # Per-arm restart XXX comment to only test global arm
@@ -467,9 +467,9 @@ PER_ARM_RESTART = [
 
 configuration.update({
     "policies":
-    [  # XXX Regular adversarial bandits algorithms!
-        { "archtype": Exp3PlusPlus, "params": {} },
-    ] +
+    # [  # XXX Regular adversarial bandits algorithms!
+    #     { "archtype": Exp3PlusPlus, "params": {} },
+    # ] +
     [  # XXX Regular stochastic bandits algorithms!
         # { "archtype": UCBalpha, "params": { "alpha": 1, } },
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
@@ -488,10 +488,10 @@ configuration.update({
     # [
     #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
     # ] +
-    # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
-    [
-        { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
-    ] +
+    # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+    # [
+    #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
+    # ] +
     # # [  # XXX TODO test the AdSwitch policy and its corrected version
     # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
     # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
@@ -604,6 +604,7 @@ configuration.update({
     [
         { "archtype": UCBLCB_IndexPolicy, "params": {
             "policy": policy,
+            "delta0": delta0,
             # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         } }
         for policy in [
@@ -611,6 +612,7 @@ configuration.update({
             klUCB,
         ]
         # for lazy_detect_change_only_x_steps in [1, 2, 10]
+        for delta0 in [0.1, 0.05, 0.001]  # comment to use default parameter
     ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
