@@ -162,9 +162,11 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
                     for other_arm in range(self.nbArms):
                         self.policy.rewards[other_arm] = 0
                         self.policy.pulls[other_arm] = 0
+                        if hasattr(self.policy, 'posterior'): self.policy.posterior[other_arm].reset()  # XXX Posterior to reset, for Bayesian policy
                 # reset current memory for THIS arm
                 self.policy.rewards[arm] = np.sum(self.all_rewards[arm])
                 self.policy.pulls[arm] = len(self.all_rewards[arm])
+                if hasattr(self.policy, 'posterior'): self.policy.posterior[arm].reset()  # XXX Posterior to reset, for Bayesian policy
 
         # we update the total number of samples available to the underlying policy
         # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE

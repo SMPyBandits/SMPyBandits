@@ -14,6 +14,7 @@ from os import mkdir
 import os.path
 from os import getenv
 from itertools import product
+import importlib
 
 # Backup evaluation object
 import pickle
@@ -21,16 +22,24 @@ import pickle
 # Local imports
 try:
     from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    if 'configuration_multiplayers_with_aggregation' in sys.argv or 'configuration_multiplayers_with_aggregation.py' in sys.argv:
-        from configuration_multiplayers_with_aggregation import configuration
-    else:
+    configuration = None
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
+            configuration = importlib.import_module(module_name).configuration
+    if configuration is None:
         from configuration_multiplayers import configuration
 except ImportError:
     from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    if 'configuration_multiplayers_with_aggregation' in sys.argv or 'configuration_multiplayers_with_aggregation.py' in sys.argv:
-        from SMPyBandits.configuration_multiplayers_with_aggregation import configuration
-    else:
-        from SMPyBandits.configuration_multiplayers import configuration
+    configuration = None
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
+            configuration = importlib.import_module(module_name, 'SMPyBandits').configuration
+    if configuration is None:
+        from configuration_multiplayers import configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours

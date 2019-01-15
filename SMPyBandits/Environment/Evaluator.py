@@ -803,7 +803,7 @@ class Evaluator(object):
                 self._xlabel(envId, "Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId]})
+                sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId], 'markevery': (policyId / 50., 0.1)})
                 legend()
                 show_and_save(self.showplot, None if savefig is None else "{}__Algo_{}_{}".format(savefig, 1 + policyId, 1 + N), fig=fig, pickleit=USE_PICKLE)
                 figs.append(fig)
@@ -823,7 +823,7 @@ class Evaluator(object):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
-                sns.distplot(last_regrets, ax=ax, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId]})  # XXX
+                sns.distplot(last_regrets, ax=ax, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'marker': markers[policyId], 'markevery': (policyId / 50., 0.1)})  # XXX
                 ax.set_title(policy.__cachedstr__, fontdict={'fontsize': 'xx-small'})  # XXX one of x-large, medium, small, None, xx-large, x-small, xx-small, smaller, larger, large
                 ax.tick_params(axis='both', labelsize=8)  # XXX https://stackoverflow.com/a/11386056/
         else:
@@ -838,7 +838,7 @@ class Evaluator(object):
                 labels.append(policy.__cachedstr__)
             if self.nbPolicies > 6: nbbins = int(nbbins * self.nbPolicies / 6)
             for policyId in range(self.nbPolicies):
-                sns.distplot(all_last_regrets[policyId], label=labels[policyId], hist=False, color=colors[policyId], kde_kws={'marker': markers[policyId]})  #, bins=nbbins)  # XXX
+                sns.distplot(all_last_regrets[policyId], label=labels[policyId], hist=False, color=colors[policyId], kde_kws={'marker': markers[policyId], 'markevery': (policyId / 50., 0.1)})  #, bins=nbbins)  # XXX
             legend()
         # Common part
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)

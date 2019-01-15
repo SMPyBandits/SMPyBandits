@@ -13,45 +13,34 @@ import sys
 from os import mkdir
 import os.path
 from os import getenv
-
+import importlib
 # Backup evaluation object
 import pickle
 
 # Local imports
+configuration_module = None
 try:
     from Environment import Evaluator, notify, start_tracemalloc, display_top_tracemalloc
     # Import a configuration file
-    if 'configuration_nonstationary' in sys.argv or 'configuration_nonstationary.py' in sys.argv:
-        from configuration_nonstationary import configuration
-    elif 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
-        from configuration_comparing_aggregation_algorithms import configuration
-    elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
-        from configuration_all_singleplayer import configuration
-    elif 'configuration_comparing_doubling_algorithms' in sys.argv or 'configuration_comparing_doubling_algorithms.py' in sys.argv:
-        from configuration_comparing_doubling_algorithms import configuration
-    elif 'configuration_markovian' in sys.argv or 'configuration_markovian.py' in sys.argv:
-        from configuration_markovian import configuration
-    elif 'configuration_sparse' in sys.argv or 'configuration_sparse.py' in sys.argv:
-        from configuration_sparse import configuration
-    else:
-        from configuration import configuration
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration module from arg = {} (module = {})...".format(arg, module_name))
+            configuration_module = importlib.import_module(module_name)
+    if configuration_module is None:
+        import configuration as configuration_module
 except ImportError:
-    from SMPyBandits.Environment import Evaluator, notify
-    # Import a configuration file
-    if 'configuration_nonstationary' in sys.argv or 'configuration_nonstationary.py' in sys.argv:
-        from SMPyBandits.configuration_nonstationary import configuration
-    elif 'configuration_comparing_aggregation_algorithms' in sys.argv or 'configuration_comparing_aggregation_algorithms.py' in sys.argv:
-        from SMPyBandits.configuration_comparing_aggregation_algorithms import configuration
-    elif 'configuration_all_singleplayer' in sys.argv or 'configuration_all_singleplayer.py' in sys.argv:
-        from SMPyBandits.configuration_all_singleplayer import configuration
-    elif 'configuration_comparing_doubling_algorithms' in sys.argv or 'configuration_comparing_doubling_algorithms.py' in sys.argv:
-        from SMPyBandits.configuration_comparing_doubling_algorithms import configuration
-    elif 'configuration_markovian' in sys.argv or 'configuration_markovian.py' in sys.argv:
-        from SMPyBandits.configuration_markovian import configuration
-    elif 'configuration_sparse' in sys.argv or 'configuration_sparse.py' in sys.argv:
-        from SMPyBandits.configuration_sparse import configuration
-    else:
-        from SMPyBandits.configuration import configuration
+    from SMPyBandits.Environment import Evaluator, notify, start_tracemalloc, display_top_tracemalloc
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
+            configuration_module = importlib.import_module('.{}'.format(module_name), package='SMPyBandits')
+    if configuration_module is None:
+        import configuration as configuration_module
+
+# Get the configuration dictionnary
+configuration = configuration_module.configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
@@ -180,6 +169,12 @@ if __name__ == '__main__':
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
+        # TODO copy (save) the current configuration file to this folder as configuration_date_hashvalue.py
+        if os.path.exists(configuration_module.__file__):
+            configuration_filename = configuration_module.__file__
+            import shutil
+            shutil.copyfile(configuration_filename, os.path.join(plot_dir, configuration_filename.replace('.py', '__{}.py'.format(hashvalue))))
+        # TODO do the same on other main_*.py scripts
         # Get the name of the output file
         imagename = "main____env{}-{}_{}".format(envId + 1, N, hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
