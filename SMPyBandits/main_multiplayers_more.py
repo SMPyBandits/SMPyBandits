@@ -20,26 +20,31 @@ import importlib
 import pickle
 
 # Local imports
+configuration_module = None
 try:
+    from save_configuration_for_reproducibility import save_configuration_for_reproducibility
     from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    configuration = None
     for arg in sys.argv:
         if arg.startswith('configuration'):
             module_name = arg.replace('.py', '')
             print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
-            configuration = importlib.import_module(module_name).configuration
-    if configuration is None:
-        from configuration_multiplayers import configuration
+            configuration_module = importlib.import_module(module_name)
+    if configuration_module is None:
+        import configuration_multiplayers as configuration_module
 except ImportError:
+    from SMPyBandits.save_configuration_for_reproducibility import save_configuration_for_reproducibility
     from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
     configuration = None
     for arg in sys.argv:
         if arg.startswith('configuration'):
             module_name = arg.replace('.py', '')
             print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
-            configuration = importlib.import_module(module_name, 'SMPyBandits').configuration
-    if configuration is None:
-        from configuration_multiplayers import configuration
+            configuration_module = importlib.import_module(module_name, 'SMPyBandits')
+    if configuration_module is None:
+        import SMPyBandits.configuration_multiplayers as configuration_module
+
+# Get the configuration dictionnary
+configuration = configuration_module.configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
@@ -191,6 +196,17 @@ if __name__ == '__main__':
                     raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
                 else:
                     mkdir(plot_dir)
+
+                # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
+                # --- DONE Save just the configuration to a minimalist python file
+                # TODO do the same on other main_*.py scripts
+                save_configuration_for_reproducibility(
+                    configuration=configuration,
+                    configuration_module=configuration_module,
+                    plot_dir=plot_dir,
+                    hashvalue=hashvalue,
+                    main_name="main_multiplayers_more.py",
+                )
 
                 if USE_PICKLE:
                     with open(picklename, 'wb') as picklefile:

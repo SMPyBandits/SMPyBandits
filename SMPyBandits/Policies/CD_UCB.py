@@ -91,7 +91,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
 
     def choice(self):
-        r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to ``choice`` of the underlying policy."""
+        r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to :meth:`choice` of the underlying policy."""
         if with_proba(self.proba_random_exploration):
             return np.random.randint(0, self.nbArms - 1)
         return self.policy.choice()
@@ -306,7 +306,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 
 # --- UCB-CDP based on LCB/UCB Mukherjee & Maillard's paper
 
-#: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speep up by 2.
+#: XXX Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``. Default is to have ``steps_s=1``, but only using ``steps_s=2`` should already speed up by 2.
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
@@ -550,7 +550,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         if "Sub" in class_name:
             name = "Sub{}".format(name)
         with_tracking = ", tracking" if "WithTracking" in class_name else ""
-        return r"{}-GLR-{}({}{}, {}{}{}{})".format(
+        with_deterministicexploration = ", determ.explo." if "DeterministicExploration" in class_name else ""
+        return r"{}-GLR-{}({}{}, {}{}{}{}{})".format(
             name,
             self._policy.__name__,
             "" if self._per_arm_restart else "Global, ",
@@ -558,7 +559,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
             ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
             ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
-            with_tracking
+            with_tracking,
+            with_deterministicexploration,
         )
 
     def detect_change(self, arm, verbose=VERBOSE):
@@ -609,17 +611,37 @@ class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
     .. warning:: FIXME this is still experimental!
     """
     def choice(self):
-        r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to ``choice`` of the underlying policy.
+        r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
         """
         number_of_explorations = self.last_pulls
         min_number_of_explorations = self.proba_random_exploration * (self.t - self.last_restart_times) / self.nbArms
         not_explored_enough = np.where(number_of_explorations <= min_number_of_explorations)[0]
         # FIXME check numerically what I want to prove mathematically
-        for arm in range(self.nbArms):
-            if number_of_explorations[arm] > 0:
-                assert number_of_explorations[arm] >= self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2, "Error: for arm k={}, the number of exploration n_k(t) = {} was not >= alpha={} / K={}**2 * (t={} - tau_k(t)={}) and RHS was = {}...".format(arm, number_of_explorations[arm], self.proba_random_exploration, self.nbArms, self.t, self.last_restart_times[arm], self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2)  # DEBUG
+        # for arm in range(self.nbArms):
+        #     if number_of_explorations[arm] > 0:
+        #         assert number_of_explorations[arm] >= self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2, "Error: for arm k={}, the number of exploration n_k(t) = {} was not >= alpha={} / K={}**2 * (t={} - tau_k(t)={}) and RHS was = {}...".format(arm, number_of_explorations[arm], self.proba_random_exploration, self.nbArms, self.t, self.last_restart_times[arm], self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2)  # DEBUG
         if len(not_explored_enough) > 0:
             return np.random.choice(not_explored_enough)
+        return self.policy.choice()
+
+
+class GLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy):
+    """ A variant of the GLR policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
+
+    - If :math:`t` is the current time and :math:`\tau` is the latest restarting time, then uniform exploration is done if:
+
+    .. math::
+
+        A &:= (t - \tau) \mod \lceil \frac{K}{\gamma} \rceil,\\
+        A &\leq K \implies A_t = A.
+    """
+    def choice(self):
+        r""" For some time steps, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
+        """
+        latest_restart_times = np.max(self.last_restart_times)
+        A = (self.t - latest_restart_times) % int(np.ceil(self.nbArms / self.proba_random_exploration))
+        if A < self.nbArms:
+            return int(A)
         return self.policy.choice()
 
 
@@ -638,6 +660,11 @@ class GaussianGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, Gaussia
     """
     pass
 
+class GaussianGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithDeterministicExploration, GaussianGLR_IndexPolicy):
+    """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
+    """
+    pass
+
 
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
@@ -649,6 +676,11 @@ class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
 
 class BernoulliGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy):
     """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough."""
+    pass
+
+class BernoulliGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithDeterministicExploration, BernoulliGLR_IndexPolicy):
+    """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
+    """
     pass
 
 

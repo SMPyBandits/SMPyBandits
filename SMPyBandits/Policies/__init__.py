@@ -183,7 +183,7 @@ from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
 
 from .LM_DSEE import LM_DSEE
 from .SWHash_UCB import SWHash_IndexPolicy
-from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, UCBLCB_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy_WithTracking, SubGaussianGLR_IndexPolicy
+from .CD_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy, UCBLCB_IndexPolicy, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy_WithTracking, GaussianGLR_IndexPolicy_WithDeterministicExploration, BernoulliGLR_IndexPolicy_WithDeterministicExploration, SubGaussianGLR_IndexPolicy
 from .Exp3R import Exp3R, Exp3RPlusPlus
 from .Monitored_UCB import Monitored_IndexPolicy
 from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy

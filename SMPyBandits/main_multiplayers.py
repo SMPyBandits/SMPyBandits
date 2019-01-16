@@ -11,13 +11,21 @@ __version__ = "0.9"
 # Generic imports
 from os import mkdir, getenv
 import os.path
-
 # Backup evaluation object
 import pickle
 
 # Local imports
-from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-from configuration_multiplayers import configuration
+try:
+    from save_configuration_for_reproducibility import save_configuration_for_reproducibility
+    from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
+    import configuration_multiplayers as configuration_module
+except ImportError:
+    from SMPyBandits.save_configuration_for_reproducibility import save_configuration_for_reproducibility
+    from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
+    import SMPyBandits.configuration_multiplayers as configuration_module
+
+# Get the configuration dictionnary
+configuration = configuration_module.configuration
 
 # Solving https://github.com/SMPyBandits/SMPyBandits/issues/15#issuecomment-292484493
 # For instance, call SLEEP=12h to delay the simulation for 12hours
@@ -149,6 +157,17 @@ if __name__ == '__main__':
                 raise ValueError("[ERROR] {} is a file, cannot use it as a directory !".format(plot_dir))
             else:
                 mkdir(plot_dir)
+
+            # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
+            # --- DONE Save just the configuration to a minimalist python file
+            # TODO do the same on other main_*.py scripts
+            save_configuration_for_reproducibility(
+                configuration=configuration,
+                configuration_module=configuration_module,
+                plot_dir=plot_dir,
+                hashvalue=hashvalue,
+                main_name="main_multiplayers.py",
+            )
 
             # Save it to a pickle file
             if USE_PICKLE:

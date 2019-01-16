@@ -106,6 +106,7 @@ class Evaluator(object):
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.cache_rewards = self.cfg.get('cache_rewards', False)  #: Should we cache and precompute rewards
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
+        self.use_box_plot = USE_BOX_PLOT or (self.repetitions == 1)  #: To use box plot (or violin plot if False). Force to use boxplot if repetitions=1.
 
         self.change_labels = self.cfg.get('change_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (overwrite their name).
         self.append_labels = self.cfg.get('append_labels', {})  #: Possibly empty dictionary to map 'policyId' to new labels (by appending the result from 'append_labels').
@@ -674,7 +675,7 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_times = [ np.asarray(all_times[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        violin_or_box_plot(data=all_times, labels=labels, boxplot=USE_BOX_PLOT)
+        violin_or_box_plot(data=all_times, labels=labels, boxplot=self.use_box_plot)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
         ylabel = "Running times (in {}), for {} repetitions".format(unit, self.repetitions)
         plt.ylabel(ylabel)
@@ -775,6 +776,8 @@ class Evaluator(object):
             subplots = False  # no need for a subplot
         colors = palette(N)
         markers = makemarkers(N)
+        if self.repetitions == 1:
+            boxplot = True
         if boxplot:
             all_last_regrets = []
             for policyId, policy in enumerate(self.policies):
@@ -792,7 +795,7 @@ class Evaluator(object):
             plt.xlabel("Bandit algorithms{}".format(self.signature))
             ylabel = "{}egret value $R_T{}$,\nfor $T = {}$, for {} repetitions".format("Normalized r" if normalized_boxplot else "R", r"/\log(T)" if normalized_boxplot else "", self.horizon, self.repetitions)
             plt.ylabel(ylabel, fontsize="x-small")
-            violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=USE_BOX_PLOT)
+            violin_or_box_plot(data=all_last_regrets, labels=labels, boxplot=self.use_box_plot)
             adjust_xticks_subplots(ylabel=ylabel, labels=labels)
             plt.title("Regret for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif all_on_separate_figures:
