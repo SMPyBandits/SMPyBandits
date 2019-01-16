@@ -118,11 +118,14 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
 
     def __str__(self):
         quality = ""
+        quality = "reset for optimal changes"
         subsub = self.reset_for_all_change
-        if subsub: quality = ", sub-sub-optimal"
+        if subsub: quality = "sub-sub-optimal"
+        if subsub: quality = "reset for all changes"
         sub = not self.reset_for_all_change and not self.reset_for_suboptimal_change
-        if sub: quality = ", sub-optimal"
-        args = "{}{}{}".format("" if self._per_arm_restart else "Global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "", quality)
+        if sub: quality = "sub-optimal"
+        args = "{}{}".format("" if self._per_arm_restart else "global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "")
+        args = "{}, {}".format(args, quality) if args else quality
         args = "({})".format(args) if args else ""
         # opt = not self.reset_for_all_change and self.reset_for_suboptimal_change
         return r"OracleRestart-{}{}".format(self._policy.__name__, args)

@@ -11,7 +11,7 @@ r""" An experimental policy, using only a sliding window (of for instance :math:
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.6"
+__version__ = "0.9"
 
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
@@ -26,7 +26,7 @@ except ImportError:
 TAU = 1000
 
 #: Default value for the constant :math:`\alpha`.
-DEFAULT_ALPHA = 0.6
+ALPHA = 1.0
 
 
 # --- Manually written
@@ -36,7 +36,7 @@ class SWUCB(IndexPolicy):
     """
 
     def __init__(self, nbArms,
-                 tau=TAU, alpha=DEFAULT_ALPHA,
+                 tau=TAU, alpha=ALPHA,
                  *args, **kwargs):
         super(SWUCB, self).__init__(nbArms, *args, **kwargs)
         # New parameters
@@ -49,7 +49,10 @@ class SWUCB(IndexPolicy):
         self.last_choices = np.full(tau, -1)  #: Keep in memory the times where each arm was last seen.
 
     def __str__(self):
-        return r"SW-UCB($\tau={}$, $\alpha={:.3g}$)".format(self.tau, self.alpha)
+        return r"SW-UCB($\tau={}${})".format(
+            self.tau,
+            ", $\alpha={:.3g}$".format(self.alpha) if self.alpha != ALPHA else "",
+        )
 
     def getReward(self, arm, reward):
         """Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

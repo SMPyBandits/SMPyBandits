@@ -251,6 +251,7 @@ if __name__ == '__main__':
             print(" - Plotting the cumulative rewards, and saving the plot to {} ...".format(savefig))
             savefig = mainfig
             evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=True)  # XXX To save the figure
+            savefig = mainfig.replace('main', 'main_LessAccurate')
             evaluation.plotRegrets(envId, savefig=savefig, moreAccurate=False)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_BestArmPulls')
             print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))

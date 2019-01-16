@@ -178,9 +178,12 @@ class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
 # --- Different change detection algorithms
 
 
+ALPHA0_SCALE_FACTOR = 0.5  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps,a  lot!
+
+
 from scipy.special import comb
 
-def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=0.5):
+def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=ALPHA0_SCALE_FACTOR):
     r""" Compute the values :math:`C_1^+, C_1^-, C_1, C_2, h` from the formulas in Theorem 2 and Corollary 2 in the paper."""
     T = int(max(1, horizon))
     UpsilonT = int(max(1, max_nb_random_events))
@@ -198,13 +201,13 @@ def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_ran
     print("Gave C2 = {}, C1- = {} and C1+ = {} so C1 = {}, and h = {} and alpha = {}".format(C2, C1_minus, C1_plus, C1, h, alpha))  # DEBUG
     return h, alpha
 
-def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=0.5):
+def compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms=None, epsilon=None, lmbda=None, M=None, scaleFactor=ALPHA0_SCALE_FACTOR):
     r""" Compute the values :math:`h, \alpha` from the simplified formulas in Theorem 2 and Corollary 2 in the paper.
 
     .. math::
 
         h &= \log(\frac{T}{\Upsilon_T}),\\
-        \alpha &= \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}.
+        \alpha &= \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}.
     """
     T = int(max(1, horizon))
     UpsilonT = int(max(1, max_nb_random_events))
@@ -336,7 +339,7 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
             "lazy s {}, ".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             r"$\delta_0={:.3g}$, ".format(self._delta0) if self._delta0 != 1 else "",
         )
-        if args.endswith(', '): args[:-2]
+        if args.endswith(', '): args = args[:-2]
         args = "({})".format(args) if args else ""
         return r"{}-CDP{}".format(self._policy.__name__, args)
 
@@ -480,8 +483,8 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
     return alpha_t1 / max(1, t)**exponentBeta
 
 
-def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=0.1):
-    r""" Compute a smart estimate of the    optimal value for the *fixed* forced exploration probability :math:`\alpha`.
+def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR):
+    r""" Compute a smart estimate of the optimal value for the *fixed* forced exploration probability :math:`\alpha`.
 
     .. math:: \alpha = \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
     """

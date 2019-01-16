@@ -20,11 +20,10 @@ except ImportError:
     from UCBalpha import UCBalpha
 
 #: Default parameter for alpha.
-ALPHA = 4
-
+ALPHA = 1
 
 #: Default parameter for gamma.
-GAMMA = 1.0
+GAMMA = 0.99
 
 
 class DiscountedUCB(UCBalpha):
@@ -50,9 +49,10 @@ class DiscountedUCB(UCBalpha):
         self.useRealDiscount = useRealDiscount  #: Flag to know if the real update should be used, the one with a multiplication by :math:`\gamma^{1+\Delta_k(t)}` and not simply a multiplication by :math:`\gamma`.
 
     def __str__(self):
-        return r"D-UCB({}$\alpha={:.3g}$, $\gamma={:.5g}$)".format(
+        return r"D-UCB({}$\gamma={:.5g}${})".format(
             "no delay, " if not self.useRealDiscount else "",
-            self.alpha, self.gamma
+            self.gamma,
+            ", $\alpha={:.3g}$".format(self.alpha) if self.alpha != ALPHA else "",
         )
 
     def getReward(self, arm, reward):

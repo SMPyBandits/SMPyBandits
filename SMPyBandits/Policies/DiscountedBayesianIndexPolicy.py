@@ -63,7 +63,7 @@ class DiscountedBayesianIndexPolicy(BayesianIndexPolicy):
 
     def __str__(self):
         """ -> str"""
-        return r"{}($\gamma={:.3g}${})".format(self.__class__.__name__, self.gamma, self._posterior_name if self._posterior_name != "DiscountedBeta" else "")
+        return r"{}($\gamma={:.5g}${})".format(self.__class__.__name__, self.gamma, self._posterior_name if self._posterior_name != "DiscountedBeta" else "")
 
     def getReward(self, arm, reward):
         """ Update the posterior on each arm, with the normalized reward."""
