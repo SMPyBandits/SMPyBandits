@@ -57,7 +57,7 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
-LAZY_DETECT_CHANGE_ONLY_X_STEPS = 5
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 4
 
 
 # --- The very generic class
@@ -313,7 +313,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 5
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 4
 
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):

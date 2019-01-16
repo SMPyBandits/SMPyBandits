@@ -125,13 +125,9 @@ if __name__ == '__main__':
         evaluation.startOneEnv(envId, env)
 
         # Display the final rankings for that env
-        print("\nGiving the final ranks ...")
         evaluation.printFinalRanking(envId)
-        print("\nGiving the vector of final regrets ...")
         evaluation.printLastRegrets(envId)
-        print("\nGiving the mean and std running times ...")
         evaluation.printRunningTimes(envId)
-        print("\nGiving the mean and std memory consumption ...")
         evaluation.printMemoryConsumption(envId)
         if debug_memory: display_top_tracemalloc()  # DEBUG
 

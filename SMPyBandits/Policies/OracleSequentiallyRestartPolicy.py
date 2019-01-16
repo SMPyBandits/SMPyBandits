@@ -117,11 +117,9 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         return optimized_changePoints
 
     def __str__(self):
-        quality = ""
         quality = "reset for optimal changes"
-        subsub = self.reset_for_all_change
-        if subsub: quality = "sub-sub-optimal"
-        if subsub: quality = "reset for all changes"
+        if self.reset_for_all_change: quality = "reset for all changes"
+        if self.reset_for_all_change: quality = ""
         sub = not self.reset_for_all_change and not self.reset_for_suboptimal_change
         if sub: quality = "sub-optimal"
         args = "{}{}".format("" if self._per_arm_restart else "global", ", Restart-with-new-Object" if self._full_restart_when_refresh else "")
@@ -143,7 +141,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         # Store it in place for the empirical average of that arm
         self.all_rewards[arm].append(reward)
 
-        if self.t in self.changePoints[arm]:
+        if self.detect_change(arm):
             print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points!".format(self, self.t, arm))  # DEBUG
 
             if not self._per_arm_restart:
@@ -173,3 +171,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
 
         # we update the total number of samples available to the underlying policy
         # self.policy.t = np.sum(self.last_pulls)  # XXX SO NOT SURE HERE
+
+    def detect_change(self, arm):
+        """ Try to detect a change in the current arm."""
+        return self.t in self.changePoints[arm]

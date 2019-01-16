@@ -144,6 +144,7 @@ class Evaluator(object):
         self.lastPulls = dict()  #: For each env, keep cumulative counts of all arm pulls
         self.runningTimes = dict()  #: For each env, keep the history of running times
         self.memoryConsumption = dict()  #: For each env, keep the history of running times
+        self.numberOfCPDetections = dict()  #: For each env, store the number of change-point detections by each algorithms, to print it's average at the end (to check if a certain Change-Point detector algorithm detects too few or too many changes).
         # XXX: WARNING no memorized vectors should have dimension duration * repetitions, that explodes the RAM consumption!
         for envId in range(len(self.envs)):
             self.bestArmPulls[envId] = np.zeros((self.nbPolicies, self.horizon), dtype=np.int32)
@@ -152,6 +153,7 @@ class Evaluator(object):
             self.lastPulls[envId] = np.zeros((self.nbPolicies, self.envs[envId].nbArms, self.repetitions), dtype=np.int32)
             self.runningTimes[envId] = np.zeros((self.nbPolicies, self.repetitions))
             self.memoryConsumption[envId] = np.zeros((self.nbPolicies, self.repetitions))
+            self.numberOfCPDetections[envId] = np.zeros((self.nbPolicies, self.repetitions), dtype=np.int32)
         print("Number of environments to try:", len(self.envs))
         # To speed up plotting
         self._times = np.arange(1, 1 + self.horizon)
@@ -255,6 +257,7 @@ class Evaluator(object):
             self.memoryConsumption[envId][policyId, repeatId] = r.memory_consumption
             self.lastPulls[envId][policyId, :, repeatId] = r.pulls
             self.runningTimes[envId][policyId, repeatId] = r.running_time
+            self.numberOfCPDetections[envId][policyId, repeatId] = r.number_of_cp_detections
 
         # Start for all policies
         for policyId, policy in enumerate(self.policies):
@@ -320,7 +323,7 @@ class Evaluator(object):
                 except (ValueError, TypeError):
                     print("Error: when saving the Evaluator object to a HDF5 file, the attribute named {} (value {} of type {}) couldn't be saved. Skipping...".format(name_of_attr, value, type(value)))  # DEBUG
             # 4.c. store data for that env
-            for name_of_dataset in ["allPulls", "lastPulls", "runningTimes", "memoryConsumption"]:
+            for name_of_dataset in ["allPulls", "lastPulls", "runningTimes", "memoryConsumption", "numberOfCPDetections"]:
                 if not ( hasattr(self, name_of_dataset) and envId in getattr(self, name_of_dataset) ): continue
                 data = getattr(self, name_of_dataset)[envId]
                 try: sbgrp.create_dataset(name_of_dataset, data=data)
@@ -329,7 +332,7 @@ class Evaluator(object):
                     print("Exception:\n", e)  # DEBUG
 
             # 4.d. compute and store data for that env
-            for methodName in ["getRunningTimes", "getMemoryConsumption", "getBestArmPulls", "getPulls", "getRewards", "getCumulatedRegret", "getLastRegrets", "getAverageRewards"]:
+            for methodName in ["getRunningTimes", "getMemoryConsumption", "getNumberOfCPDetections", "getBestArmPulls", "getPulls", "getRewards", "getCumulatedRegret", "getLastRegrets", "getAverageRewards"]:
                 if not hasattr(self, methodName): continue
                 name_of_dataset = methodName.replace("get", "")
                 name_of_dataset = name_of_dataset[0].lower() + name_of_dataset[1:]
@@ -504,7 +507,35 @@ class Evaluator(object):
         stds  = [np.std(memories)  if len(memories) > 0 else 0 for memories in all_memories]
         return means, stds, all_memories
 
+    def getNumberOfCPDetections(self, envId=0):
+        """Get the means and stds and list of numberOfCPDetections of the different policies."""
+        all_number_of_cp_detections = [ self.numberOfCPDetections[envId][policyId, :] for policyId in range(self.nbPolicies) ]
+        means = [ np.mean(number_of_cp_detections) for number_of_cp_detections in all_number_of_cp_detections ]
+        stds  = [ np.std(number_of_cp_detections) for number_of_cp_detections in all_number_of_cp_detections ]
+        return means, stds, all_number_of_cp_detections
+
     # --- Plotting methods
+
+    def printFinalRanking(self, envId=0, moreAccurate=None):
+        """Print the final ranking of the different policies."""
+        print("\nGiving the final ranks ...")
+        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
+        print("\nFinal ranking for this environment #{} :".format(envId))
+        nbPolicies = self.nbPolicies
+        lastY = np.zeros(nbPolicies)
+        for i, policy in enumerate(self.policies):
+            Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
+            if self.finalRanksOnAverage:
+                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
+            else:
+                lastY[i] = Y[-1]  # get the last value
+        # Sort lastY and give ranking
+        index_of_sorting = np.argsort(lastY)
+        for i, k in enumerate(index_of_sorting):
+            policy = self.policies[k]
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastY[k]))
+        return lastY, index_of_sorting
+        return fig
 
     def _xlabel(self, envId, *args, **kwargs):
         """Add xlabel to the plot, and if the environment has change-point, draw vertical lines to clearly identify the locations of the change points."""
@@ -666,6 +697,23 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
+    def printRunningTimes(self, envId=0, precision=3):
+        """Print the average+-std running time of the different policies."""
+        print("\nGiving the mean and std running times ...")
+        try:
+            from IPython.core.magics.execution import _format_time
+        except ImportError:
+            _format_time = str
+        means, stds, _ = self.getRunningTimes(envId)
+        for policyId in np.argsort(means):
+            policy = self.policies[policyId]
+            print("\nFor policy #{} called '{}' ...".format(policyId, policy))
+            mean_time, std_time  = means[policyId], stds[policyId]
+            if self.repetitions <= 1:
+                print(u"    {} (mean of 1 run)" .format(_format_time(mean_time, precision)))
+            else:
+                print(u"    {} ± {} per loop (mean ± std. dev. of {} run)" .format(_format_time(mean_time, precision), _format_time(std_time, precision), self.repetitions))
+
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds"):
         """Plot the running times of the different policies, as a box plot for each."""
         means, _, all_times = self.getRunningTimes(envId=envId)
@@ -684,6 +732,19 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
         return fig
 
+    def printMemoryConsumption(self, envId=0):
+        """Print the average+-std memory consumption of the different policies."""
+        print("\nGiving the mean and std memory consumption ...")
+        means, stds, _ = self.getMemoryConsumption(envId)
+        for policyId in np.argsort(means):
+            policy = self.policies[policyId]
+            print("\nFor policy #{} called '{}' ...".format(policyId, policy))
+            mean_time, std_time = means[policyId], stds[policyId]
+            if self.repetitions <= 1:
+                print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
+            else:
+                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(self.repetitions, sizeof_fmt(mean_time), sizeof_fmt(std_time)))
+
     def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB"):
         """Plot the memory consumption of the different policies, as a box plot for each."""
         means, _, all_memories = self.getMemoryConsumption(envId=envId)
@@ -700,60 +761,43 @@ class Evaluator(object):
         adjust_xticks_subplots(ylabel=ylabel, labels=labels)
         plt.title("Memory consumption for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
-        return fig
 
-    def printFinalRanking(self, envId=0, moreAccurate=None):
-        """Print the final ranking of the different policies."""
-        assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
-        print("\nFinal ranking for this environment #{} :".format(envId))
-        nbPolicies = self.nbPolicies
-        lastY = np.zeros(nbPolicies)
-        for i, policy in enumerate(self.policies):
-            Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
-            if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
-            else:
-                lastY[i] = Y[-1]  # get the last value
-        # Sort lastY and give ranking
-        index_of_sorting = np.argsort(lastY)
-        for i, k in enumerate(index_of_sorting):
-            policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastY[k]))
-        return lastY, index_of_sorting
-
-    def printRunningTimes(self, envId=0, precision=3):
-        """Print the average+-std running time of the different policies."""
-        from IPython.core.magics.execution import _format_time
-        means, stds, _ = self.getRunningTimes(envId)
-
+    def printNumberOfCPDetections(self, envId=0):
+        """Print the average+-std number_of_cp_detections of the different policies."""
+        means, stds, _ = self.getNumberOfCPDetections(envId)
+        if np.max(means) == 0: return None
+        print("\nGiving the mean and std number of CP detections ...")
         for policyId in np.argsort(means):
             policy = self.policies[policyId]
             print("\nFor policy #{} called '{}' ...".format(policyId, policy))
-            mean_time, std_time  = means[policyId], stds[policyId]
-            print(u"    {mean} ± {std} per loop (mean ± std. dev. of {runs} run{run_plural})"
-                .format(
-                    runs = self.repetitions,
-                    run_plural = "" if self.repetitions == 1 else "s",
-                    mean = _format_time(mean_time, precision),
-                    std = _format_time(std_time, precision)
-                )
-            )
-
-    def printMemoryConsumption(self, envId=0):
-        """Print the average+-std memory consumption of the different policies."""
-        means, stds, _ = self.getMemoryConsumption(envId)
-
-        for policyId in np.argsort(means):
-            policy = self.policies[policyId]
-            print("\nFor policy #{} called '{}' ...".format(policyId, policy))
-            mean_time, std_time = means[policyId], stds[policyId]
+            mean_number_of_cp_detections, std_number_of_cp_detections = means[policyId], stds[policyId]
             if self.repetitions <= 1:
-                print(u"    {mean} (mean of 1 run)".format(mean=sizeof_fmt(mean_time)))
+                print(u"    {:.3g} (mean of 1 run)".format(mean_number_of_cp_detections))
             else:
-                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=self.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
+                print(u"    {:.3g} ± {:.3g} (mean ± std. dev. of {} runs)".format(mean_number_of_cp_detections, std_number_of_cp_detections, self.repetitions))
+
+    def plotNumberOfCPDetections(self, envId=0, savefig=None):
+        """Plot the number of change-point detections of the different policies, as a box plot for each."""
+        means, _, all_number_of_cp_detections = self.getNumberOfCPDetections(envId=envId)
+        if np.max(means) == 0: return None
+        # order by increasing mean memory consumption
+        index_of_sorting = np.argsort(means)
+        labels = [ policy.__cachedstr__ for policy in self.policies ]
+        labels = [ labels[i] for i in index_of_sorting ]
+        all_number_of_cp_detections = [ np.asarray(all_number_of_cp_detections[i]) for i in index_of_sorting ]
+        fig = plt.figure()
+        violin_or_box_plot(data=all_number_of_cp_detections, labels=labels, boxplot=True)
+        plt.xlabel("Bandit algorithms{}".format(self.signature))
+        ylabel = "Number of detected change-points, for {} repetitions".format(self.repetitions)
+        plt.ylabel(ylabel)
+        adjust_xticks_subplots(ylabel=ylabel, labels=labels)
+        plt.title("Detected change-points for different bandit algorithms, horizon $T={}$, averaged ${}$ times\n${}$ arms{}: {}".format(self.horizon, self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
+        show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
+        return fig
 
     def printLastRegrets(self, envId=0, moreAccurate=False):
         """Print the last regrets of the different policies."""
+        print("\nGiving the vector of final regrets ...")
         for policyId, policy in enumerate(self.policies):
             print("\n  For policy #{} called '{}' ...".format(policyId, policy))
             last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
@@ -883,6 +927,17 @@ def delayed_play(env, policy, horizon,
     # Start game
     policy.startGame()
     result = Result(env.nbArms, horizon, indexes_bestarm=indexes_bestarm, means=means)  # One Result object, for every policy
+
+    # FIXME Monkey patching policy.detect_change() to store number of detections, see https://stackoverflow.com/a/42657312/
+    if hasattr(policy, 'detect_change'):
+        from types import MethodType
+        old_detect_change = policy.detect_change
+        def new_detect_change(self, *args, **kwargs):
+            did_it_detect_a_change = old_detect_change(*args, **kwargs)
+            if did_it_detect_a_change:
+                result.number_of_cp_detections += 1
+            return did_it_detect_a_change
+        policy.detect_change = MethodType(new_detect_change, policy)
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
     if nb_break_points is None or nb_break_points <= 0:

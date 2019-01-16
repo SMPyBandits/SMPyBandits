@@ -846,32 +846,33 @@ class EvaluatorMultiPlayers(object):
 
     def printRunningTimes(self, envId=0, precision=3, evaluators=()):
         """Print the average+-std running time of the different players."""
-        from IPython.core.magics.execution import _format_time
+        print("\nGiving the mean and std running times ...")
+        try:
+            from IPython.core.magics.execution import _format_time
+        except ImportError:
+            _format_time = str
         evaluators = [self] + list(evaluators)  # Default to only [self]
         for e in evaluators:
             means, stds, _ = e.getRunningTimes(envId)
             mean_time, std_time = np.sum(means), np.mean(stds)
             print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
-            print(u"    {mean} ± {std} per loop (mean ± std. dev. of {runs} run{run_plural})"
-                .format(
-                    runs = e.repetitions,
-                    run_plural = "" if e.repetitions == 1 else "s",
-                    mean = _format_time(mean_time, precision),
-                    std = _format_time(std_time, precision)
-                )
-            )
+            if e.repetitions <= 1:
+                print(u"    {} (mean of 1 run)".format(_format_time(mean_time, precision)))
+            else:
+                print(u"    {} ± {} per loop (mean ± std. dev. of {} run)".format(_format_time(mean_time, precision), _format_time(std_time, precision), e.repetitions))
 
     def printMemoryConsumption(self, envId=0, evaluators=()):
         """Print the average+-std memory consumption of the different players."""
+        print("\nGiving the mean and std memory consumption ...")
         evaluators = [self] + list(evaluators)  # Default to only [self]
         for e in evaluators:
             means, stds, _ = e.getMemoryConsumption(envId)
             print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
             mean_time, std_time = np.sum(means), np.mean(stds)
             if e.repetitions <= 1:
-                print(u"    {mean} (mean of 1 run)".format(mean=sizeof_fmt(mean_time)))
+                print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
             else:
-                print(u"    {mean} ± {std} (mean ± std. dev. of {runs} runs)".format(runs=e.repetitions, mean=sizeof_fmt(mean_time), std=sizeof_fmt(std_time)))
+                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(e.repetitions, sizeof_fmt(mean_time), sizeof_fmt(std_time)))
 
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds", evaluators=()):
         """Plot the running times of the different players, as a box plot for each evaluators."""
@@ -921,6 +922,7 @@ class EvaluatorMultiPlayers(object):
 
     def printFinalRanking(self, envId=0, verb=True):
         """Compute and print the ranking of the different players."""
+        print("\nGiving the final ranks ...")
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers class has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
         if verb: print("\nFinal ranking for this environment #{:>2} : {} ...".format(envId, self.strPlayers(latex=False, short=True)))  # DEBUG
         lastY = np.zeros(self.nbPlayers)
@@ -953,6 +955,7 @@ class EvaluatorMultiPlayers(object):
 
     def printLastRegrets(self, envId=0, evaluators=(), moreAccurate=None):
         """Print the last regrets of the different evaluators."""
+        print("\nGiving the vector of final regrets ...")
         evaluators = [self] + list(evaluators)  # Default to only [self]
         for evaId, eva in enumerate(evaluators):
             print("\nFor evaluator #{:>2}/{} : {} (players {}) ...".format(1 + evaId, len(evaluators), eva, eva.strPlayers(latex=False, short=True)))

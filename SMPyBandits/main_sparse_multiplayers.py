@@ -132,9 +132,7 @@ if __name__ == '__main__':
                 evaluators[envId][playersId] = evaluation
 
             # Display the final rankings for that env
-            print("\n\nGiving the final ranks ...")
             evaluation.printFinalRanking(envId)
-            print("\n\nGiving the vector of final regrets ...")
             evaluation.printLastRegrets(envId)
 
             # Sub folder with a useful name
