@@ -178,7 +178,7 @@ class SlidingWindowRestart_IndexPolicy(CD_IndexPolicy):
 # --- Different change detection algorithms
 
 
-ALPHA0_SCALE_FACTOR = 0.5  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps,a  lot!
+ALPHA0_SCALE_FACTOR = 0.1  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps,a  lot!
 
 
 from scipy.special import comb

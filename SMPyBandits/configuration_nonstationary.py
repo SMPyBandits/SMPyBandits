@@ -541,17 +541,17 @@ configuration.update({
         { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
         for alpha in ALPHAS
     ] +
-    [
-        # --- # Different versions of the discounted UCB algorithm
-        { "archtype": DiscountedUCB, "params": {
-            "alpha": alpha,
-            "gamma": gamma,
-            # "useRealDiscount": useRealDiscount,
-        } }
-        for alpha in ALPHAS
-        for gamma in GAMMAS
-        # for useRealDiscount in [True, False]
-    ] +
+    # [
+    #     # --- # Different versions of the discounted UCB algorithm
+    #     { "archtype": DiscountedUCB, "params": {
+    #         "alpha": alpha,
+    #         "gamma": gamma,
+    #         # "useRealDiscount": useRealDiscount,
+    #     } }
+    #     for alpha in ALPHAS
+    #     for gamma in GAMMAS
+    #     # for useRealDiscount in [True, False]
+    # ] +
     # [
     #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
     #     { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
@@ -631,8 +631,8 @@ configuration.update({
             # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for policy in [
-            # UCB,  # XXX comment to only test klUCB
-            klUCB,
+            UCB,  # XXX comment to only test klUCB
+            # klUCB,
         ]
         # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
         # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
@@ -652,12 +652,12 @@ configuration.update({
         } }
         for archtype in [
             GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-            # GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
             # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
             BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
-            # BernoulliGLR_IndexPolicy_WithDeterministicExploration,   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
+            BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
+            BernoulliGLR_IndexPolicy_WithDeterministicExploration,   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
