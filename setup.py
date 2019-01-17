@@ -24,7 +24,7 @@ if path.exists(README):
         long_description = f.read()
         # print("Using a long_description of length,", len(long_description), "from file", README)  # DEBUG
 
-version = "0.9.4"
+version = "0.9.5"
 try:
     from SMPyBandits import __version__ as version
 except ImportError:
@@ -32,7 +32,7 @@ except ImportError:
     print("Are you sure you are building in the correct folder?")
 
 # FIXME revert when done uploading the first version to PyPI
-# version = "0.0.1.dev9"
+# version = "0.0.2.dev2"
 
 
 setup(name="SMPyBandits",
@@ -102,6 +102,7 @@ setup(name="SMPyBandits",
     project_urls={  # Optional
         "Bug Reports": "https://github.com/SMPyBandits/SMPyBandits/issues",
         "Source":      "https://github.com/SMPyBandits/SMPyBandits/tree/master/",
+        "Documentation": "https://smpybandits.github.io/",
     },
 )
 
