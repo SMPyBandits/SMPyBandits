@@ -37,6 +37,7 @@ def save_configuration_for_reproducibility(
         str_configuration = pprint.pformat(configuration).\
             replace("<class '", "SMPyBandits.").replace("'>", "").\
             replace("<built-in function ", "").replace(">", "")
+            # FIXME other things to do!
 
         relative_imports_to_do = []
         absolute_imports_to_do = []

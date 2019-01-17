@@ -190,7 +190,7 @@ if __name__ == '__main__':
                 configuration=configuration,
                 configuration_module=configuration_module,
                 plot_dir=plot_dir,
-                hashvalue=hashvalue,
+                hashvalue="env{}-{}_{}".format(envId + 1, N, hashvalue),
                 main_name="main.py",
             )
 

@@ -743,7 +743,7 @@ class Evaluator(object):
             if self.repetitions <= 1:
                 print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
             else:
-                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(self.repetitions, sizeof_fmt(mean_time), sizeof_fmt(std_time)))
+                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(std_time), self.repetitions))
 
     def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB"):
         """Plot the memory consumption of the different policies, as a box plot for each."""
@@ -847,7 +847,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(policy.__cachedstr__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-                self._xlabel(envId, "Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
+                plt.xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'cut': 0, 'marker': markers[policyId], 'markevery': (policyId / 50., 0.1)})

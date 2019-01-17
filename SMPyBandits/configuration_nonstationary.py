@@ -50,14 +50,33 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 if REPETITIONS == -1:
     REPETITIONS = max(N_JOBS, CPU_COUNT)
 
-# Random events
-RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
-RANDOM_SHUFFLE = getenv('RANDOM_SHUFFLE', str(RANDOM_SHUFFLE)) == 'True'
-RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
-RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
+# # Random events
+# RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
+# RANDOM_SHUFFLE = getenv('RANDOM_SHUFFLE', str(RANDOM_SHUFFLE)) == 'True'
+# RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
+# RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
+
 
 NB_BREAK_POINTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
+
+#: This dictionary configures the experiments
+configuration = {
+    # --- Duration of the experiment
+    "horizon": HORIZON,
+    # --- Number of repetition of the experiment (to have an average)
+    "repetitions": REPETITIONS,
+    # --- Parameters for the use of joblib.Parallel
+    "n_jobs": N_JOBS,    # = nb of CPU cores
+    "verbosity": 6,      # Max joblib verbosity
+    # --- Random events
+    "nb_break_points": NB_BREAK_POINTS,
+    # --- Should we plot the lower-bounds or not?
+    "plot_lowerbound": False,  # XXX Default for non stationary: we do not have a better lower bound than Lai & Robbins's.
+    # --- Arms
+    "environment": [],
+}
+
 
 #: Number of arms for non-hard-coded problems (Bayesian problems)
 NB_ARMS = 3
@@ -80,27 +99,14 @@ ARM_TYPE = mapping_ARM_TYPE[ARM_TYPE]
 #: Means of arms for non-hard-coded problems (non Bayesian)
 MEANS = uniformMeans(nbArms=NB_ARMS, delta=0.05, lower=LOWER, amplitude=AMPLITUDE, isSorted=True)
 
+# FIXME we cannot launch simulations on many problems in just one launch, because the oracle needs to know the change-point locations (and they change for some problems), and some algorithms need to know the number of arms for parameter selections?
 
-
-#: This dictionary configures the experiments
-configuration = {
-    # --- Duration of the experiment
-    "horizon": HORIZON,
-    # --- Number of repetition of the experiment (to have an average)
-    "repetitions": REPETITIONS,
-    # --- Parameters for the use of joblib.Parallel
-    "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 6,      # Max joblib verbosity
-    # --- Random events
-    "nb_break_points": NB_BREAK_POINTS,
-    # --- Should we plot the lower-bounds or not?
-    "plot_lowerbound": False,  # XXX Default for non stationary: we do not have a better lower bound than Lai & Robbins's.
-    # --- Arms
-    "environment": [],
-}
+PROBLEMS = [1, 2]
+STR_PROBLEMS = str(getenv('PROBLEMS', '1, 2')).replace(' ', '')
+PROBLEMS = [int(p) for p in STR_PROBLEMS.split(',')]
 
 # XXX Pb 0 changes are only on one arm at a time, only 2 arms
-if False:  # WARNING remove this "False and" to use this problem
+if 0 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": ARM_TYPE,
@@ -125,15 +131,15 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 1 changes are only on one arm at a time
-if False:  # WARNING remove this "False and" to use this problem
+if 1 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": ARM_TYPE,
             "params": {
                 "listOfMeans": [
-                    [0.2, 0.5, 0.9],  # 0    to 399
-                    [0.2, 0.2, 0.9],  # 400  to 799
-                    [0.2, 0.2, 0.1],  # 800  to 1199
+                    [0.3, 0.5, 0.9],  # 0    to 399
+                    [0.3, 0.2, 0.9],  # 400  to 799
+                    [0.3, 0.2, 0.1],  # 800  to 1199
                     [0.7, 0.2, 0.1],  # 1200 to 1599
                     [0.7, 0.5, 0.1],  # 1600 to end
                 ],
@@ -150,7 +156,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 2 changes are on all or almost arms at a time
-if False:  # WARNING remove this "False and" to use this problem
+if 2 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": ARM_TYPE,
@@ -175,7 +181,7 @@ if False:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 3 changes are on all or almost arms at a time, from https://subhojyoti.github.io/pdf/aistats_2019.pdf
-if True:  # WARNING remove this "False and" to use this problem
+if 3 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": ARM_TYPE,
@@ -197,7 +203,7 @@ if True:  # WARNING remove this "False and" to use this problem
     ]
 
 # XXX Pb 4 changes are on all or almost arms at a time, but sequences don't have same length
-if True:
+if 4 in PROBLEMS:
     configuration["environment"] += [
         {   # A simple piece-wise stationary problem
             "arm_type": ARM_TYPE,
@@ -222,7 +228,7 @@ if True:
     ]
 
 # XXX Pb 5 Example from the Yahoo! dataset, from article "Nearly Optimal Adaptive Procedure with Change Detection for Piecewise-Stationary Bandit" (M-UCB) https://arxiv.org/abs/1802.03692
-if False:  # WARNING remove this "False and" to use this problem
+if 5 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 6 arms and 9 change points
             "arm_type": ARM_TYPE,
@@ -239,13 +245,13 @@ if False:  # WARNING remove this "False and" to use this problem
                     [0.020, 0.022, 0.020, 0.057, 0.008, 0.011],  # 8th segment
                     [0.020, 0.022, 0.034, 0.057, 0.022, 0.011],  # 9th segment
                 ],
-                "changePoints": np.linspace(0, HORIZON, num=9, endpoint=True, dtype=int),
+                "changePoints": np.linspace(0, HORIZON, num=9, endpoint=False, dtype=int),
             }
         },
     ]
 
 # XXX Pb 6 Another example from the Yahoo! dataset, from article "On Abruptly-Changing and Slowly-Varying Multiarmed Bandit Problems" (SW-UCB#) https://arxiv.org/abs/1802.08380
-if False:  # WARNING remove this "False and" to use this problem
+if 6 in PROBLEMS:  # WARNING remove this "False and" to use this problem
     configuration["environment"] = [
         {   # A very hard piece-wise stationary problem, with 5 arms and 9 change points
             "arm_type": ARM_TYPE,
@@ -335,7 +341,7 @@ if False:  # WARNING remove this "False and" to use this problem
                     [0.049, 0.031, 0.035, 0.027, 0.039],
                     [0.049, 0.032, 0.033, 0.027, 0.039],
                 ],
-                "changePoints": np.linspace(0, HORIZON, num=82, endpoint=True, dtype=int),
+                "changePoints": np.linspace(0, HORIZON, num=82, endpoint=False, dtype=int),
             }
         },
     ]
@@ -387,6 +393,10 @@ def check_condition_on_piecewise_stationary_problems(horizon, listOfMeans, chang
 CHANGE_POINTS = configuration["environment"][0]["params"]["changePoints"]
 LIST_OF_MEANS = configuration["environment"][0]["params"]["listOfMeans"]
 # CHANGE_POINTS = np.unique(np.array(list(set.union(*(set(env["params"]["changePoints"]) for env in ENVIRONMENT)))))
+
+NB_BREAK_POINTS = max([len(env["params"]["changePoints"]) - (1 if 0 in env["params"]["changePoints"] else 0) for env in configuration["environment"]])
+configuration["nb_break_points"] = NB_BREAK_POINTS
+
 
 # if False:  # WARNING remove this "False and" to use this problem
 #     configuration["environment"] = [
@@ -467,7 +477,7 @@ TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.99] #+ [0.9999, 0.9, 0.75, 0.5]
+GAMMAS = [0.99] + [0.9999, 0.9, 0.75, 0.5]
 
 WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
 
@@ -493,7 +503,7 @@ configuration.update({
         # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
         { "archtype": klUCB, "params": { "klucb": klucb, } },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-        { "archtype": Thompson, "params": { "posterior": Beta, } },
+        # { "archtype": Thompson, "params": { "posterior": Beta, } },
     ] +
     [  # XXX DiscountedThompson works REALLY well!
         { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
@@ -531,16 +541,16 @@ configuration.update({
     # #     for tau in [TAUS[0]] for eps in [EPSS[0]]
     # #     for policy in [UCB, klUCB, Thompson, BayesUCB]
     # # ] +
-    # [
-    #     # --- # Different versions of the sliding window UCB algorithm
-    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-    #     for alpha in ALPHAS for tau in TAUS
-    # ] +
     [
-        # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-        { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
-        for alpha in ALPHAS
+        # --- # Different versions of the sliding window UCB algorithm
+        { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+        for alpha in ALPHAS for tau in TAUS
     ] +
+    # [
+    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+    #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
+    #     for alpha in ALPHAS
+    # ] +
     # [
     #     # --- # Different versions of the discounted UCB algorithm
     #     { "archtype": DiscountedUCB, "params": {
@@ -588,7 +598,7 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            Thompson,
+            # Thompson,
             # UCB,
             klUCB,  # XXX comment to only test UCB
             # Exp3PlusPlus,  # XXX comment to only test UCB
@@ -596,8 +606,9 @@ configuration.update({
         # for per_arm_restart in [True, False]
         # for full_restart_when_refresh in [True, False]
         for reset_for_all_change, reset_for_suboptimal_change in [
-            (True,  True),  # sub sub optimal
-            # (False, True),  # optimal
+            (True,  False),  # optimal
+            # (True,  True),  # sub sub optimal
+            # (False, True),  # ? optimal
             # (False, False),  # sub optimal
         ]
     ] +
@@ -613,7 +624,7 @@ configuration.update({
         } }
         for archtype in [
             CUSUM_IndexPolicy,
-            PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+            # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
@@ -622,22 +633,22 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
     ] +
-    # XXX Test a UCBLCB_IndexPolicy algorithm
-    [
-        { "archtype": UCBLCB_IndexPolicy, "params": {
-            "policy": policy,
-            # "delta0": delta0,
-            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
-        } }
-        for policy in [
-            UCB,  # XXX comment to only test klUCB
-            # klUCB,
-        ]
-        # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
-        # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
-        # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
-    ] +
+    # # XXX Test a UCBLCB_IndexPolicy algorithm
+    # [
+    #     { "archtype": UCBLCB_IndexPolicy, "params": {
+    #         "policy": policy,
+    #         # "delta0": delta0,
+    #         # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+    #         # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+    #     } }
+    #     for policy in [
+    #         # UCB,  # XXX comment to only test klUCB
+    #         klUCB,
+    #     ]
+    #     # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
+    #     # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
+    #     # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
+    # ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
         { "archtype": archtype, "params": {
@@ -651,12 +662,12 @@ configuration.update({
             # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
-            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
             GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
             # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-            BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
+            # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
             BernoulliGLR_IndexPolicy_WithDeterministicExploration,   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [

@@ -455,7 +455,9 @@ def threshold_BernoulliGLR(s, t, horizon=None, delta=None):
     if delta is None:
         delta = 1.0 / horizon
     # c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))
-    c = -log(delta) + log(s) + log(t-s)
+    # c = -log(delta) + log(s) + log(t-s)
+    # c = -log(delta) + log(1 + log(t))
+    c = -log(delta) + log(t)
     if c < 0 or isinf(c):
         c = float('+inf')
     return c
@@ -553,7 +555,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         if "Sub" in class_name:
             name = "Sub{}".format(name)
         with_tracking = ", tracking" if "WithTracking" in class_name else ""
-        with_deterministicexploration = ", determ.explo." if "DeterministicExploration" in class_name else ""
+        with_randomexploration = ", random.explo." if "DeterministicExploration" not in class_name else ""
         return r"{}-GLR-{}({}{}, {}{}{}{}{})".format(
             name,
             self._policy.__name__,
@@ -563,7 +565,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
             ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking,
-            with_deterministicexploration,
+            with_randomexploration,
         )
 
     def detect_change(self, arm, verbose=VERBOSE):
@@ -610,8 +612,6 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
 class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
     """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough (with a tracking).
-
-    .. warning:: FIXME this is still experimental!
     """
     def choice(self):
         r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
