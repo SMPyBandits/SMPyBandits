@@ -898,6 +898,9 @@ class Evaluator(object):
         env = self.envs[envId]
         if hasattr(env, 'plotHistoryOfMeans'):
             fig = env.plotHistoryOfMeans(horizon=horizon, savefig=savefig, showplot=self.showplot)
+            # FIXME https://github.com/SMPyBandits/SMPyBandits/issues/175#issuecomment-455637453
+            #  For one trajectory, we can ask Evaluator.Evaluator to store not only the number of detections, but more! We can store the times of detections, for each arms (as a list of list).
+            # If we have these data (for each repetitions), we can plot the detection times (for each arm) on a plot like the following
             return fig
         else:
             print("Warning: environment {} did not have a method plotHistoryOfMeans...".format(env))  # DEBUG

@@ -501,12 +501,16 @@ configuration.update({
         # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
         # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
         # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-        { "archtype": klUCB, "params": { "klucb": klucb, } },
+        { "archtype": klUCB, "params": { "klucb": klucb, }, "change_label": "klUCB", },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
         # { "archtype": Thompson, "params": { "posterior": Beta, } },
     ] +
     [  # XXX DiscountedThompson works REALLY well!
-        { "archtype": DiscountedThompson, "params": { "posterior": DiscountedBeta, "gamma": gamma } }
+        {
+            "archtype": DiscountedThompson,
+            "params": { "posterior": DiscountedBeta, "gamma": gamma, },
+            # "change_label": "DTS",
+        }
         for gamma in GAMMAS
     ] +
     # # The Exp3R algorithm works reasonably well
@@ -664,7 +668,7 @@ configuration.update({
         for archtype in [
             # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
             # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-            GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+            # GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
             # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
             # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
@@ -677,12 +681,11 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
-        # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
+        # for lazy_detect_change_only_x_steps in [2, 10, 50]  # XXX uncomment to use default value
+        # for lazy_try_value_s_only_x_steps in [2, 10, 50]  # XXX uncomment to use default value
     ] +
     []
 })
-
 
 
 # XXX Huge hack! Use this if you want to modify the legends

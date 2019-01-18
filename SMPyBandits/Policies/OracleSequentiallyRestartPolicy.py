@@ -126,7 +126,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         args = "{}, {}".format(args, quality) if args else quality
         args = "({})".format(args) if args else ""
         # opt = not self.reset_for_all_change and self.reset_for_suboptimal_change
-        return r"OracleRestart-{}{}".format(self._policy.__name__, args)
+        return r"Oracle-{}{}".format(self._policy.__name__, args)
 
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).

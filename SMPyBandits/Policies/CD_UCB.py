@@ -57,7 +57,7 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
-LAZY_DETECT_CHANGE_ONLY_X_STEPS = 4
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 
 
 # --- The very generic class
@@ -237,7 +237,10 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
 
     def __str__(self):
-        return r"CUSUM-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        # return r"CUSUM-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        args = "{}{}".format("" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        args = "({})".format(args) if args else ""
+        return r"CUSUM-{}{}".format(self._policy.__name__, args)
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -313,7 +316,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 4
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
 
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
@@ -376,10 +379,12 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
             mean_all = np.mean(data_y[t0 : t+1])
             mean_before = 0.0
             mean_after = mean_all
-            for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
+            for s in range(t0, t):
                 y = data_y[s]
                 mean_before = (s * mean_before + y) / (s + 1)
                 mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+                if s % self.lazy_try_value_s_only_x_steps != 0:
+                    continue
 
                 ucb_lcb_cst = sqrt(log(4 * t / self.delta(t)) / 2.0)
                 S_before = ucb_lcb_cst / sqrt(s + 1)
@@ -549,24 +554,26 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
     def __str__(self):
         class_name = self.__class__.__name__
-        name = "Gaussian"
+        name = "Gaussian-"
         if "Bernoulli" in class_name:
-            name = "Bernoulli"
+            # name = "Bernoulli-"
+            name = ""
         if "Sub" in class_name:
-            name = "Sub{}".format(name)
-        with_tracking = ", tracking" if "WithTracking" in class_name else ""
-        with_randomexploration = ", random.explo." if "DeterministicExploration" not in class_name else ""
-        return r"{}-GLR-{}({}{}, {}{}{}{}{})".format(
-            name,
-            self._policy.__name__,
-            "" if self._per_arm_restart else "Global, ",
-            r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else r"$\delta=\frac{1}{T}$",
-            r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
-            ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
-            ", lazy s {}".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
+            name = "Sub{}-".format(name)
+        with_tracking = "tracking" if "WithTracking" in class_name else ""
+        with_randomexploration = "random.explo." if "DeterministicExploration" not in class_name else ""
+        args = ", ".join(s for s in [
+            "" if self._per_arm_restart else "Global",
+            r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{T}$",
+            "", # no need to print alpha as it is chosen based on horizon
+            #r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
+            r"$\Delta t={}$".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
+            r"$\Delta s={}$".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking,
             with_randomexploration,
-        )
+        ] if s)
+        args = "({})".format(args) if args else ""
+        return r"{}GLR-{}{}".format(name, self._policy.__name__, args)
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.
@@ -588,7 +595,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         mean_all = np.mean(data_y[t0 : t+1])
         mean_before = 0.0
         mean_after = mean_all
-        for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
+        for s in range(t0, t):
             # XXX nope, that was a mistake: it is only true for the Gaussian kl !
             # this_kl = self.kl(mu(s+1, t), mu(s), *self._args_to_kl)
             # glr = ((s - t0 + 1) * (t - s) / (t - t0 + 1)) * this_kl
@@ -600,6 +607,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             y = data_y[s]
             mean_before = (s * mean_before + y) / (s + 1)
             mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+            if s % self.lazy_try_value_s_only_x_steps != 0:
+                continue
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
@@ -805,7 +814,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         t = len(data_y)-1
         mean_before = 0.0
         mean_after = np.mean(data_y)
-        for s in range(t0, t, self.lazy_try_value_s_only_x_steps):
+        for s in range(t0, t):
             # XXX this is not efficient we compute the same means too many times!
             # mean_before = np.mean(data_y[t0 : s+1])
             # mean_after = np.mean(data_y[s+1 : t+1])
@@ -813,6 +822,8 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             y = data_y[s]
             mean_before = (s * mean_before + y) / (s + 1)
             mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
+            if s % self.lazy_try_value_s_only_x_steps != 0:
+                continue
             glr = abs(mean_after - mean_before)
             # compute threshold
             threshold_h = self.compute_threshold_h(s, t)
