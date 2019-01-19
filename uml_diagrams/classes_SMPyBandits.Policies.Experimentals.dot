@@ -12,7 +12,7 @@ rankdir=BT
 "8" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCB_lb|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "9" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCB_sq|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "10" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCB_t|c : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
-"11" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost|c : float\lset_D : list, int, NoneType\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
+"11" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost|c : float\lset_D : int, list, NoneType\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "12" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoostEpsilon|c : float\lepsilon : float\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "13" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost_bq_h_lb|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];
 "14" [label="{SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost_bq_h_lb_t|\l|__init__()\l__str__()\lcomputeIndex()\l}", shape="record"];

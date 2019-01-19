@@ -23,12 +23,14 @@ rankdir=BT
 "19" [label="SMPyBandits.main_multiplayers_more", shape="box"];
 "20" [label="SMPyBandits.main_sparse_multiplayers", shape="box"];
 "21" [label="SMPyBandits.policy_server", shape="box"];
-"22" [label="SMPyBandits.very_simple_configuration", shape="box"];
+"22" [label="SMPyBandits.save_configuration_for_reproducibility", shape="box"];
+"23" [label="SMPyBandits.very_simple_configuration", shape="box"];
 "0" -> "0" [arrowhead="open", arrowtail="none"];
 "15" -> "13" [arrowhead="open", arrowtail="none"];
-"16" -> "22" [arrowhead="open", arrowtail="none"];
-"17" -> "9" [arrowhead="open", arrowtail="none"];
+"16" -> "23" [arrowhead="open", arrowtail="none"];
+"17" -> "22" [arrowhead="open", arrowtail="none"];
 "18" -> "7" [arrowhead="open", arrowtail="none"];
-"19" -> "8" [arrowhead="open", arrowtail="none"];
+"18" -> "22" [arrowhead="open", arrowtail="none"];
+"19" -> "22" [arrowhead="open", arrowtail="none"];
 "20" -> "11" [arrowhead="open", arrowtail="none"];
 }

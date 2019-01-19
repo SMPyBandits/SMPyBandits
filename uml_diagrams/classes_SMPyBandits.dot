@@ -2,6 +2,6 @@ digraph "classes_SMPyBandits" {
 charset="utf-8"
 rankdir=BT
 "0" [label="{SMPyBandits.complete_tree_exploration_for_MP_bandits.State|K\lM\lN\lNtilde\lS\lStilde\lchildren : list\ldepth : int\lmus\lplayers\lprobas : list\lt : NoneType\l|__hash__()\l__init__()\l__str__()\labsorbing_states_one_depth()\lall_absorbing_states()\lall_deltas()\lcompute_one_depth()\lcopy()\lexplore_from_node_to_depth()\lfind_N_absorbing_states()\lget_all_leafs()\lget_unique_leafs()\lhas_absorbing_child_whole_subtree()\lis_absorbing()\lpretty_print_result_recursively()\lproba_reaching_absorbing_state()\lsaveto()\lto_dot()\lto_node()\l}", shape="record"];
-"1" [label="{SMPyBandits.complete_tree_exploration_for_MP_bandits.StateWithMemory|memories : NoneType, tuple\lupdate_memories\l|__hash__()\l__init__()\l__str__()\lall_deltas()\lcopy()\lis_absorbing()\lto_node()\l}", shape="record"];
+"1" [label="{SMPyBandits.complete_tree_exploration_for_MP_bandits.StateWithMemory|memories : tuple, NoneType\lupdate_memories\l|__hash__()\l__init__()\l__str__()\lall_deltas()\lcopy()\lis_absorbing()\lto_node()\l}", shape="record"];
 "1" -> "0" [arrowhead="empty", arrowtail="none"];
 }

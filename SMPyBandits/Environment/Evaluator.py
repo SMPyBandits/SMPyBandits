@@ -68,8 +68,8 @@ STORE_ALL_REWARDS = True       #: Store all rewards?
 STORE_ALL_REWARDS = False      #: Store all rewards?
 STORE_REWARDS_SQUARED = True   #: Store rewards squared?
 STORE_REWARDS_SQUARED = False  #: Store rewards squared?
-MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
-MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+MORE_ACCURATE = False          #: Use the count of selections instead of rewards for a more accurate mean/var reward measure.
+MORE_ACCURATE = True           #: Use the count of selections instead of rewards for a more accurate mean/var reward measure.
 FINAL_RANKS_ON_AVERAGE = True  #: Final ranks are printed based on average on last 1% rewards and not only the last rewards
 USE_JOBLIB_FOR_POLICIES = False  #: Don't use joblib to parallelize the simulations on various policies (we parallelize the random Monte Carlo repetitions)
 
@@ -99,7 +99,7 @@ class Evaluator(object):
         self.plot_lowerbound = self.cfg.get('plot_lowerbound', plot_lowerbound)  #: Should we plot the lower-bound?
         self.signature = signature
         # Flags
-        self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/std reward measure.
+        self.moreAccurate = moreAccurate  #: Use the count of selections instead of rewards for a more accurate mean/var reward measure.
         self.finalRanksOnAverage = finalRanksOnAverage  #: Final display of ranks are done on average rewards?
         self.averageOn = averageOn  #: How many last steps for final rank average rewards
         self.useJoblibForPolicies = useJoblibForPolicies  #: Use joblib to parallelize for loop on policies (useless)
@@ -492,27 +492,27 @@ class Evaluator(object):
         # return self.maxCumRewards[policyId, envId, :] - self.minCumRewards[policyId, envId, :]
 
     def getRunningTimes(self, envId=0):
-        """Get the means and stds and list of running time of the different policies."""
+        """Get the means and vars and list of running time of the different policies."""
         all_times = [ self.runningTimes[envId][policyId, :] for policyId in range(self.nbPolicies) ]
         means = [ np.mean(times) for times in all_times ]
-        stds  = [ np.std(times) for times in all_times ]
-        return means, stds, all_times
+        vars  = [ np.var(times) for times in all_times ]
+        return means, vars, all_times
 
     def getMemoryConsumption(self, envId=0):
-        """Get the means and stds and list of memory consumptions of the different policies."""
+        """Get the means and vars and list of memory consumptions of the different policies."""
         all_memories = [ self.memoryConsumption[envId][policyId, :] for policyId in range(self.nbPolicies) ]
         for policyId in range(self.nbPolicies):
             all_memories[policyId] = [ m for m in all_memories[policyId] if m > 0 ]
         means = [np.mean(memories) if len(memories) > 0 else 0 for memories in all_memories]
-        stds  = [np.std(memories)  if len(memories) > 0 else 0 for memories in all_memories]
-        return means, stds, all_memories
+        vars  = [np.var(memories)  if len(memories) > 0 else 0 for memories in all_memories]
+        return means, vars, all_memories
 
     def getNumberOfCPDetections(self, envId=0):
-        """Get the means and stds and list of numberOfCPDetections of the different policies."""
+        """Get the means and vars and list of numberOfCPDetections of the different policies."""
         all_number_of_cp_detections = [ self.numberOfCPDetections[envId][policyId, :] for policyId in range(self.nbPolicies) ]
         means = [ np.mean(number_of_cp_detections) for number_of_cp_detections in all_number_of_cp_detections ]
-        stds  = [ np.std(number_of_cp_detections) for number_of_cp_detections in all_number_of_cp_detections ]
-        return means, stds, all_number_of_cp_detections
+        vars  = [ np.var(number_of_cp_detections) for number_of_cp_detections in all_number_of_cp_detections ]
+        return means, vars, all_number_of_cp_detections
 
     # --- Plotting methods
 
@@ -698,21 +698,21 @@ class Evaluator(object):
         return fig
 
     def printRunningTimes(self, envId=0, precision=3):
-        """Print the average+-std running time of the different policies."""
-        print("\nGiving the mean and std running times ...")
+        """Print the average+-var running time of the different policies."""
+        print("\nGiving the mean and var running times ...")
         try:
             from IPython.core.magics.execution import _format_time
         except ImportError:
             _format_time = str
-        means, stds, _ = self.getRunningTimes(envId)
+        means, vars, _ = self.getRunningTimes(envId)
         for policyId in np.argsort(means):
             policy = self.policies[policyId]
             print("\nFor policy #{} called '{}' ...".format(policyId, policy))
-            mean_time, std_time  = means[policyId], stds[policyId]
+            mean_time, var_time  = means[policyId], vars[policyId]
             if self.repetitions <= 1:
                 print(u"    {} (mean of 1 run)" .format(_format_time(mean_time, precision)))
             else:
-                print(u"    {} ± {} per loop (mean ± std. dev. of {} run)" .format(_format_time(mean_time, precision), _format_time(std_time, precision), self.repetitions))
+                print(u"    {} ± {} per loop (mean ± var. dev. of {} run)" .format(_format_time(mean_time, precision), _format_time(var_time, precision), self.repetitions))
 
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds"):
         """Plot the running times of the different policies, as a box plot for each."""
@@ -733,17 +733,17 @@ class Evaluator(object):
         return fig
 
     def printMemoryConsumption(self, envId=0):
-        """Print the average+-std memory consumption of the different policies."""
-        print("\nGiving the mean and std memory consumption ...")
-        means, stds, _ = self.getMemoryConsumption(envId)
+        """Print the average+-var memory consumption of the different policies."""
+        print("\nGiving the mean and var memory consumption ...")
+        means, vars, _ = self.getMemoryConsumption(envId)
         for policyId in np.argsort(means):
             policy = self.policies[policyId]
             print("\nFor policy #{} called '{}' ...".format(policyId, policy))
-            mean_time, std_time = means[policyId], stds[policyId]
+            mean_time, var_time = means[policyId], vars[policyId]
             if self.repetitions <= 1:
                 print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
             else:
-                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(std_time), self.repetitions))
+                print(u"    {} ± {} (mean ± var. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(var_time), self.repetitions))
 
     def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB"):
         """Plot the memory consumption of the different policies, as a box plot for each."""
@@ -763,18 +763,18 @@ class Evaluator(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=USE_PICKLE)
 
     def printNumberOfCPDetections(self, envId=0):
-        """Print the average+-std number_of_cp_detections of the different policies."""
-        means, stds, _ = self.getNumberOfCPDetections(envId)
+        """Print the average+-var number_of_cp_detections of the different policies."""
+        means, vars, _ = self.getNumberOfCPDetections(envId)
         if np.max(means) == 0: return None
-        print("\nGiving the mean and std number of CP detections ...")
+        print("\nGiving the mean and var number of CP detections ...")
         for policyId in np.argsort(means):
             policy = self.policies[policyId]
             print("\nFor policy #{} called '{}' ...".format(policyId, policy))
-            mean_number_of_cp_detections, std_number_of_cp_detections = means[policyId], stds[policyId]
+            mean_number_of_cp_detections, var_number_of_cp_detections = means[policyId], vars[policyId]
             if self.repetitions <= 1:
                 print(u"    {:.3g} (mean of 1 run)".format(mean_number_of_cp_detections))
             else:
-                print(u"    {:.3g} ± {:.3g} (mean ± std. dev. of {} runs)".format(mean_number_of_cp_detections, std_number_of_cp_detections, self.repetitions))
+                print(u"    {:.3g} ± {:.3g} (mean ± var. dev. of {} runs)".format(mean_number_of_cp_detections, var_number_of_cp_detections, self.repetitions))
 
     def plotNumberOfCPDetections(self, envId=0, savefig=None):
         """Plot the number of change-point detections of the different policies, as a box plot for each."""
@@ -807,7 +807,7 @@ class Evaluator(object):
             print("Mean of   last regrets R_T = {:.3g}".format(np.mean(last_regrets)))
             print("Median of last regrets R_T = {:.3g}".format(np.median(last_regrets)))
             print("Max of    last regrets R_T = {:.3g}".format(np.max(last_regrets)))
-            print("STD of    last regrets R_T = {:.3g}".format(np.std(last_regrets)))
+            print("Variance  last regrets R_T = {:.3g}".format(np.var(last_regrets)))
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=15, log=False,
