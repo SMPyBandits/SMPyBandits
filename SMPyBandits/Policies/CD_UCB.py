@@ -57,7 +57,7 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
-LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 20
 
 
 # --- The very generic class
@@ -113,7 +113,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
 
         should_you_try_to_detect = (self.last_pulls[arm] % self.lazy_detect_change_only_x_steps) == 0
         if should_you_try_to_detect and self.detect_change(arm):
-            print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
+            print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.mean(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms
@@ -193,7 +193,7 @@ def compute_h_alpha_from_input_parameters__CUSUM_complicated(horizon, max_nb_ran
     C1_minus = np.log(((4 * epsilon) / (1-epsilon)**2) * comb(M, int(np.floor(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1_plus = np.log(((4 * epsilon) / (1+epsilon)**2) * comb(M, int(np.ceil(2 * epsilon * M))) * (2 * epsilon)**M + 1)
     C1 = min(C1_minus, C1_plus)
-    if C1 == 0: C1 = 1  # FIXME This case of having C1=0 for CUSUM parameters should not happen...
+    if C1 == 0: C1 = 1  # XXX This case of having C1=0 for CUSUM parameters should not happen...
     h = 1/C1 * np.log(T / UpsilonT)
     alpha = K * np.sqrt((C2 * UpsilonT)/(C1 * T) * np.log(T / UpsilonT))
     alpha *= scaleFactor  # XXX Just divide alpha to not have too large, for CUSUM-UCB.
@@ -316,7 +316,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 20
 
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
@@ -360,15 +360,15 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
         r""" Detect a change in the current arm, using the two-sided UCB-LCB algorithm [Mukherjee & Maillard, 2018].
 
         - Let :math:`\hat{\mu}_{i,t:t'}` the empirical mean of rewards obtained for arm i from time :math:`t` to :math:`t'`, and :math:`N_{i,t:t'}` the number of samples.
-        - Let :math:`S_{i,t:t'} = \srqt{\frac{\log(4 t^2 / \delta)}{2 N_{i,t:t'}}}` the length of the confidence interval.
+        - Let :math:`S_{i,t:t'} = \sqrt{\frac{\log(4 t^2 / \delta)}{2 N_{i,t:t'}}}` the length of the confidence interval.
 
         - When we have data starting at :math:`t_0=0` (since last restart) and up-to current time :math:`t`, for each *arm* i,
             - For each intermediate time steps :math:`t' \in [t_0, t)`,
-                - Compute :math:`LCB_{before} = \hat{\mu}_{i,t_0:t'} - S_{i,t_0:t'}`,
-                - Compute :math:`UCB_{before} = \hat{\mu}_{i,t_0:t'} + S_{i,t_0:t'}`,
-                - Compute :math:`LCB_{after} = \hat{\mu}_{i,t'+1:t} - S_{i,t'+1:t}`,
-                - Compute :math:`UCB_{after} = \hat{\mu}_{i,t'+1:t} + S_{i,t'+1:t}`,
-                - If :math:`UCB_{before} < LCB_{after}` or :math:`UCB_{after} < LCB_{before}`, then restart.
+                - Compute :math:`LCB_{\text{before}} = \hat{\mu}_{i,t_0:t'} - S_{i,t_0:t'}`,
+                - Compute :math:`UCB_{\text{before}} = \hat{\mu}_{i,t_0:t'} + S_{i,t_0:t'}`,
+                - Compute :math:`LCB_{\text{after}} = \hat{\mu}_{i,t'+1:t} - S_{i,t'+1:t}`,
+                - Compute :math:`UCB_{\text{after}} = \hat{\mu}_{i,t'+1:t} + S_{i,t'+1:t}`,
+                - If :math:`UCB_{\text{before}} < LCB_{\text{after}}` or :math:`UCB_{\text{after}} < LCB_{\text{before}}`, then restart.
         """
         for armId in range(self.nbArms):
             data_y = self.all_rewards[armId]
@@ -433,7 +433,7 @@ def klGauss(x, y, sig2x=1):
     return (x - y) ** 2 / (2. * sig2x)
 
 
-def threshold_GaussianGLR(s, t, horizon=None, delta=None):
+def threshold_GaussianGLR(t, horizon=None, delta=None, variant=None):
     r""" Compute the value :math:`c from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
     - The threshold is computed as (with :math:`t_0 = 0`):
@@ -442,27 +442,134 @@ def threshold_GaussianGLR(s, t, horizon=None, delta=None):
     """
     if delta is None:
         delta = 1.0 / int(max(1, horizon))
-    c = (1 + (1.0 / (t + 1.0))) * log((2 * t * sqrt(t + 2)) / delta)
+    c = (1 + (1.0 / t)) * log((2 * t**(3/2)) / delta)
     if c < 0 or isinf(c):
         c = float('+inf')
     return c
 
 
-def threshold_BernoulliGLR(s, t, horizon=None, delta=None):
+# --- Intermediate functions to define the optimal threshold for Bernoulli GLR tests
+
+def function_h(u):
+    r""" The function :math:`h(u) = u - \log(u)`."""
+    if u <= 1:
+        raise ValueError("Error: the function h only accepts values larger than 1, not x = {}".format(u))
+    return u - log(u)
+
+from scipy.optimize import root_scalar
+from scipy.special import lambertw
+from math import exp
+
+def function_h_minus_one(x):
+    r""" The inverse function of :math:`h(u)`, that is :math:`h^{-1}(x) = u \Leftrightarrow h(u) = x`. It is given by the Lambert W function, see :func:`scipy.special.lambertw`:
+
+    .. math:: h^{-1}(x) = - \mathcal{W}(- \exp(-x)).
+
+    - Example:
+
+    >>> np.random.seed(105)
+    >>> y = np.random.randn() ** 2
+    >>> print(f"y = {y}")
+    y = 0.060184682907834595
+    >>> x = function_h(y)
+    >>> print(f"h(y) = {x}")
+    h(y) = 2.8705220786966508
+    >>> z = function_h_minus_one(x)
+    >>> print(f"h^-1(x) = {z}")
+    h^-1(x) = 0.060184682907834595
+    >>> assert np.isclose(z, y), "Error: h^-1(h(y)) = z = {z} should be very close to y = {}...".format(z, y)
+    """
+    if x <= 1:
+        raise ValueError("Error: the function h inverse only accepts values larger than 1, not x = {}".format(x))
+    sol = root_scalar(lambda u: function_h(u) - x, x0=x, x1=2*x)
+    if sol.converged:
+        return sol.root
+    else:
+        z = - lambertw(- exp(- x))
+        return z.real
+
+#: The constant :math:`\frac{3}{2}`, used in the definition of functions :math:`h`, :math:`h^{-1}`, :math:`\tilde{h}` and :math:`\mathcal{T}`.
+constant_power_function_h = 3.0 / 2.0
+
+#: The constant :math:`h^{-1}(1/\log(\frac{3}{2}))`, used in the definition of function :math:`\tilde{h}`.
+threshold_function_h_tilde = function_h_minus_one(1 / log(constant_power_function_h))
+
+#: The constant :math:`\log(\log(\frac{3}{2}))`, used in the definition of function :math:`\tilde{h}`.
+constant_function_h_tilde = log(log(constant_power_function_h))
+
+def function_h_tilde(x):
+    r""" The function :math:`\tilde{h}(x)`, defined by:
+
+    .. math::
+
+        \tilde{h}(x) = \begin{cases} e^{1/h^{-1}(x)} h^{-1}(x) & \text{~if~} x \ge h^{-1}(1/\ln (3/2)), \\
+        (3/2) (x-\ln \ln (3/2)) & \text{otherwise}. \end{cases}
+    """
+    if x >= threshold_function_h_tilde:
+        y = function_h_minus_one(x)
+        return exp(1 / y) * y
+    else:
+        return constant_power_function_h * (x - constant_function_h_tilde)
+
+#: The constant :math:`\zeta(2) = \frac{\pi^2}{6}`.
+zeta_of_two = np.pi**2 / 6
+# import scipy.special
+# assert np.isclose(scipy.special.zeta(2), zeta_of_two)
+
+constant_function_T_mathcal = log(2 * zeta_of_two)
+
+def function_T_mathcal(x):
+    r""" The function :math:`\mathcal{T}(x)`, defined by:
+
+    .. math:: \mathcal{T}(x) = 2 \tilde h\left(\frac{h^{-1}(1+x) + \ln(2\zeta(2))}{2}\right).
+    """
+    return 2 * function_h_tilde((function_h_minus_one(1 + x) + constant_function_T_mathcal) / 2.0)
+
+def approximation_function_T_mathcal(x):
+    r""" An efficiently computed approximation of :math:`\mathcal{T}(x)`, valid for :math:`x \geq 5`:
+
+    .. math:: \mathcal{T}(x) \simeq x + 4 \log(1 + x + \sqrt(2 x)).
+    """
+    return x + 4 * log(1 + x + sqrt(2 * x))
+
+
+def threshold_BernoulliGLR(t, horizon=None, delta=None, variant=None):
     r""" Compute the value :math:`c from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
-    - The threshold is computed as:
+    .. warning:: This is still experimental, you can try different variants of the threshold function:
 
-    .. math:: \beta(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(s)) + \log(1 + \log(t - s)).
+    - Variant 0 (*default*) is:
 
-    .. warning:: FIXME This is still experimental! We need to finish the maths before deciding what threshold to use!
+    .. math:: \beta(t, \delta) := \log(\frac{3 t^{3/2}}{\delta}) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t).
+
+    - Variant 1 is smaller:
+
+    .. math:: \beta(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(t)).
+
+    - Variant 2 is using :math:`\mathcal{T}`:
+
+    .. math:: \beta(t, \delta) := 2 * \mathcal{T}(\frac{\log(2 t^{3/2}) / \delta}{2}) + 6 \log(1 + \log(t)).
+
+    - Variant 3 is using :math:`\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})` an approximation of :math:`\mathcal{T}(x)` (valid for :math:`x \geq 5`):
+
+    .. math:: \beta(t, \delta) := 2 * \mathcal{T}(\frac{\log(2 t^{3/2}) / \delta}{2}) + 6 \log(1 + \log(t)).
     """
     if delta is None:
         delta = 1.0 / horizon
-    # c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))
-    # c = -log(delta) + log(s) + log(t-s)
-    # c = -log(delta) + log(1 + log(t))
-    c = -log(delta) + log(t)
+    # c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))  # XXX no longer possible
+    # c = -log(delta) + log(s) + log(t-s)  # XXX no longer possible
+    if variant is not None:
+        if variant == 0:
+            c = -log(delta) + (3/2) * log(t) + log(3)
+        elif variant == 1:
+            c = -log(delta) + log(1 + log(t))
+        elif variant == 2:
+            c = 2 * function_T_mathcal(log(2 * t**(constant_power_function_h) / delta) / 2) + 6 * log(1 + log(t))
+        elif variant == 3:
+            c = 2 * approximation_function_T_mathcal(log(2 * t**(constant_power_function_h) / delta) / 2) + 6 * log(1 + log(t))
+    else:
+            c = -log(delta) + (3/2) * log(t) + log(3)
+
     if c < 0 or isinf(c):
         c = float('+inf')
     return c
@@ -491,7 +598,7 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
 
 
 def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR):
-    r""" Compute a smart estimate of the optimal value for the *fixed* forced exploration probability :math:`\alpha`.
+    r""" Compute a smart estimate of the optimal value for the *fixed* or *random* forced exploration probability :math:`\alpha` (or tracking based).
 
     .. math:: \alpha = \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
     """
@@ -517,7 +624,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             horizon=None, delta=None, max_nb_random_events=None,
             kl=klGauss,
             alpha0=None, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1,
-            threshold_function=threshold_BernoulliGLR,
+            threshold_function=threshold_BernoulliGLR, variant=None,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             *args, **kwargs
         ):
@@ -532,14 +639,15 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         if alpha0 is None and horizon is not None and max_nb_random_events is not None:
             alpha0 = smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
         self._alpha0 = alpha0
+        self._variant = variant
         self._threshold_function = threshold_function
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
         self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
 
-    def compute_threshold_h(self, s, t):
+    def compute_threshold_h(self, t):
         """Compute the threshold :math:`h` with :attr:`_threshold_function`."""
-        return self._threshold_function(s, t, horizon=self.horizon, delta=self.delta)
+        return self._threshold_function(t, horizon=self.horizon, delta=self.delta, variant=self._variant)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
@@ -562,6 +670,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             name = "Sub{}-".format(name)
         with_tracking = "tracking" if "WithTracking" in class_name else ""
         with_randomexploration = "random.explo." if "DeterministicExploration" not in class_name else ""
+        variant = "" if self._variant is None else "threshold #{}".format(self._variant)
         args = ", ".join(s for s in [
             "" if self._per_arm_restart else "Global",
             r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{T}$",
@@ -571,6 +680,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             r"$\Delta s={}$".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking,
             with_randomexploration,
+            variant,
         ] if s)
         args = "({})".format(args) if args else ""
         return r"{}GLR-{}{}".format(name, self._policy.__name__, args)
@@ -587,11 +697,12 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         - The change is detected if there is a time :math:`s` such that :math:`G^{\mathrm{kl}}_{t_0:s:t} > h`, where :attr:`threshold_h` is the threshold of the test,
         - And :math:`\mu_{a,b} = \frac{1}{b-a+1} \sum_{s=a}^{b} y_s` is the mean of the samples between :math:`a` and :math:`b`.
 
-        .. warning:: This is computationally costly, so an easy way to speed up this test is to use :attr:`lazy_try_value_s_only_x_steps` :math:`= \mathrm{Step_s}` for a small value (e.g., 10), so not test for all :math:`s\in[t_0, t-1]` but only :math:`s\in[t_0, t-1], s % \mathrm{Step_s} = 0` (e.g., one out of every 10 steps).
+        .. warning:: This is computationally costly, so an easy way to speed up this test is to use :attr:`lazy_try_value_s_only_x_steps` :math:`= \mathrm{Step_s}` for a small value (e.g., 10), so not test for all :math:`s\in[t_0, t-1]` but only :math:`s\in[t_0, t-1], s \mod \mathrm{Step_s} = 0` (e.g., one out of every 10 steps).
         """
         data_y = self.all_rewards[arm]
         t0 = 0
         t = len(data_y)-1
+        threshold_h = self.compute_threshold_h(t + 1)
         mean_all = np.mean(data_y[t0 : t+1])
         mean_before = 0.0
         mean_after = mean_all
@@ -612,7 +723,6 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
             kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
-            threshold_h = self.compute_threshold_h(s + 1, t + 1)
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the total mean mu(t0,t) = {}, so the kl before = {} and kl after = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, mean_all, kl_before, kl_after, glr, threshold_h))
             if glr >= threshold_h:
                 return True
@@ -623,12 +733,12 @@ class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
     """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough (with a tracking).
     """
     def choice(self):
-        r""" If any arm is not explored enough (:math:`n_k < \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
+        r""" If any arm is not explored enough (:math:`n_k \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
         """
         number_of_explorations = self.last_pulls
         min_number_of_explorations = self.proba_random_exploration * (self.t - self.last_restart_times) / self.nbArms
         not_explored_enough = np.where(number_of_explorations <= min_number_of_explorations)[0]
-        # FIXME check numerically what I want to prove mathematically
+        # TODO check numerically what I want to prove mathematically
         # for arm in range(self.nbArms):
         #     if number_of_explorations[arm] > 0:
         #         assert number_of_explorations[arm] >= self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2, "Error: for arm k={}, the number of exploration n_k(t) = {} was not >= alpha={} / K={}**2 * (t={} - tau_k(t)={}) and RHS was = {}...".format(arm, number_of_explorations[arm], self.proba_random_exploration, self.nbArms, self.t, self.last_restart_times[arm], self.proba_random_exploration * (self.t - self.last_restart_times[arm]) / self.nbArms**2)  # DEBUG
@@ -638,7 +748,7 @@ class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
 
 
 class GLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy):
-    """ A variant of the GLR policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
+    r""" A variant of the GLR policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
 
     - If :math:`t` is the current time and :math:`\tau` is the latest restarting time, then uniform exploration is done if:
 

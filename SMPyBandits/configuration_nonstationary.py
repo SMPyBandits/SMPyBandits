@@ -471,13 +471,13 @@ klucb = klucb_mapping.get(str(configuration["environment"][0]["arm_type"]), kluc
 
 
 # XXX compare different values of the experimental sliding window algorithm
-EPSS   = [0.1, 0.05]
+EPSS   = [0.05]  #+ [0.1]
 ALPHAS = [1]
 TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.99] + [0.9999, 0.9, 0.75, 0.5]
+GAMMAS = [0.99] #+ [0.9999, 0.9, 0.75, 0.5]
 
 WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
 
@@ -503,13 +503,13 @@ configuration.update({
         # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
         { "archtype": klUCB, "params": { "klucb": klucb, }, "change_label": "klUCB", },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-        # { "archtype": Thompson, "params": { "posterior": Beta, } },
+        { "archtype": Thompson, "params": { "posterior": Beta, }, "change_label": "Thompson Sampling" },
     ] +
     [  # XXX DiscountedThompson works REALLY well!
         {
             "archtype": DiscountedThompson,
             "params": { "posterior": DiscountedBeta, "gamma": gamma, },
-            # "change_label": "DTS",
+            "change_label": r"DTS($\gamma={:.5g}$)".format(gamma),
         }
         for gamma in GAMMAS
     ] +
@@ -539,17 +539,24 @@ configuration.update({
     #     for alpha in ALPHAS
     #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
     # ] +
-    # # [
-    # #     # --- # XXX experimental sliding window algorithm
-    # #     { "archtype": SlidingWindowRestart, "params": { "policy": policy, "tau": tau, "threshold": eps, "full_restart_when_refresh": True } }
-    # #     for tau in [TAUS[0]] for eps in [EPSS[0]]
-    # #     for policy in [UCB, klUCB, Thompson, BayesUCB]
-    # # ] +
     [
-        # --- # Different versions of the sliding window UCB algorithm
-        { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-        for alpha in ALPHAS for tau in TAUS
+        # --- # XXX experimental sliding window algorithm
+        { "archtype": SlidingWindowRestart, "params": {
+            "policy": policy,
+            "tau": tau,
+            "threshold": eps,
+            "full_restart_when_refresh": True,
+            }, "change_label": r"SW-klUCB($\tau={}$)".format(tau)
+        }
+        for tau in TAUS
+        for eps in EPSS
+        for policy in [klUCB]
     ] +
+    # [
+    #     # --- # Different versions of the sliding window UCB algorithm
+    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+    #     for alpha in ALPHAS for tau in TAUS
+    # ] +
     # [
     #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
     #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
@@ -653,7 +660,31 @@ configuration.update({
     #     # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
     #     # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
     # ] +
-    # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
+    # # XXX Test GaussianGLR_IndexPolicy
+    # [
+    #     { "archtype": archtype, "params": {
+    #         "horizon": HORIZON,
+    #         "policy": policy,
+    #         "per_arm_restart": per_arm_restart,
+    #         "max_nb_random_events": NB_BREAK_POINTS,
+    #         # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+    #         # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+    #     } }
+    #     for archtype in [
+    #         # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+    #         # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+    #         GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+    #         # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+    #     ]
+    #     for policy in [
+    #         # UCB,  # XXX comment to only test klUCB
+    #         klUCB,
+    #     ]
+    #     for per_arm_restart in PER_ARM_RESTART
+    #     # for lazy_detect_change_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+    #     # for lazy_try_value_s_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+    # ] +
+    # XXX Test BernoulliGLR_IndexPolicy
     [
         { "archtype": archtype, "params": {
             "horizon": HORIZON,
@@ -662,14 +693,11 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             "delta": delta,
             "alpha0": alpha0,
-            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-            # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+            # "variant": variant,
         } }
         for archtype in [
-            # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-            # GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
-            # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
             # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
             BernoulliGLR_IndexPolicy_WithDeterministicExploration,   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
@@ -681,12 +709,13 @@ configuration.update({
         for per_arm_restart in PER_ARM_RESTART
         for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        # for lazy_detect_change_only_x_steps in [2, 10, 50]  # XXX uncomment to use default value
-        # for lazy_try_value_s_only_x_steps in [2, 10, 50]  # XXX uncomment to use default value
+        # for lazy_detect_change_only_x_steps in [50, 10] #+ [2, 10]  # XXX uncomment to use default value
+        # for lazy_try_value_s_only_x_steps in [50, 10] #+ [2, 10]  # XXX uncomment to use default value
+        for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(10, 10), (30, 30)]
+        # for variant in [None, 1, 2, 3]
     ] +
     []
 })
-
 
 # XXX Huge hack! Use this if you want to modify the legends
 configuration.update({

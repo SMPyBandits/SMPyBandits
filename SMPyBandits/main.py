@@ -262,9 +262,9 @@ if __name__ == '__main__':
             print(" - Plotting the probability of picking the best arm, and saving the plot to {} ...".format(savefig))
             # --- Also plotting the probability of picking the best arm
             evaluation.plotBestArmPulls(envId, savefig=savefig)  # XXX To save the figure
-            if configuration['horizon'] >= 1000:
-                savefig = mainfig.replace('main', 'main_semilogx')
-                evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
+            # if configuration['horizon'] >= 1000:
+            #     savefig = mainfig.replace('main', 'main_semilogx')
+            #     evaluation.plotRegrets(envId, savefig=savefig, semilogx=True)  # XXX To save the figure
             savefig = mainfig.replace('main', 'main_semilogy')
             evaluation.plotRegrets(envId, savefig=savefig, semilogy=True)  # XXX To save the figure
             if configuration['horizon'] >= 1000:
@@ -282,8 +282,8 @@ if __name__ == '__main__':
             evaluation.plotRegrets(envId, moreAccurate=False)  # XXX To plot without saving
             # --- Also plotting the probability of picking the best arm
             evaluation.plotBestArmPulls(envId)  # XXX To plot without saving
-            if configuration['horizon'] >= 1000:
-                evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
+            # if configuration['horizon'] >= 1000:
+            #     evaluation.plotRegrets(envId, semilogx=True)  # XXX To plot without saving
             evaluation.plotRegrets(envId, semilogy=True)  # XXX To plot without saving
             if configuration['horizon'] >= 1000:
                 evaluation.plotRegrets(envId, loglog=True)

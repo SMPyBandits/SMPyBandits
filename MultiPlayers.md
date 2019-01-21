@@ -1,4 +1,4 @@
-## **Multi-players simulation environment**
+# **Multi-players simulation environment**
 
 > **For more details**, refer to [this article](https://hal.inria.fr/hal-01629733).
 >  Reference: [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733), presented at the [Internation Conference on Algorithmic Learning Theorey 2018](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted).
