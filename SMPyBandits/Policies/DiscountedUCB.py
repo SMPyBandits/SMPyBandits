@@ -129,5 +129,10 @@ class DiscountedUCBPlus(DiscountedUCB):
             gamma = GAMMA
         super(DiscountedUCBPlus, self).__init__(nbArms, alpha=alpha, gamma=gamma, *args, **kwargs)
 
-    def __str__(self):
-        return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)
+    # def __str__(self):
+    #     return r"D-UCB+($\alpha={:.3g}$, $\gamma={:.5g}$)".format(self.alpha, self.gamma)
+    #     return r"D-UCB({}$\gamma={:.5g}${})".format(
+    #         "no delay, " if not self.useRealDiscount else "",
+    #         self.gamma,
+    #         ", $\alpha={:.3g}$".format(self.alpha) if self.alpha != ALPHA else "",
+    #     )

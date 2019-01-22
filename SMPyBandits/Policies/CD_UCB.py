@@ -113,7 +113,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
 
         should_you_try_to_detect = (self.last_pulls[arm] % self.lazy_detect_change_only_x_steps) == 0
         if should_you_try_to_detect and self.detect_change(arm):
-            print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.mean(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
+            print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.mean(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms
@@ -502,7 +502,7 @@ def function_h_tilde(x):
 
     .. math::
 
-        \tilde{h}(x) = \begin{cases} e^{1/h^{-1}(x)} h^{-1}(x) & \text{~if~} x \ge h^{-1}(1/\ln (3/2)), \\
+        \tilde{h}(x) = \begin{cases} e^{1/h^{-1}(x)} h^{-1}(x) & \text{ if } x \ge h^{-1}(1/\ln (3/2)), \\
         (3/2) (x-\ln \ln (3/2)) & \text{otherwise}. \end{cases}
     """
     if x >= threshold_function_h_tilde:
@@ -538,24 +538,24 @@ def threshold_BernoulliGLR(t, horizon=None, delta=None, variant=None):
 
     .. warning:: This is still experimental, you can try different variants of the threshold function:
 
-    - Variant 0 (*default*) is:
+    - Variant #0 (*default*) is:
 
-    .. math:: \beta(t, \delta) := \log(\frac{3 t^{3/2}}{\delta}) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t).
+    .. math:: \beta(t, \delta) := \log\left(\frac{3 t^{3/2}}{\delta}\right) = \log(\frac{1}{\delta}) + \log(3) + 3/2 \log(t).
 
-    - Variant 1 is smaller:
+    - Variant #1 is smaller:
 
     .. math:: \beta(t, \delta) := \log(\frac{1}{\delta}) + \log(1 + \log(t)).
 
-    - Variant 2 is using :math:`\mathcal{T}`:
+    - Variant #2 is using :math:`\mathcal{T}`:
 
-    .. math:: \beta(t, \delta) := 2 * \mathcal{T}(\frac{\log(2 t^{3/2}) / \delta}{2}) + 6 \log(1 + \log(t)).
+    .. math:: \beta(t, \delta) := 2 \mathcal{T}\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)).
 
-    - Variant 3 is using :math:`\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})` an approximation of :math:`\mathcal{T}(x)` (valid for :math:`x \geq 5`):
+    - Variant #3 is using :math:`\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})` an approximation of :math:`\mathcal{T}(x)` (valid and quite accurate as soon as :math:`x \geq 5`):
 
-    .. math:: \beta(t, \delta) := 2 * \mathcal{T}(\frac{\log(2 t^{3/2}) / \delta}{2}) + 6 \log(1 + \log(t)).
+    .. math:: \beta(t, \delta) := 2 \tilde{\mathcal{T}}(x)\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)).
     """
     if delta is None:
-        delta = 1.0 / horizon
+        delta = 1.0 / sqrt(horizon)
     # c = -log(delta) + log(1 + log(s)) + log(1 + log(t-s))  # XXX no longer possible
     # c = -log(delta) + log(s) + log(t-s)  # XXX no longer possible
     if variant is not None:
@@ -598,9 +598,13 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
 
 
 def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR):
-    r""" Compute a smart estimate of the optimal value for the *fixed* or *random* forced exploration probability :math:`\alpha` (or tracking based).
+    r""" Compute a smart estimate of the optimal value for the *fixed* or *random* forced exploration probability :math:`\alpha` (or tracking based), with ``scaleFactor`` :math:`= \alpha_0\in(0,1)` a constant.
 
-    .. math:: \alpha = \mathrm{scaleFactor} \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}
+    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}.
+
+    Note that if :math:`\Upsilon_T` is unknown, a simpler formula is used:
+
+    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{\log(T)}{T}}.
     """
     ratio = max_nb_random_events / float(horizon)
     assert 0 < ratio <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
@@ -616,7 +620,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     - For instance :func:`kullback.klBern`, for Bernoulli distributions, gives :class:`GaussianGLR_IndexPolicy`,
     - And :func:`kullback.klGauss` for univariate Gaussian distributions, gives :class:`BernoulliGLR_IndexPolicy`.
 
-    - ``threshold_function`` computes the threshold :math:`\beta(s, t, \delta)`, it can be for instance :func:`threshold_GaussianGLR` or :func:`threshold_BernoulliGLR`.
+    - ``threshold_function`` computes the threshold :math:`\beta(t, \delta)`, it can be for instance :func:`threshold_GaussianGLR` or :func:`threshold_BernoulliGLR`.
 
     - From ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
     """
@@ -633,7 +637,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
         # if delta is None and horizon is not None: delta = 1.0 / horizon
-        self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{T}` if ``horizon`` is given and ``delta=None``.
+        self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{\sqrt{T}}` if ``horizon`` is given and ``delta=None`` but :math:`\Upsilon_T` is unknown. Defaults to :math:`\delta=\frac{1}{\sqrt{\Upsilon_T T}}` if both :math:`T` and :math:`\Upsilon_T` are given (``horizon`` and ``max_nb_random_events``).
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
         if alpha0 is None and horizon is not None and max_nb_random_events is not None:
@@ -672,7 +676,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         with_randomexploration = "random.explo." if "DeterministicExploration" not in class_name else ""
         variant = "" if self._variant is None else "threshold #{}".format(self._variant)
         args = ", ".join(s for s in [
-            "" if self._per_arm_restart else "Global",
+            "Local" if self._per_arm_restart else "Global",  # FIXME
             r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{T}$",
             "", # no need to print alpha as it is chosen based on horizon
             #r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",

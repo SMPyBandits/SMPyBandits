@@ -10,7 +10,7 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 from textwrap import wrap
-from os.path import getsize, getatime
+import os.path
 
 import matplotlib as mpl
 # mpl.use('Agg')  # XXX is it a good idea? Nope, use "export MPLBACKEND='Agg'" in your bashrc ... Cf. http://stackoverflow.com/a/4935945/ and http://matplotlib.org/faq/usage_faq.html#what-is-a-backend
@@ -217,12 +217,12 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
             print("Saving raw figure with format {}, to file '{}'...".format(form, path))  # DEBUG
             with open(path, "bw") as f:
                 pickle_dump(fig, f)
-            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, os.path.getsize(path), datetime.fromtimestamp(os.path.getatime(path))))
         for form in formats:
             path = "{}.{}".format(savefig, form)
             print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
             plt.savefig(path, bbox_inches=BBOX_INCHES)
-            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, getsize(path), datetime.fromtimestamp(getatime(path))))
+            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, os.path.getsize(path), datetime.fromtimestamp(os.path.getatime(path))))
     try:
         plt.show() if showplot else plt.close()
     except (TypeError, AttributeError):
@@ -380,6 +380,68 @@ def adjust_xticks_subplots(ylabel=None, labels=(), maxNbOfLabels=MAX_NB_OF_LABEL
         if ylabel is not None: plt.ylabel(ylabel, fontsize="x-small")
     else:
         plt.subplots_adjust(bottom=max_length_of_labels/100.0)
+
+
+def table_to_latex(mean_data, std_data=None,
+        labels=None, fmt_function=None, name_of_table=None,
+        filename=None, erase_output=False,
+        *args, **kwargs
+    ):
+    """ Tries to print the data from the input array or collection of array or :class:`pandas.DataFrame` to the stdout and to the file ``filename`` (if it does not exist).
+
+    - Give ``std_data`` to print ``mean +- std`` instead of just ``mean`` from ``mean_data``,
+    - Give a list to ``labels`` to use a header of the table,
+    - Give a formatting function to ``fmt_function``, like :func:`IPython.core.magics.execution._format_time` to print running times, or :func:`memory_consumption.sizeof_fmt` to print memory usages, or ``lambda s: "{:.3g}".format(s)`` to print ``float`` values (default),
+    - Uses :func:`tabulate.tabulate` (https://bitbucket.org/astanin/python-tabulate/) or :func:`pandas.DataFrame.to_latex` (https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.to_latex.html#pandas.DataFrame.to_latex).
+
+    .. warning:: FIXME this is still experimental! And useless, most of the time we simply do a copy/paste from the terminal to the LaTeX in the article...
+    """
+    if fmt_function is None:  fmt_function = lambda s: "{:.3g}".format(s)
+    output_string = None
+    input_data = mean_data
+    if std_data is not None:
+        format_data = np.vectorize(lambda xi, yi: r"{} \pm {}".format(fmt_function(xi), fmt_function(yi)))
+        input_data = format_data(mean_data, std_data)
+    else:
+        format_data = np.vectorize(fmt_function)
+        input_data = format_data(mean_data)
+    print("Using input_data of shape = {} and size = {}\n{}".format(np.shape(input_data), np.size(input_data), input_data))  # DEBUG
+    # 1. try with pandas module
+    try:
+        import pandas as pd
+        if labels is not None:
+            df = pd.DataFrame(input_data, columns=labels)
+        else:
+            df = pd.DataFrame(input_data)
+        output_string = df.to_latex(*args, **kwargs)
+    except ImportError:
+        print("Error: the pandas module is not available, install it with 'pip install pandas' or 'conda install pandas'.")  # DEBUG
+    # 2. if pandas failed, try with tabulate
+    if output_string is None:
+        try:
+            import tabulate
+            if labels is not None:
+                output_string = tabulate.tabulate(input_data, tablefmt="latex_raw", headers=labels, *args, **kwargs)
+            else:
+                output_string = tabulate.tabulate(input_data, tablefmt="latex_raw", *args, **kwargs)
+        except ImportError:
+            print("Error: the tabulate module is not available, install it with 'pip install tabulate' or 'conda install tabulate'.")  # DEBUG
+    if filename is not None and not erase_output and os.path.exists(filename):
+        print("Error: the file named '{}' already exists, and option 'erase_output' is False.".format(filename))
+        return -1
+    if name_of_table is not None:
+        output_string = r"""%% LaTeX code for a table, produced by SMPyBandits.Environment.plotsetting.table_to_latex()
+\begin{table}
+%s
+\caption{%s}
+\end{table}""" % (output_string, name_of_table)
+    print("\nThe data from object (shape = {} and size = {}) can be pretty printed in a LaTeX table looking like this one:".format(np.shape(input_data), np.size(input_data)))  # DEBUG
+    print(output_string)
+    if filename is not None:
+        print("\nThe data from object (shape = {} and size = {}) will be saved to the file {}...".format(np.shape(input_data), np.size(input_data), filename))  # DEBUG
+        with open(filename, 'w') as open_file:
+            print(output_string, file=open_file)
+    return 0
 
 
 # --- Debugging
