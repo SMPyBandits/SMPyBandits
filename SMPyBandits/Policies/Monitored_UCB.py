@@ -16,7 +16,6 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
-
 import numpy as np
 
 try:
@@ -38,6 +37,11 @@ PER_ARM_RESTART = False
 FULL_RESTART_WHEN_REFRESH = True
 
 
+#: Default value of the window-size. Give ``None`` to use the default value computed from a knowledge of the horizon and number of break-points.
+WINDOW_SIZE = 50
+WINDOW_SIZE = None
+
+
 # --- The very generic class
 
 class Monitored_IndexPolicy(BaseWrapperPolicy):
@@ -49,7 +53,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             full_restart_when_refresh=FULL_RESTART_WHEN_REFRESH,
             per_arm_restart=PER_ARM_RESTART,
             horizon=None, delta=DELTA, max_nb_random_events=None,
-            w=None, b=None, gamma=None,
+            w=WINDOW_SIZE, b=None, gamma=None,
             *args, **kwargs
         ):
         super(Monitored_IndexPolicy, self).__init__(nbArms, *args, **kwargs)
@@ -101,8 +105,9 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        return r"M-{}($w={:g}${})".format(self._policy.__name__, self.window_size, ", Local" if self._per_arm_restart else "")
-        # return r"M-{}{}".format(self._policy.__name__, "" if self._per_arm_restart else "(Global)")
+        args = "{}{}".format("$w={:g}$".format(self.window_size) if self.window_size != WINDOW_SIZE else "", "" if self._per_arm_restart else ", Global")
+        args = "({})".format(args) if args else ""
+        return r"M-{}{}".format(self._policy.__name__, args)
 
     def choice(self):
         r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choice`` of the underlying policy (eg. UCB).
@@ -185,10 +190,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # don't try to detect change if there is not enough data!
         if len(data_y) < self.window_size:
             return False
-        last_w_data_y = data_y[-self.window_size:]  # WARNING revert to this if data_y can be larger
-        # last_w_data_y = data_y
+        # last_w_data_y = data_y[-self.window_size:]  # WARNING revert to this if data_y can be larger
+        last_w_data_y = data_y
         sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
         sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
-
-

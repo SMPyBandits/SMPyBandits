@@ -142,7 +142,7 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
         self.all_rewards[arm].append(reward)
 
         if self.detect_change(arm):
-            print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points!".format(self, self.t, arm))  # DEBUG
+            # print("For a player {} a change was detected at time {} for arm {}, because this time step is in its list of change points!".format(self, self.t, arm))  # DEBUG
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms

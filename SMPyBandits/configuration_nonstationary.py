@@ -477,9 +477,10 @@ TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.99] #+ [0.9999, 0.9, 0.75, 0.5]
+GAMMAS = [0.99]  #+ [0.9999, 0.99, 0.75, 0.5]
 
 WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
+WINDOW_SIZE = 150  # FIXME manually set...
 
 PER_ARM_RESTART = [
     True,  # Per-arm restart XXX comment to only test global arm
@@ -487,6 +488,13 @@ PER_ARM_RESTART = [
 ]
 
 MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = np.min(np.diff(CHANGE_POINTS)) // (2 * NB_ARMS)
+
+UPSILON_T = max(1, NB_BREAK_POINTS)
+DELTA_1 = 1/np.sqrt(HORIZON)  # XXX experimental!
+DELTA_2 = 1/np.sqrt(UPSILON_T * HORIZON)  # XXX experimental!
+
+ALPHA_1 = 0.1 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX experimental!
+ALPHA_2 = 0.1 * np.sqrt(np.log(HORIZON/UPSILON_T) / UPSILON_T * HORIZON)  # XXX experimental!
 
 
 configuration.update({
@@ -497,30 +505,101 @@ configuration.update({
     # ] +
     [  # XXX Regular stochastic bandits algorithms!
         # { "archtype": UCBalpha, "params": { "alpha": 1, } },
+        # { "archtype": UCB, "params": { } },
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
-        # # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-        # # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+        # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+        # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
         # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
         { "archtype": klUCB, "params": { "klucb": klucb, }, "change_label": "klUCB", },
         # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
         { "archtype": Thompson, "params": { "posterior": Beta, }, "change_label": "Thompson Sampling" },
     ] +
-    [  # XXX DiscountedThompson works REALLY well!
-        {
-            "archtype": DiscountedThompson,
-            "params": { "posterior": DiscountedBeta, "gamma": gamma, },
-            "change_label": r"DTS($\gamma={:.5g}$)".format(gamma),
-        }
-        for gamma in GAMMAS
+    # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
+    [
+        { "archtype": OracleSequentiallyRestartPolicy, "params": {
+            "changePoints": CHANGE_POINTS,
+            "listOfMeans": LIST_OF_MEANS,
+            "policy": policy,
+            # "per_arm_restart": per_arm_restart,
+            "reset_for_all_change": reset_for_all_change,
+            "reset_for_suboptimal_change": reset_for_suboptimal_change,
+            # "full_restart_when_refresh": full_restart_when_refresh,
+        } }
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+            # Thompson,  # XXX comment to only test klUCB
+            # Exp3PlusPlus,  # XXX comment to only test klUCB
+        ]
+        # for per_arm_restart in [True, False]
+        # for full_restart_when_refresh in [True, False]
+        for reset_for_all_change, reset_for_suboptimal_change in [
+            (True,  False),  # optimal
+            # (True,  True),  # sub sub optimal
+            # (False, True),  # ? optimal
+            # (False, False),  # sub optimal
+        ]
     ] +
     # # The Exp3R algorithm works reasonably well
     # [
     #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
     # ] +
-    # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
+    # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
     # [
     #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
     # ] +
+    # [
+    #     # --- # Different versions of the discounted UCB algorithm
+    #     { "archtype": DiscountedUCB, "params": {
+    #         "gamma": gamma,
+    #         # "alpha": alpha,
+    #         # "useRealDiscount": useRealDiscount,
+    #     } }
+    #     for gamma in GAMMAS
+    #     # for alpha in ALPHAS
+    #     # for useRealDiscount in [True, False]
+    # ] +
+    # [
+    #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+    #     { "archtype": DiscountedklUCBPlus, "params": { "max_nb_random_events": NB_BREAK_POINTS, "horizon": HORIZON, } }
+    # ] +
+    # [
+    #     # --- # XXX experimental sliding window algorithm
+    #     { "archtype": SlidingWindowRestart, "params": {
+    #         "policy": policy,
+    #         "tau": tau,
+    #         "threshold": eps,
+    #         "full_restart_when_refresh": True,
+    #         },
+    #         "change_label": r"SW-klUCB"
+    #     }
+    #     for tau in TAUS
+    #     for eps in EPSS
+    #     for policy in [klUCB]
+    # ] +
+    # [
+    #     # --- # Different versions of the sliding window UCB algorithm
+    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+    #     for alpha in ALPHAS for tau in TAUS
+    # ] +
+    # [
+    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+    #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
+    #     for alpha in ALPHAS
+    # ] +
+    [
+        # --- # Different versions of the sliding window klUCB algorithm
+        { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
+        for tau in TAUS
+    ] +
+    [  # XXX DiscountedThompson works REALLY well!
+        {
+            "archtype": DiscountedThompson,
+            "params": { "posterior": DiscountedBeta, "gamma": gamma, },
+            "change_label": "DTS",
+        }
+        for gamma in GAMMAS
+    ] +
     # # [  # XXX TODO test the AdSwitch policy and its corrected version
     # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
     # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
@@ -539,47 +618,6 @@ configuration.update({
     #     for alpha in ALPHAS
     #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
     # ] +
-    [
-        # --- # XXX experimental sliding window algorithm
-        { "archtype": SlidingWindowRestart, "params": {
-            "policy": policy,
-            "tau": tau,
-            "threshold": eps,
-            "full_restart_when_refresh": True,
-            }, "change_label": r"SW-klUCB($\tau={}$)".format(tau)
-        }
-        for tau in TAUS
-        for eps in EPSS
-        for policy in [klUCB]
-    ] +
-    # [
-    #     # --- # Different versions of the sliding window UCB algorithm
-    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-    #     for alpha in ALPHAS for tau in TAUS
-    # ] +
-    # [
-    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-    #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
-    #     for alpha in ALPHAS
-    # ] +
-    # [
-    #     # --- # Different versions of the discounted UCB algorithm
-    #     { "archtype": DiscountedUCB, "params": {
-    #         "alpha": alpha,
-    #         "gamma": gamma,
-    #         # "useRealDiscount": useRealDiscount,
-    #     } }
-    #     for alpha in ALPHAS
-    #     for gamma in GAMMAS
-    #     # for useRealDiscount in [True, False]
-    # ] +
-    # [
-    #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-    #     { "archtype": DiscountedUCBPlus, "params": { "max_nb_random_events": max_nb_random_events, "alpha": alpha, "horizon": HORIZON, } }
-    #     for alpha in ALPHAS
-    #     for max_nb_random_events in [NB_BREAK_POINTS]
-    #     # for max_nb_random_events in list(set([50 * NB_BREAK_POINTS, 20 * NB_BREAK_POINTS, 10 * NB_BREAK_POINTS, NB_BREAK_POINTS, 1]))
-    # ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": {
@@ -587,8 +625,7 @@ configuration.update({
             "per_arm_restart": per_arm_restart,
             "horizon": HORIZON,
             "w": w,
-            "b": np.sqrt(w/2 * np.log(2 * NB_ARMS * HORIZON**2)),
-        } }
+        }, "change_label": "M-klUCB", }
         for per_arm_restart in PER_ARM_RESTART
         for policy in [
             # UCB,
@@ -597,41 +634,14 @@ configuration.update({
         # for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
         for w in [WINDOW_SIZE]
     ] +
-    # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
-    [
-        { "archtype": OracleSequentiallyRestartPolicy, "params": {
-            "changePoints": CHANGE_POINTS,
-            "listOfMeans": LIST_OF_MEANS,
-            "policy": policy,
-            # "per_arm_restart": per_arm_restart,
-            "reset_for_all_change": reset_for_all_change,
-            "reset_for_suboptimal_change": reset_for_suboptimal_change,
-            # "full_restart_when_refresh": full_restart_when_refresh,
-        } }
-        for policy in [
-            # Thompson,
-            # UCB,
-            klUCB,  # XXX comment to only test UCB
-            # Exp3PlusPlus,  # XXX comment to only test UCB
-        ]
-        # for per_arm_restart in [True, False]
-        # for full_restart_when_refresh in [True, False]
-        for reset_for_all_change, reset_for_suboptimal_change in [
-            (True,  False),  # optimal
-            # (True,  True),  # sub sub optimal
-            # (False, True),  # ? optimal
-            # (False, False),  # sub optimal
-        ]
-    ] +
     # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
     [
         { "archtype": archtype, "params": {
             "horizon": HORIZON,
             "policy": policy,
-            "per_arm_restart": per_arm_restart,
             "max_nb_random_events": NB_BREAK_POINTS,
-            "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
-            # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         } }
         for archtype in [
             CUSUM_IndexPolicy,
@@ -641,8 +651,8 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for per_arm_restart in PER_ARM_RESTART
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
+        for lazy_detect_change_only_x_steps in ([10] if HORIZON <= 20000 else ([20] if HORIZON <= 100000 else [50]))
     ] +
     # # XXX Test a UCBLCB_IndexPolicy algorithm
     # [
@@ -687,16 +697,25 @@ configuration.update({
     # XXX Test BernoulliGLR_IndexPolicy
     [
         { "archtype": archtype, "params": {
-            "horizon": HORIZON,
+            # "horizon": HORIZON,
             "policy": policy,
             "per_arm_restart": per_arm_restart,
-            "max_nb_random_events": NB_BREAK_POINTS,
+            # "max_nb_random_events": NB_BREAK_POINTS,
             "delta": delta,
             "alpha0": alpha0,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
-        } }
+        },
+        "change_label": r"GLR-klUCB({}{}{})".format(
+            "Local" if per_arm_restart else "Global",
+            # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
+            # r"\delta={:.3g}".format(delta),
+            # r"\alpha_0={:.3g}".format(alpha0),
+            ", $\Delta t={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
+            ", $\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
+        )
+        }
         for archtype in [
             # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
@@ -706,13 +725,18 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for per_arm_restart in PER_ARM_RESTART
-        for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
-        for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        # for lazy_detect_change_only_x_steps in [50, 10] #+ [2, 10]  # XXX uncomment to use default value
-        # for lazy_try_value_s_only_x_steps in [50, 10] #+ [2, 10]  # XXX uncomment to use default value
-        for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(10, 10), (30, 30)]
-        # for variant in [None, 1, 2, 3]
+        # for per_arm_restart in PER_ARM_RESTART
+        for per_arm_restart in [True, False]
+        # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
+        for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
+        # for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
+        for alpha0 in [ALPHA_1]  # XXX experimental!
+        # for alpha0 in [1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0]  # comment from the + to use default parameter
+        # for lazy_detect_change_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
+        # for lazy_try_value_s_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
+        # for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(1, 1), (10, 10)]
+        for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
+        # for variant in [None, 1, 2, 3]  # XXX variant for the threshold function...
     ] +
     []
 })

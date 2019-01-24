@@ -124,9 +124,9 @@ class Evaluator(object):
                 self.signature = (r", $\Upsilon_T={}$ random arms shuffling".format(len(changePoints))) + self.signature
             elif self.random_invert:
                 self.signature = (r", $\Upsilon_T={}$ arms inversion".format(len(changePoints))) + self.signature
-            else:
-                # self.signature = (r", $\Upsilon_T={}$ change point{}{}".format(len(changePoints), "s" if len(changePoints) > 1 else "", " ${}$".format(list(changePoints)) if len(changePoints) > 0 else "") + self.signature)
-                self.signature = (r", $\Upsilon_T={}$".format(len(changePoints)) + self.signature)
+            # else:
+            #     # self.signature = (r", $\Upsilon_T={}$ change point{}{}".format(len(changePoints), "s" if len(changePoints) > 1 else "", " ${}$".format(list(changePoints)) if len(changePoints) > 0 else "") + self.signature)
+            #     self.signature = (r", $\Upsilon_T={}$".format(len(changePoints)) + self.signature)
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
