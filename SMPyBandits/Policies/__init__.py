@@ -26,9 +26,9 @@
 
 - An experimental policy, using a sliding window of for instance 100 draws, and reset the algorithm as soon as the small empirical average is too far away from the full history empirical average (or just restart for one arm, if possible), :class:`SlidingWindowRestart`, and 3 versions for UCB, UCBalpha and klUCB: :class:`SlidingWindowRestart.SWR_UCB`, :class:`SlidingWindowRestart.SWR_UCBalpha`, :class:`SlidingWindowRestart.SWR_klUCB` (my algorithm, unpublished yet),
 
-- An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known.
+- An experimental policy, using just a sliding window of for instance 100 draws, :class:`SlidingWindowUCB.SWUCB`, and :class:`SlidingWindowUCB.SWUCBPlus` if the horizon is known. There is also :class:`SlidingWindowUCB.SWklUCB`.
 
-- Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`.
+- Another experimental policy with a discount factor, :class:`DiscountedUCB` and :class:`DiscountedUCB.DiscountedUCBPlus`, as well as versions using klUCB, :class:`DiscountedUCB.DiscountedklUCB`, and :class:`DiscountedUCB.DiscountedklUCBPlus`.
 
 - Other policies for the non-stationary problems: :class:`LM_DSEE`, :class:`SWHash_UCB.SWHash_IndexPolicy`, :class:`CD_UCB.CUSUM_IndexPolicy`, :class:`CD_UCB.PHT_IndexPolicy`, :class:`CD_UCB.UCBLCB_IndexPolicy`, :class:`CD_UCB.GaussianGLR_IndexPolicy`, :class:`CD_UCB.BernoulliGLR_IndexPolicy`, :class:`Monitored_UCB.Monitored_IndexPolicy`, :class:`OracleSequentiallyRestartPolicy`, :class:`AdSwitch`.
 
@@ -176,10 +176,10 @@ from .GenericAggregation import GenericAggregation
 from .ApproximatedFHGittins import ApproximatedFHGittins  # Approximated Finite-Horizon Gittins index
 
 # --- Smart policies trying to adapt to dynamically changing environments
-from .SlidingWindowRestart import SlidingWindowRestart, SWR_UCB, SWR_UCBalpha, SWR_klUCB
-from .SlidingWindowUCB import SWUCB, SWUCBPlus
+from .SlidingWindowUCB import SWUCB, SWUCBPlus, SWklUCB, SWklUCBPlus
+from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus, DiscountedklUCB, DiscountedklUCBPlus
 
-from .DiscountedUCB import DiscountedUCB, DiscountedUCBPlus
+from .SlidingWindowRestart import SlidingWindowRestart, SWR_UCB, SWR_UCBalpha, SWR_klUCB
 
 from .LM_DSEE import LM_DSEE
 from .SWHash_UCB import SWHash_IndexPolicy

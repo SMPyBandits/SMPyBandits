@@ -13,6 +13,7 @@ from __future__ import division, print_function  # Python 2 compatibility
 __author__ = "Lilian Besson"
 __version__ = "0.9"
 
+from math import log, sqrt
 import numpy as np
 np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
 
@@ -71,16 +72,16 @@ class SWUCB(IndexPolicy):
 
         .. math::
 
-           I_k(t) &= \frac{X_{k,\tau}(t)}{N_{k,\tau}(t)} + c_{k,\tau}(t),\\
-           \text{where}\;\; c_{k,\tau}(t) &:= \sqrt{\alpha \frac{\log(\min(t,\tau))}{N_{k,\tau}(t)}},\\
-           \text{and}\;\; X_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),\\
-           \text{and}\;\; N_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} \mathbb{1}(A(t) = k).
+            I_k(t) &= \frac{X_{k,\tau}(t)}{N_{k,\tau}(t)} + c_{k,\tau}(t),\\
+            \text{where}\;\; c_{k,\tau}(t) &:= \sqrt{\alpha \frac{\log(\min(t,\tau))}{N_{k,\tau}(t)}},\\
+            \text{and}\;\; X_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),\\
+            \text{and}\;\; N_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} \mathbb{1}(A(t) = k).
         """
         last_pulls_of_this_arm = np.count_nonzero(self.last_choices == arm)
         if last_pulls_of_this_arm < 1:
             return float('+inf')
         else:
-            return (np.sum(self.last_rewards[self.last_choices == arm]) / last_pulls_of_this_arm) + np.sqrt((self.alpha * np.log(min(self.t, self.tau))) / last_pulls_of_this_arm)
+            return (np.sum(self.last_rewards[self.last_choices == arm]) / last_pulls_of_this_arm) + sqrt((self.alpha * log(min(self.t, self.tau))) / last_pulls_of_this_arm)
 
 
 # --- Horizon dependent version
@@ -95,7 +96,7 @@ class SWUCBPlus(SWUCB):
                  *args, **kwargs):
         if horizon is not None:
             T = int(horizon)
-            tau = int(4 * np.sqrt(T * np.log(T)))
+            tau = int(4 * sqrt(T * log(T)))
         else:
             tau = TAU
         super(SWUCBPlus, self).__init__(nbArms, tau=tau, *args, **kwargs)
@@ -103,3 +104,69 @@ class SWUCBPlus(SWUCB):
 
     def __str__(self):
         return r"SW-UCB+($\tau={}$, $\alpha={:.3g}$)".format(self.tau, self.alpha)
+
+
+# --- SW-klUCB
+
+try:
+    from .kullback import klucbBern
+except (ImportError, SystemError):
+    from kullback import klucbBern
+
+#: Default value for the constant c used in the computation of KL-UCB index.
+constant_c = 1.  #: default value, as it was in pymaBandits v1.0
+# c = 1.  #: as suggested in the Theorem 1 in https://arxiv.org/pdf/1102.2490.pdf
+
+
+#: Default value for the tolerance for computing numerical approximations of the kl-UCB indexes.
+tolerance = 1e-4
+
+
+class SWklUCB(SWUCB):
+    r""" An experimental policy, using only a sliding window (of :math:`\tau` *steps*, not counting draws of each arms) instead of using the full-size history, and using klUCB (see :class:`Policy.klUCB`) indexes instead of UCB.
+    """
+
+    def __init__(self, nbArms, tau=TAU, klucb=klucbBern, *args, **kwargs):
+        super(SWklUCB, self).__init__(nbArms, tau=tau, *args, **kwargs)
+        self.klucb = klucb  #: kl function to use
+
+    def __str__(self):
+        name = self.klucb.__name__[5:]
+        if name == "Bern": name = ""
+        if name != "": name = "({})".format(name)
+        return r"SW-klUCB{}($\tau={}$)".format(name, self.tau)
+
+    def computeIndex(self, arm):
+        r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
+
+        .. math::
+
+            \hat{\mu'}_k(t) &= \frac{X_{k,\tau}(t)}{N_{k,\tau}(t)} , \\
+            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu'}_k(t), q) \leq \frac{c \log(\min(t,\tau))}{N_{k,\tau}(t)} \right\},\\
+            I_k(t) &= U_k(t),\\
+            \text{where}\;\; X_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} X_k(s) \mathbb{1}(A(t) = k),\\
+            \text{and}\;\; N_{k,\tau}(t) &:= \sum_{s=t-\tau+1}^{t} \mathbb{1}(A(t) = k).
+
+        If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
+        and c is the parameter (default to 1).
+        """
+        last_pulls_of_this_arm = np.count_nonzero(self.last_choices == arm)
+        if last_pulls_of_this_arm < 1:
+            return float('+inf')
+        else:
+            mean = np.sum(self.last_rewards[self.last_choices == arm]) / last_pulls_of_this_arm
+            level = constant_c * log(min(self.t, self.tau)) / last_pulls_of_this_arm
+            return self.klucb(mean, level, tolerance)
+
+
+class SWklUCBPlus(SWklUCB, SWUCBPlus):
+    r""" An experimental policy, using only a sliding window (of :math:`\tau` *steps*, not counting draws of each arms) instead of using the full-size history, and using klUCB (see :class:`Policy.klUCB`) indexes instead of UCB.
+
+    - Uses :math:`\tau = 4 \sqrt{T \log(T)}` if the horizon :math:`T` is given, otherwise use the default value.
+    """
+
+    def __str__(self):
+        name = self.klucb.__name__[5:]
+        if name == "Bern": name = ""
+        if name != "": name = "({})".format(name)
+        return r"SW-klUCB{}+($\tau={}$)".format(name, self.tau)
