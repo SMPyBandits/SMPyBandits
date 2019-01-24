@@ -31,7 +31,8 @@ class BaseWrapperPolicy(BasePolicy):
             kwargs.update(kwargs['params'])
             del kwargs['params']
         self._kwargs = kwargs  # To keep them
-        self.policy = policy  #: Underlying policy
+        self.policy = None
+        # self.policy = policy(self.nbArms, *self._args, **self._kwargs)  #: Underlying policy
 
     # --- Start game by creating new underlying policy
 
@@ -43,7 +44,7 @@ class BaseWrapperPolicy(BasePolicy):
         super(BaseWrapperPolicy, self).startGame()
         # now for the underlying policy
         if createNewPolicy:
-            # print("INFO: BaseWrapperPolicy: creating a new underlying policy with startGame(createNewPolicy=True)...")  # DEBUG
+            if self.policy is not None: print("INFO: BaseWrapperPolicy: creating a new underlying policy with startGame(createNewPolicy=True)...")  # DEBUG
             # del self.policy  # XXX be sure that we delete the attribute and the object?
             self.policy = self._policy(self.nbArms, *self._args, **self._kwargs)
         # now also start game for the underlying policy

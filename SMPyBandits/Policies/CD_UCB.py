@@ -57,7 +57,7 @@ MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 50
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
-LAZY_DETECT_CHANGE_ONLY_X_STEPS = 20
+LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 
 
 # --- The very generic class
@@ -226,9 +226,11 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             horizon=None, max_nb_random_events=None,
             lmbda=LAMBDA,
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
+            full_restart_when_refresh=False,
+            per_arm_restart=True,
             *args, **kwargs
         ):
-        super(CUSUM_IndexPolicy, self).__init__(nbArms, *args, **kwargs)
+        super(CUSUM_IndexPolicy, self).__init__(nbArms, full_restart_when_refresh=full_restart_when_refresh, per_arm_restart=per_arm_restart, *args, **kwargs)
         # New parameters
         self.max_nb_random_events = max_nb_random_events
         self.M = min_number_of_observation_between_change_point  #: Parameter :math:`M` for the test.
@@ -238,9 +240,19 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
 
     def __str__(self):
         # return r"CUSUM-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
-        args = "{}{}".format("" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        args = "{}{}".format("" if self._per_arm_restart else "Global, ", "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
         args = "({})".format(args) if args else ""
         return r"CUSUM-{}{}".format(self._policy.__name__, args)
+
+    def getReward(self, arm, reward):
+        r""" Be sure that the underlying UCB or klUCB indexes are used with :math:`\log(n_t)` for the exploration term, where :math:`n_t = \sum_{i=1}^K N_i(t)` the number of pulls of each arm since its last restart times (different restart time for each arm, CUSUM use local restart only)."""
+        super(CUSUM_IndexPolicy, self).getReward(arm, reward)
+        # FIXME Be sure that CUSUM UCB use log(n_t) in their UCB and not log(t - tau_i)
+        # we update the total number of samples available to the underlying policy
+        old_policy_t, new_policy_t = self.policy.t, sum(self.last_pulls)
+        if old_policy_t != new_policy_t:
+            print("==> WARNING: the policy {}, at global time {}, had a sub_policy.t = {} but a total number of pulls of each arm since its last restart times = {}...\n    WARNING: Forcing UCB or klUCB to use this weird t for their log(t) term...".format(self, self.t, old_policy_t, new_policy_t))  # DEBUG
+            self.policy.t = new_policy_t  # XXX SO NOT SURE HERE
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the two-sided CUSUM algorithm [Page, 1954].
@@ -316,7 +328,7 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
 #: It is a simple but efficient way to speed up GLR tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
 #: Default value is 1, to not use this feature, and 10 should speed up the test by x10.
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
-LAZY_TRY_VALUE_S_ONLY_X_STEPS = 20
+LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
 
 
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
@@ -640,9 +652,10 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{\sqrt{T}}` if ``horizon`` is given and ``delta=None`` but :math:`\Upsilon_T` is unknown. Defaults to :math:`\delta=\frac{1}{\sqrt{\Upsilon_T T}}` if both :math:`T` and :math:`\Upsilon_T` are given (``horizon`` and ``max_nb_random_events``).
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
-        if alpha0 is None and horizon is not None and max_nb_random_events is not None:
-            alpha0 = smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
-        self._alpha0 = alpha0
+        alpha = alpha0 if alpha0 is not None else 1
+        if horizon is not None and max_nb_random_events is not None:
+            alpha *= smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
+        self._alpha0 = alpha
         self._variant = variant
         self._threshold_function = threshold_function
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
@@ -765,9 +778,10 @@ class GLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy):
         r""" For some time steps, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
         """
         latest_restart_times = np.max(self.last_restart_times)
-        A = (self.t - latest_restart_times) % int(np.ceil(self.nbArms / self.proba_random_exploration))
-        if A < self.nbArms:
-            return int(A)
+        if self.proba_random_exploration > 0:
+            A = (self.t - latest_restart_times) % int(np.ceil(self.nbArms / self.proba_random_exploration))
+            if A < self.nbArms:
+                return int(A)
         return self.policy.choice()
 
 
@@ -877,9 +891,10 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         self.joint = joint  #: Parameter ``joint`` for the Sub-Gaussian-GLR test.
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
-        if alpha0 is None and horizon is not None and max_nb_random_events is not None:
-            alpha0 = smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
-        self._alpha0 = alpha0
+        alpha = alpha0 if alpha0 is not None else 1
+        if horizon is not None and max_nb_random_events is not None:
+            alpha *= smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
+        self._alpha0 = alpha
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
 
     def compute_threshold_h(self, s, t):

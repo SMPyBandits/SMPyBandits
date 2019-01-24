@@ -28,17 +28,14 @@ except ImportError:
 
 
 #: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
-#: The default abruptly-changing non-stationary problem draws news means in :math:`[0,1]` so :math:`\delta=0` is the only possible (worst-case) lower-bound on amplitude of changes.
-#: I force ``0.1`` because I can force the minimum gap when calling :func:`Arms.randomMeans` to be ``0.1``.
-DELTA = 0.1
+#: Default is ``0.05``.
+DELTA = 0.05
 
-#: Should we reset one arm empirical average or all? Default is ``True``, it's usually more efficient!
+#: Should we reset one arm empirical average or all? For M-UCB it is ``False`` by default.
 PER_ARM_RESTART = False
-PER_ARM_RESTART = True
 
-#: Should we fully restart the algorithm or simply reset one arm empirical average? Default is ``False``, it's usually more efficient!
+#: Should we fully restart the algorithm or simply reset one arm empirical average? For M-UCB it is ``True`` by default.
 FULL_RESTART_WHEN_REFRESH = True
-FULL_RESTART_WHEN_REFRESH = False
 
 
 # --- The very generic class
@@ -82,12 +79,15 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             M = max_nb_random_events
             assert M >= 1, "Error: for Monitored_UCB policy the parameter M should be >= 1 but it was given as {}.".format(M)  # DEBUG
             # XXX compute gamma from the formula from Theorem 6.1
-            gamma = np.sqrt((M-1) * nbArms * min(w/2, np.ceil(b / delta) +  3 * np.sqrt(w)) / (2 * horizon))
-        if gamma > 1:
-            gamma = 0.01 * nbArms
+            # gamma = np.sqrt(M * nbArms * min(w/2, np.ceil(b / delta) +  3 * np.sqrt(w)) / (2 * horizon))
+            # XXX compute gamma from the tuning used for their experiment (§6.1)
+            gamma = np.sqrt(M * nbArms * (2 * b +  3 * np.sqrt(w)) / (2 * horizon))
         if gamma <= 0:
-            print("Warning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 1.0 / (1 + 50 * nbArms * max_nb_random_events)))
+            print("\n\nWarning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 1.0 / (1 + 50 * nbArms * max_nb_random_events)))
             gamma = 1.0 / (1 + 50 * nbArms * max_nb_random_events)
+        elif gamma > 1:
+            print("\n\nWarning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 0.01 * nbArms))
+            gamma = 0.01 * nbArms
         assert 0 <= gamma <= 1, "Error: for Monitored_UCB policy the parameter gamma should be 0 <= gamma <= 1, but it was given as {}.".format(gamma)  # DEBUG
         gamma = max(0, min(1, gamma))  # clip gamma to (0, 1) it's a probability!
         self.gamma = gamma  #: What they call :math:`\gamma` in their paper: the share of uniform exploration.
@@ -101,8 +101,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
 
     def __str__(self):
-        # return r"M-{}($w={:g}${})".format(self._policy.__name__, self.window_size, "" if self._per_arm_restart else ", Global")
-        return r"M-{}".format(self._policy.__name__, "" if self._per_arm_restart else "(Global)")
+        return r"M-{}($w={:g}${})".format(self._policy.__name__, self.window_size, ", Local" if self._per_arm_restart else "")
+        # return r"M-{}{}".format(self._policy.__name__, "" if self._per_arm_restart else "(Global)")
 
     def choice(self):
         r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choice`` of the underlying policy (eg. UCB).
@@ -116,9 +116,10 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
             A &:= (t - \tau) \mod \lceil \frac{K}{\gamma} \rceil,\\
             A &\leq K \implies A_t = A.
         """
-        A = (self.t - self.last_update_time_tau) % int(np.ceil(self.nbArms / self.gamma))
-        if A < self.nbArms:
-            return int(A)
+        if self.gamma > 0:
+            A = (self.t - self.last_update_time_tau) % int(np.ceil(self.nbArms / self.gamma))
+            if A < self.nbArms:
+                return int(A)
         # FIXED no in this algorithm they do not use a uniform chance of random exploration!
         # if with_proba(self.gamma):
         #     return np.random.randint(0, self.nbArms - 1)
@@ -184,8 +185,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # don't try to detect change if there is not enough data!
         if len(data_y) < self.window_size:
             return False
-        # last_w_data_y = data_y[-self.window_size:]  # WARNING revert to this if data_y can be larger
-        last_w_data_y = data_y
+        last_w_data_y = data_y[-self.window_size:]  # WARNING revert to this if data_y can be larger
+        # last_w_data_y = data_y
         sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
         sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
         return abs(sum_first_half - sum_second_half) > self.threshold_b
