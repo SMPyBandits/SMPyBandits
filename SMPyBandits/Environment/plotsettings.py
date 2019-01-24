@@ -375,11 +375,11 @@ def adjust_xticks_subplots(ylabel=None, labels=(), maxNbOfLabels=MAX_NB_OF_LABEL
     max_length_of_labels = max([len(label) for label in labels])
     locs, labels = plt.xticks()
     plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")
-    if max_length_of_labels >= 40:
+    if max_length_of_labels >= 50:
         plt.subplots_adjust(bottom=max_length_of_labels/135.0)
         if ylabel is not None: plt.ylabel(ylabel, fontsize="x-small")
     else:
-        plt.subplots_adjust(bottom=max_length_of_labels/100.0)
+        plt.subplots_adjust(bottom=max_length_of_labels/90.0)
 
 
 def table_to_latex(mean_data, std_data=None,

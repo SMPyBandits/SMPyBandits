@@ -125,7 +125,8 @@ class Evaluator(object):
             elif self.random_invert:
                 self.signature = (r", $\Upsilon_T={}$ arms inversion".format(len(changePoints))) + self.signature
             else:
-                self.signature = (r", $\Upsilon_T={}$ change point{}{}".format(len(changePoints), "s" if len(changePoints) > 1 else "", " ${}$".format(list(changePoints)) if len(changePoints) > 0 else "") + self.signature)
+                # self.signature = (r", $\Upsilon_T={}$ change point{}{}".format(len(changePoints), "s" if len(changePoints) > 1 else "", " ${}$".format(list(changePoints)) if len(changePoints) > 0 else "") + self.signature)
+                self.signature = (r", $\Upsilon_T={}$".format(len(changePoints)) + self.signature)
 
         # Internal vectorial memory
         self.rewards = np.zeros((self.nbPolicies, len(self.envs), self.horizon))  #: For each env, history of rewards, ie accumulated rewards
@@ -628,8 +629,8 @@ class Evaluator(object):
             plt.ylabel(r"Mean reward, average on time $\tilde{r}_t = \frac{1}{t} \sum_{s=1}^{t}$ %s%s" % (r"$\sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[r_s]$" % (self.repetitions), ylabel2))
             if not self.envs[envId].isChangingAtEachRepetition and not self.nb_break_points > 0:
                 plt.ylim(0.80 * minArm, 1.10 * maxArm)
-            if self.nb_break_points > 0:
-                plt.ylim(0, 1)
+            # if self.nb_break_points > 0:
+            #     plt.ylim(0, 1)  # FIXME do better!
             plt.title("Mean rewards for different bandit algorithms, averaged ${}$ times\n${}$ arms{}: {}".format(self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
         elif normalizedRegret:
             if self.plot_lowerbound:
@@ -853,7 +854,7 @@ class Evaluator(object):
             for policyId, policy in enumerate(self.policies):
                 fig = plt.figure()
                 plt.title("Histogram of regrets for {}\n${}$ arms{}: {}".format(policy.__cachedstr__, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-                plt.xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
+                plt.xlabel("Regret value $R_T$, horizon $T = {}${}".format(self.horizon, self.signature))
                 plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
                 last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
                 sns.distplot(last_regrets, hist=True, bins=nbbins, color=colors[policyId], kde_kws={'cut': 0, 'marker': markers[policyId], 'markevery': (policyId / 50., 0.1)})
@@ -871,7 +872,7 @@ class Evaluator(object):
             ax0.tick_params(labelcolor='none', top=False, bottom=False, left=False, right=False)  # hide tick and tick label of the big axes
             # Add only once the ylabel, xlabel, in the middle
             ax0.set_ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Histogram and density", self.repetitions))
-            ax0.set_xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
+            ax0.set_xlabel("Regret value $R_T$, horizon $T = {}${}".format(self.horizon, self.signature))
             for policyId, policy in enumerate(self.policies):
                 i, j = policyId % nrows, policyId // nrows
                 ax = axes[i, j] if ncols > 1 else axes[i]
@@ -882,7 +883,7 @@ class Evaluator(object):
         else:
             fig = plt.figure()
             plt.title("Histogram of regrets for different bandit algorithms\n${}$ arms{}: {}".format(self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(1, latex=True)))
-            plt.xlabel("Regret value $R_T$ at the end of simulation\nFor $T = {}${}".format(self.horizon, self.signature))
+            plt.xlabel("Regret value $R_T$, horizon $T = {}${}".format(self.horizon, self.signature))
             plt.ylabel("{} of observations, ${}$ repetitions".format("Frequency" if normed else "Number", self.repetitions))
             all_last_regrets = []
             labels = []
