@@ -50,9 +50,9 @@ LAMBDA = 1
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
 MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 150
 
-#: XXX Be lazy and try to detect changes only X steps, where X is small like 10 for instance.
+#: XXX Be lazy and try to detect changes only X steps, where X is small like 20 for instance.
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
-#: Default value is 0, to not use this feature, and 10 should speed up the test by x10.
+#: Default value is 0, to not use this feature, and 20 should speed up the test by x20.
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 

@@ -642,7 +642,8 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-        } }
+        }, "change_label": "CUSUM-klUCB",
+        }
         for archtype in [
             CUSUM_IndexPolicy,
             # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
@@ -707,13 +708,13 @@ configuration.update({
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
         },
-        "change_label": r"GLR-klUCB({}{}{})".format(
+        "change_label": r"GLR-klUCB({})".format(
             "Local" if per_arm_restart else "Global",
             # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
             # r"\delta={:.3g}".format(delta),
             # r"\alpha_0={:.3g}".format(alpha0),
-            ", $\Delta t={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
-            ", $\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
+            # ", $\Delta t={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
+            # ", $\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
         )
         }
         for archtype in [

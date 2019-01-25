@@ -28,13 +28,13 @@ except ImportError:
 
 #: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
 #: Default is ``0.05``.
-DELTA = 0.05
+DELTA = 0.5
 
 #: Should we reset one arm empirical average or all? For M-UCB it is ``False`` by default.
 PER_ARM_RESTART = False
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average? For M-UCB it is ``True`` by default.
-FULL_RESTART_WHEN_REFRESH = True
+FULL_RESTART_WHEN_REFRESH = False
 
 
 #: Default value of the window-size. Give ``None`` to use the default value computed from a knowledge of the horizon and number of break-points.
