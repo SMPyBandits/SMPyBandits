@@ -724,7 +724,8 @@ configuration.update({
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
-            klUCB,
+            # klUCB,
+            klUCB_forGLR,
         ]
         # for per_arm_restart in PER_ARM_RESTART
         for per_arm_restart in [True, False]

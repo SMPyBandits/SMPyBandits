@@ -35,7 +35,7 @@ VERBOSE = False
 #: Default probability of random exploration :math:`\alpha`.
 PROBA_RANDOM_EXPLORATION = 0.1
 
-ALPHA0_SCALE_FACTOR = 0.1  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps,a  lot!
+ALPHA0_SCALE_FACTOR = 1  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
 
 #: Should we reset one arm empirical average or all? Default is ``True``, it's usually more efficient!
 PER_ARM_RESTART = True
@@ -339,7 +339,18 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             variant,
         ] if s)
         args = "({})".format(args) if args else ""
-        return r"{}GLR-{}{}".format(name, self._policy.__name__, args)
+        policy_name = self._policy.__name__.replace("_forGLR", "")
+        return r"{}GLR-{}{}".format(name, policy_name, args)
+
+    def getReward(self, arm, reward):
+        r""" Do as :class:`CD_UCB` to handle the new reward, and also, update the internal times of each arm for the indexes of :class:`klUCB_forGLR` (or other index policies), which use :math:`f(t - \tau_i(t))` for the exploration function of each arm :math:`i` at time :math:`t`, where :math:`\tau_i(t)` denotes the (last) restart time of the arm.
+        """
+        super(GLR_IndexPolicy, self).getReward(arm, reward)
+        # DONE for this fix!
+        # self.policy.t_for_each_arm += 1
+        # if np.any(self.policy.t != self.policy.t - self.last_restart_times):
+        #     print("DEBUG: for {}, the default time step t = {} and the modified time steps t - tau_i(t) = {}...".format(self, self.policy.t, self.policy.t - self.last_restart_times))  # DEBUG
+        self.policy.t_for_each_arm = self.policy.t - self.last_restart_times
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.

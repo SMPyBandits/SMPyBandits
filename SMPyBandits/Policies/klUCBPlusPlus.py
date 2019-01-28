@@ -38,7 +38,7 @@ def g(t, T, K):
     return max(0., log(y * (1. + max(0., log(y)) ** 2)))
 
 
-def np_g(t, T, K):
+def g_vect(t, T, K):
     r"""The exploration function g(t) (for t current time, T horizon, K nb arms), as defined in page 3 of the reference paper, for numpy vectorized inputs.
 
     .. math::
@@ -90,6 +90,6 @@ class klUCBPlusPlus(klUCB):
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = self.klucb(self.rewards / self.pulls, self.c * np_g(self.pulls, self.horizon, self.nbArms) / self.pulls, self.tolerance)
+        indexes = self.klucb_vect(self.rewards / self.pulls, self.c * g_vect(self.pulls, self.horizon, self.nbArms) / self.pulls, self.tolerance)
         indexes[self.pulls < 1] = float('+inf')
         self.index[:] = indexes

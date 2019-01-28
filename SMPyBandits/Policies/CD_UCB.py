@@ -140,7 +140,9 @@ class CD_IndexPolicy(BaseWrapperPolicy):
                 self.policy.pulls[arm] = len(self.all_rewards[arm])
 
         # we update the total number of samples available to the underlying policy
-        # self.policy.t = sum(self.last_pulls)  # XXX SO NOT SURE HERE
+        # self.policy.t = sum(self.last_pulls)  # DONE for the generic CD UCB policy, nothing to do here to change self.policy.t
+        # XXX See CUSUM_UCB which forces self.policy.t = sum(last_pulls)
+        # XXX See GLR_UCB which forces self.policy.t_for_each_arm = t - self.last_restart_times (different t for each arm)!
 
     def detect_change(self, arm, verbose=VERBOSE):
         """ Try to detect a change in the current arm.

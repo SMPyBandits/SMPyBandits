@@ -34,9 +34,9 @@ class klUCBPlus(klUCB):
 
         .. math::
 
-           \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-           U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t / N_k(t))}{N_k(t)} \right\},\\
-           I_k(t) &= U_k(t).
+            \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
+            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t / N_k(t))}{N_k(t)} \right\},\\
+            I_k(t) &= U_k(t).
 
         If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),
         and c is the parameter (default to 1).
@@ -49,6 +49,6 @@ class klUCBPlus(klUCB):
 
     def computeAllIndex(self):
         """ Compute the current indexes for all arms, in a vectorized manner."""
-        indexes = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t / self.pulls) / self.pulls, self.tolerance)
+        indexes = self.klucb_vect(self.rewards / self.pulls, self.c * np.log(self.t / self.pulls) / self.pulls, self.tolerance)
         indexes[self.pulls < 1] = float('+inf')
         self.index[:] = indexes
