@@ -848,7 +848,7 @@ class PieceWiseStationaryMAB(MAB):
 
     def reprarms(self, nbPlayers=None, openTag='', endTag='^*', latex=True):
         """Cannot represent the dynamic arms, so print the PieceWiseStationaryMAB object"""
-        text = "{text}, {arm} with {M} break-points".format(
+        text = r"{text}, {arm} with $\Upsilon={M}$ break-points".format(
             text="Non-Stationary MAB",
             arm=str(self.arms[0]),
             M=len([tau for tau in self.changePoints if tau > 0]),

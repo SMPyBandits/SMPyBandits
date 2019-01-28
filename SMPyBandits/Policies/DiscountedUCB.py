@@ -168,7 +168,7 @@ class DiscountedklUCB(DiscountedUCB):
         name = self.klucb.__name__[5:]
         if name == "Bern": name = ""
         if name != "": name = "({})".format(name)
-        return r"D-UCB{}({}$\gamma={:.5g}$)".format(name, "no delay, " if not self.useRealDiscount else "", self.gamma)
+        return r"D-klUCB{}({}$\gamma={:.5g}$)".format(name, "no delay, " if not self.useRealDiscount else "", self.gamma)
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time :math:`t` and after :math:`N_{k,\gamma}(t)` *"discounted"* pulls of arm k, and :math:`n_{\gamma}(t)` *"discounted"* pulls of all arms:
@@ -209,4 +209,4 @@ class DiscountedklUCBPlus(DiscountedklUCB, DiscountedUCBPlus):
         name = self.klucb.__name__[5:]
         if name == "Bern": name = ""
         if name != "": name = "({})".format(name)
-        return r"D-UCB{}+({}$\gamma={:.5g}$)".format(name, "no delay, " if not self.useRealDiscount else "", self.gamma)
+        return r"D-klUCB{}+({}$\gamma={:.5g}$)".format(name, "no delay, " if not self.useRealDiscount else "", self.gamma)

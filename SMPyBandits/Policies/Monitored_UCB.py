@@ -153,7 +153,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_w_rewards[arm].append(reward)
 
         if self.detect_change(arm):
-            print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
+            # print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
             self.last_update_time_tau = self.t
 
             if not self._per_arm_restart:

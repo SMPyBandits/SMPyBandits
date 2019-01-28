@@ -50,12 +50,6 @@ N_JOBS = int(getenv('N_JOBS', N_JOBS))
 if REPETITIONS == -1:
     REPETITIONS = max(N_JOBS, CPU_COUNT)
 
-# # Random events
-# RANDOM_SHUFFLE = False  #: The arms won't be shuffled (``shuffle(arms)``).
-# RANDOM_SHUFFLE = getenv('RANDOM_SHUFFLE', str(RANDOM_SHUFFLE)) == 'True'
-# RANDOM_INVERT = False  #: The arms won't be inverted (``arms = arms[::-1]``).
-# RANDOM_INVERT = getenv('RANDOM_INVERT', str(RANDOM_INVERT)) == 'True'
-
 
 NB_BREAK_POINTS = 5  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
 NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
@@ -477,10 +471,12 @@ TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.9]  #+ [0.9999, 0.99, 0.75, 0.5]
+GAMMAS = [0.95]  #+ [0.9999, 0.99, 0.75, 0.5]
+GAMMA_T_UpsilonT = 1 - np.sqrt(NB_BREAK_POINTS / HORIZON) / 4.
+# GAMMAS = [GAMMA_T_UpsilonT]
 
 WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
-WINDOW_SIZE = 150  # FIXME manually set...
+# WINDOW_SIZE = 400  # FIXME manually set...
 
 PER_ARM_RESTART = [
     True,  # Per-arm restart XXX comment to only test global arm
@@ -493,12 +489,11 @@ UPSILON_T = max(1, NB_BREAK_POINTS)
 
 NUMBER_OF_CHANGE_POINTS = NB_ARMS * UPSILON_T
 if len(PROBLEMS) == 1 and set(PROBLEMS) <= {1,2,3,4,5,6}:
-    listOfMeans = np.array(configuration["environment"][0]["params"]["listOfMeans"])
-    CT = sum([sum(np.diff(listOfMeans[:, i]) != 0) for i in range(np.shape(listOfMeans)[1])])
+    CT = sum([sum(np.diff(np.array(LIST_OF_MEANS)[:, i]) != 0) for i in range(np.shape(LIST_OF_MEANS)[1])])
     NUMBER_OF_CHANGE_POINTS = CT
 print("\nUsing Upsilon_T = {} break-points (time when at least one arm changes), and C_T = {} change-points (number of changes of all arms).".format(UPSILON_T, NUMBER_OF_CHANGE_POINTS))  # DEBUG
 
-DELTA_T = 1.0 / np.sqrt(HORIZON)  # XXX tune the delta as a function of T and Upsilon_T
+DELTA_T = 1.0 / np.sqrt(HORIZON)  # XXX tune the delta as a function of T
 DELTA_T_UpsilonT = 1.0 / np.sqrt(UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
 DELTA_T_UpsilonT_K = 1.0 / np.sqrt(NB_ARMS * UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
 DELTA_T_CT = 1.0 / np.sqrt(NUMBER_OF_CHANGE_POINTS * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
@@ -506,10 +501,14 @@ DELTA_T_CT = 1.0 / np.sqrt(NUMBER_OF_CHANGE_POINTS * HORIZON)  # XXX tune the de
 DELTA_GLOBAL = DELTA_T_UpsilonT
 DELTA_LOCAL = DELTA_T_UpsilonT_K
 
-ALPHA_T = 0.1 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the delta as a function of T and Upsilon_T
-ALPHA_T_UpsilonT = 0.1 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
-ALPHA_T_UpsilonT_K = 0.1 * np.sqrt(NB_ARMS * UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
-ALPHA_T_CT = 0.1 * np.sqrt(NUMBER_OF_CHANGE_POINTS * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+ALPHA_0 = 1
+ALPHA_0 = 0.05
+# ALPHA_0 = 0  # FIXME
+
+ALPHA_T = ALPHA_0 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the alpha as a function of T
+ALPHA_T_UpsilonT = ALPHA_0 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
+ALPHA_T_UpsilonT_K = ALPHA_0 * np.sqrt(NB_ARMS * UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
+ALPHA_T_CT = ALPHA_0 * np.sqrt(NUMBER_OF_CHANGE_POINTS * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
 
 ALPHA_GLOBAL = ALPHA_T_UpsilonT
 ALPHA_LOCAL = ALPHA_T_UpsilonT_K
@@ -567,7 +566,7 @@ configuration.update({
     # ] +
     # [
     #     # --- # Different versions of the discounted UCB algorithm
-    #     { "archtype": DiscountedUCB, "params": {
+    #     { "archtype": DiscountedklUCB, "params": {
     #         "gamma": gamma,
     #         # "alpha": alpha,
     #         # "useRealDiscount": useRealDiscount,
@@ -617,7 +616,7 @@ configuration.update({
         }
         for gamma in GAMMAS
     ] +
-    # # [  # XXX TODO test the AdSwitch policy and its corrected version
+    # # [  # XXX test the AdSwitch policy and its corrected version
     # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
     # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
     # #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
@@ -660,7 +659,7 @@ configuration.update({
             # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
         },
-        # "change_label": "CUSUM-klUCB",
+        "change_label": "CUSUM-klUCB",
         }
         for archtype in [
             CUSUM_IndexPolicy,
@@ -671,7 +670,7 @@ configuration.update({
             klUCB,
         ]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
-        for lazy_detect_change_only_x_steps in ([10] if HORIZON <= 20000 else ([20] if HORIZON <= 100000 else [50]))
+        for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
     ] +
     # # XXX Test a UCBLCB_IndexPolicy algorithm
     # [
