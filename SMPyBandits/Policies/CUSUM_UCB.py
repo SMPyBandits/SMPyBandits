@@ -35,10 +35,10 @@ VERBOSE = False
 #: Default probability of random exploration :math:`\alpha`.
 PROBA_RANDOM_EXPLORATION = 0.1
 
-#: Should we reset one arm empirical average or all? Default is ``True``, it's usually more efficient!
+#: Should we reset one arm empirical average or all? For CUSUM-UCB it is ``True`` by default.
 PER_ARM_RESTART = True
 
-#: Should we fully restart the algorithm or simply reset one arm empirical average? Default is ``False``, it's usually more efficient!
+#: Should we fully restart the algorithm or simply reset one arm empirical average? For CUSUM-UCB it is ``False`` by default.
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test. For CUSUM/PHT, :math:`\varepsilon` is the drift correction threshold (see algorithm).
@@ -48,7 +48,7 @@ EPSILON = 0.1
 LAMBDA = 1
 
 #: Hypothesis on the speed of changes: between two change points, there is at least :math:`M * K` time steps, where K is the number of arms, and M is this constant.
-MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 150
+MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = 100
 
 #: XXX Be lazy and try to detect changes only X steps, where X is small like 20 for instance.
 #: It is a simple but efficient way to speed up CD tests, see https://github.com/SMPyBandits/SMPyBandits/issues/173
@@ -59,7 +59,9 @@ LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 
 # --- Different change detection algorithms
 
-ALPHA0_SCALE_FACTOR = 1  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
+#: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
+ALPHA0_SCALE_FACTOR = 1
+# ALPHA0_SCALE_FACTOR = 0.1
 
 
 from scipy.special import comb
@@ -130,7 +132,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         super(CUSUM_IndexPolicy, self).getReward(arm, reward)
         # FIXED DONE Be sure that CUSUM UCB use log(n_t) in their UCB and not log(t - tau_i)
         # we update the total number of samples available to the underlying policy
-        old_policy_t, new_policy_t = self.policy.t, sum(self.last_pulls)
+        old_policy_t, new_policy_t = self.policy.t, np.sum(self.last_pulls)
         if old_policy_t != new_policy_t:
             # print("==> WARNING: the policy {}, at global time {}, had a sub_policy.t = {} but a total number of pulls of each arm since its last restart times = {}...\n    WARNING: Forcing UCB or klUCB to use this weird t for their log(t) term...".format(self, self.t, old_policy_t, new_policy_t))  # DEBUG
             self.policy.t = new_policy_t  # XXX SO NOT SURE HERE

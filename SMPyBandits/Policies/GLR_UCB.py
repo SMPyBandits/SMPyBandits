@@ -35,7 +35,9 @@ VERBOSE = False
 #: Default probability of random exploration :math:`\alpha`.
 PROBA_RANDOM_EXPLORATION = 0.1
 
-ALPHA0_SCALE_FACTOR = 1  #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
+#: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
+# ALPHA0_SCALE_FACTOR = 1
+ALPHA0_SCALE_FACTOR = 0.1
 
 #: Should we reset one arm empirical average or all? Default is ``True``, it's usually more efficient!
 PER_ARM_RESTART = True
@@ -328,10 +330,10 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         variant = "" if self._variant is None else "threshold #{}".format(self._variant)
         args = ", ".join(s for s in [
             "Local" if self._per_arm_restart else "Global",
-            r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{\sqrt{T}}$",
-            "", # no need to print alpha as it is chosen based on horizon
+            # r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{\sqrt{T}}$",
+            # "", # no need to print alpha as it is chosen based on horizon
             # r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
-            r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"", # r"$\alpha=\sqrt{frac{\log(T)}{T}}$",
+            # r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"", # r"$\alpha=\sqrt{frac{\log(T)}{T}}$",
             r"$\Delta t={}$".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
             r"$\Delta s={}$".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking,
@@ -339,7 +341,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             variant,
         ] if s)
         args = "({})".format(args) if args else ""
-        policy_name = self._policy.__name__.replace("_forGLR", "")
+        policy_name = self._policy.__name__  #.replace("_forGLR", "")
         return r"{}GLR-{}{}".format(name, policy_name, args)
 
     def getReward(self, arm, reward):
@@ -347,10 +349,12 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         """
         super(GLR_IndexPolicy, self).getReward(arm, reward)
         # DONE for this fix!
-        # self.policy.t_for_each_arm += 1
-        # if np.any(self.policy.t != self.policy.t - self.last_restart_times):
-        #     print("DEBUG: for {}, the default time step t = {} and the modified time steps t - tau_i(t) = {}...".format(self, self.policy.t, self.policy.t - self.last_restart_times))  # DEBUG
-        self.policy.t_for_each_arm = self.policy.t - self.last_restart_times
+        if hasattr(self.policy, "t_for_each_arm"):
+            # if np.any(self.t != self.t - self.last_restart_times):
+            #     print("DEBUG: for {}, the default time step t = {} and the modified time steps t - tau_i(t) = {}...".format(self, self.t, self.t - self.last_restart_times))  # DEBUG
+            self.policy.t_for_each_arm = self.t - self.last_restart_times
+        else:
+            self.policy.t = np.min(self.t - self.last_restart_times)
 
     def detect_change(self, arm, verbose=VERBOSE):
         r""" Detect a change in the current arm, using the Generalized Likelihood Ratio test (GLR) and the :attr:`kl` function.

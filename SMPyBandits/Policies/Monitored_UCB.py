@@ -28,18 +28,22 @@ except ImportError:
 
 #: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
 #: Default is ``0.05``.
-DELTA = 0.5
+DELTA = 0.1
 
 #: Should we reset one arm empirical average or all? For M-UCB it is ``False`` by default.
 PER_ARM_RESTART = False
 
 #: Should we fully restart the algorithm or simply reset one arm empirical average? For M-UCB it is ``True`` by default.
-FULL_RESTART_WHEN_REFRESH = False
+FULL_RESTART_WHEN_REFRESH = True
 
 
 #: Default value of the window-size. Give ``None`` to use the default value computed from a knowledge of the horizon and number of break-points.
 WINDOW_SIZE = 50
 WINDOW_SIZE = None
+
+#: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
+GAMMA_SCALE_FACTOR = 1
+# GAMMA_SCALE_FACTOR = 0.1
 
 
 # --- The very generic class
@@ -92,6 +96,8 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         elif gamma > 1:
             print("\n\nWarning: the formula for gamma in the paper gave gamma = {}, that's absurd, we use instead {}".format(gamma, 0.01 * nbArms))
             gamma = 0.01 * nbArms
+        # FIXME just to do as the two other approaches GLR-UCB and CUSUM-UCB
+        gamma *= GAMMA_SCALE_FACTOR
         assert 0 <= gamma <= 1, "Error: for Monitored_UCB policy the parameter gamma should be 0 <= gamma <= 1, but it was given as {}.".format(gamma)  # DEBUG
         gamma = max(0, min(1, gamma))  # clip gamma to (0, 1) it's a probability!
         self.gamma = gamma  #: What they call :math:`\gamma` in their paper: the share of uniform exploration.

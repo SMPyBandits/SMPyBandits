@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-""" The generic KL-UCB policy for one-parameter exponential distributions, using a different exploration function for each arm.
+""" The generic KL-UCB policy for one-parameter exponential distributions, using a different exploration time step for each arm (:math:`\log(t_k) + c \log(\log(t_k))` instead of :math:`\log(t) + c \log(\log(t))`).
 
+- It is designed to be used with the wrapper :class:`GLR_UCB`.
 - By default, it assumes Bernoulli arms.
 - Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
 """
@@ -31,15 +32,16 @@ TOLERANCE = 1e-4
 # --- Class
 
 class klUCB_forGLR(klUCBloglog):
-    """ The generic KL-UCB policy for one-parameter exponential distributions, using a different exploration function for each arm.
+    """ The generic KL-UCB policy for one-parameter exponential distributions, using a different exploration time step for each arm (:math:`\log(t_k) + c \log(\log(t_k))` instead of :math:`\log(t) + c \log(\log(t))`).
 
+- It is designed to be used with the wrapper :class:`GLR_UCB`.
     - By default, it assumes Bernoulli arms.
     - Reference: [Garivier & Cappé - COLT, 2011](https://arxiv.org/pdf/1102.2490.pdf).
     """
 
     def __init__(self, nbArms, tolerance=TOLERANCE, klucb=klucbBern, c=c, lower=0., amplitude=1.):
         super(klUCB_forGLR, self).__init__(nbArms, tolerance=tolerance, klucb=klucb, c=c, lower=lower, amplitude=amplitude)
-        self.t_for_each_arm = np.zeros(nbArms, dtype=int)
+        self.t_for_each_arm = np.zeros(nbArms, dtype=int)  #: Keep in memory not only the global time step :math:`t`, but also let the possibility for :class:`GLR_UCB` to use a different time steps :math:`t_k` for each arm, in the exploration function :math:`f(t) = \log(t_k) + 3 \log(\log(t_k))`.
 
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k:
@@ -47,7 +49,7 @@ class klUCB_forGLR(klUCBloglog):
         .. math::
 
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
-            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{c \log(t_k)}{N_k(t)} \right\},\\
+            U_k(t) &= \sup\limits_{q \in [a, b]} \left\{ q : \mathrm{kl}(\hat{\mu}_k(t), q) \leq \frac{\log(t_k) + c \log(\log(t_k))}{N_k(t)} \right\},\\
             I_k(t) &= U_k(t).
 
         If rewards are in :math:`[a, b]` (default to :math:`[0, 1]`) and :math:`\mathrm{kl}(x, y)` is the Kullback-Leibler divergence between two distributions of means x and y (see :mod:`Arms.kullback`),

@@ -477,7 +477,7 @@ TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.99]  #+ [0.9999, 0.99, 0.75, 0.5]
+GAMMAS = [0.9]  #+ [0.9999, 0.99, 0.75, 0.5]
 
 WINDOW_SIZE = NB_ARMS * int(np.ceil(HORIZON / 100))  #: Default window size :math:`w` for the M-UCB and SW-UCB algorithm.
 WINDOW_SIZE = 150  # FIXME manually set...
@@ -490,12 +490,29 @@ PER_ARM_RESTART = [
 MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT = np.min(np.diff(CHANGE_POINTS)) // (2 * NB_ARMS)
 
 UPSILON_T = max(1, NB_BREAK_POINTS)
-DELTA_1 = 1/np.sqrt(HORIZON)  # XXX experimental!
-DELTA_2 = 1/np.sqrt(UPSILON_T * HORIZON)  # XXX experimental!
 
-ALPHA_1 = 0.1 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX experimental!
-ALPHA_2 = 0.1 * np.sqrt(np.log(HORIZON/UPSILON_T) / UPSILON_T * HORIZON)  # XXX experimental!
+NUMBER_OF_CHANGE_POINTS = NB_ARMS * UPSILON_T
+if len(PROBLEMS) == 1 and set(PROBLEMS) <= {1,2,3,4,5,6}:
+    listOfMeans = np.array(configuration["environment"][0]["params"]["listOfMeans"])
+    CT = sum([sum(np.diff(listOfMeans[:, i]) != 0) for i in range(np.shape(listOfMeans)[1])])
+    NUMBER_OF_CHANGE_POINTS = CT
+print("\nUsing Upsilon_T = {} break-points (time when at least one arm changes), and C_T = {} change-points (number of changes of all arms).".format(UPSILON_T, NUMBER_OF_CHANGE_POINTS))  # DEBUG
 
+DELTA_T = 1.0 / np.sqrt(HORIZON)  # XXX tune the delta as a function of T and Upsilon_T
+DELTA_T_UpsilonT = 1.0 / np.sqrt(UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+DELTA_T_UpsilonT_K = 1.0 / np.sqrt(NB_ARMS * UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+DELTA_T_CT = 1.0 / np.sqrt(NUMBER_OF_CHANGE_POINTS * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+
+DELTA_GLOBAL = DELTA_T_UpsilonT
+DELTA_LOCAL = DELTA_T_UpsilonT_K
+
+ALPHA_T = 0.1 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the delta as a function of T and Upsilon_T
+ALPHA_T_UpsilonT = 0.1 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+ALPHA_T_UpsilonT_K = 0.1 * np.sqrt(NB_ARMS * UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+ALPHA_T_CT = 0.1 * np.sqrt(NUMBER_OF_CHANGE_POINTS * np.log(HORIZON) / HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
+
+ALPHA_GLOBAL = ALPHA_T_UpsilonT
+ALPHA_LOCAL = ALPHA_T_UpsilonT_K
 
 configuration.update({
     "policies":
@@ -642,7 +659,8 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-        }, "change_label": "CUSUM-klUCB",
+        },
+        # "change_label": "CUSUM-klUCB",
         }
         for archtype in [
             CUSUM_IndexPolicy,
@@ -727,12 +745,17 @@ configuration.update({
             # klUCB,
             klUCB_forGLR,
         ]
-        # for per_arm_restart in PER_ARM_RESTART
-        for per_arm_restart in [True, False]
-        # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
-        for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
-        # for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
-        for alpha0 in [ALPHA_1]  # XXX experimental!
+        for (per_arm_restart, delta, alpha0) in zip(
+            [True, False],
+            [DELTA_LOCAL, DELTA_GLOBAL],
+            [ALPHA_LOCAL, ALPHA_GLOBAL],
+        )
+        # # for per_arm_restart in PER_ARM_RESTART
+        # for per_arm_restart in [True, False]
+        # # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
+        # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
+        # # for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
+        # for alpha0 in [ALPHA_1]  # XXX experimental!
         # for alpha0 in [1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0]  # comment from the + to use default parameter
         # for lazy_detect_change_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
         # for lazy_try_value_s_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
