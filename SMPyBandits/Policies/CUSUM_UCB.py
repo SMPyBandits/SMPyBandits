@@ -42,7 +42,7 @@ PER_ARM_RESTART = True
 FULL_RESTART_WHEN_REFRESH = False
 
 #: Precision of the test. For CUSUM/PHT, :math:`\varepsilon` is the drift correction threshold (see algorithm).
-EPSILON = 0.1
+EPSILON = 0.01
 
 #: Default value of :math:`\lambda`. Used only if :math:`h` and :math:`\alpha` are computed using :func:`compute_h_alpha_from_input_parameters__CUSUM_complicated`.
 LAMBDA = 1
