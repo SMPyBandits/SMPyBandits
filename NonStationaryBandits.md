@@ -52,14 +52,12 @@ More recent articles include the following:
     + One advantage of their algorithms is their simplicity and ability to tackle both cases!
 
 2. [["Adaptively Tracking the Best Arm with an Unknown Number of Distribution Changes". Peter Auer, Pratik Gajane and Ronald Ortner. EWRL 2018, Lille](https://ewrl.files.wordpress.com/2018/09/ewrl_14_2018_paper_28.pdf)], introduced the [`AdSwitch`](https://smpybandits.github.io/docs/Policies.AdSwitch.html) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
-    + TODO code it!
     + Be sure how to adapt it to `$K\geq2$` arms and not just `$K=2$` (it shouldn't be hard).
     + TODO adapt it to unknown horizon (using [doubling tricks?](DoublingTrick.html)!
 
 3. [["Memory Bandits: a Bayesian approach for the Switching Bandit Problem". Réda Alami, Odalric Maillard, Raphaël Féraud. 31st Conference on Neural Information Processing Systems (NIPS 2017), hal-01811697](https://hal.archives-ouvertes.fr/hal-01811697/document)], introduced the [`MemoryBandit`](XXX) algorithm, which does not require to know the number `$\Upsilon_T$` of change points.
     + They use a generic idea of [expert aggregation](Aggregation.md) with [an efficient tracking of a growing number of expert](https://hal.archives-ouvertes.fr/hal-01615424/). The basic idea is the following: a new expert is started *at every time*, and at a breakpoint, the expert started just after the breakpoint will essentially be the most efficient one (and we need efficient tracking to know it).
     + Their `MemoryBandit` algorithm is very efficient empirically, but not easy to implement and it requires a large memory (although some discussion is given in their article's appendix, as they evoke an heuristic that reduces the storage requirement).
-    + TODO code it!
 
 4. 🇫🇷 [["Algorithme de bandit et obsolescence : un modèle pour la recommandation". Jonhathan Louëdec, Laurent Rossi, Max Chevalier, Aurélien Garivier and Josiane Mothe. 18ème Conférence francophone sur l'Apprentissage Automatique, 2016 (Marseille, France)](http://oatao.univ-toulouse.fr/17130/1/louedec_17130.pdf)] (🇫🇷 *in French*), introduces and justifies the possible applications of slowly-varying to recommender systems. They studies and present a model with an exponential decrease of the means, and the [`FadingUCB`](XXX) that is efficient if a bound on the speed of the exponential decrease is known.
 
@@ -85,10 +83,20 @@ For example, we can compare the standard [`UCB`](https://smpybandits.github.io/d
 We also included our algorithms [`Bernoulli-GLR-UCB`](https://smpybandits.github.io/docs/Policies.BernoulliGLR_IndexPolicy.html) using [`kl-UCB`](https://smpybandits.github.io/docs/Policies.klUCB.html), and the efficient [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
 
 ```python
-horizon = 10000
+horizon = 5000
+change_points = [0, 1000, 2000, 3000, 4000]
+nb_random_events = len(change_points) - 1 # t=0 is not a change-point
+list_of_means = [
+    [0.4, 0.5, 0.9], # from 0 to 1000
+    [0.5, 0.4, 0.7], # from 1000 to 2000
+    [0.6, 0.3, 0.5], # from 2000 to 3000
+    [0.7, 0.2, 0.3], # from 3000 to 4000
+    [0.8, 0.1, 0.1], # from 4000 to 5000
+]
+
 configuration = {
     "horizon": horizon,    # Finite horizon of the simulation
-    "repetitions": 100,  # number of repetitions
+    "repetitions": 1000,  # number of repetitions
     "n_jobs": -1,        # Maximum number of cores for parallelization: use ALL your CPU
     "verbosity": 5,      # Verbosity for the joblib calls
     # Environment configuration, you can set up more than one.
@@ -96,42 +104,42 @@ configuration = {
         {   # A non stationary problem: every step of the same repetition use a different mean vector!
             "arm_type": Bernoulli,
             "params": {
-                "listOfMeans": [
-                    [0.4, 0.5, 0.9],  # 0    to 399
-                    [0.5, 0.4, 0.7],  # 400  to 799
-                    [0.6, 0.3, 0.5],  # 800  to 1199
-                    [0.7, 0.2, 0.3],  # 1200 to 1599
-                    [0.8, 0.1, 0.1],  # 1600 to end
-                ],
-                "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
-                    # 20000,  # XXX larger than horizon, just to see if it is a problem?
-                ],
+                "listOfMeans": list_of_means,
+                "changePoints": change_points,
             }
         },
     ]
     ],
     # Policies that should be simulated, and their parameters.
     "policies": [
-        {"archtype": UCB, "params": {} },
-        {"archtype": klUCB, "params": {} },
-        {"archtype": Thompson, "params": {} },
-        {"archtype": SWUCB, "params": { "tau":  # formula from [GarivierMoulines2011]
+        { "archtype": klUCB, "params": {} },
+        { "archtype": Thompson, "params": {} },
+        { "archtype": OracleSequentiallyRestartPolicy, "params": {
+            "policy": klUCB,
+            "changePoints": change_points,
+            "list_of_means": list_of_means,
+            "reset_for_all_change": True,
+            "reset_for_suboptimal_change": False,
+        }}
+        { "archtype": SWklUCB, "params": { "tau":  # formula from [GarivierMoulines2011]
             2 * np.sqrt(horizon * np.log(horizon) / (1 + nb_random_events))
         } },
-        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.99 } },
-        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.9 } },
-        {"archtype": DiscountedUCB, "params": { "alpha": 1, "gamma": 0.7 } },
-        { "archtype": BernoulliGLR_IndexPolicy, "params": {
-            "horizon": horizon, "policy": klUCB, "per_arm_restart": True,
+        { "archtype": DiscountedklUCB, "params": { "gamma": 0.95 } },
+        { "archtype": DiscountedThompson, "params": { "gamma": 0.95 } },
+        { "archtype": Monitored_IndexPolicy, "params": {
+            "horizon": horizon, "policy": klUCB, "w": 150,
+        } },
+        { "archtype": CUSUM_IndexPolicy, "params": {
+            "horizon": horizon, "policy": klUCB, "w": 150, "max_nb_random_events": nb_random_events, "lazy_detect_change_only_x_steps": 10, # Delta n to speed up
+        } } ] + [
+        { "archtype": BernoulliGLR_IndexPolicy_WithDeterministicExploration,
+        "params": {
+            "horizon": horizon, "policy": klUCB_forGLR, "max_nb_random_events": nb_random_events,
+            "lazy_detect_change_only_x_steps": 10, # Delta n to speed up
+            "lazy_try_value_s_only_x_steps": 10, # Delta s
+            "per_arm_restart": per_arm_restart,
         } }
-        {"archtype": DiscountedThompson, "params": { "gamma": 0.99 } },
-        {"archtype": DiscountedThompson, "params": { "gamma": 0.9 } },
-        {"archtype": DiscountedThompson, "params": { "gamma": 0.7 } },
+        for per_arm_restart in [True, False]
     ]
 }
 ```
@@ -155,7 +163,42 @@ make nonstationary   # run and log the main.py script
 
 Here are some plots illustrating the performances of the different [policies](https://smpybandits.github.io/docs/Policies/) implemented in this project, against various non-stationary problems (with [`Bernoulli`](https://smpybandits.github.io/docs/Arms.Bernoulli.html) only).
 
-FIXME do some plots!
+### History of means for this simple problem
+
+We consider a simple piece-wise stationary problem, with $K=3$ arms, a time horizon $T=5000$ and $N=1000$ repetitions.
+Arm changes concern only one arm at a time, and there is $\Upsilon=4$ changes at times $1000,2000,3000,4000$ ($C_T=\Upsilon_T=4)$.
+
+![plots/NonStationary_example_HistoryOfMeans.png](plots/NonStationary_example_HistoryOfMeans.png)
+
+> Figure 1 : history of means $\mu_i(t)$ for the $K=3$ arms. There is only one change of the optimal arm.
+
+### Comparison of different algorithms
+
+By using the configuration snippet shown above, we compare 9 algorithms.
+The plots below show how to perform.
+Our proposal is the GLR-klUCB, with two options for **Local** or **Global** restarts (Generalized Likelihood Ratio test + klUCB), and it outperforms all the previous state-of-the-art approaches.
+
+![plots/NonStationary_example_Regret.png](plots/NonStationary_example_Regret.png)
+
+> Figure 2 : plot of the mean regret $R_t$ as a function of the current time step $t$, for the different algorithms.
+
+![plots/NonStationary_example_BoxPlotRegret.png](plots/NonStationary_example_BoxPlotRegret.png)
+
+> Figure 3 : box plot of the regret at $T=5000$, for the different algorithms.
+
+![plots/NonStationary_example_HistogramsRegret.png](plots/NonStationary_example_HistogramsRegret.png)
+
+> Figure 4 : plot of the histograms of the regret at $T=5000$, for the different algorithms.
+
+### Comparison of time and memory consumptions
+
+![plots/NonStationary_example_RunningTimes.png](plots/NonStationary_example_RunningTimes.png)
+
+> Figure 5 : comparison of the running times. Our approach, like other actively adaptive approach, is slower, but drastically more efficient!
+
+![plots/NonStationary_example_MemoryConsumption.png](plots/NonStationary_example_MemoryConsumption.png)
+
+> Figure 6 : comparison of the memory consumption. Our approach, like other actively adaptive approach, is more costly, but drastically more efficient!
 
 ----
 

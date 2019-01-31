@@ -503,7 +503,7 @@ DELTA_LOCAL = DELTA_T_UpsilonT_K
 
 # ALPHA_0 = 1
 ALPHA_0 = 0.05
-# ALPHA_0 = 0  # FIXME
+# ALPHA_0 = 0
 
 ALPHA_T = ALPHA_0 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the alpha as a function of T
 ALPHA_T_UpsilonT = ALPHA_0 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
@@ -638,11 +638,11 @@ configuration.update({
     [
         { "archtype": Monitored_IndexPolicy, "params": {
             "policy": policy,
-            "per_arm_restart": per_arm_restart,
+            # "per_arm_restart": per_arm_restart,
             "horizon": HORIZON,
             "w": w,
         }, "change_label": "M-klUCB", }
-        for per_arm_restart in PER_ARM_RESTART
+        # for per_arm_restart in PER_ARM_RESTART
         for policy in [
             # UCB,
             klUCB,  # XXX comment to only test UCB
@@ -730,7 +730,7 @@ configuration.update({
             # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
             # r"\delta={:.3g}".format(delta),
             # r"\alpha_0={:.3g}".format(alpha0),
-            # ", $\Delta t={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
+            # ", $\Delta n={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
             # ", $\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
         )
         }

@@ -249,18 +249,48 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
     return alpha_t1 / max(1, t)**exponentBeta
 
 
-def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR):
+DELTA0_SCALE_FACTOR = 1.0
+
+def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=DELTA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=None):
+    r""" Compute a smart estimate of the optimal value for the confidence level :math:`\delta`, with ``scaleFactor`` :math:`= \delta_0\in(0,1)` a constant.
+
+    - If ``per_arm_restart`` is True (**Local** option):
+
+    .. math:: \delta = \frac{\delta_0}{\sqrt{K \Upsilon_T T}.
+
+    - If ``per_arm_restart`` is False (**Global** option):
+
+    .. math:: \delta = \frac{\delta_0}{\sqrt{\Upsilon_T T}.
+
+    Note that if :math:`\Upsilon_T` is unknown, it is assumed to be :math:`\Upsilon_T=1`.
+    """
+    product = max_nb_random_events * float(horizon)
+    if per_arm_restart:
+        product *= nbArms
+    assert 0 < product <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
+    delta = scaleFactor / sqrt(product)
+    print("DEBUG: smart_delta_from_T_UpsilonT: horizon = {}, max_nb_random_events = {}, gives delta = {}...".format(horizon, max_nb_random_events, delta))  # DEBUG
+    return delta
+
+
+def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=None):
     r""" Compute a smart estimate of the optimal value for the *fixed* or *random* forced exploration probability :math:`\alpha` (or tracking based), with ``scaleFactor`` :math:`= \alpha_0\in(0,1)` a constant.
 
-    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{\Upsilon_T}{T} \log(\frac{T}{\Upsilon_T})}.
+    - If ``per_arm_restart`` is True (**Local** option):
 
-    Note that if :math:`\Upsilon_T` is unknown, a simpler formula is used:
+    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{K \Upsilon_T}{T} \log(T)}.
 
-    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{\log(T)}{T}}.
+    - If ``per_arm_restart`` is False (**Global** option):
+
+    .. math:: \alpha = \alpha_0 \times \sqrt{\frac{\Upsilon_T}{T} \log(T)}.
+
+    Note that if :math:`\Upsilon_T` is unknown, it is assumed to be :math:`\Upsilon_T=1`.
     """
     ratio = max_nb_random_events / float(horizon)
+    if per_arm_restart:
+        ratio *= nbArms
     assert 0 < ratio <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
-    alpha = scaleFactor * sqrt(- ratio * log(ratio))
+    alpha = scaleFactor * sqrt(ratio * log(horizon))
     print("DEBUG: smart_alpha_from_T_UpsilonT: horizon = {}, max_nb_random_events = {}, gives alpha = {}...".format(horizon, max_nb_random_events, alpha))  # DEBUG
     return alpha
 
@@ -282,19 +312,22 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             alpha0=None, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1,
             threshold_function=threshold_BernoulliGLR, variant=None,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
+            per_arm_restart=PER_ARM_RESTART,
             *args, **kwargs
         ):
-        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, *args, **kwargs)
+        super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, per_arm_restart=per_arm_restart, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
         # if delta is None and horizon is not None: delta = 1.0 / horizon
-        self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{\sqrt{T}}` if ``horizon`` is given and ``delta=None`` but :math:`\Upsilon_T` is unknown. Defaults to :math:`\delta=\frac{1}{\sqrt{\Upsilon_T T}}` if both :math:`T` and :math:`\Upsilon_T` are given (``horizon`` and ``max_nb_random_events``).
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
-        alpha = alpha0 if alpha0 is not None else 1
+        delta = delta if delta is not None else 1.0
+        alpha = alpha0 if alpha0 is not None else 1.0
         if horizon is not None and max_nb_random_events is not None:
-            alpha *= smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
+            delta *= smart_delta_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events, per_arm_restart=per_arm_restart, nbArms=nbArms)
+            alpha *= smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events, per_arm_restart=per_arm_restart, nbArms=nbArms)
+        self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{\sqrt{T}}` if ``horizon`` is given and ``delta=None`` but :math:`\Upsilon_T` is unknown. Defaults to :math:`\delta=\frac{1}{\sqrt{\Upsilon_T T}}` if both :math:`T` and :math:`\Upsilon_T` are given (``horizon`` and ``max_nb_random_events``).
         self._alpha0 = alpha
         self._variant = variant
         self._threshold_function = threshold_function
@@ -334,7 +367,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             # "", # no need to print alpha as it is chosen based on horizon
             # r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
             # r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"", # r"$\alpha=\sqrt{frac{\log(T)}{T}}$",
-            r"$\Delta t={}$".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
+            r"$\Delta n={}$".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "",
             r"$\Delta s={}$".format(self.lazy_try_value_s_only_x_steps) if self.lazy_try_value_s_only_x_steps != LAZY_TRY_VALUE_S_ONLY_X_STEPS else "",
             with_tracking,
             with_randomexploration,
