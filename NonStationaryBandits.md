@@ -42,6 +42,10 @@ Here is a partial list of references on this topic. For more, a good starting po
 
 4. [["Stochastic multi-armed-bandit problem with non-stationary rewards", O. Besbes, Y. Gur, A. Zeevi. Advances in Neural Information Processing Systems (pp. 199-207), 2014](http://papers.nips.cc/paper/5378-stochastic-multi-armed-bandit-problem-with-non-stationary-rewards.pdf)]
 
+5. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)] introduced the [`CUSUM-UCB`](https://smpybandits.github.io/docs/Policies.CD_UCB.html) and `PHT-UCB` algorithms.
+
+6. [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018](https://arxiv.org/pdf/1802.03692)] introduced the [`M-UCB`](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html) algorithm.
+
 
 ### Recent references
 
@@ -69,18 +73,17 @@ Other interesting references:
 
 2. [["Taming non-stationary bandits: A Bayesian approach". V. Raj and S. Kalyani. arXiv preprint arXiv:1707.09727, 2017](https://arxiv.org/pdf/1707.09727)] introduced the [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
 
-3. [["A Change-Detection based Framework for Piecewise-stationary Multi-Armed Bandit Problem". F. Liu, J. Lee and N. Shroff. arXiv preprint arXiv:1711.03539, 2017](https://arxiv.org/pdf/1711.03539)] introduced the [`CUSUM-UCB`](https://smpybandits.github.io/docs/Policies.CD_UCB.html) and `PHT-UCB` algorithms.
-
-4. [["Nearly Optimal Adaptive Procedure for Piecewise-Stationary Bandit: a Change-Point Detection Approach". Yang Cao, Zheng Wen, Branislav Kveton, Yao Xie. arXiv preprint arXiv:1802.03692, 2018](https://arxiv.org/pdf/1802.03692)] introduced the [`M-UCB`](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html) algorithm.
-
 ----
 
 ## Example of simulation configuration
 
 A simple python file, [`configuration_nonstationary.py`](https://smpybandits.github.io/docs/configuration_nonstationary.html), is used to import the [arm classes](Arms/), the [policy classes](Policies/) and define the problems and the experiments.
+The [`main.py`](https://smpybandits.github.io/docs/main.html) file is used to import the configuration and launch the simulations.
 
-For example, we can compare the standard [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) and  [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](https://smpybandits.github.io/docs/Policies.DiscountedUCB.html) and [`SWUCB`](https://smpybandits.github.io/docs/Policies.SlidingWindowUCB.html) algorithms.
-We also included our algorithms [`Bernoulli-GLR-UCB`](https://smpybandits.github.io/docs/Policies.BernoulliGLR_IndexPolicy.html) using [`kl-UCB`](https://smpybandits.github.io/docs/Policies.klUCB.html), and the efficient [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
+For example, we can compare the standard [`UCB`](https://smpybandits.github.io/docs/Policies.UCB.html) and  [`Thompson`](https://smpybandits.github.io/docs/Policies.Thompson.html) algorithms, non aware of the non-stationarity, against the non-stationarity aware [`DiscountedUCB`](https://smpybandits.github.io/docs/Policies.DiscountedUCB.html) [`SWUCB`](https://smpybandits.github.io/docs/Policies.SlidingWindowUCB.html), and the efficient [`DiscountedThompson`](https://smpybandits.github.io/docs/Policies.DiscountedThompson.html) algorithm.
+
+We also included our algorithms [`Bernoulli-GLR-UCB`](https://smpybandits.github.io/docs/Policies.GLR_UCB.html) using [`kl-UCB`](https://smpybandits.github.io/docs/Policies.klUCB.html),
+and compare it with [`CUSUM-UCB`](https://smpybandits.github.io/docs/Policies.CUSUM_UCB.html) and [`M-UCB`](https://smpybandits.github.io/docs/Policies.Monitored_UCB.html), the two other state-of-the-art actively adaptive algorithms.
 
 ```python
 horizon = 5000
