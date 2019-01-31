@@ -157,7 +157,17 @@ You should use the provided [`Makefile`](Makefile) file to do this simply:
 git clone https://github.com/SMPyBandits/SMPyBandits/
 cd SMPyBandits
 make install         # install the requirements ONLY ONCE
+```
+
+Then modify the `configuration_nonstationary.py` file, to specify the algorithms you want to compare (use the snippet above for inspiration). And run with:
+```bash
 make nonstationary   # run and log the main.py script
+```
+
+There is a couple of different piece-wise stationary problems, that we implemented for our article, and you can use environment variables to modify the experiment to run.
+For instance, to run problems 1 and 2, with horizon T=5000, N=1000 repetitions, using 4 cores, run:
+```bash
+PROBLEMS=1,2 T=5000 N=1000 N_JOBS=4 DEBUG=False SAVEALL=True make nonstationary
 ```
 
 ----
@@ -174,6 +184,11 @@ Arm changes concern only one arm at a time, and there is $\Upsilon=4$ changes at
 ![plots/NonStationary_example_HistoryOfMeans.png](plots/NonStationary_example_HistoryOfMeans.png)
 
 > Figure 1 : history of means $\mu_i(t)$ for the $K=3$ arms. There is only one change of the optimal arm.
+
+The next figures were obtained with the following command (at the date of writing, 31st of January 2019):
+```bash
+PROBLEMS=1 T=5000 N=1000 N_JOBS=4 DEBUG=False SAVEALL=True make nonstationary
+```
 
 ### Comparison of different algorithms
 

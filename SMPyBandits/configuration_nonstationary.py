@@ -502,8 +502,8 @@ DELTA_GLOBAL = DELTA_T_UpsilonT
 DELTA_LOCAL = DELTA_T_UpsilonT_K
 
 # ALPHA_0 = 1
-ALPHA_0 = 0.05
-# ALPHA_0 = 0
+# ALPHA_0 = 0.05
+ALPHA_0 = 0
 
 ALPHA_T = ALPHA_0 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the alpha as a function of T
 ALPHA_T_UpsilonT = ALPHA_0 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
