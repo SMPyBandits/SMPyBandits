@@ -471,7 +471,7 @@ TAUS   = [
         # 500, 1000, 2000,
         int(2 * np.sqrt(HORIZON * np.log(HORIZON) / max(1, NB_BREAK_POINTS))),  # "optimal" value according to [Garivier & Moulines, 2008]
     ]
-GAMMAS = [0.95]  #+ [0.9999, 0.99, 0.75, 0.5]
+GAMMAS = [0.75]  #+ [0.9999, 0.99, 0.75, 0.5]
 GAMMA_T_UpsilonT = 1 - np.sqrt(NB_BREAK_POINTS / HORIZON) / 4.
 # GAMMAS = [GAMMA_T_UpsilonT]
 
@@ -493,6 +493,19 @@ if len(PROBLEMS) == 1 and set(PROBLEMS) <= {1,2,3,4,5,6}:
     NUMBER_OF_CHANGE_POINTS = CT
 print("\nUsing Upsilon_T = {} break-points (time when at least one arm changes), and C_T = {} change-points (number of changes of all arms).".format(UPSILON_T, NUMBER_OF_CHANGE_POINTS))  # DEBUG
 
+DELTA_for_MUCB = 0.1
+EPSILON_for_CUSUM = 0.1
+if len(PROBLEMS) == 1: # and set(PROBLEMS) <= {1,2,3,4,5,6}:
+    print("For this problem, we compute the Delta^change and Delta^opt...")  # DEBUG
+    min_change_on_mean = min(delta for delta in [min([delta for delta in np.abs(np.diff(np.array(LIST_OF_MEANS)[:, i])) if delta > 0 ]) for i in range(np.shape(LIST_OF_MEANS)[1])] if delta > 0)
+    print("min_change_on_mean =", min_change_on_mean)  # DEBUG
+    min_optimality_gap = min(delta for delta in [min([delta for delta in np.abs(np.diff(np.array(LIST_OF_MEANS)[j, :])) if delta > 0 ]) for j in range(np.shape(LIST_OF_MEANS)[0])] if delta > 0)
+    print("min_optimality_gap =", min_optimality_gap)  # DEBUG
+    # DELTA_for_MUCB = min_change_on_mean
+    # EPSILON_for_CUSUM = min_change_on_mean
+print("DELTA_for_MUCB =", DELTA_for_MUCB)  # DEBUG
+print("EPSILON_for_CUSUM =", EPSILON_for_CUSUM)  # DEBUG
+
 DELTA_T = 1.0 / np.sqrt(HORIZON)  # XXX tune the delta as a function of T
 DELTA_T_UpsilonT = 1.0 / np.sqrt(UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
 DELTA_T_UpsilonT_K = 1.0 / np.sqrt(NB_ARMS * UPSILON_T * HORIZON)  # XXX tune the delta as just a function of T and Upsilon_T
@@ -502,8 +515,8 @@ DELTA_GLOBAL = DELTA_T_UpsilonT
 DELTA_LOCAL = DELTA_T_UpsilonT_K
 
 # ALPHA_0 = 1
-# ALPHA_0 = 0.05
-ALPHA_0 = 0
+ALPHA_0 = 0.05
+# ALPHA_0 = 0
 
 ALPHA_T = ALPHA_0 * np.sqrt(np.log(HORIZON) / HORIZON)  # XXX tune the alpha as a function of T
 ALPHA_T_UpsilonT = ALPHA_0 * np.sqrt(UPSILON_T * np.log(HORIZON) / HORIZON)  # XXX tune the alpha as just a function of T and Upsilon_T
@@ -520,7 +533,9 @@ configuration.update({
     #     { "archtype": Exp3PlusPlus, "params": {} },
     # ] +
     [  # XXX Regular stochastic bandits algorithms!
-        # { "archtype": UCBalpha, "params": { "alpha": 1, } },
+        # # { "archtype": Uniform, "params": { } },
+        # # { "archtype": EmpiricalMeans, "params": { } },
+        # # { "archtype": UCBalpha, "params": { "alpha": 1, } },
         # { "archtype": UCB, "params": { } },
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
         # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
@@ -641,6 +656,7 @@ configuration.update({
             # "per_arm_restart": per_arm_restart,
             "horizon": HORIZON,
             "w": w,
+            "delta": DELTA_for_MUCB,
         }, "change_label": "M-klUCB", }
         # for per_arm_restart in PER_ARM_RESTART
         for policy in [
@@ -658,6 +674,7 @@ configuration.update({
             "max_nb_random_events": NB_BREAK_POINTS,
             # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "epsilon": EPSILON_for_CUSUM,
         },
         "change_label": "CUSUM-klUCB",
         }

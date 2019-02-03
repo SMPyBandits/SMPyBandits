@@ -26,7 +26,7 @@ except ImportError:
     from BaseWrapperPolicy import BaseWrapperPolicy
 
 
-#: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point 1.
+#: Default value for the parameter :math:`\delta`, the lower-bound for :math:`\delta_k^{(i)}` the amplitude of change of arm k at break-point.
 #: Default is ``0.05``.
 DELTA = 0.1
 

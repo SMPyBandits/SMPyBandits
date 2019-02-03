@@ -113,7 +113,7 @@
 <text text-anchor="start" x="764.5" y="-393.3" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitude</text>
 <text text-anchor="start" x="764.5" y="-378.3" font-family="Times,serif" font-size="14.00" fill="#000000">_items : list</text>
 <text text-anchor="start" x="764.5" y="-363.3" font-family="Times,serif" font-size="14.00" fill="#000000">_lower</text>
-<text text-anchor="start" x="764.5" y="-348.3" font-family="Times,serif" font-size="14.00" fill="#000000">_probabilities : list, recarray</text>
+<text text-anchor="start" x="764.5" y="-348.3" font-family="Times,serif" font-size="14.00" fill="#000000">_probabilities : recarray, list</text>
 <text text-anchor="start" x="764.5" y="-333.3" font-family="Times,serif" font-size="14.00" fill="#000000">_values : list, recarray</text>
 <text text-anchor="start" x="764.5" y="-318.3" font-family="Times,serif" font-size="14.00" fill="#000000">_values_to_proba</text>
 <text text-anchor="start" x="764.5" y="-303.3" font-family="Times,serif" font-size="14.00" fill="#000000">lower_amplitude</text>
