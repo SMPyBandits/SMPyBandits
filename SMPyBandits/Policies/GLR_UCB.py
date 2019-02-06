@@ -264,6 +264,7 @@ def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=D
 
     Note that if :math:`\Upsilon_T` is unknown, it is assumed to be :math:`\Upsilon_T=1`.
     """
+    if max_nb_random_events is None: max_nb_random_events = 1
     product = max_nb_random_events * float(horizon)
     if per_arm_restart:
         product *= nbArms
@@ -288,6 +289,7 @@ def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=A
 
     Note that if :math:`\Upsilon_T` is unknown, it is assumed to be :math:`\Upsilon_T=1`.
     """
+    if max_nb_random_events is None: max_nb_random_events = 1
     ratio = max_nb_random_events / float(horizon)
     if per_arm_restart:
         ratio *= nbArms

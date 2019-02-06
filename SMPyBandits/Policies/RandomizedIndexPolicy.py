@@ -41,7 +41,7 @@ gaussian_perturbation = normal_perturbation
 
 
 def exponential_perturbation(size=1, scale=0.25):
-    r""" Exponential random perturbation, with parameter (:math:`\lambda`) ``scale=0.25`` (by default), that is :math:`\mathcal{E}exponential(\lambda)`.
+    r""" Exponential random perturbation, with parameter (:math:`\lambda`) ``scale=0.25`` (by default), that is :math:`\mathcal{E}xponential(\lambda)`.
 
     - Reference: see Corollary 7 from [["On the Optimality of Perturbations in Stochastic and Adversarial Multi-armed Bandit Problems", by Baekjin Kim, Ambuj Tewari, arXiv:1902.00610]](https://arxiv.org/pdf/1902.00610.pdf)
     """
