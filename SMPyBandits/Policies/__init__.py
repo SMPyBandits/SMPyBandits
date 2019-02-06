@@ -109,6 +109,8 @@ from .UCBimproved import UCBimproved          # Different indexes
 from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
 
+from .RCB import RCB  # Randomized Confidence Bounds
+
 # --- SparseUCB and variants policies for sparse stochastic bandit
 from .SparseUCB import SparseUCB
 from .SparseklUCB import SparseklUCB

@@ -51,7 +51,7 @@ class IndexPolicy(BasePolicy):
 
         .. math:: A(t) \sim U(\arg\max_{1 \leq k \leq K} I_k(t)).
 
-        .. warning:: In almost all cases, there is a unique arm with maximal index, so we lose a lot of time with this generic code, but I couldn't find a way to be more efficient without loosing generality.
+        .. warning:: In almost all cases, there is a unique arm with maximal index, so we loose a lot of time with this generic code, but I couldn't find a way to be more efficient without loosing generality.
         """
         # I prefer to let this be another method, so child of IndexPolicy only needs to implement it (if they want, or just computeIndex)
         self.computeAllIndex()

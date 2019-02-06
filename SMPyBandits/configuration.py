@@ -332,29 +332,29 @@ except (ValueError, np.AxisError, TypeError):
 
 configuration.update({
     "policies": [
-        # --- Stupid algorithms
-        {
-            "archtype": Uniform,   # The stupidest policy, fully uniform
-            "params": {}
-        },
+        # # --- Stupid algorithms
+        # {
+        #     "archtype": Uniform,   # The stupidest policy, fully uniform
+        #     "params": {}
+        # },
         # {
         #     "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
         #     "params": {}
         # },
-        # {
-        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": TakeRandomFixedArm,   # The stupidest policy
-        #     "params": {}
-        # },
-        # # --- Full or partial knowledge algorithms
-        { "archtype": TakeFixedArm, "params": { "armIndex": 0 }},  # Take worse arm!
-        { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
-        { "archtype": TakeFixedArm, "params": { "armIndex": min(2, nbArms - 1) }},  # Take third worse arm!
-        # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 2 }},  # Take second best arm!
-        # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 1 }},  # Take best arm!
+        # # {
+        # #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        # #     "params": {}
+        # # },
+        # # {
+        # #     "archtype": TakeRandomFixedArm,   # The stupidest policy
+        # #     "params": {}
+        # # },
+        # # # --- Full or partial knowledge algorithms
+        # { "archtype": TakeFixedArm, "params": { "armIndex": 0 }},  # Take worse arm!
+        # { "archtype": TakeFixedArm, "params": { "armIndex": 1 }},  # Take second worse arm!
+        # { "archtype": TakeFixedArm, "params": { "armIndex": min(2, nbArms - 1) }},  # Take third worse arm!
+        # # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 2 }},  # Take second best arm!
+        # # { "archtype": TakeFixedArm, "params": { "armIndex": nbArms - 1 }},  # Take best arm!
         # # --- Epsilon-... algorithms
         # {
         #     "archtype": EpsilonGreedy,   # This basic EpsilonGreedy is very bad
@@ -666,6 +666,35 @@ configuration.update({
         #         "alpha": 1.,
         #     }
         # },
+        # --- TODO try these new RCB algorithm, https://arxiv.org/pdf/1902.00610.pdf
+        {
+            "archtype": RCB,
+            "params": {
+                "alpha": 1.,
+                "perturbation": "uniform",  # like UCB
+            }
+        },
+        {
+            "archtype": RCB,
+            "params": {
+                "alpha": 1.,
+                "perturbation": "gaussian",  # like Thompson sampling
+            }
+        },
+        {
+            "archtype": RCB,
+            "params": {
+                "alpha": 1.,
+                "perturbation": "exponential",
+            }
+        },
+        {
+            "archtype": RCB,
+            "params": {
+                "alpha": 1.,
+                "perturbation": "gumbel",
+            }
+        },
         # # --- MOSS algorithm, like UCB
         # {
         #     "archtype": MOSS,
@@ -678,13 +707,13 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # # --- MOSS-Anytime algorithm, extension of MOSS
-        # {
-        #     "archtype": MOSSAnytime,
-        #     "params": {
-        #         "alpha": 1.35,
-        #     }
-        # },
+        # --- MOSS-Anytime algorithm, extension of MOSS
+        {
+            "archtype": MOSSAnytime,
+            "params": {
+                "alpha": 1.35,
+            }
+        },
         # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
         # {
         #     "archtype": MOSSExperimental,
@@ -838,13 +867,13 @@ configuration.update({
         #         "klucb": klucb,
         #     }
         # },
-        {
-            "archtype": klUCBPlusPlus,
-            "params": {
-                "horizon": HORIZON,
-                "klucb": klucb,
-            }
-        },
+        # {
+        #     "archtype": klUCBPlusPlus,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "klucb": klucb,
+        #     }
+        # },
         # # --- new klUCBswitch algorithm!
         # {
         #     "archtype": klUCBswitch,
@@ -862,13 +891,13 @@ configuration.update({
         #         "threshold": "delayed"
         #     }
         # },
-        # {
-        #     "archtype": klUCBswitchAnytime,
-        #     "params": {
-        #         "klucb": klucb,
-        #         "threshold": "best"
-        #     }
-        # },
+        {
+            "archtype": klUCBswitchAnytime,
+            "params": {
+                "klucb": klucb,
+                "threshold": "best"
+            }
+        },
         # {
         #     "archtype": klUCBswitchAnytime,
         #     "params": {
@@ -892,13 +921,13 @@ configuration.update({
         #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
         #     },
         # },
-        # # --- Bayes UCB algorithms
-        # {
-        #     "archtype": BayesUCB,
-        #     "params": {
-        #         "posterior": Beta,
-        #     }
-        # },
+        # --- Bayes UCB algorithms
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "posterior": Beta,
+            }
+        },
         # # {
         # #     "archtype": BayesUCB,
         # #     "params": {
@@ -929,16 +958,16 @@ configuration.update({
         #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
         #     },
         # },
-        # # # --- Horizon-dependent algorithm ApproximatedFHGittins
-        # {
-        #     "archtype": ApproximatedFHGittins,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-        #         # "horizon": HORIZON,
-        #         # "horizon": HORIZON + 1,
-        #     }
-        # },
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 0.5,
+                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+                # "horizon": HORIZON,
+                # "horizon": HORIZON + 1,
+            }
+        },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,
@@ -970,26 +999,26 @@ configuration.update({
         #     "archtype": OSSB_DecreasingRate,
         #     "params": {}
         # },
-        # {
-        #     "archtype": OSSB_AutoDecreasingRate,
-        #     "params": {}
-        # },
+        {
+            "archtype": OSSB_AutoDecreasingRate,
+            "params": {}
+        },
         # # --- The awesome BESA algorithm
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-        #         "randomized_tournament": True,
-        #         # "randomized_tournament": False,  # XXX Very inefficient!
-        #         "random_subsample": True,
-        #         # "random_subsample": False,  # XXX Very inefficient!
-        #         "non_binary": False,
-        #         # "non_binary": True,
-        #         "non_recursive": False,
-        #         # "non_recursive": True,
-        #     }
-        # },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+                "randomized_tournament": True,
+                # "randomized_tournament": False,  # XXX Very inefficient!
+                "random_subsample": True,
+                # "random_subsample": False,  # XXX Very inefficient!
+                "non_binary": False,
+                # "non_binary": True,
+                "non_recursive": False,
+                # "non_recursive": True,
+            }
+        },
         # {
         #     "archtype": BESA,
         #     "params": {

@@ -644,7 +644,7 @@ class ChangingAtEachRepMAB(MAB):
             K=str(self._arms[0]),
             lower=self.args["lower"],
             upper=self.args["lower"] + self.args["amplitude"],
-            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r",min gap=%.3g" % self.args["mingap"],
+            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=$%.3g$" % self.args["mingap"],
             sparsity="" if self._sparsity is None else ", sparsity = {dollar}{s}{dollar}".format(s=self._sparsity, dollar="$" if latex else ""),
             dollar="$" if latex else "",
         )
@@ -1063,7 +1063,7 @@ class NonStationaryMAB(PieceWiseStationaryMAB):
             arm=str(self._arms[0]),
             lower=self.args["lower"],
             upper=self.args["lower"] + self.args["amplitude"],
-            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r",min gap=%.3g" % self.args["mingap"],
+            mingap="" if self.args["mingap"] is None or self.args["mingap"] == 0 else r", min gap=$%.3g$" % self.args["mingap"],
             sparsity="" if self._sparsity is None else ", sparsity = {dollar}{s}{dollar}".format(s=self._sparsity, dollar="$" if latex else ""),
             dollar="$" if latex else "",
         )
