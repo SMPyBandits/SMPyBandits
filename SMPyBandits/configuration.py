@@ -1004,21 +1004,21 @@ configuration.update({
             "params": {}
         },
         # # --- The awesome BESA algorithm
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-                "randomized_tournament": True,
-                # "randomized_tournament": False,  # XXX Very inefficient!
-                "random_subsample": True,
-                # "random_subsample": False,  # XXX Very inefficient!
-                "non_binary": False,
-                # "non_binary": True,
-                "non_recursive": False,
-                # "non_recursive": True,
-            }
-        },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+        #         "randomized_tournament": True,
+        #         # "randomized_tournament": False,  # XXX Very inefficient!
+        #         "random_subsample": True,
+        #         # "random_subsample": False,  # XXX Very inefficient!
+        #         "non_binary": False,
+        #         # "non_binary": True,
+        #         "non_recursive": False,
+        #         # "non_recursive": True,
+        #     }
+        # },
         # {
         #     "archtype": BESA,
         #     "params": {

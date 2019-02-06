@@ -251,7 +251,7 @@ def decreasing_alpha__GLR(alpha0=None, t=1, exponentBeta=EXPONENT_BETA, alpha_t1
 
 DELTA0_SCALE_FACTOR = 1.0
 
-def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=DELTA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=None):
+def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=DELTA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=1):
     r""" Compute a smart estimate of the optimal value for the confidence level :math:`\delta`, with ``scaleFactor`` :math:`= \delta_0\in(0,1)` a constant.
 
     - If ``per_arm_restart`` is True (**Local** option):
@@ -276,7 +276,7 @@ def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=D
     return delta
 
 
-def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=None):
+def smart_alpha_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=ALPHA0_SCALE_FACTOR, per_arm_restart=PER_ARM_RESTART, nbArms=1):
     r""" Compute a smart estimate of the optimal value for the *fixed* or *random* forced exploration probability :math:`\alpha` (or tracking based), with ``scaleFactor`` :math:`= \alpha_0\in(0,1)` a constant.
 
     - If ``per_arm_restart`` is True (**Local** option):
