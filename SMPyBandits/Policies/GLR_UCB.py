@@ -267,7 +267,9 @@ def smart_delta_from_T_UpsilonT(horizon=1, max_nb_random_events=1, scaleFactor=D
     product = max_nb_random_events * float(horizon)
     if per_arm_restart:
         product *= nbArms
-    assert 0 < product <= 1, "Error: Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon)  # DEBUG
+    if product > 1:
+        print("Error: bound Upsilon_T = {} should be smaller than horizon T = {}...".format(max_nb_random_events, horizon))  # DEBUG
+        product = 0.1
     delta = scaleFactor / sqrt(product)
     print("DEBUG: smart_delta_from_T_UpsilonT: horizon = {}, max_nb_random_events = {}, gives delta = {}...".format(horizon, max_nb_random_events, delta))  # DEBUG
     return delta

@@ -671,7 +671,7 @@ configuration.update({
             "archtype": RCB,
             "params": {
                 "alpha": 1.,
-                "perturbation": "uniform",  # like UCB
+                "perturbation": "uniform",  # like UCB?
             }
         },
         {

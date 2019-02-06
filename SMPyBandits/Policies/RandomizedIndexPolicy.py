@@ -123,11 +123,12 @@ class RandomizedIndexPolicy(IndexPolicy):
         super(RandomizedIndexPolicy, self).computeAllIndex()
         index = self.index
         means = self.rewards / self.pulls
-        means[self.pulls < 1] = float('+inf')
         ucb = index - means
         random_perturbations = self.perturbation(size=self.nbArms)
         for arm in range(self.nbArms):
             perturbated_index = means[arm] + ucb[arm] * random_perturbations[arm]
             self.index[arm] = perturbated_index
+            if self.pulls[arm] < 1:
+                self.index[arm] = float('+inf')
         if VERBOSE:
             print("  - at time t = {}, policy {} would have used indexes = {} and means = {}, but using its perturbation distribution ({}), it sampled perturbations = {}, and the perturbated indexes was {} instead...".format(self.t, self, index, means, self.perturbation_name, random_perturbations, self.index))  # DEBUG

@@ -106,7 +106,7 @@ class SparseklUCB(klUCB):
             UCB_J = np.sqrt((self.c * np.log(self.pulls)) / self.pulls)
             UCB_J[self.pulls < 1] = float('+inf')
         else:
-            UCB_J = self.klucb(self.rewards / self.pulls, self.c * np.log(self.pulls) / self.pulls, self.tolerance) - means
+            UCB_J = self.klucb_vect(self.rewards / self.pulls, self.c * np.log(self.pulls) / self.pulls, self.tolerance) - means
             UCB_J[self.pulls < 1] = float('+inf')
         self.force_to_see[means >= UCB_J] = True
 
@@ -129,7 +129,7 @@ class SparseklUCB(klUCB):
             UCB_K = np.sqrt((self.c * np.log(self.t)) / self.pulls)
             UCB_K[self.pulls < 1] = float('+inf')
         else:
-            UCB_K = self.klucb(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance) - means
+            UCB_K = self.klucb_vect(self.rewards / self.pulls, self.c * np.log(self.t) / self.pulls, self.tolerance) - means
             UCB_K[self.pulls < 1] = float('+inf')
         self.goods[means >= UCB_K] = True
 
