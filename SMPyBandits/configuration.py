@@ -999,10 +999,10 @@ configuration.update({
         #     "archtype": OSSB_DecreasingRate,
         #     "params": {}
         # },
-        {
-            "archtype": OSSB_AutoDecreasingRate,
-            "params": {}
-        },
+        # {
+        #     "archtype": OSSB_AutoDecreasingRate,
+        #     "params": {}
+        # },
         # # --- The awesome BESA algorithm
         # {
         #     "archtype": BESA,
