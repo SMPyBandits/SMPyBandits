@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Empty __init__.py to define the package as a package and its version.
+Open-Source Python package for Single- and Multi-Players multi-armed Bandits algorithms.
+
+- Homepage: https://SMPyBandits.GitHub.io/
+- Author: Lilian Besson and contributors
+- License: MIT
+- Date: February 2019
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

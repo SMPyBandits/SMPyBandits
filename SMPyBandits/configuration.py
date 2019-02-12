@@ -666,35 +666,11 @@ configuration.update({
         #         "alpha": 1.,
         #     }
         # },
-        # --- TODO try these new RCB algorithm, https://arxiv.org/pdf/1902.00610.pdf
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "uniform",  # like UCB?
-            }
-        },
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "gaussian",  # like Thompson sampling
-            }
-        },
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "exponential",
-            }
-        },
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "gumbel",
-            }
-        },
+        # --- RCB algorithm
+        # { "archtype": RCB, "params": { "alpha": 1., "perturbation": "uniform",  # like UCB? } },
+        { "archtype": RCB, "params": { "alpha": 1., "perturbation": "gaussian",  # like Thompson sampling } },
+        # { "archtype": RCB, "params": { "alpha": 1., "perturbation": "exponential", } },
+        # { "archtype": RCB, "params": { "alpha": 1., "perturbation": "gumbel", } },
         # # --- MOSS algorithm, like UCB
         # {
         #     "archtype": MOSS,
