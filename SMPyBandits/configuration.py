@@ -695,6 +695,25 @@ configuration.update({
         #         "perturbation": "gumbel",
         #     }
         # },
+        # --- PHE algorithm
+        {
+            "archtype": PHE,
+            "params": {
+                "perturbation_scale": 0.5,
+            }
+        },
+        {
+            "archtype": PHE,
+            "params": {
+                "perturbation_scale": 1.1,
+            }
+        },
+        {
+            "archtype": PHE,
+            "params": {
+                "perturbation_scale": 2.1,
+            }
+        },
         # # --- MOSS algorithm, like UCB
         # {
         #     "archtype": MOSS,

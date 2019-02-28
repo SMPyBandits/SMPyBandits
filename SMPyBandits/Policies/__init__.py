@@ -110,6 +110,7 @@ from .UCBV import UCBV          # Different indexes
 from .UCBVtuned import UCBVtuned  # Different indexes
 
 from .RCB import RCB  # Randomized Confidence Bounds
+from .PHE import PHE  # Perturbed-History Exploration
 
 # --- SparseUCB and variants policies for sparse stochastic bandit
 from .SparseUCB import SparseUCB
