@@ -245,11 +245,11 @@ if 0 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.3, 0.9],  # 1600 to end
                 ],
                 "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
+                    int((0  * HORIZON) / 20.0),
+                    int((4  * HORIZON) / 20.0),
+                    int((8  * HORIZON) / 20.0),
+                    int((12 * HORIZON) / 20.0),
+                    int((16 * HORIZON) / 20.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -270,11 +270,11 @@ if 1 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.7, 0.5, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
+                    int((0  * HORIZON) / 20.0),
+                    int((4  * HORIZON) / 20.0),
+                    int((8  * HORIZON) / 20.0),
+                    int((12 * HORIZON) / 20.0),
+                    int((16 * HORIZON) / 20.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -295,11 +295,11 @@ if 2 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.8, 0.1, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(400  * HORIZON / 2000.0),
-                    int(800  * HORIZON / 2000.0),
-                    int(1200 * HORIZON / 2000.0),
-                    int(1600 * HORIZON / 2000.0),
+                    int((0  * HORIZON) / 20.0),
+                    int((4  * HORIZON) / 20.0),
+                    int((8  * HORIZON) / 20.0),
+                    int((12 * HORIZON) / 20.0),
+                    int((16 * HORIZON) / 20.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -319,10 +319,10 @@ if 3 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.2, 0.2, 0.3],  # 3000 to end
                 ],
                 "changePoints": [
-                    int(0    * HORIZON / 4000.0),
-                    int(1000 * HORIZON / 4000.0),
-                    int(2000 * HORIZON / 4000.0),
-                    int(3000 * HORIZON / 4000.0),
+                    int(0 * HORIZON / 4.0),
+                    int((1 * HORIZON) / 4.0),
+                    int((2 * HORIZON) / 4.0),
+                    int((3 * HORIZON) / 4.0),
                 ],
             }
         },
@@ -342,11 +342,11 @@ if 4 in PROBLEMS:
                     [0.1, 0.5, 0.2],  # 5th sequence, best=2nd, DeltaMin=0.1
                 ],
                 "changePoints": [
-                    int(0    * HORIZON / 2000.0),
-                    int(1000 * HORIZON / 2000.0),
-                    int(1250 * HORIZON / 2000.0),
-                    int(1500 * HORIZON / 2000.0),
-                    int(1750 * HORIZON / 2000.0),
+                    int((0    * HORIZON) / 2000.0),
+                    int((1000 * HORIZON) / 2000.0),
+                    int((1250 * HORIZON) / 2000.0),
+                    int((1500 * HORIZON) / 2000.0),
+                    int((1750 * HORIZON) / 2000.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -648,6 +648,7 @@ configuration["successive_players"] = [
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
@@ -678,51 +679,15 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.001, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
 
-    # DONE test this new SIC_MMAB algorithm
-    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    # # DONE test this new SIC_MMAB algorithm
+    # [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    # [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    # [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
     # # DONE test this new TrekkingTSN algorithm!
 ]
-
-# XXX Comparing different rhoRand approaches
-# configuration["successive_players"] = [
-#     rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, nbArms, UCBalpha, alpha=0.25).children,  # This one is efficient!
-#     rhoRand(NB_PLAYERS, nbArms, MOSS).children,
-#     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-#     rhoRand(NB_PLAYERS, nbArms, klUCBPlus).children,
-#     rhoRand(NB_PLAYERS, nbArms, Thompson).children,
-#     rhoRand(NB_PLAYERS, nbArms, SoftmaxDecreasing).children,
-#     rhoRand(NB_PLAYERS, nbArms, BayesUCB).children,
-#     rhoRand(NB_PLAYERS, nbArms, AdBandits, alpha=0.5, horizon=HORIZON).children,
-# ]
-
-
-# XXX Comparing different ALOHA approaches
-# from itertools import product  # XXX If needed!
-# p0 = 1. / NB_PLAYERS
-# p0 = 0.75
-# configuration["successive_players"] = [
-#     Selfish(NB_PLAYERS, nbArms, BayesUCB).children,  # This one is efficient!
-# ] + [
-#     ALOHA(NB_PLAYERS, nbArms, BayesUCB, p0=p0, alpha_p0=alpha_p0, beta=beta).children
-#     # ALOHA(NB_PLAYERS, nbArms, BayesUCB, p0=p0, alpha_p0=alpha_p0, ftnext=tnext_log).children,
-#     for alpha_p0, beta in product([0.05, 0.25, 0.5, 0.75, 0.95], repeat=2)
-#     # for alpha_p0, beta in product([0.1, 0.5, 0.9], repeat=2)
-# ]
-
-# # XXX Comparing different centralized approaches
-# configuration["successive_players"] = [
-#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha).children,
-#     CentralizedIMP(NB_PLAYERS, nbArms, UCBalpha).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, Thompson).children,
-#     CentralizedIMP(NB_PLAYERS, nbArms, Thompson).children,
-#     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCBPlus).children,
-# ]
 
 
 configuration.update({
@@ -754,7 +719,10 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children
     # "players": Selfish(NB_PLAYERS, nbArms, UCB).children
+    # "players": Selfish(NB_PLAYERS, nbArms, DiscountedUCB).children
+    # "players": Selfish(NB_PLAYERS, nbArms, Thompson).children
     "players": Selfish(NB_PLAYERS, nbArms, DiscountedThompson).children
+    # "players": Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children
 
     # --- XXX play with SIC_MMAB
     # "players": [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ]

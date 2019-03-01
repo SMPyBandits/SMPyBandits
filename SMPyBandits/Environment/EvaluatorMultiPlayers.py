@@ -885,7 +885,7 @@ class EvaluatorMultiPlayers(object):
             if e.repetitions <= 1:
                 print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
             else:
-                print(u"    {} ± {} (mean ± var. dev. of {} runs)".format(e.repetitions, sizeof_fmt(mean_time), sizeof_fmt(var_time)))
+                print(u"    {} ± {} (mean ± var. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(var_time), e.repetitions))
 
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds", evaluators=()):
         """Plot the running times of the different players, as a box plot for each evaluators."""
