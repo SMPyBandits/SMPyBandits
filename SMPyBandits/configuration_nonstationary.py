@@ -532,6 +532,30 @@ configuration.update({
     #     # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
     #     { "archtype": Exp3PlusPlus, "params": {} },
     # ] +
+    # [
+    #     # --- TsallisInf algorithm
+    #     {
+    #         "archtype": TsallisInf,
+    #         "params": {
+    #             "alpha": 0.5,
+    #         }
+    #     },
+    #     # --- RCB algorithm
+    #     {
+    #         "archtype": RCB,
+    #         "params": {
+    #             "alpha": 1.,
+    #             "perturbation": "uniform",  # like UCB?
+    #         }
+    #     },
+    #     # --- PHE algorithm
+    #     {
+    #         "archtype": PHE,
+    #         "params": {
+    #             "perturbation_scale": 1.1,
+    #         }
+    #     },
+    # ] +
     [  # XXX Regular stochastic bandits algorithms!
         # # { "archtype": Uniform, "params": { } },
         # # { "archtype": EmpiricalMeans, "params": { } },

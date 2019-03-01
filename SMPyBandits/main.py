@@ -193,16 +193,14 @@ if __name__ == '__main__':
                 hashvalue="env{}-{}_{}".format(envId + 1, N, hashvalue),
                 main_name="main.py",
             )
-
-        # --- Save it to a pickle file
-        if saveallfigs and USE_PICKLE:
-            with open(picklename, 'wb') as picklefile:
-                print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
-                pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
-
-        # --- Save it to a HD5 file
-        if saveallfigs and USE_HD5:
-            evaluation.saveondisk(h5pyname)
+            # --- Save it to a pickle file
+            if USE_PICKLE:
+                with open(picklename, 'wb') as picklefile:
+                    print("Saving the Evaluator 'evaluation' objet to", picklename, "...")
+                    pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
+            # --- Save it to a HD5 file
+            if USE_HD5:
+                evaluation.saveondisk(h5pyname)
 
         # --- Also plotting the history of means
         if saveallfigs:

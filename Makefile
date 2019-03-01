@@ -88,11 +88,23 @@ multiplayers3:
 multiplayers2:
 	time nice -n 19 python2 ./SMPyBandits/main_multiplayers.py | tee ./logs/main_multiplayers_py2_log.txt
 
+multiplayers_nonstationary:	multiplayers_nonstationary3
+multiplayers_nonstationary3:
+	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers.py configuration_multiplayers_nonstationary | tee ./logs/main_multiplayers_nonstationary_py3_log.txt
+multiplayers_nonstationary2:
+	time nice -n 19 python2 ./SMPyBandits/main_multiplayers.py configuration_multiplayers_nonstationary | tee ./logs/main_multiplayers_nonstationary_py2_log.txt
+
 moremultiplayers: moremultiplayers3
 moremultiplayers3:
 	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py3_log.txt
 moremultiplayers2:
 	time nice -n 19 python2 ./SMPyBandits/main_multiplayers_more.py | tee ./logs/main_multiplayers_more_py2_log.txt
+
+moremultiplayers_nonstationary: moremultiplayers_nonstationary3
+moremultiplayers_nonstationary3:
+	time nice -n 19 ipython3 ./SMPyBandits/main_multiplayers_more.py configuration_multiplayers_nonstationary | tee ./logs/main_multiplayers_nonstationary_more_py3_log.txt
+moremultiplayers_nonstationary2:
+	time nice -n 19 python2 ./SMPyBandits/main_multiplayers_more.py configuration_multiplayers_nonstationary | tee ./logs/main_multiplayers_nonstationary_more_py2_log.txt
 
 moremultiplayers_with_aggregation: moremultiplayers_with_aggregation3
 moremultiplayers_with_aggregation3:

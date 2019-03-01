@@ -47,7 +47,7 @@ HORIZON = int(getenv('T', HORIZON))
 #: REPETITIONS : number of repetitions of the experiments.
 #: Warning: Should be >= 10 to be statistically trustworthy.
 REPETITIONS = 1  # XXX To profile the code, turn down parallel computing
-REPETITIONS = 4  # Nb of cores, to h    ave exactly one repetition process by cores
+REPETITIONS = 4  # Nb of cores, to have exactly one repetition process by cores
 REPETITIONS = 200
 REPETITIONS = int(getenv('N', REPETITIONS))
 
@@ -144,10 +144,90 @@ if MEANS_STR != '':
     MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
     print("Using cli env variable to use MEANS = {}.".format(MEANS))  # DEBUG
 
+#: This dictionary configures the experiments
+configuration = {
+    # --- Duration of the experiment
+    "horizon": HORIZON,
+    # --- Number of repetition of the experiment (to have an average)
+    "repetitions": REPETITIONS,
+    # --- Parameters for the use of joblib.Parallel
+    "n_jobs": N_JOBS,    # = nb of CPU cores
+    "verbosity": 6,      # Max joblib verbosity
+    # --- Collision model
+    "collisionModel": collisionModel,
+    # --- Other parameters for the Evaluator
+    "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
+    "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
+    # --- Should we plot the lower-bounds or not?
+    "plot_lowerbounds": True,  # XXX Default
+    # --- Arms
+    "environment": [
+        # # {   # A damn simple problem: 2 arms, one bad, one good
+        # #     "arm_type": Bernoulli,
+        # #     "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
+        # #     # "params": [0.9, 0.9]
+        # #     # "params": [0.85, 0.9]
+        # # }
+        # # {   # XXX to test with 1 suboptimal arm only
+        # #     "arm_type": Bernoulli,
+        # #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
+        # # }
+        # # {   # XXX to test with half very bad arms, half perfect arms
+        # #     "arm_type": Bernoulli,
+        # #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
+        # # }
+        # # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        # #     "arm_type": Bernoulli,
+        # #     "params": [1] * NB_PLAYERS
+        # # }
+        # # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        # #     "arm_type": Bernoulli,
+        # #     "params": [1] * NB_ARMS
+        # # }
+        # # {   # XXX To only test the orthogonalization (collision avoidance) protocol
+        # #     "arm_type": Bernoulli,
+        # #     "params": ([0] * (NB_ARMS - NB_PLAYERS)) + ([1] * NB_PLAYERS)
+        # # }
+        # # {   # An easy problem, but with a LOT of arms! (50 arms)
+        # #     "arm_type": Bernoulli,
+        # #     "params": uniformMeans(50, 1 / (1. + 50))
+        # # }
+        # # # XXX Default!
+        # # {   # A very easy problem (X arms), but it is used in a lot of articles
+        # #     "arm_type": ARM_TYPE,
+        # #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
+        # # },
+        # {   # Use vector from command line
+        #     "arm_type": ARM_TYPE,
+        #     "params": MEANS
+        # },
+    ],
+}
+
+if ENVIRONMENT_BAYESIAN:
+    configuration["environment"] = [  # XXX Bernoulli arms
+        {   # A Bayesian problem: every repetition use a different mean vectors!
+            "arm_type": ARM_TYPE,
+            "params": {
+                "function": randomMeans,
+                "args": {
+                    "nbArms": NB_ARMS,
+                    # "mingap": None,
+                    # "mingap": 0.0000001,
+                    # "mingap": 0.1,
+                    "mingap": 1. / (3 * NB_ARMS),
+                    "lower": LOWER,
+                    "amplitude": AMPLITUDE,
+                    "isSorted": True,
+                }
+            }
+        },
+    ]
+
 
 # FIXME we cannot launch simulations on many problems in just one launch, because the oracle needs to know the change-point locations (and they change for some problems), and some algorithms need to know the number of arms for parameter selections?
 
-PROBLEMS = [1, 2]
+PROBLEMS = [1]
 STR_PROBLEMS = str(getenv('PROBLEMS', '1, 2')).replace(' ', '')
 PROBLEMS = [int(p) for p in STR_PROBLEMS.split(',')]
 
@@ -401,148 +481,6 @@ NB_BREAK_POINTS = max([len(env["params"]["changePoints"]) - (1 if 0 in env["para
 configuration["nb_break_points"] = NB_BREAK_POINTS
 
 
-# if False:  # WARNING remove this "False and" to use this problem
-#     configuration["environment"] = [
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": randomMeans,
-#                 # XXX Note that even using geometricChangePoints does not mean random change points *at each repetitions*
-#                 # "changePoints": geometricChangePoints(horizon=HORIZON, proba=NB_BREAK_POINTS/HORIZON),
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int, endpoint=False),
-#                 "args": {
-#                     "nbArms": NB_ARMS,
-#                     "lower": LOWER, "amplitude": AMPLITUDE,
-#                     "mingap": None, "isSorted": False,
-#                 },
-#                 # XXX onlyOneArm is None by default,
-#                 "onlyOneArm": None,
-#                 # XXX but onlyOneArm can be "uniform" to only change *one* arm at each change point,
-#                 # "onlyOneArm": "uniform",
-#                 # XXX onlyOneArm can also be an integer to only change n arms at each change point,
-#                 # "onlyOneArm": 3,
-#             }
-#         },
-#     ]
-
-# if False:  # WARNING remove this "False and" to use this problem
-#     configuration["environment"] = [  # XXX Bernoulli arms
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": continuouslyVaryingMeans,
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
-#                 "args": {
-#                    "nbArms": NB_ARMS,
-#                    "maxSlowChange": 0.1, "sign": +1,
-#                    "mingap": None, "isSorted": False,
-#                    "lower": LOWER, "amplitude": AMPLITUDE,
-#                 }
-#             }
-#         },
-#     ]
-
-
-# if False:  # WARNING remove this "False and" to use this problem
-#     configuration["environment"] = [  # XXX Bernoulli arms
-#         {   # A non stationary problem: every step of the same repetition use a different mean vector!
-#             "arm_type": ARM_TYPE,
-#             "params": {
-#                 "newMeans": randomContinuouslyVaryingMeans,
-#                 "changePoints": np.linspace(0, HORIZON, num=NB_BREAK_POINTS, dtype=int),
-#                 "args": {
-#                     "nbArms": NB_ARMS,
-#                     "maxSlowChange": 0.1, "horizon": HORIZON,
-#                     "mingap": None, "isSorted": False,
-#                     "lower": LOWER, "amplitude": AMPLITUDE,
-#                 }
-#             }
-#         },
-#     ]
-
-#: This dictionary configures the experiments
-configuration = {
-    # --- Duration of the experiment
-    "horizon": HORIZON,
-    # --- Number of repetition of the experiment (to have an average)
-    "repetitions": REPETITIONS,
-    # --- Parameters for the use of joblib.Parallel
-    "n_jobs": N_JOBS,    # = nb of CPU cores
-    "verbosity": 6,      # Max joblib verbosity
-    # --- Collision model
-    "collisionModel": collisionModel,
-    # --- Other parameters for the Evaluator
-    "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
-    "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
-    # --- Should we plot the lower-bounds or not?
-    "plot_lowerbounds": True,  # XXX Default
-    # --- Arms
-    "environment": [
-        # {   # A damn simple problem: 2 arms, one bad, one good
-        #     "arm_type": Bernoulli,
-        #     "params": [0.1, 0.9]  # uniformMeans(2, 0.1)
-        #     # "params": [0.9, 0.9]
-        #     # "params": [0.85, 0.9]
-        # }
-        # {   # XXX to test with 1 suboptimal arm only
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans((NB_PLAYERS + 1), 1 / (1. + (NB_PLAYERS + 1)))
-        # }
-        # {   # XXX to test with half very bad arms, half perfect arms
-        #     "arm_type": Bernoulli,
-        #     "params": shuffled([0] * NB_PLAYERS) + ([1] * NB_PLAYERS)
-        # }
-        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-        #     "arm_type": Bernoulli,
-        #     "params": [1] * NB_PLAYERS
-        # }
-        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-        #     "arm_type": Bernoulli,
-        #     "params": [1] * NB_ARMS
-        # }
-        # {   # XXX To only test the orthogonalization (collision avoidance) protocol
-        #     "arm_type": Bernoulli,
-        #     "params": ([0] * (NB_ARMS - NB_PLAYERS)) + ([1] * NB_PLAYERS)
-        # }
-        # {   # An easy problem, but with a LOT of arms! (50 arms)
-        #     "arm_type": Bernoulli,
-        #     "params": uniformMeans(50, 1 / (1. + 50))
-        # }
-        # # XXX Default!
-        # {   # A very easy problem (X arms), but it is used in a lot of articles
-        #     "arm_type": ARM_TYPE,
-        #     "params": uniformMeans(NB_ARMS, 1 / (1. + NB_ARMS))
-        # },
-        {   # Use vector from command line
-            "arm_type": ARM_TYPE,
-            "params": MEANS
-        },
-    ],
-}
-
-if ENVIRONMENT_BAYESIAN:
-    configuration["environment"] = [  # XXX Bernoulli arms
-        {   # A Bayesian problem: every repetition use a different mean vectors!
-            "arm_type": ARM_TYPE,
-            "params": {
-                "function": randomMeans,
-                "args": {
-                    "nbArms": NB_ARMS,
-                    # "mingap": None,
-                    # "mingap": 0.0000001,
-                    # "mingap": 0.1,
-                    "mingap": 1. / (3 * NB_ARMS),
-                    "lower": LOWER,
-                    "amplitude": AMPLITUDE,
-                    "isSorted": True,
-                }
-            }
-        },
-    ]
-
-
-
-
 try:
     #: Number of arms *in the first environment*
     nbArms = int(configuration["environment"][0]["params"]["args"]["nbArms"])
@@ -633,15 +571,6 @@ except (ValueError, np.AxisError):
 
 
 configuration["successive_players"] = [
-    # DONE test this new SIC_MMAB algorithm
-    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-
-    # # XXX stupid version with fixed T0 : cannot adapt to any problem
-    # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
-    # # DONE test this new TrekkingTSN algorithm!
-
     # ---- rhoRand etc
     rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
@@ -748,6 +677,15 @@ configuration["successive_players"] = [
     # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.005, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.001, Time1=HORIZON).children,
     # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+
+    # DONE test this new SIC_MMAB algorithm
+    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+
+    # # XXX stupid version with fixed T0 : cannot adapt to any problem
+    # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
+    # # DONE test this new TrekkingTSN algorithm!
 ]
 
 # XXX Comparing different rhoRand approaches
@@ -816,14 +754,14 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children
     # "players": Selfish(NB_PLAYERS, nbArms, Exp3WithHorizon, horizon=HORIZON).children
     # "players": Selfish(NB_PLAYERS, nbArms, UCB).children
+    "players": Selfish(NB_PLAYERS, nbArms, DiscountedThompson).children
 
-    # --- TODO play with SIC_MMAB
-    "players": [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ]
+    # --- XXX play with SIC_MMAB
+    # "players": [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ]
 })
 # TODO the EvaluatorMultiPlayers should regenerate the list of players in every repetitions, to have at the end results on the average behavior of these randomized multi-players policies
 
 
-
 # DONE
-print("Loaded experiments configuration from 'configuration_multiplayers.py' :")
+print("Loaded experiments configuration from 'configuration_multiplayers_nonstationary.py' :")
 print("configuration =", configuration)  # DEBUG

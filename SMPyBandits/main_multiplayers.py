@@ -136,6 +136,10 @@ if __name__ == '__main__':
 
         if debug_memory: start_tracemalloc()  # DEBUG
 
+        # --- Also plotting the history of means
+        if interactive:
+            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+
         # Evaluate just that env
         evaluation.startOneEnv(envId, env)
 
@@ -187,6 +191,14 @@ if __name__ == '__main__':
                     pickle.dump(evaluation, picklefile, pickle.HIGHEST_PROTOCOL)
             if USE_HD5:
                 evaluation.saveondisk(h5pyname)
+
+        # --- Also plotting the history of means
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_HistoryOfMeans')
+            print(" - Plotting the history of means, and saving the plot to {} ...".format(savefig))
+            evaluation.plotHistoryOfMeans(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
 
         # --- Also plotting the running times
         if saveallfigs:

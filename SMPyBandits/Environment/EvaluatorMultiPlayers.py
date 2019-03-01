@@ -149,20 +149,32 @@ class EvaluatorMultiPlayers(object):
         """ Create environments."""
         nbArms = []
         for configuration_arms in self.cfg['environment']:
+            print("Using this dictionary to create a new environment:\n", configuration_arms)  # DEBUG
+            new_mab_problem = None
             if isinstance(configuration_arms, dict) \
-                and "arm_type" in configuration_arms and "params" in configuration_arms \
-                and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
-                    MB = ChangingAtEachRepMAB(configuration_arms)
-            # FIXME add support for PieceWiseStationaryMAB
-            elif isinstance(configuration_arms, dict) \
-                and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
-                and "params" in configuration_arms \
-                and "transitions" in configuration_arms["params"]:
-                    self.envs.append(MarkovianMAB(configuration_arms))
-            else:
-                MB = MAB(configuration_arms)
-            self.envs.append(MB)
-            nbArms.append(MB.nbArms)
+                and "arm_type" in configuration_arms \
+                and "params" in configuration_arms:
+                # PieceWiseStationaryMAB or NonStationaryMAB or ChangingAtEachRepMAB
+                if "listOfMeans"  in configuration_arms["params"] \
+                    and "changePoints" in configuration_arms["params"]:
+                        new_mab_problem = PieceWiseStationaryMAB(configuration_arms)
+                elif "newMeans" in configuration_arms["params"] \
+                    and "args" in configuration_arms["params"]:
+                    if "changePoints" in configuration_arms["params"]:
+                        new_mab_problem = NonStationaryMAB(configuration_arms)
+                    else:
+                        new_mab_problem = ChangingAtEachRepMAB(configuration_arms)
+                # MarkovianMAB
+                elif configuration_arms["arm_type"] == "Markovian" \
+                    and "transitions" in configuration_arms["params"]:
+                    new_mab_problem = MarkovianMAB(configuration_arms)
+                # IncreasingMAB
+                elif "change_lower_amplitude" in configuration_arms:
+                    new_mab_problem = IncreasingMAB(configuration_arms)
+            if new_mab_problem is None:
+                new_mab_problem = MAB(configuration_arms)
+            self.envs.append(new_mab_problem)
+            nbArms.append(new_mab_problem.nbArms)
         if len(set(nbArms)) != 1:  # FIXME add support of multi-environments evaluator for MP policies with different number of arms in the scenarios.
             raise ValueError("ERROR: right now, the multi-environments evaluator does not work well for MP policies, if there is a number different of arms in the scenarios!")
 
@@ -1035,6 +1047,21 @@ class EvaluatorMultiPlayers(object):
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
 
+    def plotHistoryOfMeans(self, envId=0, horizon=None, savefig=None):
+        """ Plot the history of means, as a plot with x axis being the time, y axis the mean rewards, and K curves one for each arm."""
+        if horizon is None:
+            horizon = self.horizon
+        env = self.envs[envId]
+        if hasattr(env, 'plotHistoryOfMeans'):
+            fig = env.plotHistoryOfMeans(horizon=horizon, savefig=savefig, showplot=self.showplot)
+            # FIXME https://github.com/SMPyBandits/SMPyBandits/issues/175#issuecomment-455637453
+            #  For one trajectory, we can ask Evaluator.Evaluator to store not only the number of detections, but more! We can store the times of detections, for each arms (as a list of list).
+            # If we have these data (for each repetitions), we can plot the detection times (for each arm) on a plot like the following
+            return fig
+        else:
+            print("Warning: environment {} did not have a method plotHistoryOfMeans...".format(env))  # DEBUG
+
+
     def strPlayers(self, short=False, latex=True):
         """Get a string of the players for this environment."""
         listStrPlayers = [_extract(player.__cachedstr__) for player in self.players]
@@ -1108,6 +1135,11 @@ def delayed_play(env, players, horizon, collisionModel,
 
         # Finally we store the results
         result.store(t, choices, rewards, pulls, collisions)
+
+        if env.isDynamic:
+            if t in env.changePoints:
+                means = env.newRandomArms(t)
+                if repeatId == 0: print("\nNew means vector = {}, at time t = {} ...".format(means, t))  # DEBUG
 
         # XXX During the simulation, if using rhoRand or other ranks policy
         if all_players_have_ranks and t > 1:
