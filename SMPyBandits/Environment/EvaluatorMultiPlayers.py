@@ -36,7 +36,7 @@ try:
     from .fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from .CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
+    from .MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
     from .ResultMultiPlayers import ResultMultiPlayers
     from .memory_consumption import getCurrentMemory, sizeof_fmt
 except ImportError:
@@ -48,7 +48,7 @@ except ImportError:
     from fairnessMeasures import amplitude_fairness, std_fairness, rajjain_fairness, mean_fairness, fairnessMeasure, fairness_mapping
     # Local imports, objects and functions
     from CollisionModels import onlyUniqUserGetsReward, noCollision, closerUserGetsReward, rewardIsSharedUniformly, defaultCollisionModel, full_lost_if_collision
-    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB
+    from MAB import MAB, MarkovianMAB, ChangingAtEachRepMAB, NonStationaryMAB, PieceWiseStationaryMAB, IncreasingMAB
     from ResultMultiPlayers import ResultMultiPlayers
     from memory_consumption import getCurrentMemory, sizeof_fmt
 
@@ -153,6 +153,7 @@ class EvaluatorMultiPlayers(object):
                 and "arm_type" in configuration_arms and "params" in configuration_arms \
                 and "function" in configuration_arms["params"] and "args" in configuration_arms["params"]:
                     MB = ChangingAtEachRepMAB(configuration_arms)
+            # FIXME add support for PieceWiseStationaryMAB
             elif isinstance(configuration_arms, dict) \
                 and "arm_type" in configuration_arms and configuration_arms["arm_type"] == "Markovian" \
                 and "params" in configuration_arms \

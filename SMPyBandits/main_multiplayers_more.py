@@ -10,12 +10,10 @@ __version__ = "0.9"
 
 # Generic imports
 import sys
-from os import mkdir
+from os import mkdir, getenv
 import os.path
-from os import getenv
 from itertools import product
 import importlib
-
 # Backup evaluation object
 import pickle
 
@@ -34,7 +32,6 @@ try:
 except ImportError:
     from SMPyBandits.save_configuration_for_reproducibility import save_configuration_for_reproducibility
     from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    configuration = None
     for arg in sys.argv:
         if arg.startswith('configuration'):
             module_name = arg.replace('.py', '')

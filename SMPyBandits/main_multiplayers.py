@@ -9,20 +9,35 @@ __author__ = "Lilian Besson"
 __version__ = "0.9"
 
 # Generic imports
+import sys
 from os import mkdir, getenv
 import os.path
+import importlib
 # Backup evaluation object
 import pickle
 
 # Local imports
+configuration_module = None
 try:
     from save_configuration_for_reproducibility import save_configuration_for_reproducibility
     from Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    import configuration_multiplayers as configuration_module
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
+            configuration_module = importlib.import_module(module_name)
+    if configuration_module is None:
+        import configuration_multiplayers as configuration_module
 except ImportError:
     from SMPyBandits.save_configuration_for_reproducibility import save_configuration_for_reproducibility
     from SMPyBandits.Environment import EvaluatorMultiPlayers, notify, start_tracemalloc, display_top_tracemalloc
-    import SMPyBandits.configuration_multiplayers as configuration_module
+    for arg in sys.argv:
+        if arg.startswith('configuration'):
+            module_name = arg.replace('.py', '')
+            print("Reading argument from command line, importing the configuration from arg = {} (module = {})...".format(arg, module_name))
+            configuration_module = importlib.import_module(module_name, 'SMPyBandits')
+    if configuration_module is None:
+        import SMPyBandits.configuration_multiplayers as configuration_module
 
 # Get the configuration dictionnary
 configuration = configuration_module.configuration

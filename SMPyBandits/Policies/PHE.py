@@ -24,6 +24,9 @@ class PHE(IndexPolicy):
     """ The PHE, Perturbed-History Exploration, policy for bounded bandits.
 
     - Reference: [[Perturbed-History Exploration in Stochastic Multi-Armed Bandits, by Branislav Kveton, Csaba Szepesvari, Mohammad Ghavamzadeh, Craig Boutilier, 26 Feb 2019, arXiv:1902.10089]](https://arxiv.org/abs/1902.10089)
+
+    - They prove that PHE achieves a regret of :math:`\mathcal{O}(K \Delta^{-1} \log(T))` regret for horizon :math:`T`, and if :math:`\Delta` is the minimum gap between the expected rewards of the optimal and suboptimal arms, for :math:`a > 1`.
+    - Note that the limit case of :math:`a=0` gives the Follow-the-Leader algorithm (FTL), known to fail.
     """
     def __init__(self, nbArms, perturbation_scale=DEFAULT_PERTURBATION_SCALE, lower=0., amplitude=1.):
         assert perturbation_scale > 0, "Error: for PHE class, the parameter perturbation_scale should be > 0, it was {}.".format(perturbation_scale)  # DEBUG
