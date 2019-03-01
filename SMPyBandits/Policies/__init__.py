@@ -6,7 +6,7 @@
 - Greedy algorithms: :class:`EpsilonGreedy`, :class:`EpsilonFirst`, :class:`EpsilonDecreasing`, :class:`EpsilonDecreasingMEGA`, :class:`EpsilonExpDecreasing`,
 - And variants of the Explore-Then-Commit policy: :class:`ExploreThenCommit.ETC_KnownGap`, :class:`ExploreThenCommit.ETC_RandomStop`, :class:`ExploreThenCommit.ETC_FixedBudget`, :class:`ExploreThenCommit.ETC_SPRT`, :class:`ExploreThenCommit.ETC_BAI`, :class:`ExploreThenCommit.DeltaUCB`,
 
-- Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, and a smart variant :class:`BoltzmannGumbel`,
+- Probabilistic weighting algorithms: :class:`Hedge`, :class:`Softmax`, :class:`Softmax.SoftmaxDecreasing`, :class:`Softmax.SoftMix`, :class:`Softmax.SoftmaxWithHorizon`, :class:`Exp3`, :class:`Exp3.Exp3Decreasing`, :class:`Exp3.Exp3SoftMix`, :class:`Exp3.Exp3WithHorizon`, :class:`Exp3.Exp3ELM`, :class:`ProbabilityPursuit`, :class:`Exp3PlusPlus`, a smart variant :class:`BoltzmannGumbel`, and a recent extension :class:`TsallisInf`,
 
 - Index based UCB algorithms: :class:`EmpiricalMeans`, :class:`UCB`, :class:`UCBalpha`, :class:`UCBmin`, :class:`UCBplus`, :class:`UCBrandomInit`, :class:`UCBV`, :class:`UCBVtuned`, :class:`UCBH`, :class:`CPUCB`, :class:`UCBimproved`,
 
@@ -93,6 +93,8 @@ from .Exp3PlusPlus import Exp3PlusPlus
 from .ProbabilityPursuit import ProbabilityPursuit
 from .BoltzmannGumbel import BoltzmannGumbel
 from .Hedge import Hedge, HedgeDecreasing, HedgeWithHorizon
+
+from .TsallisInf import TsallisInf
 
 # --- Simple UCB policies
 from .UCB import UCB

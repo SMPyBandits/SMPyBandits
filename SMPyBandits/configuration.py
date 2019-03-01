@@ -572,6 +572,25 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
+        # --- TODO TsallisInf algorithm
+        {
+            "archtype": TsallisInf,
+            "params": {
+                "alpha": 0.5,
+            }
+        },
+        {
+            "archtype": TsallisInf,
+            "params": {
+                "alpha": 0.25,
+            }
+        },
+        {
+            "archtype": TsallisInf,
+            "params": {
+                "alpha": 0.75,
+            }
+        },
         # # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
