@@ -95,6 +95,12 @@ class CD_IndexPolicy(BaseWrapperPolicy):
             return np.random.randint(0, self.nbArms - 1)
         return self.policy.choice()
 
+    def choiceWithRank(self, rank=1):
+        r""" With a probability :math:`\alpha`, play uniformly at random, otherwise, pass the call to :meth:`choiceWithRank` of the underlying policy."""
+        if with_proba(self.proba_random_exploration):
+            return np.random.randint(0, self.nbArms - 1)
+        return self.policy.choiceWithRank(rank=1)
+
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
 

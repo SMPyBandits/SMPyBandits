@@ -159,7 +159,7 @@ if __name__ == '__main__':
             if debug_memory: start_tracemalloc()  # DEBUG
 
             # --- Also plotting the history of means
-            if interactive:
+            if playersId == 0 and interactive:
                 evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
 
             # Evaluate just that env
@@ -222,6 +222,15 @@ if __name__ == '__main__':
                 evaluation.plotHistoryOfMeans(envId, savefig=savefig)  # XXX To save the figure
             else:
                 evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+
+            # --- Also plotting the boxplot of regrets
+            print("\n- Plotting the boxplot of regrets")
+            if saveallfigs:
+                savefig = mainfig.replace('main', 'main_BoxPlotRegret')
+                print("  and saving the plot to {} ...".format(savefig))
+                evaluation.plotLastRegrets(envId, boxplot=True, savefig=savefig)
+            else:
+                evaluation.plotLastRegrets(envId, boxplot=True)  # XXX To plot without saving
 
             # --- Also plotting the running times
             if saveallfigs:
@@ -433,6 +442,23 @@ if __name__ == '__main__':
         imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)
         mainfig = os.path.join(plot_dir, imagename)
         savefig = mainfig
+
+        # --- Also plotting the history of means
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_HistoryOfMeans')
+            print(" - Plotting the history of means, and saving the plot to {} ...".format(savefig))
+            evaluation.plotHistoryOfMeans(envId, savefig=savefig)  # XXX To save the figure
+        else:
+            evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
+
+        # --- Also plotting the boxplot of regrets
+        print("\n- Plotting the boxplot of regrets")
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_BoxPlotRegret')
+            print("  and saving the plot to {} ...".format(savefig))
+            evaluation.plotLastRegrets(envId, boxplot=True, savefig=savefig, evaluators=eothers)
+        else:
+            evaluation.plotLastRegrets(envId, boxplot=True, evaluators=eothers)  # XXX To plot without saving
 
         # --- Also plotting the running times
         if saveallfigs:

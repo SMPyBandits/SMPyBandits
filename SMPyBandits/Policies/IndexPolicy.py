@@ -71,7 +71,7 @@ class IndexPolicy(BasePolicy):
         - If rank is 4, the 4-th best arm is chosen.
 
 
-        .. note:: This method is *required* for the rhoRand policy.
+        .. note:: This method is *required* for the :class:`PoliciesMultiPlayers.rhoRand` policy.
 
         """
         if rank == 1:
@@ -84,7 +84,11 @@ class IndexPolicy(BasePolicy):
             # Then it is fair to chose a random arm with best index, instead of aiming at an arm with index being ranked rank
             chosenIndex = sortedRewards[-rank]
             # Uniform choice among the rank-th best arms
-            return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
+            try:
+                return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
+            except ValueError:
+                print("Warning: unknown error in IndexPolicy.choiceWithRank(): the indexes were {} but couldn't be used to select an arm.".format(self.index))
+                return np.random.randint(self.nbArms)
 
     def choiceFromSubSet(self, availableArms='all'):
         """ In an index policy, choose the best arm from sub-set availableArms (uniformly at random)."""

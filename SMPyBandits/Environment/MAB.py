@@ -210,6 +210,13 @@ class MAB(object):
         return np.full(horizon, self.maxArm)
         # return self.maxArm  # XXX Nope, it's not a constant!
 
+    def get_maxArms(self, M=1, horizon=None):
+        """Return the vector of sum of the M-best means of the arms.
+
+        - It is a vector of length horizon.
+        """
+        return np.full(horizon, self.sumBestMeans(M))
+
     def get_allMeans(self, horizon=None):
         """Return the vector of means of the arms.
 
@@ -811,8 +818,7 @@ class PieceWiseStationaryMAB(MAB):
         params = configuration["params"]
         print(" - with 'params' =", params)  # DEBUG
 
-        self.listOfMeans = params["listOfMeans"]  #: The list of means
-        self.listOfMeans = np.array(self.listOfMeans)
+        self.listOfMeans = np.array(params["listOfMeans"])  #: The list of means
         self.nbArms = len(self.listOfMeans[0])  #: Number of arms
         assert all(len(arms) == self.nbArms for arms in self.listOfMeans), "Error: the number of arms cannot be different between change-points."  # DEBUG
         print(" - with 'listOfMeans' =", self.listOfMeans)  # DEBUG
@@ -943,6 +949,25 @@ class PieceWiseStationaryMAB(MAB):
             meansOfMinArms[t] = mapOfMinArms[nbChangePoint]
         return meansOfMinArms
 
+    def get_minArms(self, M=1, horizon=None):
+        """Return the vector of sum of the M-worst means of the arms, for a piece-wise stationary MAB.
+
+        - It is a vector of length horizon.
+        """
+        if horizon is None:
+            horizon = np.max(self.changePoints)
+        def Mworst(unsorted_list):
+            sorted_list = np.sort(unsorted_list)
+            return np.sum(sorted_list[:-M])
+        mapOfMworstMaxArms = [Mworst(means) for means in self.listOfMeans]
+        meansOfMworstMaxArms = np.ones(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self.changePoints) - 1 and t >= self.changePoints[nbChangePoint + 1]:
+                nbChangePoint += 1
+            meansOfMworstMaxArms[t] = mapOfMworstMaxArms[nbChangePoint]
+        return meansOfMworstMaxArms
+
     def get_maxArm(self, horizon=None):
         """Return the vector of max mean of the arms, for a piece-wise stationary MAB.
 
@@ -958,6 +983,25 @@ class PieceWiseStationaryMAB(MAB):
                 nbChangePoint += 1
             meansOfMaxArms[t] = mapOfMaxArms[nbChangePoint]
         return meansOfMaxArms
+
+    def get_maxArms(self, M=1, horizon=None):
+        """Return the vector of sum of the M-best means of the arms, for a piece-wise stationary MAB.
+
+        - It is a vector of length horizon.
+        """
+        if horizon is None:
+            horizon = np.max(self.changePoints)
+        def Mbest(unsorted_list):
+            sorted_list = np.sort(unsorted_list)
+            return np.sum(sorted_list[-M:])
+        mapOfMBestMaxArms = [Mbest(means) for means in self.listOfMeans]
+        meansOfMBestMaxArms = np.ones(horizon)
+        nbChangePoint = 0
+        for t in range(horizon):
+            if nbChangePoint < len(self.changePoints) - 1 and t >= self.changePoints[nbChangePoint + 1]:
+                nbChangePoint += 1
+            meansOfMBestMaxArms[t] = mapOfMBestMaxArms[nbChangePoint]
+        return meansOfMBestMaxArms
 
     def get_allMeans(self, horizon=None):
         """Return the vector of mean of the arms, for a piece-wise stationary MAB.

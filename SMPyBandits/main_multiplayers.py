@@ -200,6 +200,15 @@ if __name__ == '__main__':
         else:
             evaluation.plotHistoryOfMeans(envId)  # XXX To plot without saving
 
+        # --- Also plotting the boxplot of regrets
+        print("\n- Plotting the boxplot of regrets")
+        if saveallfigs:
+            savefig = mainfig.replace('main', 'main_BoxPlotRegret')
+            print("  and saving the plot to {} ...".format(savefig))
+            evaluation.plotLastRegrets(envId, boxplot=True, savefig=savefig)
+        else:
+            evaluation.plotLastRegrets(envId, boxplot=True)  # XXX To plot without saving
+
         # --- Also plotting the running times
         if saveallfigs:
             savefig = mainfig.replace('main', 'main_RunningTimes')

@@ -1,0 +1,233 @@
+Reading argument from command line, importing the configuration from arg = configuration_multiplayers_nonstationary (module = configuration_multiplayers_nonstationary)...
+
+Using Upsilon_T = 3 break-points (time when at least one arm changes), and C_T = 9 change-points (number of changes of all arms).
+For this problem, we compute the Delta^change and Delta^opt...
+min_change_on_mean = 0.09999999999999998
+min_optimality_gap = 0.09999999999999998
+DELTA_for_MUCB = 0.1
+EPSILON_for_CUSUM = 0.1
+Warning: using the default value for the GAP (Bayesian environment maybe?)
+ - One new child, of index 0, and class #1<CentralizedMultiplePlay(kl-UCB)> ...
+ - One new child, of index 1, and class #2<CentralizedMultiplePlay(kl-UCB)> ...
+ - One new child, of index 0, and class #1<CentralizedMultiplePlay(GLR-UCB(Local))> ...
+ - One new child, of index 1, and class #2<CentralizedMultiplePlay(GLR-UCB(Local))> ...
+Loaded experiments configuration from 'configuration_multiplayers_nonstationary.py' :
+configuration = {'horizon': 10000, 'repetitions': 40, 'n_jobs': -1, 'verbosity': 6, 'collisionModel': <function onlyUniqUserGetsReward at 0x7ff8a4b4dbf8>, 'finalRanksOnAverage': True, 'averageOn': 0.001, 'nb_break_points': 3, 'plot_lowerbounds': True, 'environment': [{'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}}], 'successive_players': [[rhoRand(kl-UCB), rhoRand(kl-UCB)], [rhoRand(GLR-UCB(Local)), rhoRand(GLR-UCB(Local))], [RandTopM(kl-UCB), RandTopM(kl-UCB)], [RandTopM(GLR-UCB(Local)), RandTopM(GLR-UCB(Local))], [MCTopM(kl-UCB), MCTopM(kl-UCB)], [MCTopM(GLR-UCB(Local)), MCTopM(GLR-UCB(Local))], [Selfish(kl-UCB), Selfish(kl-UCB)], [Selfish(GLR-UCB(Local)), Selfish(GLR-UCB(Local))], [CentralizedMultiplePlay(kl-UCB), CentralizedMultiplePlay(kl-UCB)], [CentralizedMultiplePlay(GLR-UCB(Local)), CentralizedMultiplePlay(GLR-UCB(Local))], [<Policies.MusicalChair.MusicalChair object at 0x7ff89ee01128>, <Policies.MusicalChair.MusicalChair object at 0x7ff89ee01208>], [<Policies.MusicalChair.MusicalChair object at 0x7ff89ee012b0>, <Policies.MusicalChair.MusicalChair object at 0x7ff89ee01358>], [<Policies.MusicalChair.MusicalChair object at 0x7ff89ee01400>, <Policies.MusicalChair.MusicalChair object at 0x7ff89ee014a8>], [<Policies.SIC_MMAB.SIC_MMAB_klUCB object at 0x7ff89ee01550>, <Policies.SIC_MMAB.SIC_MMAB_klUCB object at 0x7ff89ee01588>]], 'players': [Selfish(GLR-UCB(Local)), Selfish(GLR-UCB(Local))]}
+====> TURNING DEBUG MODE ON <=====
+plots/ is already a directory here...
+
+
+
+Considering the list of players :
+ [rhoRand(kl-UCB), rhoRand(kl-UCB)]
+Number of players in the multi-players game: 2
+Time horizon: 10000
+Number of repetitions: 40
+Sampling rate for plotting, delta_t_plot: 1
+Number of jobs for parallelization: -1
+Using collision model onlyUniqUserGetsReward (function <function onlyUniqUserGetsReward at 0x7ff8a4b4dbf8>).
+More details:
+ Simple collision model where only the players alone on one arm samples it and receives the reward.
+
+    - This is the default collision model, cf. [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+    - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
+    
+Using accurate regrets and last regrets ? True
+Using this dictionary to create a new environment:
+ {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}}
+  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}} ...
+ - with 'arm_type' = <class 'Arms.Bernoulli.Bernoulli'>
+ - with 'params' = {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}
+ - with 'listOfMeans' = [[0.1 0.2 0.9]
+ [0.4 0.9 0.1]
+ [0.5 0.1 0.2]
+ [0.2 0.2 0.3]]
+ - with 'changePoints' = [0, 2500, 5000, 7500]
+
+
+ ==> Creating the dynamic arms ...
+   - with 'nbArms' = 3
+   - with 'arms' = [B(0.1), B(0.2), B(0.9)]
+ - Initial draw of 'means' = [0.1 0.2 0.9]
+Number of environments to try: 1
+
+
+Evaluating environment: PieceWiseStationaryMAB(nbArms: 3, arms: [B(0.1), B(0.2), B(0.9)])
+- Adding player # 1 = #1<RhoRand-kl-UCB> ...
+  Using this already created player 'player' = #1<RhoRand-kl-UCB> ...
+- Adding player # 2 = #2<RhoRand-kl-UCB> ...
+  Using this already created player 'player' = #2<RhoRand-kl-UCB> ...
+
+New means vector = [0.1 0.2 0.9], at time t = 0 ...
+
+New means vector = [0.4 0.9 0.1], at time t = 2500 ...
+
+New means vector = [0.5 0.1 0.2], at time t = 5000 ...
+
+New means vector = [0.2 0.2 0.3], at time t = 7500 ...
+
+Estimated order by the policy #1<RhoRand-kl-UCB> after 10000 steps: [0 2 1] ...
+  ==> Optimal arm identification: 100.00% (relative success)...
+  ==> Mean distance from optimal ordering: 61.11% (relative success)...
+
+Estimated order by the policy #2<RhoRand-kl-UCB> after 10000 steps: [2 0 1] ...
+  ==> Optimal arm identification: 80.00% (relative success)...
+  ==> Mean distance from optimal ordering: 38.89% (relative success)...
+
+Giving the final ranks ...
+
+Final ranking for this environment # 0 : RhoRand-kl-UCB ...
+- Player # 1 / 2, RhoRand-kl-UCB	was ranked	1 / 2 for this simulation (last rewards = 3910.8).
+- Player # 2 / 2, RhoRand-kl-UCB	was ranked	2 / 2 for this simulation (last rewards = 3735.4).
+
+Giving the vector of final regrets ...
+
+For evaluator # 1/1 : <Environment.EvaluatorMultiPlayers.EvaluatorMultiPlayers object at 0x7ff8cc133128> (players RhoRand-kl-UCB) ...
+  Last regrets vector (for all repetitions) is:
+Min of    last regrets R_T = -1979.0
+Mean of   last regrets R_T = -270.21750000000037
+Median of last regrets R_T = 329.25
+Max of    last regrets R_T = 2769.5999999999995
+Variance  last regrets R_T = 1603533.34894375
+
+Giving the mean and var running times ...
+
+For players called 'RhoRand-kl-UCB' ...
+    10.2 s ± 2.55 s per loop (mean ± var. dev. of 40 run)
+
+Giving the mean and var memory consumption ...
+
+For players called 'RhoRand-kl-UCB' ...
+    3.4 KiB ± 27 KiB (mean ± var. dev. of 40 runs)
+
+
+
+Considering the list of players :
+ [rhoRand(GLR-UCB(Local)), rhoRand(GLR-UCB(Local))]
+Number of players in the multi-players game: 2
+Time horizon: 10000
+Number of repetitions: 40
+Sampling rate for plotting, delta_t_plot: 1
+Number of jobs for parallelization: -1
+Using collision model onlyUniqUserGetsReward (function <function onlyUniqUserGetsReward at 0x7ff8a4b4dbf8>).
+More details:
+ Simple collision model where only the players alone on one arm samples it and receives the reward.
+
+    - This is the default collision model, cf. [[Multi-Player Bandits Revisited, Lilian Besson and Emilie Kaufmann, 2017]](https://hal.inria.fr/hal-01629733).
+    - The numpy array 'choices' is increased according to the number of users who collided (it is NOT binary).
+    
+Using accurate regrets and last regrets ? True
+Using this dictionary to create a new environment:
+ {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}}
+  Special MAB problem, with arm (possibly) changing at every time step, read from a dictionnary 'configuration' = {'arm_type': <class 'Arms.Bernoulli.Bernoulli'>, 'params': {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}} ...
+ - with 'arm_type' = <class 'Arms.Bernoulli.Bernoulli'>
+ - with 'params' = {'listOfMeans': [[0.1, 0.2, 0.9], [0.4, 0.9, 0.1], [0.5, 0.1, 0.2], [0.2, 0.2, 0.3]], 'changePoints': [0, 2500, 5000, 7500]}
+ - with 'listOfMeans' = [[0.1 0.2 0.9]
+ [0.4 0.9 0.1]
+ [0.5 0.1 0.2]
+ [0.2 0.2 0.3]]
+ - with 'changePoints' = [0, 2500, 5000, 7500]
+
+
+ ==> Creating the dynamic arms ...
+   - with 'nbArms' = 3
+   - with 'arms' = [B(0.1), B(0.2), B(0.9)]
+ - Initial draw of 'means' = [0.1 0.2 0.9]
+Number of environments to try: 1
+
+
+Evaluating environment: PieceWiseStationaryMAB(nbArms: 3, arms: [B(0.1), B(0.2), B(0.9)])
+- Adding player # 1 = #1<RhoRand-GLR-UCB(Local)> ...
+  Using this already created player 'player' = #1<RhoRand-GLR-UCB(Local)> ...
+- Adding player # 2 = #2<RhoRand-GLR-UCB(Local)> ...
+  Using this already created player 'player' = #2<RhoRand-GLR-UCB(Local)> ...
+
+New means vector = [0.1 0.2 0.9], at time t = 0 ...
+
+New means vector = [0.4 0.9 0.1], at time t = 2500 ...
+Warning: unknown error in IndexPolicy.choice(): the indexes were [nan nan nan] but couldn't be used to select an arm.
+Warning: unknown error in IndexPolicy.choice(): the indexes were [nan nan nan] but couldn't be used to select an arm.
+[0;31m---------------------------------------------------------------------------[0m
+[0;31m_RemoteTraceback[0m                          Traceback (most recent call last)
+[0;31m_RemoteTraceback[0m: 
+"""
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/dist-packages/joblib/externals/loky/process_executor.py", line 418, in _process_worker
+    r = call_item()
+  File "/usr/local/lib/python3.6/dist-packages/joblib/externals/loky/process_executor.py", line 272, in __call__
+    return self.fn(*self.args, **self.kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/joblib/_parallel_backends.py", line 567, in __call__
+    return self.func(*args, **kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/joblib/parallel.py", line 225, in __call__
+    for func, args, kwargs in self.items]
+  File "/usr/local/lib/python3.6/dist-packages/joblib/parallel.py", line 225, in <listcomp>
+    for func, args, kwargs in self.items]
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/Environment/EvaluatorMultiPlayers.py", line 1174, in delayed_play
+    choices[playerId] = player.choice()
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/PoliciesMultiPlayers/rhoRand.py", line 63, in choice
+    result = super(oneRhoRand, self).choiceWithRank(self.rank)
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/PoliciesMultiPlayers/ChildPointer.py", line 45, in choiceWithRank
+    return self.mother._choiceWithRank_one(self.playerId, rank)
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/PoliciesMultiPlayers/BaseMPPolicy.py", line 38, in _choiceWithRank_one
+    return self._players[playerId].choiceWithRank(rank)
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/Policies/BaseWrapperPolicy.py", line 74, in choiceWithRank
+    return self.policy.choiceWithRank(rank=rank)
+  File "/home/lilian/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/Policies/IndexPolicy.py", line 87, in choiceWithRank
+    return np.random.choice(np.nonzero(self.index == chosenIndex)[0])
+  File "mtrand.pyx", line 1125, in mtrand.RandomState.choice
+ValueError: 'a' cannot be empty unless no samples are taken
+"""
+
+The above exception was the direct cause of the following exception:
+
+[0;31mValueError[0m                                Traceback (most recent call last)
+[0;32m~/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/main_multiplayers_more.py[0m in [0;36m<module>[0;34m[0m
+[1;32m    164[0m [0;34m[0m[0m
+[1;32m    165[0m             [0;31m# Evaluate just that env[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 166[0;31m             [0mevaluation[0m[0;34m.[0m[0mstartOneEnv[0m[0;34m([0m[0menvId[0m[0;34m,[0m [0menv[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    167[0m             [0;32mif[0m [0mdo_comparison_plots[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    168[0m                 [0mevaluators[0m[0;34m[[0m[0menvId[0m[0;34m][0m[0;34m[[0m[0mplayersId[0m[0;34m][0m [0;34m=[0m [0mevaluation[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/ownCloud/owncloud.crans.org/Crans/These_2016-17/src/SMPyBandits/SMPyBandits/Environment/EvaluatorMultiPlayers.py[0m in [0;36mstartOneEnv[0;34m(self, envId, env)[0m
+[1;32m    245[0m             for r in Parallel(n_jobs=self.cfg['n_jobs'], verbose=self.cfg['verbosity'])(
+[1;32m    246[0m                 [0mdelayed[0m[0;34m([0m[0mdelayed_play[0m[0;34m)[0m[0;34m([0m[0menv[0m[0;34m,[0m [0mself[0m[0;34m.[0m[0mplayers[0m[0;34m,[0m [0mself[0m[0;34m.[0m[0mhorizon[0m[0;34m,[0m [0mself[0m[0;34m.[0m[0mcollisionModel[0m[0;34m,[0m [0mseed[0m[0;34m=[0m[0mseeds[0m[0;34m[[0m[0mrepeatId[0m[0;34m][0m[0;34m,[0m [0mrepeatId[0m[0;34m=[0m[0mrepeatId[0m[0;34m,[0m [0mcount_ranks_markov_chain[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mcount_ranks_markov_chain[0m[0;34m,[0m [0museJoblib[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0museJoblib[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 247[0;31m                 [0;32mfor[0m [0mrepeatId[0m [0;32min[0m [0mtqdm[0m[0;34m([0m[0mrange[0m[0;34m([0m[0mself[0m[0;34m.[0m[0mrepetitions[0m[0;34m)[0m[0;34m,[0m [0mdesc[0m[0;34m=[0m[0;34m"Repeat||"[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    248[0m             ):
+[1;32m    249[0m                 [0mstore[0m[0;34m([0m[0mr[0m[0;34m,[0m [0mrepeatIdout[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.6/dist-packages/joblib/parallel.py[0m in [0;36m__call__[0;34m(self, iterable)[0m
+[1;32m    932[0m [0;34m[0m[0m
+[1;32m    933[0m             [0;32mwith[0m [0mself[0m[0;34m.[0m[0m_backend[0m[0;34m.[0m[0mretrieval_context[0m[0;34m([0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 934[0;31m                 [0mself[0m[0;34m.[0m[0mretrieve[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    935[0m             [0;31m# Make sure that we get a last message telling us we are done[0m[0;34m[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    936[0m             [0melapsed_time[0m [0;34m=[0m [0mtime[0m[0;34m.[0m[0mtime[0m[0;34m([0m[0;34m)[0m [0;34m-[0m [0mself[0m[0;34m.[0m[0m_start_time[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.6/dist-packages/joblib/parallel.py[0m in [0;36mretrieve[0;34m(self)[0m
+[1;32m    831[0m             [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    832[0m                 [0;32mif[0m [0mgetattr[0m[0;34m([0m[0mself[0m[0;34m.[0m[0m_backend[0m[0;34m,[0m [0;34m'supports_timeout'[0m[0;34m,[0m [0;32mFalse[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 833[0;31m                     [0mself[0m[0;34m.[0m[0m_output[0m[0;34m.[0m[0mextend[0m[0;34m([0m[0mjob[0m[0;34m.[0m[0mget[0m[0;34m([0m[0mtimeout[0m[0;34m=[0m[0mself[0m[0;34m.[0m[0mtimeout[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    834[0m                 [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    835[0m                     [0mself[0m[0;34m.[0m[0m_output[0m[0;34m.[0m[0mextend[0m[0;34m([0m[0mjob[0m[0;34m.[0m[0mget[0m[0;34m([0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/local/lib/python3.6/dist-packages/joblib/_parallel_backends.py[0m in [0;36mwrap_future_result[0;34m(future, timeout)[0m
+[1;32m    519[0m         AsyncResults.get from multiprocessing."""
+[1;32m    520[0m         [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 521[0;31m             [0;32mreturn[0m [0mfuture[0m[0;34m.[0m[0mresult[0m[0;34m([0m[0mtimeout[0m[0;34m=[0m[0mtimeout[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    522[0m         [0;32mexcept[0m [0mLokyTimeoutError[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    523[0m             [0;32mraise[0m [0mTimeoutError[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/lib/python3.6/concurrent/futures/_base.py[0m in [0;36mresult[0;34m(self, timeout)[0m
+[1;32m    430[0m                 [0;32mraise[0m [0mCancelledError[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    431[0m             [0;32melif[0m [0mself[0m[0;34m.[0m[0m_state[0m [0;34m==[0m [0mFINISHED[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 432[0;31m                 [0;32mreturn[0m [0mself[0m[0;34m.[0m[0m__get_result[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    433[0m             [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    434[0m                 [0;32mraise[0m [0mTimeoutError[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/usr/lib/python3.6/concurrent/futures/_base.py[0m in [0;36m__get_result[0;34m(self)[0m
+[1;32m    382[0m     [0;32mdef[0m [0m__get_result[0m[0;34m([0m[0mself[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    383[0m         [0;32mif[0m [0mself[0m[0;34m.[0m[0m_exception[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 384[0;31m             [0;32mraise[0m [0mself[0m[0;34m.[0m[0m_exception[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    385[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    386[0m             [0;32mreturn[0m [0mself[0m[0;34m.[0m[0m_result[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mValueError[0m: 'a' cannot be empty unless no samples are taken

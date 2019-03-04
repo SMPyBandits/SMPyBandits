@@ -97,10 +97,8 @@ collisionModel = onlyUniqUserGetsReward    # XXX this is the best one
 
 # collisionModel = allGetRewardsAndUseCollision  #: DONE this is a bad collision model
 
-
 # Parameters for the arms
 VARIANCE = 0.05   #: Variance of Gaussian arms
-
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
 CACHE_REWARDS = False  # XXX to disable manually this feature
@@ -144,6 +142,11 @@ if MEANS_STR != '':
     MEANS = [ float(m) for m in MEANS_STR.replace('[', '').replace(']', '').split(',') ]
     print("Using cli env variable to use MEANS = {}.".format(MEANS))  # DEBUG
 
+
+NB_BREAK_POINTS = 1  #: Number of true breakpoints. They are uniformly spaced in time steps (and the first one at t=0 does not count).
+NB_BREAK_POINTS = int(getenv('NB_BREAK_POINTS', NB_BREAK_POINTS))
+
+
 #: This dictionary configures the experiments
 configuration = {
     # --- Duration of the experiment
@@ -158,6 +161,8 @@ configuration = {
     # --- Other parameters for the Evaluator
     "finalRanksOnAverage": True,  # Use an average instead of the last value for the final ranking of the tested players
     "averageOn": 1e-3,  # Average the final rank on the 1.% last time steps
+    # --- Random events
+    "nb_break_points": NB_BREAK_POINTS,
     # --- Should we plot the lower-bounds or not?
     "plot_lowerbounds": True,  # XXX Default
     # --- Arms
@@ -245,11 +250,11 @@ if 0 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.3, 0.9],  # 1600 to end
                 ],
                 "changePoints": [
-                    int((0  * HORIZON) / 20.0),
-                    int((4  * HORIZON) / 20.0),
-                    int((8  * HORIZON) / 20.0),
-                    int((12 * HORIZON) / 20.0),
-                    int((16 * HORIZON) / 20.0),
+                    0,
+                    int((1 * HORIZON) / 5.0),
+                    int((2 * HORIZON) / 5.0),
+                    int((3 * HORIZON) / 5.0),
+                    int((4 * HORIZON) / 5.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -270,11 +275,11 @@ if 1 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.7, 0.5, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    int((0  * HORIZON) / 20.0),
-                    int((4  * HORIZON) / 20.0),
-                    int((8  * HORIZON) / 20.0),
-                    int((12 * HORIZON) / 20.0),
-                    int((16 * HORIZON) / 20.0),
+                    0,
+                    int((1 * HORIZON) / 5.0),
+                    int((2 * HORIZON) / 5.0),
+                    int((3 * HORIZON) / 5.0),
+                    int((4 * HORIZON) / 5.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -295,11 +300,11 @@ if 2 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.8, 0.1, 0.1],  # 1600 to end
                 ],
                 "changePoints": [
-                    int((0  * HORIZON) / 20.0),
-                    int((4  * HORIZON) / 20.0),
-                    int((8  * HORIZON) / 20.0),
-                    int((12 * HORIZON) / 20.0),
-                    int((16 * HORIZON) / 20.0),
+                    0,
+                    int((1 * HORIZON) / 5.0),
+                    int((2 * HORIZON) / 5.0),
+                    int((3 * HORIZON) / 5.0),
+                    int((4 * HORIZON) / 5.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -319,7 +324,7 @@ if 3 in PROBLEMS:  # WARNING remove this "False and" to use this problem
                     [0.2, 0.2, 0.3],  # 3000 to end
                 ],
                 "changePoints": [
-                    int(0 * HORIZON / 4.0),
+                    0,
                     int((1 * HORIZON) / 4.0),
                     int((2 * HORIZON) / 4.0),
                     int((3 * HORIZON) / 4.0),
@@ -342,11 +347,11 @@ if 4 in PROBLEMS:
                     [0.1, 0.5, 0.2],  # 5th sequence, best=2nd, DeltaMin=0.1
                 ],
                 "changePoints": [
-                    int((0    * HORIZON) / 2000.0),
-                    int((1000 * HORIZON) / 2000.0),
-                    int((1250 * HORIZON) / 2000.0),
-                    int((1500 * HORIZON) / 2000.0),
-                    int((1750 * HORIZON) / 2000.0),
+                    0,
+                    int((4 * HORIZON) / 8.0),
+                    int((5 * HORIZON) / 8.0),
+                    int((6 * HORIZON) / 8.0),
+                    int((7 * HORIZON) / 8.0),
                     # 20000,  # XXX larger than horizon, just to see if it is a problem?
                 ],
             }
@@ -572,85 +577,32 @@ except (ValueError, np.AxisError):
 
 configuration["successive_players"] = [
     # ---- rhoRand etc
-    rhoRand(NB_PLAYERS, nbArms, UCB).children,
+    # rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-    # rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
-    # #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
-    # #         for x in range(NB_ARMS)
-    # #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-    # #     ]) for _ in range(NB_PLAYERS)
-    # # ],
-    # # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB).children,
-    # rhoEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... rhoRand, klUCB)
-    # # rhoEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... rhoRand, klUCB)
-    # # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
-    # # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)
-    # # rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
-    # # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
-    # # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
-    # # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoRand(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
 
     # # ---- RandTopM
-    RandTopM(NB_PLAYERS, nbArms, UCB).children,
+    # RandTopM(NB_PLAYERS, nbArms, UCB).children,
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-    # RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
-    # #         lambda: RandTopM(1 + x, nbArms, klUCB).children[0]
-    # #         for x in range(NB_ARMS)
-    # #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-    # #     ]) for _ in range(NB_PLAYERS)
-    # # ],
-    # # EstimateM(NB_PLAYERS, nbArms, RandTopM, klUCB).children,  # FIXME experimental!
-    # RandTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... RandTopM, klUCB)
-    # # RandTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
+    RandTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
 
     # ---- MCTopM
-    MCTopM(NB_PLAYERS, nbArms, UCB).children,
+    # MCTopM(NB_PLAYERS, nbArms, UCB).children,
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
-    # MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # MCTopM(NB_PLAYERS, nbArms, BESA).children,
-    # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
-    # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
-    # [ Aggregator(nbArms, children=[  # XXX Not efficient!
-    #         lambda: MCTopM(1 + x, nbArms, klUCB).children[0]
-    #         for x in range(NB_ARMS)
-    #         # for x in set.intersection(set(range(NB_ARMS)), [NB_PLAYERS - 1, NB_PLAYERS, NB_PLAYERS + 1])
-    #     ]) for _ in range(NB_PLAYERS)
-    # ],
-    # # EstimateM(NB_PLAYERS, nbArms, MCTopM, klUCB).children,  # FIXME experimental!
-    # MCTopMEst(NB_PLAYERS, nbArms, klUCB).children,  # = EstimateM(... MCTopM, klUCB)
-    # # MCTopMEst(NB_PLAYERS, nbArms, BESA).children,  # = EstimateM(... MCTopM, klUCB)
-    # # MCTopMEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,  # FIXME experimental!
-    # # MCTopMEstPlus(NB_PLAYERS, nbArms, BESA, HORIZON).children,  # FIXME experimental!
+    MCTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
 
-    # # # ---- Selfish
-    # # # Selfish(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    # # # Selfish(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
-    Selfish(NB_PLAYERS, nbArms, UCB).children,
+    # ---- Selfish
+    # Selfish(NB_PLAYERS, nbArms, UCB).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
-    # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # # Selfish(NB_PLAYERS, nbArms, Aggregator, children=[UCB, klUCB, EmpiricalMeans]).children,
-    # # # Selfish(NB_PLAYERS, nbArms, BESA).children,
-    # # # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
-    # # [ Aggregator(nbArms, children=[UCB, klUCB, Thompson]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
+    Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
 
     # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
     # [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
 
-    # # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
-    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
-    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3PlusPlus).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
+    # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
-    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BESA).children,
-    # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Aggregator, children=[UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]).children,  # XXX don't work so well
 
     # # FIXME how to chose the 5 parameters for MEGA policy ?
     # # XXX By trial and error??
@@ -668,21 +620,10 @@ configuration["successive_players"] = [
     # # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
 
-    # --- 1) CentralizedMultiplePlay
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
-
-    # --- 2) Musical Chair
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.1, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.05, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.005, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.001, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-
-    # # DONE test this new SIC_MMAB algorithm
+    # DONE test this new SIC_MMAB algorithm
     # [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
     # [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
-    # [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ TrekkingTSN(nbArms, theta=0.1, epsilon=0.1, delta=0.1) for _ in range(NB_PLAYERS) ],
@@ -721,8 +662,8 @@ configuration.update({
     # "players": Selfish(NB_PLAYERS, nbArms, UCB).children
     # "players": Selfish(NB_PLAYERS, nbArms, DiscountedUCB).children
     # "players": Selfish(NB_PLAYERS, nbArms, Thompson).children
-    "players": Selfish(NB_PLAYERS, nbArms, DiscountedThompson).children
-    # "players": Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children
+    # "players": Selfish(NB_PLAYERS, nbArms, DiscountedThompson, gamma=0.99).children
+    "players": Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children
 
     # --- XXX play with SIC_MMAB
     # "players": [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ]

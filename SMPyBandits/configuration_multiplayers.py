@@ -251,7 +251,7 @@ except (ValueError, np.AxisError):
 
 configuration["successive_players"] = [
     # DONE test this new SIC_MMAB algorithm
-    [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
+    # [ SIC_MMAB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
     [ SIC_MMAB_UCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
     [ SIC_MMAB_klUCB(nbArms, HORIZON) for _ in range(NB_PLAYERS) ],
 

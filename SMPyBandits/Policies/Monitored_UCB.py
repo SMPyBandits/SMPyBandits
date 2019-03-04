@@ -136,6 +136,14 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         #     return np.random.randint(0, self.nbArms - 1)
         return self.policy.choice()
 
+    def choiceWithRank(self, rank=1):
+        r""" Essentially play uniformly at random with probability :math:`\gamma`, otherwise, pass the call to ``choiceWithRank`` of the underlying policy (eg. UCB). """
+        if self.gamma > 0:
+            A = (self.t - self.last_update_time_tau) % int(np.ceil(self.nbArms / self.gamma))
+            if A < self.nbArms:
+                return int(A)
+        return self.policy.choiceWithRank(rank=1)
+
     def getReward(self, arm, reward):
         """ Give a reward: increase t, pulls, and update cumulated sum of rewards and update small history (sliding window) for that arm (normalized in [0, 1]).
 
