@@ -665,8 +665,10 @@ class EvaluatorMultiPlayers(object):
         # Labels and legends
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}$, {}{}".format(self.horizon, self.strPlayers() if len(evaluators) == 1 else "", self.signature))
-        # FIXME fix math formula in case of non stationary bandits
-        plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{k=1}^{%d}\mu_k^* t - \sum_{k=1}^{%d} \mu_k\mathbb{E}_{%d}[T_k(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
+        if self.nb_break_points > 0:
+            plt.ylabel("{}umulative non-stationary centralized regret {}".format("Normalized c" if normalized else "C", r"$\sum_{s=1}^{t} \sum_{k=1}^{%d} \mu_k^*(s) - \sum_{s=1}^{t} \sum_{k=1}^{%d} \mu_k(s) \mathbb{P}_{%d}[A^j(t)=k,\overline{C}^j(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
+        else:
+            plt.ylabel("{}umulative centralized regret {}".format("Normalized c" if normalized else "C", r"$t \sum_{k=1}^{%d} \mu_k^* - \sum_{s=1}^{t} \sum_{k=1}^{%d} \mu_k(s) \mathbb{P}_{%d}[A^j(t)=k,\overline{C}^j(t)]$" % (self.nbPlayers, self.envs[envId].nbArms, self.repetitions) if moreAccurate else r"$\mathbb{E}_{%d}[R_t]$" % self.repetitions))
         plt.title("Multi-players $M = {}$ : {}umulated centralized regret, averaged ${}$ times\n${}$ arms{}: {}".format(self.nbPlayers, "Normalized c" if normalized else "C", self.repetitions, self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
         return fig
@@ -737,6 +739,8 @@ class EvaluatorMultiPlayers(object):
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
         # FIXME fix computation in case of non stationary bandits
+        if self.nb_break_points > 0:
+            print("WARNING the computation of Frequency of pulls of the optimal arm is wrong for non-stationary bandits...")  # DEBUG
         plt.ylabel("Frequency of pulls of the optimal arm")
         plt.title("Multi-players $M = {}$ : Best arm pulls frequency for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
@@ -785,7 +789,6 @@ class EvaluatorMultiPlayers(object):
         legend()
         plt.xlabel("Time steps $t = 1...T$, horizon $T = {}${}".format(self.horizon, self.signature))
         add_percent_formatter("yaxis", 1.0)
-        # FIXME fix math formula in case of non stationary bandits
         plt.ylabel("{}ransmission on a free channel".format("Cumulated T" if cumulated else "T"))
         plt.title("Multi-players $M = {}$ : {}free transmission for each players, averaged ${}$ times\n{} arm{}s: {}".format(self.nbPlayers, "Cumulated " if cumulated else "", self.cfg['repetitions'], self.envs[envId].nbArms, self.envs[envId].str_sparsity(), self.envs[envId].reprarms(self.nbPlayers, latex=True)))
         show_and_save(self.showplot, savefig, fig=fig, pickleit=PICKLE_IT)
