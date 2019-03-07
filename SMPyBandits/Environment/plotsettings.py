@@ -221,8 +221,11 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
         for form in formats:
             path = "{}.{}".format(savefig, form)
             print("Saving figure with format {}, to file '{}'...".format(form, path))  # DEBUG
-            plt.savefig(path, bbox_inches=BBOX_INCHES)
-            print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, os.path.getsize(path), datetime.fromtimestamp(os.path.getatime(path))))
+            try:
+                plt.savefig(path, bbox_inches=BBOX_INCHES)
+                print("       Saved! '{}' created of size '{}b', at '{:%c}' ...".format(path, os.path.getsize(path), datetime.fromtimestamp(os.path.getatime(path))))
+            except Exception as exc:
+                print("Error: could not save current figure to {} because of error {}... Skipping!".format(path, exc))  # DEBUG
     try:
         plt.show() if showplot else plt.close()
     except (TypeError, AttributeError):

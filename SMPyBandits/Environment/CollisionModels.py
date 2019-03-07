@@ -94,6 +94,8 @@ def onlyUniqUserGetsRewardSparse(t, arms, players, choices, rewards, pulls, coll
     - Support for player non activated, by choosing a negative index.
     """
     # First, sense in all the arms
+    # FIXME had support for problems with different means for each players?
+    # see issue https://github.com/SMPyBandits/SMPyBandits/issues/185 and papers referenced therein
     sensing = [a.draw(t) for a in arms]
 
     nbCollisions = np.bincount(choices[choices >= 0], minlength=len(arms)) - 1

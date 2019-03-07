@@ -579,30 +579,48 @@ configuration["successive_players"] = [
     # ---- rhoRand etc
     # rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
-    rhoRand(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
+    rhoRand(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=True, delta=DELTA_LOCAL, alpha0=ALPHA_LOCAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
+    # rhoRand(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=False, delta=DELTA_GLOBAL, alpha0=ALPHA_GLOBAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
 
     # # ---- RandTopM
     # RandTopM(NB_PLAYERS, nbArms, UCB).children,
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
-    RandTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
+    RandTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=True, delta=DELTA_LOCAL, alpha0=ALPHA_LOCAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
+    # RandTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=False, delta=DELTA_GLOBAL, alpha0=ALPHA_GLOBAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
 
     # ---- MCTopM
     # MCTopM(NB_PLAYERS, nbArms, UCB).children,
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
-    MCTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
+    MCTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=True, delta=DELTA_LOCAL, alpha0=ALPHA_LOCAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
+    # MCTopM(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=False, delta=DELTA_GLOBAL, alpha0=ALPHA_GLOBAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
 
     # ---- Selfish
+    Selfish(NB_PLAYERS, nbArms, Thompson).children,
     # Selfish(NB_PLAYERS, nbArms, UCB).children,
     Selfish(NB_PLAYERS, nbArms, klUCB).children,
-    Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
+
+    # ---- TODO Selfish for algorithms specialized for non-stationary settings
+    Selfish(NB_PLAYERS, nbArms, OracleSequentiallyRestartPolicy, changePoints=CHANGE_POINTS, listOfMeans=LIST_OF_MEANS, policy=klUCB, reset_for_all_change=True, reset_for_suboptimal_change=False).children,
+    Selfish(NB_PLAYERS, nbArms, DiscountedThompson, gamma=0.99).children,
+    Selfish(NB_PLAYERS, nbArms, Monitored_IndexPolicy, horizon=HORIZON, w=WINDOW_SIZE, delta=DELTA_for_MUCB, policy=klUCB).children,
+    Selfish(NB_PLAYERS, nbArms, CUSUM_IndexPolicy, horizon=HORIZON, max_nb_random_events=NB_BREAK_POINTS, epsilon=EPSILON_for_CUSUM, policy=klUCB, lazy_detect_change_only_x_steps=20).children,
+    Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=True, delta=DELTA_LOCAL, alpha0=ALPHA_LOCAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
+    # Selfish(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=False, delta=DELTA_GLOBAL, alpha0=ALPHA_GLOBAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
 
     # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
     # [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
 
-    # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
+    # ---- Centralized multiple play
     # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCB).children,
     CentralizedMultiplePlay(NB_PLAYERS, nbArms, klUCB).children,
-    CentralizedMultiplePlay(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration).children,
+
+    # ---- TODO Selfish for algorithms specialized for non-stationary settings
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, OracleSequentiallyRestartPolicy, changePoints=CHANGE_POINTS, listOfMeans=LIST_OF_MEANS, policy=klUCB, reset_for_all_change=True, reset_for_suboptimal_change=False).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, DiscountedThompson, gamma=0.99).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, Monitored_IndexPolicy, horizon=HORIZON, w=WINDOW_SIZE, delta=DELTA_for_MUCB, policy=klUCB).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, CUSUM_IndexPolicy, horizon=HORIZON, max_nb_random_events=NB_BREAK_POINTS, epsilon=EPSILON_for_CUSUM, policy=klUCB, lazy_detect_change_only_x_steps=20).children,
+    CentralizedMultiplePlay(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=True, delta=DELTA_LOCAL, alpha0=ALPHA_LOCAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
+    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BernoulliGLR_IndexPolicy_WithDeterministicExploration, policy=klUCB_forGLR, per_arm_restart=False, delta=DELTA_GLOBAL, alpha0=ALPHA_GLOBAL, lazy_detect_change_only_x_steps=20, lazy_try_value_s_only_x_steps=20).children,
 
     # # FIXME how to chose the 5 parameters for MEGA policy ?
     # # XXX By trial and error??
@@ -611,9 +629,9 @@ configuration["successive_players"] = [
 
     # # XXX stupid version with fixed T0 : cannot adapt to any problem
     # [ MusicalChair(nbArms, Time0=1000) for _ in range(NB_PLAYERS) ],
-    [ MusicalChair(nbArms, Time0=50*NB_ARMS) for _ in range(NB_PLAYERS) ],
     [ MusicalChair(nbArms, Time0=100*NB_ARMS) for _ in range(NB_PLAYERS) ],
     [ MusicalChair(nbArms, Time0=150*NB_ARMS) for _ in range(NB_PLAYERS) ],
+    [ MusicalChair(nbArms, Time0=250*NB_ARMS) for _ in range(NB_PLAYERS) ],
     # # # XXX cheated version, with known gap (epsilon < Delta) and proba of success 5% !
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.5)) for _ in range(NB_PLAYERS) ],
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=0.1)) for _ in range(NB_PLAYERS) ],

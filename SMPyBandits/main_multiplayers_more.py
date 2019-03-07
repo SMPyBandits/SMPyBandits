@@ -64,15 +64,12 @@ normalized = True  #: Plot normalized regret?
 fairnessAmplitude = False  #: Use amplitude measure for the fairness or std?
 subTerms = True  #: Plot the 3 sub terms for the regret
 
-saveallfigs = False  #: Save all the figures ?
 saveallfigs = True  # XXX dont keep it like this
 
 #: Whether to do the plots for single experiments or not
-do_simple_plots = True
 do_simple_plots = False
 
 #: Whether to do the plots for comparison experiments or not
-do_comparison_plots = False
 do_comparison_plots = True
 
 if getenv('NOPLOTS', 'False') == 'True' and __name__ == '__main__':
@@ -194,17 +191,6 @@ if __name__ == '__main__':
                 else:
                     mkdir(plot_dir)
 
-                # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
-                # --- DONE Save just the configuration to a minimalist python file
-                # TODO do the same on other main_*.py scripts
-                save_configuration_for_reproducibility(
-                    configuration=configuration,
-                    configuration_module=configuration_module,
-                    plot_dir=plot_dir,
-                    hashvalue=hashvalue,
-                    main_name="main_multiplayers_more.py",
-                )
-
                 if USE_PICKLE:
                     with open(picklename, 'wb') as picklefile:
                         print("Saving the EvaluatorMultiPlayers 'evaluation' objet to", picklename, "...")
@@ -258,7 +244,7 @@ if __name__ == '__main__':
                 evaluation.plotRewards(envId)  # XXX To plot without saving
 
             # --- Also plotting the centralized fairness
-            for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+            for fairness in ['STD']:
                 print("\n\n- Plotting the centralized fairness (%s)" % fairness)
                 if saveallfigs:
                     savefig = mainfig.replace('main', 'main_Fairness%s' % fairness)
@@ -417,6 +403,17 @@ if __name__ == '__main__':
             if saveallfigs:
                 print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
 
+        # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
+        # --- DONE Save just the configuration to a minimalist python file
+        # TODO do the same on other main_*.py scripts
+        save_configuration_for_reproducibility(
+            configuration=configuration,
+            configuration_module=configuration_module,
+            plot_dir=plot_dir,
+            hashvalue=hashvalue,
+            main_name="main_multiplayers_more.py",
+        )
+
     #
     # Compare different MP strategies on the same figures
     #
@@ -513,7 +510,7 @@ if __name__ == '__main__':
             e0.plotRegretCentralized(envId, loglog=True, normalized=False, evaluators=eothers)  # XXX To plot without saving
 
         # --- Also plotting the fairness
-        for fairness in ['STD'] if savefig else ['Ampl', 'STD', 'RajJain', 'Mean']:
+        for fairness in ['STD']:
             savefig = mainfig.replace('all', 'all_Fairness%s' % fairness)
             print("\n\n- Plotting the centralized fairness (%s)" % fairness)
             if saveallfigs:

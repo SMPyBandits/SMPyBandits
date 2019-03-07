@@ -784,7 +784,7 @@ class Evaluator(object):
         """Plot the number of change-point detections of the different policies, as a box plot for each."""
         means, _, all_number_of_cp_detections = self.getNumberOfCPDetections(envId=envId)
         if np.max(means) == 0: return None
-        # order by increasing mean memory consumption
+        # order by increasing mean nb of change-point detection
         index_of_sorting = np.argsort(means)
         labels = [ policy.__cachedstr__ for policy in self.policies ]
         labels = [ labels[i] for i in index_of_sorting ]
@@ -837,7 +837,7 @@ class Evaluator(object):
                     last_regret /= np.log(self.horizon)
                 all_last_regrets.append(last_regret)
             means = [ np.mean(last_regrets) for last_regrets in all_last_regrets ]
-            # order by increasing mean memory consumption
+            # order by increasing mean regret
             index_of_sorting = np.argsort(means)
             labels = [ policy.__cachedstr__ for policy in self.policies ]
             labels = [ labels[i] for i in index_of_sorting ]
