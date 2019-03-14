@@ -186,7 +186,7 @@ def approximation_function_T_mathcal(x):
 
 
 def threshold_BernoulliGLR(t, horizon=None, delta=None, variant=None):
-    r""" Compute the value :math:`c from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+    r""" Compute the value :math:`c` from the corollary of of Theorem 2 from ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
 
     .. warning:: This is still experimental, you can try different variants of the threshold function:
 
@@ -204,7 +204,7 @@ def threshold_BernoulliGLR(t, horizon=None, delta=None, variant=None):
 
     - Variant #3 is using :math:`\tilde{\mathcal{T}}(x) = x + 4 \log(1 + x + \sqrt{2x})` an approximation of :math:`\mathcal{T}(x)` (valid and quite accurate as soon as :math:`x \geq 5`):
 
-    .. math:: \beta(t, \delta) := 2 \tilde{\mathcal{T}}(x)\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)).
+    .. math:: \beta(t, \delta) := 2 \tilde{\mathcal{T}}\left(\frac{\log(2 t^{3/2}) / \delta}{2}\right) + 6 \log(1 + \log(t)).
     """
     if delta is None:
         delta = 1.0 / sqrt(horizon)
@@ -220,8 +220,7 @@ def threshold_BernoulliGLR(t, horizon=None, delta=None, variant=None):
         elif variant == 3:
             c = 2 * approximation_function_T_mathcal(log(2 * t**(constant_power_function_h) / delta) / 2) + 6 * log(1 + log(t))
     else:
-            c = -log(delta) + (3/2) * log(t) + log(3)
-
+        c = -log(delta) + (3/2) * log(t) + log(3)
     if c < 0 or isinf(c):
         c = float('+inf')
     return c
@@ -363,7 +362,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         if "Sub" in class_name:
             name = "Sub{}-".format(name)
         with_tracking = "tracking" if "WithTracking" in class_name else ""
-        with_randomexploration = "random.explo." if "DeterministicExploration" not in class_name else ""
+        with_randomexploration = "random expl." if not with_tracking and "DeterministicExploration" not in class_name else ""
         variant = "" if self._variant is None else "threshold #{}".format(self._variant)
         args = ", ".join(s for s in [
             "Local" if self._per_arm_restart else "Global",
