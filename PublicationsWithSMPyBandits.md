@@ -4,7 +4,7 @@
 
 ----
 
-## 1st article, using the [**policy aggregation algorithm**](Aggregation.md)
+## 1st article, about [**policy aggregation algorithm (aka model selection)**](Aggregation.md)
 I designed and added the [`Aggregator`](https://smpybandits.github.io/docs/Policies.Aggregator.html) policy, in order to test its validity and performance.
 
 It is a "simple" **voting algorithm to combine multiple bandit algorithms into one**.
@@ -12,18 +12,18 @@ Basically, it behaves like a simple MAB bandit just based on empirical means (ev
 
 > **For more details**, refer to this file: [`Aggregation.md`](Aggregation.md) and [this research article](https://hal.inria.fr/hal-01705292).
 
-> PDF : [BKM_IEEEWCNC_2018.pdf](https://hal.inria.fr/hal-01705292/document) | HAL notice : [BKM_IEEEWCNC_2018](https://hal.inria.fr/hal-01705292/) | BibTeX : [BKM_IEEEWCNC_2018.bib](https://hal.inria.fr/hal-01705292/bibtex) | [Source code and documentation](Aggregation.html)
+> PDF : [BKM_IEEEWCNC_2018.pdf](https://hal.inria.fr/hal-01705292/document) | HAL notice : [BKM_IEEEWCNC_2018](https://hal.inria.fr/hal-01705292/) | BibTeX : [BKM_IEEEWCNC_2018.bib](https://hal.inria.fr/hal-01705292/bibtex) | [Source code and documentation](Aggregation.md)
 > [![Published](https://img.shields.io/badge/Published%3F-accepted-green.svg)](https://hal.inria.fr/hal-01705292)  [![Maintenance](https://img.shields.io/badge/Maintained%3F-finished-green.svg)](https://bitbucket.org/lbesson/aggregation-of-multi-armed-bandits-learning-algorithms-for/commits/)  [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
 
 ----
 
-## 2nd article, using [**Multi-players simulation environment**](MultiPlayers.md)
+## 2nd article, about [**Multi-players Multi-Armed Bandits**](MultiPlayers.md)
 There is another point of view: instead of comparing different single-player policies on the same problem, we can make them play against each other, in a multi-player setting.
 The basic difference is about **collisions** : at each time `t`, if two or more user chose to sense the same channel, there is a *collision*. Collisions can be handled in different way from the base station point of view, and from each player point of view.
 
 > **For more details**, refer to this file: [`MultiPlayers.md`](MultiPlayers.md) and [this research article](https://hal.inria.fr/hal-01629733).
 
-> PDF : [BK__ALT_2018.pdf](https://hal.inria.fr/hal-01629733/document) | HAL notice : [BK__ALT_2018](https://hal.inria.fr/hal-01629733/) | BibTeX : [BK__ALT_2018.bib](https://hal.inria.fr/hal-01629733/bibtex) | [Source code and documentation](MultiPlayers.html)
+> PDF : [BK__ALT_2018.pdf](https://hal.inria.fr/hal-01629733/document) | HAL notice : [BK__ALT_2018](https://hal.inria.fr/hal-01629733/) | BibTeX : [BK__ALT_2018.bib](https://hal.inria.fr/hal-01629733/bibtex) | [Source code and documentation](MultiPlayers.md)
 > [![Published](https://img.shields.io/badge/Published%3F-accepted-green.svg)](http://www.cs.cornell.edu/conferences/alt2018/index.html#accepted)  [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://bitbucket.org/lbesson/multi-player-bandits-revisited/commits/)  [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
 
 ----
@@ -33,8 +33,18 @@ I studied what Doubling Trick can and can't do to obtain efficient anytime versi
 
 > **For more details**, refer to this file: [`DoublingTrick.md`](DoublingTrick.md) and [this research article](https://hal.inria.fr/hal-01736357).
 
-> PDF : [BK__ALT_2018.pdf](https://hal.inria.fr/hal-01736357/document) | HAL notice : [BK__ALT_2018](https://hal.inria.fr/hal-01736357/) | BibTeX : [BK__ALT_2018.bib](https://hal.inria.fr/hal-01736357/bibtex) | [Source code and documentation](MultiPlayers.html)
+> PDF : [BK__DoublingTricks_2018.pdf](https://hal.inria.fr/hal-01736357/document) | HAL notice : [BK__DoublingTricks_2018](https://hal.inria.fr/hal-01736357/) | BibTeX : [BK__DoublingTricks_2018.bib](https://hal.inria.fr/hal-01736357/bibtex) | [Source code and documentation](DoublingTrick.md)
 > [![Published](https://img.shields.io/badge/Published%3F-waiting-orange.svg)](https://hal.inria.fr/hal-01736357) [![Maintenance](https://img.shields.io/badge/Maintained%3F-almost%20finished-orange.svg)](https://bitbucket.org/lbesson/what-doubling-tricks-can-and-cant-do-for-multi-armed-bandits/commits/) [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
+
+----
+
+## 4th article, about [**Piece-Wise Stationary Multi-Armed Bandits**](NonStationaryBandits.md)
+With Emilie Kaufmann, we studied the Generalized Likelihood Ratio Test (GLRT) for sub-Bernoulli distributions, and proposed the B-GLRT algorithm for change-point detection for piece-wise stationary one-armed bandit problems. We combined the B-GLRT with the kl-UCB multi-armed bandit algorithm and proposed the GLR-klUCB algorithm for piece-wise stationary multi-armed bandit problems. We prove finite-time guarantees for the B-GLRT and the GLR-klUCB algorithm, and we illustrate its performance with extensive numerical experiments.
+
+> **For more details**, refer to this file: [`NonStationaryBandits.md`](NonStationaryBandits.md) and [this research article](https://hal.inria.fr/hal-02006471).
+
+> PDF : [BK__COLT_2019.pdf](https://hal.inria.fr/hal-02006471/document) | HAL notice : [BK__COLT_2019](https://hal.inria.fr/hal-02006471/) | BibTeX : [BK__COLT_2019.bib](https://hal.inria.fr/hal-02006471/bibtex) | [Source code and documentation](NonStationaryBandits.html)
+> [![Published](https://img.shields.io/badge/Published%3F-waiting-orange.svg)](https://hal.inria.fr/hal-02006471) [![Maintenance](https://img.shields.io/badge/Maintained%3F-almost%20finished-orange.svg)](https://bitbucket.org/lbesson/combining-the-generalized-likelihood-ratio-test-and-kl-ucb-for/commits/) [![Ask Me Anything !](https://img.shields.io/badge/Ask%20me-anything-1abc9c.svg)](https://bitbucket.org/lbesson/ama)
 
 ----
 
