@@ -52,11 +52,12 @@ __version__ = "0.9"
 import os
 from linecache import getline
 
+HAS_resource = False
 try:
     import resource
+    HAS_resource = True
 except ImportError as e:
-    print("ERROR: 'resource' module not available, but it is in the standard library.\nHave you messed up your Python installation?\nPlease submit a new bug on https://github.com/SMPyBandits/SMPyBandits/issues/new")  # DEBUG
-    raise e
+    print("ERROR: 'resource' module not available, but it is in the standard library.\nHave you messed up your Python installation?\nAre you on Windows? In this case, it's okay.\nPlease submit a new bug on https://github.com/SMPyBandits/SMPyBandits/issues/new")  # DEBUG
 
 
 def getCurrentMemory(thread=False, both=False):
@@ -81,8 +82,12 @@ def getCurrentMemory(thread=False, both=False):
     .. warning:: This is still experimental for multi-threaded code.
     .. warning:: It can break on some systems, see for instance [the issue #142](https://github.com/SMPyBandits/SMPyBandits/issues/142).
 
-    .. warning:: FIXME even on my own system,, it works for the *last* few policies I test, but fails for the first??
+    .. warning:: FIXME even on my own system, it works for the *last* few policies I test, but fails for the first??
+
+    .. warning:: This returns 0 on Microsoft Windows, because the :mod:`resource` module is not available on non-UNIX systems (see https://docs.python.org/3/library/unix.html).
     """
+    if not HAS_resource:
+        return 0
     if thread:
         try:
             # https://docs.python.org/3/library/resource.html#resource.RUSAGE_THREAD
