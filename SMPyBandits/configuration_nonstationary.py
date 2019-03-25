@@ -569,32 +569,32 @@ configuration.update({
     #     # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
     #     { "archtype": Thompson, "params": { "posterior": Beta, }, "change_label": "Thompson Sampling" },
     # ] +
-    # # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
-    # [
-    #     { "archtype": OracleSequentiallyRestartPolicy, "params": {
-    #         "changePoints": CHANGE_POINTS,
-    #         "listOfMeans": LIST_OF_MEANS,
-    #         "policy": policy,
-    #         # "per_arm_restart": per_arm_restart,
-    #         "reset_for_all_change": reset_for_all_change,
-    #         "reset_for_suboptimal_change": reset_for_suboptimal_change,
-    #         # "full_restart_when_refresh": full_restart_when_refresh,
-    #     } }
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #         # Thompson,  # XXX comment to only test klUCB
-    #         # Exp3PlusPlus,  # XXX comment to only test klUCB
-    #     ]
-    #     # for per_arm_restart in [True, False]
-    #     # for full_restart_when_refresh in [True, False]
-    #     for reset_for_all_change, reset_for_suboptimal_change in [
-    #         (True,  False),  # optimal
-    #         # (True,  True),  # sub sub optimal
-    #         # (False, True),  # ? optimal
-    #         # (False, False),  # sub optimal
-    #     ]
-    # ] +
+    # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
+    [
+        { "archtype": OracleSequentiallyRestartPolicy, "params": {
+            "changePoints": CHANGE_POINTS,
+            "listOfMeans": LIST_OF_MEANS,
+            "policy": policy,
+            # "per_arm_restart": per_arm_restart,
+            "reset_for_all_change": reset_for_all_change,
+            "reset_for_suboptimal_change": reset_for_suboptimal_change,
+            # "full_restart_when_refresh": full_restart_when_refresh,
+        } }
+        for policy in [
+            UCB,  # XXX comment to only test klUCB
+            klUCB,
+            # Thompson,  # XXX comment to only test klUCB
+            # Exp3PlusPlus,  # XXX comment to only test klUCB
+        ]
+        # for per_arm_restart in [True, False]
+        # for full_restart_when_refresh in [True, False]
+        for reset_for_all_change, reset_for_suboptimal_change in [
+            (True,  False),  # optimal
+            # (True,  True),  # sub sub optimal
+            # (False, True),  # ? optimal
+            # (False, False),  # sub optimal
+        ]
+    ] +
     # TODO How does the Exp3S algorithm work??
     [
         { "archtype": Exp3S, "params": {
@@ -603,10 +603,10 @@ configuration.update({
             "alpha0": alpha0,
             "gamma0": gamma0,
         } }
-        for alpha0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
-        # for alpha0 in [50, 1, 0.05]  # try different values for alpha, but using the formula, just a constant scaling
-        for gamma0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
-        # for gamma0 in [50, 1, 0.05]  # try different values for alpha, but using the formula, just a constant scaling
+        # for alpha0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
+        for alpha0 in [100, 50, 1]  # try different values for alpha, but using the formula, just a constant scaling
+        # for gamma0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
+        for gamma0 in [10, 1, 0.01]  # try different values for alpha, but using the formula, just a constant scaling
     ] +
     # The Exp3R algorithm works reasonably well
     [
@@ -694,7 +694,9 @@ configuration.update({
             "horizon": HORIZON,
             "w": w,
             "delta": DELTA_for_MUCB,
-        }, "change_label": "M-klUCB", }
+        },
+            # "change_label": "M-klUCB",
+        }
         # for per_arm_restart in PER_ARM_RESTART
         for policy in [
             UCB,
@@ -713,7 +715,7 @@ configuration.update({
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "epsilon": EPSILON_for_CUSUM,
         },
-        "change_label": "CUSUM-klUCB",
+            # "change_label": "CUSUM-klUCB",
         }
         for archtype in [
             CUSUM_IndexPolicy,
@@ -797,7 +799,8 @@ configuration.update({
         for archtype, archname in [
             # (BernoulliGLR_IndexPolicy, "random expl."),   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
             # (BernoulliGLR_IndexPolicy_WithTracking, "tracking"),   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
-            (BernoulliGLR_IndexPolicy_WithDeterministicExploration, "determ.expl."),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
+            # (BernoulliGLR_IndexPolicy_WithDeterministicExploration, "determ.expl."),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient  XXX use this if using other exploration mechanisms XXX
+            (BernoulliGLR_IndexPolicy_WithDeterministicExploration, ""),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
