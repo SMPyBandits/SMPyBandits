@@ -5,7 +5,7 @@ rankdir=BT
 "1" [label="{SMPyBandits.Arms.Bernoulli.Bernoulli|lower_amplitude\lmean\lprobability\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneLR()\l}", shape="record"];
 "2" [label="{SMPyBandits.Arms.Binomial.Binomial|draws : int\llower_amplitude\lmean\lprobability\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneLR()\l}", shape="record"];
 "3" [label="{SMPyBandits.Arms.Constant.Constant|amplitude : float\lconstant_reward : float\llower\lmean : float\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneLR()\l}", shape="record"];
-"4" [label="{SMPyBandits.Arms.DiscreteArm.DiscreteArm|_amplitude\l_items : list\l_lower\l_probabilities : recarray, list\l_values : list, recarray\l_values_to_proba\llower_amplitude\lmean\lsize\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneLR()\l}", shape="record"];
+"4" [label="{SMPyBandits.Arms.DiscreteArm.DiscreteArm|_amplitude\l_items : list\l_lower\l_probabilities : list, recarray\l_values : list, recarray\l_values_to_proba\llower_amplitude\lmean\lsize\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneLR()\l}", shape="record"];
 "5" [label="{SMPyBandits.Arms.Exponential.Exponential|lower_amplitude\lmean\lp\ltrunc : int\l|__init__()\l__repr__()\l__str__()\ldraw()\ldraw_nparray()\lkl()\loneHOI()\loneLR()\l}", shape="record"];
 "6" [label="{SMPyBandits.Arms.Exponential.ExponentialFromMean|\l|__init__()\l}", shape="record"];
 "7" [label="{SMPyBandits.Arms.Exponential.UnboundedExponential|\l|__init__()\l}", shape="record"];
