@@ -600,13 +600,13 @@ configuration.update({
         { "archtype": Exp3S, "params": {
             "horizon": HORIZON,
             "max_nb_random_events": NB_BREAK_POINTS,
-            "alpha0": alpha0,
-            "gamma0": gamma0,
+            # "alpha0": alpha0,
+            # "gamma0": gamma0,
         } }
         # for alpha0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
-        for alpha0 in [100, 50, 1]  # try different values for alpha, but using the formula, just a constant scaling
+        # # for alpha0 in [100, 50, 1]  # try different values for alpha, but using the formula, just a constant scaling
         # for gamma0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
-        for gamma0 in [10, 1, 0.01]  # try different values for alpha, but using the formula, just a constant scaling
+        # # for gamma0 in [10, 1, 0.01]  # try different values for alpha, but using the formula, just a constant scaling
     ] +
     # The Exp3R algorithm works reasonably well
     [
@@ -756,10 +756,10 @@ configuration.update({
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
         } }
         for archtype in [
-            # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-            # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
             GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
-            # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
