@@ -134,7 +134,7 @@ TL;DR: this short bash snippet shows how to clone the code, install the requirem
 
 ```bash
 cd /tmp/  # or wherever you want
-git clone https://GitHub.com/SMPyBandits/SMPyBandits.git
+git clone -c core.symlinks=true https://GitHub.com/SMPyBandits/SMPyBandits.git
 cd SMPyBandits
 # just be sure you have the latest virtualenv from Python 3
 sudo pip3 install --upgrade --force-reinstall virtualenv
