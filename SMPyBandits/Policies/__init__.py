@@ -194,6 +194,7 @@ from .CUSUM_UCB import CUSUM_IndexPolicy, PHT_IndexPolicy
 from .GLR_UCB import GLR_IndexPolicy, GLR_IndexPolicy_WithTracking, GLR_IndexPolicy_WithDeterministicExploration, GaussianGLR_IndexPolicy, BernoulliGLR_IndexPolicy, GaussianGLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy_WithTracking, GaussianGLR_IndexPolicy_WithDeterministicExploration, BernoulliGLR_IndexPolicy_WithDeterministicExploration, SubGaussianGLR_IndexPolicy
 
 from .Exp3R import Exp3R, Exp3RPlusPlus
+from .Exp3S import Exp3S
 from .Monitored_UCB import Monitored_IndexPolicy
 from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy
 from .AdSwitch import AdSwitch

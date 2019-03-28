@@ -110,9 +110,12 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',  # http://www.sphinx-doc.org/en/stable/ext/intersphinx.html
-    # From https://nbsphinx.readthedocs.io/
-    'nbsphinx',
 ]
+if not on_rtd:
+    extensions += [
+        # From https://nbsphinx.readthedocs.io/
+        'nbsphinx',
+    ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 r""" The Drift-Detection algorithm for non-stationary bandits.
 
-- Reference:  [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
-- It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`CUSUM_IndexPolicy` is a wrapper:
+- Reference: [["EXP3 with Drift Detection for the Switching Bandit Problem", Robin Allesiardo & Raphael Feraud]](https://www.researchgate.net/profile/Allesiardo_Robin/publication/281028960_EXP3_with_Drift_Detection_for_the_Switching_Bandit_Problem/links/55d1927808aee19936fdac8e.pdf)
+- It runs on top of a simple policy like :class:`Exp3`, and :class:`DriftDetection_IndexPolicy` is a wrapper:
 
-    >>> policy = Exp3R(nbArms, C=1)
+    >>> policy = DriftDetection_IndexPolicy(nbArms, C=1)
     >>> # use policy as usual, with policy.startGame(), r = policy.choice(), policy.getReward(arm, r)
 
 - It uses an additional :math:`\mathcal{O}(\tau_\max)` memory for a game of maximum stationary length :math:`\tau_\max`.
 
-.. warning:: It can only work on basic index policy based on empirical averages (and an exploration bias), like :class:`UCB`, and cannot work on any Bayesian policy (for which we would have to remember all previous observations in order to reset the history with a small history)!
+.. warning:: It works on :class:`Exp3` or other parametrizations of the Exp3 policy, e.g., :class:`Exp3PlusPlus`.
 """
 from __future__ import division, print_function  # Python 2 compatibility
 

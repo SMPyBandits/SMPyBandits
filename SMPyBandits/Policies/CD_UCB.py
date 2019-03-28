@@ -118,7 +118,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
 
         should_you_try_to_detect = (self.last_pulls[arm] % self.lazy_detect_change_only_x_steps) == 0
         if should_you_try_to_detect and self.detect_change(arm):
-            # print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.mean(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
+            # print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.sum(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms

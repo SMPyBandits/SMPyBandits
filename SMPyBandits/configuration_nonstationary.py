@@ -528,47 +528,47 @@ ALPHA_LOCAL = ALPHA_T_UpsilonT_K
 
 configuration.update({
     "policies":
-    # [  # XXX Regular adversarial bandits algorithms!
-    #     # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
-    #     { "archtype": Exp3PlusPlus, "params": {} },
+    # # [  # XXX Regular adversarial bandits algorithms!
+    # #     # { "archtype": Exp3WithHorizon, "params": { "horizon": HORIZON, } },
+    # #     { "archtype": Exp3PlusPlus, "params": {} },
+    # # ] +
+    # # [
+    # #     # --- TsallisInf algorithm
+    # #     {
+    # #         "archtype": TsallisInf,
+    # #         "params": {
+    # #             "alpha": 0.5,
+    # #         }
+    # #     },
+    # #     # --- RCB algorithm
+    # #     {
+    # #         "archtype": RCB,
+    # #         "params": {
+    # #             "alpha": 1.,
+    # #             "perturbation": "uniform",  # like UCB?
+    # #         }
+    # #     },
+    # #     # --- PHE algorithm
+    # #     {
+    # #         "archtype": PHE,
+    # #         "params": {
+    # #             "perturbation_scale": 1.1,
+    # #         }
+    # #     },
+    # # ] +
+    # [  # XXX Regular stochastic bandits algorithms!
+    #     # # { "archtype": Uniform, "params": { } },
+    #     # # { "archtype": EmpiricalMeans, "params": { } },
+    #     # # { "archtype": UCBalpha, "params": { "alpha": 1, } },
+    #     # { "archtype": UCB, "params": { } },
+    #     # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
+    #     # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
+    #     # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
+    #     # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
+    #     { "archtype": klUCB, "params": { "klucb": klucb, }, "change_label": "klUCB", },
+    #     # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
+    #     { "archtype": Thompson, "params": { "posterior": Beta, }, "change_label": "Thompson Sampling" },
     # ] +
-    # [
-    #     # --- TsallisInf algorithm
-    #     {
-    #         "archtype": TsallisInf,
-    #         "params": {
-    #             "alpha": 0.5,
-    #         }
-    #     },
-    #     # --- RCB algorithm
-    #     {
-    #         "archtype": RCB,
-    #         "params": {
-    #             "alpha": 1.,
-    #             "perturbation": "uniform",  # like UCB?
-    #         }
-    #     },
-    #     # --- PHE algorithm
-    #     {
-    #         "archtype": PHE,
-    #         "params": {
-    #             "perturbation_scale": 1.1,
-    #         }
-    #     },
-    # ] +
-    [  # XXX Regular stochastic bandits algorithms!
-        # # { "archtype": Uniform, "params": { } },
-        # # { "archtype": EmpiricalMeans, "params": { } },
-        # # { "archtype": UCBalpha, "params": { "alpha": 1, } },
-        # { "archtype": UCB, "params": { } },
-        # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
-        # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
-        # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
-        # { "archtype": AdBandits, "params": { "alpha": 1, "horizon": HORIZON, } },
-        { "archtype": klUCB, "params": { "klucb": klucb, }, "change_label": "klUCB", },
-        # { "archtype": SWR_klUCB, "params": { "klucb": klucb, } },  # WARNING experimental!
-        { "archtype": Thompson, "params": { "posterior": Beta, }, "change_label": "Thompson Sampling" },
-    ] +
     # DONE the OracleSequentiallyRestartPolicy with klUCB/UCB policy works quite well, but NOT optimally!
     [
         { "archtype": OracleSequentiallyRestartPolicy, "params": {
@@ -581,7 +581,7 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            # UCB,  # XXX comment to only test klUCB
+            UCB,  # XXX comment to only test klUCB
             klUCB,
             # Thompson,  # XXX comment to only test klUCB
             # Exp3PlusPlus,  # XXX comment to only test klUCB
@@ -595,84 +595,97 @@ configuration.update({
             # (False, False),  # sub optimal
         ]
     ] +
-    # # The Exp3R algorithm works reasonably well
-    # [
-    #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-    # ] +
-    # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
-    # [
-    #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
-    # ] +
-    # [
-    #     # --- # Different versions of the discounted UCB algorithm
-    #     { "archtype": DiscountedklUCB, "params": {
-    #         "gamma": gamma,
-    #         # "alpha": alpha,
-    #         # "useRealDiscount": useRealDiscount,
-    #     } }
-    #     for gamma in GAMMAS
-    #     # for alpha in ALPHAS
-    #     # for useRealDiscount in [True, False]
-    # ] +
-    # [
-    #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
-    #     { "archtype": DiscountedklUCBPlus, "params": { "max_nb_random_events": NB_BREAK_POINTS, "horizon": HORIZON, } }
-    # ] +
-    # [
-    #     # --- # XXX experimental sliding window algorithm
-    #     { "archtype": SlidingWindowRestart, "params": {
-    #         "policy": policy,
-    #         "tau": tau,
-    #         "threshold": eps,
-    #         "full_restart_when_refresh": True,
-    #         },
-    #         "change_label": r"SW-klUCB"
-    #     }
-    #     for tau in TAUS
-    #     for eps in EPSS
-    #     for policy in [klUCB]
-    # ] +
-    # [
-    #     # --- # Different versions of the sliding window UCB algorithm
-    #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
-    #     for alpha in ALPHAS for tau in TAUS
-    # ] +
-    # [
-    #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
-    #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
-    #     for alpha in ALPHAS
-    # ] +
+    # TODO How does the Exp3S algorithm work??
     [
-        # --- # Different versions of the sliding window klUCB algorithm
-        { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
-        for tau in TAUS
+        { "archtype": Exp3S, "params": {
+            "horizon": HORIZON,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            # "alpha0": alpha0,
+            # "gamma0": gamma0,
+        } }
+        # for alpha0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
+        # # for alpha0 in [100, 50, 1]  # try different values for alpha, but using the formula, just a constant scaling
+        # for gamma0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
+        # # for gamma0 in [10, 1, 0.01]  # try different values for alpha, but using the formula, just a constant scaling
     ] +
-    [  # XXX DiscountedThompson works REALLY well!
-        {
-            "archtype": DiscountedThompson,
-            "params": { "posterior": DiscountedBeta, "gamma": gamma, },
-            "change_label": "DTS",
-        }
-        for gamma in GAMMAS
+    # The Exp3R algorithm works reasonably well
+    [
+        { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
     ] +
-    # # [  # XXX test the AdSwitch policy and its corrected version
-    # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-    # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # # ] +
-    # # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    # # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
     # # [
-    # #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-    # #     # XXX note that for a fixed T it means nothing…
-    # #     # XXX But for T=10000 it is at most 100 changes, reasonable!
-    # #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+    # #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
     # # ] +
-    # # DONE The SW_UCB_Hash algorithm works fine!
+    # # [
+    # #     # --- # Different versions of the discounted UCB algorithm
+    # #     { "archtype": DiscountedklUCB, "params": {
+    # #         "gamma": gamma,
+    # #         # "alpha": alpha,
+    # #         # "useRealDiscount": useRealDiscount,
+    # #     } }
+    # #     for gamma in GAMMAS
+    # #     # for alpha in ALPHAS
+    # #     # for useRealDiscount in [True, False]
+    # # ] +
+    # # [
+    # #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
+    # #     { "archtype": DiscountedklUCBPlus, "params": { "max_nb_random_events": NB_BREAK_POINTS, "horizon": HORIZON, } }
+    # # ] +
+    # # [
+    # #     # --- # XXX experimental sliding window algorithm
+    # #     { "archtype": SlidingWindowRestart, "params": {
+    # #         "policy": policy,
+    # #         "tau": tau,
+    # #         "threshold": eps,
+    # #         "full_restart_when_refresh": True,
+    # #         },
+    # #         "change_label": r"SW-klUCB"
+    # #     }
+    # #     for tau in TAUS
+    # #     for eps in EPSS
+    # #     for policy in [klUCB]
+    # # ] +
+    # # [
+    # #     # --- # Different versions of the sliding window UCB algorithm
+    # #     { "archtype": SWUCB, "params": { "alpha": alpha, "tau": tau, } }
+    # #     for alpha in ALPHAS for tau in TAUS
+    # # ] +
+    # # [
+    # #     # --- # XXX experimental other version of the sliding window algorithm, knowing the horizon
+    # #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
+    # #     for alpha in ALPHAS
+    # # ] +
     # [
-    #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-    #     for alpha in ALPHAS
-    #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+    #     # --- # Different versions of the sliding window klUCB algorithm
+    #     { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
+    #     for tau in TAUS
     # ] +
+    # [  # XXX DiscountedThompson works REALLY well!
+    #     {
+    #         "archtype": DiscountedThompson,
+    #         "params": { "posterior": DiscountedBeta, "gamma": gamma, },
+    #         "change_label": "DTS",
+    #     }
+    #     for gamma in GAMMAS
+    # ] +
+    # # # [  # XXX test the AdSwitch policy and its corrected version
+    # # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
+    # # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    # # #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    # # # ] +
+    # # # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    # # # [
+    # # #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+    # # #     # XXX note that for a fixed T it means nothing…
+    # # #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+    # # #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+    # # # ] +
+    # # # DONE The SW_UCB_Hash algorithm works fine!
+    # # [
+    # #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
+    # #     for alpha in ALPHAS
+    # #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+    # # ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": {
@@ -681,10 +694,12 @@ configuration.update({
             "horizon": HORIZON,
             "w": w,
             "delta": DELTA_for_MUCB,
-        }, "change_label": "M-klUCB", }
+        },
+            # "change_label": "M-klUCB",
+        }
         # for per_arm_restart in PER_ARM_RESTART
         for policy in [
-            # UCB,
+            UCB,
             klUCB,  # XXX comment to only test UCB
         ]
         # for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
@@ -700,59 +715,61 @@ configuration.update({
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "epsilon": EPSILON_for_CUSUM,
         },
-        "change_label": "CUSUM-klUCB",
+            # "change_label": "CUSUM-klUCB",
         }
         for archtype in [
             CUSUM_IndexPolicy,
             # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
         ]
         for policy in [
-            # UCB,  # XXX comment to only test klUCB
+            UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
+        # for lazy_detect_change_only_x_steps in [1]
         for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
     ] +
-    # # XXX Test a UCBLCB_IndexPolicy algorithm
-    # [
-    #     { "archtype": UCBLCB_IndexPolicy, "params": {
-    #         "policy": policy,
-    #         # "delta0": delta0,
-    #         # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-    #         # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
-    #     } }
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #     ]
-    #     # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
-    #     # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
-    #     # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
-    # ] +
-    # # XXX Test GaussianGLR_IndexPolicy
-    # [
-    #     { "archtype": archtype, "params": {
-    #         "horizon": HORIZON,
-    #         "policy": policy,
-    #         "per_arm_restart": per_arm_restart,
-    #         "max_nb_random_events": NB_BREAK_POINTS,
-    #         # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-    #         # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
-    #     } }
-    #     for archtype in [
-    #         # GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-    #         # GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-    #         GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
-    #         # SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-    #     ]
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #     ]
-    #     for per_arm_restart in PER_ARM_RESTART
-    #     # for lazy_detect_change_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
-    #     # for lazy_try_value_s_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
-    # ] +
+    # # # XXX Test a UCBLCB_IndexPolicy algorithm
+    # # [
+    # #     { "archtype": UCBLCB_IndexPolicy, "params": {
+    # #         "policy": policy,
+    # #         # "delta0": delta0,
+    # #         # "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+    # #         # "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+    # #     } }
+    # #     for policy in [
+    # #         # UCB,  # XXX comment to only test klUCB
+    # #         klUCB,
+    # #     ]
+    # #     # for delta0 in [10, 1, 0.1, 0.001]  # comment to use default parameter
+    # #     # for lazy_detect_change_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
+    # #     # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
+    # # ] +
+    # XXX Test GaussianGLR_IndexPolicy
+    [
+        { "archtype": archtype, "params": {
+            "horizon": HORIZON,
+            "policy": policy,
+            "per_arm_restart": per_arm_restart,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+        } }
+        for archtype in [
+            GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+            SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        for per_arm_restart in PER_ARM_RESTART
+        # for lazy_detect_change_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+        # for lazy_try_value_s_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+        for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
+    ] +
     # XXX Test BernoulliGLR_IndexPolicy
     [
         { "archtype": archtype, "params": {
@@ -760,46 +777,60 @@ configuration.update({
             "policy": policy,
             "per_arm_restart": per_arm_restart,
             # "max_nb_random_events": NB_BREAK_POINTS,
+            # "delta": delta0 * delta,
             "delta": delta,
-            "alpha0": alpha0,
+            "alpha0": mult_alpha0 * alpha0,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
         },
-        "change_label": r"GLR-klUCB({})".format(
+        "change_label": r"GLR-klUCB({})".format(", ".join(s for s in [
             "Local" if per_arm_restart else "Global",
+            archname,
+            # "threshold #{}".format(variant),
             # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
-            # r"\delta={:.3g}".format(delta),
-            # r"\alpha_0={:.3g}".format(alpha0),
-            # ", $\Delta n={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
-            # ", $\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
-        )
+            # r"$\delta={:.3g}$".format(delta),
+            # r"$\alpha_0={:.3g}$".format(alpha0),
+            r"$\alpha_0={:.3g}$".format(mult_alpha0),
+            # # "$\Delta n={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
+            # # "$\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
+        ] if s))
         }
-        for archtype in [
-            # BernoulliGLR_IndexPolicy,   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
-            # BernoulliGLR_IndexPolicy_WithTracking,   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
-            BernoulliGLR_IndexPolicy_WithDeterministicExploration,   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
+        for archtype, archname in [
+            # (BernoulliGLR_IndexPolicy, "random expl."),   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
+            # (BernoulliGLR_IndexPolicy_WithTracking, "tracking"),   # OK GaussianGLR_IndexPolicy_WithTracking is very much like Bernoulli GLR and is more efficient
+            # (BernoulliGLR_IndexPolicy_WithDeterministicExploration, "determ.expl."),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient  XXX use this if using other exploration mechanisms XXX
+            (BernoulliGLR_IndexPolicy_WithDeterministicExploration, ""),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [
             # UCB,  # XXX comment to only test klUCB
             # klUCB,
             klUCB_forGLR,
         ]
+        # for (per_arm_restart, delta, alpha0) in zip(
+        #     [True],
+        #     [DELTA_LOCAL],
+        #     [ALPHA_LOCAL],
+        # )
+        # for (per_arm_restart, delta, alpha0) in zip(
+        #     [False],
+        #     [DELTA_GLOBAL],
+        #     [ALPHA_GLOBAL],
+        # )
         for (per_arm_restart, delta, alpha0) in zip(
             [True, False],
             [DELTA_LOCAL, DELTA_GLOBAL],
             [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
-        # # for per_arm_restart in PER_ARM_RESTART
-        # for per_arm_restart in [True, False]
-        # # for delta in [None] #+ [0.1, 0.05, 0.001]  # comment from the + to use default parameter
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
-        # # for alpha0 in [None] #+ [0.1, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
         # for alpha0 in [ALPHA_1]  # XXX experimental!
+        for mult_alpha0 in [1]  # comment from the + to use default parameter
         # for alpha0 in [1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0]  # comment from the + to use default parameter
+        # for delta0 in [1000, 500, 100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001]  # comment from the + to use default parameter
         # for lazy_detect_change_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
         # for lazy_try_value_s_only_x_steps in [1, 5, 10, 20]  # XXX uncomment to use default value
         # for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(1, 1), (10, 10)]
+        # for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(1, 1)]
         for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
         # for variant in [None, 1, 2, 3]  # XXX variant for the threshold function...
     ] +

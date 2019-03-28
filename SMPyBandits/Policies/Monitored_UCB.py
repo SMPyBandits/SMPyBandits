@@ -109,6 +109,7 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         # Internal memory
         self.last_w_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the times where each arm was last seen. Start with -1 (never seen)
+        self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
 
     def __str__(self):
         args = "{}{}".format("$w={:g}$".format(self.window_size) if self.window_size != WINDOW_SIZE else "", "" if self._per_arm_restart else ", Global")
@@ -161,15 +162,17 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         self.last_w_rewards[arm].append(reward)
 
         if self.detect_change(arm):
-            # print("For a player {} a change was detected at time {} for arm {} after seeing reward = {}!".format(self, self.t, arm, reward))  # DEBUG
+            # print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.sum(self.last_w_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
             self.last_update_time_tau = self.t
 
             if not self._per_arm_restart:
                 # or reset current memory for ALL THE arms
                 for other_arm in range(self.nbArms):
+                    self.last_restart_times[other_arm] = self.t
                     self.last_pulls[other_arm] = 0
                     self.last_w_rewards[other_arm] = []
             # reset current memory for THIS arm
+            self.last_restart_times[arm] = self.t
             self.last_pulls[arm] = 1
             self.last_w_rewards[arm] = [reward]
 
