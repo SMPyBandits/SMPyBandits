@@ -403,16 +403,16 @@ if __name__ == '__main__':
             if saveallfigs:
                 print("\n\n==> To see the figures, do :\neog", os.path.join(plot_dir, "main*{}.png".format(hashvalue)))  # DEBUG
 
-        # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
-        # --- DONE Save just the configuration to a minimalist python file
-        # TODO do the same on other main_*.py scripts
-        save_configuration_for_reproducibility(
-            configuration=configuration,
-            configuration_module=configuration_module,
-            plot_dir=plot_dir,
-            hashvalue=hashvalue,
-            main_name="main_multiplayers_more.py",
-        )
+            # --- DONE Copy (save) the current full configuration file to this folder as configuration__hashvalue.py
+            # --- DONE Save just the configuration to a minimalist python file
+            # TODO do the same on other main_*.py scripts
+            save_configuration_for_reproducibility(
+                configuration=configuration,
+                configuration_module=configuration_module,
+                plot_dir=plot_dir,
+                hashvalue=hashvalue,
+                main_name="main_multiplayers_more.py",
+            )
 
     #
     # Compare different MP strategies on the same figures

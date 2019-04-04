@@ -581,7 +581,7 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             klUCB,
             # Thompson,  # XXX comment to only test klUCB
             # Exp3PlusPlus,  # XXX comment to only test klUCB
@@ -699,7 +699,7 @@ configuration.update({
         }
         # for per_arm_restart in PER_ARM_RESTART
         for policy in [
-            UCB,
+            # UCB,
             klUCB,  # XXX comment to only test UCB
         ]
         # for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
@@ -722,7 +722,7 @@ configuration.update({
             # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
         ]
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]

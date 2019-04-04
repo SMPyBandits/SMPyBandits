@@ -263,6 +263,7 @@ configuration["successive_players"] = [
     rhoRand(NB_PLAYERS, nbArms, UCB).children,
     rhoRand(NB_PLAYERS, nbArms, klUCB).children,
     # rhoRand(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    rhoRand(NB_PLAYERS, nbArms, BESA).children,
     # # [ Aggregator(nbArms, children=[  # XXX Not efficient!
     # #         lambda: rhoRand(1 + x, nbArms, klUCB).children[0]
     # #         for x in range(NB_ARMS)
@@ -283,6 +284,7 @@ configuration["successive_players"] = [
     RandTopM(NB_PLAYERS, nbArms, UCB).children,
     RandTopM(NB_PLAYERS, nbArms, klUCB).children,
     # RandTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    RandTopM(NB_PLAYERS, nbArms, BESA).children,
     # # RandTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # # RandTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -300,7 +302,7 @@ configuration["successive_players"] = [
     MCTopM(NB_PLAYERS, nbArms, UCB).children,
     MCTopM(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopM(NB_PLAYERS, nbArms, EmpiricalMeans).children,
-    # MCTopM(NB_PLAYERS, nbArms, BESA).children,
+    MCTopM(NB_PLAYERS, nbArms, BESA).children,
     # MCTopMCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMExtraCautious(NB_PLAYERS, nbArms, klUCB).children,
     # MCTopMOld(NB_PLAYERS, nbArms, klUCB).children,
@@ -327,9 +329,6 @@ configuration["successive_players"] = [
     # # # [ Aggregator(nbArms, children=[Exp3Decreasing, Exp3PlusPlus, UCB, MOSS, klUCB, BayesUCB, Thompson, DMEDPlus]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
     # # [ Aggregator(nbArms, children=[UCB, klUCB, Thompson]) for _ in range(NB_PLAYERS) ],  # exactly like Selfish(NB_PLAYERS, nbArms, Aggregator, children=[...])
 
-    # --- FIXME MusicalChairNoSensing (selfish), a better Musical Chair
-    # [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON) for _ in range(NB_PLAYERS) ],
-
     # # --- 22) Comparing Selfish, rhoRand, rhoLearn, RandTopM for klUCB, and estimating M
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, EmpiricalMeans).children,
     # # CentralizedMultiplePlay(NB_PLAYERS, nbArms, Exp3Decreasing).children,
@@ -355,16 +354,10 @@ configuration["successive_players"] = [
     # # # XXX cheated version, with known gap and known horizon (proba of success delta < 1 / T) !
     # [ MusicalChair(nbArms, Time0=optimalT0(nbArms=NB_ARMS, epsilon=0.99*GAP, delta=1./(1+HORIZON))) for _ in range(NB_PLAYERS) ],
 
-    # --- 1) CentralizedMultiplePlay
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, UCBalpha, alpha=1).children,
-    # CentralizedMultiplePlay(NB_PLAYERS, nbArms, BayesUCB).children,
-
-    # --- 2) Musical Chair
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.1, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.05, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.005, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, MusicalChair, Time0=0.001, Time1=HORIZON).children,
-    # Selfish(NB_PLAYERS, nbArms, EmpiricalMeans).children,
+    # FIXME an extension of the MusicalChair for the NoSensing case
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON, constant_c=1) for _ in range(NB_PLAYERS) ],
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON, constant_c=10) for _ in range(NB_PLAYERS) ],
+    [ MusicalChairNoSensing(nbPlayers=NB_PLAYERS, nbArms=nbArms, horizon=HORIZON, constant_c=128) for _ in range(NB_PLAYERS) ],
 ]
 
 # XXX Comparing different rhoRand approaches

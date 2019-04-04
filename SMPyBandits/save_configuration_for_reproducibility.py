@@ -27,7 +27,10 @@ def save_configuration_for_reproducibility(
         file_start = configuration_filename
         file_end = os.path.join(plot_dir, os.path.basename(configuration_filename).replace('.py', '__{}.py'.format(hashvalue)))
         print("Copying {} to {}...".format(file_start, file_end))  # DEBUG
-        shutil.copyfile(file_start, file_end)
+        try:
+            shutil.copyfile(file_start, file_end)
+        except FileNotFoundError:
+            print("WARNING could not save file {} to {}, maybe you are not in the correct folder?\nSkipping this step...".format(file_start, file_end))  # DEBUG
 
     # --- DONE Save just the configuration to a minimalist python file
     file_end_just_dict = file_end.replace('.py', '_minimalist.py')

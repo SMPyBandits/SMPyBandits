@@ -28,7 +28,7 @@ ConstantC = 10
 ConstantC = 1
 
 
-def parameter_g(K=9, m=3, T=1000):
+def parameter_g(K=9, m=3, T=1000, constant_c=ConstantC):
     r""" Length :math:`g` of the phase 1, from parameters ``K``, ``m`` and ``T``.
 
     .. math:: g = 128 K \log(3 K m^2 T^2).
@@ -44,7 +44,7 @@ def parameter_g(K=9, m=3, T=1000):
     >>> parameter_g(m=3, K=3, T=100)  # DOCTEST: +ELLIPSIS
     5224.239...
     """
-    return (np.log(3) + np.log(K) + 2*np.log(m) + 2*np.log(T)) * ConstantC * K
+    return (np.log(3) + np.log(K) + 2*np.log(m) + 2*np.log(T)) * constant_c * K
 
 
 def estimate_length_phases_12(K=3, m=9, Delta=0.1, T=1000):
@@ -119,6 +119,7 @@ class MusicalChairNoSensing(BasePolicy):
 
     def __init__(self,
                 nbPlayers=1, nbArms=1, horizon=1000,
+                constant_c=ConstantC,
                 lower=0., amplitude=1.
         ):  # Named argument to give them in any order
         """
@@ -154,7 +155,9 @@ class MusicalChairNoSensing(BasePolicy):
         self.A = np.random.permutation(nbArms)  #: A random permutation of arms, it will then be of size nbPlayers!
 
         # Parameters
-        g = parameter_g(K=nbArms, m=nbArms, T=horizon)  #: Used for the stopping criteria of phase 1
+        self.constant_c = constant_c
+        g = parameter_g(K=nbArms, m=nbArms, T=horizon, constant_c=constant_c)  #: Used for the stopping criteria of phase 1
+        self.constant_g = g
         self.constant_in_testing_the_gap = (1 - 1.0/self.nbArms)**(self.nbPlayers - 1) * 3 * np.sqrt(g)
 
         # Implementation details
@@ -162,7 +165,8 @@ class MusicalChairNoSensing(BasePolicy):
         self.t = -1  #: Internal times
 
     def __str__(self):
-        return r"MCNoSensing($M={}$, $T={}$)".format(self.nbPlayers, self.horizon)  # Use current estimate
+        # return r"MCNoSensing($M={}$, $T={}$)".format(self.nbPlayers, self.horizon)  # Use current estimate
+        return r"MCNoSensing($M={}$, $T={}$, $c={:.3g}$, $g={:.3g}$)".format(self.nbPlayers, self.horizon, self.constant_c, self.constant_g)  # Use current estimate
 
     def startGame(self):
         """ Just reinitialize all the internal memory, and decide how to start (state 1 or 2)."""
