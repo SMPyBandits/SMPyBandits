@@ -502,20 +502,20 @@ class EvaluatorMultiPlayers(object):
             return self.getLastRegrets_LessAccurate(envId=envId)
 
     def getRunningTimes(self, envId=0):
-        """Get the means and vars and list of running time of the different players."""
+        """Get the means and stds and list of running time of the different players."""
         all_times = [ self.runningTimes[envId][playerId, :] for playerId in range(self.nbPlayers) ]
         means = [ np.mean(times) for times in all_times ]
-        vars  = [ np.var(times) for times in all_times ]
-        return means, vars, all_times
+        stds  = [ np.std(times) for times in all_times ]
+        return means, stds, all_times
 
     def getMemoryConsumption(self, envId=0):
-        """Get the means and vars and list of memory consumptions of the different players."""
+        """Get the means and stds and list of memory consumptions of the different players."""
         all_memories = [ self.memoryConsumption[envId][playerId, :] for playerId in range(self.nbPlayers) ]
         for playerId in range(self.nbPlayers):
             all_memories[playerId] = [ m for m in all_memories[playerId] if m > 0 ]
         means = [ np.mean(memories) for memories in all_memories ]
-        vars  = [ np.var(memories) for memories in all_memories ]
-        return means, vars, all_memories
+        stds  = [ np.std(memories) for memories in all_memories ]
+        return means, stds, all_memories
 
     # --- Plotting methods
 
@@ -881,44 +881,44 @@ class EvaluatorMultiPlayers(object):
         return fig
 
     def printRunningTimes(self, envId=0, precision=3, evaluators=()):
-        """Print the average+-var running time of the different players."""
-        print("\nGiving the mean and var running times ...")
+        """Print the average+-std runnning time of the different players."""
+        print("\nGiving the mean and std running times ...")
         try:
             from IPython.core.magics.execution import _format_time
         except ImportError:
             _format_time = str
         evaluators = [self] + list(evaluators)  # Default to only [self]
-        for e in evaluators:
-            means, vars, _ = e.getRunningTimes(envId)
-            mean_time, var_time = np.sum(means), np.mean(vars)
-            print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
-            if e.repetitions <= 1:
+        for eva in evaluators:
+            means, vars, _ = eva.getRunningTimes(envId)
+            mean_time, std_time = np.sum(means), np.mean(vars)
+            print("\nFor players called '{}' ...".format(eva.strPlayers(latex=False, short=True)))
+            if eva.repetitions <= 1:
                 print(u"    {} (mean of 1 run)".format(_format_time(mean_time, precision)))
             else:
-                print(u"    {} ± {} per loop (mean ± var. dev. of {} run)".format(_format_time(mean_time, precision), _format_time(var_time, precision), e.repetitions))
+                print(u"    {} ± {} per loop (mean ± std. dev. of {} run)".format(_format_time(mean_time, precision), _format_time(std_time, precision), eva.repetitions))
 
     def printMemoryConsumption(self, envId=0, evaluators=()):
-        """Print the average+-var memory consumption of the different players."""
-        print("\nGiving the mean and var memory consumption ...")
+        """Print the average+-std memory consumption of the different players."""
+        print("\nGiving the mean and std memory consumption ...")
         evaluators = [self] + list(evaluators)  # Default to only [self]
-        for e in evaluators:
-            means, vars, _ = e.getMemoryConsumption(envId)
-            print("\nFor players called '{}' ...".format(e.strPlayers(latex=False, short=True)))
-            mean_time, var_time = np.sum(means), np.mean(vars)
-            if e.repetitions <= 1:
+        for eva in evaluators:
+            means, vars, _ = eva.getMemoryConsumption(envId)
+            print("\nFor players called '{}' ...".format(eva.strPlayers(latex=False, short=True)))
+            mean_time, std_time = np.sum(means), np.mean(vars)
+            if eva.repetitions <= 1:
                 print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
             else:
-                print(u"    {} ± {} (mean ± var. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(var_time), e.repetitions))
+                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(std_time), eva.repetitions))
 
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds", evaluators=()):
         """Plot the running times of the different players, as a box plot for each evaluators."""
         means, all_times, labels = [], [], []
         evaluators = [self] + list(evaluators)  # Default to only [self]
-        for e in evaluators:
-            _means, _, _all_times = e.getRunningTimes(envId=envId)
+        for eva in evaluators:
+            _means, _, _all_times = eva.getRunningTimes(envId=envId)
             means.append(np.sum(_means))
             all_times.append(np.sum(_all_times, axis=0))
-            labels.append(e.strPlayers(latex=False, short=True))
+            labels.append(eva.strPlayers(latex=False, short=True))
         # order by increasing mean time
         index_of_sorting = np.argsort(means)
         labels = [ labels[i] for i in index_of_sorting ]
@@ -937,11 +937,11 @@ class EvaluatorMultiPlayers(object):
         """Plot the memory consumption of the different players, as a box plot for each."""
         means, all_memories, labels = [], [], []
         evaluators = [self] + list(evaluators)  # Default to only [self]
-        for e in evaluators:
-            _means, _, _all_memories = e.getMemoryConsumption(envId=envId)
+        for eva in evaluators:
+            _means, _, _all_memories = eva.getMemoryConsumption(envId=envId)
             means.append(np.sum(_means))
             all_memories.append(np.sum(_all_memories, axis=0))
-            labels.append(e.strPlayers(latex=False, short=True))
+            labels.append(eva.strPlayers(latex=False, short=True))
         # order by increasing mean memory consumption
         index_of_sorting = np.argsort(means)
         labels = [ labels[i] for i in index_of_sorting ]
@@ -1001,7 +1001,22 @@ class EvaluatorMultiPlayers(object):
             print("Mean of   last regrets R_T =", np.mean(last_regrets))
             print("Median of last regrets R_T =", np.median(last_regrets))
             print("Max of    last regrets R_T =", np.max(last_regrets))
-            print("Variance  last regrets R_T =", np.var(last_regrets))
+            print("STD var   last regrets R_T =", np.std(last_regrets))
+
+    def printLastRegretsPM(self, envId=0, evaluators=(), moreAccurate=None):
+        """Print the average+-std last regret of the different players."""
+        print("\nGiving the mean and std last regret ...")
+        evaluators = [self] + list(evaluators)  # Default to only [self]
+        for eva in evaluators:
+            last_regrets = eva.getLastRegrets(envId=envId, moreAccurate=moreAccurate)
+            print("\nFor players called '{}' ...".format(eva.strPlayers(latex=False, short=True)))
+            mean_regret, std_regret = np.mean(last_regrets), np.std(last_regrets)
+            # FIXME
+            mean_regret, std_regret = np.round(mean_regret), np.round(std_regret)
+            if eva.repetitions <= 1:
+                print(u"    {:g} (mean of 1 run)".format(mean_regret))
+            else:
+                print(u"    {:g} ± {:g} (mean ± std. dev. of {} runs)".format(mean_regret, std_regret, eva.repetitions))
 
     def plotLastRegrets(self, envId=0,
                         normed=False, subplots=True, nbbins=15, log=False,

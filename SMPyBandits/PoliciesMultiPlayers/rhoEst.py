@@ -58,7 +58,8 @@ class oneRhoEst(oneRhoRand):
         self.t = 0  #: Internal time
 
     def __str__(self):   # Better to recompute it automatically
-        return r"#{}<RhoEst{}-{}{}{}>".format(self.playerId + 1, "Plus" if self.horizon else "", self.mother._players[self.playerId], "(rank:{})".format(self.rank) if self.rank is not None else "", "($T={}$)".format(self.horizon) if self.horizon else "")
+        # return r"#{}<RhoEst{}-{}{}{}>".format(self.playerId + 1, "Plus" if self.horizon else "", self.mother._players[self.playerId], "(rank:{})".format(self.rank) if self.rank is not None else "", "($T={}$)".format(self.horizon) if self.horizon else "")
+        return r"#{}<RhoEst{}-{}{}>".format(self.playerId + 1, "Plus" if self.horizon else "", self.mother._players[self.playerId], "($T={}$)".format(self.horizon) if self.horizon else "")
 
     def startGame(self):
         """Start game."""

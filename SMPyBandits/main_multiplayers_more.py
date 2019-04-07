@@ -161,8 +161,7 @@ if __name__ == '__main__':
 
             # Evaluate just that env
             evaluation.startOneEnv(envId, env)
-            if do_comparison_plots:
-                evaluators[envId][playersId] = evaluation
+            evaluators[envId][playersId] = evaluation
 
             # Display the final rankings for that env
             evaluation.printFinalRanking(envId)
@@ -419,8 +418,6 @@ if __name__ == '__main__':
     #
     N = len(configuration["environment"])
     for envId, env in enumerate(configuration["environment"]):
-        if not do_comparison_plots:
-            break
 
         e0, eothers = evaluators[envId][0], evaluators[envId][1:]
         M = e0.nbPlayers
@@ -433,7 +430,12 @@ if __name__ == '__main__':
         e0.printRunningTimes(envId, evaluators=eothers)
         print("\nGiving the mean and std memory consumption ...")
         e0.printMemoryConsumption(envId, evaluators=eothers)
+        print("\nGiving the mean and std last regrets...")
+        e0.printLastRegretsPM(envId, evaluators=eothers)
         if debug_memory: display_top_tracemalloc()  # DEBUG
+
+        if not do_comparison_plots:
+            break
 
         # Get the name of the output file
         imagename = "all____env{}-{}_{}".format(envId + 1, N, _hashvalue)
