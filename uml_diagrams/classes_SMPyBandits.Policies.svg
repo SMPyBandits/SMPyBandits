@@ -69,7 +69,7 @@
 <text text-anchor="start" x="7169.5" y="-2174.8" font-family="Times,serif" font-size="14.00" fill="#000000">batch_number : int</text>
 <text text-anchor="start" x="7169.5" y="-2159.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_best_arm : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2144.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_estimated_gap : NoneType</text>
-<text text-anchor="start" x="7169.5" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploitation_arm : int, NoneType</text>
+<text text-anchor="start" x="7169.5" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploitation_arm : NoneType, int</text>
 <text text-anchor="start" x="7169.5" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : NoneType, int</text>
 <text text-anchor="start" x="7169.5" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_worst_arm : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
@@ -105,7 +105,7 @@
 <text text-anchor="start" x="7442" y="-2272.3" font-family="Times,serif" font-size="14.00" fill="#000000">children : list</text>
 <text text-anchor="start" x="7442" y="-2257.3" font-family="Times,serif" font-size="14.00" fill="#000000">children_cumulated_losses</text>
 <text text-anchor="start" x="7442" y="-2242.3" font-family="Times,serif" font-size="14.00" fill="#000000">choices</text>
-<text text-anchor="start" x="7442" y="-2227.3" font-family="Times,serif" font-size="14.00" fill="#000000">decreaseRate : str, NoneType</text>
+<text text-anchor="start" x="7442" y="-2227.3" font-family="Times,serif" font-size="14.00" fill="#000000">decreaseRate : NoneType, str</text>
 <text text-anchor="start" x="7442" y="-2212.3" font-family="Times,serif" font-size="14.00" fill="#000000">extra_str : str</text>
 <text text-anchor="start" x="7442" y="-2197.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon</text>
 <text text-anchor="start" x="7442" y="-2182.3" font-family="Times,serif" font-size="14.00" fill="#000000">index</text>
@@ -937,7 +937,7 @@
 <polygon fill="none" stroke="#000000" points="9740,-1023.5 9740,-1197.5 10075,-1197.5 10075,-1023.5 9740,-1023.5"/>
 <text text-anchor="middle" x="9907.5" y="-1182.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Exp3R.DriftDetection_IndexPolicy</text>
 <polyline fill="none" stroke="#000000" points="9740,-1174.5 10075,-1174.5 "/>
-<text text-anchor="start" x="9748" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">H : NoneType, int</text>
+<text text-anchor="start" x="9748" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">H : int, NoneType</text>
 <text text-anchor="start" x="9748" y="-1144.3" font-family="Times,serif" font-size="14.00" fill="#000000">delta : NoneType</text>
 <text text-anchor="start" x="9748" y="-1129.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
 <text text-anchor="start" x="9748" y="-1114.3" font-family="Times,serif" font-size="14.00" fill="#000000">min_number_of_pulls_to_test_change</text>
@@ -992,8 +992,8 @@
 <polygon fill="none" stroke="#000000" points="14294.5,-1437 14294.5,-1671 14512.5,-1671 14512.5,-1437 14294.5,-1437"/>
 <text text-anchor="middle" x="14403.5" y="-1655.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Exp3S.Exp3S</text>
 <polyline fill="none" stroke="#000000" points="14294.5,-1648 14512.5,-1648 "/>
-<text text-anchor="start" x="14302.5" y="-1632.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha : NoneType, float</text>
-<text text-anchor="start" x="14302.5" y="-1617.8" font-family="Times,serif" font-size="14.00" fill="#000000">_gamma : NoneType, float</text>
+<text text-anchor="start" x="14302.5" y="-1632.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha : float, NoneType</text>
+<text text-anchor="start" x="14302.5" y="-1617.8" font-family="Times,serif" font-size="14.00" fill="#000000">_gamma : float, NoneType</text>
 <text text-anchor="start" x="14302.5" y="-1602.8" font-family="Times,serif" font-size="14.00" fill="#000000">alpha</text>
 <text text-anchor="start" x="14302.5" y="-1587.8" font-family="Times,serif" font-size="14.00" fill="#000000">gamma</text>
 <text text-anchor="start" x="14302.5" y="-1572.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon</text>
@@ -1488,7 +1488,7 @@
 <text text-anchor="start" x="15259" y="-2152.3" font-family="Times,serif" font-size="14.00" fill="#000000">b : float</text>
 <text text-anchor="start" x="15259" y="-2137.3" font-family="Times,serif" font-size="14.00" fill="#000000">batch_number : int</text>
 <text text-anchor="start" x="15259" y="-2122.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploitation_arm : NoneType</text>
-<text text-anchor="start" x="15259" y="-2107.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : NoneType, int</text>
+<text text-anchor="start" x="15259" y="-2107.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : int, NoneType</text>
 <text text-anchor="start" x="15259" y="-2092.3" font-family="Times,serif" font-size="14.00" fill="#000000">gamma : float</text>
 <text text-anchor="start" x="15259" y="-2077.3" font-family="Times,serif" font-size="14.00" fill="#000000">l : int</text>
 <text text-anchor="start" x="15259" y="-2062.3" font-family="Times,serif" font-size="14.00" fill="#000000">length_of_current_phase : NoneType</text>
@@ -1662,7 +1662,7 @@
 <text text-anchor="start" x="7770.5" y="-1572.8" font-family="Times,serif" font-size="14.00" fill="#000000">last_update_time_tau : int</text>
 <text text-anchor="start" x="7770.5" y="-1557.8" font-family="Times,serif" font-size="14.00" fill="#000000">last_w_rewards</text>
 <text text-anchor="start" x="7770.5" y="-1542.8" font-family="Times,serif" font-size="14.00" fill="#000000">threshold_b : NoneType</text>
-<text text-anchor="start" x="7770.5" y="-1527.8" font-family="Times,serif" font-size="14.00" fill="#000000">window_size : NoneType, int</text>
+<text text-anchor="start" x="7770.5" y="-1527.8" font-family="Times,serif" font-size="14.00" fill="#000000">window_size : int, NoneType</text>
 <polyline fill="none" stroke="#000000" points="7762.5,-1520 8130.5,-1520 "/>
 <text text-anchor="start" x="7770.5" y="-1504.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
 <text text-anchor="start" x="7770.5" y="-1489.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
@@ -1689,7 +1689,7 @@
 <text text-anchor="start" x="16062" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">cumulatedRewards</text>
 <text text-anchor="start" x="16062" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbCollision : int</text>
 <text text-anchor="start" x="16062" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbObservations</text>
-<text text-anchor="start" x="16062" y="-2069.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : int, NoneType</text>
+<text text-anchor="start" x="16062" y="-2069.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : NoneType, int</text>
 <text text-anchor="start" x="16062" y="-2054.8" font-family="Times,serif" font-size="14.00" fill="#000000">state</text>
 <text text-anchor="start" x="16062" y="-2039.8" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="16054,-2032 16349,-2032 "/>
@@ -1710,33 +1710,35 @@
 <!-- 74 -->
 <g id="node75" class="node">
 <title>74</title>
-<polygon fill="none" stroke="#000000" points="16367,-1904 16367,-2213 16780,-2213 16780,-1904 16367,-1904"/>
-<text text-anchor="middle" x="16573.5" y="-2197.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.MusicalChairNoSensing.MusicalChairNoSensing</text>
-<polyline fill="none" stroke="#000000" points="16367,-2190 16780,-2190 "/>
-<text text-anchor="start" x="16375" y="-2174.8" font-family="Times,serif" font-size="14.00" fill="#000000">A</text>
-<text text-anchor="start" x="16375" y="-2159.8" font-family="Times,serif" font-size="14.00" fill="#000000">chair : NoneType</text>
-<text text-anchor="start" x="16375" y="-2144.8" font-family="Times,serif" font-size="14.00" fill="#000000">constant_in_testing_the_gap</text>
-<text text-anchor="start" x="16375" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">cumulatedRewards</text>
-<text text-anchor="start" x="16375" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : int</text>
-<text text-anchor="start" x="16375" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms : int</text>
-<text text-anchor="start" x="16375" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbObservations</text>
-<text text-anchor="start" x="16375" y="-2069.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : int</text>
-<text text-anchor="start" x="16375" y="-2054.8" font-family="Times,serif" font-size="14.00" fill="#000000">state</text>
-<text text-anchor="start" x="16375" y="-2039.8" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
-<text text-anchor="start" x="16375" y="-2024.8" font-family="Times,serif" font-size="14.00" fill="#000000">tau_phase_2 : int</text>
-<polyline fill="none" stroke="#000000" points="16367,-2017 16780,-2017 "/>
-<text text-anchor="start" x="16375" y="-2001.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="16375" y="-1986.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="16375" y="-1971.8" font-family="Times,serif" font-size="14.00" fill="#000000">_endPhase2()</text>
-<text text-anchor="start" x="16375" y="-1956.8" font-family="Times,serif" font-size="14.00" fill="#000000">choice()</text>
-<text text-anchor="start" x="16375" y="-1941.8" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
-<text text-anchor="start" x="16375" y="-1926.8" font-family="Times,serif" font-size="14.00" fill="#000000">handleCollision()</text>
-<text text-anchor="start" x="16375" y="-1911.8" font-family="Times,serif" font-size="14.00" fill="#000000">startGame()</text>
+<polygon fill="none" stroke="#000000" points="16367,-1889 16367,-2228 16780,-2228 16780,-1889 16367,-1889"/>
+<text text-anchor="middle" x="16573.5" y="-2212.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.MusicalChairNoSensing.MusicalChairNoSensing</text>
+<polyline fill="none" stroke="#000000" points="16367,-2205 16780,-2205 "/>
+<text text-anchor="start" x="16375" y="-2189.8" font-family="Times,serif" font-size="14.00" fill="#000000">A</text>
+<text text-anchor="start" x="16375" y="-2174.8" font-family="Times,serif" font-size="14.00" fill="#000000">chair : NoneType</text>
+<text text-anchor="start" x="16375" y="-2159.8" font-family="Times,serif" font-size="14.00" fill="#000000">constant_c : int</text>
+<text text-anchor="start" x="16375" y="-2144.8" font-family="Times,serif" font-size="14.00" fill="#000000">constant_g</text>
+<text text-anchor="start" x="16375" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">constant_in_testing_the_gap</text>
+<text text-anchor="start" x="16375" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">cumulatedRewards</text>
+<text text-anchor="start" x="16375" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : int</text>
+<text text-anchor="start" x="16375" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms : int</text>
+<text text-anchor="start" x="16375" y="-2069.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbObservations</text>
+<text text-anchor="start" x="16375" y="-2054.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : int</text>
+<text text-anchor="start" x="16375" y="-2039.8" font-family="Times,serif" font-size="14.00" fill="#000000">state</text>
+<text text-anchor="start" x="16375" y="-2024.8" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
+<text text-anchor="start" x="16375" y="-2009.8" font-family="Times,serif" font-size="14.00" fill="#000000">tau_phase_2 : int</text>
+<polyline fill="none" stroke="#000000" points="16367,-2002 16780,-2002 "/>
+<text text-anchor="start" x="16375" y="-1986.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="16375" y="-1971.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
+<text text-anchor="start" x="16375" y="-1956.8" font-family="Times,serif" font-size="14.00" fill="#000000">_endPhase2()</text>
+<text text-anchor="start" x="16375" y="-1941.8" font-family="Times,serif" font-size="14.00" fill="#000000">choice()</text>
+<text text-anchor="start" x="16375" y="-1926.8" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<text text-anchor="start" x="16375" y="-1911.8" font-family="Times,serif" font-size="14.00" fill="#000000">handleCollision()</text>
+<text text-anchor="start" x="16375" y="-1896.8" font-family="Times,serif" font-size="14.00" fill="#000000">startGame()</text>
 </g>
 <!-- 74&#45;&gt;5 -->
 <g id="edge79" class="edge">
 <title>74&#45;&gt;5</title>
-<path fill="none" stroke="#000000" d="M16481.359,-2213.0102C16447.8356,-2256.4267 16406.0531,-2299.0882 16357.5,-2326 16133.7632,-2450.0117 15365.4549,-2488.3449 15042.8944,-2499.1364"/>
+<path fill="none" stroke="#000000" d="M16469.4052,-2228.0125C16438.0857,-2266.0788 16400.4408,-2302.199 16357.5,-2326 16133.7632,-2450.0117 15365.4549,-2488.3449 15042.8944,-2499.1364"/>
 <polygon fill="none" stroke="#000000" points="15042.4244,-2495.6499 15032.5455,-2499.4783 15042.6556,-2502.6461 15042.4244,-2495.6499"/>
 </g>
 <!-- 75 -->
@@ -2462,7 +2464,7 @@
 <polygon fill="none" stroke="#000000" points="18150,-1979 18150,-2138 18463,-2138 18463,-1979 18150,-1979"/>
 <text text-anchor="middle" x="18306.5" y="-2122.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.TakeFixedArm.TakeFixedArm</text>
 <polyline fill="none" stroke="#000000" points="18150,-2115 18463,-2115 "/>
-<text text-anchor="start" x="18158" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">armIndex : NoneType, int</text>
+<text text-anchor="start" x="18158" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">armIndex : int, NoneType</text>
 <text text-anchor="start" x="18158" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
 <polyline fill="none" stroke="#000000" points="18150,-2077 18463,-2077 "/>
 <text text-anchor="start" x="18158" y="-2061.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
@@ -2529,7 +2531,7 @@
 <text text-anchor="start" x="18489.5" y="-2107.3" font-family="Times,serif" font-size="14.00" fill="#000000">delta : float</text>
 <text text-anchor="start" x="18489.5" y="-2092.3" font-family="Times,serif" font-size="14.00" fill="#000000">epsilon : float</text>
 <text text-anchor="start" x="18489.5" y="-2077.3" font-family="Times,serif" font-size="14.00" fill="#000000">index_sort : NoneType</text>
-<text text-anchor="start" x="18489.5" y="-2062.3" font-family="Times,serif" font-size="14.00" fill="#000000">last_choice : NoneType, int</text>
+<text text-anchor="start" x="18489.5" y="-2062.3" font-family="Times,serif" font-size="14.00" fill="#000000">last_choice : int, NoneType</text>
 <text text-anchor="start" x="18489.5" y="-2047.3" font-family="Times,serif" font-size="14.00" fill="#000000">last_was_successful : bool</text>
 <text text-anchor="start" x="18489.5" y="-2032.3" font-family="Times,serif" font-size="14.00" fill="#000000">lock_channel : bool</text>
 <text text-anchor="start" x="18489.5" y="-2017.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbObservations</text>

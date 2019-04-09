@@ -277,8 +277,9 @@ configuration["successive_players"] = [
     # # rhoEst(NB_PLAYERS, nbArms, klUCB, threshold=threshold_on_t).children,  # = EstimateM(... rhoRand, klUCB)
     # EstimateM(NB_PLAYERS, nbArms, rhoRand, klUCB, horizon=HORIZON, threshold=threshold_on_t_with_horizon).children,  # = rhoEstPlus(...)
     rhoEstPlus(NB_PLAYERS, nbArms, klUCB, HORIZON).children,
-    # rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
-    # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
+    rhoLearn(NB_PLAYERS, nbArms, klUCB, BayesUCB).children,
+    rhoLearn(NB_PLAYERS, nbArms, klUCB, klUCB).children,
+    rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=binary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
     # rhoLearnExp3(NB_PLAYERS, nbArms, klUCB, feedback_function=ternary_feedback, rankSelectionAlgo=Exp3Decreasing).children,
 
     # # ---- RandTopM
