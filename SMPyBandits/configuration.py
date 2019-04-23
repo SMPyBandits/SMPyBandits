@@ -362,13 +362,13 @@ configuration.update({
         #         "epsilon": EPSILON,
         #     }
         # },
-        # {
-        #     "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
-        #     "params": {
-        #         "epsilon": EPSILON,
-        #         "decreasingRate": 0.005,
-        #     }
-        # },
+        {
+            "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
+            "params": {
+                "epsilon": EPSILON,
+                # "decreasingRate": 0.005,
+            }
+        },
         # {
         #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
         #     "params": {
@@ -391,13 +391,13 @@ configuration.update({
         # #         "gap": 0.05,
         # #     }
         # # },
-        # # {
-        # #     "archtype": ETC_KnownGap,
-        # #     "params": {
-        # #         "horizon": HORIZON,
-        # #         "gap": 0.01,
-        # #     }
-        # # },
+        {
+            "archtype": ETC_KnownGap,
+            "params": {
+                "horizon": HORIZON,
+                "gap": 0.01,
+            }
+        },
         # # {
         # #     "archtype": ETC_KnownGap,
         # #     "params": {
@@ -519,11 +519,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # # --- Exp3PlusPlus algorithm
-        # {
-        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-        #     "params": {}
-        # },
+        # --- Exp3PlusPlus algorithm
+        {
+            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+            "params": {}
+        },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -572,13 +572,13 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # # --- TsallisInf algorithm
-        # {
-        #     "archtype": TsallisInf,
-        #     "params": {
-        #         "alpha": 0.5,
-        #     }
-        # },
+        # --- TsallisInf algorithm
+        {
+            "archtype": TsallisInf,
+            "params": {
+                "alpha": 0.5,
+            }
+        },
         # # {
         # #     "archtype": TsallisInf,
         # #     "params": {
@@ -715,18 +715,18 @@ configuration.update({
         #     }
         # },
         # --- PHE algorithm
-        # {
-        #     "archtype": PHE,
-        #     "params": {
-        #         "perturbation_scale": 0.5,
-        #     }
-        # },
         {
             "archtype": PHE,
             "params": {
-                "perturbation_scale": 1.1,
+                "perturbation_scale": 0.5,
             }
         },
+        # {
+        #     "archtype": PHE,
+        #     "params": {
+        #         "perturbation_scale": 1.1,
+        #     }
+        # },
         # {
         #     "archtype": PHE,
         #     "params": {
@@ -972,14 +972,14 @@ configuration.update({
         # #         "posterior": Gauss,
         # #     }
         # # },
-        # # --- AdBandits with different alpha paramters
-        # {
-        #     "archtype": AdBandits,
-        #     "params": {
-        #         "alpha": 0.5,
-        #         "horizon": HORIZON,
-        #     }
-        # },
+        # --- AdBandits with different alpha paramters
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON,
+            }
+        },
         # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
         # {
         #     "archtype": Aggregator,
@@ -1041,7 +1041,7 @@ configuration.update({
         #     "archtype": OSSB_AutoDecreasingRate,
         #     "params": {}
         # },
-        # # --- The awesome BESA algorithm
+        # --- The awesome BESA algorithm
         # {
         #     "archtype": BESA,
         #     "params": {
@@ -1051,10 +1051,10 @@ configuration.update({
         #         # "randomized_tournament": False,  # XXX Very inefficient!
         #         "random_subsample": True,
         #         # "random_subsample": False,  # XXX Very inefficient!
-        #         "non_binary": False,
-        #         # "non_binary": True,
-        #         "non_recursive": False,
-        #         # "non_recursive": True,
+        #         # "non_binary": False,
+        #         "non_binary": True,
+        #         # "non_recursive": False,
+        #         "non_recursive": True,
         #     }
         # },
         # {
@@ -1064,20 +1064,20 @@ configuration.update({
         #         "non_binary": True,
         #     }
         # },
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_recursive": True,
-        #     }
-        # },
-        # # --- Auto-tuned UCBdagger algorithm
-        # {
-        #     "archtype": UCBdagger,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "non_recursive": True,
+            }
+        },
+        # --- Auto-tuned UCBdagger algorithm
+        {
+            "archtype": UCBdagger,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
         # # # --- new UCBoost algorithms
         # # {
         # #     "archtype": UCB_bq,

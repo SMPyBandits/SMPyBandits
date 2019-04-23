@@ -45,7 +45,7 @@ class EpsilonGreedy(BasePolicy):
         return self._epsilon
 
     def __str__(self):
-        return "EpsilonGreedy({})".format(self.epsilon)
+        return r"EpsilonGreedy($\varepsilon={.:3g}$)".format(self.epsilon)
 
     def choice(self):
         """With a probability of epsilon, explore (uniform choice), otherwhise exploit based on just accumulated *rewards* (not empirical mean rewards)."""
@@ -118,7 +118,7 @@ class EpsilonDecreasing(EpsilonGreedy):
         self._epsilon = epsilon
 
     def __str__(self):
-        return "EpsilonDecreasing(e:{})".format(self._epsilon)
+        return r"EpsilonDecreasing($\varepsilon_0={:.3g}$)".format(self._epsilon)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
