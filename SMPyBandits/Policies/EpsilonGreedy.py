@@ -45,7 +45,7 @@ class EpsilonGreedy(BasePolicy):
         return self._epsilon
 
     def __str__(self):
-        return r"EpsilonGreedy($\varepsilon={.:3g}$)".format(self.epsilon)
+        return r"EpsilonGreedy($\varepsilon={:.3g}$)".format(self.epsilon)
 
     def choice(self):
         """With a probability of epsilon, explore (uniform choice), otherwhise exploit based on just accumulated *rewards* (not empirical mean rewards)."""
