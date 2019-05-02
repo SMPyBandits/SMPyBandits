@@ -373,7 +373,7 @@ class MAB(object):
         show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
         return fig
 
-    def plotHistogram(self, horizon=10000, savefig=None):
+    def plotHistogram(self, horizon=10000, savefig=None, bins=50, alpha=0.9, density=None):
         """Plot a horizon=10000 draws of each arms."""
         arms = self.arms
         rewards = np.zeros((len(arms), horizon))
@@ -387,10 +387,13 @@ class MAB(object):
         # Now plot
         fig = plt.figure()
         for armId, arm in enumerate(arms):
-            plt.hist(rewards[armId, :], bins=200, density=True, color=colors[armId], label='$%s$' % repr(arm), alpha=0.7)
+            plt.hist(rewards[armId, :], bins=bins, density=density, color=colors[armId], label='$%s$' % repr(arm), alpha=alpha)
         legend()
         plt.xlabel("Rewards")
-        plt.ylabel("Mass repartition of the rewards")
+        if density:
+            plt.ylabel("Empirical density of the rewards")
+        else:
+            plt.ylabel("Empirical count of observations of the rewards")
         plt.title("{} draws of rewards from these arms.\n{} arms: {}{}".format(horizon, self.nbArms, self.reprarms(latex=True), signature))
         show_and_save(showplot=True, savefig=savefig, fig=fig, pickleit=False)
         return fig

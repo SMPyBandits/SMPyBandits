@@ -333,7 +333,7 @@ def besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_u
 class BESA(IndexPolicy):
     r""" The Best Empirical Sampled Average (BESA) algorithm.
 
-    - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://arxiv.org/abs/1711.00400)
+    - Reference: [[Sub-Sampling For Multi Armed Bandits, Baransi et al., 2014]](https://hal.inria.fr/hal-01025651)
 
     .. warning:: The BESA algorithm requires to store all the history of rewards, so its memory usage for :math:`T` rounds with :math:`K` arms is :math:`\mathcal{O}(K T)`, which is huge for large :math:`T`, be careful! Aggregating different BESA instances is probably a bad idea because of this limitation!
     """

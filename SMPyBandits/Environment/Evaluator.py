@@ -714,6 +714,10 @@ class Evaluator(object):
                 print(u"    {} (mean of 1 run)" .format(_format_time(mean_time, precision)))
             else:
                 print(u"    {} ± {} per loop (mean ± std. dev. of {} run)" .format(_format_time(mean_time, precision), _format_time(var_time, precision), self.repetitions))
+        for policyId, policy in enumerate(self.policies):
+            print("For policy #{} called '{}' ...".format(policyId, policy.__cachedstr__))
+            mean_time, var_time  = means[policyId], stds[policyId]
+            print(r"{} \pm {}".format(int(round(1000 * mean_time)), int(round(1000 * var_time))))  # XXX in milli seconds
         # table_to_latex(mean_data=means, std_data=stds, labels=[policy.__cachedstr__ for policy in self.policies], fmt_function=_format_time)
 
     def plotRunningTimes(self, envId=0, savefig=None, base=1, unit="seconds"):
@@ -741,11 +745,15 @@ class Evaluator(object):
         for policyId in np.argsort(means):
             policy = self.policies[policyId]
             print("\nFor policy #{} called '{}' ...".format(policyId, policy.__cachedstr__))
-            mean_time, var_time = means[policyId], stds[policyId]
+            mean_memory, var_memory = means[policyId], stds[policyId]
             if self.repetitions <= 1:
-                print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_time)))
+                print(u"    {} (mean of 1 run)".format(sizeof_fmt(mean_memory)))
             else:
-                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(sizeof_fmt(mean_time), sizeof_fmt(var_time), self.repetitions))
+                print(u"    {} ± {} (mean ± std. dev. of {} runs)".format(sizeof_fmt(mean_memory), sizeof_fmt(var_memory), self.repetitions))
+        for policyId, policy in enumerate(self.policies):
+            print("For policy #{} called '{}' ...".format(policyId, policy.__cachedstr__))
+            mean_memory, var_memory = means[policyId], stds[policyId]
+            print(r"{} \pm {}".format(int(round(mean_memory)), int(round(var_memory))))  # XXX in B
         # table_to_latex(mean_data=means, std_data=stds, labels=[policy.__cachedstr__ for policy in self.policies], fmt_function=sizeof_fmt)
 
     def plotMemoryConsumption(self, envId=0, savefig=None, base=1024, unit="KiB"):
@@ -811,7 +819,10 @@ class Evaluator(object):
             print("Median of last regrets R_T = {:.3g}".format(np.median(last_regrets)))
             print("Max of    last regrets R_T = {:.3g}".format(np.max(last_regrets)))
             print("Standard deviation     R_T = {:.3g}".format(np.std(last_regrets)))
-            print(r"{:.0f} \pm {:.0f}".format(np.mean(last_regrets), np.std(last_regrets)))
+        for policyId, policy in enumerate(self.policies):
+            print("For policy #{} called '{}' ...".format(policyId, policy.__cachedstr__))
+            last_regrets = self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)
+            print(r"{} \pm {}".format(int(round(np.mean(last_regrets))), int(round(np.std(last_regrets)))))
         means = [np.mean(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)) for policyId in range(self.nbPolicies)]
         stds = [np.std(self.getLastRegrets(policyId, envId=envId, moreAccurate=moreAccurate)) for policyId in range(self.nbPolicies)]
         # table_to_latex(mean_data=means, std_data=stds, labels=[policy.__cachedstr__ for policy in self.policies])

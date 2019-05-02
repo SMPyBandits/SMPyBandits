@@ -296,7 +296,7 @@ if ENVIRONMENT_BAYESIAN:
                 "args": {
                     "nbArms": NB_ARMS,
                     # "mingap": None,
-                    "mingap": 0.1 if NB_ARMS <= 5 else 1. / (3 * NB_ARMS),
+                    "mingap": 0.1 if NB_ARMS <= 3 else 1. / (3 * NB_ARMS),
                     "lower": LOWER,
                     "amplitude": AMPLITUDE,
                     "isSorted": True,
@@ -572,25 +572,6 @@ configuration.update({
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- TsallisInf algorithm
-        {
-            "archtype": TsallisInf,
-            "params": {
-                "alpha": 0.5,
-            }
-        },
-        # # {
-        # #     "archtype": TsallisInf,
-        # #     "params": {
-        # #         "alpha": 0.25,
-        # #     }
-        # # },
-        # # {
-        # #     "archtype": TsallisInf,
-        # #     "params": {
-        # #         "alpha": 0.75,
-        # #     }
-        # # },
         # # --- UCB algorithms
         # {
         #     "archtype": UCB,   # This basic UCB is very worse than the other
@@ -685,161 +666,6 @@ configuration.update({
         #         "alpha": 1.,
         #     }
         # },
-        # --- RCB algorithm
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "uniform",  # like UCB?
-            }
-        },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "gaussian",  # like Thompson sampling
-        #     }
-        # },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "exponential",
-        #     }
-        # },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "gumbel",
-        #     }
-        # },
-        # --- PHE algorithm
-        {
-            "archtype": PHE,
-            "params": {
-                "perturbation_scale": 0.5,
-            }
-        },
-        # {
-        #     "archtype": PHE,
-        #     "params": {
-        #         "perturbation_scale": 1.1,
-        #     }
-        # },
-        # {
-        #     "archtype": PHE,
-        #     "params": {
-        #         "perturbation_scale": 2.1,
-        #     }
-        # },
-        # # --- MOSS algorithm, like UCB
-        # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
-        # # --- MOSS-H algorithm, like UCB-H
-        # {
-        #     "archtype": MOSSH,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # --- MOSS-Anytime algorithm, extension of MOSS
-        {
-            "archtype": MOSSAnytime,
-            "params": {
-                "alpha": 1.35,
-            }
-        },
-        # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
-        # {
-        #     "archtype": MOSSExperimental,
-        #     "params": {}
-        # },
-        # # --- Optimally-Confident UCB algorithm
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 1,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.9,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.8,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.7,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.6,
-        #     }
-        # },
-        # # --- Optimally-Confident UCB algorithm, horizon dependent
-        # {
-        #     "archtype": OCUCBH,
-        #     "params": {
-        #         "psi": 2,
-        #         "alpha": 4,
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # {
-        #     "archtype": AOCUCBH,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # --- CPUCB algorithm, other variant of UCB
-        # {
-        #     "archtype": CPUCB,
-        #     "params": {}
-        # },
-        # # --- DMED algorithm, similar to klUCB
-        # {
-        #     "archtype": DMEDPlus,
-        #     "params": {}
-        # },
-        # # {
-        # #     "archtype": DMED,
-        # #     "params": {}
-        # # },
-        # # --- IMED algorithm, similar to DMED
-        # {
-        #     "archtype": IMED,
-        #     "params": {}
-        # },
-        # --- Thompson algorithms
-        {
-            "archtype": Thompson,
-            "params": {
-                "posterior": Beta,
-            }
-        },
-        # {
-        #     "archtype": Thompson,
-        #     "params": {
-        #         "posterior": Gauss,
-        #     }
-        # },
         # --- KL algorithms
         {
             "archtype": klUCB,
@@ -912,6 +738,197 @@ configuration.update({
         #         "klucb": klucb,
         #     }
         # },
+        # --- Thompson algorithms
+        {
+            "archtype": Thompson,
+            "params": {
+                "posterior": Beta,
+            }
+        },
+        # {
+        #     "archtype": Thompson,
+        #     "params": {
+        #         "posterior": Gauss,
+        #     }
+        # },
+        # --- Bayes UCB algorithms
+        {
+            "archtype": BayesUCB,
+            "params": {
+                "posterior": Beta,
+            }
+        },
+        # # {
+        # #     "archtype": BayesUCB,
+        # #     "params": {
+        # #         "posterior": Gauss,
+        # #     }
+        # # },
+        # --- AdBandits with different alpha paramters
+        {
+            "archtype": AdBandits,
+            "params": {
+                "alpha": 0.5,
+                "horizon": HORIZON,
+            }
+        },
+        # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
+        # {
+        #     "archtype": Aggregator,
+        #     "params": {
+        #         "unbiased": UNBIASED,
+        #         "update_all_children": UPDATE_ALL_CHILDREN,
+        #         "decreaseRate": DECREASE_RATE,
+        #         "learningRate": LEARNING_RATE,
+        #         "children": [
+        #             { "archtype": BayesUCB, "params": {} },
+        #             { "archtype": Thompson, "params": {} },
+        #         ],
+        #         "update_like_exp4": UPDATE_LIKE_EXP4,
+        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+        #     },
+        # },
+        # --- The awesome BESA algorithm
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+        #         "randomized_tournament": True,
+        #         # "randomized_tournament": False,  # XXX Very inefficient!
+        #         "random_subsample": True,
+        #         # "random_subsample": False,  # XXX Very inefficient!
+        #         # "non_binary": False,
+        #         "non_binary": True,
+        #         # "non_recursive": False,
+        #         "non_recursive": True,
+        #     }
+        # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_binary": True,
+        #     }
+        # },
+        {
+            "archtype": BESA,
+            "params": {
+                "horizon": HORIZON,
+                "non_recursive": True,
+            }
+        },
+        # # --- MOSS algorithm, like UCB
+        # {
+        #     "archtype": MOSS,
+        #     "params": {}
+        # },
+        # # --- MOSS-H algorithm, like UCB-H
+        # {
+        #     "archtype": MOSSH,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # --- MOSS-Anytime algorithm, extension of MOSS
+        {
+            "archtype": MOSSAnytime,
+            "params": {
+                "alpha": 1.35,
+            }
+        },
+        # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
+        # {
+        #     "archtype": MOSSExperimental,
+        #     "params": {}
+        # },
+        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        {
+            "archtype": ApproximatedFHGittins,
+            "params": {
+                "alpha": 0.5,
+                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+                # "horizon": HORIZON,
+                # "horizon": HORIZON + 1,
+            }
+        },
+        # --- Auto-tuned UCBdagger algorithm
+        {
+            "archtype": UCBdagger,
+            "params": {
+                "horizon": HORIZON,
+            }
+        },
+        # # --- Optimally-Confident UCB algorithm
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 1,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.9,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.8,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.7,
+        #     }
+        # },
+        # {
+        #     "archtype": OCUCB,
+        #     "params": {
+        #         "eta": 1.1,
+        #         "rho": 0.6,
+        #     }
+        # },
+        # # --- Optimally-Confident UCB algorithm, horizon dependent
+        # {
+        #     "archtype": OCUCBH,
+        #     "params": {
+        #         "psi": 2,
+        #         "alpha": 4,
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # {
+        #     "archtype": AOCUCBH,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # --- CPUCB algorithm, other variant of UCB
+        # {
+        #     "archtype": CPUCB,
+        #     "params": {}
+        # },
+        # # --- DMED algorithm, similar to klUCB
+        # {
+        #     "archtype": DMEDPlus,
+        #     "params": {}
+        # },
+        # # {
+        # #     "archtype": DMED,
+        # #     "params": {}
+        # # },
+        # # --- IMED algorithm, similar to DMED
+        # {
+        #     "archtype": IMED,
+        #     "params": {}
+        # },
         # # --- new klUCBswitch algorithm!
         # {
         #     "archtype": klUCBswitch,
@@ -959,53 +976,73 @@ configuration.update({
         #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
         #     },
         # },
-        # --- Bayes UCB algorithms
+        # --- TsallisInf algorithm
         {
-            "archtype": BayesUCB,
+            "archtype": TsallisInf,
             "params": {
-                "posterior": Beta,
+                "alpha": 0.5,
             }
         },
         # # {
-        # #     "archtype": BayesUCB,
+        # #     "archtype": TsallisInf,
         # #     "params": {
-        # #         "posterior": Gauss,
+        # #         "alpha": 0.25,
         # #     }
         # # },
-        # --- AdBandits with different alpha paramters
+        # # {
+        # #     "archtype": TsallisInf,
+        # #     "params": {
+        # #         "alpha": 0.75,
+        # #     }
+        # # },
+        # --- RCB algorithm
         {
-            "archtype": AdBandits,
+            "archtype": RCB,
             "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON,
+                "alpha": 1.,
+                "perturbation": "uniform",  # like UCB?
             }
         },
-        # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
         # {
-        #     "archtype": Aggregator,
+        #     "archtype": RCB,
         #     "params": {
-        #         "unbiased": UNBIASED,
-        #         "update_all_children": UPDATE_ALL_CHILDREN,
-        #         "decreaseRate": DECREASE_RATE,
-        #         "learningRate": LEARNING_RATE,
-        #         "children": [
-        #             { "archtype": BayesUCB, "params": {} },
-        #             { "archtype": Thompson, "params": {} },
-        #         ],
-        #         "update_like_exp4": UPDATE_LIKE_EXP4,
-        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-        #     },
+        #         "alpha": 1.,
+        #         "perturbation": "gaussian",  # like Thompson sampling
+        #     }
         # },
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
+        # {
+        #     "archtype": RCB,
+        #     "params": {
+        #         "alpha": 1.,
+        #         "perturbation": "exponential",
+        #     }
+        # },
+        # {
+        #     "archtype": RCB,
+        #     "params": {
+        #         "alpha": 1.,
+        #         "perturbation": "gumbel",
+        #     }
+        # },
+        # --- PHE algorithm
         {
-            "archtype": ApproximatedFHGittins,
+            "archtype": PHE,
             "params": {
-                "alpha": 0.5,
-                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-                # "horizon": HORIZON,
-                # "horizon": HORIZON + 1,
+                "perturbation_scale": 0.5,
             }
         },
+        # {
+        #     "archtype": PHE,
+        #     "params": {
+        #         "perturbation_scale": 1.1,
+        #     }
+        # },
+        # {
+        #     "archtype": PHE,
+        #     "params": {
+        #         "perturbation_scale": 2.1,
+        #     }
+        # },
         # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # {
         #     "archtype": BlackBoxOpt,
@@ -1041,43 +1078,6 @@ configuration.update({
         #     "archtype": OSSB_AutoDecreasingRate,
         #     "params": {}
         # },
-        # --- The awesome BESA algorithm
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-        #         "randomized_tournament": True,
-        #         # "randomized_tournament": False,  # XXX Very inefficient!
-        #         "random_subsample": True,
-        #         # "random_subsample": False,  # XXX Very inefficient!
-        #         # "non_binary": False,
-        #         "non_binary": True,
-        #         # "non_recursive": False,
-        #         "non_recursive": True,
-        #     }
-        # },
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_binary": True,
-        #     }
-        # },
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "non_recursive": True,
-            }
-        },
-        # --- Auto-tuned UCBdagger algorithm
-        {
-            "archtype": UCBdagger,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
         # # # --- new UCBoost algorithms
         # # {
         # #     "archtype": UCB_bq,
