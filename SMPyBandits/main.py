@@ -161,9 +161,6 @@ if __name__ == '__main__':
         evaluation.printNumberOfCPDetections(envId)
         if debug_memory: display_top_tracemalloc()  # DEBUG
 
-        if not do_plots:
-            break
-
         # Sub folder with a useful name
         subfolder = "SP__K{}_T{}_N{}__{}_algos".format(env.nbArms, configuration['horizon'], configuration['repetitions'], len(configuration['policies']))
         plot_dir = os.path.join(PLOT_DIR, subfolder)
@@ -201,6 +198,9 @@ if __name__ == '__main__':
             # --- Save it to a HD5 file
             if USE_HD5:
                 evaluation.saveondisk(h5pyname)
+
+        if not do_plots:
+            break
 
         # --- Also plotting the history of means
         if saveallfigs:

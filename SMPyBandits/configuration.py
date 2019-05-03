@@ -395,7 +395,7 @@ configuration.update({
             "archtype": ETC_KnownGap,
             "params": {
                 "horizon": HORIZON,
-                "gap": 0.01,
+                "gap": max(0.01, 1.0 / (3 * NB_ARMS)),
             }
         },
         # # {
