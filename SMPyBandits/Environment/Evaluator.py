@@ -105,6 +105,7 @@ class Evaluator(object):
         self.useJoblibForPolicies = useJoblibForPolicies  #: Use joblib to parallelize for loop on policies (useless)
         self.useJoblib = USE_JOBLIB and self.cfg['n_jobs'] != 1  #: Use joblib to parallelize for loop on repetitions (useful)
         self.cache_rewards = self.cfg.get('cache_rewards', False)  #: Should we cache and precompute rewards
+        self.environment_bayesian = self.cfg.get('environment_bayesian', False)  #: Is the environment Bayesian?
         self.showplot = self.cfg.get('showplot', True)  #: Show the plot (interactive display or not)
         self.use_box_plot = USE_BOX_PLOT or (self.repetitions == 1)  #: To use box plot (or violin plot if False). Force to use boxplot if repetitions=1.
 
@@ -291,7 +292,7 @@ class Evaluator(object):
         # 2. store main attributes and all other attributes, if they exist
         for name_of_attr in [
                 "horizon", "repetitions", "nbPolicies",
-                "delta_t_plot", "random_shuffle", "random_invert", "nb_break_points", "plot_lowerbound", "signature", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "showplot", "change_labels", "append_labels"
+                "delta_t_plot", "random_shuffle", "random_invert", "nb_break_points", "plot_lowerbound", "signature", "moreAccurate", "finalRanksOnAverage", "averageOn", "useJoblibForPolicies", "useJoblib", "cache_rewards", "environment_bayesian", "showplot", "change_labels", "append_labels"
             ]:
             if not hasattr(self, name_of_attr): continue
             value = getattr(self, name_of_attr)

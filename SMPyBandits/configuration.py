@@ -175,6 +175,7 @@ configuration = {
     # "plot_lowerbound": False,
     # --- Cache rewards: use the same random rewards for the Aggregator[..] and the algorithms
     "cache_rewards": CACHE_REWARDS,
+    "environment_bayesian": ENVIRONMENT_BAYESIAN,
     # --- Arms
     "environment": [  # XXX Bernoulli arms
         # {   # The easier problem: 2 arms, one perfectly bad, one perfectly good
