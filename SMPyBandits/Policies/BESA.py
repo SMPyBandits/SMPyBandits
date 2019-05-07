@@ -292,7 +292,7 @@ def besa_K_actions__non_binary(rewards, pulls, actions, subsample_function=subsa
     return chosen_arm
 
 
-def besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_uniform):
+def besa_K_actions__non_recursive(rewards, pulls, actions, subsample_function=subsample_uniform, depth=0):
     r""" BESA non-recursive selection algorithm for an action set of size :math:`\mathcal{K} \geq 1`.
 
     - No calls to :func:`besa_two_actions`, just generalize it to K actions instead of 2.
@@ -305,9 +305,9 @@ def besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_u
     array([ 0.09876921, -0.18561207,  0.04463033,  0.0653539 ])
     >>> np.mean(rewards[:, :min(pulls)], axis=1)  # arm 1 is better in the first 6 samples
     array([-0.06401484,  0.17366346,  0.05323033, -0.09514708])
-    >>> besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
+    >>> besa_K_actions__non_recursive(rewards, pulls, None, subsample_function=subsample_deterministic)  # doctest: +ELLIPSIS
     3
-    >>> [besa_K_actions__non_recursive(rewards, pulls, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
+    >>> [besa_K_actions__non_recursive(rewards, pulls, None, subsample_function=subsample_uniform) for _ in range(10)]  # doctest: +ELLIPSIS
     [1, 3, 0, 2, 2, 3, 1, 1, 3, 1]
     """
     K = len(pulls)
@@ -353,6 +353,11 @@ class BESA(IndexPolicy):
         self.non_recursive = non_recursive  #: Whether to use :func:`besa_K_actions` or :func:`besa_K_actions__non_recursive` for the selection of K arms.
         assert not (non_binary and non_recursive), "Error: BESA cannot use simultaneously non_binary and non_recursive option..."  # DEBUG
         self._subsample_function = subsample_uniform if random_subsample else subsample_deterministic
+        self._besa_function = besa_K_actions
+        if non_binary:
+            self._besa_function = besa_K_actions__non_binary
+        if non_recursive:
+            self._besa_function = besa_K_actions__non_recursive
         # --- Internal memory
         assert nbArms >= 2, "Error: BESA algorithm can only work for at least 2 arms."
         self._left = 0  # just keep them in memory to increase readability
@@ -408,7 +413,7 @@ class BESA(IndexPolicy):
             if self.randomized_tournament:
                 np.random.shuffle(self._actions)
             # print("Calling 'besa_K_actions' with actions list = {}...".format(self._actions))  # DEBUG
-            return besa_K_actions(self.all_rewards, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
+            return self._besa_function(self.all_rewards, self.pulls, self._actions, subsample_function=self._subsample_function, depth=0)
 
     # --- Others choice...() methods, partly implemented
 

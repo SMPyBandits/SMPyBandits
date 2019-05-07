@@ -812,11 +812,28 @@ configuration.update({
         #         "non_binary": True,
         #     }
         # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_recursive": False,
+        #         "non_binary": False,
+        #     }
+        # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_recursive": False,
+        #         "non_binary": True,
+        #     }
+        # },
         {
             "archtype": BESA,
             "params": {
                 "horizon": HORIZON,
-                "non_recursive": True,
+                "non_recursive": False,
+                "non_binary": True,
             }
         },
         # # --- MOSS algorithm, like UCB
