@@ -200,7 +200,7 @@ if __name__ == '__main__':
                 evaluation.saveondisk(h5pyname)
 
         if not do_plots:
-            break
+            continue  # XXX don't use break, it exit the loop on different environments
 
         # --- Also plotting the history of means
         if saveallfigs:

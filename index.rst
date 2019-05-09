@@ -61,6 +61,7 @@ The paper can be consulted `here on my website <https://perso.crans.org/besson/a
     SparseBandits.md
     NonStationaryBandits.md
     API.md
+    About_parallel_computations.md
     TODO.md
     plots/README.md
     notebooks/README.md
