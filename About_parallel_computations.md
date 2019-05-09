@@ -6,7 +6,7 @@
 Nowadays, parallelism is everywhere in the computational world, and any serious framework for numerical simulations must explore at least one of the three main approaches to (try to) gain performance from parallelism.
 
 For all the different numerical simulations for which SMPyBandits is designed, the setting is the same: we consider a small set of p different problems, of time horizon T that we want to simulate for N independent runs (e.g., p=6, T=10000 and N=100).
-On the first hand, because of the fundamentally sequential nature of bandit games, each repetition of the simulation must be sequential regarding the time steps t=1,\dots,T, and so no parallelism can be done to speed up this axis.
+On the first hand, because of the fundamentally sequential nature of bandit games, each repetition of the simulation must be sequential regarding the time steps t=1,...,T, and so no parallelism can be done to speed up this axis.
 On the other hand, parallelism can help greatly for the two other axes: if we have a way to run in parallel 4 processes, and we have p=4 problems to simulate, then running a process for each problem directly brings a speed-up factor of 4.
 Similarly, if we want to run 100 repetitions of the same (random) problem, and we can run 4 processes in parallel, then running 100/4=25 repetitions on each process also bring a speed-up factor of 4.
 
@@ -35,14 +35,16 @@ We give in the Table below an example of running time of an experiment with T=10
 It clearly illustrates that using more jobs than the number of CPU is sub-optimal, and that as soon as the number of repetitions is large enough, using one job by available CPU core (\ie, here 4 jobs) gives a significant speed-up time.
 Due to the cost of orchestrating the different jobs, and memory exchanges at the end of each repetition, the parallel version is \emph{not} 4 times faster, but empirically we always found it to be 2 to 3.5 times faster.
 
-| Repetitions \ number of jobs `N_JOBS` | 1 | 4 (= nb cores) | 20 (> nb cores) |
-|---|---|---|---|
-| 1 repetition    | 15 seconds   | 26 seconds   | 43 seconds   |
-| 10 repetitions  | 87 seconds   | 51 seconds   | 76 seconds   |
-| 100 repetitions | 749 seconds  | 272 seconds  | 308 seconds  |
-| 500 repetitions | 2944 seconds | 1530 seconds | 1846 seconds |
+For a simulation with 9 different algorithms, for K=9 arms, a time horizon of T=10000,
+we illustrate the effect on the running time of using `N_JOBS` jobs in parallel.
+For different number of repetitions and different number of jobs `N_JOBS`, for 1, 4 (= nb cores), 20 (> nb cores) jobs:
 
-> The table above shows the effect on the running time of using `N_JOBS` jobs in parallel, for a simulation with 9 different algorithms, for K=9 arms, a time horizon of T=10000.
+- 1 repetition: 15 seconds, 26 seconds, 43 seconds
+- 10 repetitions: 87 seconds, 51 seconds, 76 seconds
+- 100 repetitions: 749 seconds, 272 seconds, 308 seconds
+- 500 repetitions: 2944 seconds, 1530 seconds, 1846 seconds
+
+![The table above shows the effect on the running time of using `N_JOBS` jobs in parallel, for a simulation with 9 different algorithms, for K=9 arms, a time horizon of T=10000.](plots/About_parallel_computations.png)
 
 ----
 
