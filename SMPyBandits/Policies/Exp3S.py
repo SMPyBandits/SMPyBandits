@@ -76,7 +76,8 @@ class Exp3S(Exp3):
         self.weights = np.full(nbArms, 1. / nbArms)  #: Weights on the arms
 
     def __str__(self):
-        return r"Exp3.S($T={}$, $\Upsilon_T={}$, $\alpha={:.6g}$, $\gamma={:.6g}$)".format(self.horizon, self.max_nb_random_events, self._alpha, self._gamma)
+        # return r"Exp3.S($T={}$, $\Upsilon_T={}$, $\alpha={:.6g}$, $\gamma={:.6g}$)".format(self.horizon, self.max_nb_random_events, self._alpha, self._gamma)
+        return r"Exp3.S($T={}$, $\Upsilon_T={}$)".format(self.horizon, self.max_nb_random_events)
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
@@ -145,6 +146,11 @@ class Exp3S(Exp3):
         if self.unbiased:
             reward = reward / self.trusts[arm]
         # Multiplicative weights + uniform share of previous weights (alpha is used for this)
-        self.weights[arm] = self.weights[arm] * np.exp(reward * (self.gamma / self.nbArms)) + CONSTANT_e * (self.alpha / self.nbArms) * np.sum(self.weights)
-        # !!! DONT Renormalize weights at each step
+        old_weights = self.weights[:]
+        sum_of_weights = np.sum(old_weights)
+        for otherArm in range(self.nbArms):
+            if otherArm != arm:
+                self.weights[otherArm] = old_weights[otherArm] + CONSTANT_e * (self.alpha / self.nbArms) * sum_of_weights
+        self.weights[arm] = old_weights[arm] * np.exp(reward * (self.gamma / self.nbArms)) + CONSTANT_e * (self.alpha / self.nbArms) * sum_of_weights
+        # WARNING DONT Renormalize weights at each step !!
         # self.weights /= np.sum(self.weights)
