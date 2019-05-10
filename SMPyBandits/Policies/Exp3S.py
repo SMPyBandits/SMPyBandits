@@ -77,7 +77,7 @@ class Exp3S(Exp3):
 
     def __str__(self):
         # return r"Exp3.S($T={}$, $\Upsilon_T={}$, $\alpha={:.6g}$, $\gamma={:.6g}$)".format(self.horizon, self.max_nb_random_events, self._alpha, self._gamma)
-        return r"Exp3.S($T={}$, $\Upsilon_T={}$)".format(self.horizon, self.max_nb_random_events)
+        return "Exp3.S"
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property
