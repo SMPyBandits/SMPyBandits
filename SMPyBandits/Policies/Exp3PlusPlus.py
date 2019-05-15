@@ -117,18 +117,11 @@ class Exp3PlusPlus(BasePolicy):
         trusts = ((1 - np.sum(self.eta)) * self.weights) + self.eta
         # XXX Handle weird cases, slow down everything but safer!
         if not np.all(np.isfinite(trusts)):
-            print("WARNING: Exp3PlusPlus.trusts : a trust was infinite...")  # DEBUG
-            # XXX some value has non-finite trust, probably on the first steps
-            # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
-            if np.all(~np.isfinite(trusts)):
-                trusts = np.full(self.nbArms, 1. / self.nbArms)
-            # 2nd case: only few values are non-finite: set them to 0
-            else:
-                trusts[~np.isfinite(trusts)] = 0
+            trusts[~np.isfinite(trusts)] = 0  # set bad values to 0
         # Bad case, where the sum is so small that it's only rounding errors
+        # or where all values where bad and forced to 0, start with trusts=[1/K...]
         if np.isclose(np.sum(trusts), 0):
-            print("WARNING: Exp3PlusPlus.trusts : the sum of trusts was too close to zero, reinitializing!")  # DEBUG
-            trusts = np.full(self.nbArms, 1. / self.nbArms)
+            trusts[:] = 1.0 / self.nbArms
         # Normalize it and return it
         return trusts / np.sum(trusts)
 

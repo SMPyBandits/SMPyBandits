@@ -76,8 +76,8 @@ class TsallisInf(Exp3):
 
         # 1. solve f(x)=1 to get an approximation of the (unique) Lagrange multiplier x
         def objective_function(x):
-            f_of_x = np.sum( (eta_t * (self.cumulative_losses - x)) ** self.inverse_exponent )
-            return (f_of_x - 1)**2
+            return (np.sum( (eta_t * (self.cumulative_losses - x)) ** self.inverse_exponent ) - 1) ** 2
+
         result_of_minimization = opt.minimize_scalar(objective_function)
         # result_of_minimization = opt.minimize(objective_function, 0.0)  # XXX is it not faster?
         x = result_of_minimization.x
@@ -86,6 +86,15 @@ class TsallisInf(Exp3):
         new_weights = ( eta_t * (self.cumulative_losses - x) ) ** self.inverse_exponent
 
         # print("DEBUG: {} at time {} (seeing reward {} on arm {}), compute slack variable x = {}, \n    and new_weights = {}...".format(self, self.t, reward, arm, x, new_weights))  # DEBUG
+
+        # XXX Handle weird cases, slow down everything but safer!
+        if not np.all(np.isfinite(new_weights)):
+            new_weights[~np.isfinite(new_weights)] = 0  # set bad values to 0
+        # Bad case, where the sum is so small that it's only rounding errors
+        # or where all values where bad and forced to 0, start with new_weights=[1/K...]
+        if np.isclose(np.sum(new_weights), 0):
+            # Normalize it!
+            new_weights[:] = 1.0
 
         # 3. Renormalize weights at each step
         new_weights /= np.sum(new_weights)

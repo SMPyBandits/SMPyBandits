@@ -78,16 +78,11 @@ class Exp3(BasePolicy):
         trusts = ((1 - self.gamma) * self.weights) + (self.gamma / self.nbArms)
         # XXX Handle weird cases, slow down everything but safer!
         if not np.all(np.isfinite(trusts)):
-            # XXX some value has non-finite trust, probably on the first steps
-            # 1st case: all values are non-finite (nan): set trusts to 1/N uniform choice
-            if np.all(~np.isfinite(trusts)):
-                trusts = np.full(self.nbArms, 1. / self.nbArms)
-            # 2nd case: only few values are non-finite: set them to 0
-            else:
-                trusts[~np.isfinite(trusts)] = 0
+            trusts[~np.isfinite(trusts)] = 0  # set bad values to 0
         # Bad case, where the sum is so small that it's only rounding errors
+        # or where all values where bad and forced to 0, start with trusts=[1/K...]
         if np.isclose(np.sum(trusts), 0):
-                trusts = np.full(self.nbArms, 1. / self.nbArms)
+            trusts[:] = 1.0 / self.nbArms
         # Normalize it and return it
         return trusts / np.sum(trusts)
 
@@ -315,8 +310,8 @@ class Exp3ELM(Exp3):
         if np.isclose(np.sum(trusts), 0):
                 trusts = np.full(len(self.availableArms), 1. / len(self.availableArms))
         # Normalize it and return it
-        return trusts
-        # return trusts / np.sum(trusts[self.availableArms])
+        # return trusts
+        return trusts / np.sum(trusts[self.availableArms])
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
     @property

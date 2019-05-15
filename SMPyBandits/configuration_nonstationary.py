@@ -581,7 +581,7 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             klUCB,
             # Thompson,  # XXX comment to only test klUCB
             # Exp3PlusPlus,  # XXX comment to only test klUCB
@@ -655,11 +655,11 @@ configuration.update({
     # #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
     # #     for alpha in ALPHAS
     # # ] +
-    # [
-    #     # --- # Different versions of the sliding window klUCB algorithm
-    #     { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
-    #     for tau in TAUS
-    # ] +
+    [
+        # --- # Different versions of the sliding window klUCB algorithm
+        { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
+        for tau in TAUS
+    ] +
     [  # XXX DiscountedThompson works REALLY well!
         {
             "archtype": DiscountedThompson,
@@ -668,24 +668,24 @@ configuration.update({
         }
         for gamma in GAMMAS
     ] +
-    # # # [  # XXX test the AdSwitch policy and its corrected version
-    # # #     { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-    # # #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # # #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    # # # ] +
-    # # # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
-    # # # [
-    # # #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-    # # #     # XXX note that for a fixed T it means nothing…
-    # # #     # XXX But for T=10000 it is at most 100 changes, reasonable!
-    # # #     { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
-    # # # ] +
-    # # # DONE The SW_UCB_Hash algorithm works fine!
-    # # [
-    # #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-    # #     for alpha in ALPHAS
-    # #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
-    # # ] +
+    [  # XXX test the AdSwitch policy and its corrected version
+        { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
+        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+        for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    ] +
+    # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    [
+        # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+        # XXX note that for a fixed T it means nothing…
+        # XXX But for T=10000 it is at most 100 changes, reasonable!
+        { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
+    ] +
+    # DONE The SW_UCB_Hash algorithm works fine!
+    [
+        { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
+        for alpha in ALPHAS
+        for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+    ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": {
@@ -705,30 +705,30 @@ configuration.update({
         # for w in [20, 10*NB_ARMS, WINDOW_SIZE, NB_ARMS*WINDOW_SIZE, 2*NB_ARMS*WINDOW_SIZE]
         for w in [WINDOW_SIZE]
     ] +
-    # # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
-    # [
-    #     { "archtype": archtype, "params": {
-    #         "horizon": HORIZON,
-    #         "policy": policy,
-    #         "max_nb_random_events": NB_BREAK_POINTS,
-    #         # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
-    #         "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-    #         "epsilon": EPSILON_for_CUSUM,
-    #     },
-    #         # "change_label": "CUSUM-klUCB",
-    #     }
-    #     for archtype in [
-    #         CUSUM_IndexPolicy,
-    #         # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
-    #     ]
-    #     for policy in [
-    #         # UCB,  # XXX comment to only test klUCB
-    #         klUCB,
-    #     ]
-    #     # for lazy_detect_change_only_x_steps in [1, 2, 5]
-    #     # for lazy_detect_change_only_x_steps in [1]
-    #     for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
-    # ] +
+    # XXX Test a few CD-MAB algorithms that need to know NB_BREAK_POINTS
+    [
+        { "archtype": archtype, "params": {
+            "horizon": HORIZON,
+            "policy": policy,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "epsilon": EPSILON_for_CUSUM,
+        },
+            # "change_label": "CUSUM-klUCB",
+        }
+        for archtype in [
+            CUSUM_IndexPolicy,
+            # PHT_IndexPolicy,  # OK PHT_IndexPolicy is very much like CUSUM
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        # for lazy_detect_change_only_x_steps in [1, 2, 5]
+        # for lazy_detect_change_only_x_steps in [1]
+        for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
+    ] +
     # # # # XXX Test a UCBLCB_IndexPolicy algorithm
     # # # [
     # # #     { "archtype": UCBLCB_IndexPolicy, "params": {
@@ -784,17 +784,17 @@ configuration.update({
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
         },
-        # "change_label": r"GLR-klUCB({})".format(", ".join(s for s in [
-        #     "Local" if per_arm_restart else "Global",
-        #     archname,
-        #     # "threshold #{}".format(variant),
-        #     # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
-        #     # r"$\delta={:.3g}$".format(delta),
-        #     # r"$\alpha_0={:.3g}$".format(alpha0),
-        #     r"$\alpha_0={:.3g}$".format(mult_alpha0),
-        #     # # "$\Delta n={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
-        #     # # "$\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
-        # ] if s))
+        "change_label": r"GLR-klUCB({})".format(", ".join(s for s in [
+            "Local" if per_arm_restart else "Global",
+            archname,
+            # "threshold #{}".format(variant),
+            # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
+            # r"$\delta={:.3g}$".format(delta),
+            # r"$\alpha_0={:.3g}$".format(alpha0),
+            # r"$\alpha_0={:.3g}$".format(mult_alpha0),
+            # # "$\Delta n={}$".format(lazy_detect_change_only_x_steps) if lazy_detect_change_only_x_steps != 10 else "",
+            # # "$\Delta s={}$".format(lazy_try_value_s_only_x_steps) if lazy_try_value_s_only_x_steps != 10 else "",
+        ] if s))
         }
         for archtype, archname in [
             # (BernoulliGLR_IndexPolicy, "random expl."),   # OK BernoulliGLR_IndexPolicy is very much like CUSUM
@@ -803,7 +803,7 @@ configuration.update({
             (BernoulliGLR_IndexPolicy_WithDeterministicExploration, ""),   # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Bernoulli GLR and is more efficient
         ]
         for policy in [
-            UCB,  # XXX comment to only test klUCB
+            # UCB,  # XXX comment to only test klUCB
             # klUCB,
             klUCB_forGLR,
         ]
@@ -818,9 +818,9 @@ configuration.update({
         #     [ALPHA_GLOBAL],
         # )
         for (per_arm_restart, delta, alpha0) in zip(
-            [True, ],  # False],  # FIXME
-            [DELTA_LOCAL, ],  # DELTA_GLOBAL],  # FIXME
-            [ALPHA_LOCAL, ],  # ALPHA_GLOBAL],  # FIXME
+            [True, False],
+            [DELTA_LOCAL, DELTA_GLOBAL],
+            [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
         # for alpha0 in [ALPHA_1]  # XXX experimental!
