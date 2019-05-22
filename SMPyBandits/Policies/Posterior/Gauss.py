@@ -3,7 +3,7 @@
 
 .. warning:: TODO I have to test it!
 
-- Reference: [[*Further optimal regret bounds for Thompson sampling*, S. Agrawal and N. Goyal, In Artificial Intelligence and Statistics, pages 99–107, 2013.](XXX)]
+- Reference: [[*Further optimal regret bounds for Thompson sampling*, S. Agrawal and N. Goyal, In Artificial Intelligence and Statistics, pages 99–107, 2013.](http://proceedings.mlr.press/v31/agrawal13a.pdf)]
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
@@ -33,15 +33,19 @@ class Gauss(Posterior):
 
         \hat{\mu_k}(t) &= \frac{X_k(t)}{N_k(t)},
         \hat{\sigma_k}^2(t) &= \frac{1}{N_k(t)}.
+        
+    .. warning:: This works only for prior with a variance :math:`\sigma^2=1` !
     """
 
-    def __init__(self, mu=0., sigma=1):
-        r"""Create a posterior assuming the default is :math:`\mathcal{N}(0, 1)`."""
-        self._mu = float(mu)
-        self.mu = float(mu)  #: Parameter :math:`\mu` of the posterior
-        assert sigma > 0, "Error: parameter 'sigma' for Gauss posterior has to be > 0."
-        self._nu = float(sigma)
-        self.sigma = float(sigma)  #: Parameter :math:`\sigma` of the posterior
+    def __init__(self, mu=0.0):
+        r"""Create a posterior assuming the prior is :math:`\mathcal{N}(\mu, 1)`.
+        
+        - The prior is centered (:math:`\mu=1`) by default, but parameter ``mu`` can be used to change this default.
+        """
+        self._mu = float(mu)  # initial value
+        self.mu = float(mu)   #: Parameter :math:`\mu` of the posterior
+        self._nu = 1.0    # initial value
+        self.sigma = 1.0  #: The parameter :math:`\sigma` of the posterior
         # internal memories
         self._nb_data = 0  # number of samples!
         self._sum_data = 0.0  # sum of samples!
@@ -49,12 +53,11 @@ class Gauss(Posterior):
     def __str__(self):
         return "Gauss({:.3g}, {:.3g})".format(self.mu, self.sigma)
 
-    def reset(self, mu=None, sigma=None):
+    def reset(self, mu=None):
         r""" Reset the for parameters :math:`\mu, \sigma`, as when creating a new Gauss posterior."""
         if mu is None:
             self.mu = self._mu
-        if sigma is None:
-            self.sigma = self._nu
+        self.sigma = self._nu
 
     def sample(self):
         r""" Get a random sample :math:`(x, \sigma^2)` from the Gaussian posterior (using :func:`scipy.stats.invgamma` for the variance :math:`\sigma^2` parameter and :func:`numpy.random.normal` for the mean :math:`x`).
