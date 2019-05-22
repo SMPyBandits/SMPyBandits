@@ -44,7 +44,6 @@ class Gauss(Posterior):
         """
         self._mu = float(mu)  # initial value
         self.mu = float(mu)   #: Parameter :math:`\mu` of the posterior
-        assert sigma > 0, "Error: parameter 'sigma' for Gauss posterior has to be > 0."
         self._nu = 1.0    # initial value
         self.sigma = 1.0  #: The parameter :math:`\sigma` of the posterior
         # internal memories
