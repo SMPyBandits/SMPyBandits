@@ -98,7 +98,7 @@ class RandomizedIndexPolicy(IndexPolicy):
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
             Z_k(t) &\sim \mathrm{Distribution}, \\
             \mathrm{UCB}_k(t) &= I_k(t) - \hat{\mu}_k(t),\\
-            A(t) &\sim U(\arg\max_{1 \leq k \leq K} \hat{\mu}_k(t) + I_k(t) \cdot Z_k(t)).
+            A(t) &\sim U(\arg\max_{1 \leq k \leq K} \hat{\mu}_k(t) + \mathrm{UCB}_k(t) \cdot Z_k(t)).
         """
         if self.pulls[arm] < 1:
             return float('+inf')
@@ -118,7 +118,7 @@ class RandomizedIndexPolicy(IndexPolicy):
             \hat{\mu}_k(t) &= \frac{X_k(t)}{N_k(t)}, \\
             Z_k(t) &\sim \mathrm{Distribution}, \\
             \mathrm{UCB}_k(t) &= I_k(t) - \hat{\mu}_k(t),\\
-            A(t) &\sim U(\arg\max_{1 \leq k \leq K} \hat{\mu}_k(t) + I_k(t) \cdot Z_k(t)).
+            A(t) &\sim U(\arg\max_{1 \leq k \leq K} \hat{\mu}_k(t) + \mathrm{UCB}_k(t) \cdot Z_k(t)).
         """
         super(RandomizedIndexPolicy, self).computeAllIndex()
         index = self.index

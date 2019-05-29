@@ -616,17 +616,17 @@ configuration.update({
     # # [
     # #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
     # # ] +
-    [
-        # --- # Different versions of the discounted UCB algorithm
-        { "archtype": DiscountedklUCB, "params": {
-            "gamma": gamma,
-            # "alpha": alpha,
-            # "useRealDiscount": useRealDiscount,
-        } }
-        for gamma in GAMMAS
-        # for alpha in ALPHAS
-        # for useRealDiscount in [True, False]
-    ] +
+    # [
+    #     # --- # Different versions of the discounted UCB algorithm
+    #     { "archtype": DiscountedklUCB, "params": {
+    #         "gamma": gamma,
+    #         # "alpha": alpha,
+    #         # "useRealDiscount": useRealDiscount,
+    #     } }
+    #     for gamma in GAMMAS
+    #     # for alpha in ALPHAS
+    #     # for useRealDiscount in [True, False]
+    # ] +
     # # [
     # #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
     # #     { "archtype": DiscountedklUCBPlus, "params": { "max_nb_random_events": NB_BREAK_POINTS, "horizon": HORIZON, } }
@@ -655,11 +655,11 @@ configuration.update({
     # #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
     # #     for alpha in ALPHAS
     # # ] +
-    [
-        # --- # Different versions of the sliding window klUCB algorithm
-        { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
-        for tau in TAUS
-    ] +
+    # [
+    #     # --- # Different versions of the sliding window klUCB algorithm
+    #     { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
+    #     for tau in TAUS
+    # ] +
     [  # XXX DiscountedThompson works REALLY well!
         {
             "archtype": DiscountedThompson,
@@ -668,24 +668,32 @@ configuration.update({
         }
         for gamma in GAMMAS
     ] +
-    [  # XXX test the AdSwitch policy and its corrected version
-        { "archtype": AdSwitch, "params": { "horizon": HORIZON, "C1": C1, "C2": C2,} }
-        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-        for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    ] +
-    # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
-    [
-        # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
-        # XXX note that for a fixed T it means nothing…
-        # XXX But for T=10000 it is at most 100 changes, reasonable!
-        { "archtype": LM_DSEE, "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, } }
-    ] +
-    # DONE The SW_UCB_Hash algorithm works fine!
-    [
-        { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
-        for alpha in ALPHAS
-        for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
-    ] +
+    # [  # XXX test the AdSwitch policy and its corrected version
+    #     {
+    #         "archtype": AdSwitch,
+    #         "params": { "horizon": HORIZON, "C1": C1, "C2": C2,},
+    #         "change_label": "AdSwitch",
+    #     }
+    #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    #     for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    # ] +
+    # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
+    # [
+    #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
+    #     # XXX note that for a fixed T it means nothing…
+    #     # XXX But for T=10000 it is at most 100 changes, reasonable!
+    #     {
+    #         "archtype": LM_DSEE,
+    #         "params": { "nu": 0.25, "DeltaMin": 0.1, "a": 1, "b": 0.25, },
+    #         "change_label": r"LM-DSEE($\nu=1/4$, $\Delta^{min}=0.1$, $a=1$, $b=1/4$)",
+    #     }
+    # ] +
+    # # DONE The SW_UCB_Hash algorithm works fine!
+    # [
+    #     { "archtype": SWHash_IndexPolicy, "params": { "alpha": alpha, "lmbda": lmbda, "policy": UCB } }
+    #     for alpha in ALPHAS
+    #     for lmbda in [1]  # [0.1, 0.5, 1, 5, 10]
+    # ] +
     # XXX The Monitored_IndexPolicy with specific tuning of the input parameters
     [
         { "archtype": Monitored_IndexPolicy, "params": {
@@ -695,7 +703,7 @@ configuration.update({
             "w": w,
             "delta": DELTA_for_MUCB,
         },
-            # "change_label": "M-klUCB",
+            "change_label": "M-klUCB",
         }
         # for per_arm_restart in PER_ARM_RESTART
         for policy in [
@@ -715,7 +723,7 @@ configuration.update({
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "epsilon": EPSILON_for_CUSUM,
         },
-            # "change_label": "CUSUM-klUCB",
+            "change_label": "CUSUM-klUCB",
         }
         for archtype in [
             CUSUM_IndexPolicy,
