@@ -539,14 +539,15 @@ class Evaluator(object):
             else:
                 lastRegret[i] = Y[-1]  # get the last value
             totalRegret[i] = Y[-1]
-            totalRewards[i] = np.sum(self.getAverageRewards(i, envId))
+            totalRewards[i] = np.sum(self.getRewards(i, envId))
             totalWeightedSelections[i] = np.sum( self.getAverageWeightedSelections(i, envId))
         # Sort lastRegret and give ranking
         index_of_sorting = np.argsort(lastRegret)
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}, total regret = {:.5g}, total reward = {:.5g}, total weighted selection = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastRegret[k], totalRegret[k], totalRewards[k], totalWeightedSelections[k]))
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation\n\t(last regret = {:.5g},\ttotal regret = {:.5g},\ttotal reward = {:.5g},\ttotal weighted selection = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastRegret[k], totalRegret[k], totalRewards[k], totalWeightedSelections[k]))
         return lastRegret, index_of_sorting
+        return fig
 
     def _xlabel(self, envId, *args, **kwargs):
         """Add xlabel to the plot, and if the environment has change-point, draw vertical lines to clearly identify the locations of the change points."""
