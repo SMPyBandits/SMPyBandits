@@ -526,22 +526,27 @@ class Evaluator(object):
         """Print the final ranking of the different policies."""
         print("\nGiving the final ranks ...")
         assert 0 < self.averageOn < 1, "Error, the parameter averageOn of a EvaluatorMultiPlayers classs has to be in (0, 1) strictly, but is = {} here ...".format(self.averageOn)  # DEBUG
-        print("\nFinal ranking for this environment #{} :".format(envId))
+        print("\nFinal ranking for this environment #{} : (using {} accurate estimate of the regret)".format(envId, "more" if moreAccurate else "less"))
         nbPolicies = self.nbPolicies
-        lastY = np.zeros(nbPolicies)
+        lastRegret = np.zeros(nbPolicies)
+        totalRegret = np.zeros(nbPolicies)
+        totalRewards = np.zeros(nbPolicies)
+        totalWeightedSelections = np.zeros(nbPolicies)
         for i, policy in enumerate(self.policies):
             Y = self.getCumulatedRegret(i, envId, moreAccurate=moreAccurate)
             if self.finalRanksOnAverage:
-                lastY[i] = np.mean(Y[-int(self.averageOn * self.horizon)])   # get average value during the last 0.5% of the iterations
+                lastRegret[i] = np.mean(Y[-int(self.averageOn * self.horizon):])   # get average value during the last 0.5% of the iterations
             else:
-                lastY[i] = Y[-1]  # get the last value
-        # Sort lastY and give ranking
-        index_of_sorting = np.argsort(lastY)
+                lastRegret[i] = Y[-1]  # get the last value
+            totalRegret[i] = Y[-1]
+            totalRewards[i] = np.sum(self.getAverageRewards(i, envId))
+            totalWeightedSelections[i] = np.sum( self.getAverageWeightedSelections(i, envId))
+        # Sort lastRegret and give ranking
+        index_of_sorting = np.argsort(lastRegret)
         for i, k in enumerate(index_of_sorting):
             policy = self.policies[k]
-            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastY[k]))
-        return lastY, index_of_sorting
-        return fig
+            print("- Policy '{}'\twas ranked\t{} / {} for this simulation (last regret = {:.5g}, total regret = {:.5g}, total reward = {:.5g}, total weighted selection = {:.5g}).".format(policy.__cachedstr__, i + 1, nbPolicies, lastRegret[k], totalRegret[k], totalRewards[k], totalWeightedSelections[k]))
+        return lastRegret, index_of_sorting
 
     def _xlabel(self, envId, *args, **kwargs):
         """Add xlabel to the plot, and if the environment has change-point, draw vertical lines to clearly identify the locations of the change points."""

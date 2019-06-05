@@ -155,7 +155,8 @@ if __name__ == '__main__':
 
         # Display the final regrets and rankings for that env
         evaluation.printLastRegrets(envId)
-        evaluation.printFinalRanking(envId)
+        evaluation.printFinalRanking(envId, moreAccurate=False)
+        evaluation.printFinalRanking(envId, moreAccurate=True)
         evaluation.printRunningTimes(envId)
         evaluation.printMemoryConsumption(envId)
         evaluation.printNumberOfCPDetections(envId)

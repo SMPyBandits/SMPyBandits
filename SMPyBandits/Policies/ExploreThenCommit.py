@@ -48,7 +48,7 @@ class ETC_KnownGap(EpsilonGreedy):
         assert 0 <= gap <= 1, "Error: the 'gap' parameter for ETC_KnownGap class has to be in [0, 1], but was {}.".format(gap)  # DEBUG
         self.gap = gap  #: Known gap parameter for the stopping rule.
         # Compute the time m
-        m = max(0, int(np.floor(((2. / gap**2) * np.log(horizon * gap**2 / 2.)))))
+        m = max(0, int(np.floor(((4. / gap**2) * np.log(horizon * gap**2 / 4.)))))
         self.max_t = self.nbArms * m  #: Time until pure exploitation, ``m_`` steps in each arm.
 
     def __str__(self):
@@ -59,7 +59,7 @@ class ETC_KnownGap(EpsilonGreedy):
     def epsilon(self):
         r""" 1 while :math:`t \leq T_0`, 0 after, where :math:`T_0` is defined by:
 
-        .. math:: T_0 = \lfloor \frac{2}{\Delta^2} \log(\frac{T \Delta^2}{2}) \rfloor.
+        .. math:: T_0 = \lfloor \frac{4}{\Delta^2} \log(\frac{T \Delta^2}{4}) \rfloor.
         """
         if self.t <= self.max_t:
             # First phase: randomly explore!
