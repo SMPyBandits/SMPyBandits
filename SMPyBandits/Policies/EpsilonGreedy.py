@@ -36,7 +36,7 @@ class EpsilonGreedy(BasePolicy):
 
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonGreedy, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."  # DEBUG
+        # assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonGreedy class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
     # This decorator @property makes this method an attribute, cf. https://docs.python.org/3/library/functions.html#property
@@ -114,7 +114,7 @@ class EpsilonDecreasing(EpsilonGreedy):
 
     def __init__(self, nbArms, epsilon=EPSILON, lower=0., amplitude=1.):
         super(EpsilonDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0. <= epsilon <= 1., "Error: the 'epsilon' parameter for EpsilonDecreasing class has to be in [0, 1]."  # DEBUG
+        # assert 0. <= epsilon <= 1., "Error: the 'epsilon' parameter for EpsilonDecreasing class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
     def __str__(self):
@@ -178,7 +178,7 @@ class EpsilonFirst(EpsilonGreedy):
         super(EpsilonFirst, self).__init__(nbArms, epsilon=epsilon, lower=lower, amplitude=amplitude)
         assert horizon > 0, "Error: the 'horizon' parameter for EpsilonFirst class has to be > 0."
         self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment.
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."  # DEBUG
+        # assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonFirst class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
 
     def __str__(self):
@@ -212,7 +212,7 @@ class EpsilonExpDecreasing(EpsilonGreedy):
 
     def __init__(self, nbArms, epsilon=EPSILON, decreasingRate=DECREASINGRATE, lower=0., amplitude=1.):
         super(EpsilonExpDecreasing, self).__init__(nbArms, lower=lower, amplitude=amplitude)
-        assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonExpDecreasing class has to be in [0, 1]."  # DEBUG
+        # assert 0 <= epsilon <= 1, "Error: the 'epsilon' parameter for EpsilonExpDecreasing class has to be in [0, 1]."  # DEBUG
         self._epsilon = epsilon
         assert decreasingRate > 0, "Error: the 'decreasingRate' parameter for EpsilonExpDecreasing class has to be > 0."
         self._decreasingRate = decreasingRate

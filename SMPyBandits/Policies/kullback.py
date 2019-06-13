@@ -845,7 +845,7 @@ def kllcbExp(x, d, precision=1e-6):
 
 # --- max EV functions
 
-@jit
+#@jit
 def maxEV(p, V, klMax):
     r""" Maximize expectation of :math:`V` with respect to :math:`q` st. :math:`\mathrm{KL}(p, q) < \text{klMax}`.
 
@@ -882,7 +882,7 @@ def maxEV(p, V, klMax):
     return Uq
 
 
-@jit
+#@jit
 def reseqp(p, V, klMax, max_iterations=50):
     """ Solve ``f(reseqp(p, V, klMax)) = klMax``, using Newton method.
 
@@ -931,7 +931,7 @@ def reseqp2(p, V, klMax):
     tol = 1e-4
     value0 = mV + 0.1
 
-    @jit  # TODO try numba.jit() on this function
+    #@jit  # TODO try numba.jit() on this function
     def f(value):
         """ Function fo to minimize."""
         if MV < mV + tol:
