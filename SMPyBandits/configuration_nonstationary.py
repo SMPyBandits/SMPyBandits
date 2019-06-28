@@ -722,9 +722,9 @@ configuration.update({
             # "min_number_of_observation_between_change_point": MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "epsilon": EPSILON_for_CUSUM,
-            "use_experimental_localization": use_experimental_localization,
+            "use_localization": use_localization,
         },
-            "change_label": "CUSUM-klUCB{}".format("(Localization)" if use_experimental_localization else ""),
+            "change_label": "CUSUM-klUCB{}".format("(Localization)" if use_localization else ""),
         }
         for archtype in [
             CUSUM_IndexPolicy,
@@ -734,7 +734,7 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for use_experimental_localization in [True, False]
+        for use_localization in [True, False]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
         # for lazy_detect_change_only_x_steps in [1]
         for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
@@ -793,11 +793,11 @@ configuration.update({
             "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
-            "use_experimental_localization": use_experimental_localization,
+            "use_localization": use_localization,
         },
         "change_label": r"GLR-klUCB({})".format(", ".join(s for s in [
             "Local" if per_arm_restart else "Global",
-            "Localization" if use_experimental_localization else "",
+            "Localization" if use_localization else "",
             archname,
             # "threshold #{}".format(variant),
             # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
@@ -834,7 +834,7 @@ configuration.update({
             [DELTA_LOCAL, DELTA_GLOBAL],
             [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
-        for use_experimental_localization in [True, False]
+        for use_localization in [True, False]
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
         # for alpha0 in [ALPHA_1]  # XXX experimental!
         for mult_alpha0 in [1]  # comment from the + to use default parameter
