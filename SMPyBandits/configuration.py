@@ -88,8 +88,8 @@ TEST_WrapRange = True
 TEST_WrapRange = False  # XXX do not let this = False if you want to test my WrapRange policy
 
 #: Should we cache rewards? The random rewards will be the same for all the REPETITIONS simulations for each algorithms.
-CACHE_REWARDS = True  # XXX to manually enable this feature?
 CACHE_REWARDS = False  # XXX to manually disable this feature?
+CACHE_REWARDS = True  # XXX to manually enable this feature?
 
 #: Should the Aggregator policy update the trusts in each child or just the one trusted for last decision?
 UPDATE_ALL_CHILDREN = True
@@ -325,7 +325,11 @@ klucb = klucb_mapping.get(str(configuration['environment'][0]['arm_type']), kluc
 #: Compute the gap of the first problem.
 #: (for d in MEGA's parameters, and epsilon for MusicalChair's parameters)
 try:
-    GAP = np.min(np.diff(np.sort(configuration['environment'][0]['params'])))
+    sorted_means = np.sort(configuration['environment'][0]['params'])
+    if np.isclose(np.min(sorted_means), np.max(sorted_means)):
+        GAP = np.min(np.diff(sorted_means))
+    else:
+        GAP = np.max(sorted_means) - np.max(sorted_means[sorted_means < np.max(sorted_means)])
 except (ValueError, np.AxisError, TypeError):
     print("Warning: using the default value for the GAP (Bayesian environment maybe?)")  # DEBUG
     GAP = 1. / (3 * NB_ARMS)
@@ -334,14 +338,16 @@ except (ValueError, np.AxisError, TypeError):
 configuration.update({
     "policies": [
         # # --- Stupid algorithms
-        # {
-        #     "archtype": Uniform,   # The stupidest policy, fully uniform
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
-        #     "params": {}
-        # },
+        {
+            "archtype": Uniform,   # The stupidest policy, fully uniform
+            "params": {},
+            "change_label": "Pure exploration",
+        },
+        {
+            "archtype": EmpiricalMeans,   # The naive policy, just using empirical means
+            "params": {},
+            "change_label": "Pure exploitation",
+        },
         # # {
         # #     "archtype": TakeRandomFixedArm,   # The stupidest policy
         # #     "params": {}
@@ -366,9 +372,10 @@ configuration.update({
         {
             "archtype": EpsilonDecreasing,   # This basic EpsilonGreedy is also very bad
             "params": {
-                "epsilon": EPSILON,
+                "epsilon": 6 * NB_ARMS / GAP,
                 # "decreasingRate": 0.005,
-            }
+            },
+            "change_label": r"$\varepsilon$-greedy",
         },
         # {
         #     "archtype": EpsilonFirst,   # This basic EpsilonFirst is also very bad
@@ -396,8 +403,10 @@ configuration.update({
             "archtype": ETC_KnownGap,
             "params": {
                 "horizon": HORIZON,
-                "gap": max(0.01, 1.0 / (3 * NB_ARMS)),
-            }
+                # "gap": max(0.01, 1.0 / (3 * NB_ARMS)),
+                "gap": GAP,
+            },
+            "change_label": "Explore-then-Exploit",
         },
         # # {
         # #     "archtype": ETC_KnownGap,
@@ -520,11 +529,11 @@ configuration.update({
         #         "delta": 0.1,
         #     }
         # },
-        # --- Exp3PlusPlus algorithm
-        {
-            "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
-            "params": {}
-        },
+        # # --- Exp3PlusPlus algorithm
+        # {
+        #     "archtype": Exp3PlusPlus,   # Another parameter-free Exp3, better parametrization
+        #     "params": {}
+        # },
         # # --- Probability pursuit algorithm
         # {
         #     "archtype": ProbabilityPursuit,
@@ -672,7 +681,8 @@ configuration.update({
             "archtype": klUCB,
             "params": {
                 "klucb": klucb,
-            }
+            },
+            "change_label": r"Bernoulli kl-UCB",
         },
         # {
         #     "archtype": SWR_klUCB,   # XXX experimental sliding window algorithm
@@ -744,449 +754,451 @@ configuration.update({
             "archtype": Thompson,
             "params": {
                 "posterior": Beta,
-            }
-        },
-        # {
-        #     "archtype": Thompson,
-        #     "params": {
-        #         "posterior": Gauss,
-        #     }
-        # },
-        # --- Bayes UCB algorithms
-        {
-            "archtype": BayesUCB,
-            "params": {
-                "posterior": Beta,
-            }
+            },
+            "change_label": r"Thompson sampling",
         },
         # # {
-        # #     "archtype": BayesUCB,
+        # #     "archtype": Thompson,
         # #     "params": {
         # #         "posterior": Gauss,
         # #     }
         # # },
-        # --- AdBandits with different alpha paramters
-        {
-            "archtype": AdBandits,
-            "params": {
-                "alpha": 0.5,
-                "horizon": HORIZON,
-            }
-        },
-        # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
+        # # --- Bayes UCB algorithms
         # {
-        #     "archtype": Aggregator,
+        #     "archtype": BayesUCB,
         #     "params": {
-        #         "unbiased": UNBIASED,
-        #         "update_all_children": UPDATE_ALL_CHILDREN,
-        #         "decreaseRate": DECREASE_RATE,
-        #         "learningRate": LEARNING_RATE,
-        #         "children": [
-        #             { "archtype": BayesUCB, "params": {} },
-        #             { "archtype": Thompson, "params": {} },
-        #         ],
-        #         "update_like_exp4": UPDATE_LIKE_EXP4,
-        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-        #     },
-        # },
-        # --- The awesome BESA algorithm
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
-        #         "randomized_tournament": True,
-        #         # "randomized_tournament": False,  # XXX Very inefficient!
-        #         "random_subsample": True,
-        #         # "random_subsample": False,  # XXX Very inefficient!
-        #         # "non_binary": False,
-        #         "non_binary": True,
-        #         # "non_recursive": False,
-        #         "non_recursive": True,
+        #         "posterior": Beta,
         #     }
         # },
+        # # # {
+        # # #     "archtype": BayesUCB,
+        # # #     "params": {
+        # # #         "posterior": Gauss,
+        # # #     }
+        # # # },
+        # # --- AdBandits with different alpha paramters
         # {
-        #     "archtype": BESA,
+        #     "archtype": AdBandits,
         #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_binary": True,
-        #     }
-        # },
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_recursive": False,
-        #         "non_binary": False,
-        #     }
-        # },
-        # {
-        #     "archtype": BESA,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #         "non_recursive": False,
-        #         "non_binary": True,
-        #     }
-        # },
-        {
-            "archtype": BESA,
-            "params": {
-                "horizon": HORIZON,
-                "non_recursive": False,
-                "non_binary": True,
-            }
-        },
-        # # --- MOSS algorithm, like UCB
-        # {
-        #     "archtype": MOSS,
-        #     "params": {}
-        # },
-        # # --- MOSS-H algorithm, like UCB-H
-        # {
-        #     "archtype": MOSSH,
-        #     "params": {
+        #         "alpha": 0.5,
         #         "horizon": HORIZON,
         #     }
         # },
-        # --- MOSS-Anytime algorithm, extension of MOSS
-        {
-            "archtype": MOSSAnytime,
-            "params": {
-                "alpha": 1.35,
-            }
-        },
-        # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
-        # {
-        #     "archtype": MOSSExperimental,
-        #     "params": {}
-        # },
-        # --- Horizon-dependent algorithm ApproximatedFHGittins
-        {
-            "archtype": ApproximatedFHGittins,
-            "params": {
-                "alpha": 0.5,
-                "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
-                # "horizon": HORIZON,
-                # "horizon": HORIZON + 1,
-            }
-        },
-        # --- Auto-tuned UCBdagger algorithm
-        {
-            "archtype": UCBdagger,
-            "params": {
-                "horizon": HORIZON,
-            }
-        },
-        # # --- Optimally-Confident UCB algorithm
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 1,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.9,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.8,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.7,
-        #     }
-        # },
-        # {
-        #     "archtype": OCUCB,
-        #     "params": {
-        #         "eta": 1.1,
-        #         "rho": 0.6,
-        #     }
-        # },
-        # # --- Optimally-Confident UCB algorithm, horizon dependent
-        # {
-        #     "archtype": OCUCBH,
-        #     "params": {
-        #         "psi": 2,
-        #         "alpha": 4,
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # {
-        #     "archtype": AOCUCBH,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # },
-        # --- CPUCB algorithm, other variant of UCB
-        # {
-        #     "archtype": CPUCB,
-        #     "params": {}
-        # },
-        # # --- DMED algorithm, similar to klUCB
-        # {
-        #     "archtype": DMEDPlus,
-        #     "params": {}
-        # },
+        # # # DONE Compare AdBandits with Aggregator[BayesUCB, Thompson]
         # # {
-        # #     "archtype": DMED,
+        # #     "archtype": Aggregator,
+        # #     "params": {
+        # #         "unbiased": UNBIASED,
+        # #         "update_all_children": UPDATE_ALL_CHILDREN,
+        # #         "decreaseRate": DECREASE_RATE,
+        # #         "learningRate": LEARNING_RATE,
+        # #         "children": [
+        # #             { "archtype": BayesUCB, "params": {} },
+        # #             { "archtype": Thompson, "params": {} },
+        # #         ],
+        # #         "update_like_exp4": UPDATE_LIKE_EXP4,
+        # #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+        # #     },
+        # # },
+        # # --- The awesome BESA algorithm
+        # # {
+        # #     "archtype": BESA,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "minPullsOfEachArm": 1,  # Default, don't seem to improve if increasing this one
+        # #         "randomized_tournament": True,
+        # #         # "randomized_tournament": False,  # XXX Very inefficient!
+        # #         "random_subsample": True,
+        # #         # "random_subsample": False,  # XXX Very inefficient!
+        # #         # "non_binary": False,
+        # #         "non_binary": True,
+        # #         # "non_recursive": False,
+        # #         "non_recursive": True,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": BESA,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "non_binary": True,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": BESA,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "non_recursive": False,
+        # #         "non_binary": False,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": BESA,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "non_recursive": False,
+        # #         "non_binary": True,
+        # #     }
+        # # },
+        # {
+        #     "archtype": BESA,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #         "non_recursive": False,
+        #         "non_binary": True,
+        #     }
+        # },
+        # # # --- MOSS algorithm, like UCB
+        # # {
+        # #     "archtype": MOSS,
         # #     "params": {}
         # # },
-        # # --- IMED algorithm, similar to DMED
+        # # # --- MOSS-H algorithm, like UCB-H
+        # # {
+        # #     "archtype": MOSSH,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #     }
+        # # },
+        # # --- MOSS-Anytime algorithm, extension of MOSS
         # {
-        #     "archtype": IMED,
-        #     "params": {}
-        # },
-        # # --- new klUCBswitch algorithm!
-        # {
-        #     "archtype": klUCBswitch,
+        #     "archtype": MOSSAnytime,
         #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb,
-        #         "threshold": "best"
+        #         "alpha": 1.35,
         #     }
         # },
+        # # # --- MOSS-Experimental algorithm, extension of MOSSAnytime
+        # # {
+        # #     "archtype": MOSSExperimental,
+        # #     "params": {}
+        # # },
+        # # --- Horizon-dependent algorithm ApproximatedFHGittins
         # {
-        #     "archtype": klUCBswitch,
+        #     "archtype": ApproximatedFHGittins,
         #     "params": {
-        #         "horizon": HORIZON,
-        #         "klucb": klucb,
-        #         "threshold": "delayed"
+        #         "alpha": 0.5,
+        #         "horizon": max(HORIZON + 100, int(1.05 * HORIZON)),
+        #         # "horizon": HORIZON,
+        #         # "horizon": HORIZON + 1,
         #     }
         # },
-        {
-            "archtype": klUCBswitchAnytime,
-            "params": {
-                "klucb": klucb,
-                "threshold": "best"
-            }
-        },
+        # # --- Auto-tuned UCBdagger algorithm
+        # {
+        #     "archtype": UCBdagger,
+        #     "params": {
+        #         "horizon": HORIZON,
+        #     }
+        # },
+        # # # --- Optimally-Confident UCB algorithm
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 1,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.9,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.8,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.7,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OCUCB,
+        # #     "params": {
+        # #         "eta": 1.1,
+        # #         "rho": 0.6,
+        # #     }
+        # # },
+        # # # --- Optimally-Confident UCB algorithm, horizon dependent
+        # # {
+        # #     "archtype": OCUCBH,
+        # #     "params": {
+        # #         "psi": 2,
+        # #         "alpha": 4,
+        # #         "horizon": HORIZON,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": AOCUCBH,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #     }
+        # # },
+        # # --- CPUCB algorithm, other variant of UCB
+        # # {
+        # #     "archtype": CPUCB,
+        # #     "params": {}
+        # # },
+        # # # --- DMED algorithm, similar to klUCB
+        # # {
+        # #     "archtype": DMEDPlus,
+        # #     "params": {}
+        # # },
+        # # # {
+        # # #     "archtype": DMED,
+        # # #     "params": {}
+        # # # },
+        # # # --- IMED algorithm, similar to DMED
+        # # {
+        # #     "archtype": IMED,
+        # #     "params": {}
+        # # },
+        # # # --- new klUCBswitch algorithm!
+        # # {
+        # #     "archtype": klUCBswitch,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "klucb": klucb,
+        # #         "threshold": "best"
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": klUCBswitch,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #         "klucb": klucb,
+        # #         "threshold": "delayed"
+        # #     }
+        # # },
         # {
         #     "archtype": klUCBswitchAnytime,
         #     "params": {
         #         "klucb": klucb,
-        #         "threshold": "delayed"
+        #         "threshold": "best"
         #     }
         # },
-        # # DONE Compare klUCBSwitch with Aggregator[klUCB, MOSS]
-        # {
-        #     "archtype": Aggregator,
-        #     "params": {
-        #         "unbiased": UNBIASED,
-        #         "update_all_children": UPDATE_ALL_CHILDREN,
-        #         "decreaseRate": DECREASE_RATE,
-        #         "learningRate": LEARNING_RATE,
-        #         "children": [
-        #             { "archtype": klUCB, "params": {} },
-        #             { "archtype": MOSS, "params": {} },
-        #         ],
-        #         "update_like_exp4": UPDATE_LIKE_EXP4,
-        #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
-        #     },
-        # },
-        # --- TsallisInf algorithm
-        {
-            "archtype": TsallisInf,
-            "params": {
-                "alpha": 0.5,
-            }
-        },
         # # {
-        # #     "archtype": TsallisInf,
+        # #     "archtype": klUCBswitchAnytime,
         # #     "params": {
-        # #         "alpha": 0.25,
+        # #         "klucb": klucb,
+        # #         "threshold": "delayed"
+        # #     }
+        # # },
+        # # # DONE Compare klUCBSwitch with Aggregator[klUCB, MOSS]
+        # # {
+        # #     "archtype": Aggregator,
+        # #     "params": {
+        # #         "unbiased": UNBIASED,
+        # #         "update_all_children": UPDATE_ALL_CHILDREN,
+        # #         "decreaseRate": DECREASE_RATE,
+        # #         "learningRate": LEARNING_RATE,
+        # #         "children": [
+        # #             { "archtype": klUCB, "params": {} },
+        # #             { "archtype": MOSS, "params": {} },
+        # #         ],
+        # #         "update_like_exp4": UPDATE_LIKE_EXP4,
+        # #         # "horizon": HORIZON  # XXX uncomment to give the value of horizon to have a better learning rate
+        # #     },
+        # # },
+        # # --- TsallisInf algorithm
+        # {
+        #     "archtype": TsallisInf,
+        #     "params": {
+        #         "alpha": 0.5,
+        #     }
+        # },
+        # # # {
+        # # #     "archtype": TsallisInf,
+        # # #     "params": {
+        # # #         "alpha": 0.25,
+        # # #     }
+        # # # },
+        # # # {
+        # # #     "archtype": TsallisInf,
+        # # #     "params": {
+        # # #         "alpha": 0.75,
+        # # #     }
+        # # # },
+        # # --- RCB algorithm
+        # {
+        #     "archtype": RCB,
+        #     "params": {
+        #         "alpha": 1.,
+        #         "perturbation": "uniform",  # like UCB?
+        #     }
+        # },
+        # # {
+        # #     "archtype": RCB,
+        # #     "params": {
+        # #         "alpha": 1.,
+        # #         "perturbation": "gaussian",  # like Thompson sampling
         # #     }
         # # },
         # # {
-        # #     "archtype": TsallisInf,
+        # #     "archtype": RCB,
         # #     "params": {
-        # #         "alpha": 0.75,
+        # #         "alpha": 1.,
+        # #         "perturbation": "exponential",
         # #     }
         # # },
-        # --- RCB algorithm
-        {
-            "archtype": RCB,
-            "params": {
-                "alpha": 1.,
-                "perturbation": "uniform",  # like UCB?
-            }
-        },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "gaussian",  # like Thompson sampling
-        #     }
-        # },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "exponential",
-        #     }
-        # },
-        # {
-        #     "archtype": RCB,
-        #     "params": {
-        #         "alpha": 1.,
-        #         "perturbation": "gumbel",
-        #     }
-        # },
-        # --- PHE algorithm
-        {
-            "archtype": PHE,
-            "params": {
-                "perturbation_scale": 0.5,
-            }
-        },
+        # # {
+        # #     "archtype": RCB,
+        # #     "params": {
+        # #         "alpha": 1.,
+        # #         "perturbation": "gumbel",
+        # #     }
+        # # },
+        # # --- PHE algorithm
         # {
         #     "archtype": PHE,
         #     "params": {
-        #         "perturbation_scale": 1.1,
+        #         "perturbation_scale": 0.5,
         #     }
         # },
-        # {
-        #     "archtype": PHE,
-        #     "params": {
-        #         "perturbation_scale": 2.1,
-        #     }
-        # },
-        # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
-        # {
-        #     "archtype": BlackBoxOpt,
-        #     "params": {}
-        # },
-        # # --- The new OSSB algorithm
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.01,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.001,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB,
-        #     "params": {
-        #         "epsilon": 0.0,
-        #         "gamma": 0.0,
-        #     }
-        # },
-        # {
-        #     "archtype": OSSB_DecreasingRate,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": OSSB_AutoDecreasingRate,
-        #     "params": {}
-        # },
-        # # # --- new UCBoost algorithms
         # # {
-        # #     "archtype": UCB_bq,
-        # #     "params": {}
-        # # },
-        # # {
-        # #     "archtype": UCB_h,
-        # #     "params": {}
-        # # },
-        # {
-        #     "archtype": UCB_lb,
-        #     "params": {}
-        # },
-        # {
-        #     "archtype": UCBoost_bq_h_lb,
-        #     "params": {}
-        # },
-        # # # --- new UCBoostEpsilon algorithm
-        # # {
-        # #     "archtype": UCBoostEpsilon,
+        # #     "archtype": PHE,
         # #     "params": {
-        # #         "epsilon": 0.1,
+        # #         "perturbation_scale": 1.1,
         # #     }
         # # },
         # # {
-        # #     "archtype": UCBoostEpsilon,
+        # #     "archtype": PHE,
         # #     "params": {
-        # #         "epsilon": 0.05,
+        # #         "perturbation_scale": 2.1,
         # #     }
         # # },
+        # # --- Black Box optimizer, using Gaussian Processes XXX works well, but VERY SLOW
         # # {
-        # #     "archtype": UCBoostEpsilon,
+        # #     "archtype": BlackBoxOpt,
+        # #     "params": {}
+        # # },
+        # # # --- The new OSSB algorithm
+        # # {
+        # #     "archtype": OSSB,
         # #     "params": {
         # #         "epsilon": 0.01,
+        # #         "gamma": 0.0,
         # #     }
         # # },
-        # # --- new UCBoost_cython algorithms
         # # {
-        # #     "archtype": UCB_bq_cython,
-        # #     "params": {}
-        # # },
-        # # {
-        # #     "archtype": UCB_h_cython,
-        # #     "params": {}
-        # # },
-        # {
-        #     "archtype": UCB_lb_cython,
-        #     "params": {}
-        # },
-        # # {
-        # #     "archtype": UCBoost_bq_h_lb_cython,
-        # #     "params": {}
-        # # },
-        # # # --- new UCBoostEpsilon_cython algorithm
-        # # {
-        # #     "archtype": UCBoostEpsilon_cython,
+        # #     "archtype": OSSB,
         # #     "params": {
-        # #         "epsilon": 0.05,
+        # #         "epsilon": 0.001,
+        # #         "gamma": 0.0,
         # #     }
         # # },
-        # # --- new UCBimproved algorithm
-        # {
-        #     "archtype": UCBimproved,
-        #     "params": {
-        #         "horizon": HORIZON,
-        #     }
-        # }
-        # # DONE Compare Generic Aggregation
-        # {
-        #     "archtype": GenericAggregation,
-        #     "params": {
-        #         "master": { "archtype": BayesUCB, "params": {} },
-        #         "children": [
-        #             # # Aggregating fixed-arm policies == playing the master algorithm (just more inefficient regarding time and storage, but same regret)
-        #             # { "archtype": TakeFixedArm, "params": { "armIndex": armId } }
-        #             # for armId in range(NB_ARMS)
-        #             # Confuse it with stupid algorithms
-        #             { "archtype": Uniform, "params": {} },
-        #             { "archtype": EmpiricalMeans, "params": {} },
-        #             { "archtype": Exp3PlusPlus, "params": {} },
-        #             # And use some smart algorithms
-        #             { "archtype": UCB_lb, "params": {} },
-        #             { "archtype": Thompson, "params": {} },
-        #             { "archtype": klUCB, "params": {} },
-        #             { "archtype": BayesUCB, "params": {} },
-        #             # { "archtype": ApproximatedFHGittins, "params": { "alpha": 1, "horizon": HORIZON } },
-        #         ],
-        #     },
-        # },
+        # # {
+        # #     "archtype": OSSB,
+        # #     "params": {
+        # #         "epsilon": 0.0,
+        # #         "gamma": 0.0,
+        # #     }
+        # # },
+        # # {
+        # #     "archtype": OSSB_DecreasingRate,
+        # #     "params": {}
+        # # },
+        # # {
+        # #     "archtype": OSSB_AutoDecreasingRate,
+        # #     "params": {}
+        # # },
+        # # # # --- new UCBoost algorithms
+        # # # {
+        # # #     "archtype": UCB_bq,
+        # # #     "params": {}
+        # # # },
+        # # # {
+        # # #     "archtype": UCB_h,
+        # # #     "params": {}
+        # # # },
+        # # {
+        # #     "archtype": UCB_lb,
+        # #     "params": {}
+        # # },
+        # # {
+        # #     "archtype": UCBoost_bq_h_lb,
+        # #     "params": {}
+        # # },
+        # # # # --- new UCBoostEpsilon algorithm
+        # # # {
+        # # #     "archtype": UCBoostEpsilon,
+        # # #     "params": {
+        # # #         "epsilon": 0.1,
+        # # #     }
+        # # # },
+        # # # {
+        # # #     "archtype": UCBoostEpsilon,
+        # # #     "params": {
+        # # #         "epsilon": 0.05,
+        # # #     }
+        # # # },
+        # # # {
+        # # #     "archtype": UCBoostEpsilon,
+        # # #     "params": {
+        # # #         "epsilon": 0.01,
+        # # #     }
+        # # # },
+        # # # --- new UCBoost_cython algorithms
+        # # # {
+        # # #     "archtype": UCB_bq_cython,
+        # # #     "params": {}
+        # # # },
+        # # # {
+        # # #     "archtype": UCB_h_cython,
+        # # #     "params": {}
+        # # # },
+        # # {
+        # #     "archtype": UCB_lb_cython,
+        # #     "params": {}
+        # # },
+        # # # {
+        # # #     "archtype": UCBoost_bq_h_lb_cython,
+        # # #     "params": {}
+        # # # },
+        # # # # --- new UCBoostEpsilon_cython algorithm
+        # # # {
+        # # #     "archtype": UCBoostEpsilon_cython,
+        # # #     "params": {
+        # # #         "epsilon": 0.05,
+        # # #     }
+        # # # },
+        # # # --- new UCBimproved algorithm
+        # # {
+        # #     "archtype": UCBimproved,
+        # #     "params": {
+        # #         "horizon": HORIZON,
+        # #     }
+        # # }
+        # # # DONE Compare Generic Aggregation
+        # # {
+        # #     "archtype": GenericAggregation,
+        # #     "params": {
+        # #         "master": { "archtype": BayesUCB, "params": {} },
+        # #         "children": [
+        # #             # # Aggregating fixed-arm policies == playing the master algorithm (just more inefficient regarding time and storage, but same regret)
+        # #             # { "archtype": TakeFixedArm, "params": { "armIndex": armId } }
+        # #             # for armId in range(NB_ARMS)
+        # #             # Confuse it with stupid algorithms
+        # #             { "archtype": Uniform, "params": {} },
+        # #             { "archtype": EmpiricalMeans, "params": {} },
+        # #             { "archtype": Exp3PlusPlus, "params": {} },
+        # #             # And use some smart algorithms
+        # #             { "archtype": UCB_lb, "params": {} },
+        # #             { "archtype": Thompson, "params": {} },
+        # #             { "archtype": klUCB, "params": {} },
+        # #             { "archtype": BayesUCB, "params": {} },
+        # #             # { "archtype": ApproximatedFHGittins, "params": { "alpha": 1, "horizon": HORIZON } },
+        # #         ],
+        # #     },
+        # # },
     ]
 })
+
 
 # # Tiny configuration, for the paper.pdf illustration.
 # configuration.update({

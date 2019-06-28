@@ -111,6 +111,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             full_restart_when_refresh=False,
             per_arm_restart=True,
+            use_localization=False,
             *args, **kwargs
         ):
         super(CUSUM_IndexPolicy, self).__init__(nbArms, full_restart_when_refresh=full_restart_when_refresh, per_arm_restart=per_arm_restart, *args, **kwargs)
@@ -120,10 +121,11 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         h, alpha = compute_h_alpha_from_input_parameters__CUSUM(horizon, max_nb_random_events, nbArms=nbArms, epsilon=self.epsilon, lmbda=lmbda, M=min_number_of_observation_between_change_point)
         self.threshold_h = h  #: Parameter :math:`h` for the test (threshold).
         self.proba_random_exploration = alpha  #: What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time.
+        self.use_localization = use_localization  #: Experiment to use localization of the break-point, ie, restart memory of arm by keeping observations s+1...n instead of just the last one
 
     def __str__(self):
         # return r"CUSUM-{}($\alpha={:.3g}$, $M={}${}{})".format(self._policy.__name__, self.proba_random_exploration, self.M, "" if self._per_arm_restart else ", Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
-        args = "{}{}".format("" if self._per_arm_restart else "Global, ", "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
+        args = "{}{}{}".format("" if self._per_arm_restart else "Global, ", "Localization, " if self.use_localization else "", "lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
         args = "({})".format(args) if args else ""
         return r"CUSUM-{}{}".format(self._policy.__name__, args)
 
@@ -155,7 +157,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
         gp, gm = 0, 0
         data_y = self.all_rewards[arm]
         if len(data_y) <= self.M:
-            return False
+            return False, None
         # First we use the first M samples to calculate the average :math:`\hat{u_0}`.
         u0hat = np.mean(data_y[:self.M])  # DONE okay this is efficient we don't compute the same means too many times!
         for k, y_k in enumerate(data_y, self.M + 1): # no need to multiply by (k > self.M)
@@ -163,8 +165,8 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             gm = max(0, gm + (y_k - u0hat - self.epsilon))
             if verbose: print("  - For u0hat = {}, k = {}, y_k = {}, gp = {}, gm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(u0hat, k, y_k, gp, gm, max(gp, gm), self.threshold_h))  # DEBUG
             if gp >= self.threshold_h or gm >= self.threshold_h:
-                return True
-        return False
+                return True, k + self.M + 1 if self.use_localization else None
+        return False, None
 
 
 class PHT_IndexPolicy(CUSUM_IndexPolicy):
@@ -201,6 +203,6 @@ class PHT_IndexPolicy(CUSUM_IndexPolicy):
             gm = max(0, gm + (y_k - y_k_hat - self.epsilon))
             if verbose: print("  - For y_k_hat = {}, k = {}, y_k = {}, gp = {}, gm = {}, and max(gp, gm) = {} compared to threshold h = {}".format(y_k_hat, k, y_k, gp, gm, max(gp, gm), self.threshold_h))  # DEBUG
             if gp >= self.threshold_h or gm >= self.threshold_h:
-                return True
-        return False
+                return True, k if self.use_localization else None
+        return False, None
 

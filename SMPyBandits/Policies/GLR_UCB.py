@@ -316,12 +316,14 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             threshold_function=threshold_BernoulliGLR, variant=None,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             per_arm_restart=PER_ARM_RESTART,
+            use_localization=False,
             *args, **kwargs
         ):
         super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, per_arm_restart=per_arm_restart, *args, **kwargs)
         # New parameters
         self.horizon = horizon  #: The horizon :math:`T`.
         self.max_nb_random_events = max_nb_random_events  #: The number of breakpoints :math:`\Upsilon_T`.
+        self.use_localization = use_localization  #: experiment to use localization of the break-point, ie, restart memory of arm by keeping observations s+1...n instead of just the last one
         # if delta is None and horizon is not None: delta = 1.0 / horizon
         self._exponentBeta = exponentBeta
         self._alpha_t1 = alpha_t1
@@ -366,6 +368,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         variant = "" if self._variant is None else "threshold #{}".format(self._variant)
         args = ", ".join(s for s in [
             "Local" if self._per_arm_restart else "Global",
+            "Localization" if self.use_localization else "",
             # r"$\delta={:.3g}$".format(self.delta) if self.delta is not None else "", # r"$\delta=\frac{1}{\sqrt{T}}$",
             # "", # no need to print alpha as it is chosen based on horizon
             # r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
@@ -427,13 +430,15 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             mean_after = ((t + 1 - s + t0) * mean_after - y) / (t - s + t0)
             if s % self.lazy_try_value_s_only_x_steps != 0:
                 continue
+            if np.isclose(mean_before, mean_all) and np.isclose(mean_after, mean_all):
+                continue
             kl_before = self.kl(mean_before, mean_all, *self._args_to_kl)
-            kl_after  = self.kl(mean_after, mean_all, *self._args_to_kl)
+            kl_after  = self.kl(mean_after,  mean_all, *self._args_to_kl)
             glr = (s - t0 + 1) * kl_before + (t - s) * kl_after
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean before mu(t0,s) = {} and the mean after mu(s+1,t) = {} and the total mean mu(t0,t) = {}, so the kl before = {} and kl after = {} and GLR = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, mean_all, kl_before, kl_after, glr, threshold_h))
             if glr >= threshold_h:
-                return True
-        return False
+                return True, t0 + s + 1 if self.use_localization else None
+        return False, None
 
 
 class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):

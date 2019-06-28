@@ -974,10 +974,10 @@ def delayed_play(env, policy, horizon,
         from types import MethodType
         old_detect_change = policy.detect_change
         def new_detect_change(self, *args, **kwargs):
-            did_it_detect_a_change = old_detect_change(*args, **kwargs)
-            if did_it_detect_a_change:
+            response_of_detect_change = old_detect_change(*args, **kwargs)
+            if (isinstance(response_of_detect_change, bool) and response_of_detect_change) or (isinstance(response_of_detect_change, tuple) and response_of_detect_change[0]):
                 result.number_of_cp_detections += 1
-            return did_it_detect_a_change
+            return response_of_detect_change
         policy.detect_change = MethodType(new_detect_change, policy)
 
     # XXX Experimental support for random events: shuffling or inverting the list of arms, at these time steps
