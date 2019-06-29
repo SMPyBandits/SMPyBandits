@@ -116,7 +116,7 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
         # XXX Do we have enough samples?
         min_pulls = np.min(self.last_pulls)
         if min_pulls < self.min_number_of_pulls_to_test_change:  # no we don't
-            return False
+            return False, None
         # Yes we do have enough samples
         trusts = self.policy.trusts
         k_max = np.argmax(trusts)
@@ -126,8 +126,8 @@ class DriftDetection_IndexPolicy(CD_IndexPolicy):
             difference_of_mean = means[otherArm] - meanOfTrustedArm
             if verbose: print("  - For the mean mu(k={}) = {} and mean of trusted arm mu(k_max={}) = {}, their difference is {}, compared to c = {}...".format(otherArm, means[otherArm], k_max, meanOfTrustedArm, difference_of_mean, self.threshold_h))
             if difference_of_mean >= self.threshold_h:
-                return True
-        return False
+                return True, None
+        return False, None
 
 
 # --- Exp3R

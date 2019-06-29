@@ -212,4 +212,4 @@ class Monitored_IndexPolicy(BaseWrapperPolicy):
         sum_first_half = np.sum(last_w_data_y[:self.window_size//2])
         sum_second_half = np.sum(last_w_data_y[self.window_size//2:])
         has_detected = abs(sum_first_half - sum_second_half) > self.threshold_b
-        return has_detected
+        return has_detected, None

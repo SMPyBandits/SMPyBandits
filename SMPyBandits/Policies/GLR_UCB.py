@@ -574,6 +574,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             exponentBeta=1.05, alpha_t1=0.1, alpha0=None,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
+            use_localization=False,
             *args, **kwargs
         ):
         super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)
@@ -591,6 +592,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             alpha *= smart_alpha_from_T_UpsilonT(horizon=self.horizon, max_nb_random_events=self.max_nb_random_events)
         self._alpha0 = alpha
         self.lazy_try_value_s_only_x_steps = lazy_try_value_s_only_x_steps  #: Be lazy and try to detect changes for :math:`s` taking steps of size ``steps_s``.
+        self.use_localization = use_localization  #: experiment to use localization of the break-point, ie, restart memory of arm by keeping observations s+1...n instead of just the last one
 
     def compute_threshold_h(self, s, t):
         """Compute the threshold :math:`h` with :func:`threshold_SubGaussianGLR`."""
@@ -611,6 +613,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
         args1 = "{}{}".format(
             "joint" if self.joint else "disjoint",
             "" if self._per_arm_restart else ", Global"
+            ", Localisation" if self.use_localization else ""
         )
         args2 = "{}{}{}".format(
             r"$\alpha={:.3g}$".format(self._alpha0) if self._alpha0 is not None else r"decreasing $\alpha_t$",
@@ -653,5 +656,5 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             threshold_h = self.compute_threshold_h(s, t)
             if verbose: print("  - For t0 = {}, s = {}, t = {}, the mean mu(t0,s) = {} and mu(s+1,t) = {} so glr = {}, compared to c = {}...".format(t0, s, t, mean_before, mean_after, glr, threshold_h))
             if glr >= threshold_h:
-                return True
-        return False
+                return True, t0 + s + 1 if self.use_localization else None
+        return False, None

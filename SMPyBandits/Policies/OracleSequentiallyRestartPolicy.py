@@ -174,4 +174,4 @@ class OracleSequentiallyRestartPolicy(BaseWrapperPolicy):
 
     def detect_change(self, arm):
         """ Try to detect a change in the current arm."""
-        return self.t in self.changePoints[arm]
+        return self.t in self.changePoints[arm], None
