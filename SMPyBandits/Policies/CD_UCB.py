@@ -123,6 +123,8 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         has_detected_and_maybe_position = self.detect_change(arm)
         if isinstance(has_detected_and_maybe_position, bool):
             has_detected, position = has_detected_and_maybe_position, None
+        else:
+            has_detected, position = has_detected_and_maybe_position
         if not has_detected: return
         if position is None:
             # print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.sum(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
