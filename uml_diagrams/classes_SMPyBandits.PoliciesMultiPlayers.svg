@@ -328,7 +328,7 @@
 <polygon fill="none" stroke="#000000" points="10476,-.5 10476,-189.5 10817,-189.5 10817,-.5 10476,-.5"/>
 <text text-anchor="middle" x="10646.5" y="-174.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.PoliciesMultiPlayers.OracleFair.CyclingBest</text>
 <polyline fill="none" stroke="#000000" points="10476,-166.5 10817,-166.5 "/>
-<text text-anchor="start" x="10484" y="-151.3" font-family="Times,serif" font-size="14.00" fill="#000000">bestArms : list, NoneType</text>
+<text text-anchor="start" x="10484" y="-151.3" font-family="Times,serif" font-size="14.00" fill="#000000">bestArms : NoneType, list</text>
 <text text-anchor="start" x="10484" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">nbArms</text>
 <text text-anchor="start" x="10484" y="-121.3" font-family="Times,serif" font-size="14.00" fill="#000000">nb_bestArms</text>
 <text text-anchor="start" x="10484" y="-106.3" font-family="Times,serif" font-size="14.00" fill="#000000">offset</text>

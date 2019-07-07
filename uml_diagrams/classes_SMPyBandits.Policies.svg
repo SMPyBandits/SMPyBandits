@@ -70,7 +70,7 @@
 <text text-anchor="start" x="7169.5" y="-2174.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_best_arm : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2159.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_estimated_gap : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2144.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploitation_arm : int, NoneType</text>
-<text text-anchor="start" x="7169.5" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : NoneType, int</text>
+<text text-anchor="start" x="7169.5" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : int, NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">current_worst_arm : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
 <text text-anchor="start" x="7169.5" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">last_restart_time : int</text>
@@ -355,23 +355,24 @@
 <!-- 12 -->
 <g id="node13" class="node">
 <title>12</title>
-<polygon fill="none" stroke="#000000" points="10832.5,-1038.5 10832.5,-1197.5 11158.5,-1197.5 11158.5,-1038.5 10832.5,-1038.5"/>
-<text text-anchor="middle" x="10995.5" y="-1182.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.CD_UCB.UCBLCB_IndexPolicy</text>
-<polyline fill="none" stroke="#000000" points="10832.5,-1174.5 11158.5,-1174.5 "/>
-<text text-anchor="start" x="10840.5" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">_delta : NoneType</text>
-<text text-anchor="start" x="10840.5" y="-1144.3" font-family="Times,serif" font-size="14.00" fill="#000000">_delta0 : float</text>
-<text text-anchor="start" x="10840.5" y="-1129.3" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
-<text text-anchor="start" x="10840.5" y="-1114.3" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration : int</text>
-<polyline fill="none" stroke="#000000" points="10832.5,-1106.5 11158.5,-1106.5 "/>
-<text text-anchor="start" x="10840.5" y="-1091.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="10840.5" y="-1076.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="10840.5" y="-1061.3" font-family="Times,serif" font-size="14.00" fill="#000000">delta()</text>
-<text text-anchor="start" x="10840.5" y="-1046.3" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
+<polygon fill="none" stroke="#000000" points="10832.5,-1031 10832.5,-1205 11158.5,-1205 11158.5,-1031 10832.5,-1031"/>
+<text text-anchor="middle" x="10995.5" y="-1189.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.CD_UCB.UCBLCB_IndexPolicy</text>
+<polyline fill="none" stroke="#000000" points="10832.5,-1182 11158.5,-1182 "/>
+<text text-anchor="start" x="10840.5" y="-1166.8" font-family="Times,serif" font-size="14.00" fill="#000000">_delta : NoneType</text>
+<text text-anchor="start" x="10840.5" y="-1151.8" font-family="Times,serif" font-size="14.00" fill="#000000">_delta0 : float</text>
+<text text-anchor="start" x="10840.5" y="-1136.8" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
+<text text-anchor="start" x="10840.5" y="-1121.8" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration : int</text>
+<text text-anchor="start" x="10840.5" y="-1106.8" font-family="Times,serif" font-size="14.00" fill="#000000">use_localization : bool</text>
+<polyline fill="none" stroke="#000000" points="10832.5,-1099 11158.5,-1099 "/>
+<text text-anchor="start" x="10840.5" y="-1083.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="10840.5" y="-1068.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
+<text text-anchor="start" x="10840.5" y="-1053.8" font-family="Times,serif" font-size="14.00" fill="#000000">delta()</text>
+<text text-anchor="start" x="10840.5" y="-1038.8" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
 </g>
 <!-- 12&#45;&gt;10 -->
 <g id="edge12" class="edge">
 <title>12&#45;&gt;10</title>
-<path fill="none" stroke="#000000" d="M10949.0868,-1197.6583C10919.1514,-1241.1643 10876.02,-1291.452 10823.5,-1318 10789.9868,-1334.9404 10182.5429,-1351.1595 10149.5,-1369 10119.5799,-1385.1544 10093.6498,-1409.889 10072.0396,-1436.5186"/>
+<path fill="none" stroke="#000000" d="M10943.8946,-1205.0815C10914.2546,-1246.7633 10873.0568,-1292.9499 10823.5,-1318 10789.9868,-1334.9404 10182.5429,-1351.1595 10149.5,-1369 10119.5799,-1385.1544 10093.6498,-1409.889 10072.0396,-1436.5186"/>
 <polygon fill="none" stroke="#000000" points="10069.2227,-1434.4383 10065.7667,-1444.4536 10074.714,-1438.7794 10069.2227,-1434.4383"/>
 </g>
 <!-- 13 -->
@@ -453,23 +454,24 @@
 <!-- 15 -->
 <g id="node16" class="node">
 <title>15</title>
-<polygon fill="none" stroke="#000000" points="9371.5,-1038.5 9371.5,-1197.5 9721.5,-1197.5 9721.5,-1038.5 9371.5,-1038.5"/>
-<text text-anchor="middle" x="9546.5" y="-1182.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.CUSUM_UCB.CUSUM_IndexPolicy</text>
-<polyline fill="none" stroke="#000000" points="9371.5,-1174.5 9721.5,-1174.5 "/>
-<text text-anchor="start" x="9379.5" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">M : int</text>
-<text text-anchor="start" x="9379.5" y="-1144.3" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
-<text text-anchor="start" x="9379.5" y="-1129.3" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
-<text text-anchor="start" x="9379.5" y="-1114.3" font-family="Times,serif" font-size="14.00" fill="#000000">threshold_h</text>
-<polyline fill="none" stroke="#000000" points="9371.5,-1106.5 9721.5,-1106.5 "/>
-<text text-anchor="start" x="9379.5" y="-1091.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="9379.5" y="-1076.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="9379.5" y="-1061.3" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
-<text text-anchor="start" x="9379.5" y="-1046.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<polygon fill="none" stroke="#000000" points="9371.5,-1031 9371.5,-1205 9721.5,-1205 9721.5,-1031 9371.5,-1031"/>
+<text text-anchor="middle" x="9546.5" y="-1189.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.CUSUM_UCB.CUSUM_IndexPolicy</text>
+<polyline fill="none" stroke="#000000" points="9371.5,-1182 9721.5,-1182 "/>
+<text text-anchor="start" x="9379.5" y="-1166.8" font-family="Times,serif" font-size="14.00" fill="#000000">M : int</text>
+<text text-anchor="start" x="9379.5" y="-1151.8" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
+<text text-anchor="start" x="9379.5" y="-1136.8" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
+<text text-anchor="start" x="9379.5" y="-1121.8" font-family="Times,serif" font-size="14.00" fill="#000000">threshold_h</text>
+<text text-anchor="start" x="9379.5" y="-1106.8" font-family="Times,serif" font-size="14.00" fill="#000000">use_localization : bool</text>
+<polyline fill="none" stroke="#000000" points="9371.5,-1099 9721.5,-1099 "/>
+<text text-anchor="start" x="9379.5" y="-1083.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="9379.5" y="-1068.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
+<text text-anchor="start" x="9379.5" y="-1053.8" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
+<text text-anchor="start" x="9379.5" y="-1038.8" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
 </g>
 <!-- 15&#45;&gt;10 -->
 <g id="edge15" class="edge">
 <title>15&#45;&gt;10</title>
-<path fill="none" stroke="#000000" d="M9607.1119,-1197.6866C9640.3404,-1237.5164 9684.1413,-1284.2796 9730.5,-1318 9774.4052,-1349.9358 9799.0349,-1335.1729 9841.5,-1369 9865.6251,-1388.2177 9888.1252,-1411.9859 9908.0703,-1436.3497"/>
+<path fill="none" stroke="#000000" d="M9613.3843,-1205.137C9645.7577,-1243.24 9687.0029,-1286.3611 9730.5,-1318 9774.4052,-1349.9358 9799.0349,-1335.1729 9841.5,-1369 9865.6251,-1388.2177 9888.1252,-1411.9859 9908.0703,-1436.3497"/>
 <polygon fill="none" stroke="#000000" points="9905.4562,-1438.6839 9914.455,-1444.276 9910.9076,-1434.2927 9905.4562,-1438.6839"/>
 </g>
 <!-- 16 -->
@@ -485,8 +487,8 @@
 <!-- 16&#45;&gt;15 -->
 <g id="edge16" class="edge">
 <title>16&#45;&gt;15</title>
-<path fill="none" stroke="#000000" d="M9369.0403,-662.0018C9400.5271,-742.9098 9469.6846,-920.616 9511.7643,-1028.7437"/>
-<polygon fill="none" stroke="#000000" points="9508.6101,-1030.2894 9515.4986,-1038.3392 9515.1335,-1027.7507 9508.6101,-1030.2894"/>
+<path fill="none" stroke="#000000" d="M9369.0403,-662.0018C9399.8465,-741.1609 9466.7124,-912.9788 9508.9983,-1021.6361"/>
+<polygon fill="none" stroke="#000000" points="9505.743,-1022.9222 9512.6315,-1030.972 9512.2665,-1020.3834 9505.743,-1022.9222"/>
 </g>
 <!-- 17 -->
 <g id="node18" class="node">
@@ -1165,33 +1167,34 @@
 <!-- 52 -->
 <g id="node53" class="node">
 <title>52</title>
-<polygon fill="none" stroke="#000000" points="10093,-971 10093,-1265 10400,-1265 10400,-971 10093,-971"/>
-<text text-anchor="middle" x="10246.5" y="-1249.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.GLR_UCB.GLR_IndexPolicy</text>
-<polyline fill="none" stroke="#000000" points="10093,-1242 10400,-1242 "/>
-<text text-anchor="start" x="10101" y="-1226.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha0</text>
-<text text-anchor="start" x="10101" y="-1211.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha_t1 : float</text>
-<text text-anchor="start" x="10101" y="-1196.8" font-family="Times,serif" font-size="14.00" fill="#000000">_args_to_kl : tuple</text>
-<text text-anchor="start" x="10101" y="-1181.8" font-family="Times,serif" font-size="14.00" fill="#000000">_exponentBeta : float</text>
-<text text-anchor="start" x="10101" y="-1166.8" font-family="Times,serif" font-size="14.00" fill="#000000">_threshold_function</text>
-<text text-anchor="start" x="10101" y="-1151.8" font-family="Times,serif" font-size="14.00" fill="#000000">_variant : NoneType</text>
-<text text-anchor="start" x="10101" y="-1136.8" font-family="Times,serif" font-size="14.00" fill="#000000">delta</text>
-<text text-anchor="start" x="10101" y="-1121.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
-<text text-anchor="start" x="10101" y="-1106.8" font-family="Times,serif" font-size="14.00" fill="#000000">kl</text>
-<text text-anchor="start" x="10101" y="-1091.8" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
-<text text-anchor="start" x="10101" y="-1076.8" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
-<text text-anchor="start" x="10101" y="-1061.8" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
-<polyline fill="none" stroke="#000000" points="10093,-1054 10400,-1054 "/>
-<text text-anchor="start" x="10101" y="-1038.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="10101" y="-1023.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="10101" y="-1008.8" font-family="Times,serif" font-size="14.00" fill="#000000">compute_threshold_h()</text>
-<text text-anchor="start" x="10101" y="-993.8" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
-<text text-anchor="start" x="10101" y="-978.8" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<polygon fill="none" stroke="#000000" points="10093,-963.5 10093,-1272.5 10400,-1272.5 10400,-963.5 10093,-963.5"/>
+<text text-anchor="middle" x="10246.5" y="-1257.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.GLR_UCB.GLR_IndexPolicy</text>
+<polyline fill="none" stroke="#000000" points="10093,-1249.5 10400,-1249.5 "/>
+<text text-anchor="start" x="10101" y="-1234.3" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha0</text>
+<text text-anchor="start" x="10101" y="-1219.3" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha_t1 : float</text>
+<text text-anchor="start" x="10101" y="-1204.3" font-family="Times,serif" font-size="14.00" fill="#000000">_args_to_kl : tuple</text>
+<text text-anchor="start" x="10101" y="-1189.3" font-family="Times,serif" font-size="14.00" fill="#000000">_exponentBeta : float</text>
+<text text-anchor="start" x="10101" y="-1174.3" font-family="Times,serif" font-size="14.00" fill="#000000">_threshold_function</text>
+<text text-anchor="start" x="10101" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">_variant : NoneType</text>
+<text text-anchor="start" x="10101" y="-1144.3" font-family="Times,serif" font-size="14.00" fill="#000000">delta</text>
+<text text-anchor="start" x="10101" y="-1129.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
+<text text-anchor="start" x="10101" y="-1114.3" font-family="Times,serif" font-size="14.00" fill="#000000">kl</text>
+<text text-anchor="start" x="10101" y="-1099.3" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
+<text text-anchor="start" x="10101" y="-1084.3" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
+<text text-anchor="start" x="10101" y="-1069.3" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
+<text text-anchor="start" x="10101" y="-1054.3" font-family="Times,serif" font-size="14.00" fill="#000000">use_localization : bool</text>
+<polyline fill="none" stroke="#000000" points="10093,-1046.5 10400,-1046.5 "/>
+<text text-anchor="start" x="10101" y="-1031.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="10101" y="-1016.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
+<text text-anchor="start" x="10101" y="-1001.3" font-family="Times,serif" font-size="14.00" fill="#000000">compute_threshold_h()</text>
+<text text-anchor="start" x="10101" y="-986.3" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
+<text text-anchor="start" x="10101" y="-971.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
 </g>
 <!-- 49&#45;&gt;52 -->
 <g id="edge50" class="edge">
 <title>49&#45;&gt;52</title>
-<path fill="none" stroke="#000000" d="M11471.4906,-654.7097C11434.5942,-680.8234 11381.0185,-715.4865 11329.5,-737 11042.3178,-856.9238 10955.9823,-851.9382 10648.5,-900 10595.8774,-908.2253 10456.7163,-893.3542 10409.5,-918 10387.4148,-929.5279 10367.2324,-945.4868 10349.1682,-963.4072"/>
-<polygon fill="none" stroke="#000000" points="10346.5809,-961.0469 10342.087,-970.6415 10351.5833,-965.9435 10346.5809,-961.0469"/>
+<path fill="none" stroke="#000000" d="M11471.4906,-654.7097C11434.5942,-680.8234 11381.0185,-715.4865 11329.5,-737 11042.3178,-856.9238 10955.9823,-851.9382 10648.5,-900 10595.8774,-908.2253 10456.7163,-893.3542 10409.5,-918 10390.3884,-927.9758 10372.7016,-941.2697 10356.5793,-956.2815"/>
+<polygon fill="none" stroke="#000000" points="10354.0675,-953.8412 10349.2824,-963.2939 10358.9179,-958.8884 10354.0675,-953.8412"/>
 </g>
 <!-- 50 -->
 <g id="node51" class="node">
@@ -1256,20 +1259,20 @@
 <!-- 52&#45;&gt;10 -->
 <g id="edge55" class="edge">
 <title>52&#45;&gt;10</title>
-<path fill="none" stroke="#000000" d="M10164.6605,-1265.0502C10134.1017,-1319.9587 10099.5975,-1381.9563 10069.759,-1435.5705"/>
-<polygon fill="none" stroke="#000000" points="10066.6253,-1434.0041 10064.8205,-1444.4441 10072.7418,-1437.4082 10066.6253,-1434.0041"/>
+<path fill="none" stroke="#000000" d="M10160.4712,-1272.5776C10130.9577,-1325.6078 10098.2018,-1384.464 10069.707,-1435.6639"/>
+<polygon fill="none" stroke="#000000" points="10066.6107,-1434.0303 10064.8059,-1444.4703 10072.7272,-1437.4345 10066.6107,-1434.0303"/>
 </g>
 <!-- 53&#45;&gt;52 -->
 <g id="edge56" class="edge">
 <title>53&#45;&gt;52</title>
-<path fill="none" stroke="#000000" d="M11007.4867,-654.623C10957.9993,-678.0587 10891.4065,-709.5017 10832.5,-737 10675.9138,-810.0963 10642.2912,-842.0227 10479.5,-900 10449.2387,-910.7774 10436.5561,-900.6833 10409.5,-918 10389.858,-930.5714 10371.4637,-946.3013 10354.6219,-963.3852"/>
-<polygon fill="none" stroke="#000000" points="10351.913,-961.1525 10347.4999,-970.7844 10356.9564,-966.0068 10351.913,-961.1525"/>
+<path fill="none" stroke="#000000" d="M11007.4867,-654.623C10957.9993,-678.0587 10891.4065,-709.5017 10832.5,-737 10675.9138,-810.0963 10642.2912,-842.0227 10479.5,-900 10449.2387,-910.7774 10436.5561,-900.6833 10409.5,-918 10392.6404,-928.7906 10376.7001,-941.9082 10361.8717,-956.2117"/>
+<polygon fill="none" stroke="#000000" points="10359.3302,-953.8026 10354.6825,-963.3237 10364.2532,-958.7791 10359.3302,-953.8026"/>
 </g>
 <!-- 54&#45;&gt;52 -->
 <g id="edge57" class="edge">
 <title>54&#45;&gt;52</title>
-<path fill="none" stroke="#000000" d="M10601.6385,-654.5536C10553.2183,-717.7406 10448.5971,-854.2685 10365.3827,-962.8611"/>
-<polygon fill="none" stroke="#000000" points="10362.4812,-960.8933 10359.1768,-970.9597 10368.0375,-965.151 10362.4812,-960.8933"/>
+<path fill="none" stroke="#000000" d="M10601.6385,-654.5536C10554.3367,-716.2812 10453.4,-848.001 10371.182,-955.2933"/>
+<polygon fill="none" stroke="#000000" points="10368.3501,-953.2345 10365.0457,-963.3009 10373.9064,-957.4923 10368.3501,-953.2345"/>
 </g>
 <!-- 55 -->
 <g id="node56" class="node">
@@ -1285,8 +1288,8 @@
 <!-- 55&#45;&gt;52 -->
 <g id="edge58" class="edge">
 <title>55&#45;&gt;52</title>
-<path fill="none" stroke="#000000" d="M10238.2596,-661.5722C10239.4409,-727.005 10241.7786,-856.4846 10243.6632,-960.8747"/>
-<polygon fill="none" stroke="#000000" points="10240.1641,-960.9605 10243.8442,-970.8956 10247.163,-960.834 10240.1641,-960.9605"/>
+<path fill="none" stroke="#000000" d="M10238.2596,-661.5722C10239.412,-725.4057 10241.665,-850.1933 10243.5242,-953.1764"/>
+<polygon fill="none" stroke="#000000" points="10240.0286,-953.4536 10243.7086,-963.3887 10247.0274,-953.3271 10240.0286,-953.4536"/>
 </g>
 <!-- 56 -->
 <g id="node57" class="node">
@@ -1333,29 +1336,30 @@
 <!-- 58 -->
 <g id="node59" class="node">
 <title>58</title>
-<polygon fill="none" stroke="#000000" points="8976,-993.5 8976,-1242.5 9353,-1242.5 9353,-993.5 8976,-993.5"/>
-<text text-anchor="middle" x="9164.5" y="-1227.3" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.GLR_UCB.SubGaussianGLR_IndexPolicy</text>
-<polyline fill="none" stroke="#000000" points="8976,-1219.5 9353,-1219.5 "/>
-<text text-anchor="start" x="8984" y="-1204.3" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha0</text>
-<text text-anchor="start" x="8984" y="-1189.3" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha_t1 : float</text>
-<text text-anchor="start" x="8984" y="-1174.3" font-family="Times,serif" font-size="14.00" fill="#000000">_exponentBeta : float</text>
-<text text-anchor="start" x="8984" y="-1159.3" font-family="Times,serif" font-size="14.00" fill="#000000">delta : float</text>
-<text text-anchor="start" x="8984" y="-1144.3" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
-<text text-anchor="start" x="8984" y="-1129.3" font-family="Times,serif" font-size="14.00" fill="#000000">joint : bool</text>
-<text text-anchor="start" x="8984" y="-1114.3" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
-<text text-anchor="start" x="8984" y="-1099.3" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
-<text text-anchor="start" x="8984" y="-1084.3" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
-<text text-anchor="start" x="8984" y="-1069.3" font-family="Times,serif" font-size="14.00" fill="#000000">sigma : float</text>
-<polyline fill="none" stroke="#000000" points="8976,-1061.5 9353,-1061.5 "/>
-<text text-anchor="start" x="8984" y="-1046.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="8984" y="-1031.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="8984" y="-1016.3" font-family="Times,serif" font-size="14.00" fill="#000000">compute_threshold_h()</text>
-<text text-anchor="start" x="8984" y="-1001.3" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
+<polygon fill="none" stroke="#000000" points="8976,-986 8976,-1250 9353,-1250 9353,-986 8976,-986"/>
+<text text-anchor="middle" x="9164.5" y="-1234.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.GLR_UCB.SubGaussianGLR_IndexPolicy</text>
+<polyline fill="none" stroke="#000000" points="8976,-1227 9353,-1227 "/>
+<text text-anchor="start" x="8984" y="-1211.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha0</text>
+<text text-anchor="start" x="8984" y="-1196.8" font-family="Times,serif" font-size="14.00" fill="#000000">_alpha_t1 : float</text>
+<text text-anchor="start" x="8984" y="-1181.8" font-family="Times,serif" font-size="14.00" fill="#000000">_exponentBeta : float</text>
+<text text-anchor="start" x="8984" y="-1166.8" font-family="Times,serif" font-size="14.00" fill="#000000">delta : float</text>
+<text text-anchor="start" x="8984" y="-1151.8" font-family="Times,serif" font-size="14.00" fill="#000000">horizon : NoneType</text>
+<text text-anchor="start" x="8984" y="-1136.8" font-family="Times,serif" font-size="14.00" fill="#000000">joint : bool</text>
+<text text-anchor="start" x="8984" y="-1121.8" font-family="Times,serif" font-size="14.00" fill="#000000">lazy_try_value_s_only_x_steps : int</text>
+<text text-anchor="start" x="8984" y="-1106.8" font-family="Times,serif" font-size="14.00" fill="#000000">max_nb_random_events : NoneType</text>
+<text text-anchor="start" x="8984" y="-1091.8" font-family="Times,serif" font-size="14.00" fill="#000000">proba_random_exploration</text>
+<text text-anchor="start" x="8984" y="-1076.8" font-family="Times,serif" font-size="14.00" fill="#000000">sigma : float</text>
+<text text-anchor="start" x="8984" y="-1061.8" font-family="Times,serif" font-size="14.00" fill="#000000">use_localization : bool</text>
+<polyline fill="none" stroke="#000000" points="8976,-1054 9353,-1054 "/>
+<text text-anchor="start" x="8984" y="-1038.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="8984" y="-1023.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
+<text text-anchor="start" x="8984" y="-1008.8" font-family="Times,serif" font-size="14.00" fill="#000000">compute_threshold_h()</text>
+<text text-anchor="start" x="8984" y="-993.8" font-family="Times,serif" font-size="14.00" fill="#000000">detect_change()</text>
 </g>
 <!-- 58&#45;&gt;10 -->
 <g id="edge63" class="edge">
 <title>58&#45;&gt;10</title>
-<path fill="none" stroke="#000000" d="M9261.6694,-1242.6629C9290.8726,-1272.0708 9325.1822,-1300.054 9362.5,-1318 9410.7354,-1341.1962 9794.7971,-1342.8552 9841.5,-1369 9870.9088,-1385.4634 9896.5466,-1410.0856 9918.0248,-1436.4785"/>
+<path fill="none" stroke="#000000" d="M9269.2749,-1250.1734C9296.7647,-1276.7851 9328.3746,-1301.5892 9362.5,-1318 9410.7354,-1341.1962 9794.7971,-1342.8552 9841.5,-1369 9870.9088,-1385.4634 9896.5466,-1410.0856 9918.0248,-1436.4785"/>
 <polygon fill="none" stroke="#000000" points="9915.3056,-1438.6825 9924.2634,-1444.3401 9920.7889,-1434.3312 9915.3056,-1438.6825"/>
 </g>
 <!-- 59 -->
@@ -1489,7 +1493,7 @@
 <text text-anchor="start" x="15259" y="-2167.3" font-family="Times,serif" font-size="14.00" fill="#000000">b : float</text>
 <text text-anchor="start" x="15259" y="-2152.3" font-family="Times,serif" font-size="14.00" fill="#000000">batch_number : int</text>
 <text text-anchor="start" x="15259" y="-2137.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploitation_arm : NoneType</text>
-<text text-anchor="start" x="15259" y="-2122.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : NoneType, int</text>
+<text text-anchor="start" x="15259" y="-2122.3" font-family="Times,serif" font-size="14.00" fill="#000000">current_exploration_arm : int, NoneType</text>
 <text text-anchor="start" x="15259" y="-2107.3" font-family="Times,serif" font-size="14.00" fill="#000000">gamma : float</text>
 <text text-anchor="start" x="15259" y="-2092.3" font-family="Times,serif" font-size="14.00" fill="#000000">l : int</text>
 <text text-anchor="start" x="15259" y="-2077.3" font-family="Times,serif" font-size="14.00" fill="#000000">length_of_current_phase : NoneType</text>
@@ -1690,7 +1694,7 @@
 <text text-anchor="start" x="16062" y="-2129.8" font-family="Times,serif" font-size="14.00" fill="#000000">cumulatedRewards</text>
 <text text-anchor="start" x="16062" y="-2114.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbCollision : int</text>
 <text text-anchor="start" x="16062" y="-2099.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbObservations</text>
-<text text-anchor="start" x="16062" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : NoneType, int</text>
+<text text-anchor="start" x="16062" y="-2084.8" font-family="Times,serif" font-size="14.00" fill="#000000">nbPlayers : int, NoneType</text>
 <text text-anchor="start" x="16062" y="-2069.8" font-family="Times,serif" font-size="14.00" fill="#000000">state</text>
 <text text-anchor="start" x="16062" y="-2054.8" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="16054,-2047 16349,-2047 "/>

@@ -304,7 +304,7 @@
 <text text-anchor="start" x="1153" y="-1914.8" font-family="Times,serif" font-size="14.00" fill="#000000">_amplitudes : list, recarray</text>
 <text text-anchor="start" x="1153" y="-1899.8" font-family="Times,serif" font-size="14.00" fill="#000000">_change_lower_amplitude</text>
 <text text-anchor="start" x="1153" y="-1884.8" font-family="Times,serif" font-size="14.00" fill="#000000">_first_amplitudes : list, recarray</text>
-<text text-anchor="start" x="1153" y="-1869.8" font-family="Times,serif" font-size="14.00" fill="#000000">_first_lowers : recarray, list</text>
+<text text-anchor="start" x="1153" y="-1869.8" font-family="Times,serif" font-size="14.00" fill="#000000">_first_lowers : list, recarray</text>
 <text text-anchor="start" x="1153" y="-1854.8" font-family="Times,serif" font-size="14.00" fill="#000000">_lowers : list, recarray</text>
 <text text-anchor="start" x="1153" y="-1839.8" font-family="Times,serif" font-size="14.00" fill="#000000">isDynamic : bool</text>
 <polyline fill="none" stroke="#000000" points="1145,-1832 1439,-1832 "/>
