@@ -11,7 +11,7 @@ Open-Source Python package for Single- and Multi-Players multi-armed Bandits alg
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 
 try:
     # from .Arms import *
