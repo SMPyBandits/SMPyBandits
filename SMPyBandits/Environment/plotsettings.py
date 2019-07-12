@@ -134,7 +134,7 @@ SHRINKFACTOR = 0.70
 SHRINKFACTOR = 0.75
 
 #: Default parameter for maximum number of label to display in the legend INSIDE the figure
-MAXNBOFLABELINFIGURE = 7
+MAXNBOFLABELINFIGURE = 8
 
 
 def legend(putatright=PUTATRIGHT, fontsize="xx-small",
