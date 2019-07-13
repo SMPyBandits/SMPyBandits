@@ -41,6 +41,9 @@ class Thompson(BayesianIndexPolicy):
     - Reference: [Thompson - Biometrika, 1933].
     """
 
+    def __str__(self):
+        return "Thompson Sampling"
+    
     def computeIndex(self, arm):
         r""" Compute the current index, at time t and after :math:`N_k(t)` pulls of arm k, giving :math:`S_k(t)` rewards of 1, by sampling from the Beta posterior:
 
