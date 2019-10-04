@@ -198,6 +198,7 @@ from .Exp3S import Exp3S
 from .Monitored_UCB import Monitored_IndexPolicy
 from .OracleSequentiallyRestartPolicy import OracleSequentiallyRestartPolicy
 from .AdSwitch import AdSwitch
+from .AdSwitchNew import AdSwitchNew
 
 from .DoublingTrickWrapper import DoublingTrickWrapper, next_horizon__arithmetic, next_horizon__geometric, next_horizon__exponential, next_horizon__exponential_fast, next_horizon__exponential_slow, next_horizon__exponential_generic, breakpoints, Ti_geometric, Ti_exponential, Ti_intermediate_sqrti, Ti_intermediate_i13, Ti_intermediate_i23, Ti_intermediate_i12_logi12, Ti_intermediate_i_by_logi
 

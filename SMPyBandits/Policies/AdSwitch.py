@@ -54,9 +54,9 @@ class AdSwitch(BasePolicy):
             horizon=None, C1=Constant_C1, C2=Constant_C2,
             *args, **kwargs
         ):
-        # DONE XXX generalize the algorithm to K > 2 arms!
         if nbArms > 2:
             print("WARNING: so far, for the AdSwitch algorithm, only the special case of K=2 arms was explained in the paper, but I generalized it. Maybe it does not work!")  # DEBUG
+            print("FIXME for the generic case of K > 2 arms, use the AdSwitchNew algorithm (paper from 2019)!")
         super(AdSwitch, self).__init__(nbArms, *args, **kwargs)
 
         # Parameters
@@ -67,7 +67,7 @@ class AdSwitch(BasePolicy):
         self.C1 = C1  #: Parameter :math:`C_1` for the AdSwitch algorithm.
 
         assert C2 > 0, "Error: for a AdSwitch policy, the parameter 'C2' should be > 0 but was = {}".format(C2)  # DEBUG
-        self.C2 = C2  #: Parameter :math:`C_1` for the AdSwitch algorithm.
+        self.C2 = C2  #: Parameter :math:`C_2` for the AdSwitch algorithm.
 
         # Internal memory
         self.phase = Phase.Estimation  #: Current phase, exploration or exploitation.
