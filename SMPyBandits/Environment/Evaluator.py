@@ -776,7 +776,7 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_memories = [ np.asarray(all_memories[i]) / float(base) for i in index_of_sorting ]
         fig = plt.figure()
-        violin_or_box_plot(data=all_memories, labels=labels, boxplot=True)
+        violin_or_box_plot(data=all_memories, labels=labels, boxplot=self.use_box_plot)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
         ylabel = "Memory consumption (in {}), for {} repetitions".format(unit, self.repetitions)
         plt.ylabel(ylabel)
@@ -809,7 +809,7 @@ class Evaluator(object):
         labels = [ labels[i] for i in index_of_sorting ]
         all_number_of_cp_detections = [ np.asarray(all_number_of_cp_detections[i]) for i in index_of_sorting ]
         fig = plt.figure()
-        violin_or_box_plot(data=all_number_of_cp_detections, labels=labels, boxplot=True)
+        violin_or_box_plot(data=all_number_of_cp_detections, labels=labels, boxplot=self.use_box_plot)
         plt.xlabel("Bandit algorithms{}".format(self.signature))
         ylabel = "Number of detected change-points, for {} repetitions".format(self.repetitions)
         plt.ylabel(ylabel)

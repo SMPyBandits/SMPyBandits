@@ -683,7 +683,7 @@ configuration.update({
             "params": { "horizon": HORIZON, "C1": C1,},
             "change_label": "AdSwitch-New",
         }
-        for C1 in [1, 10, 0.1]  # WARNING don't test too many parameters!
+        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
     ] +
     # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
     # [

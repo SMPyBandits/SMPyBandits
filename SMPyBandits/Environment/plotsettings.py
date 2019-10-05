@@ -38,8 +38,10 @@ else:
 
 DPI = 120  #: DPI to use for the figures
 # FIGSIZE = (19.80, 10.80)  #: Figure size, in inches!
-# FIGSIZE = (16, 9)  #: Figure size, in inches!
-FIGSIZE = (12.4, 7)  #: Figure size, in inches!
+FIGSIZE = (16, 9)  #: Figure size, in inches!
+# FIGSIZE = (12.4, 7)  #: Figure size, in inches!
+# FIGSIZE = (8, 6)  #: Figure size, in inches!
+FIGSIZE = (8, 4.5)  #: Figure size, in inches!
 
 # Customize the colormap
 HLS = True  #: Use the HLS mapping, or HUSL mapping
@@ -51,7 +53,7 @@ BBOX_INCHES = None
 
 if __name__ != '__main__':
     # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.95)
+    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.65)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX
@@ -62,10 +64,10 @@ if __name__ != '__main__':
 
     # Configure size for axes and x and y labels
     # Cf. https://stackoverflow.com/a/12444777/
-    mpl.rcParams['axes.labelsize']  = "medium"
-    mpl.rcParams['xtick.labelsize'] = "small"
-    mpl.rcParams['ytick.labelsize'] = "small"
-    mpl.rcParams['figure.titlesize'] = "medium"
+    mpl.rcParams['axes.labelsize']  = "x-small"
+    mpl.rcParams['xtick.labelsize'] = "xx-small"
+    mpl.rcParams['ytick.labelsize'] = "xx-small"
+    mpl.rcParams['figure.titlesize'] = "x-small"
 
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI
@@ -177,7 +179,7 @@ def maximizeWindow():
 
     .. warning:: This function is still experimental, but "it works on my machine" so I keep it.
     """
-    # plt.show()
+    # plt.show(block=True)
     # plt.tight_layout()
     figManager = plt.get_current_fig_manager()
     try:
@@ -227,7 +229,7 @@ def show_and_save(showplot=True, savefig=None, formats=FORMATS, pickleit=False, 
             except Exception as exc:
                 print("Error: could not save current figure to {} because of error {}... Skipping!".format(path, exc))  # DEBUG
     try:
-        plt.show() if showplot else plt.close()
+        plt.show(block=True) if showplot else plt.close()
     except (TypeError, AttributeError):
         print("Failed to show the figure for some unknown reason...")  # DEBUG
 
@@ -337,11 +339,11 @@ def addTextForWorstCases(ax, n, bins, patches, rate=0.85, normed=False, fontsize
             ax.text(x, y, text, fontsize=fontsize)
 
 
-def myviolinplot(nonsymmetrical=False, *args, **kwargs):
+def myviolinplot(*args, nonsymmetrical=False, **kwargs):
     try:
-        return sns.violinplot(nonsymmetrical=nonsymmetrical, cut=0, inner="stick", *args, **kwargs)
-    except TypeError:
-        return sns.violinplot(cut=0, inner="stick", *args, **kwargs)
+        return sns.violinplot(*args, nonsymmetrical=nonsymmetrical, cut=0, inner="stick", **kwargs)
+    except (TypeError, NameError):
+        return sns.violinplot(*args, cut=0, inner="stick", **kwargs)
 
 
 def violin_or_box_plot(data=None, labels=None, boxplot=False, **kwargs):
@@ -362,7 +364,7 @@ def violin_or_box_plot(data=None, labels=None, boxplot=False, **kwargs):
             return myviolinplot(nonsymmetrical="left", data=df, orient="v", **kwargs)
         except ImportError:
             return violin_or_box_plot(data, boxplot=boxplot, **kwargs)
-    return myviolinplot(nonsymmetrical="left", data=df, orient="v", **kwargs)
+    return myviolinplot(nonsymmetrical="left", data=data, orient="v", **kwargs)
 
 
 MAX_NB_OF_LABELS = 50  #: If more than MAX_NB_OF_LABELS labels have to be displayed on a boxplot, don't put a legend.
@@ -376,7 +378,7 @@ def adjust_xticks_subplots(ylabel=None, labels=(), maxNbOfLabels=MAX_NB_OF_LABEL
     if len(labels) >= maxNbOfLabels:
         return
     max_length_of_labels = max([len(label) for label in labels])
-    locs, labels = plt.xticks()
+    locs, xticks_labels = plt.xticks()  # XXX don't name xticks_labels, labels or it erases the argument of the function and labels are not correctly displayed.
     plt.xticks(locs, labels, rotation=80, verticalalignment="top", fontsize="xx-small")
     if max_length_of_labels >= 50:
         plt.subplots_adjust(bottom=max_length_of_labels/135.0)
