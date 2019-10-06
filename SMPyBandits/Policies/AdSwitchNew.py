@@ -33,7 +33,9 @@ def mymean(x):
 
 # --- Class
 
-Constant_C1 = 1.0  #: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
+#: Default value for the constant :math:`C_1`. Should be :math:`>0` and as large as possible, but not too large.
+#: In their paper, in section 4.2) page 8, an inequality controls C1: (5) states that for all s', t', C1 > 8 (2n - 1)/n where n = n_[s',t'], so C1 > 16.
+Constant_C1 = 16.1
 
 DELTA_T = 50  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
 DELTA_S = 20  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
@@ -65,7 +67,7 @@ class AdSwitchNew(BasePolicy):
         self.delta_t = delta_t  #: Parameter :math:`\delta_s` for the AdSwitchNew algorithm.
 
         # Internal memory
-        self.ell = 0  #: Variable :math:`\ell` in the algorithm. Count the number of new episode.
+        self.ell = 1  #: Variable :math:`\ell` in the algorithm. Count the number of new episode.
         self.start_of_episode = 0  #: Variable :math:`t_l` in the algorithm. Count the starting time of the current episode.
         self.set_GOOD = set(range(nbArms))  #: Variable :math:`\mathrm{GOOD}_t` in the algorithm. Set of "good" arms at current time.
         self.set_BAD = set()  #: Variable :math:`\mathrm{BAD}_t` in the algorithm. Set of "bad" arms at current time. It always satisfies :math:`\mathrm{BAD}_t = \{1,\dots,K\} \setminus \mathrm{GOOD}_t`.
@@ -94,7 +96,7 @@ class AdSwitchNew(BasePolicy):
         """ Start the game (fill pulls and rewards with 0)."""
         super(AdSwitchNew, self).startGame()
 
-        self.ell = 0
+        self.ell = 1
         self.start_of_episode = 0
         self.set_GOOD = set(range(self.nbArms))
         self.set_BAD = set()
@@ -132,15 +134,15 @@ class AdSwitchNew(BasePolicy):
                             # print("AdSwitchNew: should we start a new episode, by checking condition (3), with arm {}, s1 = {}, s2 = {}, s = {} and t = {}...".format(good_arm, s_1, s_2, s, self.t))  # DEBUB
                             if abs_difference_in_s1s2_st > right_side:  # check condition 3:
                                 print("\n==> New episode was started as condition (3) is satisfied!")  # DEBUG
-                                print("    n_s1_s2_a =", n_s1_s2_a)  # DEBUG
-                                print("    mu_hat_s1_s2_a =", mu_hat_s1_s2_a)  # DEBUG
-                                print("    n_s_t_a =", n_s_t_a)  # DEBUG
-                                print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                                print("    abs_difference_in_s1s2_st =", abs_difference_in_s1s2_st)  # DEBUG
-                                print("    confidence_radius_s1s2 =", confidence_radius_s1s2)  # DEBUG
-                                print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
-                                print("    right_side =", right_side)  # DEBUG
-                                should_start_new_episode = True
+                                # print("    n_s1_s2_a =", n_s1_s2_a)  # DEBUG
+                                # print("    mu_hat_s1_s2_a =", mu_hat_s1_s2_a)  # DEBUG
+                                # print("    n_s_t_a =", n_s_t_a)  # DEBUG
+                                # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
+                                # print("    abs_difference_in_s1s2_st =", abs_difference_in_s1s2_st)  # DEBUG
+                                # print("    confidence_radius_s1s2 =", confidence_radius_s1s2)  # DEBUG
+                                # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
+                                # print("    right_side =", right_side)  # DEBUG
+                                # should_start_new_episode = True
 
         # 4. Check for changes of bad arms, in O(K t):
         if self.t % self.delta_t == 0:
@@ -153,15 +155,15 @@ class AdSwitchNew(BasePolicy):
                     confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
                     gap = self.gap_Delta_tilde_of_l[bad_arm] / 4
                     right_side = gap + confidence_radius_st
-                    print("AdSwitchNew: should we start a new episode, by checking condition (4), with arm {}, s = {} and t = {}...".format(bad_arm, s, self.t))  # DEBUB
+                    # print("AdSwitchNew: should we start a new episode, by checking condition (4), with arm {}, s = {} and t = {}...".format(bad_arm, s, self.t))  # DEBUB
                     if abs_difference_in_st_l > right_side:  # check condition 4:
                         print("\n==> New episode was started as condition (4) is satisfied!")  # DEBUG
-                        print("    n_s_t_a =", n_s_t_a)  # DEBUG
-                        print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                        print("    abs_difference_in_st_l =", abs_difference_in_st_l)  # DEBUG
-                        print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
-                        print("    gap =", gap)  # DEBUG
-                        print("    right_side =", right_side)  # DEBUG
+                        # print("    n_s_t_a =", n_s_t_a)  # DEBUG
+                        # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
+                        # print("    abs_difference_in_st_l =", abs_difference_in_st_l)  # DEBUG
+                        # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
+                        # print("    gap =", gap)  # DEBUG
+                        # print("    right_side =", right_side)  # DEBUG
                         should_start_new_episode = True
                 # 5'. Recompute S_t+1
                 new_set_Stp1 = set()
@@ -182,14 +184,14 @@ class AdSwitchNew(BasePolicy):
                     mu_hat_s_t_best = max(mu_hat_s_t_good)
                     gap_Delta = mu_hat_s_t_best - mu_hat_s_t_a
                     gap_to_check = np.sqrt(self.C1 * max(1, np.log(self.horizon)) / max(self.n_s_t(good_arm, s, self.t) - 1, 1))
-                    print("AdSwitchNew: should arm = {} be evicted, by checking condition (1), with s = {} and t = {}...".format(good_arm, s, self.t))  # DEBUB
+                    # print("AdSwitchNew: should arm = {} be evicted, by checking condition (1), with s = {} and t = {}...".format(good_arm, s, self.t))  # DEBUB
                     if gap_Delta > gap_to_check:  # check condition 1:
                         print("==> Evict the arm, it shouldn't be in GOOD any longer! as condition (1) is satisfied!")  # DEBUG
-                        print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                        print("    mu_hat_s_t_good =", mu_hat_s_t_good)  # DEBUG
-                        print("    mu_hat_s_t_best =", mu_hat_s_t_best)  # DEBUG
-                        print("    gap_Delta =", gap_Delta)  # DEBUG
-                        print("    gap_to_check =", gap_to_check)  # DEBUG
+                        # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
+                        # print("    mu_hat_s_t_good =", mu_hat_s_t_good)  # DEBUG
+                        # print("    mu_hat_s_t_best =", mu_hat_s_t_best)  # DEBUG
+                        # print("    gap_Delta =", gap_Delta)  # DEBUG
+                        # print("    gap_to_check =", gap_to_check)  # DEBUG
                         evicted_arm = good_arm
                         self.set_BAD.add(evicted_arm)  # added to the bad arms
                         self.set_GOOD.remove(evicted_arm)  # this arm is now evicted

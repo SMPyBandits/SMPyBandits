@@ -41,7 +41,7 @@ DPI = 120  #: DPI to use for the figures
 FIGSIZE = (16, 9)  #: Figure size, in inches!
 # FIGSIZE = (12.4, 7)  #: Figure size, in inches!
 # FIGSIZE = (8, 6)  #: Figure size, in inches!
-FIGSIZE = (8, 4.5)  #: Figure size, in inches!
+# FIGSIZE = (8, 4.5)  #: Figure size, in inches!
 
 # Customize the colormap
 HLS = True  #: Use the HLS mapping, or HUSL mapping
