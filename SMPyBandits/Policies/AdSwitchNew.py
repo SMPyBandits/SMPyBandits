@@ -37,8 +37,8 @@ def mymean(x):
 #: In their paper, in section 4.2) page 8, an inequality controls C1: (5) states that for all s', t', C1 > 8 (2n - 1)/n where n = n_[s',t'], so C1 > 16.
 Constant_C1 = 16.1
 
-DELTA_T = 50  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
-DELTA_S = 20  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
+DELTA_T = 20  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
+DELTA_S = 10  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
 
 
 class AdSwitchNew(BasePolicy):
@@ -107,6 +107,63 @@ class AdSwitchNew(BasePolicy):
         self.all_rewards = [{} for _ in range(self.nbArms)]
         self.history_of_plays = []
 
+    def check_changes_good_arms(self):
+        """ Check for changes of good arms.
+
+        - TODO this takes a crazy O(K t^3) time, it HAS to be done faster!
+        """
+        for good_arm in self.set_GOOD:
+            for s_1 in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
+                for s_2 in range(s_1, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
+                    for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
+                        # check condition (3)
+                        n_s1_s2_a = self.n_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
+                        mu_hat_s1_s2_a = self.mu_hat_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
+                        n_s_t_a = self.n_s_t(good_arm, s, self.t)
+                        mu_hat_s_t_a = self.mu_hat_s_t(good_arm, s, self.t)
+                        abs_difference_in_s1s2_st = abs(mu_hat_s1_s2_a - mu_hat_s_t_a)
+                        confidence_radius_s1s2 = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s1_s2_a, 1))
+                        confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
+                        right_side = confidence_radius_s1s2 + confidence_radius_st
+                        # print("AdSwitchNew: should we start a new episode, by checking condition (3), with arm {}, s1 = {}, s2 = {}, s = {} and t = {}...".format(good_arm, s_1, s_2, s, self.t))  # DEBUG
+                        if abs_difference_in_s1s2_st > right_side:  # check condition 3:
+                            print("\n==> New episode was started, with arm {}, s1 = {}, s2 = {}, s = {} and t = {}, as condition (3) is satisfied!".format(good_arm, s_1, s_2, s, self.t))  # DEBUG
+                            # print("    n_s1_s2_a =", n_s1_s2_a)  # DEBUG
+                            # print("    mu_hat_s1_s2_a =", mu_hat_s1_s2_a)  # DEBUG
+                            # print("    n_s_t_a =", n_s_t_a)  # DEBUG
+                            # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
+                            # print("    abs_difference_in_s1s2_st =", abs_difference_in_s1s2_st)  # DEBUG
+                            # print("    confidence_radius_s1s2 =", confidence_radius_s1s2)  # DEBUG
+                            # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
+                            # print("    right_side =", right_side)  # DEBUG
+                            return True
+        # done for checking on good arms
+        return False
+
+    def check_changes_bad_arms(self):
+        """ Check for changes of bad arms, in O(K t)."""
+        for bad_arm in self.set_BAD:
+            for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
+                # check condition (4)
+                n_s_t_a = self.n_s_t(bad_arm, s, self.t)
+                mu_hat_s_t_a = self.mu_hat_s_t(bad_arm, s, self.t)
+                abs_difference_in_st_l = abs(mu_hat_s_t_a - self.mu_tilde_of_l[bad_arm])
+                confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
+                gap = self.gap_Delta_tilde_of_l[bad_arm] / 4
+                right_side = gap + confidence_radius_st
+                # print("AdSwitchNew: should we start a new episode, by checking condition (4), with arm {}, s = {} and t = {}...".format(bad_arm, s, self.t))  # DEBUG
+                if abs_difference_in_st_l > right_side:  # check condition 4:
+                    print("\n==> New episode was started at time t = {} for arm {}, s = {} and t = {}, as condition (4) is satisfied!".format(bad_arm, s, self.t))  # DEBUG
+                    # print("    n_s_t_a =", n_s_t_a)  # DEBUG
+                    # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
+                    # print("    abs_difference_in_st_l =", abs_difference_in_st_l)  # DEBUG
+                    # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
+                    # print("    gap =", gap)  # DEBUG
+                    # print("    right_side =", right_side)  # DEBUG
+                    return True
+        # done for checking on bad arms
+        return False
+
     def getReward(self, arm, reward):
         """ Get a reward from an arm."""
         super(AdSwitchNew, self).getReward(arm, reward)
@@ -116,63 +173,24 @@ class AdSwitchNew(BasePolicy):
         should_start_new_episode = False
 
         # 3. Check for changes of good arms:
-        # TODO this takes a crazy O(K t^3) time, it HAS to be done faster!
         if self.t % self.delta_t == 0:
-            for good_arm in self.set_GOOD:
-                for s_1 in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                    for s_2 in range(s_1, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                        for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                            # check condition (3)
-                            n_s1_s2_a = self.n_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
-                            mu_hat_s1_s2_a = self.mu_hat_s_t(good_arm, s_1, s_2)  # sub interval [s1, s2] <= [s, t] (s <= s1 <= s2 <= t).
-                            n_s_t_a = self.n_s_t(good_arm, s, self.t)
-                            mu_hat_s_t_a = self.mu_hat_s_t(good_arm, s, self.t)
-                            abs_difference_in_s1s2_st = abs(mu_hat_s1_s2_a - mu_hat_s_t_a)
-                            confidence_radius_s1s2 = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s1_s2_a, 1))
-                            confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
-                            right_side = confidence_radius_s1s2 + confidence_radius_st
-                            # print("AdSwitchNew: should we start a new episode, by checking condition (3), with arm {}, s1 = {}, s2 = {}, s = {} and t = {}...".format(good_arm, s_1, s_2, s, self.t))  # DEBUB
-                            if abs_difference_in_s1s2_st > right_side:  # check condition 3:
-                                print("\n==> New episode was started as condition (3) is satisfied!")  # DEBUG
-                                # print("    n_s1_s2_a =", n_s1_s2_a)  # DEBUG
-                                # print("    mu_hat_s1_s2_a =", mu_hat_s1_s2_a)  # DEBUG
-                                # print("    n_s_t_a =", n_s_t_a)  # DEBUG
-                                # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                                # print("    abs_difference_in_s1s2_st =", abs_difference_in_s1s2_st)  # DEBUG
-                                # print("    confidence_radius_s1s2 =", confidence_radius_s1s2)  # DEBUG
-                                # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
-                                # print("    right_side =", right_side)  # DEBUG
-                                # should_start_new_episode = True
+            if not should_start_new_episode:
+                should_start_new_episode = self.check_changes_good_arms()
 
         # 4. Check for changes of bad arms, in O(K t):
         if self.t % self.delta_t == 0:
-            for bad_arm in self.set_BAD:
-                for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
-                    # check condition (4)
-                    n_s_t_a = self.n_s_t(bad_arm, s, self.t)
-                    mu_hat_s_t_a = self.mu_hat_s_t(bad_arm, s, self.t)
-                    abs_difference_in_st_l = abs(mu_hat_s_t_a - self.mu_tilde_of_l[bad_arm])
-                    confidence_radius_st = np.sqrt(2 * max(1, np.log(self.horizon)) / max(n_s_t_a, 1))
-                    gap = self.gap_Delta_tilde_of_l[bad_arm] / 4
-                    right_side = gap + confidence_radius_st
-                    # print("AdSwitchNew: should we start a new episode, by checking condition (4), with arm {}, s = {} and t = {}...".format(bad_arm, s, self.t))  # DEBUB
-                    if abs_difference_in_st_l > right_side:  # check condition 4:
-                        print("\n==> New episode was started as condition (4) is satisfied!")  # DEBUG
-                        # print("    n_s_t_a =", n_s_t_a)  # DEBUG
-                        # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
-                        # print("    abs_difference_in_st_l =", abs_difference_in_st_l)  # DEBUG
-                        # print("    confidence_radius_st =", confidence_radius_st)  # DEBUG
-                        # print("    gap =", gap)  # DEBUG
-                        # print("    right_side =", right_side)  # DEBUG
-                        should_start_new_episode = True
-                # 5'. Recompute S_t+1
-                new_set_Stp1 = set()
-                for triplet in self.set_S[bad_arm]:
-                    _, n, s = triplet
-                    n_s_t_a = self.n_s_t(bad_arm, s, self.t)
-                    if n_s_t_a < n:
-                        new_set_Stp1.add(triplet)
-                self.set_S[bad_arm] = new_set_Stp1
+            if not should_start_new_episode:
+                should_start_new_episode = self.check_changes_bad_arms()
+
+        # 5'. Recompute S_t+1
+        for bad_arm in self.set_BAD:
+            new_set_Stp1 = set()
+            for triplet in self.set_S[bad_arm]:
+                _, n, s = triplet
+                n_s_t_a = self.n_s_t(bad_arm, s, self.t)
+                if n_s_t_a < n:
+                    new_set_Stp1.add(triplet)
+            self.set_S[bad_arm] = new_set_Stp1
 
         # 5. Evict arms from GOOD_t
         if self.t % self.delta_t == 0:
@@ -184,7 +202,7 @@ class AdSwitchNew(BasePolicy):
                     mu_hat_s_t_best = max(mu_hat_s_t_good)
                     gap_Delta = mu_hat_s_t_best - mu_hat_s_t_a
                     gap_to_check = np.sqrt(self.C1 * max(1, np.log(self.horizon)) / max(self.n_s_t(good_arm, s, self.t) - 1, 1))
-                    # print("AdSwitchNew: should arm = {} be evicted, by checking condition (1), with s = {} and t = {}...".format(good_arm, s, self.t))  # DEBUB
+                    # print("AdSwitchNew: should arm = {} be evicted, by checking condition (1), with s = {} and t = {}...".format(good_arm, s, self.t))  # DEBUG
                     if gap_Delta > gap_to_check:  # check condition 1:
                         print("==> Evict the arm, it shouldn't be in GOOD any longer! as condition (1) is satisfied!")  # DEBUG
                         # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG

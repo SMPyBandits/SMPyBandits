@@ -434,7 +434,7 @@ def klucbBern(x, d, precision=1e-6):
     >>> klucbBern(0.9, 0.9)  # doctest: +ELLIPSIS
     0.999995...
     """
-    upperbound = min(1., klucbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
+    upperbound = min(1., klucbGauss(x, d, sig2x=0.25, precision=precision))  # variance 1/4 for [0,1] bounded distributions
     # upperbound = min(1., klucbPoisson(x, d))  # also safe, and better ?
     return klucb(x, d, klBern, upperbound, precision)
 
@@ -679,7 +679,7 @@ def kllcbBern(x, d, precision=1e-6):
     >>> kllcbBern(0.9, 0.9)  # doctest: +ELLIPSIS
     0.8999...
     """
-    lowerbound = max(0., kllcbGauss(x, d, sig2x=0.25))  # variance 1/4 for [0,1] bounded distributions
+    lowerbound = max(0., kllcbGauss(x, d, sig2x=0.25, precision=precision))  # variance 1/4 for [0,1] bounded distributions
     # lowerbound = max(0., kllcbPoisson(x, d))  # also safe, and better ?
     return kllcb(x, d, klBern, lowerbound, precision)
 

@@ -2,15 +2,17 @@ git-complete-stats.sh: do statistics on this git repository.
   From https://github.com/Naereen/git-stats/
 
 Number of commits per author:
-  1569	Lilian Besson
+  1577	Lilian Besson
      2	Guillaume Gautier
      2	Lilian Besson (Naereen)
+     2	Xuedong Shang
+     1	Yannis Flet-Berliac
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 1325
-  - Number of lines added: 1060234
-  - Number of lines deleted: 722576
+  - Number of files changed: 1326
+  - Number of lines added: 1060820
+  - Number of lines deleted: 722851
   - Number of merges: 0
 
 -------------------------
@@ -22,21 +24,35 @@ Statistics for: Guillaume
 
 ----------------------
 Statistics for: Lilian
-  - Number of files changed: 1325
-  - Number of lines added: 1060234
-  - Number of lines deleted: 722576
+  - Number of files changed: 1326
+  - Number of lines added: 1060820
+  - Number of lines deleted: 722851
   - Number of merges: 0
-      Jul     Aug     Sep       Oct     Nov     Dec       Jan     Feb     Mar       Apr     May     Jun       Jul 
-                          o .   .   .                             .                 .                           
-    M . O                   .   .   o .     o . . .         . . .         o     .           .                   
-      .             .           .   . . . O o . . . .       . .     .           .   .   .   .                   
-    W .                   . o   .   .   . . . 0 . . O     . .   . o           . .             . . . .           
-                    .     .       . . o   . o . o O O     o . o .       . . .   . .       . .         .         
-    F .                 . o . O   .     O O   . . o O       . .         o     .           . .             .     
-                        o O   .         .           o       .                                             .     
+
+-----------------------
+Statistics for: Xuedong
+  - Number of files changed: 1
+  - Number of lines added: 3
+  - Number of lines deleted: 0
+  - Number of merges: 0
+
+----------------------
+Statistics for: Yannis
+  - Number of files changed: 1
+  - Number of lines added: 10
+  - Number of lines deleted: 10
+  - Number of merges: 0
+      Oct     Nov     Dec       Jan     Feb     Mar       Apr     May     Jun       Jul     Aug       Sep     Oct 
+      .   .                             .                 .                                                   . 
+    M .   o .     o . . .         . . .         o     .           .                 .                           
+      .   . . . O o . . . .       . .     .           .   .   .   .                           .                 
+    W .   .   . . . 0 . . O     . .   . o           . .             . . . .                                     
+        . . o   . o . o O O     o . o .       . . .   . .       . .         .                                   
+    F   .     O O   . . o O       . .         o     .           . .             .   .                       .   
+              .           o       .                                             .   .                       .   
 
                                                                                           Less   . o O 0  More
- 289: Total commits
+ 233: Total commits
   15: Days ( Nov 26 2018 - Dec 14 2018 ) - Longest streak excluding weekends       
-   6: Days ( Sep 19 2018 - Sep 24 2018 ) - Longest streak including weekends       
-   0: Days - Current streak                          
+   6: Days ( Jan 14 2019 - Jan 19 2019 ) - Longest streak including weekends       
+   3: Days ( Oct  4 2019 - Oct  6 2019 ) - Current streak                          
