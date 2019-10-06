@@ -557,10 +557,10 @@ configuration.update({
     # #     },
     # # ] +
     [  # XXX Regular stochastic bandits algorithms!
-        # # { "archtype": Uniform, "params": { } },
+        { "archtype": Uniform, "params": { } },
         # # { "archtype": EmpiricalMeans, "params": { } },
         # # { "archtype": UCBalpha, "params": { "alpha": 1, } },
-        # { "archtype": UCB, "params": { } },
+        { "archtype": UCB, "params": { } },
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
         # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
         # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
@@ -677,14 +677,6 @@ configuration.update({
         for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
         for C2 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
     ] +
-    [  # FIXME test the AdSwitch policy and its corrected version
-        {
-            "archtype": AdSwitchNew,
-            "params": { "horizon": HORIZON, "C1": C1,},
-            "change_label": "AdSwitch-New",
-        }
-        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    ] +
     # # The LM_DSEE algorithm seems to work fine! WARNING it seems TOO efficient!
     # [
     #     # nu = 0.5 means there is of the order Upsilon_T = T^0.5 = sqrt(T) change points
@@ -742,7 +734,7 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        for use_localization in [True, False]
+        for use_localization in [True, False]  # FIXME experimental use of localization
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
         # for lazy_detect_change_only_x_steps in [1]
         for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
@@ -764,30 +756,34 @@ configuration.update({
     # # #     # for lazy_try_value_s_only_x_steps in [1, 2, 5]  # XXX uncomment to use default value
     # # # ] +
     # # # XXX Test GaussianGLR_IndexPolicy
-    # # [
-    # #     { "archtype": archtype, "params": {
-    # #         "horizon": HORIZON,
-    # #         "policy": policy,
-    # #         "per_arm_restart": per_arm_restart,
-    # #         "max_nb_random_events": NB_BREAK_POINTS,
-    # #         "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
-    # #         "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
-    # #     } }
-    # #     for archtype in [
-    # #         GaussianGLR_IndexPolicy,    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
-    # #         GaussianGLR_IndexPolicy_WithTracking,    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
-    # #         GaussianGLR_IndexPolicy_WithDeterministicExploration,    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
-    # #         SubGaussianGLR_IndexPolicy, # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
-    # #     ]
-    # #     for policy in [
-    # #         # UCB,  # XXX comment to only test klUCB
-    # #         klUCB,
-    # #     ]
-    # #     for per_arm_restart in PER_ARM_RESTART
-    # #     # for lazy_detect_change_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
-    # #     # for lazy_try_value_s_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
-    # #     for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
-    # # ] +
+    [
+        { "archtype": archtype, "params": {
+            "horizon": HORIZON,
+            "policy": policy,
+            "per_arm_restart": per_arm_restart,
+            "max_nb_random_events": NB_BREAK_POINTS,
+            "lazy_detect_change_only_x_steps": lazy_detect_change_only_x_steps,
+            "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
+        },  "change_label": archname
+        }
+        for archtype, archname in [
+            # (GaussianGLR_IndexPolicy, "random expl."),    # OK GaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            # (GaussianGLR_IndexPolicy_WithTracking, "tracking"),    # OK GaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            (GaussianGLR_IndexPolicy_WithDeterministicExploration, "Gaussian-GLR"),    # OK GaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+            (SubGaussianGLR_IndexPolicy, "sub-Gaussian GLR"), # OK SubGaussianGLR_IndexPolicy is very much like Gaussian GLR
+            # (OurGaussianGLR_IndexPolicy, "random expl."),    # OK OurGaussianGLR_IndexPolicy is very much like Bernoulli GLR
+            # (OurGaussianGLR_IndexPolicy_WithTracking, "tracking"),    # OK OurGaussianGLR_IndexPolicy_WithTracking is very much like Gaussian GLR and is more efficient
+            (OurGaussianGLR_IndexPolicy_WithDeterministicExploration, "Our Gaussian-GLR"),    # OK OurGaussianGLR_IndexPolicy_WithDeterministicExploration is very much like Gaussian GLR and is more efficient
+        ]
+        for policy in [
+            # UCB,  # XXX comment to only test klUCB
+            klUCB,
+        ]
+        for per_arm_restart in PER_ARM_RESTART
+        # for lazy_detect_change_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+        # for lazy_try_value_s_only_x_steps in [50] #+ [2, 10]  # XXX uncomment to use default value
+        for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
+    ] +
     # XXX Test BernoulliGLR_IndexPolicy
     [
         { "archtype": archtype, "params": {
@@ -842,7 +838,7 @@ configuration.update({
             [DELTA_LOCAL, DELTA_GLOBAL],
             [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
-        for use_localization in [True, False]
+        for use_localization in [True, False]  # FIXME experimental use of localization
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
         # for alpha0 in [ALPHA_1]  # XXX experimental!
         for mult_alpha0 in [1]  # comment from the + to use default parameter
@@ -854,6 +850,14 @@ configuration.update({
         # for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(1, 1)]
         for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
         # for variant in [None, 1, 2, 3]  # XXX variant for the threshold function...
+    ] +
+    [  # FIXME test the AdSwitch policy and its corrected version
+        {
+            "archtype": AdSwitchNew,
+            "params": { "horizon": HORIZON, "C1": C1,},
+            "change_label": "AdSwitch-New",
+        }
+        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
     ] +
     []
 })

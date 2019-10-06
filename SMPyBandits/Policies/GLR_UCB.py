@@ -519,6 +519,27 @@ class BernoulliGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_With
     pass
 
 
+# --- GLR for sigma=1 Gaussian
+class OurGaussianGLR_IndexPolicy(GLR_IndexPolicy):
+    r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed), but with our threshold designed for the sub-Bernoulli case.
+    """
+    def __init__(self, nbArms, sig2=0.25, kl=klGauss, threshold_function=threshold_BernoulliGLR, *args, **kwargs):
+        super(OurGaussianGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
+        self._sig2 = sig2  #: Fixed variance :math:`\sigma^2` of the Gaussian distributions. Extra parameter given to :func:`kullback.klGauss`. Default to :math:`\sigma^2 = \frac{1}{4}`.
+        self._args_to_kl = (sig2, )
+
+
+class OurGaussianGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, OurGaussianGLR_IndexPolicy):
+    """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough, but with our threshold designed for the sub-Bernoulli case, but with our threshold designed for the sub-Bernoulli case.
+    """
+    pass
+
+class OurGaussianGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithDeterministicExploration, OurGaussianGLR_IndexPolicy):
+    """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed, but with our threshold designed for the sub-Bernoulli case.
+    """
+    pass
+
+
 # --- Non-Parametric Sub-Gaussian GLR for Sub-Gaussian data
 
 #: Default confidence level for :class:`SubGaussianGLR_IndexPolicy`.
