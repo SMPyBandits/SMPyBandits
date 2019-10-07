@@ -37,8 +37,8 @@ def mymean(x):
 #: In their paper, in section 4.2) page 8, an inequality controls C1: (5) states that for all s', t', C1 > 8 (2n - 1)/n where n = n_[s',t'], so C1 > 16.
 Constant_C1 = 16.1
 
-DELTA_T = 20  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
-DELTA_S = 10  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
+DELTA_T = 50  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
+DELTA_S = 20  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
 
 
 class AdSwitchNew(BasePolicy):
@@ -110,6 +110,7 @@ class AdSwitchNew(BasePolicy):
     def check_changes_good_arms(self):
         """ Check for changes of good arms.
 
+        - I moved this into a function, in order to stop the 4 for loops (``good_arm``, ``s_1``, ``s_2``, ``s``) as soon as a change was detected (early stopping).
         - TODO this takes a crazy O(K t^3) time, it HAS to be done faster!
         """
         for good_arm in self.set_GOOD:
@@ -141,7 +142,10 @@ class AdSwitchNew(BasePolicy):
         return False
 
     def check_changes_bad_arms(self):
-        """ Check for changes of bad arms, in O(K t)."""
+        """ Check for changes of bad arms, in O(K t).
+
+        - I moved this into a function, in order to stop the 2 for loops (``good_arm``, ``s``) as soon as a change was detected (early stopping).
+        """
         for bad_arm in self.set_BAD:
             for s in range(self.start_of_episode, self.t + 1, self.delta_s):  # WARNING we could speed up this loop with their trick
                 # check condition (4)
@@ -153,7 +157,7 @@ class AdSwitchNew(BasePolicy):
                 right_side = gap + confidence_radius_st
                 # print("AdSwitchNew: should we start a new episode, by checking condition (4), with arm {}, s = {} and t = {}...".format(bad_arm, s, self.t))  # DEBUG
                 if abs_difference_in_st_l > right_side:  # check condition 4:
-                    print("\n==> New episode was started at time t = {} for arm {}, s = {} and t = {}, as condition (4) is satisfied!".format(bad_arm, s, self.t))  # DEBUG
+                    print("\n==> New episode was started for arm {}, s = {} and t = {}, as condition (4) is satisfied!".format(bad_arm, s, self.t))  # DEBUG
                     # print("    n_s_t_a =", n_s_t_a)  # DEBUG
                     # print("    mu_hat_s_t_a =", mu_hat_s_t_a)  # DEBUG
                     # print("    abs_difference_in_st_l =", abs_difference_in_st_l)  # DEBUG
@@ -172,15 +176,17 @@ class AdSwitchNew(BasePolicy):
 
         should_start_new_episode = False
 
-        # 3. Check for changes of good arms:
-        if self.t % self.delta_t == 0:
-            if not should_start_new_episode:
-                should_start_new_episode = self.check_changes_good_arms()
-
         # 4. Check for changes of bad arms, in O(K t):
+        # XXX I moved this check first, because it is less costly,
+        # and the costly one (good arms) does not happen if this first check yields a new episode
         if self.t % self.delta_t == 0:
             if not should_start_new_episode:
                 should_start_new_episode = self.check_changes_bad_arms()
+
+        # 3. Check for changes of good arms, in O(K t^3) CRAZY EXPENSIVE:
+        if self.t % self.delta_t == 0:
+            if not should_start_new_episode:
+                should_start_new_episode = self.check_changes_good_arms()
 
         # 5'. Recompute S_t+1
         for bad_arm in self.set_BAD:
@@ -191,6 +197,8 @@ class AdSwitchNew(BasePolicy):
                 if n_s_t_a < n:
                     new_set_Stp1.add(triplet)
             self.set_S[bad_arm] = new_set_Stp1
+            # In one line
+            # self.set_S[bad_arm] = { (e,n,s) for (e,n,s) in self.set_S[bad_arm] if self.n_s_t(bad_arm, s, self.t) < n }
 
         # 5. Evict arms from GOOD_t
         if self.t % self.delta_t == 0:
@@ -260,7 +268,7 @@ class AdSwitchNew(BasePolicy):
         for bad_arm in self.set_BAD:
             gap_Delta_hat_of_l_a = self.gap_Delta_tilde_of_l[bad_arm]
             for i in range(1, self.find_max_i(gap_Delta_hat_of_l_a) + 1):
-                assert 2**(-i) >= gap_Delta_hat_of_l_a/16
+                # assert 2**(-i) >= gap_Delta_hat_of_l_a/16  # DEBUG
                 # ell, K, T = self.ell, self.nbArms, self.horizon
                 probability_to_add_this_triplet = 2**(-i) * np.sqrt(self.ell / (self.nbArms * self.horizon * np.log(self.horizon)))
                 print("AdSwitchNew: for bad_arm = {}, gap Delta = {}, and i = {}, a new triplet can be added to the set S with probability = {}.".format(bad_arm, gap_Delta_hat_of_l_a, i, probability_to_add_this_triplet))  # DEBUG

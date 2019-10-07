@@ -53,7 +53,7 @@ BBOX_INCHES = None
 
 if __name__ != '__main__':
     # use a clever color palette, eg http://seaborn.pydata.org/api.html#color-palettes
-    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.65)
+    sns.set(context="talk", style="whitegrid", palette="hls" if HLS else "husl", font="sans-serif", font_scale=0.95)
 
     # Use tex by default http://matplotlib.org/2.0.0/users/dflt_style_changes.html#math-text
     # mpl.rcParams['text.usetex'] = True  # XXX force use of LaTeX
@@ -64,10 +64,10 @@ if __name__ != '__main__':
 
     # Configure size for axes and x and y labels
     # Cf. https://stackoverflow.com/a/12444777/
-    mpl.rcParams['axes.labelsize']  = "x-small"
-    mpl.rcParams['xtick.labelsize'] = "xx-small"
-    mpl.rcParams['ytick.labelsize'] = "xx-small"
-    mpl.rcParams['figure.titlesize'] = "x-small"
+    mpl.rcParams['axes.labelsize']  = "small"
+    mpl.rcParams['xtick.labelsize'] = "x-small"
+    mpl.rcParams['ytick.labelsize'] = "x-small"
+    mpl.rcParams['figure.titlesize'] = "small"
 
     # Configure the DPI of all images, once and for all!
     mpl.rcParams['figure.dpi'] = DPI

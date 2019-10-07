@@ -120,6 +120,16 @@ if not interactive:
     print("Warning: Non interactive simulations, switching from '{}' backend to 'agg'...".format(matplotlib.get_backend()))  # DEBUG
     matplotlib.use("agg", warn=True, force=True)
 
+if interactive:
+    import seaborn as sns
+    sns.set(context="talk", style="whitegrid", palette="hls", font="sans-serif", font_scale=0.65)
+    import matplotlib as mpl
+    # Configure size for axes and x and y labels
+    mpl.rcParams['axes.labelsize']  = "x-small"
+    mpl.rcParams['xtick.labelsize'] = "xx-small"
+    mpl.rcParams['ytick.labelsize'] = "xx-small"
+    mpl.rcParams['figure.titlesize'] = "x-small"
+
 
 if __name__ == '__main__':
     # Update configuration
