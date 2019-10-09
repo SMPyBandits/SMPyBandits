@@ -883,14 +883,14 @@ configuration.update({
         for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
         # for variant in [None, 1, 2, 3]  # XXX variant for the threshold function...
     ] +
-    [  # FIXME test the AdSwitch policy and its corrected version
-        {
-            "archtype": AdSwitchNew,
-            "params": { "horizon": HORIZON, "C1": C1,},
-            "change_label": "AdSwitch-New",
-        }
-        for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
-    ] +
+    # [  # DONE test the AdSwitch policy and its corrected version
+    #     {
+    #         "archtype": AdSwitchNew,
+    #         "params": { "horizon": HORIZON, "C1": C1,},
+    #         "change_label": "AdSwitch-New",
+    #     }
+    #     for C1 in [1]  #, 10, 0.1]  # WARNING don't test too many parameters!
+    # ] +
     []
 })
 
