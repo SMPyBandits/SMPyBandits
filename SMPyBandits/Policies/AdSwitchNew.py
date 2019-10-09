@@ -37,7 +37,10 @@ def mymean(x):
 #: In their paper, in section 4.2) page 8, an inequality controls C1: (5) states that for all s', t', C1 > 8 (2n - 1)/n where n = n_[s',t'], so C1 > 16.
 Constant_C1 = 16.1
 
+DELTA_T = 1  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
 DELTA_T = 50  #: A small trick to speed-up the computations, the checks for changes of good/bad arms are going to have a step ``DELTA_T``.
+
+DELTA_S = 1  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
 DELTA_S = 20  #: A small trick to speed-up the computations, the loops on :math:`s_1`, :math:`s_2` and :math:`s` are going to have a step ``DELTA_S``.
 
 
