@@ -765,7 +765,7 @@ configuration.update({
             klUCB,
         ]
         # for use_localization in [True, False]  # FIXME experimental use of localization
-        for use_localization in [False]
+        for use_localization in [True]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
         # for lazy_detect_change_only_x_steps in [1]
         for lazy_detect_change_only_x_steps in ([20] if HORIZON <= 20000 else ([35] if HORIZON <= 100000 else [50]))
@@ -870,7 +870,7 @@ configuration.update({
             [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
         # for use_localization in [True, False]  # FIXME experimental use of localization
-        for use_localization in [False]
+        for use_localization in [True]
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
         # for alpha0 in [ALPHA_1]  # XXX experimental!
         for mult_alpha0 in [1]  # comment from the + to use default parameter

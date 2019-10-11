@@ -228,6 +228,11 @@ LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
 
 
+#: Default value of ``use_localization`` for policies. All the experiments I tried showed that the localization always helps improving learning, so the default value is set to True.
+USE_LOCALIZATION = False
+USE_LOCALIZATION = True
+
+
 class UCBLCB_IndexPolicy(CD_IndexPolicy):
     r""" The UCBLCB-UCB generic policy for non-stationary bandits, from [[Improved Changepoint Detection for Piecewise i.i.d Bandits, by S. Mukherjee  & O.-A. Maillard, preprint 2018](https://subhojyoti.github.io/pdf/aistats_2019.pdf)].
 
@@ -236,7 +241,7 @@ class UCBLCB_IndexPolicy(CD_IndexPolicy):
     def __init__(self, nbArms,
             delta=None, delta0=1.0,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
-            use_localization=False,
+            use_localization=USE_LOCALIZATION,
             *args, **kwargs
         ):
         super(UCBLCB_IndexPolicy, self).__init__(nbArms, per_arm_restart=False, *args, **kwargs)

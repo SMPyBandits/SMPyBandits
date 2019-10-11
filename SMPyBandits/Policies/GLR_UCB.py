@@ -58,6 +58,11 @@ LAZY_TRY_VALUE_S_ONLY_X_STEPS = 1
 LAZY_TRY_VALUE_S_ONLY_X_STEPS = 10
 
 
+#: Default value of ``use_localization`` for policies. All the experiments I tried showed that the localization always helps improving learning, so the default value is set to True.
+USE_LOCALIZATION = False
+USE_LOCALIZATION = True
+
+
 # --- Generic GLR for 1-dimensional exponential families
 
 eps = 1e-10  #: Threshold value: everything in [0, 1] is truncated to [eps, 1 - eps]
@@ -316,7 +321,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             threshold_function=threshold_BernoulliGLR, variant=None,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             per_arm_restart=PER_ARM_RESTART,
-            use_localization=False,
+            use_localization=USE_LOCALIZATION,
             *args, **kwargs
         ):
         super(GLR_IndexPolicy, self).__init__(nbArms, epsilon=1, per_arm_restart=per_arm_restart, *args, **kwargs)
@@ -595,7 +600,7 @@ class SubGaussianGLR_IndexPolicy(CD_IndexPolicy):
             exponentBeta=1.05, alpha_t1=0.1, alpha0=None,
             lazy_detect_change_only_x_steps=LAZY_DETECT_CHANGE_ONLY_X_STEPS,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
-            use_localization=False,
+            use_localization=USE_LOCALIZATION,
             *args, **kwargs
         ):
         super(SubGaussianGLR_IndexPolicy, self).__init__(nbArms, epsilon=1, full_restart_when_refresh=full_restart_when_refresh, policy=policy, lazy_detect_change_only_x_steps=lazy_detect_change_only_x_steps, *args, **kwargs)

@@ -57,6 +57,11 @@ LAZY_DETECT_CHANGE_ONLY_X_STEPS = 1
 LAZY_DETECT_CHANGE_ONLY_X_STEPS = 10
 
 
+#: Default value of ``use_localization`` for policies. All the experiments I tried showed that the localization always helps improving learning, so the default value is set to True.
+USE_LOCALIZATION = False
+USE_LOCALIZATION = True
+
+
 # --- Different change detection algorithms
 
 #: For any algorithm with uniform exploration and a formula to tune it, :math:`\alpha` is usually too large and leads to larger regret. Multiplying it by a 0.1 or 0.2 helps, a lot!
@@ -111,7 +116,7 @@ class CUSUM_IndexPolicy(CD_IndexPolicy):
             min_number_of_observation_between_change_point=MIN_NUMBER_OF_OBSERVATION_BETWEEN_CHANGE_POINT,
             full_restart_when_refresh=False,
             per_arm_restart=True,
-            use_localization=False,
+            use_localization=USE_LOCALIZATION,
             *args, **kwargs
         ):
         super(CUSUM_IndexPolicy, self).__init__(nbArms, full_restart_when_refresh=full_restart_when_refresh, per_arm_restart=per_arm_restart, *args, **kwargs)
