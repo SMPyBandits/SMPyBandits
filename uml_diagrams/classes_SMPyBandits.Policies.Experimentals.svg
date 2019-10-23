@@ -25,10 +25,10 @@
 <text text-anchor="start" x="8" y="-106.3" font-family="Times,serif" font-size="14.00" fill="#000000">opt : Optimizer</text>
 <text text-anchor="start" x="8" y="-91.3" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="0,-83.5 377,-83.5 "/>
-<text text-anchor="start" x="8" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="8" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, opt, est, lower, amplitude)</text>
 <text text-anchor="start" x="8" y="-53.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
 <text text-anchor="start" x="8" y="-38.3" font-family="Times,serif" font-size="14.00" fill="#000000">choice()</text>
-<text text-anchor="start" x="8" y="-23.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<text text-anchor="start" x="8" y="-23.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward(armId, reward)</text>
 <text text-anchor="start" x="8" y="-8.3" font-family="Times,serif" font-size="14.00" fill="#000000">startGame()</text>
 </g>
 <!-- 1 -->
@@ -40,13 +40,13 @@
 <text text-anchor="start" x="403.5" y="-181.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : int</text>
 <text text-anchor="start" x="403.5" y="-166.3" font-family="Times,serif" font-size="14.00" fill="#000000">maxReward : float</text>
 <text text-anchor="start" x="403.5" y="-151.3" font-family="Times,serif" font-size="14.00" fill="#000000">obs</text>
-<text text-anchor="start" x="403.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">pulls</text>
+<text text-anchor="start" x="403.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">pulls : ndarray</text>
 <text text-anchor="start" x="403.5" y="-121.3" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="395.5,-113.5 763.5,-113.5 "/>
-<text text-anchor="start" x="403.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">_KLucb()</text>
-<text text-anchor="start" x="403.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="403.5" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
-<text text-anchor="start" x="403.5" y="-53.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<text text-anchor="start" x="403.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">_KLucb(obs, klMax, debug)</text>
+<text text-anchor="start" x="403.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, maxReward, lower, amplitude)</text>
+<text text-anchor="start" x="403.5" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
+<text text-anchor="start" x="403.5" y="-53.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward(arm, reward)</text>
 <text text-anchor="start" x="403.5" y="-38.3" font-family="Times,serif" font-size="14.00" fill="#000000">startGame()</text>
 </g>
 <!-- 2 -->
@@ -57,9 +57,9 @@
 <polyline fill="none" stroke="#000000" points="781.5,-151.5 1203.5,-151.5 "/>
 <text text-anchor="start" x="789.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">averageOn : int</text>
 <polyline fill="none" stroke="#000000" points="781.5,-128.5 1203.5,-128.5 "/>
-<text text-anchor="start" x="789.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="789.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, posterior, averageOn, lower, amplitude)</text>
 <text text-anchor="start" x="789.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="789.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="789.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 3 -->
 <g id="node4" class="node">
@@ -70,8 +70,8 @@
 <text text-anchor="start" x="1229.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">_index_function</text>
 <text text-anchor="start" x="1229.5" y="-121.3" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="1221.5,-113.5 1553.5,-113.5 "/>
-<text text-anchor="start" x="1229.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
-<text text-anchor="start" x="1229.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="1229.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, lower, amplitude)</text>
+<text text-anchor="start" x="1229.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 4 -->
 <g id="node5" class="node">
@@ -81,7 +81,7 @@
 <polyline fill="none" stroke="#000000" points="1600.5,-520.5 1946.5,-520.5 "/>
 <polyline fill="none" stroke="#000000" points="1600.5,-496.5 1946.5,-496.5 "/>
 <text text-anchor="start" x="1608.5" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeAllIndex()</text>
-<text text-anchor="start" x="1608.5" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="1608.5" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 5 -->
 <g id="node6" class="node">
@@ -91,10 +91,10 @@
 <polyline fill="none" stroke="#000000" points="1571.5,-159 1975.5,-159 "/>
 <text text-anchor="start" x="1579.5" y="-143.8" font-family="Times,serif" font-size="14.00" fill="#000000">alpha : int</text>
 <polyline fill="none" stroke="#000000" points="1571.5,-136 1975.5,-136 "/>
-<text text-anchor="start" x="1579.5" y="-120.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="1579.5" y="-120.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, alpha, lower, amplitude)</text>
 <text text-anchor="start" x="1579.5" y="-105.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
 <text text-anchor="start" x="1579.5" y="-90.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeAllIndex()</text>
-<text text-anchor="start" x="1579.5" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="1579.5" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 5&#45;&gt;4 -->
 <g id="edge1" class="edge">
@@ -110,9 +110,9 @@
 <polyline fill="none" stroke="#000000" points="1993.5,-151.5 2357.5,-151.5 "/>
 <text text-anchor="start" x="2001.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <polyline fill="none" stroke="#000000" points="1993.5,-128.5 2357.5,-128.5 "/>
-<text text-anchor="start" x="2001.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="2001.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="2001.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="2001.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="2001.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 7 -->
 <g id="node8" class="node">
@@ -122,9 +122,9 @@
 <polyline fill="none" stroke="#000000" points="2376,-151.5 2733,-151.5 "/>
 <text text-anchor="start" x="2384" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <polyline fill="none" stroke="#000000" points="2376,-128.5 2733,-128.5 "/>
-<text text-anchor="start" x="2384" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="2384" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="2384" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="2384" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="2384" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 8 -->
 <g id="node9" class="node">
@@ -134,9 +134,9 @@
 <polyline fill="none" stroke="#000000" points="2751,-151.5 3112,-151.5 "/>
 <text text-anchor="start" x="2759" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <polyline fill="none" stroke="#000000" points="2751,-128.5 3112,-128.5 "/>
-<text text-anchor="start" x="2759" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="2759" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="2759" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="2759" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="2759" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 9 -->
 <g id="node10" class="node">
@@ -146,9 +146,9 @@
 <polyline fill="none" stroke="#000000" points="3130.5,-151.5 3492.5,-151.5 "/>
 <text text-anchor="start" x="3138.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <polyline fill="none" stroke="#000000" points="3130.5,-128.5 3492.5,-128.5 "/>
-<text text-anchor="start" x="3138.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="3138.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="3138.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="3138.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="3138.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 10 -->
 <g id="node11" class="node">
@@ -158,9 +158,9 @@
 <polyline fill="none" stroke="#000000" points="3510.5,-151.5 3864.5,-151.5 "/>
 <text text-anchor="start" x="3518.5" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <polyline fill="none" stroke="#000000" points="3510.5,-128.5 3864.5,-128.5 "/>
-<text text-anchor="start" x="3518.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="3518.5" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="3518.5" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="3518.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="3518.5" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 11 -->
 <g id="node12" class="node">
@@ -169,11 +169,11 @@
 <text text-anchor="middle" x="4530.5" y="-542.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost</text>
 <polyline fill="none" stroke="#000000" points="4347.5,-535 4713.5,-535 "/>
 <text text-anchor="start" x="4355.5" y="-519.8" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
-<text text-anchor="start" x="4355.5" y="-504.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, int, NoneType</text>
+<text text-anchor="start" x="4355.5" y="-504.8" font-family="Times,serif" font-size="14.00" fill="#000000">set_D : list, NoneType, int</text>
 <polyline fill="none" stroke="#000000" points="4347.5,-497 4713.5,-497 "/>
-<text text-anchor="start" x="4355.5" y="-481.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="4355.5" y="-481.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, set_D, c, lower, amplitude)</text>
 <text text-anchor="start" x="4355.5" y="-466.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="4355.5" y="-451.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="4355.5" y="-451.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 12 -->
 <g id="node13" class="node">
@@ -184,9 +184,9 @@
 <text text-anchor="start" x="5235" y="-143.8" font-family="Times,serif" font-size="14.00" fill="#000000">c : float</text>
 <text text-anchor="start" x="5235" y="-128.8" font-family="Times,serif" font-size="14.00" fill="#000000">epsilon : float</text>
 <polyline fill="none" stroke="#000000" points="5227,-121 5634,-121 "/>
-<text text-anchor="start" x="5235" y="-105.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="5235" y="-105.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, epsilon, c, lower, amplitude)</text>
 <text text-anchor="start" x="5235" y="-90.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="5235" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="5235" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 13 -->
 <g id="node14" class="node">
@@ -195,9 +195,9 @@
 <text text-anchor="middle" x="4090.5" y="-159.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost_bq_h_lb</text>
 <polyline fill="none" stroke="#000000" points="3882,-152 4299,-152 "/>
 <polyline fill="none" stroke="#000000" points="3882,-128 4299,-128 "/>
-<text text-anchor="start" x="3890" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="3890" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="3890" y="-97.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="3890" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="3890" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 13&#45;&gt;11 -->
 <g id="edge2" class="edge">
@@ -212,9 +212,9 @@
 <text text-anchor="middle" x="4530.5" y="-159.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost_bq_h_lb_t</text>
 <polyline fill="none" stroke="#000000" points="4316.5,-152 4744.5,-152 "/>
 <polyline fill="none" stroke="#000000" points="4316.5,-128 4744.5,-128 "/>
-<text text-anchor="start" x="4324.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="4324.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="4324.5" y="-97.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="4324.5" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="4324.5" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 14&#45;&gt;11 -->
 <g id="edge3" class="edge">
@@ -229,9 +229,9 @@
 <text text-anchor="middle" x="4985.5" y="-159.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UCBoost_faster.UCBoost_bq_h_lb_t_sq</text>
 <polyline fill="none" stroke="#000000" points="4762.5,-152 5208.5,-152 "/>
 <polyline fill="none" stroke="#000000" points="4762.5,-128 5208.5,-128 "/>
-<text text-anchor="start" x="4770.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="4770.5" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, c, lower, amplitude)</text>
 <text text-anchor="start" x="4770.5" y="-97.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="4770.5" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="4770.5" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 15&#45;&gt;11 -->
 <g id="edge4" class="edge">
@@ -247,7 +247,7 @@
 <polyline fill="none" stroke="#000000" points="5652,-144.5 6005,-144.5 "/>
 <polyline fill="none" stroke="#000000" points="5652,-120.5 6005,-120.5 "/>
 <text text-anchor="start" x="5660" y="-105.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeAllIndex()</text>
-<text text-anchor="start" x="5660" y="-90.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="5660" y="-90.3" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 17 -->
 <g id="node18" class="node">
@@ -258,10 +258,10 @@
 <polyline fill="none" stroke="#000000" points="6057.5,-526.5 6481.5,-526.5 "/>
 <text text-anchor="start" x="6065.5" y="-511.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
 <text text-anchor="start" x="6065.5" y="-496.3" font-family="Times,serif" font-size="14.00" fill="#000000">__repr__()</text>
-<text text-anchor="start" x="6065.5" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit()</text>
-<text text-anchor="start" x="6065.5" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample()</text>
-<text text-anchor="start" x="6065.5" y="-451.3" font-family="Times,serif" font-size="14.00" fill="#000000">score()</text>
-<text text-anchor="start" x="6065.5" y="-436.3" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples()</text>
+<text text-anchor="start" x="6065.5" y="-481.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit(data)</text>
+<text text-anchor="start" x="6065.5" y="-466.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample(shape)</text>
+<text text-anchor="start" x="6065.5" y="-451.3" font-family="Times,serif" font-size="14.00" fill="#000000">score(data)</text>
+<text text-anchor="start" x="6065.5" y="-436.3" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples(data)</text>
 </g>
 <!-- 18 -->
 <g id="node19" class="node">
@@ -271,13 +271,13 @@
 <polyline fill="none" stroke="#000000" points="6023,-181.5 6502,-181.5 "/>
 <text text-anchor="start" x="6031" y="-166.3" font-family="Times,serif" font-size="14.00" fill="#000000">amplitude : float</text>
 <text text-anchor="start" x="6031" y="-151.3" font-family="Times,serif" font-size="14.00" fill="#000000">lower : float</text>
-<text text-anchor="start" x="6031" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">mu</text>
+<text text-anchor="start" x="6031" y="-136.3" font-family="Times,serif" font-size="14.00" fill="#000000">mu : NoneType, ndarray</text>
 <polyline fill="none" stroke="#000000" points="6023,-128.5 6502,-128.5 "/>
-<text text-anchor="start" x="6031" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="6031" y="-113.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(p)</text>
 <text text-anchor="start" x="6031" y="-98.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="6031" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit()</text>
-<text text-anchor="start" x="6031" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample()</text>
-<text text-anchor="start" x="6031" y="-53.3" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples()</text>
+<text text-anchor="start" x="6031" y="-83.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit(data)</text>
+<text text-anchor="start" x="6031" y="-68.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample(shape)</text>
+<text text-anchor="start" x="6031" y="-53.3" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples(data)</text>
 </g>
 <!-- 18&#45;&gt;17 -->
 <g id="edge5" class="edge">
@@ -291,14 +291,14 @@
 <polygon fill="none" stroke="#000000" points="6520,-53 6520,-197 6997,-197 6997,-53 6520,-53"/>
 <text text-anchor="middle" x="6758.5" y="-181.8" font-family="Times,serif" font-size="14.00" fill="#000000">SMPyBandits.Policies.Experimentals.UnsupervisedLearning.SimpleGaussianKernel</text>
 <polyline fill="none" stroke="#000000" points="6520,-174 6997,-174 "/>
-<text text-anchor="start" x="6528" y="-158.8" font-family="Times,serif" font-size="14.00" fill="#000000">loc : float</text>
-<text text-anchor="start" x="6528" y="-143.8" font-family="Times,serif" font-size="14.00" fill="#000000">scale : float</text>
+<text text-anchor="start" x="6528" y="-158.8" font-family="Times,serif" font-size="14.00" fill="#000000">loc : float, ndarray</text>
+<text text-anchor="start" x="6528" y="-143.8" font-family="Times,serif" font-size="14.00" fill="#000000">scale : ndarray, float</text>
 <polyline fill="none" stroke="#000000" points="6520,-136 6997,-136 "/>
-<text text-anchor="start" x="6528" y="-120.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="6528" y="-120.8" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(loc, scale)</text>
 <text text-anchor="start" x="6528" y="-105.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
-<text text-anchor="start" x="6528" y="-90.8" font-family="Times,serif" font-size="14.00" fill="#000000">fit()</text>
-<text text-anchor="start" x="6528" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">sample()</text>
-<text text-anchor="start" x="6528" y="-60.8" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples()</text>
+<text text-anchor="start" x="6528" y="-90.8" font-family="Times,serif" font-size="14.00" fill="#000000">fit(data)</text>
+<text text-anchor="start" x="6528" y="-75.8" font-family="Times,serif" font-size="14.00" fill="#000000">sample(shape)</text>
+<text text-anchor="start" x="6528" y="-60.8" font-family="Times,serif" font-size="14.00" fill="#000000">score_samples(data)</text>
 </g>
 <!-- 19&#45;&gt;17 -->
 <g id="edge6" class="edge">
@@ -327,15 +327,15 @@
 <text text-anchor="start" x="6568" y="-482.3" font-family="Times,serif" font-size="14.00" fill="#000000">observations</text>
 <text text-anchor="start" x="6568" y="-467.3" font-family="Times,serif" font-size="14.00" fill="#000000">t : int</text>
 <polyline fill="none" stroke="#000000" points="6560,-459.5 7035,-459.5 "/>
-<text text-anchor="start" x="6568" y="-444.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__()</text>
+<text text-anchor="start" x="6568" y="-444.3" font-family="Times,serif" font-size="14.00" fill="#000000">__init__(nbArms, estimator, T_0, fit_every, meanOf, lower, amplitude)</text>
 <text text-anchor="start" x="6568" y="-429.3" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
 <text text-anchor="start" x="6568" y="-414.3" font-family="Times,serif" font-size="14.00" fill="#000000">choice()</text>
 <text text-anchor="start" x="6568" y="-399.3" font-family="Times,serif" font-size="14.00" fill="#000000">estimatedOrder()</text>
-<text text-anchor="start" x="6568" y="-384.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit()</text>
-<text text-anchor="start" x="6568" y="-369.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward()</text>
+<text text-anchor="start" x="6568" y="-384.3" font-family="Times,serif" font-size="14.00" fill="#000000">fit(data)</text>
+<text text-anchor="start" x="6568" y="-369.3" font-family="Times,serif" font-size="14.00" fill="#000000">getReward(armId, reward)</text>
 <text text-anchor="start" x="6568" y="-354.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample()</text>
-<text text-anchor="start" x="6568" y="-339.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample_with_mean()</text>
-<text text-anchor="start" x="6568" y="-324.3" font-family="Times,serif" font-size="14.00" fill="#000000">score()</text>
+<text text-anchor="start" x="6568" y="-339.3" font-family="Times,serif" font-size="14.00" fill="#000000">sample_with_mean(meanOf)</text>
+<text text-anchor="start" x="6568" y="-324.3" font-family="Times,serif" font-size="14.00" fill="#000000">score(obs)</text>
 <text text-anchor="start" x="6568" y="-309.3" font-family="Times,serif" font-size="14.00" fill="#000000">startGame()</text>
 </g>
 <!-- 19&#45;&gt;20 -->
@@ -361,7 +361,7 @@
 <polyline fill="none" stroke="#000000" points="7015,-128 7382,-128 "/>
 <text text-anchor="start" x="7023" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
 <text text-anchor="start" x="7023" y="-97.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeAllIndex()</text>
-<text text-anchor="start" x="7023" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="7023" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 <!-- 22 -->
 <g id="node23" class="node">
@@ -372,7 +372,7 @@
 <polyline fill="none" stroke="#000000" points="7400,-128 7801,-128 "/>
 <text text-anchor="start" x="7408" y="-112.8" font-family="Times,serif" font-size="14.00" fill="#000000">__str__()</text>
 <text text-anchor="start" x="7408" y="-97.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeAllIndex()</text>
-<text text-anchor="start" x="7408" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex()</text>
+<text text-anchor="start" x="7408" y="-82.8" font-family="Times,serif" font-size="14.00" fill="#000000">computeIndex(arm)</text>
 </g>
 </g>
 </svg>

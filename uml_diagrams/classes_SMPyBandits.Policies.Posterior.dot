@@ -1,11 +1,11 @@
 digraph "classes_SMPyBandits.Policies.Posterior" {
 charset="utf-8"
 rankdir=BT
-"0" [label="{SMPyBandits.Policies.Posterior.Beta.Beta|N : list\l_a : int\l_b : int\l|__init__()\l__str__()\lforget()\lmean()\lquantile()\lreset()\lsample()\lupdate()\l}", shape="record"];
-"1" [label="{SMPyBandits.Policies.Posterior.DiscountedBeta.DiscountedBeta|N : list\l_a : int\l_b : int\lgamma : float\l|__init__()\l__str__()\ldiscount()\lforget()\lquantile()\lreset()\lsample()\lundiscount()\lupdate()\l}", shape="record"];
-"2" [label="{SMPyBandits.Policies.Posterior.Gamma.Gamma|_k : int\l_lmbda : int\lk : int\llmbda : int\l|__init__()\l__str__()\lforget()\lmean()\lquantile()\lreset()\lsample()\lupdate()\l}", shape="record"];
-"3" [label="{SMPyBandits.Policies.Posterior.Gauss.Gauss|_mu : float\l_nb_data : int\l_nu : float\l_sum_data : float\lmu : float\lsigma : float\l|__init__()\l__str__()\lforget()\lmean()\lquantile()\lreset()\lsample()\lupdate()\lvariance()\l}", shape="record"];
-"4" [label="{SMPyBandits.Policies.Posterior.Posterior.Posterior|\l|__init__()\lforget()\lmean()\lquantile()\lreset()\lsample()\lupdate()\l}", shape="record"];
+"0" [label="{SMPyBandits.Policies.Posterior.Beta.Beta|N : list\l_a : int\l_b : int\l|__init__(a, b)\l__str__()\lforget(obs)\lmean()\lquantile(p)\lreset(a, b)\lsample()\lupdate(obs)\l}", shape="record"];
+"1" [label="{SMPyBandits.Policies.Posterior.DiscountedBeta.DiscountedBeta|N : list\l_a : int\l_b : int\lgamma : float\l|__init__(gamma, a, b)\l__str__()\ldiscount()\lforget(obs)\lquantile(p)\lreset(a, b)\lsample()\lundiscount()\lupdate(obs)\l}", shape="record"];
+"2" [label="{SMPyBandits.Policies.Posterior.Gamma.Gamma|_k : int\l_lmbda : int\lk : int\llmbda : int\l|__init__(k, lmbda)\l__str__()\lforget(obs)\lmean()\lquantile(p)\lreset(k, lmbda)\lsample()\lupdate(obs)\l}", shape="record"];
+"3" [label="{SMPyBandits.Policies.Posterior.Gauss.Gauss|_mu : float\l_nb_data : int\l_nu : float\l_sum_data : float\lmu : float\lsigma : float\l|__init__(mu)\l__str__()\lforget(obs)\lmean()\lquantile(p)\lreset(mu)\lsample()\lupdate(obs)\lvariance()\l}", shape="record"];
+"4" [label="{SMPyBandits.Policies.Posterior.Posterior.Posterior|\l|__init__()\lforget(obs)\lmean()\lquantile(p)\lreset()\lsample()\lupdate(obs)\l}", shape="record"];
 "0" -> "4" [arrowhead="empty", arrowtail="none"];
 "1" -> "0" [arrowhead="empty", arrowtail="none"];
 "2" -> "4" [arrowhead="empty", arrowtail="none"];
