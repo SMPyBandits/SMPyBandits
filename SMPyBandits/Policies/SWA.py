@@ -1,0 +1,82 @@
+# -*- coding: utf-8 -*-
+""" The Sliding Window Average policy for rotting bandits.
+Reference: [Levine , Crammer & Mannor, 2017].
+"""
+from __future__ import division, print_function  # Python 2 compatibility
+
+__author__ = "Julien Seznec"
+__version__ = "0.1"
+
+from math import sqrt, log
+import numpy as np
+import pandas as pd
+np.seterr(divide='ignore')  # XXX dangerous in general, controlled here!
+
+try:
+    from .IndexPolicy import IndexPolicy
+except ImportError:
+    from IndexPolicy import IndexPolicy
+
+
+class SWA(IndexPolicy):
+    """ The Sliding Window Average policy for rotting bandits.
+    Reference: [Levine , Crammer & Mannor, 2017].
+    """
+    def __init__(self, nbArms, horizon=1, subgaussian=1, maxDecrement=1,alpha=0.2, doublingTrick=False):
+        super(SWA, self).__init__(nbArms)
+        self.t = 0
+        self.nbArms = nbArms
+        self.arms_history = {}
+        for arm in range(nbArms):
+            self.arms_history[arm] = np.array([])
+        self.armSet = set(range(nbArms))
+        self.horizon = horizon
+        self.alpha = alpha if alpha else (2*maxDecrement)**(-2/3)
+        self.subgaussian = subgaussian
+        self.h = self.setWindow()
+        self.doubling = doublingTrick
+
+    def setWindow(self):
+        return self.alpha * (16 * self.subgaussian**2 * self.horizon**2 * log(sqrt(2)*self.horizon)/ len(self.armSet)**2)**(1/3)
+
+    def getReward(self, arm, reward):
+        super(SWA, self).getReward(arm, reward)
+        self.arms_history[arm] = np.insert(self.arms_history[arm], 0, 0) + reward
+
+    def computeIndex(self, arm):
+        """ Compute the mean of the h last value """
+        if len(self.arms_history[arm]) < self.h:
+            return float('+inf')
+        else:
+            return self.arms_history[arm][int(self.h)]
+
+class wSWA(SWA):
+    """ SWA with doubling trick (custom = no restart)
+    Reference: [Levine , Crammer & Mannor, 2017].
+    """
+    def __init__(self, nbArms, firstHorizon=1, subgaussian=1, maxDecrement=1, alpha=0.2):
+        super(wSWA, self).__init__(nbArms, firstHorizon, subgaussian, maxDecrement, alpha)
+
+    def __str__(self):
+        return r"wSWA($\alpha={:.3g}$)".format(self.alpha)
+
+    def doublingTrick(self):
+        self.horizon = 2 * self.horizon
+        self.h = self.setWindow()
+
+    def getReward(self, arm, reward):
+        super(wSWA, self).getReward(arm,reward)
+        if self.t >= self.horizon:
+            self.doublingTrick()
+
+# --- Debugging
+
+if __name__ == "__main__":
+    # Code for debugging purposes.
+    reward = {0:0, 1:0.2, 2:0.4, 3:0.6, 4:0.8}
+    policy = SWA(5, horizon=1000)
+    for t in range(1000):
+        choice = policy.choice()
+        print("chosen:%s" % choice)
+        policy.getReward(choice, reward[choice])
+    print(policy.pulls)
