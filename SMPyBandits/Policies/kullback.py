@@ -141,6 +141,8 @@ def klPoisson(x, y):
     return y - x + x * log(x / y)
 
 
+inf = float('+inf')
+
 @jit
 def klExp(x, y):
     r""" Kullback-Leibler divergence for exponential distributions. https://en.wikipedia.org/wiki/Exponential_distribution#Kullback.E2.80.93Leibler_divergence
@@ -175,7 +177,7 @@ def klExp(x, y):
     inf
     """
     if x <= 0 or y <= 0:
-        return float('+inf')
+        return inf
     else:
         x = max(x, eps)
         y = max(y, eps)
@@ -220,7 +222,7 @@ def klGamma(x, y, a=1):
     inf
     """
     if x <= 0 or y <= 0:
-        return float('+inf')
+        return inf
     else:
         x = max(x, eps)
         y = max(y, eps)
