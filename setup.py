@@ -24,7 +24,7 @@ if path.exists(README):
         long_description = f.read()
         # print("Using a long_description of length,", len(long_description), "from file", README)  # DEBUG
 
-version = "0.9.6"
+version = "0.9.7"
 try:
     from SMPyBandits import __version__ as version
 except ImportError:

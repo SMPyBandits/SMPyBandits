@@ -6,12 +6,12 @@ Open-Source Python package for Single- and Multi-Players multi-armed Bandits alg
 - Homepage: https://SMPyBandits.GitHub.io/
 - Author: Lilian Besson and contributors
 - License: MIT
-- Date: February 2019
+- Date: October 2019
 """
 from __future__ import division, print_function  # Python 2 compatibility
 
 __author__ = "Lilian Besson"
-__version__ = "0.9.6"
+__version__ = "0.9.7"
 
 try:
     # from .Arms import *
