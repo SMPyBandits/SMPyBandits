@@ -34,7 +34,8 @@ class ChildPointer(object):
 
     def handleCollision(self, arm, reward=None):
         """ Pass the call to self.mother._handleCollision_one(playerId, arm, reward) with the player's ID number. """
-        return self.mother._handleCollision_one(self.playerId, arm)
+        if hasattr(self.mother, "_handleCollision_one"):
+            return self.mother._handleCollision_one(self.playerId, arm)
 
     def choice(self):
         """ Pass the call to self.mother._choice_one(playerId) with the player's ID number. """
