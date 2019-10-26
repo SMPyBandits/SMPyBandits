@@ -41,13 +41,11 @@ class AdBandits(BasePolicy):
     .. warning:: This policy is very not famous, but for stochastic bandits it works usually VERY WELL! It is not anytime thought.
     """
 
-    def __init__(self, nbArms, horizon=None, alpha=ALPHA, posterior=Beta, lower=0., amplitude=1.):
+    def __init__(self, nbArms, horizon=1000, alpha=ALPHA, posterior=Beta, lower=0., amplitude=1.):
         """ New policy."""
         super(AdBandits, self).__init__(nbArms, lower=lower, amplitude=amplitude)
         self.alpha = alpha  #: Parameter alpha
-        if horizon is None:
-            horizon = 1000  # default value is 10000?
-        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment. Default value is 10000.
+        self.horizon = int(horizon)  #: Parameter :math:`T` = known horizon of the experiment. Default value is 1000.
         self.posterior = [None] * self.nbArms  #: Posterior for each arm. List instead of dict, quicker access
         for arm in range(self.nbArms):
             self.posterior[arm] = posterior()
