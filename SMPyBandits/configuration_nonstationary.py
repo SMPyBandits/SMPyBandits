@@ -590,7 +590,7 @@ configuration.update({
         # { "archtype": Uniform, "params": { } },
         # # { "archtype": EmpiricalMeans, "params": { } },
         # # { "archtype": UCBalpha, "params": { "alpha": 1, } },
-        # { "archtype": UCB, "params": { } },
+        { "archtype": UCB, "params": { } },
         # # { "archtype": SWR_UCBalpha, "params": { "alpha": 1, } },  # WARNING experimental!
         # { "archtype": BESA, "params": { "horizon": HORIZON, "non_binary": True, } },
         # { "archtype": BayesUCB, "params": { "posterior": Beta, } },
@@ -611,9 +611,9 @@ configuration.update({
             # "full_restart_when_refresh": full_restart_when_refresh,
         } }
         for policy in [
-            # UCB,  # XXX comment to only test klUCB
+            UCB,  # XXX comment to only test klUCB
             klUCB,
-            # Thompson,  # XXX comment to only test klUCB
+            Thompson,  # XXX comment to only test klUCB
             # Exp3PlusPlus,  # XXX comment to only test klUCB
         ]
         # for per_arm_restart in [True, False]
@@ -638,25 +638,25 @@ configuration.update({
         # for gamma0 in [100, 10, 1, 0.1, 0.01, 0.001]  # try different values for alpha, but using the formula, just a constant scaling
         # # for gamma0 in [10, 1, 0.01]  # try different values for alpha, but using the formula, just a constant scaling
     ] +
-    # # The Exp3R algorithm works reasonably well
-    # [
-    #     { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
-    # ] +
+    # The Exp3R algorithm works reasonably well
+    [
+        { "archtype": Exp3R, "params": { "horizon": HORIZON, } }
+    ] +
     # # # XXX The Exp3RPlusPlus variant of Exp3R algorithm works also reasonably well
     # # [
     # #     { "archtype": Exp3RPlusPlus, "params": { "horizon": HORIZON, } }
     # # ] +
-    # [
-    #     # --- # Different versions of the discounted UCB algorithm
-    #     { "archtype": DiscountedklUCB, "params": {
-    #         "gamma": gamma,
-    #         # "alpha": alpha,
-    #         # "useRealDiscount": useRealDiscount,
-    #     } }
-    #     for gamma in GAMMAS
-    #     # for alpha in ALPHAS
-    #     # for useRealDiscount in [True, False]
-    # ] +
+    [
+        # --- # Different versions of the discounted UCB algorithm
+        { "archtype": DiscountedklUCB, "params": {
+            "gamma": gamma,
+            # "alpha": alpha,
+            # "useRealDiscount": useRealDiscount,
+        } }
+        for gamma in GAMMAS
+        # for alpha in ALPHAS
+        # for useRealDiscount in [True, False]
+    ] +
     # # [
     # #     # --- # XXX experimental discounted UCB algorithm, knowing the horizon
     # #     { "archtype": DiscountedklUCBPlus, "params": { "max_nb_random_events": NB_BREAK_POINTS, "horizon": HORIZON, } }
@@ -685,11 +685,11 @@ configuration.update({
     # #     { "archtype": SWUCBPlus, "params": { "horizon": HORIZON, "alpha": alpha, } }
     # #     for alpha in ALPHAS
     # # ] +
-    # [
-    #     # --- # Different versions of the sliding window klUCB algorithm
-    #     { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
-    #     for tau in TAUS
-    # ] +
+    [
+        # --- # Different versions of the sliding window klUCB algorithm
+        { "archtype": SWklUCB, "params": { "tau": tau, }, "change_label": "SW-klUCB" }
+        for tau in TAUS
+    ] +
     [  # XXX DiscountedThompson works REALLY well!
         {
             "archtype": DiscountedThompson,
@@ -764,7 +764,6 @@ configuration.update({
             # UCB,  # XXX comment to only test klUCB
             klUCB,
         ]
-        # for use_localization in [True, False]  # FIXME experimental use of localization
         for use_localization in [True]
         # for lazy_detect_change_only_x_steps in [1, 2, 5]
         # for lazy_detect_change_only_x_steps in [1]
@@ -829,12 +828,14 @@ configuration.update({
             "lazy_try_value_s_only_x_steps": lazy_try_value_s_only_x_steps,
             # "variant": variant,
             "use_localization": use_localization,
+            "use_increasing_alpha": use_increasing_alpha,
         },
         "change_label": r"GLR-klUCB({})".format(", ".join(s for s in [
             "Local" if per_arm_restart else "Global",
             "Localization" if use_localization else "",
             archname,
             # "threshold #{}".format(variant),
+            r"increasing $\alpha_t$" if use_increasing_alpha else "",
             # r"\delta 1" if delta == DELTA_1 else r"\delta 2",
             # r"$\delta={:.3g}$".format(delta),
             # r"$\alpha_0={:.3g}$".format(alpha0),
@@ -869,7 +870,6 @@ configuration.update({
             [DELTA_LOCAL, DELTA_GLOBAL],
             [ALPHA_LOCAL, ALPHA_GLOBAL],
         )
-        # for use_localization in [True, False]  # FIXME experimental use of localization
         for use_localization in [True]
         # for delta in [DELTA_1] # + [DELTA_2]  # XXX experimental!
         # for alpha0 in [ALPHA_1]  # XXX experimental!
@@ -882,6 +882,7 @@ configuration.update({
         # for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in [(1, 1)]
         for lazy_detect_change_only_x_steps, lazy_try_value_s_only_x_steps in ([(10, 10)] if HORIZON <= 20000 else ([(20, 20)] if HORIZON <= 100000 else [(50, 50)]))
         # for variant in [None, 1, 2, 3]  # XXX variant for the threshold function...
+        for use_increasing_alpha in [False, True]  # FIXME try this!
     ] +
     # [  # DONE test the AdSwitch policy and its corrected version
     #     {

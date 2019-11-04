@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 r""" The GLR-UCB policy and variants, for non-stationary bandits.
 
-- Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](TODO)
+- Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
 - It runs on top of a simple policy, e.g., :class:`UCB`, and :class:`BernoulliGLR_IndexPolicy` is a wrapper:
 
     >>> policy = BernoulliGLR_IndexPolicy(nbArms, UCB)
@@ -313,12 +313,15 @@ class GLR_IndexPolicy(CD_IndexPolicy):
     - ``threshold_function`` computes the threshold :math:`\beta(t, \delta)`, it can be for instance :func:`threshold_GaussianGLR` or :func:`threshold_BernoulliGLR`.
 
     - From ["Sequential change-point detection: Laplace concentration of scan statistics and non-asymptotic delay bounds", O.-A. Maillard, 2018].
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     def __init__(self, nbArms,
             horizon=None, delta=None, max_nb_random_events=None,
             kl=klGauss,
             alpha0=None, exponentBeta=EXPONENT_BETA, alpha_t1=ALPHA_T1,
             threshold_function=threshold_BernoulliGLR, variant=None,
+            use_increasing_alpha=False,
             lazy_try_value_s_only_x_steps=LAZY_TRY_VALUE_S_ONLY_X_STEPS,
             per_arm_restart=PER_ARM_RESTART,
             use_localization=USE_LOCALIZATION,
@@ -340,6 +343,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         self.delta = delta  #: The confidence level :math:`\delta`. Defaults to :math:`\delta=\frac{1}{\sqrt{T}}` if ``horizon`` is given and ``delta=None`` but :math:`\Upsilon_T` is unknown. Defaults to :math:`\delta=\frac{1}{\sqrt{\Upsilon_T T}}` if both :math:`T` and :math:`\Upsilon_T` are given (``horizon`` and ``max_nb_random_events``).
         self._alpha0 = alpha
         self._variant = variant
+        self._use_increasing_alpha = use_increasing_alpha
         self._threshold_function = threshold_function
         self._args_to_kl = tuple()  # Tuple of extra arguments to give to the :attr:`kl` function.
         self.kl = kl  #: The parametrized Kullback-Leibler divergence (:math:`\mathrm{kl}(x,y) = KL(D(x),D(y))`) for the 1-dimensional exponential family :math:`x\mapsto D(x)`. Example: :func:`kullback.klBern` or :func:`kullback.klGauss`.
@@ -355,6 +359,12 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         r"""What they call :math:`\alpha` in their paper: the probability of uniform exploration at each time."""
         if self._alpha0 is not None:
             return self._alpha0
+        elif self._use_increasing_alpha:
+            ell = max(self.number_of_restart, 1)
+            T = self.horizon if self.horizon is not None else self.t
+            T = max(T, 1)
+            alpha = min(np.sqrt(ell * np.log(T) / T), 1)
+            return alpha
         else:
             smallest_time_since_last_restart = np.min(self.last_pulls)
             t = min(self.t, 2 * smallest_time_since_last_restart)
@@ -371,6 +381,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
         with_tracking = "tracking" if "WithTracking" in class_name else ""
         with_randomexploration = "random expl." if not with_tracking and "DeterministicExploration" not in class_name else ""
         variant = "" if self._variant is None else "threshold #{}".format(self._variant)
+        use_increasing_alpha = r"increasing $\alpha_t$" if self._use_increasing_alpha else ""
         args = ", ".join(s for s in [
             "Local" if self._per_arm_restart else "Global",
             "Localization" if self.use_localization else "",
@@ -383,6 +394,7 @@ class GLR_IndexPolicy(CD_IndexPolicy):
             with_tracking,
             with_randomexploration,
             variant,
+            use_increasing_alpha,
         ] if s)
         args = "({})".format(args) if args else ""
         policy_name = self._policy.__name__  #.replace("_forGLR", "")
@@ -448,6 +460,8 @@ class GLR_IndexPolicy(CD_IndexPolicy):
 
 class GLR_IndexPolicy_WithTracking(GLR_IndexPolicy):
     """ A variant of the GLR policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough (with a tracking).
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     def choice(self):
         r""" If any arm is not explored enough (:math:`n_k \leq \frac{\alpha}{K} \times (t - n_k)`, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
@@ -473,6 +487,8 @@ class GLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy):
 
         A &:= (t - \tau) \mod \lceil \frac{K}{\gamma} \rceil,\\
         A &\leq K \implies A_t = A.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     def choice(self):
         r""" For some time steps, play uniformly at random one of these arms, otherwise, pass the call to :meth:`choice` of the underlying policy.
@@ -509,17 +525,24 @@ class GaussianGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithD
 # --- GLR for Bernoulli
 class BernoulliGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The BernoulliGLR-UCB policy for non-stationary bandits, for Bernoulli distributions.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     def __init__(self, nbArms, kl=klBern, threshold_function=threshold_BernoulliGLR, *args, **kwargs):
         super(BernoulliGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
 
 
 class BernoulliGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, BernoulliGLR_IndexPolicy):
-    """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough."""
+    """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
+    """
     pass
 
 class BernoulliGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithDeterministicExploration, BernoulliGLR_IndexPolicy):
     """ A variant of the BernoulliGLR-UCB policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     pass
 
@@ -527,6 +550,8 @@ class BernoulliGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_With
 # --- GLR for sigma=1 Gaussian
 class OurGaussianGLR_IndexPolicy(GLR_IndexPolicy):
     r""" The GaussianGLR-UCB policy for non-stationary bandits, for fixed-variance Gaussian distributions (ie, :math:`\sigma^2`=``sig2`` known and fixed), but with our threshold designed for the sub-Bernoulli case.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     def __init__(self, nbArms, sig2=0.25, kl=klGauss, threshold_function=threshold_BernoulliGLR, *args, **kwargs):
         super(OurGaussianGLR_IndexPolicy, self).__init__(nbArms, kl=kl, threshold_function=threshold_function, *args, **kwargs)
@@ -536,11 +561,15 @@ class OurGaussianGLR_IndexPolicy(GLR_IndexPolicy):
 
 class OurGaussianGLR_IndexPolicy_WithTracking(GLR_IndexPolicy_WithTracking, OurGaussianGLR_IndexPolicy):
     """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but based on a tracking of arms that haven't been explored enough, but with our threshold designed for the sub-Bernoulli case, but with our threshold designed for the sub-Bernoulli case.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     pass
 
 class OurGaussianGLR_IndexPolicy_WithDeterministicExploration(GLR_IndexPolicy_WithDeterministicExploration, OurGaussianGLR_IndexPolicy):
     """ A variant of the GaussianGLR-UCB policy where the exploration is not forced to be uniformly random but deterministic, inspired by what M-UCB proposed, but with our threshold designed for the sub-Bernoulli case.
+
+    - Reference: [["Combining the Generalized Likelihood Ratio Test and kl-UCB for Non-Stationary Bandits. E. Kaufmann and L. Besson, 2019]](https://hal.inria.fr/hal-02006471/)
     """
     pass
 

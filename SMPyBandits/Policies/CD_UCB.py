@@ -85,6 +85,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         self.all_rewards = [[] for _ in range(self.nbArms)]  #: Keep in memory all the rewards obtained since the last restart on that arm.
         self.last_pulls = np.zeros(nbArms, dtype=int)  #: Keep in memory the number times since last restart. Start with -1 (never seen)
         self.last_restart_times = np.zeros(nbArms, dtype=int)  #: Keep in memory the times of last restarts (for each arm).
+        self.number_of_restart = 0  #: Keep in memory the number of restarts.
 
     def __str__(self):
         return r"CD-{}($\varepsilon={:.3g}$, $\gamma={:.3g}$, {}{})".format(self._policy.__name__, self.epsilon, self.proba_random_exploration, "" if self._per_arm_restart else "Global", ", lazy detect {}".format(self.lazy_detect_change_only_x_steps) if self.lazy_detect_change_only_x_steps != LAZY_DETECT_CHANGE_ONLY_X_STEPS else "")
@@ -126,6 +127,7 @@ class CD_IndexPolicy(BaseWrapperPolicy):
         else:
             has_detected, position = has_detected_and_maybe_position
         if not has_detected: return
+        self.number_of_restart += 1
         if position is None:
             # print("For a player {} a change was detected at time {} for arm {}, after {} pulls of that arm (giving mean reward = {:.3g}). Last restart on that arm was at tau = {}".format(self, self.t, arm, self.last_pulls[arm], np.sum(self.all_rewards[arm]) / self.last_pulls[arm], self.last_restart_times[arm]))  # DEBUG
 
