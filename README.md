@@ -5,7 +5,8 @@
 
 This repository contains the code of [Lilian Besson's](https://perso.crans.org/besson/) numerical environment, written in [Python (2 or 3)](https://www.python.org/), for numerical simulations on :slot_machine: *single*-player and *multi*-players [Multi-Armed Bandits (MAB)](https://en.wikipedia.org/wiki/Multi-armed_bandit) algorithms.
 
-A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
+- A complete Sphinx-generated documentation is on [SMPyBandits.GitHub.io](https://smpybandits.github.io/).
+- You can also browse online the results of extensive benchmarks, powered by [Airspeed Velocity](https://asv.readthedocs.io/en/stable/using.html), on [this page](https://perso.crans.org/besson/phd/SMPyBandits-benchmarks/) (code on [SMPyBandits-benchmarks](https://github.com/Naereen/SMPyBandits-benchmarks/)).
 
 ## Quick presentation
 
