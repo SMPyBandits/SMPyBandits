@@ -32,6 +32,7 @@ class SWA(IndexPolicy):
         self.arms_history = {arm: [] for arm in range(nbArms)}
         self.armSet = set(range(nbArms))
         self.horizon = horizon
+        self.starting_horizon = horizon
         self.alpha = alpha if alpha is not None else (2*maxDecrement)**(-2/3)
         self.subgaussian = subgaussian
         self.h = self.setWindow()
@@ -51,9 +52,11 @@ class SWA(IndexPolicy):
         else:
             return self.arms_history[arm][int(self.h)]
 
-    def startGame(self):
+    def startGame(self, resetHorizon = True):
         super(SWA, self).startGame()
         self.arms_history = {arm: [] for arm in range(self.nbArms)}
+        if resetHorizon:
+            self.horizon = self.starting_horizon
 
 
 class wSWA(SWA):
@@ -67,9 +70,9 @@ class wSWA(SWA):
         return r"wSWA($\alpha={:.3g}$)".format(self.alpha)
 
     def doublingTrick(self):
-        self.horizon = 2 * self.horizon
+        self.horizon *= 2
         self.h = self.setWindow()
-        self.startGame()
+        self.startGame(resetHorizon=False)
 
     def getReward(self, arm, reward):
         super(wSWA, self).getReward(arm,reward)
