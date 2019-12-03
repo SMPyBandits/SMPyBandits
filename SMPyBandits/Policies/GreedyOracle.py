@@ -11,7 +11,7 @@ import numpy as np
 
 class GreedyPolicy(IndexPolicy):
     """
-    Greedy Policy for rotting bandits (A2 in teh reference below).
+    Greedy Policy for rotting bandits (A2 in the reference below).
     Selects arm with best last value.
     Reference: [Heidari et al., 2016, https://www.ijcai.org/Proceedings/16/Papers/224.pdf]
     """
