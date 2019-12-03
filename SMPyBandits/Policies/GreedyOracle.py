@@ -1,6 +1,8 @@
 """
 author: Julien Seznec
 
+Oracle and near-minimax policy for rotting bandits without noise.
+
 Reference: [Heidari et al., 2016, https://www.ijcai.org/Proceedings/16/Papers/224.pdf]
 Tight Policy Regret Bounds for Improving and Decaying Bandits.
 Hoda Heidari, Michael Kearns, Aaron Roth.
